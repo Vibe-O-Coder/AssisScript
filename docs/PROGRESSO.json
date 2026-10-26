@@ -133,7 +133,7 @@
           "name": "Texto com comprimento/vidas, bytes e APIs Unicode",
           "status": "complete",
           "evidence": "BIBLIOTECA-unicode.md",
-          "notes": "API nova unicode::Texto com UTF-8/NUL/comprimento, own em campos/listas e slices com vidas em parâmetros/retornos. text C e Texto legado preservam contrato anterior; sem grafemas/normalização."
+          "notes": "API nova unicode::String com UTF-8/NUL/comprimento, own em campos/listas e slices com vidas em parâmetros/retornos. text C e String global legado preservam contrato anterior; sem grafemas/normalização."
         },
         {
           "id": "P3-NUM",

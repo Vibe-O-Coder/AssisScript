@@ -34,3 +34,5 @@ Na próxima sessão, usar o commit final desta entrega como baseline, manter ing
 ## Correção após a CI Windows
 
 A execução 40258606887 aprovou a etapa Linux completa e encontrou no Windows um alias 8.3 (`RUNNER~1`) não reconhecido como raiz do pacote. A correção normaliza somente as comparações de pacote/lockfile, preserva os caminhos dos diagnósticos e compara overlays por identidade de arquivo quando necessário. O teste Windows cobre grafias longa/curta, lock determinístico, entrada não salva e overlay que precisa invalidar o lock. As verificações físicas de confinamento e hardlinks permanecem em vigor.
+
+A [execução 40294654212](https://github.com/Vibe-O-Coder/AssisScript/actions/runs/40294654212), commit de código `5cf5c19`, aprovou os três jobs: Linux, Windows e package. O commit `4606eca` contém a entrega principal; `5cf5c19` contém a correção de caminhos, a cobertura documental do editor e as medições finais. A revisão documental seguinte registra a evidência remota e sincroniza as somas dos pacotes.

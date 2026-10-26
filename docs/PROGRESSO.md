@@ -73,7 +73,7 @@ Cada registro histórico congela seus 35 estados; atualizações futuras não al
 
 | Critério | Estado | Evidência e limites |
 | --- | --- | --- |
-| P3-TEXT — Texto com comprimento/vidas, bytes e APIs Unicode | Concluído no escopo do critério | [Documento](BIBLIOTECA-unicode.md) — API nova unicode::Texto com UTF-8/NUL/comprimento, own em campos/listas e slices com vidas em parâmetros/retornos. text C e Texto legado preservam contrato anterior; sem grafemas/normalização. |
+| P3-TEXT — Texto com comprimento/vidas, bytes e APIs Unicode | Concluído no escopo do critério | [Documento](BIBLIOTECA-unicode.md) — API nova unicode::String com UTF-8/NUL/comprimento, own em campos/listas e slices com vidas em parâmetros/retornos. text C e String global legado preservam contrato anterior; sem grafemas/normalização. |
 | P3-NUM — Inteiros de largura fixa e números de ponto flutuante | Concluído no escopo do critério | [Documento](NUMEROS.md) — Inteiros de largura fixa e f32/f64 nativos, layout/ABI/coleções, overflow/conversões e IEEE verificados; print real hexadecimal exato. |
 | P3-IO — Arquivos, caminhos e argumentos com aplicação A validada | Concluído no escopo do critério | [Documento](IO-E-APLICACAO-A.md) — Arquivos own, argumentos/caminhos Unicode e aplicação A em CSV numérico de uma coluna, com fluxo limitado, erros e permissões nos dois sistemas. Sem API geral de diretórios/JSON. |
 | P3-LIB — Bibliotecas CLI, JSON, tempo, logs e iteradores com recursos seguros | Concluído no escopo do critério | [Documento](BIBLIOTECAS.md) — CLI own, JSON UTF-8 com limites, tempo/logs e pipelines imutáveis entregues no escopo CLI. DOM/JSON incremental, CSV legado geral e APIs mais amplas permanecem evolução. |
