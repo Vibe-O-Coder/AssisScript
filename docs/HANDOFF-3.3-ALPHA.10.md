@@ -1,6 +1,6 @@
 # Continuação — 3.3.0-alpha.10
 
-Data: 25/10/2026, contexto do usuário. Plano, handoffs alpha.1–9 e relatório de otimização alpha.7 lidos. O estado recebido foi preservado no commit inicial `e88af38832c4ce7d42ab8a62b62f16c80970e7f9`, enviado ao GitHub antes de alterar os fontes. As baselines/medições históricas permanecem preservadas.
+Data: 26/10/2026; trabalho iniciado em 25/10/2026, contexto do usuário. Plano, handoffs alpha.1–9 e relatório de otimização alpha.7 lidos. O estado recebido foi preservado no commit inicial `e88af38832c4ce7d42ab8a62b62f16c80970e7f9`, enviado ao GitHub antes de alterar os fontes. As baselines/medições históricas permanecem preservadas.
 
 ## Entrega
 
@@ -30,3 +30,7 @@ Windows: `tools/build-windows.ps1 -Compiler C:/msys64/ucrt64/bin/gcc.exe`. Linux
 `tools/benchmark-optimization.py --baseline COMPILADOR_ALPHA9 --output benchmarks/resultados/optimization-alpha10-SISTEMA.json --check` mede regressões específicas. `tools/benchmark-alpha10.py` mede cargas/recursos atuais, preservando os relatórios alpha.9. Antes de distribuir, reconstruir e validar, medir contra os binários finais, empacotar VSIX/ZIP e verificar ambos os sistemas.
 
 Na próxima sessão, usar o commit final desta entrega como baseline, manter inglês nas novas APIs e atacar um contrato grande por vez: variantes Move/capturas com vidas, ABI C/FFI e integrações B/C. Registrar a implementação, falhas simuladas e evidência real antes de atualizar a régua.
+
+## Correção após a CI Windows
+
+A execução 40258606887 aprovou a etapa Linux completa e encontrou no Windows um alias 8.3 (`RUNNER~1`) não reconhecido como raiz do pacote. A correção normaliza somente as comparações de pacote/lockfile, preserva os caminhos dos diagnósticos e compara overlays por identidade de arquivo quando necessário. O teste Windows cobre grafias longa/curta, lock determinístico, entrada não salva e overlay que precisa invalidar o lock. As verificações físicas de confinamento e hardlinks permanecem em vigor.

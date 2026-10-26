@@ -154,7 +154,7 @@ function analyze(text, file) {
         const lines = text.slice(0, offset).split(/\r?\n/); lines.pop(); const result = [];
         for (let j = lines.length - 1; j >= 0 && /^\s*(?:miyabi\b|\/\/\/)/.test(lines[j]); j--) result.unshift(lines[j].replace(/^\s*(?:miyabi\s?|\/\/\/\s?)/, ''));
         if (!result.length) {
-            const block = /\/\*\*((?:(?!\*\/)[\s\S])*)\*\/\s*$/.exec(text.slice(0, offset).replace(/(?:(?:private|pure)\s+)?(?:assis|ASSIS|struct)\s*$/, ''));
+            const block = /\/\*\*((?:(?!\*\/)[\s\S])*)\*\/\s*$/.exec(text.slice(0, offset).replace(/(?:(?:private|public|pure|safe|final|value)\s+)*(?:fn|assis|class|ASSIS|struct|enum)\s*$/, ''));
             if (block) result.push(block[1].split(/\r?\n/).map(line => line.replace(/^\s*\* ?/, '').trimEnd()).join('\n').trim());
         }
         return result.join('\n');

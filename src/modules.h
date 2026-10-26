@@ -37,7 +37,7 @@ static const char *overlay_path(const char *path){
     for(int i=0;i<source_overlays.n;i++){
         SourceOverlay *overlay=source_overlays.v[i];
 #ifdef _WIN32
-        bool match=!_stricmp(overlay->path,absolute);
+        bool match=!_stricmp(overlay->path,absolute)||same_file(overlay->path,absolute);
 #else
         bool match=same(overlay->path,absolute);
 #endif

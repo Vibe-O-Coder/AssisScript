@@ -1,6 +1,6 @@
 # Estimativa de conclusão — 3.3.0-alpha.10
 
-Data: 25/10/2026. **Conclusão estimada: 77%** (76,5 pontos de 100).
+Data: 26/10/2026. **Conclusão estimada: 77%** (76,5 pontos de 100).
 
 Escopo: Conclusão do plano de evolução das fases 0–6, incluindo a trilha funcional e as aplicações A/B/C. Não inclui construir o navegador, HTDL, estilos ou motor de busca.
 

@@ -5,6 +5,30 @@ typedef struct {char *alias,*version,*path;Package *target;} PackageDependency;
 struct Package {char *root,*name,*version,*manifest,*digest;Vec dependencies;int state;};
 static Vec packages;
 static Package *project_package;
+#ifdef _WIN32
+static char *package_long_path(const char *path){
+    wchar_t *wide=wide_path(path);DWORD n=GetLongPathNameW(wide,NULL,0);char *result=NULL;
+    if(n){wchar_t *out=mem(((size_t)n+1)*sizeof(wchar_t));DWORD got=GetLongPathNameW(wide,out,n+1);if(got&&got<=n)result=utf8_path(out);free(out);}
+    free(wide);return result;
+}
+#endif
+/* Package roots are physical long paths. Compare 8.3 aliases in that same
+ * spelling without changing diagnostic paths or weakening physical boundaries.
+ * Unsaved overlays can have a missing leaf, so expand their existing parent. */
+static char *package_comparison_path(const char *path){
+#ifdef _WIN32
+    char *absolute=absolute_path(path),*expanded=package_long_path(absolute);
+    if(!expanded){
+        char *parent=path_directory(absolute),*long_parent=package_long_path(parent);free(parent);
+        if(long_parent){size_t n=strlen(long_parent);while(n>3&&(long_parent[n-1]=='/'||long_parent[n-1]=='\\'))long_parent[--n]=0;
+            const char *name=absolute;for(const char *p=absolute;*p;p++)if(*p=='/'||*p=='\\')name=p+1;
+            expanded=path_join(long_parent,name);free(long_parent);}
+    }
+    if(expanded){free(absolute);return expanded;}return absolute;
+#else
+    return copy(path,strlen(path));
+#endif
+}
 static char *physical_path(const char *path){
 #ifdef _WIN32
     wchar_t *wide=wide_path(path);HANDLE h=CreateFileW(wide,0,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING,FILE_FLAG_BACKUP_SEMANTICS,NULL);free(wide);
@@ -69,11 +93,12 @@ static Package *load_package(const char *root,int depth){
     p->state=2;return p;
 }
 static Package *package_owner(const char *path){
-    Package *found=NULL;for(int i=0;i<packages.n;i++){Package *p=packages.v[i];if(path_inside(p->root,path)&&(!found||strlen(p->root)>strlen(found->root)))found=p;}return found;
+    if(!packages.n)return NULL;char *normalized=package_comparison_path(path);
+    Package *found=NULL;for(int i=0;i<packages.n;i++){Package *p=packages.v[i];if(path_inside(p->root,normalized)&&(!found||strlen(p->root)>strlen(found->root)))found=p;}free(normalized);return found;
 }
 static bool package_standard(const char *path){
-    const char *roots[]={"../stdlib","../share/assisscript/stdlib"};
-    for(int i=0;i<2;i++){char *joined=path_join(compiler_directory,roots[i]),*root=absolute_path(joined);free(joined);bool found=path_inside(root,path);free(root);if(found)return true;}return false;
+    const char *roots[]={"../stdlib","../share/assisscript/stdlib"};char *normalized=package_comparison_path(path);bool found=false;
+    for(int i=0;i<2&&!found;i++){char *joined=path_join(compiler_directory,roots[i]),*absolute=absolute_path(joined),*root=package_comparison_path(absolute);free(joined);free(absolute);found=path_inside(root,normalized);free(root);}free(normalized);return found;
 }
 static void package_import_boundary(Token *t,const char *path){
     if(!project_package)return;bool standard=package_standard(t->file->path);Package *owner=package_owner(t->file->path);if(!standard&&(!owner||owner==project_package))return;
@@ -96,7 +121,8 @@ static char *resolve_package(Token *t,const char *name){
     char *physical=physical_path(candidate);free(candidate);if(!path_inside(dependency->root,physical))error(t,"importação escapa da pasta do pacote");return physical;
 }
 static char *package_relative(const char *path){
-    size_t n=strlen(project_package->root);while(path[n]=='/'||path[n]=='\\')n++;char *out=copy(path+n,strlen(path+n));
+    char *normalized=package_comparison_path(path);if(!path_inside(project_package->root,normalized))fatal("caminho fora do projeto ao gerar lockfile: %s",path);
+    size_t n=strlen(project_package->root);while(normalized[n]=='/'||normalized[n]=='\\')n++;char *out=copy(normalized+n,strlen(normalized+n));free(normalized);
     for(char *p=out;*p;p++){if(*p=='\\')*p='/';if(*p=='\t'||*p=='\n'||*p=='\r')fatal("caminho de pacote contém separador de registro");}return out;
 }
 static void package_lock_row(Vec *rows,const char *kind,const char *path,const char *digest){char *relative=package_relative(path);size_t n=strlen(kind)+strlen(relative)+strlen(digest)+4;char *row=mem(n);snprintf(row,n,"%s\t%s\t%s\n",kind,relative,digest);push(rows,row);free(relative);}
@@ -104,8 +130,9 @@ static int package_row_compare(const void *a,const void *b){return strcmp(*(char
 static void package_source_row(Vec *rows,const char *path,const char *digest,bool internal){
     Package *owner=package_owner(path);
     if(!internal&&package_standard(path)){
-        const char *name=path;for(const char *c=path;*c;c++)if(*c=='/'||*c=='\\')name=c+1;
+        char *normalized=package_comparison_path(path);const char *name=normalized;for(const char *c=normalized;*c;c++)if(*c=='/'||*c=='\\')name=c+1;
         size_t n=strlen(name)+strlen(digest)+16;char *row=mem(n);snprintf(row,n,"stdlib\t%s\t%s\n",name,digest);push(rows,row);
+        free(normalized);
     }
     else if(owner&&owner!=project_package)package_lock_row(rows,"source",path,digest);
     else if(!owner&&!internal)fatal("projeto com lockfile exige módulos vendorizados ou std: %s",path);

@@ -12,6 +12,26 @@ base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
 main=base.main
 
 class Packages(base.Evolution):
+    @unittest.skipUnless(os.name=='nt','Windows 8.3 path aliases')
+    def test_short_long_paths_share_lock_and_unsaved_overlays(self):
+        import ctypes
+        source=self.setup_project()
+        def spelling(name,function):
+            output=ctypes.create_unicode_buffer(32768)
+            fn=getattr(ctypes.windll.kernel32,function);fn.argtypes=[ctypes.c_wchar_p,ctypes.c_wchar_p,ctypes.c_uint32];fn.restype=ctypes.c_uint32
+            if not fn(str(name),output,len(output)):self.skipTest('Volume does not provide 8.3 aliases')
+            return Path(output.value)
+        short=spelling(self.temp,'GetShortPathNameW')/source.name
+        long=spelling(source,'GetLongPathNameW')
+        if str(short).lower()==str(long).lower():self.skipTest('Volume has short-name creation disabled')
+        result=self.invoke('lock',short);self.assertEqual(result.returncode,0,result.stderr)
+        original=(self.temp/'assis.lock').read_bytes()
+        result=self.invoke('lock',long);self.assertEqual(result.returncode,0,result.stderr);self.assertEqual(original,(self.temp/'assis.lock').read_bytes())
+        result=self.invoke('check',short.parent/'unsaved.assis','--stdin',input=source.read_text(encoding='utf-8'));self.assertEqual(result.returncode,0,result.stderr)
+        changed=self.put('changed.assis','namespace core;public pure assis answer():int{return 7;}')
+        dependency=short.parent/'vendor/core/api.assis'
+        result=self.invoke('check',long,'--overlay',dependency,changed);self.assertNotEqual(result.returncode,0);self.assertIn('lockfile divergente',result.stderr)
+
     def put(self,name,contents):
         path=self.temp/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text(contents,encoding='utf-8');return path
 

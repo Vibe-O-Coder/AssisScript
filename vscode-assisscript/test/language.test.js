@@ -4,6 +4,12 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const l = require('../src/language');
 
+test('block documentation survives canonical English declaration modifiers', () => {
+    const model=l.analyze('/** Doubles a value. */ public pure fn twice(n:int):int{return n*2;}\n/** Stores a value. */ public final class Box{}','docs.assis');
+    assert.equal(model.symbols.find(s=>s.name==='twice').documentation,'Doubles a value.');
+    assert.equal(model.symbols.find(s=>s.name==='Box').documentation,'Stores a value.');
+});
+
 test('canonical English functions, classes, constructors and imports are indexed', () => {
     const source = 'import "helper.assis";class Box<T>{let item:T;fn init(item:T):void{self.item=item;}fn get():T{return self.item;}}pure fn double(value:int):int{return value*2;}fn main():int{val callback:pure fn(int):int=double;return callback(21);}';
     const model = l.analyze(source, 'english.assis');
