@@ -21,8 +21,8 @@ ASSIS Child extends Base {
 
 class ManagedClasses(base.Evolution):
     def test_final_classes_preserve_library_invariants(self):
-        self.rejected('#yuri <std/unicode.assis>\nASSIS Evil extends unicode::Texto{assis assis_fodase(borrow mut self):void{}}'+main(''),'classe final')
-        self.rejected('#yuri <std/proprios.assis>\nASSIS Evil extends proprios::Lista<Arquivo>{}'+main(''),'classe final')
+        self.rejected('#yuri <std/unicode.assis>\nASSIS Evil extends unicode::String{assis assis_fodase(borrow mut self):void{}}'+main(''),'classe final')
+        self.rejected('#yuri <std/owned.assis>\nASSIS Evil extends owned::OwnedList<File>{}'+main(''),'classe final')
         self.rejected('final ASSIS C<T>{}ASSIS D extends C<int>{}'+main(''),'classe final')
     def test_utf8_validity_agrees_with_independent_decoder(self):
         cases=[bytes([i]) for i in range(256)]
@@ -32,7 +32,7 @@ class ManagedClasses(base.Evolution):
             try:data.decode('utf-8');valid=True
             except UnicodeDecodeError:valid=False
             body+=''.join(f'b[{i}]=byte({c});' for i,c in enumerate(data))
-            body+=f'assert((unicode::erro(fatia(b,0,{len(data)}))<0)=='+('true' if valid else 'false')+');'
+            body+=f'assert((unicode::error(slice_of(b,0,{len(data)}))<0)=='+('true' if valid else 'false')+');'
         self.accepted('#yuri <std/unicode.assis>\nsafe '+main(body))
 
     def test_class_cleanup_on_break_continue_and_early_return(self):
@@ -40,24 +40,24 @@ class ManagedClasses(base.Evolution):
             +'safe '+main('let total:int=0;for(let i:int=0;i<100;i+=1){own c:Base=new Child();if(i==0){continue;}if(i==50){break;}total+=c.read();}print(total,early(1),early(0));'),'2058 40 42\n')
 
     def test_owning_collection_move_borrow_pop_and_drop(self):
-        self.accepted('#yuri <std/proprios.assis>\n'+CLASS+'safe '+main(
-            'own lista:proprios::Lista<Base>=new proprios::Lista<Base>();'
-            'lista.inserir(new Base());lista.inserir(new Child());'
-            '{borrow b:Base=lista.obter(1);print(lista.tamanho(),b.read());}'
-            'own ultimo:Base=lista.retirar();print(ultimo.read(),lista.tamanho());'), '2 40\n42 1\n')
-        self.rejected('#yuri <std/proprios.assis>\n'+CLASS+main(
-            'own lista:proprios::Lista<Base>=new proprios::Lista<Base>();lista.inserir(new Base());'
-            'borrow b:Base=lista.obter(0);lista.retirar();'),'exclusivo')
+        self.accepted('#yuri <std/owned.assis>\n'+CLASS+'safe '+main(
+            'own lista:owned::OwnedList<Base>=new owned::OwnedList<Base>();'
+            'lista.push_front(new Base());lista.push_front(new Child());'
+            '{borrow b:Base=lista.get(1);print(lista.size(),b.read());}'
+            'own ultimo:Base=lista.pop_front();print(ultimo.read(),lista.size());'), '2 40\n42 1\n')
+        self.rejected('#yuri <std/owned.assis>\n'+CLASS+main(
+            'own lista:owned::OwnedList<Base>=new owned::OwnedList<Base>();lista.push_front(new Base());'
+            'borrow b:Base=lista.get(0);lista.pop_front();'),'exclusivo')
 
     def test_utf8_text_embedded_zero_copy_and_borrow(self):
         code='#yuri <std/unicode.assis>\nsafe '+main(
-            'own dados:*byte=alloc<byte>(4);dados[0]=byte(65);dados[1]=byte(0);dados[2]=byte(195);dados[3]=byte(169);'
-            'own t:unicode::Texto=new unicode::Texto();assert(t.carregar(fatia(dados,0,4)));'
-            '{borrow s:slice<byte>=t.visualizar();print(len(s),int(s[1]),unicode::proximo(s,2));}'
-            'dados[2]=byte(255);assert(!t.carregar(fatia(dados,0,4)));'
-            'borrow r:slice<byte>=t.recortar(2,2);print(int(r[0]),len(r));')
+            'own data:*byte=alloc<byte>(4);data[0]=byte(65);data[1]=byte(0);data[2]=byte(195);data[3]=byte(169);'
+            'own t:unicode::String=new unicode::String();assert(t.load(slice_of(data,0,4)));'
+            '{borrow s:slice<byte>=t.as_slice();print(len(s),int(s[1]),unicode::next(s,2));}'
+            'data[2]=byte(255);assert(!t.load(slice_of(data,0,4)));'
+            'borrow r:slice<byte>=t.slice_range(2,2);print(int(r[0]),len(r));')
         self.accepted(code,'4 0 4\n195 2\n')
-        self.rejected('#yuri <std/unicode.assis>\n'+main('own t:unicode::Texto=new unicode::Texto();borrow s:slice<byte>=t.visualizar();free(t);'),'borrow ativo')
+        self.rejected('#yuri <std/unicode.assis>\n'+main('own t:unicode::String=new unicode::String();borrow s:slice<byte>=t.as_slice();free(t);'),'borrow ativo')
     def test_constructor_mutation_borrow_and_dynamic_drop(self):
         self.accepted(CLASS+'safe '+main('own b:Base=new Base();print(b.read());b.set(42);'
             '{borrow r:Base=b;print(r.read());}own c:Base=new Child();print(c.read(),b.read());'), '40\n42\n42 42\n')

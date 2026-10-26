@@ -10,7 +10,7 @@ O modelo gerenciado passa a cobrir parâmetros, retornos, chamadas indiretas e c
 
 ```assis
 struct Ponto { let x: int; }
-safe assis criar(n: int): own Ponto { return new Ponto(n); }
+safe assis create(n: int): own Ponto { return new Ponto(n); }
 safe assis ler(borrow p: Ponto): int { return p.x; }
 safe assis alterar(borrow mut p: Ponto, n: int): void { p.x = n; }
 safe assis transferir(own p: Ponto): own Ponto { return move(p); }
@@ -94,7 +94,7 @@ Unsafe não desliga ownership, privacidade, pureza ou tipagem: não permite pass
 
 `safe` e `unsafe` passam a ser palavras reservadas; identificadores antigos com esses nomes precisam ser renomeados. Os contratos de funções antigas e as APIs manuais são preservados. Não há inferência que converta automaticamente uma referência legada em empréstimo gerenciado.
 
-`std/algoritmos.assis` oferece `safe map_own<T,U>(borrow Array<T>, callback pure): own Array<U>`, `filter_own<T>` e `fold_borrow<T,A>`. As duas primeiras têm saída independente e limpa automaticamente pelo chamador own; a terceira não aloca um array. Entrada é preservada. T/U/A devem satisfazer os callbacks puros escalares, Copy ou funções pure. As APIs antigas map/filter/fold continuam disponíveis com contratos manuais para compatibilidade.
+`std/algorithms.assis` oferece `safe map_own<T,U>(borrow Array<T>, callback pure): own Array<U>`, `filter_own<T>` e `fold_borrow<T,A>`. As duas primeiras têm saída independente e limpa automaticamente pelo chamador own; a terceira não aloca um array. Entrada é preservada. T/U/A devem satisfazer os callbacks puros escalares, Copy ou funções pure. As APIs antigas map/filter/fold continuam disponíveis com contratos manuais para compatibilidade.
 
 O [exemplo 19](../exemplos/19_ownership_funcoes.assis) combina essas APIs, retorno emprestado de campo e extração parcial, com saída `6 3 24` e `4 8 12`. Execute com `assis run exemplos/19_ownership_funcoes.assis --safe --debug`.
 

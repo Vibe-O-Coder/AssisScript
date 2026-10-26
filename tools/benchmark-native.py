@@ -44,7 +44,7 @@ workloads = [
      'let total:int=0;for(let i:int=0;i<1000000;i+=1){let p:P=new P(i);total+=p.x;free(p);}print(total);',
      'int64_t total=0;for(int64_t i=0;i<1000000;i++){struct P *p=malloc(sizeof(*p));if(!p)return 2;p->x=i;observe(p);total+=p->x;free(p);}printf("%lld\\n",(long long)total);',
      'class P:\n __slots__=("x",)\n def __init__(self,x): self.x=x\ntotal=0\nfor i in range(1000000):\n p=P(i)\n total+=p.x\n del p\nprint(total)\n'),
-    ('texto-indice',
+    ('strings-indice',
      'let s:text="'+'a'*30000+'";let total:int=0;for(let i:int=0;i<len(s);i+=1){total+=s[i];}print(total);',
      'char *s=malloc(30001);if(!s)return 2;memset(s,97,30000);s[30000]=0;observe(s);int64_t total=0;size_t n=strlen(s);for(size_t i=0;i<n;i++)total+=(unsigned char)s[i];printf("%lld\\n",(long long)total);free(s);',
      's=b"a"*30000\ntotal=0\nfor i in range(len(s)): total+=s[i]\nprint(total)\n')
@@ -76,7 +76,7 @@ with tempfile.TemporaryDirectory(prefix='assis-native-') as folder:
         if name=='aritmetica': assis=assis.replace('for(let i:int=0;i<10000000;i+=1){','let i:int=0;while(i<10000000){').replace(';}print', ';i+=1;}print')
         elif name=='collatz': assis=assis.replace('for(let i:int=1;i<200001;i+=1){','let i:int=1;while(i<200001){').replace('total+=1;}}','total+=1;}i+=1;}')
         elif name=='alocacao': assis=assis.replace('for(let i:int=0;i<1000000;i+=1){','let i:int=0;while(i<1000000){').replace('free(p);}', 'free(p);i+=1;}')
-        elif name=='texto-indice': assis=assis.replace('for(let i:int=0;i<len(s);i+=1){','let i:int=0;while(i<len(s)){').replace('total+=s[i];}', 'total+=s[i];i+=1;}')
+        elif name=='strings-indice': assis=assis.replace('for(let i:int=0;i<len(s);i+=1){','let i:int=0;while(i<len(s)){').replace('total+=s[i];}', 'total+=s[i];i+=1;}')
         source=folder/(name+'.assis');source.write_text('struct P {let x:int;}\nassis assis_assis():int{'+assis+'return 0;}')
         c_source=folder/(name+'.c'); c_source.write_text(c_header+c+'return 0;}')
         py_source=folder/(name+'.py'); py_source.write_text(python)
@@ -111,7 +111,7 @@ Tempos incluem início de processo. C: `-O2 -std=c11 -static`, sem remover verif
 for r in report['results']:
     markdown+=f'| {r["case"]} | {r["variant"]} | {r["medianMs"]:.3f} | {r["minMs"]:.3f}–{r["maxMs"]:.3f} |\n'
 markdown+='''
-O teste C de alocação contém uma barreira de compilador sem instruções para impedir que malloc/free sejam eliminados; ela não adiciona acessos volatile. Os laços usam os mesmos limites e resultados. O teste de texto mede a indexação pública com limites verificados em AssisScript e acesso por índice em C/Python. O struct de AssisScript inclui metadados adicionais. O teste de objetos Python usa __slots__.
+O teste C de alocação contém uma barreira de compilador sem instruções para impedir que malloc/free sejam eliminados; ela não adiciona acessos volatile. Os laços usam os mesmos limites e resultados. O teste de strings mede a indexação pública com limites verificados em AssisScript e acesso por índice em C/Python. O struct de AssisScript inclui metadados adicionais. O teste de objetos Python usa __slots__.
 
 Cargas abaixo de 20 ms sofrem influência relevante do início do processo; proximidade entre medianas não demonstra paridade com C. Estes quatro programas não representam todos os programas C/C++, nem medem pico de RAM. A variante anterior usa o mesmo fonte com while. Dados brutos acompanham este arquivo.
 '''

@@ -1,33 +1,33 @@
 #yuri <std/csv.assis>
-#yuri <std/conversoes.assis>
-#yuri <std/algoritmos.assis>
+#yuri <std/convert.assis>
+#yuri <std/algorithms.assis>
 
 // Pipeline real: CSV de vendas, validação, totalização por produto e ordenação.
 // Preços são centavos inteiros; dados inválidos não são convertidos silenciosamente.
 assis assis_assis(): int {
-    let csv: DocumentoCSV = ler_csv("produto;quantidade;centavos\nCafe;3;1250\nCha;2;850\nCafe;1;1250\n", byte(59));
-    if (!csv.ok) { print("CSV invalido no byte", csv.posicao); csv.dispose(); free(csv); return 1; }
+    let csv: CsvDocument = read_csv("produto;count;centavos\nCafe;3;1250\nCha;2;850\nCafe;1;1250\n", byte(59));
+    if (!csv.ok) { print("CSV invalido no byte", csv.position); csv.dispose(); free(csv); return 1; }
     let totais: HashMap<text, int> = new HashMap<text, int>(); let vendas: Array<int> = [];
     let linha: int = 1; let status: int = 0;
-    while (linha < len(csv.linhas)) {
-        let campos: Array<text> = csv.linhas[linha];
+    while (linha < len(csv.rows)) {
+        let campos: Array<text> = csv.rows[linha];
         if (len(campos) != 3) { print("Numero de colunas invalido na linha", linha + 1); status = 1; break; }
-        let quantidade: ResultadoInt = inteiro_de_texto(campos[1]); let preco: ResultadoInt = inteiro_de_texto(campos[2]);
-        if (!quantidade.ok || !preco.ok || quantidade.valor < 0 || preco.valor < 0) {
-            print("Quantidade ou preco invalido na linha", linha + 1); free(quantidade); free(preco); status = 1; break;
+        let count: IntResult = parse_int(campos[1]); let preco: IntResult = parse_int(campos[2]);
+        if (!count.ok || !preco.ok || count.value < 0 || preco.value < 0) {
+            print("Quantidade ou preco invalido na linha", linha + 1); free(count); free(preco); status = 1; break;
         }
-        if (quantidade.valor != 0 && preco.valor > 0x7fff_ffff_ffff_ffff / quantidade.valor) {
-            print("Total fora do intervalo na linha", linha + 1); free(quantidade); free(preco); status = 1; break;
+        if (count.value != 0 && preco.value > 0x7fff_ffff_ffff_ffff / count.value) {
+            print("Total fora do intervalo na linha", linha + 1); free(count); free(preco); status = 1; break;
         }
-        let total: int = quantidade.valor * preco.valor;
-        let soma: ResultadoInt = somar_seguro(totais.get_or(campos[0], 0), total);
-        if (!soma.ok) { print("Total acumulado fora do intervalo"); free(soma); free(quantidade); free(preco); status = 1; break; }
-        totais.set(campos[0], soma.valor); vendas.push(total);
-        free(soma); free(quantidade); free(preco); linha += 1;
+        let total: int = count.value * preco.value;
+        let soma: IntResult = checked_add(totais.get_or(campos[0], 0), total);
+        if (!soma.ok) { print("Total acumulado fora do intervalo"); free(soma); free(count); free(preco); status = 1; break; }
+        totais.set(campos[0], soma.value); vendas.push(total);
+        free(soma); free(count); free(preco); linha += 1;
     }
     if (status == 0) {
         print("Cafe, centavos:", totais.get_or("Cafe", 0)); print("Cha, centavos:", totais.get_or("Cha", 0));
-        ordenar_inteiros(vendas); if (len(vendas) > 0) { print("Menor venda:", vendas[0]); }
+        sort_ints(vendas); if (len(vendas) > 0) { print("Menor venda:", vendas[0]); }
     }
     // As chaves emprestam textos do CSV: o documento é liberado por último.
     free(vendas); free(totais); csv.dispose(); free(csv); return status;

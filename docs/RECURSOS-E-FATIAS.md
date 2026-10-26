@@ -1,5 +1,7 @@
 # Recursos gerenciados e fatias — alpha.9
 
+**Atualização alpha.10:** sintaxe e APIs canônicas em inglês; imports e nomes antigos da stdlib exigem migração. Veja [ENGLISH-API.md](ENGLISH-API.md) e o [handoff atual](HANDOFF-3.3-ALPHA.10.md). As grafias históricas da sintaxe continuam aliases.
+
 ## Classes e receptores
 
 `ASSIS` pode declarar campos own. Uma classe usada como own/borrow precisa ter todos os métodos com receptor explícito: `assis ler(borrow self):int` ou `assis alterar(borrow mut self,n:int):void`. O receptor aparece primeiro e não é passado pelo usuário. Métodos com receptor são safe; operações legadas exigem unsafe. Métodos antigos continuam com seu contrato manual e impedem promover a classe para own apenas por anotação.
@@ -12,17 +14,17 @@ Retornos `borrow(self)`/`borrow mut(self)` conservam a vida do receptor. O segun
 
 Destruição de classe usa o tipo dinâmico, mesmo após upcast/move para uma base. Um endereço de drop fica imediatamente antes da vtable; libera campos own da derivada para a base em ordem inversa e depois o objeto. Não chama um dispose legado por nome. Structs mantêm seu drop concreto. Não há destrutor de usuário ou GC. Cada recurso externo novo precisa de seu próprio adaptador de drop.
 
-`proprios::Lista<T>` integra proprietários em uma coleção limitada e preserva empréstimos dos elementos. Não transforma Array/HashMap legados em coleções proprietárias.
+`owned::OwnedList<T>` integra proprietários em uma coleção limitada e preserva empréstimos dos elementos. Não transforma Array/HashMap legados em coleções proprietárias.
 
 ## Fatias
 
-`slice<T>` representa dois words inline: endereço dos elementos e quantidade. T é um escalar/valor Copy, sem referência. `fatia(buffer,inicio,quantidade)` e `fatia(slice,inicio,quantidade)` avaliam argumentos uma vez da esquerda para a direita. Exigem buffer gerenciado, índices não negativos e quantidade menor ou igual ao tamanho restante; subtração antes da comparação evita overflow. Uma fatia vazia no fim é válida. A indexação sempre confere limites.
+`slice<T>` representa dois words inline: endereço dos elementos e quantidade. T é um escalar/valor Copy, sem referência. `slice_of(buffer,start,count)` e `slice_of(slice,start,count)` avaliam argumentos uma vez da esquerda para a direita. Exigem buffer gerenciado, índices não negativos e quantidade menor ou igual ao tamanho restante; subtração antes da comparação evita overflow. Uma fatia vazia no fim é válida. A indexação sempre confere limites.
 
 Fatias são empréstimos, não proprietários nem valores Copy públicos: exigem vínculos/parâmetros borrow, retornos com origem explícita e não podem ser copiadas por let, guardadas em campos/coleções, comparadas, liberadas ou convertidas para ponteiros brutos. Compartilhamento/exclusividade se aplicam à raiz inteira. Não há empréstimos disjuntos inferidos.
 
 Argumentos/retornos inline seguem o destino oculto da ABI de valores, mas a tipagem não os classifica como Copy. Descritores não alocam no heap. Retornar fatia de local é rejeitado; chamadas indiretas e especializações mantêm o tipo do elemento e a origem. `slice<int>` e `slice<byte>` têm identidades distintas.
 
-`unicode::Texto` é a API textual nova com comprimento/vida explícitos, UTF-8 e NUL. A API C `text`, Texto legado e CSV legado conservam seus contratos e não recebem garantias por coexistirem com essa biblioteca. Grafemas/normalização continuam extensões de APIs.
+`unicode::String` é a API textual nova com comprimento/vida explícitos, UTF-8 e NUL. A API C `text`, Texto legado e CSV legado conservam seus contratos e não recebem garantias por coexistirem com essa biblioteca. Grafemas/normalização continuam extensões de APIs.
 
 ## Backend e diagnóstico
 

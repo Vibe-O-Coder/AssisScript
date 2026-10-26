@@ -68,7 +68,7 @@ function harness(documents, settings = {}) {
 test('comando check inclui pacotes e bibliotecas não salvos e publica o diagnóstico', async () => {
     const entry = doc(path.join(temp, 'assis.assis'), '#body src.pillow\nassis assis_assis(): int { return 0; }');
     const packageDoc = doc(path.join(temp, 'src.pillow'), '#yuri <lib.assis>\n', 'assisscript-package', true);
-    const lib = doc(path.join(temp, 'lib.assis'), 'assis dobro(valor: int): int { return valor * 2; }', 'assisscript', true);
+    const lib = doc(path.join(temp, 'lib.assis'), 'assis dobro(value: int): int { return value * 2; }', 'assisscript', true);
     const h = harness([entry, packageDoc, lib]);
     try {
         await h.commands.get('assisscript.check')();

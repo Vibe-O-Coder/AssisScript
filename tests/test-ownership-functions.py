@@ -13,7 +13,7 @@ spec.loader.exec_module(evolution)
 main = evolution.main
 RECORD = 'struct P{let x:int;}'
 FUNCS = '''
-assis criar(n:int):own P{return new P(n);}
+assis create(n:int):own P{return new P(n);}
 assis ler(borrow p:P):int{return p.x;}
 assis mudar(borrow mut p:P,n:int):void{p.x=n;}
 assis consumir(own p:P):int{return p.x;}
@@ -31,17 +31,17 @@ class OwnershipFunctions(unittest.TestCase):
     rejected = evolution.Evolution.rejected
 
     def test_consumption_return_and_borrow(self):
-        self.accepted(RECORD + FUNCS + main('own p:P=criar(7);print(ler(p));mudar(p,42);'
-                      'own q:P=passar(move(p));print(consumir(move(q)));print(consumir(criar(9)));'), '7\n42\n9\n')
+        self.accepted(RECORD + FUNCS + main('own p:P=create(7);print(ler(p));mudar(p,42);'
+                      'own q:P=passar(move(p));print(consumir(move(q)));print(consumir(create(9)));'), '7\n42\n9\n')
 
     def test_borrowed_return_and_reborrowing(self):
-        self.accepted(RECORD + FUNCS + main('own p:P=criar(1);{borrow a:P=ver(p);borrow b:P=a;print(ler(b));}'
+        self.accepted(RECORD + FUNCS + main('own p:P=create(1);{borrow a:P=ver(p);borrow b:P=a;print(ler(b));}'
                       '{borrow mut a:P=exclusivo(p);{borrow b:P=ver(a);print(b.x);}mudar(a,42);}print(p.x);'), '1\n1\n42\n')
 
     def test_contracts_in_function_values_and_callbacks(self):
         self.accepted(RECORD + FUNCS + 'assis aplicar(f:assis(own P):own P,own p:P):own P{return f(move(p));}' +
                       main('val f:assis(borrow P):int=ler;val g:assis(borrow P):borrow(0) P=ver;'
-                           'own p:P=aplicar(passar,criar(42));{borrow b:P=g(p);print(f(b));}'), '42\n')
+                           'own p:P=aplicar(passar,create(42));{borrow b:P=g(p);print(f(b));}'), '42\n')
         for declaration in ['val f:assis(P):int=ler;', 'val f:assis(borrow mut P):int=ler;',
                             'val f:assis(own P):P=passar;', 'val f:assis(borrow P):borrow(0) P=exclusivo;']:
             self.rejected(RECORD + FUNCS + main(declaration), 'não é possível usar')
@@ -53,13 +53,13 @@ class OwnershipFunctions(unittest.TestCase):
 
     def test_use_after_move_and_implicit_copy(self):
         for body, message in [
-            ('own p:P=criar(1);consumir(p);', 'alocação nova'),
-            ('own p:P=criar(1);consumir(move(p));print(p.x);', 'movido ou liberado'),
-            ('let p:P=criar(1);', 'não pode escapar'),
-            ('criar(1);', 'não pode escapar'),
-            ('own p:P=criar(1);let q:P=ver(p);', 'não pode escapar'),
+            ('own p:P=create(1);consumir(p);', 'alocação nova'),
+            ('own p:P=create(1);consumir(move(p));print(p.x);', 'movido ou liberado'),
+            ('let p:P=create(1);', 'não pode escapar'),
+            ('create(1);', 'não pode escapar'),
+            ('own p:P=create(1);let q:P=ver(p);', 'não pode escapar'),
             ('let p:P=new P();ler(p);', 'borrow exige'),
-            ('own p:P=criar(1);borrow b:P=p;consumir(move(p));', 'borrow ativo'),
+            ('own p:P=create(1);borrow b:P=p;consumir(move(p));', 'borrow ativo'),
         ]:
             self.rejected(RECORD + FUNCS + main(body), message)
 
@@ -101,15 +101,15 @@ class OwnershipFunctions(unittest.TestCase):
 
     def test_branch_join_uses_only_live_paths(self):
         self.accepted(RECORD + FUNCS + 'assis f(own p:P,b:bool):int{if(b){return consumir(move(p));}return p.x+1;}' +
-                      main('print(f(criar(41),false),f(criar(42),true));'), '42 42\n')
-        self.rejected(RECORD + FUNCS + main('own p:P=criar(1);if(true){consumir(move(p));}print(p.x);'), 'movido ou liberado')
+                      main('print(f(create(41),false),f(create(42),true));'), '42 42\n')
+        self.rejected(RECORD + FUNCS + main('own p:P=create(1);if(true){consumir(move(p));}print(p.x);'), 'movido ou liberado')
 
     def test_loops_cannot_consume_outer_owners_even_in_condition(self):
-        f = 'assis fim(own p:P):bool{return false;}'
-        for body in ['own p:P=new P();while(fim(move(p))){}',
+        f = 'assis end(own p:P):bool{return false;}'
+        for body in ['own p:P=new P();while(end(move(p))){}',
                      'own p:P=new P();while(true){consumir(move(p));break;}']:
             self.rejected(RECORD + FUNCS + f + main(body), 'externo dentro de laço')
-        self.accepted(RECORD + FUNCS + main('for(let i:int=0;i<100;i+=1){own p:P=criar(i);if(i%2==0){continue;}consumir(move(p));}'))
+        self.accepted(RECORD + FUNCS + main('for(let i:int=0;i<100;i+=1){own p:P=create(i);if(i%2==0){continue;}consumir(move(p));}'))
 
     def test_buffer_contracts_and_bounds(self):
         f = 'assis ver_buffer(borrow p:*int):borrow(p) *int{return p;}assis gravar(borrow mut p:*int):void{p[1]=42;}'
@@ -121,10 +121,10 @@ class OwnershipFunctions(unittest.TestCase):
             self.assertIn('limite', result.stderr)
 
     def test_owned_fields_nested_drop_move_and_replacement(self):
-        rec = 'struct Caixa<T>{own valor:T;let id:int;}struct Par{own a:Caixa<Array<int>>;own b:*int;}'
+        rec = 'struct Caixa<T>{own value:T;let id:int;}struct Par{own a:Caixa<Array<int>>;own b:*int;}'
         self.accepted(rec + main('own p:Par=new Par(new Caixa<Array<int>>([1,2],9),alloc<int>(2));'
                       'own a:Caixa<Array<int>>=move(p.a);p.a=new Caixa<Array<int>>([42],7);'
-                      'p.b[1]=3;print(p.a.valor[0],a.id,p.b[1]);p.a.valor=[4,5];print(len(p.a.valor));'), '42 9 3\n2\n')
+                      'p.b[1]=3;print(p.a.value[0],a.id,p.b[1]);p.a.value=[4,5];print(len(p.a.value));'), '42 9 3\n2\n')
 
     def test_partial_move_preserves_sibling_and_partial_drop(self):
         rec = 'struct Par{own a:Array<int>;own b:Array<int>;}'
@@ -145,9 +145,9 @@ class OwnershipFunctions(unittest.TestCase):
         self.accepted('ASSIS C{own a:Array<int>;}' + main('own c:C=new C();'))
 
     def test_recursive_owned_records_and_empty_fields(self):
-        rec = 'struct Lista{let n:int;own prox:Lista;}'
-        self.accepted(rec + main('own a:Lista=new Lista();a.n=42;'
-                      'own b:Lista=new Lista(7,move(a));print(b.prox.n);'), '42\n')
+        rec = 'struct OwnedList{let n:int;own prox:OwnedList;}'
+        self.accepted(rec + main('own a:OwnedList=new OwnedList();a.n=42;'
+                      'own b:OwnedList=new OwnedList(7,move(a));print(b.prox.n);'), '42\n')
 
     def test_owned_parameters_drop_on_all_exits(self):
         f = 'assis f(own a:Array<int>,b:bool):void{if(b){return;}a.push(42);}'
@@ -184,13 +184,13 @@ class OwnershipFunctions(unittest.TestCase):
 
     def test_safe_function_values_keep_effect_and_ownership(self):
         safe_main = lambda b: main(b).replace('assis assis_assis', 'safe assis assis_assis')
-        f = 'safe assis tamanho(borrow a:Array<int>):int{return len(a);}'
-        self.accepted(f + safe_main('val f:safe assis(borrow Array<int>):int=tamanho;own a:Array<int>=[1,2];print(f(a));'), '2\n')
+        f = 'safe assis size(borrow a:Array<int>):int{return len(a);}'
+        self.accepted(f + safe_main('val f:safe assis(borrow Array<int>):int=size;own a:Array<int>=[1,2];print(f(a));'), '2\n')
         self.rejected('assis legado(n:int):int{return n;}' + main('val f:safe assis(int):int=legado;'), 'não é possível usar')
 
     def test_managed_functional_library_and_example(self):
         safe_main = lambda b: main(b).replace('assis assis_assis', 'safe assis assis_assis')
-        f = '''#yuri <std/algoritmos.assis>
+        f = '''#yuri <std/algorithms.assis>
 pure assis dobro(n:int):int{return n*2;}
 pure assis par(n:int):bool{return n%2==0;}
 pure assis somar(a:int,b:int):int{return a+b;}
@@ -226,9 +226,9 @@ pure assis somar(a:int,b:int):int{return a+b;}
     def test_partial_state_joins_and_recursive_drop(self):
         rec = 'struct C{own a:Array<int>;}'
         self.rejected(rec + main('own c:C=new C([1]);own a:Array<int>=move(c.a);if(true){c.a=[2];}print(c.a[0]);'), 'movido ou liberado')
-        rec = 'struct Lista{let n:int;own prox:Lista;}'
-        f = 'assis lista(n:int):own Lista{if(n==0){return new Lista();}return new Lista(n,lista(n-1));}'
-        self.accepted(rec + f + main('for(let i:int=0;i<50;i+=1){own l:Lista=lista(64);assert(l.prox.n==63);}'))
+        rec = 'struct OwnedList{let n:int;own prox:OwnedList;}'
+        f = 'assis lista(n:int):own OwnedList{if(n==0){return new OwnedList();}return new OwnedList(n,lista(n-1));}'
+        self.accepted(rec + f + main('for(let i:int=0;i<50;i+=1){own l:OwnedList=lista(64);assert(l.prox.n==63);}'))
 
 
 if __name__ == '__main__':

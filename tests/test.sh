@@ -36,7 +36,7 @@ for fixture in "$root/tests/rejections/"*.assis; do
 done
 
 expect_status 0 "$assis" version
-grep -Fq '3.3.0-alpha.9' "$tmp/out" || fail 'versão'
+grep -Fq '3.3.0-alpha.10' "$tmp/out" || fail 'versão'
 expect_status 0 "$assis" doctor
 expect_status 0 "$assis" help
 expect_status 2 "$assis" comando-inexistente
@@ -81,7 +81,7 @@ HOME="$tmp/home" sh "$root/instalar.sh" > "$tmp/install"
 [ -f "$tmp/home/.local/share/assisscript/docs/LINGUAGEM.md" ] || fail 'manual instalado'
 count=$((count+1))
 HOME="$tmp/home" PATH=/usr/bin:/bin /bin/sh -c '. "$HOME/.profile"; assis version' > "$tmp/out"
-grep -Fq '3.3.0-alpha.9' "$tmp/out" || fail 'comando instalado no PATH'
+grep -Fq '3.3.0-alpha.10' "$tmp/out" || fail 'comando instalado no PATH'
 HOME="$tmp/home" sh "$root/instalar.sh" > "$tmp/install"
 [ "$(grep -Fc '# >>> AssisScript PATH >>>' "$tmp/home/.profile")" = 1 ] || fail 'PATH duplicado na reinstalação'
 HOME="$tmp/home" sh "$root/desinstalar.sh" > "$tmp/uninstall"

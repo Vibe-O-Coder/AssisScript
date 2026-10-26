@@ -1,5 +1,7 @@
 # Novidades experimentais 3.3.0-alpha.6
 
+**Atualização alpha.10:** sintaxe e APIs canônicas em inglês; imports e nomes antigos da stdlib exigem migração. Veja [ENGLISH-API.md](ENGLISH-API.md) e o [handoff atual](HANDOFF-3.3-ALPHA.10.md). As grafias históricas da sintaxe continuam aliases.
+
 **Atualização 3.3.0-alpha.8:** Alpha.7 acrescenta [valores Copy e variantes](VALORES-E-VARIANTES.md), [IO e aplicação A](IO-E-APLICACAO-A.md). Pure aceita valores Copy; Option/Result e matching exaustivo estão implementados. [Progresso atual: 56%](PROGRESSO.md). As descrições das alphas anteriores abaixo são históricas.
 
 Alpha.6: parâmetros/retornos own/borrow, vidas declaradas, campos own de structs, safe assis e unsafe { ... } estão documentados em [Ownership entre funções](OWNERSHIP-FUNCOES.md). A gramática completa acompanha essa extensão. As regras das seções históricas devem ser lidas com essa atualização.
@@ -8,7 +10,7 @@ A linguagem adota a direção funcional. Há funções como valores, tipos `pure
 
 # Novidades da versão 3.2
 
-A linguagem acrescenta `own`, `borrow`, `borrow mut`, `move`, `div { ... }`, `for`, `defer free`, `ler_bytes` e `agora`. Veja [memória e escopos](MEMORIA-OWNERSHIP.md) e [contratos e limites da versão](MELHORIAS-3.2.md). As palavras novas são reservadas. O manual abaixo preserva a descrição do núcleo anterior.
+A linguagem acrescenta `own`, `borrow`, `borrow mut`, `move`, `div { ... }`, `for`, `defer free`, `read_bytes` e `monotonic_ms`. Veja [memória e escopos](MEMORIA-OWNERSHIP.md) e [contratos e limites da versão](MELHORIAS-3.2.md). As palavras novas são reservadas. O manual abaixo preserva a descrição do núcleo anterior.
 
 # Linguagem AssisScript 3.1
 
@@ -47,7 +49,7 @@ A entrada é `assis_assis`, sem parâmetros, com retorno `int` ou `void`. Funç�
 | `Array<T>` | Referência a sequência dinâmica homogênea |
 | `HashMap<K, V>` | Referência a tabela hash tipada |
 
-`byte` converte implicitamente para `int`. Redução para byte exige `byte(valor)` e preserva os oito bits inferiores. `int(valor)` e `bool(valor)` aceitam inteiros e booleanos; zero vira falso. `null` é atribuível a ponteiros, classes, structs e coleções, mas não a text. `void` não pode ser variável, campo, parâmetro nem elemento de coleção.
+`byte` converte implicitamente para `int`. Redução para byte exige `byte(value)` e preserva os oito bits inferiores. `int(value)` e `bool(value)` aceitam inteiros e booleanos; zero vira falso. `null` é atribuível a ponteiros, classes, structs e coleções, mas não a text. `void` não pode ser variável, campo, parâmetro nem elemento de coleção.
 
 Campos começam em zero, falso, texto vazio ou referência nula. Uma variável de classe, struct ou coleção guarda uma referência; atribuí-la não cria cópia independente. Textos são imutáveis.
 
@@ -69,14 +71,14 @@ Condições exigem bool; corpos exigem chaves. Atribuição é instrução e nã
 
 ```assis
 ASSIS Contador {
-    let valor: int;
+    let value: int;
 
-    assis assis_fodase(inicial: int): void { self.valor = inicial; }
-    assis proximo(): int { self.valor += 1; return self.valor; }
+    assis assis_fodase(inicial: int): void { self.value = inicial; }
+    assis next(): int { self.value += 1; return self.value; }
 }
 
 ASSIS ContadorDuplo extends Contador {
-    assis proximo(): int { self.valor += 2; return self.valor; }
+    assis next(): int { self.value += 2; return self.value; }
 }
 ```
 
@@ -123,14 +125,14 @@ Literais `[...]` exigem contexto `Array<T>`: declaração, argumento, atribuiç�
 ## Ponteiros e alocação
 
 ```assis
-let dados: *int = alloc<int>(4);
-dados[0] = 42;
-let endereco: *int = &dados[0];
+let data: *int = alloc<int>(4);
+data[0] = 42;
+let endereco: *int = &data[0];
 print(*endereco);
-free(dados);
+free(data);
 ```
 
-`alloc<T>(quantidade)` aloca elementos zerados e retorna *T, validando quantidade negativa e overflow na multiplicação pelo tamanho. `&` obtém endereço e `*` dereferencia. Ponteiros brutos não verificam limites. Não há conversão de inteiro para ponteiro nem entre ponteiros incompatíveis. Ponteiro + n e ponteiro - n avançam em elementos do tipo apontado.
+`alloc<T>(count)` aloca elementos zerados e retorna *T, validando quantidade negativa e overflow na multiplicação pelo tamanho. `&` obtém endereço e `*` dereferencia. Ponteiros brutos não verificam limites. Não há conversão de inteiro para ponteiro nem entre ponteiros incompatíveis. Ponteiro + n e ponteiro - n avançam em elementos do tipo apontado.
 
 Buffers de text e de referências começam nulos; inicialize os elementos antes de ler. A garantia de texto vazio vale para campos de instância, não para buffers brutos. `free` recebe null, uma alocação original ou uma instância válida. Nunca libere endereço local, endereço interno ou uma alocação já liberada. Não há coletor de lixo.
 
@@ -145,8 +147,8 @@ Literais: `42`, `1_000`, `0xff`, `0b1010`. Os bits são interpretados como int c
 | Lógica | `&&` e `||` com curto-circuito; `!` |
 | Bits | `&` `|` `^` `~` `<<` `>>` |
 | Atribuição | `= += -= *= /= %= &= |= ^= <<= >>=` |
-| Acesso | `valor.campo`, `valor.metodo(...)`, `valor[indice]` |
-| Memória | `&valor`, `*ponteiro` |
+| Acesso | `value.campo`, `value.metodo(...)`, `value[indice]` |
+| Memória | `&value`, `*ponteiro` |
 
 Expressões e argumentos são avaliados da esquerda para a direita. Operações numéricas retornam int, inclusive entre bytes; atribuição composta a byte guarda os oito bits inferiores. Deslocamentos exigem 0 a 63; o deslocamento à direita preserva o sinal. Textos usam igualdade de conteúdo; objetos e coleções usam identidade de referência.
 
@@ -156,7 +158,7 @@ Textos aceitam escapes `\n`, `\r`, `\t`, `\0`, `\"`, `\\`, `\xNN` e `\uNNNN`, co
 
 `print(valores...)` separa os valores por espaço e termina a linha; `print()` só quebra a linha. Objetos e ponteiros são mostrados como endereços hexadecimais. Booleanos preservam a saída histórica `aSsIs`/`fOdAsE`.
 
-`len(valor)` aceita text, Array e HashMap. `assert(condicao)` exige bool e encerra com status 70 se falso. Falhas de execução incluem divisão por zero, ponteiro nulo, deslocamento inválido, alocação inválida, índice fora do limite e precondição violada.
+`len(value)` aceita text, Array e HashMap. `assert(condicao)` exige bool e encerra com status 70 se falso. Falhas de execução incluem divisão por zero, ponteiro nulo, deslocamento inválido, alocação inválida, índice fora do limite e precondição violada.
 
 ## Comentários e documentação
 
@@ -164,9 +166,9 @@ Textos aceitam escapes `\n`, `\r`, `\t`, `\0`, `\"`, `\\`, `\xNN` e `\uNNNN`, co
 
 ```assis
 /// Retorna o quadrado em aritmética modular de 64 bits.
-/// @param valor Inteiro a multiplicar por ele mesmo.
-/// @return Resultado da multiplicação.
-assis quadrado(valor: int): int { return valor * valor; }
+/// @param value ParsedInt a multiplicar por ele mesmo.
+/// @return ValidationResult da multiplicação.
+assis quadrado(value: int): int { return value * value; }
 ```
 
 ## Importação e pacotes
@@ -183,12 +185,12 @@ Use `#yuri <biblioteca.assis>` e `#body src.pillow`, em linhas próprias. Pacote
 | `print`, `new`, `free`, `self` | `FODASE`, `fodase`, `foDASE`, `aSSIS` |
 | `true`, `false`, `null` | `aSsIs`, `fOdAsE`, `fOdase` |
 | `break`, `continue`, `extends` | `FODasE`, `FodASE`, `ASSIS_FODASE` |
-| `len(texto)` | `FODASE_fodase(texto)` |
+| `len(strings)` | `FODASE_fodase(strings)` |
 
 `ASSIS_fodase(bytes)` continua alocando *byte. `assis`, `ASSIS`, `assis_assis` e `assis_fodase` preservam sua grafia original.
 
 ## Continuação alpha.8
 
-Inteiros de largura fixa e f32/f64 têm [contrato numérico](NUMEROS.md). Módulos `namespace`/`public` e resolução offline com `assis.pkg`/`assis.lock` estão em [pacotes](PACOTES-E-NAMESPACES.md). `cli`, `json`, `tempo`, `log`, `iteradores` e `eventos` são bibliotecas opcionais novas, com empréstimos explícitos e limites documentados.
+Inteiros de largura fixa e f32/f64 têm [contrato numérico](NUMEROS.md). Módulos `namespace`/`public` e resolução offline com `assis.pkg`/`assis.lock` estão em [pacotes](PACOTES-E-NAMESPACES.md). `cli`, `json`, `time`, `log`, `iterators` e `events` são bibliotecas opcionais novas, com empréstimos explícitos e limites documentados.
 
 Comandos `fmt`, `test`, `doc`, LSP independente e símbolos/DWARF: [ferramentas](FERRAMENTAS-ALPHA.8.md). Relógio civil, espera, saída binária, cancelamento e persistência: [contratos](EVENTOS-E-PERSISTENCIA.md). Classes/Texto gerenciados gerais, variantes Move, capturas e slices gerais permanecem abertos; os caminhos C continuam com a fronteira legada documentada.

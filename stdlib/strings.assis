@@ -1,0 +1,242 @@
+/// Testa se texto começa com prefixo, comparando bytes UTF-8 até o primeiro byte zero. Custo O(len(prefixo)).
+fn starts_with(strings: text, prefixo: text): bool {
+    let size: int = len(prefixo);
+    if (size > len(strings)) { return false; }
+    let data: *byte = bytes(strings); let esperado: *byte = bytes(prefixo);
+    let i: int = 0;
+    while (i < size) { if (data[i] != esperado[i]) { return false; } i += 1; }
+    return true;
+}
+/// Testa se texto termina com sufixo, comparando bytes UTF-8. Sufixo vazio retorna true.
+fn ends_with(strings: text, sufixo: text): bool {
+    let size: int = len(sufixo); let start: int = len(strings) - size;
+    if (start < 0) { return false; }
+    let data: *byte = bytes(strings); let esperado: *byte = bytes(sufixo);
+    let i: int = 0;
+    while (i < size) { if (data[start + i] != esperado[i]) { return false; } i += 1; }
+    return true;
+}
+/// Busca trecho UTF-8 usando KMP em O(n+m) e O(m) de memória temporária. Trecho vazio retorna true.
+fn contains(strings: text, trecho: text): bool {
+    return find_text(strings, trecho) >= 0;
+}
+
+/// Retorna primeiro offset de bytes do trecho, ou -1. KMP O(n+m); trecho vazio retorna 0. Não altera nem retém os textos.
+fn find_text(strings: text, trecho: text): int {
+    let n: int = len(strings); let m: int = len(trecho);
+    if (m == 0) { return 0; } if (m > n) { return -1; }
+    let data: *byte = bytes(strings); let padrao: *byte = bytes(trecho);
+    let prefixos: *int = alloc<int>(m); let i: int = 1; let j: int = 0;
+    while (i < m) {
+        while (j > 0 && padrao[i] != padrao[j]) { j = prefixos[j - 1]; }
+        if (padrao[i] == padrao[j]) { j += 1; } prefixos[i] = j; i += 1;
+    }
+    i = 0; j = 0;
+    while (i < n) {
+        while (j > 0 && data[i] != padrao[j]) { j = prefixos[j - 1]; }
+        if (data[i] == padrao[j]) { j += 1; }
+        if (j == m) { free(prefixos); return i - m + 1; } i += 1;
+    }
+    free(prefixos); return -1;
+}
+
+/// String UTF-8 proprietário com crescimento amortizado. Campos _ são internos. visualizacao() é emprestada e invalida após mutação/dispose. Para liberar: objeto.dispose(); free(objeto).
+class String {
+    private let _dados: *byte;
+    private let _tamanho: int;
+    private let _capacidade: int;
+
+    /// Retorna tamanho em bytes, sem o terminador zero. O(1).
+    fn size(): int { return self._tamanho; }
+
+    /// Retorna text emprestado; não liberar nem guardar após mutações ou dispose do proprietário.
+    fn view(): text { if (self._dados == null) { return ""; } return text(self._dados); }
+
+    /// Reserva capacidade em bytes, incluindo terminador. Crescimento geométrico; invalida visualizações se realocar.
+    fn reserve(min: int): void {
+        assert(min >= 0); if (min <= self._capacidade) { return; }
+        let capacity: int = self._capacidade; if (capacity < 32) { capacity = 32; }
+        while (capacity < min) { if (capacity > 0x3fff_ffff_ffff_ffff) { capacity = min; } else { capacity *= 2; } }
+        let novos: *byte = alloc<byte>(capacity); let i: int = 0;
+        while (i < self._tamanho) { novos[i] = self._dados[i]; i += 1; }
+        free(self._dados); self._dados = novos; self._capacidade = capacity;
+    }
+
+    /// Acrescenta bytes UTF-8 em O(n) amortizado. Aceita o próprio texto, inclusive se o buffer crescer.
+    fn append(entrada: text): void {
+        let n: int = len(entrada); if (n == 0) { return; }
+        assert(n <= 0x7fff_ffff_ffff_fffe - self._tamanho);
+        let total: int = self._tamanho + n; let origem: *byte = bytes(entrada); let i: int = 0;
+        if (total + 1 > self._capacidade) {
+            let capacity: int = self._capacidade;
+            if (capacity < 32) { capacity = 32; }
+            while (capacity < total + 1) {
+                if (capacity > 0x3fff_ffff_ffff_ffff) { capacity = total + 1; } else { capacity *= 2; }
+            }
+            let novos: *byte = alloc<byte>(capacity);
+            while (i < self._tamanho) { novos[i] = self._dados[i]; i += 1; }
+            i = 0; while (i < n) { novos[self._tamanho + i] = origem[i]; i += 1; }
+            free(self._dados); self._dados = novos; self._capacidade = capacity;
+        } else { while (i < n) { self._dados[self._tamanho + i] = origem[i]; i += 1; } }
+        self._tamanho = total; self._dados[total] = byte(0);
+    }
+
+    /// Acrescenta byte não nulo. Use para ASCII ou bytes completos de UTF-8; a biblioteca não valida Unicode.
+    fn append_byte(value: byte): void {
+        assert(value != 0 && self._tamanho <= 0x7fff_ffff_ffff_fffd);
+        if (self._tamanho + 2 > self._capacidade) { self.reserve(self._tamanho + 2); }
+        self._dados[self._tamanho] = value; self._tamanho += 1; self._dados[self._tamanho] = byte(0);
+    }
+
+    /// Esvazia o texto preservando capacidade. Invalida visualizações anteriores.
+    fn clear(): void { self._tamanho = 0; if (self._dados != null) { self._dados[0] = byte(0); } }
+
+    /// Remove o último byte em O(1). Exige texto não vazio; invalida visualizações e pode cortar uma sequência UTF-8.
+    fn pop_byte(): void { assert(self._tamanho > 0); self._tamanho -= 1; self._dados[self._tamanho] = byte(0); }
+
+    /// Libera o buffer, permite repetição e reutilização do objeto. Não libera o próprio objeto.
+    fn dispose(): void { free(self._dados); self._dados = null; self._tamanho = 0; self._capacidade = 0; }
+}
+
+/// Copia intervalo de bytes em um String proprietário. Exige 0 <= inicio <= len e 0 <= quantidade <= len-inicio. Não ajusta fronteiras UTF-8.
+fn substring(entrada: text, start: int, count: int): String {
+    let n: int = len(entrada); assert(start >= 0 && start <= n && count >= 0 && count <= n - start);
+    let resultado: String = new String();
+    if (count == 0) { return resultado; }
+    let data: *byte = bytes(entrada); let buffer: *byte = alloc<byte>(count + 1); let i: int = 0;
+    while (i < count) { buffer[i] = data[start + i]; i += 1; }
+    resultado.append(text(buffer)); free(buffer); return resultado;
+}
+
+/// Remove espaços ASCII, tab, CR e LF das extremidades; preserva os bytes UTF-8 internos. Retorna String proprietário.
+fn trim(entrada: text): String {
+    let data: *byte = bytes(entrada); let start: int = 0; let end: int = len(entrada);
+    while (start < end && (data[start] == 32 || data[start] == 9 || data[start] == 10 || data[start] == 13)) { start += 1; }
+    while (end > start && (data[end - 1] == 32 || data[end - 1] == 9 || data[end - 1] == 10 || data[end - 1] == 13)) { end -= 1; }
+    return substring(entrada, start, end - start);
+}
+
+/// Concatena duas entradas, copiando-as para um String independente. O(n+m).
+fn concat(a: text, b: text): String {
+    let resultado: String = new String(); resultado.append(a); resultado.append(b); return resultado;
+}
+
+/// Junta textos com separador, copiando os bytes. Array vazio produz String vazio.
+fn join(partes: Array<text>, separador: text): String {
+    let resultado: String = new String();
+    for (let i: int = 0; i < len(partes); i += 1) {
+        if (i > 0) { resultado.append(separador); } resultado.append(partes[i]);
+    }
+    return resultado;
+}
+
+/// Divide por separador não vazio em O(n+m), com KMP. Preserva partes vazias.
+/// Cada String do array possui seus bytes: dispose/free em cada parte e free no array.
+fn split(entrada: text, separador: text): Array<String> {
+    let n: int = len(entrada); let m: int = len(separador); assert(m > 0);
+    let data: *byte = bytes(entrada); let padrao: *byte = bytes(separador);
+    let prefixos: *int = alloc<int>(m); defer free(prefixos);
+    let j: int = 0;
+    for (let i: int = 1; i < m; i += 1) {
+        while (j > 0 && padrao[i] != padrao[j]) { j = prefixos[j - 1]; }
+        if (padrao[i] == padrao[j]) { j += 1; } prefixos[i] = j;
+    }
+    let resultado: Array<String> = new Array<String>(); let start: int = 0; j = 0;
+    for (let i: int = 0; i < n; i += 1) {
+        while (j > 0 && data[i] != padrao[j]) { j = prefixos[j - 1]; }
+        if (data[i] == padrao[j]) { j += 1; }
+        if (j == m) {
+            resultado.push(substring(entrada, start, i - m + 1 - start));
+            start = i + 1; j = 0;
+        }
+    }
+    resultado.push(substring(entrada, start, n - start)); return resultado;
+}
+
+/// Substitui ocorrências sem sobreposição. Busca não vazia; substituto pode ser vazio.
+/// Retorna String independente; libera todas as partes temporárias.
+fn replace(entrada: text, busca: text, substituto: text): String {
+    let partes: Array<String> = split(entrada, busca); let resultado: String = new String();
+    for (let i: int = 0; i < len(partes); i += 1) {
+        if (i > 0) { resultado.append(substituto); }
+        let parte: String = partes[i]; resultado.append(parte.view()); parte.dispose(); free(parte);
+    }
+    free(partes); return resultado;
+}
+
+/// Lê UTF-8 da entrada padrão até LF ou EOF, removendo um CR final.
+/// EOF sem dados retorna String vazio. Uma leitura por byte; para volume use ler_bytes.
+fn read_line(): String {
+    let resultado: String = new String(); let buffer: *byte = alloc<byte>(1); defer free(buffer);
+    while (true) {
+        let lidos: int = read_bytes(buffer, 1); assert(lidos >= 0, "falha ao ler entrada padrao");
+        if (lidos == 0 || buffer[0] == 10) { break; }
+        resultado.append_byte(buffer[0]);
+    }
+    let n: int = resultado.size();
+    if (n > 0 && resultado.view()[n - 1] == 13) { resultado.pop_byte(); }
+    return resultado;
+}
+
+// Compatibilidade com 2.x
+miyabi Predicados de strings em bytes UTF-8; respeitam o primeiro byte nulo.
+/// Testa prefixo por comparação de bytes UTF-8 (API legada de starts_with).
+fn Fodase_assis_fodase(AssisAssis: FoDaSe, AssisFodase: FoDaSe): FodAsE {
+    Assis FodaseAssis: AssIs = FODASE_fodase(AssisFodase);
+    assIS (FodaseAssis > FODASE_fodase(AssisAssis)) { Fodase fOdAsE; }
+    Assis FodaseFodase: AssIs = 0;
+    ASSis (FodaseFodase < FodaseAssis) {
+        assIS (AssisAssis[FodaseFodase] != AssisFodase[FodaseFodase]) { Fodase fOdAsE; }
+        FodaseFodase += 1;
+    }
+    Fodase aSsIs;
+}
+/// Testa sufixo por comparação de bytes UTF-8 (API legada de ends_with).
+fn Fodase_fodase_assis(AssisAssis: FoDaSe, AssisFodase: FoDaSe): FodAsE {
+    Assis FodaseAssis: AssIs = FODASE_fodase(AssisAssis) - FODASE_fodase(AssisFodase);
+    assIS (FodaseAssis < 0) { Fodase fOdAsE; }
+    Assis FodaseFodase: AssIs = 0;
+    ASSis (FodaseFodase < FODASE_fodase(AssisFodase)) {
+        assIS (AssisAssis[FodaseAssis + FodaseFodase] != AssisFodase[FodaseFodase]) { Fodase fOdAsE; }
+        FodaseFodase += 1;
+    }
+    Fodase aSsIs;
+}
+/// Step UTF-8 estrito: proximo é um offset de bytes; ponto pode ser U+0000.
+value struct Utf8Step { let valid: bool; let codepoint: int; let next: int; }
+
+/// Decodifica um ponto de código dentro do comprimento explícito de um buffer gerenciado.
+/// Rejeita truncamento, overlong, surrogates, continuações isoladas e valores acima de U+10FFFF.
+safe fn utf8_next(borrow data: *byte, size: int, start: int): Utf8Step {
+    if (size < 0 || size > len(data) || start < 0 || start >= size) { return new Utf8Step(false, 0, start); }
+    let a: int = int(data[start]);
+    if (a < 128) { return new Utf8Step(true, a, start + 1); }
+    let count: int = 0; let codepoint: int = 0; let min: int = 0;
+    if (a >= 194 && a <= 223) { count = 2; codepoint = a & 31; min = 128; }
+    else if (a >= 224 && a <= 239) { count = 3; codepoint = a & 15; min = 2048; }
+    else if (a >= 240 && a <= 244) { count = 4; codepoint = a & 7; min = 65536; }
+    else { return new Utf8Step(false, 0, start); }
+    if (count > size - start) { return new Utf8Step(false, 0, start); }
+    for (let i: int = 1; i < count; i += 1) {
+        let b: int = int(data[start + i]);
+        if (b < 128 || b > 191) { return new Utf8Step(false, 0, start); }
+        codepoint = (codepoint << 6) | (b & 63);
+    }
+    if (codepoint < min || codepoint > 1114111 || (codepoint >= 55296 && codepoint <= 57343)) { return new Utf8Step(false, 0, start); }
+    return new Utf8Step(true, codepoint, start + count);
+}
+
+/// Conta pontos de código (não grafemas); retorna -1 se o intervalo não for UTF-8 válido.
+safe fn utf8_count(borrow data: *byte, size: int): int {
+    if (size < 0 || size > len(data)) { return -1; }
+    let indice: int = 0; let count: int = 0;
+    while (indice < size) {
+        val step: Utf8Step = utf8_next(data, size, indice);
+        if (!step.valid) { return -1; }
+        indice = step.next; count += 1;
+    }
+    return count;
+}
+
+/// Valida bytes sem interpretar NUL como terminador; intervalo vazio é válido.
+safe fn utf8_valid(borrow data: *byte, size: int): bool { return utf8_count(data, size) >= 0; }

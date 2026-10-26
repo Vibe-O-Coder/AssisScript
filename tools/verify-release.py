@@ -44,13 +44,18 @@ with zipfile.ZipFile(root / 'dist' / f'assisscript-{version}.vsix') as archive:
     for name in ['PROGRESSO.md', 'PROGRESSO.json']:
         assert archive.read('extension/docs/' + name) == (root / 'docs' / name).read_bytes()
     for platform_name, binary_name in [('windows', 'assis.exe'), ('linux', 'assis')]:
-        report_path = f'extension/benchmarks/resultados/evolucao-alpha9-{platform_name}'
+        report_path = f'extension/benchmarks/resultados/evolucao-alpha10-{platform_name}'
         assert report_path + '.md' in names
         report = json.loads(archive.read(report_path + '.json'))
         assert report['compilerSha256'] == hashlib.sha256(archive.read('extension/bin/' + binary_name)).hexdigest()
         assert report['completionMetricVersion'] == version and report['completionEstimatePercent'] == estimate
         assert len(report['nativeFeatures']) == 6
+        optimization=json.loads(archive.read(f'extension/benchmarks/resultados/optimization-alpha10-{platform_name}.json'))
+        assert optimization['compilers']['candidate']['sha256']==hashlib.sha256(archive.read('extension/bin/'+binary_name)).hexdigest()
+        assert optimization['max_stride_ratio']<=5
     assert all(not Path(name).is_absolute() and '..' not in Path(name).parts for name in names)
+    for name in ['LICENSE','THIRD_PARTY_NOTICES.md','README.en.md','README.pt-BR.md','README.es.md','docs/LICENSE','docs/third-party/GCC-RUNTIME-EXCEPTION.txt','docs/third-party/GPL-3.0.txt','docs/third-party/MinGW-w64-NOTICES.txt']:
+        assert archive.read('extension/'+name)==(root/name).read_bytes(),name
     with tempfile.TemporaryDirectory(prefix='assis-package-') as temp:
         archive.extractall(temp)
         folder = Path(temp) / 'extension'
@@ -81,11 +86,13 @@ with zipfile.ZipFile(root / 'dist' / f'assisscript-{version}.vsix') as archive:
             assert (result.returncode,result.stdout,result.stderr)==(0,expected,b''),(name,result.stderr.decode())
         result=subprocess.run([compiler,'run',folder/'exemplos/25_recursos_e_unicode.assis','--safe','--debug'],capture_output=True,timeout=30)
         assert (result.returncode,result.stdout,result.stderr)==(0,b'4 2 195 169\n0 4\n',b''),result.stderr.decode()
+        result=subprocess.run([compiler,'run',folder/'exemplos/26_english_api.assis','--safe','--debug'],capture_output=True,timeout=30)
+        assert (result.returncode,result.stdout,result.stderr)==(0,b'2\n4\n6\n3\n',b''),result.stderr.decode()
         config=folder/('config.exe' if sys.platform=='win32' else 'config')
         result=subprocess.run([compiler,'build',folder/'exemplos/24_config_json.assis','--safe','--debug','-o',config],capture_output=True,timeout=30)
         assert result.returncode==0,result.stderr.decode()
         incoming,committed,temporary=folder/'entrada á.json',folder/'persistida á.json',folder/'temporario á.json'
-        incoming.write_bytes(b'{"valor":42}')
+        incoming.write_bytes(b'{"value":42}')
         result=subprocess.run([config,incoming,committed,temporary],capture_output=True,timeout=30)
         assert result.returncode==0 and result.stderr==b'',result.stderr.decode()
         assert committed.read_bytes()==incoming.read_bytes() and not temporary.exists()
@@ -102,7 +109,7 @@ with zipfile.ZipFile(root / 'dist' / f'assisscript-{version}.vsix') as archive:
         result = subprocess.run([compiler, 'build', folder / 'exemplos/21_relatorio_csv_stream.assis', '--safe', '--debug', '-o', app], capture_output=True, timeout=30)
         assert result.returncode == 0, result.stderr.decode()
         input_file, output_file = folder / 'entrada.csv', folder / 'saida.csv'
-        input_file.write_bytes(b'valor\n1\n41\n')
+        input_file.write_bytes(b'value\n1\n41\n')
         result = subprocess.run([app, input_file, output_file], capture_output=True, timeout=30)
         assert (result.returncode, result.stdout, result.stderr) == (0, b'Registros 2 total 42\n', b''), result.stderr.decode()
         assert output_file.read_bytes() == b'registros,total\n2,42\n'
@@ -111,7 +118,7 @@ with zipfile.ZipFile(root / 'dist' / f'assisscript-{version}.vsix') as archive:
             assert result.returncode == 0, result.stderr.decode()
         for source, message in [
             ('assis assis_assis():int{own a:Array<int>=[1];a._length=999999;return 0;}', 'campo privado'),
-            ('pure assis f():int{return agora();}assis assis_assis():int{return 0;}', 'pure'),
+            ('pure assis f():int{return monotonic_ms();}assis assis_assis():int{return 0;}', 'pure'),
             ('assis assis_assis():int{val n:int=1;n=2;return 0;}', 'imutável'),
             ('pure assis f<T>(v:T):T{return v;}assis assis_assis():int{print(f::<text>("a"));return 0;}', 'pure'),
             ('assis f<T>(a:Array<T>):int{return a._length;}assis assis_assis():int{let a:Array<int>=[1];return f::<int>(a);}', 'campo privado'),
@@ -124,7 +131,7 @@ with zipfile.ZipFile(root / 'dist' / f'assisscript-{version}.vsix') as archive:
 with zipfile.ZipFile(root / 'dist' / f'AssisScript-{version}-windows-linux.zip') as archive:
     assert archive.testzip() is None
     for platform_name in ['windows','linux']:
-        report=json.loads(archive.read(f'AssisScript/benchmarks/resultados/evolucao-alpha9-{platform_name}.json'))
+        report=json.loads(archive.read(f'AssisScript/benchmarks/resultados/evolucao-alpha10-{platform_name}.json'))
         for name,digest in report['sourceHashes'].items():
             archive_name='AssisScript/'+name.replace(chr(92),'/')
             assert hashlib.sha256(archive.read(archive_name)).hexdigest()==digest, ('fonte de medição divergente',name)

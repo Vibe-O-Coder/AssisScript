@@ -34,7 +34,7 @@ def instructions(binary,header):
 report=dict(compilerSha256=hashlib.sha256(compiler.read_bytes()).hexdigest(),baselineSha256=hashlib.sha256(baseline.read_bytes()).hexdigest(),iterations=count,samples=samples,heap=[],compilerStartup=[])
 with tempfile.TemporaryDirectory(prefix='assis-investigation-') as temp:
     folder=Path(temp);file=folder/'heap.assis';file.write_text('struct Par{let x:int;let y:int;}assis item(n:int):own Par{return new Par(n,n+1);}assis assis_assis():int{let total:int=0;for(let i:int=0;i<'+str(count)+';i+=1){own p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}',encoding='utf-8')
-    variants=[('alpha7',baseline),('atual',compiler)]
+    variants=[('alpha7',baseline),('current',compiler)]
     paths=[]
     for name,cc in variants:
         binary=folder/(name+('.exe' if os.name=='nt' else ''));run([cc,'build',file,'-o',binary]);paths.append(binary);report['heap'].append(dict(variant=name,samplesMs=[],binarySha256=hashlib.sha256(binary.read_bytes()).hexdigest()))
@@ -54,9 +54,9 @@ with tempfile.TemporaryDirectory(prefix='assis-investigation-') as temp:
     for r in report['compilerStartup']:r['versionMedianMs']=statistics.median(r['versionMs']);r['checkMedianMs']=statistics.median(r['checkMs'])
     if os.name!='nt':
         old=instructions(paths[0],baseline.parent.parent/'src/runtime_blob.h');new=instructions(paths[1],ROOT/'src/runtime_blob.h');report['normalizedUserInstructionsEqual']=old==new
-        report['userInstructionCounts']=[len(old),len(new)];report['instructions']={'alpha7':old,'atual':new}
+        report['userInstructionCounts']=[len(old),len(new)];report['instructions']={'alpha7':old,'current':new}
 args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
 text='# Investigação alpha.8\n\nOnze pares alternados, 40 milhões de itens por processo, uma rodada de aquecimento. N² é conferido independentemente; os checks continuam ativos.\n\n| Variante | Heap (ms) | Version compilador (ms) | Check compilador (ms) |\n| --- | ---: | ---: | ---: |\n'
 for i,r in enumerate(report['heap']):s=report['compilerStartup'][i];text+=f'| {r["variant"]} | {r["medianMs"]:.3f} | {s["versionMedianMs"]:.3f} | {s["checkMedianMs"]:.3f} |\n'
-if 'normalizedUserInstructionsEqual' in report:text+=f'\nInstruções de funções do usuário iguais após normalizar endereços de saltos/chamadas: {report["normalizedUserInstructionsEqual"]}. O layout/endereço do código mudou; essa comparação não prova causalidade das diferenças de tempo.\n'
+if 'normalizedUserInstructionsEqual' in report:text+=f'\nInstruções de funções do usuário iguais após normalizar endereços de saltos/chamadas: {report["normalizedUserInstructionsEqual"]}. O layout/endereço do código mudou; essa comparação não prova causalidade das diferenças de time.\n'
 text+='\nVersion/check medem cinco subprocessos por amostra e apresentam média por subprocesso. Frequência, escalonamento Windows/WSL e antivírus não foram controlados. Dados brutos e hashes no JSON; os resultados iniciais permanecem preservados.\n';args.output.with_suffix('.md').write_text(text,encoding='utf-8',newline='\n');print(args.output)

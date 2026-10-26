@@ -16,7 +16,7 @@ function reject(source, message) { const r = run(['check', write('invalid.assis'
 const main = body => `assis assis_assis(): int { ${body} return 0; }`;
 
 test('nomes livres, palavras legíveis e métodos preservam herança virtual', () => {
-    execute(`ASSIS Pessoa { let idade: int; assis assis_fodase(valor: int): void { self.idade = valor; } assis ler(): int { return self.idade; } }
+    execute(`ASSIS Pessoa { let idade: int; assis assis_fodase(value: int): void { self.idade = value; } assis ler(): int { return self.idade; } }
 ASSIS Especial extends Pessoa { assis ler(): int { return self.idade * 2; } }
 ${main('let pessoa_42: Pessoa = new Especial(21); print(pessoa_42.ler()); free(pessoa_42);')}`, '42\n');
 });
@@ -30,13 +30,13 @@ a.clear(); assert(len(a) == 0); a.reserve(2000); a.push(42); a.dispose(); a.disp
 });
 test('literais e argumentos aninhados, ponteiros, byte, bool e text', () => {
     execute(`assis soma(a: Array<int>): int { let v: int = a[0] + a[1]; free(a); return v; }
-assis criar(): Array<int> { return [8, 9]; }
+assis create(): Array<int> { return [8, 9]; }
 ${main(`let m: Array<Array<int>> = [[1, 2], [], [3]]; m[1].push(4); assert(m[1][0] == 4);
 let b: Array<byte> = [byte(255)]; b[0] += 2; assert(b[0] == byte(1));
 let flags: Array<bool> = [true, false]; flags[1] = true; assert(flags[0] && flags[1]);
 let texts: Array<text> = ["ação", ""]; assert(texts.contains("ação"));
 let x: int = 5; let pointers: Array<*int> = [&x]; *pointers[0] += 2;
-let returned: Array<int> = criar(); print(soma([20, 22]), returned.pop(), x);
+let returned: Array<int> = create(); print(soma([20, 22]), returned.pop(), x);
 free(returned); free(pointers); free(texts); free(flags); free(b); free(m[0]); free(m[1]); free(m[2]); free(m);`)}`, '42 9 7\n');
 });
 test('hashmap trata colisões, tombstones, crescimento, substituição e chave mínima', () => {
@@ -71,10 +71,10 @@ let q: Pessoa = new Pessoa("Miyabi", 24, [true]); let alias: Pessoa = q; alias.i
     reject('struct A { assis metodo(): void {} }', /somente campos/);
     reject('struct A {} ASSIS B extends A {}', /não pode ser classe base/);
 });
-test('erros de tipos e especializações são rejeitados antes de gerar binário', () => {
+test('errors de tipos e especializações são rejeitados antes de gerar binário', () => {
     const cases = [
         ['let a: Array<int> = [true];', /não é possível/],
-        ['let a: Array<int> = []; a.push("texto");', /não é possível/],
+        ['let a: Array<int> = []; a.push("strings");', /não é possível/],
         ['let a: Array<void> = [];', /não aceitam void/],
         ['let a: HashMap<Array<int>, int> = null;', /chave de HashMap/],
         ['let a: Array<TipoAusente> = null;', /tipo desconhecido/],
@@ -119,19 +119,19 @@ test('#yuri e #body resolvem fontes transitivos e pacotes pontuados', () => {
 });
 test('diretivas malformadas, pacotes com código e ciclos são diagnosticados', () => {
     for (const [source, message] of [
-        ['#yuri <std/texto>', /extensão .assis/], ['#yuri "std/texto.assis"', /exige </],
-        ['#yuri <std/texto.assis', /fechamento/], ['#body src.txt', /extensão .pillow/],
+        ['#yuri <std/strings>', /extensão .assis/], ['#yuri "std/strings.assis"', /exige </],
+        ['#yuri <std/strings.assis', /fechamento/], ['#body src.txt', /extensão .pillow/],
         ['#body', /extensão .pillow/], ['#outra', /desconhecida/],
-        ['#yuri <std/texto.assis> assis f(): int { return 0; }', /linha própria/]
+        ['#yuri <std/strings.assis> assis f(): int { return 0; }', /linha própria/]
     ]) reject(source, message);
     const code = write('bad.pillow', 'assis algo(): int { return 0; }'); const bad = run(['check', code, '--library']); assert.equal(bad.status, 1); assert.match(bad.stderr, /somente #yuri e #body/);
     const a = write('a.pillow', '#body b.pillow\n'); write('b.pillow', '#body a.pillow\n');
     const r = run(['check', a, '--library']); assert.equal(r.status, 1); assert.match(r.stderr, /ciclo de importação/);
 });
 test('bibliotecas legíveis e projeto novo são executáveis sem ferramentas externas', () => {
-    execute('#yuri <std/matematica.assis>\n#yuri <std/texto.assis>\n#yuri <std/memoria.assis>\n' + main(`assert(minimo(2, 3) == 2); assert(maximo(2, 3) == 3); assert(limitar(99, 0, 10) == 10); assert(absoluto(-42) == 42);
-assert(comeca_com("ação", "aç")); assert(termina_com("ação", "ão")); assert(contem("ação", "çã")); assert(!contem("ação", "xyz"));
-let a: *byte = alloc<byte>(4); let b: *byte = alloc<byte>(4); preencher(a, 4, byte(255)); copiar(b, a, 4); assert(b[3] == 255); free(a); free(b);`));
+    execute('#yuri <std/math.assis>\n#yuri <std/strings.assis>\n#yuri <std/memory.assis>\n' + main(`assert(min(2, 3) == 2); assert(max(2, 3) == 3); assert(clamp(99, 0, 10) == 10); assert(abs(-42) == 42);
+assert(starts_with("ação", "aç")); assert(ends_with("ação", "ão")); assert(contains("ação", "çã")); assert(!contains("ação", "xyz"));
+let a: *byte = alloc<byte>(4); let b: *byte = alloc<byte>(4); fill(a, 4, byte(255)); copy(b, a, 4); assert(b[3] == 255); free(a); free(b);`));
     const folder = path.join(temp, 'novo-projeto'); assert.equal(run(['new', folder]).status, 0);
     const r = run(['run'], { cwd: folder, env: { ...process.env, PATH: '' } }); assert.equal(r.status, 0, r.stderr); assert.equal(r.stdout, 'Assis, mundo. Fodase. 42\n');
     assert(fs.existsSync(path.join(folder, 'src.pillow')));

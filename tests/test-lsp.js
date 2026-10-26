@@ -17,7 +17,7 @@ test('namespaces no editor conservam privacidade, tipos e navegação', () => {
     assert.equal(language.resolveSymbol(a,a.text.lastIndexOf('hidden(n)'),[a,b])?.name,'hidden');
 });
 
-test('LSP independente: framing, UTF-16, overlays, navegação e correção de erros', async () => {
+test('LSP independente: framing, UTF-16, overlays, navegação e correção de errors', async () => {
     const folder = fs.mkdtempSync(path.join(os.tmpdir(),'assis-lsp-test-'));
     const file = path.join(folder,'assis.assis'), uri=pathToFileURL(file).href;
     const original = 'pure assis dobro(x:int):int{return x*2;}\nassis assis_assis():int{print("😀");return dobro(21);}\n';fs.writeFileSync(file,original);

@@ -14,7 +14,7 @@ expect() {
     [ "$actual" = "$wanted" ] || { cat "$tmp/err" >&2; echo "Status $actual, esperado $wanted: $*" >&2; exit 1; }
     count=$((count+1))
 }
-expect 0 "$assis" check "$root/stdlib/matematica.assis" --library
+expect 0 "$assis" check "$root/stdlib/math.assis" --library
 printf 'importa "b";\n' > "$tmp/a.assis"
 printf 'importa "a";\n' > "$tmp/b.assis"
 expect 1 "$assis" check "$tmp/a.assis" --diagnostics=json
@@ -45,7 +45,7 @@ cmp "$root/docs/PROGRESSO.json" "$tmp/install/.local/share/assisscript/docs/PROG
 printf '%s\n' pessoal > "$tmp/install/.local/share/assisscript/docs/pessoal.txt"
 HOME="$tmp/install" sh "$root/desinstalar.sh" > "$tmp/remove-out"
 [ -f "$tmp/install/.local/share/assisscript/docs/pessoal.txt" ]
-for marker in 'AssisScript 2.2.0' 'AssisScript 3.2.0' 'AssisScript 3.3.0-alpha.1' 'AssisScript 3.3.0-alpha.2' 'AssisScript 3.3.0-alpha.3' 'AssisScript 3.3.0-alpha.4' 'AssisScript 3.3.0-alpha.5' 'AssisScript 3.3.0-alpha.6' 'AssisScript 3.3.0-alpha.7' 'AssisScript 3.3.0-alpha.8' 'AssisScript 3.3.0-alpha.9'; do
+for marker in 'AssisScript 2.2.0' 'AssisScript 3.2.0' 'AssisScript 3.3.0-alpha.1' 'AssisScript 3.3.0-alpha.2' 'AssisScript 3.3.0-alpha.3' 'AssisScript 3.3.0-alpha.4' 'AssisScript 3.3.0-alpha.5' 'AssisScript 3.3.0-alpha.6' 'AssisScript 3.3.0-alpha.7' 'AssisScript 3.3.0-alpha.8' 'AssisScript 3.3.0-alpha.9' 'AssisScript 3.3.0-alpha.10'; do
     prefix="$tmp/marker"
     mkdir -p "$prefix/bin" "$prefix/share/assisscript"
     printf '%s\n' "$marker" > "$prefix/share/assisscript/INSTALADO"

@@ -4,8 +4,16 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const l = require('../src/language');
 
+test('canonical English functions, classes, constructors and imports are indexed', () => {
+    const source = 'import "helper.assis";class Box<T>{let item:T;fn init(item:T):void{self.item=item;}fn get():T{return self.item;}}pure fn double(value:int):int{return value*2;}fn main():int{val callback:pure fn(int):int=double;return callback(21);}';
+    const model = l.analyze(source, 'english.assis');
+    for (const name of ['Box', 'init', 'get', 'double', 'main', 'callback']) assert(model.symbols.some(s => s.name === name), name);
+    assert.equal(model.symbols.find(s => s.name === 'init').params[0].type, 'T');
+    assert.equal(model.imports[0].name, 'helper.assis');
+});
+
 test('receptores não viram argumentos explícitos e fatias conservam o tipo', () => {
-    const text='ASSIS C{own b:*byte;assis ver(borrow self,n:int):borrow(self) slice<byte>{return fatia(self.b,0,n);}}';
+    const text='ASSIS C{own b:*byte;assis ver(borrow self,n:int):borrow(self) slice<byte>{return slice_of(self.b,0,n);}}';
     const m=l.analyze(text,'slice.assis');const fn=m.symbols.find(s=>s.name==='ver');
     assert.equal(fn.receiver,'borrow self');assert.equal(fn.params.length,1);assert.equal(fn.params[0].name,'n');
     assert.match(fn.type,/borrow\(self\) slice<byte>/);assert.equal(fn.safe,true);
@@ -14,15 +22,15 @@ test('receptores não viram argumentos explícitos e fatias conservam o tipo', (
 });
 
 test('classes genéricas substituem métodos, construtores e bases antes da navegação', () => {
-    const text = 'ASSIS Base<A,B>{private let segredo:A;let valor:B;assis ler(v:A):B{return self.valor;}}' +
+    const text = 'ASSIS Base<A,B>{private let segredo:A;let value:B;assis ler(v:A):B{return self.value;}}' +
         'ASSIS Filho<T,U> extends Base<U,T>{private let local:T;assis assis_fodase(v:T):void{self.local=v;}' +
-        'assis obter():T{return self.local;}}' +
-        'assis assis_assis():int{let c:Filho<int,bool>=new Filho<int,bool>(42);c.ler(true);print(c.valor,c.obter());return 0;}';
+        'assis get():T{return self.local;}}' +
+        'assis assis_assis():int{let c:Filho<int,bool>=new Filho<int,bool>(42);c.ler(true);print(c.value,c.get());return 0;}';
     const m = l.analyze(text, 'classes.assis');
     const child = m.symbols.find(s => s.name === 'Filho');
     assert.equal(child.base, 'Base<U, T>');
     assert.equal(m.symbols.find(s => s.name === 'local').kind, 'field');
-    assert.equal(l.resolveSymbol(m, text.indexOf('c.valor') + 2, [m]).type, 'int');
+    assert.equal(l.resolveSymbol(m, text.indexOf('c.value') + 2, [m]).type, 'int');
     const read = l.resolveSymbol(m, text.indexOf('c.ler') + 2, [m]);
     assert.equal(read.type, 'int'); assert.equal(read.params[0].type, 'bool');
     assert.match(l.signatureAt(m, text.indexOf('(true)') + 2, [m]).label, /ler\(v: bool\): int/);
@@ -36,18 +44,18 @@ test('classes genéricas substituem métodos, construtores e bases antes da nave
 });
 
 test('generics do usuário preservam navegação, campos concretos e assinaturas', () => {
-    const text = 'struct Caixa<T> { let valor: T; private let segredo: int; } struct Par<A,B> { let a:A; let b:B; } pure assis id<T>(valor:T):T { return valor; } assis assis_assis():int { let c:Caixa<Array<int>>=new Caixa<Array<int>>([1]); print(c.valor); id::<HashMap<text, int>>(new HashMap<text, int>()); new Caixa<int>(42); return 0; }';
+    const text = 'struct Caixa<T> { let value: T; private let segredo: int; } struct Par<A,B> { let a:A; let b:B; } pure assis id<T>(value:T):T { return value; } assis assis_assis():int { let c:Caixa<Array<int>>=new Caixa<Array<int>>([1]); print(c.value); id::<HashMap<text, int>>(new HashMap<text, int>()); new Caixa<int>(42); return 0; }';
     const model = l.analyze(text, 'main.assis');
     const identity = model.symbols.find(s => s.name === 'id');
     assert.deepEqual(identity.typeParams, ['T']); assert.match(identity.label, /^pure id<T>/);
     assert.equal(l.resolveSymbol(model, text.indexOf('id::<') + 1, [model]).start, identity.start);
-    assert.equal(l.resolveSymbol(model, text.indexOf('c.valor') + 2, [model]).type, 'Array<int>');
+    assert.equal(l.resolveSymbol(model, text.indexOf('c.value') + 2, [model]).type, 'Array<int>');
     assert.deepEqual(l.members([model], 'Par<byte, bool>').map(s => s.type), ['byte', 'bool']);
     assert(!l.members([model], 'Caixa<int>').some(s => s.name === 'segredo'));
     const call = l.signatureAt(model, text.indexOf('new HashMap<text, int>()') + 1, [model]);
-    assert.match(call.label, /id<HashMap<text, int>>\(valor: HashMap<text, int>\)/);
+    assert.match(call.label, /id<HashMap<text, int>>\(value: HashMap<text, int>\)/);
     const constructor = l.signatureAt(model, text.lastIndexOf('42)') + 1, [model]);
-    assert.match(constructor.label, /new Caixa<int>\(valor: int\)/);
+    assert.match(constructor.label, /new Caixa<int>\(value: int\)/);
     const nested = 'struct C<T>{let v:T;}assis id<T>(v:T):T{return v;}assis assis_assis():int{print(id::<C<int>>(new C<int>(1)).v);return 0;}';
     const n = l.analyze(nested, 'nested.assis');
     assert.equal(l.resolveSymbol(n, nested.lastIndexOf('.v') + 1, [n]).type, 'int');
@@ -73,7 +81,7 @@ test('ownership e div têm referências e for limita a variável de inicializaç
     assert.equal(l.resolveSymbol(model,text.indexOf('b.push'),[model]).type,'Array<int>');
     assert(l.visibleSymbols(model,text.indexOf('print(i)'),[model]).some(s=>s.name==='i'));
     assert(!l.visibleSymbols(model,text.indexOf('print(a[0])'),[model]).some(s=>s.name==='i'));
-    for(const word of ['own','borrow','mut','move','defer','div','for','ler_bytes','agora'])assert(l.keywords[word],word);
+    for(const word of ['own','borrow','mut','move','defer','div','for','read_bytes','monotonic_ms'])assert(l.keywords[word],word);
 });
 test('ignora strings e comentários aninhados, preservando posições UTF-16', () => {
     const text = 'miyabi assis FodaseAssis() {}\r\nte te interno to externo to\nassis AssisAssis(): FoDaSe { Fodase "😀 te miyabi"; }';
@@ -124,9 +132,9 @@ test('literais, construtores genéricos e alloc não atrapalham ajuda de parâme
     assert.equal(l.resolveSymbol(c, ctor.indexOf('.push') + 1, [c]).params[0].type, 'int');
 });
 test('documentação ///, miyabi e bloco inclui parâmetros e retorno de bibliotecas', () => {
-    const source = '/// Retorna o dobro.\n/// @param valor Inteiro de entrada.\n/// @return Inteiro multiplicado por dois.\nassis dobro(valor: int): int { return valor * 2; }\n/** Retorna o triplo. */\nassis triplo(valor: int): int { return valor * 3; }';
+    const source = '/// Retorna o dobro.\n/// @param value Inteiro de entrada.\n/// @return Inteiro multiplicado por dois.\nassis dobro(valor: int): int { return valor * 2; }\n/** Retorna o triplo. */\nassis triplo(valor: int): int { return valor * 3; }';
     const m = l.analyze(source, 'lib.assis');
-    assert.match(m.symbols.find(s => s.name === 'dobro').documentation, /@param valor/);
+    assert.match(m.symbols.find(s => s.name === 'dobro').documentation, /@param value/);
     assert.match(m.symbols.find(s => s.name === 'triplo').documentation, /Retorna o triplo/);
     assert.match(l.builtinSignatures.len.documentation, /HashMap/);
 });
@@ -138,29 +146,29 @@ test('#body, #yuri e caminhos pontuados coletam docs de dependências não salva
 });
 test('tipos de callback preservam parâmetros, retorno, efeitos e assinatura indireta', () => {
     const text = 'pure assis aplicar<T>(f:pure assis(T, T):T,v:T):T{return f(v,v);}' +
-        'pure assis obter():pure assis(int):int{return dobro;}' +
+        'pure assis get():pure assis(int):int{return dobro;}' +
         'assis assis_assis():int{val f:pure assis(int, int):int=somar;return f(1,2);}';
     const m = l.analyze(text, 'callbacks.assis');
     const apply = m.symbols.find(s => s.name === 'aplicar');
     assert.deepEqual(apply.params.map(p => p.type), ['pure assis(T, T): T', 'T']);
-    assert.equal(m.symbols.find(s => s.name === 'obter').type, 'pure assis(int): int');
+    assert.equal(m.symbols.find(s => s.name === 'get').type, 'pure assis(int): int');
     assert.deepEqual(l.signatureAt(m, text.lastIndexOf('2)') + 1, [m]).params, ['arg1: int', 'arg2: int']);
     assert.equal(l.signatureAt(m, text.lastIndexOf('2)') + 1, [m]).active, 1);
     assert.equal(l.resolveSymbol(m, text.lastIndexOf('f(1'), [m]).immutable, true);
 });
 
 test('ownership em parâmetros e retornos conserva contratos e navegação', () => {
-    const text = 'struct Caixa<T>{own valor:T;}safe assis criar<T>(own v:T):own Caixa<T>{return new Caixa<T>(move(v));}' +
+    const text = 'struct Caixa<T>{own value:T;}safe assis create<T>(own v:T):own Caixa<T>{return new Caixa<T>(move(v));}' +
         'safe assis ver(borrow c:Caixa<int>):borrow(c) Caixa<int>{return c;}' +
-        'safe assis assis_assis():int{own c:Caixa<int>=criar::<int>(42);print(ver(c).valor);return 0;}';
-    const m = l.analyze(text, 'vidas.assis'), create = m.symbols.find(s => s.name === 'criar');
+        'safe assis assis_assis():int{own c:Caixa<int>=create::<int>(42);print(ver(c).value);return 0;}';
+    const m = l.analyze(text, 'vidas.assis'), create = m.symbols.find(s => s.name === 'create');
     assert.equal(create.params[0].ownership, 'own');
     assert.equal(create.type, 'own Caixa<T>');
     assert.equal(m.symbols.filter(s => s.name === 'v' && s.kind === 'parameter').length, 1);
     assert.equal(m.symbols.filter(s => s.name === 'v' && s.kind === 'variable').length, 0);
-    const field = l.resolveSymbol(m, text.lastIndexOf('valor'), [m]);
+    const field = l.resolveSymbol(m, text.lastIndexOf('value'), [m]);
     assert.equal(field.type, 'int');
-    assert.match(l.signatureAt(m, text.indexOf('(42)') + 2, [m]).label, /safe criar<int>\(own v: int\): own Caixa<int>/);
+    assert.match(l.signatureAt(m, text.indexOf('(42)') + 2, [m]).label, /safe create<int>\(own v: int\): own Caixa<int>/);
 });
 
 test('callbacks safe preservam modos aninhados e origem da vida', () => {

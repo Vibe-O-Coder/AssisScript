@@ -12,7 +12,7 @@ A regra de nomes Assis/Fodase foi removida. Os identificadores aceitam letras AS
 
 Use let, int, byte, bool, text, void, if, else, while, return, print, new, free, self, true, false, null, break, continue e extends. Os aliases antigos continuam aceitos. As declarações centrais permanecem assis e ASSIS; a entrada continua assis_assis e o inicializador assis_fodase.
 
-Troque `importa "std/matematica";` por `#yuri <std/matematica.assis>`, em uma linha própria. A forma legada permanece compatível. Agrupe fontes em um manifesto .pillow e carregue com #body src.pillow.
+Troque `importa "std/math";` por `#yuri <std/math.assis>`, em uma linha própria. A forma legada permanece compatível. Agrupe fontes em um manifesto .pillow e carregue com #body src.pillow.
 
 Novas palavras são reservadas e podem exigir renomear identificadores de projetos antigos. Array, HashMap e o prefixo __assis_ também são reservados. Ponteiros brutos e classes conservam a semântica anterior. A saída de bool permanece aSsIs/fOdAsE.
 

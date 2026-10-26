@@ -17,7 +17,7 @@ import time
 
 ROOT = Path(__file__).resolve().parent.parent
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--baseline', type=Path, help='Alpha.5 opcional; sem ele mede apenas referência manual atual vs own')
+parser.add_argument('--baseline', type=Path, help='Alpha.5 opcional; sem ele mede apenas referência manual current vs own')
 parser.add_argument('--output', required=True, type=Path)
 parser.add_argument('--samples', default=7, type=int)
 parser.add_argument('--iterations', default=200_000, type=int)
@@ -35,19 +35,19 @@ def run(command):
         raise AssertionError((command, p.returncode, p.stdout, p.stderr))
     return p.stdout
 
-manual = '''struct Caixa{let dados:Array<int>;}
+manual = '''struct Caixa{let data:Array<int>;}
 assis calcular(n:int):int{let r:Caixa=new Caixa([n,n+1]);
-let total:int=r.dados[0]+r.dados[1];free(r.dados);free(r);return total;}
+let total:int=r.data[0]+r.data[1];free(r.data);free(r);return total;}
 '''
-managed = '''struct Caixa{own dados:Array<int>;}
-safe assis criar(n:int):own Caixa{return new Caixa([n,n+1]);}
-safe assis ler(borrow r:Caixa):int{return r.dados[0]+r.dados[1];}
-safe assis calcular(n:int):int{own r:Caixa=criar(n);return ler(r);}
+managed = '''struct Caixa{own data:Array<int>;}
+safe assis create(n:int):own Caixa{return new Caixa([n,n+1]);}
+safe assis ler(borrow r:Caixa):int{return r.data[0]+r.data[1];}
+safe assis calcular(n:int):int{own r:Caixa=create(n);return ler(r);}
 '''
 entry = f'''assis assis_assis():int{{let total:int=0;
 for(let i:int=0;i<{count};i+=1){{total+=calcular(i);}}print(total);return 0;}}
 '''
-implementations = [('alpha5-manual', baseline, manual), ('alpha6-manual', compiler, manual), ('alpha6-own', compiler, managed)] if args.baseline else [('atual-manual', compiler, manual), ('atual-own', compiler, managed)]
+implementations = [('alpha5-manual', baseline, manual), ('alpha6-manual', compiler, manual), ('alpha6-own', compiler, managed)] if args.baseline else [('current-manual', compiler, manual), ('current-own', compiler, managed)]
 variants = [(name + suffix, cc, code + entry, flags)
             for suffix, flags in [('', []), ('-sem-opt', ['--no-opt'])]
             for name, cc, code in implementations]
@@ -129,7 +129,7 @@ Inclui início de processo. RAM é pico por processo; não mede retenção prolo
 '''
 for r in report['results']:
     markdown += f'| {r["variant"]} | {r["medianMs"]:.3f} | {min(r["samplesMs"]):.3f}–{max(r["samplesMs"]):.3f} | {r["compileMedianMs"]:.3f} | {r["binaryBytes"]} | {r["peakMemoryMedianBytes"]:.0f} |\n'
-markdown += ('\nA variante own faz chamadas adicionais criar/ler e uma chamada de destruição composta. '
+markdown += ('\nA variante own faz chamadas adicionais create/ler e uma chamada de destruição composta. '
              'A diferença não isola o custo de análise estática. Não há nova otimização de chamadas. '
              'Pico de RAM depende do OS; as métricas Windows/Linux não são diretamente equivalentes. '
              'Não demonstra aplicações A/B/C, 24 horas de estabilidade nem paridade com C/C++. '

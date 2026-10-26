@@ -15,7 +15,7 @@ ASSIS AssisAssis {
     assis Assis_Fodase(AssisFodase: AssisAssis): FODase {
         Assis FodaseAssis: AssIs = aSSIS.FodaseFodase();
         AssisFodase.Assis_assis -= FodaseAssis;
-        FODASE("Dano:", FodaseAssis, "| Vida restante:", AssisFodase.Assis_assis);
+        FODASE("Dano:", FodaseAssis, "| Vida remaining:", AssisFodase.Assis_assis);
     }
 }
 

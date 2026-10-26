@@ -1,5 +1,7 @@
 # Bibliotecas e pacotes 3.1
 
+**Atualização alpha.10:** sintaxe e APIs canônicas em inglês; imports e nomes antigos da stdlib exigem migração. Veja [ENGLISH-API.md](ENGLISH-API.md) e o [handoff atual](HANDOFF-3.3-ALPHA.10.md). As grafias históricas da sintaxe continuam aliases.
+
 **Atualização alpha.9:** [Recursos/fatias e backend](RECURSOS-E-FATIAS.md) complementam os contratos abaixo: classes gerenciadas com receptor, slice<T>, texto UTF-8 com comprimento, vtable com drop e ELF PIE. [Handoff atual](HANDOFF-3.3-ALPHA.9.md).
 
 **Atualização 3.3.0-alpha.8:** Alpha.7 mantém oito bibliotecas, com Option/Result em erros, UTF-8 explícito em texto e formatação sem alocação em conversoes. [IO nativo e aplicação A](IO-E-APLICACAO-A.md) são intrínsecos do runtime.
@@ -9,7 +11,7 @@ Alpha.6: algoritmos acrescenta map_own/filter_own/fold_borrow com contratos gere
 ## Inclusão de fontes
 
 ```assis
-#yuri <std/matematica.assis>
+#yuri <std/math.assis>
 #yuri <bibliotecas/geometria.assis>
 ```
 
@@ -40,16 +42,16 @@ Fontes repetidos são incluídos uma única vez, inclusive se referenciados por 
 
 | Arquivo | Funções legíveis |
 | --- | --- |
-| `std/matematica.assis` | `minimo`, `maximo`, `limitar`, `absoluto` |
-| `std/texto.assis` | `comeca_com`, `termina_com`, `contem` |
-| `std/memoria.assis` | `preencher`, `copiar` |
-| `std/erros.assis` | `ResultadoInt`, `somar_seguro`, `dividir_seguro`, `mensagem_erro` |
-| `std/conversoes.assis` | `inteiro_de_texto`, `texto_de_inteiro` |
-| `std/algoritmos.assis` (opcional) | Heapsort, busca binária, deduplicação |
+| `std/math.assis` | `min`, `max`, `clamp`, `abs` |
+| `std/strings.assis` | `starts_with`, `ends_with`, `contains` |
+| `std/memory.assis` | `fill`, `copy` |
+| `std/errors.assis` | `IntResult`, `checked_add`, `checked_div`, `error_message` |
+| `std/convert.assis` | `parse_int`, `int_to_string` |
+| `std/algorithms.assis` (opcional) | Heapsort, busca binária, deduplicação |
 | `std/csv.assis` (opcional) | CSV com aspas, escapes, CRLF e erro recuperável |
-| `std/codificacao.assis` (opcional) | Hexadecimal e Base64 estritos para dados binários |
+| `std/encoding.assis` (opcional) | Hexadecimal e Base64 estritos para dados binários |
 
-O instalador inclui as cinco obrigatórias em todos os perfis. Por padrão instala também as três opcionais. Use `bin/assis-setup.exe install --minimal` (Windows) ou `sh instalar.sh --minimal` (Linux) para o núcleo. `--with csv,algoritmos` instala núcleo e apenas as opcionais selecionadas; `--with` pode ser repetido. Reinstalar acrescenta bibliotecas sem remover opções anteriormente instaladas. O VSIX contém o conjunto completo, independente do perfil do instalador.
+O instalador inclui as cinco obrigatórias em todos os perfis. Por padrão instala também as três opcionais. Use `bin/assis-setup.exe install --minimal` (Windows) ou `sh instalar.sh --minimal` (Linux) para o núcleo. `--with csv,algorithms` instala núcleo e apenas as opcionais selecionadas; `--with` pode ser repetido. Reinstalar acrescenta bibliotecas sem remover opções anteriormente instaladas. O VSIX contém o conjunto completo, independente do perfil do instalador.
 
 ### Manuais individuais
 
@@ -70,10 +72,10 @@ Array<T> e HashMap<K, V> são intrínsecos e não exigem importação. As funç�
 
 ```assis
 /// Retorna x*x + y*y sem extrair raiz, com overflow modular de 64 bits.
-/// @param ponto Referência válida a Ponto.
+/// @param codepoint Referência válida a Ponto.
 /// @return Quadrado da distância à origem.
-assis distancia_quadrada(ponto: Ponto): int {
-    return ponto.x * ponto.x + ponto.y * ponto.y;
+assis distancia_quadrada(codepoint: Ponto): int {
+    return codepoint.x * codepoint.x + codepoint.y * codepoint.y;
 }
 ```
 
@@ -81,7 +83,7 @@ O editor encontra essa documentação por #yuri ou por #body, incluindo imports 
 
 ## Compatibilidade
 
-A sintaxe antiga `importa "std/matematica";` ainda funciona e permite omitir extensão, como em 2.x. Para novos programas, prefira #yuri. No Windows, ASSIS_PATH separa pastas com ponto e vírgula; no Linux, com dois pontos.
+A sintaxe antiga `importa "std/math";` ainda funciona e permite omitir extensão, como em 2.x. Para novos programas, prefira #yuri. No Windows, ASSIS_PATH separa pastas com ponto e vírgula; no Linux, com dois pontos.
 
 ## Bibliotecas opcionais da alpha.8
 

@@ -1,11 +1,11 @@
-#yuri <std/matematica.assis>
+#yuri <std/math.assis>
 
 assis assis_assis(): int {
     let numeros: Array<int> = [10, 20, 30];
     numeros.push(40);
     numeros.insert(1, 15);
     numeros[0] += 2;
-    print("Primeiro:", numeros[0], "tamanho:", len(numeros));
+    print("Primeiro:", numeros[0], "size:", len(numeros));
     print("Removidos:", numeros.remove(1), numeros.pop());
     numeros.reverse();
     let i: int = 0;
@@ -16,7 +16,7 @@ assis assis_assis(): int {
 
     let pontos: HashMap<text, int> = new HashMap<text, int>();
     pontos.set("Miyabi", 100);
-    pontos.set("Yuri", maximo(42, 75));
+    pontos.set("Yuri", max(42, 75));
     pontos.set("Yuri", pontos.get("Yuri") + 5);
     print("Yuri:", pontos.get("Yuri"));
     print("Ausente:", pontos.get_or("ninguém", 0));

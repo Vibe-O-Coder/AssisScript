@@ -43,8 +43,8 @@ report = dict(platform=platform.platform(), cpu=platform.processor(), samples=ar
               compiler=run([compiler, 'version']).strip(), results=[])
 with tempfile.TemporaryDirectory(prefix='assis-functional-bench-') as temp:
     directory = Path(temp)
-    variants = [('atual-legado', compiler, legacy, []), ('atual-puro', compiler, functional, []),
-                ('atual-puro-sem-opt', compiler, functional, ['--no-opt'])]
+    variants = [('current-legado', compiler, legacy, []), ('current-puro', compiler, functional, []),
+                ('current-puro-sem-opt', compiler, functional, ['--no-opt'])]
     if args.baseline:
         variants.append(('base-3.2-legado', args.baseline.resolve(), legacy, []))
         report['baseline'] = run([args.baseline.resolve(), 'version']).strip()
@@ -74,7 +74,7 @@ for result in report['results']:
     result['medianMs'] = statistics.median(result['samplesMs'])
     result['minMs'] = min(result['samplesMs'])
     result['maxMs'] = max(result['samplesMs'])
-report['optimizedBinariesIdentical'] = len({entry['sha256'] for entry in report['results'] if entry['variant'] != 'atual-puro-sem-opt'}) == 1
+report['optimizedBinariesIdentical'] = len({entry['sha256'] for entry in report['results'] if entry['variant'] != 'current-puro-sem-opt'}) == 1
 args.output.parent.mkdir(parents=True, exist_ok=True)
 args.output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
 markdown = ('# Custo do primeiro incremento funcional\n\n' + report['compiler'] + '; ' + report['platform'] + '.\n\n'

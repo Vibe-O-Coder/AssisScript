@@ -7,13 +7,13 @@ Continuação da alpha.2: [tipos de função, valores especializados e callbacks
 Esta alpha continua a fase 1. Funções globais, structs e classes podem declarar até 16 parâmetros de tipo. O compilador guarda a árvore sintática e emite uma instância nativa por definição e combinação concreta de tipos utilizada. Não há interpretação, boxing ou despacho dinâmico acrescentado pela especialização de funções. Classes conservam o despacho virtual de métodos já existente.
 
 ```assis
-pure assis identidade<T>(valor: T): T { return valor; }
-struct Caixa<T> { let valor: T; }
+pure assis identidade<T>(value: T): T { return value; }
+struct Caixa<T> { let value: T; }
 struct Par<A, B> { let primeiro: A; let segundo: B; }
 
 assis assis_assis(): int {
     own caixa: Caixa<int> = new Caixa<int>(identidade::<int>(42));
-    print(caixa.valor, identidade::<bool>(true));
+    print(caixa.value, identidade::<bool>(true));
     return 0;
 }
 ```
@@ -22,11 +22,11 @@ Saída: `42 aSsIs`. [Exemplo distribuído](../exemplos/16_generics.assis).
 
 ## Regras de uso
 
-Chamadas genéricas exigem `nome::<Tipo, OutroTipo>(argumentos)`. A sintaxe explícita evita confundir argumentos de tipo com comparações `<` e `>`. Não existe inferência dos argumentos de tipo. Todos os argumentos devem ser fornecidos; `void` não é um argumento válido. A entrada `assis_assis` não pode ser genérica.
+Chamadas genéricas exigem `nome::<Tipo, OutroTipo>(arg_count)`. A sintaxe explícita evita confundir argumentos de tipo com comparações `<` e `>`. Não existe inferência dos argumentos de tipo. Todos os argumentos devem ser fornecidos; `void` não é um argumento válido. A entrada `assis_assis` não pode ser genérica.
 
 `Caixa<int>` e `Caixa<byte>` são tipos nominais distintos. `OutraCaixa<int>` também é distinto, mesmo com campos idênticos. Parâmetros chamados `T` em definições diferentes têm identidades diferentes. Os módulos continuam compartilhando um único espaço global; não há sobrecarga ou namespaces novos.
 
-Tipos aninhados, ponteiros, vários parâmetros, imports e recursão com um conjunto finito de instâncias são suportados. Exemplos: `Caixa<Array<int>>`, `Array<Caixa<int>>`, `HashMap<int, Caixa<text>>` e um campo `proximo: Elo<T>` na própria `struct Elo<T>`. Os internos de coleções permanecem privados.
+Tipos aninhados, ponteiros, vários parâmetros, imports e recursão com um conjunto finito de instâncias são suportados. Exemplos: `Caixa<Array<int>>`, `Array<Caixa<int>>`, `HashMap<int, Caixa<text>>` e um campo `next: Elo<T>` na própria `struct Elo<T>`. Os internos de coleções permanecem privados.
 
 Structs continuam sendo referências ao heap. Atribuir uma struct compartilha a referência; especialização não implementa cópia por valor nem imutabilidade profunda. Campos explicitamente own de structs têm destruição gerenciada na alpha.6. `own Caixa<int>` e `own Caixa<text>` seguem a regra local de structs com campos escalares/text de vida externa. A alpha.6 acrescenta campos own de structs e contratos own/borrow nas assinaturas, inclusive em especializações; veja [contratos](OWNERSHIP-FUNCOES.md). Funções genéricas comuns com `text`, objetos e ponteiros conservam o contrato legado de memória.
 
@@ -44,9 +44,9 @@ Há limites determinísticos de 256 instâncias de funções/structs/classes do 
 
 ```assis
 ASSIS Caixa<T> {
-    private let valor: T;
-    assis assis_fodase(valor: T): void { self.valor = valor; }
-    assis ler(): T { return self.valor; }
+    private let value: T;
+    assis assis_fodase(value: T): void { self.value = value; }
+    assis ler(): T { return self.value; }
 }
 ASSIS Filha<U> extends Caixa<U> {}
 ```

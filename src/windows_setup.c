@@ -6,6 +6,7 @@
 #define _UNICODE
 #endif
 #define WIN32_LEAN_AND_MEAN
+#include "version.h"
 #include <windows.h>
 #include <shlobj.h>
 #include <stdio.h>
@@ -98,7 +99,7 @@ static void install(int change_path,int file_icons){
     for(size_t i=0;i<sizeof(files)/sizeof(files[0]);i++){join(from,root,files[i]);join(to,prefix,files[i]);wcscpy(dir,to);wchar_t *parent=wcsrchr(dir,L'\\');if(parent){*parent=0;directory(dir);}if(!CopyFileW(from,to,FALSE))die(L"Não foi possível copiar um arquivo da instalação");}
     for(unsigned i=0;i<OPTIONAL_COUNT;i++)if(optional_mask&(1u<<i)){join(from,root,optional_files[i]);join(to,prefix,optional_files[i]);if(!CopyFileW(from,to,FALSE))die(L"Não foi possível instalar biblioteca opcional");}
     join(to,prefix,L"INSTALADO");FILE *marker=_wfopen(to,L"wb");if(!marker)die(L"Não foi possível gravar marcador de instalação");
-    int ok=fputs("AssisScript 3.3.0-alpha.9\n",marker)>=0;if(fclose(marker))ok=0;if(!ok)die(L"Erro ao gravar marcador de instalação");
+    int ok=fputs("AssisScript " ASSIS_VERSION "\n",marker)>=0;if(fclose(marker))ok=0;if(!ok)die(L"Erro ao gravar marcador de instalação");
     if(change_path)edit_path(1);
     if(file_icons)association(0);
     wprintf(L"ASSIS: instalado em %ls\\bin\\assis.exe\n",prefix);
@@ -138,7 +139,7 @@ int wmain(int argc,wchar_t **argv){
             if(!selected)optional_mask=0;selected=1;const wchar_t *p=argv[++i];if(!*p)die(L"--with exige bibliotecas separadas por vírgula");
             while(*p){const wchar_t *end=wcschr(p,L',');size_t len=end?(size_t)(end-p):wcslen(p);int found=0;
                 for(unsigned j=0;j<OPTIONAL_COUNT;j++)if(len==wcslen(optional_names[j])&&!wcsncmp(p,optional_names[j],len)){optional_mask|=1u<<j;found=1;break;}
-                if(!found)die(L"Biblioteca desconhecida; consulte stdlib/catalogo.json");if(!end)break;p=end+1;if(!*p)die(L"Lista de bibliotecas incompleta");
+                if(!found)die(L"Biblioteca desconhecida; consulte stdlib/catalogo.json");if(!end)break;p=end+1;if(!*p)die(L"OwnedList de bibliotecas incompleta");
             }
         }
         else if(!_wcsicmp(argv[i],L"--no-path"))change_path=0;else if(!_wcsicmp(argv[i],L"--no-associations"))file_icons=0;else die(L"Opção desconhecida");

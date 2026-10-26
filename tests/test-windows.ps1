@@ -66,14 +66,14 @@ try {
     }
     $result = Run-Process -File $assis -Arguments @('version')
     Assert-Code $result 0 'version'
-    Assert-True ($result.Out.Contains('3.3.0-alpha.9') -and $result.Out.Contains('Windows x64')) 'versao Windows'
+    Assert-True ($result.Out.Contains('3.3.0-alpha.10') -and $result.Out.Contains('Windows x64')) 'versao Windows'
     Assert-Code (Run-Process -File $assis -Arguments @('doctor')) 0 'doctor'
     Assert-Code (Run-Process -File $assis -Arguments @('help')) 0 'help'
     Assert-Code (Run-Process -File $assis -Arguments @('comando-inexistente')) 2 'comando invalido'
     Assert-Code (Run-Process -File $assis -Arguments @('check', (Join-Path $isolatedRoot 'ausente.assis'))) 2 'arquivo ausente'
     Assert-Code (Run-Process -File $assis -Arguments @('tokens', (Join-Path $root 'exemplos\01_ola.assis'))) 0 'tokens'
 
-    $folder = Join-Path $isolatedRoot 'projeto com espaco e ação'
+    $folder = Join-Path $isolatedRoot 'projeto com whitespace e ação'
     Assert-Code (Run-Process -File $assis -Arguments @('new', $folder)) 0 'new Unicode'
     $result = Run-Process -File $assis -Arguments @('run') -Directory $folder -NoTools $true
     Assert-Code $result 0 'run sem ferramentas'

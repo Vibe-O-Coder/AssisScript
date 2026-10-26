@@ -121,7 +121,7 @@ static void package_lock(bool write){
     else{
         protect_output(path);char *temporary=mem(strlen(path)+64);FILE *f=NULL;
         for(unsigned i=0;i<100&&!f;i++){snprintf(temporary,strlen(path)+64,"%s.tmp.%lu.%u",path,(unsigned long)time(NULL),i);f=fopen(temporary,"wbx");}
-        if(!f)fatal("não foi possível criar lockfile temporário");bool ok=fputs(contents,f)>=0;if(fclose(f))ok=false;
+        if(!f)fatal("não foi possível create lockfile temporário");bool ok=fputs(contents,f)>=0;if(fclose(f))ok=false;
 #ifdef _WIN32
         if(ok){wchar_t *a=wide_path(temporary),*b=wide_path(path);ok=MoveFileExW(a,b,MOVEFILE_REPLACE_EXISTING|MOVEFILE_WRITE_THROUGH)!=0;free(a);free(b);}
 #else

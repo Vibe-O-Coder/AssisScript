@@ -1,18 +1,18 @@
 #yuri <std/cli.assis>
-#yuri <std/conversoes.assis>
+#yuri <std/convert.assis>
 namespace log;
 
 /// Log binário delimitado por linha em stderr, nível 0..5 e filtro mínimo.
 /// Prefixo: [epoch_ms nivel] . Mensagem até 1 MiB; bytes são preservados.
 /// 0: filtrado; 1: escrito; -1: argumento/IO. Não usa estado global.
-public safe assis escrever(nivel: int, minimo: int, borrow mensagem: *byte, tamanho: int): int {
-    if (nivel < 0 || nivel > 5 || minimo < 0 || minimo > 6 || tamanho < 0 || tamanho > len(mensagem) || tamanho > 1048576) { return -1; }
-    if (nivel < minimo) { return 0; }
-    val instante: int = relogio_civil();if (instante < 0) { return -1; }
+public safe fn write(nivel: int, min: int, borrow mensagem: *byte, size: int): int {
+    if (nivel < 0 || nivel > 5 || min < 0 || min > 6 || size < 0 || size > len(mensagem) || size > 1048576) { return -1; }
+    if (nivel < min) { return 0; }
+    val instant: int = civil_ms();if (instant < 0) { return -1; }
     own prefixo: *byte = alloc<byte>(32);own numero: *byte = alloc<byte>(20);
-    val n: int = formatar_int_buffer(instante, numero);prefixo[0] = byte(91);
+    val n: int = format_int_buffer(instant, numero);prefixo[0] = byte(91);
     for (let i: int = 0; i < n; i += 1) { prefixo[i + 1] = numero[i]; }
     prefixo[n + 1] = byte(32);prefixo[n + 2] = byte(48 + nivel);prefixo[n + 3] = byte(93);prefixo[n + 4] = byte(32);
-    if (cli::saida(2, prefixo, n + 5) < 0 || cli::saida(2, mensagem, tamanho) < 0) { return -1; }
+    if (cli::saida(2, prefixo, n + 5) < 0 || cli::saida(2, mensagem, size) < 0) { return -1; }
     prefixo[0] = byte(10);if (cli::saida(2, prefixo, 1) < 0) { return -1; }return 1;
 }

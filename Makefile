@@ -16,7 +16,7 @@ bin/assis.exe: src/assisc.c $(wildcard src/*.h src/*.inc)
 	mkdir -p bin
 	$(MINGW_CC) $(CFLAGS) -municode -static -static-libgcc -s -Wl,--no-insert-timestamp src/assisc.c -o bin/assis.exe
 
-bin/assis-setup.exe: src/windows_setup.c src/install_files.inc src/install_optional.inc
+bin/assis-setup.exe: src/windows_setup.c src/version.h src/install_files.inc src/install_optional.inc
 	mkdir -p bin
 	$(MINGW_CC) $(CFLAGS) -municode -static -static-libgcc -s -Wl,--no-insert-timestamp src/windows_setup.c -lshell32 -ladvapi32 -luser32 -o bin/assis-setup.exe
 
@@ -79,6 +79,12 @@ test-alpha9: bin/assis
 	python3 tests/test-slices.py
 	python3 tests/test-managed-classes.py
 	python3 tests/test-backend-alpha9.py
+
+.PHONY: test-alpha10
+test-alpha10: bin/assis
+	python3 tests/test-optimization.py
+	python3 tests/test-english-api.py
+	python3 tests/test-release-policy.py
 
 bench:
 	node tools/benchmark.js

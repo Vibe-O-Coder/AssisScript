@@ -74,7 +74,7 @@ for phase in data['phases']:
 text += ('\nA evidência vinculada também descreve limites, inclusive para critérios pendentes. '
          'A base de bibliotecas, distribuição, vidas explícitas, recursos compostos, fatias/texto gerenciado, valores Copy/variantes e a aplicação A delimitada já existe; '
          'variantes Move/capturas, aplicações B/C, integração externa, conclusão da HIR e novos alvos concentram o restante. '
-         'Licença e direitos de componentes dependem de decisão do responsável.\n\n'
+         'A licença foi escolhida pelo responsável; direitos de imagens e auditoria completa de componentes permanecem abertos.\n\n'
          'Fonte auditável: [PROGRESSO.json](PROGRESSO.json). Gerar com `python tools/report-progress.py`; '
          'verificar com `python tools/report-progress.py --check`. Relatórios históricos de versões anteriores '
          'permanecem preservados; a porcentagem começa a ser publicada na alpha.5.\n')

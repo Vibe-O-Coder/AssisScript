@@ -1,4 +1,4 @@
-#yuri <std/erros.assis>
+#yuri <std/errors.assis>
 
 value struct Ponto { let x: int; let y: int; }
 
@@ -16,8 +16,8 @@ safe assis assis_assis(): int {
     val opcao: Option<int> = new Option<int>.Some(42);
     print(option_or::<int>(opcao, 0));
     match (dividir_valor(84, 2)) {
-        Ok(valor) { print(valor); }
-        Err(codigo) { print("erro", codigo); }
+        Ok(value) { print(value); }
+        Err(code) { print("error", code); }
     }
     return 0;
 }

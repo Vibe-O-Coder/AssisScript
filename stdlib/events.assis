@@ -1,0 +1,91 @@
+namespace events;
+
+/// Fila de uma thread. IDs não são reutilizados. Os campos são implementação;
+/// as operações verificam os comprimentos antes de acessar a fila.
+public struct Loop {
+    own actions: Array<safe fn(borrow mut Loop, int): void>;
+    own states: Array<int>;
+    own deadlines: Array<int>;
+    own ids: Array<int>;
+    let next: int;
+    let capacity: int;
+    let stopped: bool;
+    let running: bool;
+}
+
+public safe fn create(capacity: int): own Loop {
+    assert(capacity > 0 && capacity <= 65536);
+    return new Loop(new Array<safe fn(borrow mut Loop, int): void>(), new Array<int>(), new Array<int>(), new Array<int>(), 1, capacity, false, false);
+}
+
+safe fn valid(borrow loop: Loop): bool {
+    if (loop.actions == null || loop.states == null || loop.ids == null || loop.deadlines == null) { return false; }
+    return len(loop.actions) == len(loop.states) && len(loop.ids) == len(loop.deadlines) && len(loop.ids) == len(loop.actions)
+        && len(loop.ids) <= loop.capacity && loop.capacity > 0 && loop.capacity <= 65536;
+}
+
+/// Agenda uma ação com efeitos explícitos e estado escalar. 0 indica falha.
+/// A ação recebe empréstimo exclusivo apenas durante a chamada; pode reagendar.
+public safe fn schedule(borrow mut loop: Loop, atraso: int, estado: int, acao: safe fn(borrow mut Loop, int): void): int {
+    if (!valid(loop) || atraso < 0 || loop.next <= 0 || loop.next == 0x7fff_ffff_ffff_ffff) { return 0; }
+    val instant: int = monotonic_ms();
+    if (instant < 0 || atraso > 0x7fff_ffff_ffff_ffff - instant) { return 0; }
+    let position: int = 0;
+    while (position < len(loop.ids) && loop.ids[position] != 0) { position += 1; }
+    if (position == len(loop.ids) && position == loop.capacity) { return 0; }
+    val id: int = loop.next;
+    if (position == len(loop.ids)) {
+        loop.actions.push(acao); loop.states.push(estado); loop.deadlines.push(instant + atraso); loop.ids.push(id);
+    } else {
+        loop.actions[position] = acao; loop.states[position] = estado; loop.deadlines[position] = instant + atraso; loop.ids[position] = id;
+    }
+    loop.next += 1;
+    return id;
+}
+
+/// Cancela uma ação ainda pendente. ID expirado/desconhecido retorna false.
+public safe fn cancel(borrow mut loop: Loop, id: int): bool {
+    if (!valid(loop) || id <= 0) { return false; }
+    for (let i: int = 0; i < len(loop.ids); i += 1) {
+        if (loop.ids[i] == id) { loop.ids[i] = 0; return true; }
+    }
+    return false;
+}
+
+public safe fn stop(borrow mut loop: Loop): void { loop.stopped = true; }
+
+/// Executa até limite ações ou esvaziar/parar a fila. Ordem: prazo, depois ID.
+/// -1: relógio/espera/estado inválido; -2: execução reentrante; >=0: ações.
+/// Não cria threads. Uma ação longa bloqueia a fila; cancelamento é cooperativo.
+public safe fn run(borrow mut loop: Loop, limite: int): int {
+    if (!valid(loop) || limite < 0) { return -1; }
+    if (loop.running) { return -2; }
+    loop.running = true; loop.stopped = false;
+    let executadas: int = 0;
+    while (executadas < limite && !loop.stopped) {
+        if (!valid(loop)) { loop.running = false; return -1; }
+        let escolhido: int = -1;
+        for (let i: int = 0; i < len(loop.ids); i += 1) {
+            if (loop.ids[i] > 0) {
+                if (escolhido < 0) { escolhido = i; }
+                else if (loop.deadlines[i] < loop.deadlines[escolhido] || (loop.deadlines[i] == loop.deadlines[escolhido] && loop.ids[i] < loop.ids[escolhido])) { escolhido = i; }
+            }
+        }
+        if (escolhido < 0) { break; }
+        val instant: int = monotonic_ms();
+        if (instant < 0) { loop.running = false; return -1; }
+        if (loop.deadlines[escolhido] > instant) {
+            let espera: int = loop.deadlines[escolhido] - instant;
+            if (espera > 50) { espera = 50; }
+            if (sleep_ms(espera) < 0) { loop.running = false; return -1; }
+        } else {
+            val estado: int = loop.states[escolhido];
+            let acao: safe fn(borrow mut Loop, int): void = loop.actions[escolhido];
+            loop.ids[escolhido] = 0;
+            acao(loop, estado);
+            executadas += 1;
+        }
+    }
+    loop.running = false;
+    return executadas;
+}

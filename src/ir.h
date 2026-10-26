@@ -75,7 +75,7 @@ static void prepare_ir(void){
 static void print_ir(void){
     fputs("{\"format\":\"AssisScript-HIR-v1\",\"functions\":[",stdout);
     for(int i=0;i<ir_functions.n;i++){
-        IRFunction *f=ir_functions.v[i];if(i)fputc(',',stdout);fputs("{\"name\":",stdout);json_string(stdout,f->source->t->text);fputs(",\"result\":",stdout);json_string(stdout,type_name(f->source->result));fputs(",\"blocks\":[",stdout);
+        IRFunction *f=ir_functions.v[i];if(i)fputc(',',stdout);fputs("{\"name\":",stdout);json_string(stdout,f->source->t->text);fputs(",\"result\":",stdout);json_string(stdout,type_name(f->source->result));fprintf(stdout,",\"provenBounds\":%d,\"blocks\":[",range_count(f->source->body));
         for(int j=0;j<f->blocks.n;j++){
             IRBlock *b=f->blocks.v[j];if(j)fputc(',',stdout);fprintf(stdout,"{\"id\":%d,\"terminator\":",b->id);json_string(stdout,b->terminator);fprintf(stdout,",\"conditionEffects\":%u,\"successors\":[",ir_effects(b->condition));
             for(int k=0;k<b->successors.n;k++){if(k)fputc(',',stdout);fprintf(stdout,"%d",(int)(intptr_t)b->successors.v[k]-1);}fputs("],\"operations\":[",stdout);

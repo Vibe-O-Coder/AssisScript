@@ -12,7 +12,7 @@ assis assis_assis(): AssIs {
             Assis FodaseAssis: **AssiS = &AssisFodase.Assis_assis;
             (*FodaseAssis)[0] = AssiS(42);
             Assis FodaseFodase: *FoDaSe = &AssisFodase.Fodase_assis;
-            *FodaseFodase = "texto";
+            *FodaseFodase = "strings";
             Assis FodaseAssisAssis: *AssisAssis = &AssisFodase.Assis_Fodase;
             *FodaseAssisAssis = AssisFodase;
             FODASE(AssisFodase.Assis_assis[0], *FodaseFodase, AssisFodase.Assis_Fodase == AssisFodase);

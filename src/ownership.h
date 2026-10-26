@@ -128,7 +128,7 @@ static void memory_expr(Node *n){
         loan_add(v,2,n->t,true);memory_expr(n->items.v[1]);memory_expr(n->items.v[2]);loans_end(old);n->ownership=input->ownership;return;
     }
     if(!n)return;
-    if(n->kind==N_BUILTIN&&n->op==T_FILE_OPEN){if(n->ownership!=1)error(n->t,"arquivo_abrir exige destino own ou retorno own");memory_expr(n->items.v[0]);hold_value(n->items.v[0]);memory_expr(n->items.v[1]);return;}
+    if(n->kind==N_BUILTIN&&n->op==T_FILE_OPEN){if(n->ownership!=1)error(n->t,"file_open exige destino own ou retorno own");memory_expr(n->items.v[0]);hold_value(n->items.v[0]);memory_expr(n->items.v[1]);return;}
     if(n->kind==N_BUILTIN&&(n->op==T_FILE_READ||n->op==T_FILE_WRITE||n->op==T_FILE_CLOSE||n->op==T_FILE_SYNC||n->op==T_ARG_COPY||n->op==T_WRITE_BYTES)){
         int old=memory_temps.n,buffer=(n->op==T_FILE_CLOSE||n->op==T_FILE_SYNC)?-1:1;
         if(n->op==T_ARG_COPY||n->op==T_WRITE_BYTES)memory_expr(n->items.v[0]);
@@ -170,7 +170,7 @@ static void memory_expr(Node *n){
     if(n->kind==N_BINARY){memory_expr(n->a);hold_value(n->a);memory_expr(n->b);return;}
     if(n->kind==N_BUILTIN&&n->op==T_READ){
         int old=memory_temps.n;Node *a=n->items.v[0];Var *v=memory_reference(a,false,true);
-        if(v&&!v->deferred){if(a->ownership==2)error(n->t,"ler_bytes exige acesso exclusivo");memory_access(v,n->t,true,true);loan_add(v,3,n->t,true);}
+        if(v&&!v->deferred){if(a->ownership==2)error(n->t,"read_bytes exige acesso exclusivo");memory_access(v,n->t,true,true);loan_add(v,3,n->t,true);}
         memory_expr(n->items.v[1]);loans_end(old);return;
     }
     memory_expr(n->a);memory_expr(n->b);

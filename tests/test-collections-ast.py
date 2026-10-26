@@ -119,7 +119,7 @@ class CollectionsAST(unittest.TestCase):
         self.rejected('assis receber(a:Array<int>):int{return len(a);}' + main(
             'own a:Array<int>=[1];print(receber(a));'), 'não pode escapar')
         self.rejected(main('own a:Array<int>=[1];{borrow b:Array<int>=a;b.push(2);}'), 'acesso exclusivo')
-        self.accepted('#yuri <std/algoritmos.assis>\n'
+        self.accepted('#yuri <std/algorithms.assis>\n'
             'pure assis dobro(v:int):int{return v*2;}pure assis somar(a:int,b:int):int{return a+b;}' + main(
             'let a:Array<int>=[1,2,3];let b:Array<int>=map::<int,int>(a,dobro);'
             'print(fold::<int,int>(b,0,somar),a[1]);free(b);free(a);'), '12 2\n')

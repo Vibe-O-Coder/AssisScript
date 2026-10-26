@@ -21,7 +21,7 @@ assis doctor
 
 A versão deve informar `AssisScript 3.2.0 (nativo, Windows x64)`.
 
-Todas as bibliotecas acompanham a instalação padrão. Para apenas as cinco obrigatórias, use `bin/assis-setup.exe install --minimal`. Para selecionar opcionais, use `bin/assis-setup.exe install --with csv,algoritmos`. As opções `--no-path`, `--no-associations` e `--prefix pasta` continuam disponíveis. Cada biblioteca tem [manual próprio offline](BIBLIOTECAS.md).
+Todas as bibliotecas acompanham a instalação padrão. Para apenas as cinco obrigatórias, use `bin/assis-setup.exe install --minimal`. Para selecionar opcionais, use `bin/assis-setup.exe install --with csv,algorithms`. As opções `--no-path`, `--no-associations` e `--prefix pasta` continuam disponíveis. Cada biblioteca tem [manual próprio offline](BIBLIOTECAS.md).
 
 ## Criar, executar e compilar
 
@@ -109,7 +109,7 @@ A suíte usa o PowerShell já fornecido pelo Windows, sem módulos extras. Compi
 
 Instale `dist/assisscript-3.2.0.vsix` pelo menu **Extensões → … → Instalar do VSIX…** do VSCode. A extensão inclui o compilador e todas as bibliotecas, e não exige instalação global. Veja [VSCODE.md](VSCODE.md).
 
-`assis run exemplos/08_modulos.assis` demonstra imports e bibliotecas. A instalação nativa copia também `stdlib` para que `importa "std/matematica";` funcione fora da pasta do pacote. Leia [BIBLIOTECAS.md](BIBLIOTECAS.md) para criar e compartilhar suas bibliotecas.
+`assis run exemplos/08_modulos.assis` demonstra imports e bibliotecas. A instalação nativa copia também `stdlib` para que `importa "std/math";` funcione fora da pasta do pacote. Leia [BIBLIOTECAS.md](BIBLIOTECAS.md) para criar e compartilhar suas bibliotecas.
 
 Não há binários nativos para Windows de 32 bits, ARM ou macOS nesta versão. O suporte Linux x86_64 e a sintaxe anterior foram preservados.
 

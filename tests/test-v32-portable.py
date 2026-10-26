@@ -5,13 +5,14 @@ Then run: python3 tests/test-v32-portable.py
 """
 from pathlib import Path
 import base64
+import os
 import json
 import subprocess
 import sys
 root=Path(__file__).resolve().parent.parent
 compiler=root/'bin'/('assis.exe' if sys.platform=='win32' else 'assis')
-fixtures=sorted((root/'build/v32-fixtures').glob('*.json'))
-assert len(fixtures)>=70, 'Gere o corpus Node 3.2 antes de executar'
+fixtures=sorted(Path(os.environ.get('ASSIS_V32_FIXTURE_DIR',root/'build/v32-fixtures')).resolve().glob('*.json'))
+assert len(fixtures)>=70, 'Gere o corpus Node 3.2 antes de run'
 for file in fixtures:
     case=json.loads(file.read_text(encoding='utf-8'))
     source=file.with_suffix('.assis')

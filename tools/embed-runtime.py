@@ -22,7 +22,7 @@ for source, macro, blob in [('runtime', 'RT', 'runtime_blob'), ('runtime_win', '
     # COFF rounds the raw text section to an alignment boundary. An explicit
     # end symbol excludes that padding and makes both hosts embed the same bytes.
     assembly = build / f'{source}-embed.S'
-    assembly.write_text('\n'.join(lines) + '\n.text\nassis_runtime_blob_end:\n', encoding='utf-8')
+    assembly.write_text('\n'.join(lines) + '\n.text\nassis_runtime_blob_end:\n', encoding='utf-8', newline='\n')
     run('as', '--64', '-I', root / 'src', assembly, '-o', obj)
     run('objcopy', '-O', 'binary', '--only-section=.text', obj, binary)
     # Local references must be resolved by the assembler. External references
@@ -50,5 +50,5 @@ for source, macro, blob in [('runtime', 'RT', 'runtime_blob'), ('runtime_win', '
         lines += ['static const struct { size_t offset; const char *name; } windows_import_patches[] = {']
         lines += [f'{{0x{offset:x}, "{re.sub(r"_[0-9]+$", "", name[7:])}"}},' for offset, name in symbols if name.startswith('import_')]
         lines += ['};']
-    (root / 'src' / f'{blob}.h').write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    (root / 'src' / f'{blob}.h').write_text('\n'.join(lines) + '\n', encoding='utf-8', newline='\n')
 print('Runtimes Linux e Windows incorporados.')

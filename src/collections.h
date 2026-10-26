@@ -44,7 +44,14 @@ static const char array_template[] =
 static const char map_template[] =
 "ASSIS __assis_Map<K,V> {\n"
 " private let _length: int; private let _capacity: int; private let _used: int; private let _keys: *K; private let _values: *V; private let _states: *byte;\n"
-" private assis _hash(key: K): int { return int(key) & 0x7fff_ffff_ffff_ffff; }\n"
+/* Mix all 64 bits before the power-of-two mask. Unsigned shifts matter for
+ * negative keys; the finalizer is deterministic, not a keyed DoS defense. */
+" private assis _hash(key: K): int {\n"
+"  let hash: u64 = u64(int(key));\n"
+"  hash = (hash ^ (hash >> 30)) * u64(0xbf58_476d_1ce4_e5b9);\n"
+"  hash = (hash ^ (hash >> 27)) * u64(0x94d0_49bb_1331_11eb);\n"
+"  return int(hash ^ (hash >> 31)) & 0x7fff_ffff_ffff_ffff;\n"
+" }\n"
 " private assis _find(key: K): int {\n"
 "  if (self._capacity == 0) { return -1; } let i: int = self._hash(key) & (self._capacity - 1); let probes: int = 0;\n"
 "  while (probes < self._capacity) {\n"
@@ -91,7 +98,7 @@ static const char map_template[] =
 "}\n";
 
 /* Hash choice is a type-directed AST choice, with both bodies parsed once.
- * Preserve the existing text hash and integer hash; this is not a hash redesign. */
+ * Text retains its previous algorithm; integer keys use the finalizer above. */
 static const char text_hash_template[] =
 "\n\n{ let hash: int = 5381; let i: int = 0; let size: int = len(key); let data: *byte = bytes(key); while (i < size) { hash = (hash * 33 + data[i]) & 0x7fff_ffff_ffff_ffff; i += 1; } return hash; }";
 static Class *array_ast,*map_ast;

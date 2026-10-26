@@ -29,20 +29,20 @@ const cases = [
     { name: 'aritmetica', expected: '25750000000\n' },
     { name: 'hashmap', expected: '199998000000\n' },
     { name: 'array', expected: '499999500000\n' },
-    { name: 'texto-prefixo', expected: '80\n' }
+    { name: 'strings-prefixo', expected: '80\n' }
 ];
 function textKernel(legacy) {
     // Frozen copies isolate the old checked indexing and new bounded byte loop.
-    const declaration = legacy ? '' : 'let a: *byte = bytes(texto); let b: *byte = bytes(prefixo);';
-    const compare = legacy ? 'texto[i] != prefixo[i]' : 'a[i] != b[i]';
+    const declaration = legacy ? '' : 'let a: *byte = bytes(strings); let b: *byte = bytes(prefixo);';
+    const compare = legacy ? 'strings[i] != prefixo[i]' : 'a[i] != b[i]';
     const value = 'a'.repeat(2000);
-    return `assis prefixo(texto: text, prefixo: text): bool { let n: int = len(prefixo); if (n > len(texto)) { return false; } ${declaration} let i: int = 0; while(i < n) { if (${compare}) { return false; } i += 1; } return true; }
-assis assis_assis(): int { let texto: text = "${value}"; let i: int = 0; let total: int = 0; while (i < 80) { if (prefixo(texto, texto)) { total += 1; } i += 1; } print(total); return 0; }`;
+    return `assis prefixo(strings: text, prefixo: text): bool { let n: int = len(prefixo); if (n > len(strings)) { return false; } ${declaration} let i: int = 0; while(i < n) { if (${compare}) { return false; } i += 1; } return true; }
+assis assis_assis(): int { let strings: text = "${value}"; let i: int = 0; let total: int = 0; while (i < 80) { if (prefixo(strings, strings)) { total += 1; } i += 1; } print(total); return 0; }`;
 }
 try {
     for (const entry of cases) for (const variant of variants) {
         const source = path.join(directory, entry.name + '.assis');
-        fs.writeFileSync(source, entry.name === 'texto-prefixo' ? textKernel(variant.legacy) : fs.readFileSync(path.join(root, 'benchmarks', entry.name + '.assis')));
+        fs.writeFileSync(source, entry.name === 'strings-prefixo' ? textKernel(variant.legacy) : fs.readFileSync(path.join(root, 'benchmarks', entry.name + '.assis')));
         let binary;
         const compileTimes = [];
         for (let i = 0; i < 3; i++) {
@@ -57,7 +57,7 @@ try {
     fs.writeFileSync(path.join(output, 'benchmark.json'), JSON.stringify(report, null, 2) + '\n');
     let markdown = `# Medições do AssisScript ${version}\n\nExecução: ${report.generatedAt}. ${report.platform}; ${report.cpu}; Node ${report.node}.\n\n${samples} amostras após 1 aquecimento; mediana, incluindo início do processo. Compilação medida em três amostras separadas. Cada saída foi validada.\n\n| Programa | Variante | Execução mediana (ms) | Mín–máx (ms) | Compilação mediana (ms) | Bytes |\n| --- | --- | ---: | ---: | ---: | ---: |\n`;
     for (const r of report.results) markdown += `| ${r.case} | ${r.variant} | ${r.execution.medianMs.toFixed(2)} | ${r.execution.minMs.toFixed(2)}–${r.execution.maxMs.toFixed(2)} | ${r.compile.medianMs.toFixed(2)} | ${r.binaryBytes} |\n`;
-    markdown += '\nO caso texto-prefixo compara o laço da biblioteca anterior (indexação verificada) ao laço da biblioteca nova (bytes limitados por comprimento). As outras cargas usam o mesmo fonte em todas as variantes. Diferenças próximas ao custo de iniciar um processo não são conclusivas. Não há comparação com outras linguagens. Dados brutos: [benchmark.json](benchmark.json).\n';
+    markdown += '\nO caso strings-prefixo compara o laço da biblioteca anterior (indexação verificada) ao laço da biblioteca nova (bytes limitados por comprimento). As outras cargas usam o mesmo fonte em todas as variantes. Diferenças próximas ao custo de iniciar um processo não são conclusivas. Não há comparação com outras linguagens. Dados brutos: [benchmark.json](benchmark.json).\n';
     fs.writeFileSync(path.join(output, 'RELATORIO.md'), markdown);
     fs.writeFileSync(path.join(root, 'docs/RESULTADOS-DESEMPENHO.md'), markdown.replace('(benchmark.json)', '(DESEMPENHO.json)'));
     fs.writeFileSync(path.join(root, 'docs/DESEMPENHO.json'), JSON.stringify(report, null, 2) + '\n');

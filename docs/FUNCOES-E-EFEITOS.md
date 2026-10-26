@@ -39,7 +39,7 @@ Campos, Array e ponteiros tipados podem guardar funções no núcleo legado. Cam
 
 ## map, filter e fold
 
-Importe `#yuri <std/algoritmos.assis>`. APIs:
+Importe `#yuri <std/algorithms.assis>`. APIs:
 
 | Função | Contrato |
 | --- | --- |

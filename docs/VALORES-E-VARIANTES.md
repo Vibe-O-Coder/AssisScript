@@ -25,7 +25,7 @@ Valores Copy usam `let`/`val`; aplicar own/borrow/free/move diretamente a eles �
 
 Recursos own existentes são Move: transferência exige `move`, empréstimos têm vida verificada e destruição ocorre na saída. Buffers e structs legadas continuam usando essa representação de recurso. Um campo próprio de `value struct` ou payload de enum **não admite** own, text, ponteiros, Arquivo, coleções ou classes. Essas combinações são rejeitadas; não há cópia implícita de um recurso nem variante Move inline nesta versão. Registros legados gerenciados podem combinar campos Copy por valor e campos own separados.
 
-Um registro por valor aceita zero argumentos (valor zerado) ou um argumento por campo. Campos privados mantêm a identidade declaradora e as restrições de construção/leitura. Registros por valor não têm métodos ou herança. Enums exigem `new Tipo.Variação(argumentos)`, inclusive variantes vazias. Aridade e tipos são conferidos após especialização. `enum` e `match`, assim como os nomes dos novos intrínsecos de IO, passam a ser reservados.
+Um registro por valor aceita zero argumentos (valor zerado) ou um argumento por campo. Campos privados mantêm a identidade declaradora e as restrições de construção/leitura. Registros por valor não têm métodos ou herança. Enums exigem `new Tipo.Variação(arg_count)`, inclusive variantes vazias. Aridade e tipos são conferidos após especialização. `enum` e `match`, assim como os nomes dos novos intrínsecos de IO, passam a ser reservados.
 
 ## Matching e efeitos
 
@@ -33,7 +33,7 @@ Um registro por valor aceita zero argumentos (valor zerado) ou um argumento por 
 
 O fluxo considera return, break e continue. O estado de recursos é unido apenas nos braços que continuam; sair por erro libera proprietários de todos os escopos encerrados. Pure admite construir/ler/comparar esses valores, além dos escalares/callbacks anteriores. IO, ponteiros, text e alocação no heap continuam proibidos. Templates pure não instanciados também são auditados, inclusive chamadas dentro dos braços e callbacks vinculados por padrões.
 
-`stdlib/erros.assis` oferece Option/Result, `option_or`, `option_map` e `result_map`. Os auxiliares preservam o erro e aceitam callbacks pure. Não capturam ambientes. Resultados com recursos proprietários ou text continuam fora desse contrato Copy; abrir arquivo usa um proprietário anulável com erro nativo separado.
+`stdlib/errors.assis` oferece Option/Result, `option_or`, `option_map` e `result_map`. Os auxiliares preservam o erro e aceitam callbacks pure. Não capturam ambientes. Resultados com recursos proprietários ou text continuam fora desse contrato Copy; abrir arquivo usa um proprietário anulável com erro nativo separado.
 
 ## Layout e emissão
 
@@ -51,6 +51,6 @@ Exemplo: [20_valores_e_resultados.assis](../exemplos/20_valores_e_resultados.ass
 
 ## Continuação alpha.8
 
-Inteiros de largura fixa e f32/f64 têm [contrato numérico](NUMEROS.md). Módulos `namespace`/`public` e resolução offline com `assis.pkg`/`assis.lock` estão em [pacotes](PACOTES-E-NAMESPACES.md). `cli`, `json`, `tempo`, `log`, `iteradores` e `eventos` são bibliotecas opcionais novas, com empréstimos explícitos e limites documentados.
+Inteiros de largura fixa e f32/f64 têm [contrato numérico](NUMEROS.md). Módulos `namespace`/`public` e resolução offline com `assis.pkg`/`assis.lock` estão em [pacotes](PACOTES-E-NAMESPACES.md). `cli`, `json`, `time`, `log`, `iterators` e `events` são bibliotecas opcionais novas, com empréstimos explícitos e limites documentados.
 
 Comandos `fmt`, `test`, `doc`, LSP independente e símbolos/DWARF: [ferramentas](FERRAMENTAS-ALPHA.8.md). Relógio civil, espera, saída binária, cancelamento e persistência: [contratos](EVENTOS-E-PERSISTENCIA.md). Classes/Texto gerenciados gerais, variantes Move, capturas e slices gerais permanecem abertos; os caminhos C continuam com a fronteira legada documentada.

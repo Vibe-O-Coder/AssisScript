@@ -1,0 +1,55 @@
+#yuri <std/errors.assis>
+#yuri <std/strings.assis>
+
+/// Converte decimal estrito, com sinal opcional, sem espaços ou separadores. Detecta overflow e aceita INT64_MIN. Erro aponta o primeiro byte inválido (offset zero). Libere o IntResult com free.
+fn parse_int(entrada: text): IntResult {
+    let n: int = len(entrada);
+    if (n == 0) { return result_error(1, 0); }
+    let data: *byte = bytes(entrada); let i: int = 0; let negativo: bool = false;
+    if (data[0] == 45 || data[0] == 43) { negativo = data[0] == 45; i = 1; }
+    if (i == n) { return result_error(2, i); }
+    // Acumular negativamente permite representar INT64_MIN sem overflow.
+    let limite: int = -0x7fff_ffff_ffff_ffff;
+    if (negativo) { limite = -0x8000_0000_0000_0000; }
+    let corte: int = limite / 10; let value: int = 0;
+    while (i < n) {
+        let c: int = int(data[i]);
+        if (c < 48 || c > 57) { return result_error(2, i); }
+        let digit: int = c - 48;
+        if (value < corte) { return result_error(3, i); }
+        value *= 10;
+        if (value < limite + digit) { return result_error(3, i); }
+        value -= digit; i += 1;
+    }
+    if (!negativo) { value = -value; }
+    return result_ok(value);
+}
+
+/// Formata qualquer int64 em decimal, incluindo INT64_MIN. Retorna String proprietário; use resultado.dispose(); free(resultado); após a última leitura.
+fn int_to_string(value: int): String {
+    let resultado: String = new String(); let buffer: *byte = alloc<byte>(20);
+    let negativo: bool = value < 0;
+    if (value > 0) { value = -value; }
+    let n: int = 0;
+    while (value <= -10) { buffer[n] = byte(48 - value % 10); n += 1; value /= 10; }
+    buffer[n] = byte(48 - value); n += 1;
+    if (negativo) { resultado.append_byte(byte(45)); }
+    while (n > 0) { n -= 1; resultado.append_byte(buffer[n]); }
+    free(buffer); return resultado;
+}
+/// Escreve decimal ASCII sem alocação ou terminador. Exige buffer gerenciado de pelo menos 20 bytes.
+/// Retorna comprimento, ou -1 para capacidade insuficiente. Inclui INT64_MIN.
+safe fn format_int_buffer(numero: int, borrow mut destino: *byte): int {
+    if (len(destino) < 20) { return -1; }
+    let negativo: bool = numero < 0; let value: int = numero;
+    if (value > 0) { value = -value; }
+    let size: int = 0;
+    while (true) {
+        destino[size] = byte(48 - (value % 10)); size += 1; value /= 10;
+        if (value == 0) { break; }
+    }
+    if (negativo) { destino[size] = byte(45); size += 1; }
+    let a: int = 0; let b: int = size - 1;
+    while (a < b) { let temp: byte = destino[a]; destino[a] = destino[b]; destino[b] = temp; a += 1; b -= 1; }
+    return size;
+}

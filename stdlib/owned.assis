@@ -1,0 +1,38 @@
+namespace owned;
+
+struct Link<T> { own value:T; own next:Link<T>; }
+
+safe fn element<T>(borrow no:Link<T>,indice:int):borrow(no) T {
+    assert(no!=null && indice>=0);
+    if(indice==0){return no.value;}
+    return element::<T>(no.next,indice-1);
+}
+
+/// Coleção limitada de recursos Move. Inserção/remoção na frente O(1), leitura
+/// por índice O(n). Destruição O(n) recursiva; limite de 1024 nós.
+public final class OwnedList<T> {
+    private own start:Link<T>;
+    private let count:int;
+
+    fn size(borrow self):int{return self.count;}
+
+    fn push_front(borrow mut self,own value:T):void {
+        assert(self.count<1024);
+        own anterior:Link<T>=move(self.start);
+        self.start=new Link<T>(move(value),move(anterior));
+        self.count+=1;
+    }
+
+    fn get(borrow self,indice:int):borrow(self) T {
+        assert(indice>=0 && indice<self.count);
+        return element::<T>(self.start,indice);
+    }
+
+    fn pop_front(borrow mut self):own T {
+        assert(self.count>0);
+        own no:Link<T>=move(self.start);
+        self.start=move(no.next);
+        self.count-=1;
+        return move(no.value);
+    }
+}

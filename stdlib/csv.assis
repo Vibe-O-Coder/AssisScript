@@ -1,61 +1,61 @@
-#yuri <std/texto.assis>
+#yuri <std/strings.assis>
 
 /// CSV proprietário. linhas contém visualizações dos textos em _campos. ok=false informa erro em posicao (byte zero-based); nenhuma exceção encerra o programa por CSV inválido. Libere com dispose(); free().
-ASSIS DocumentoCSV {
+class CsvDocument {
     let ok: bool;
-    let posicao: int;
-    let linhas: Array<Array<text>>;
-    private let _campos: Array<Texto>;
+    let position: int;
+    let rows: Array<Array<text>>;
+    private let _campos: Array<String>;
 
-    /// Inicializa documento vazio. Use ler_csv para analisar dados.
-    assis assis_fodase(): void { self.ok = true; self.posicao = -1; self.linhas = new Array<Array<text>>(); self._campos = new Array<Texto>(); }
+    /// Inicializa documento vazio. Use read_csv para analisar dados.
+    fn init(): void { self.ok = true; self.position = -1; self.rows = new Array<Array<text>>(); self._campos = new Array<String>(); }
 
     /// Libera linhas e todos os textos próprios, inclusive de uma análise que falhou. Repetição é segura.
-    assis dispose(): void {
+    fn dispose(): void {
         if (self._campos != null) { let i: int = 0; while (i < len(self._campos)) { self._campos[i].dispose(); free(self._campos[i]); i += 1; } free(self._campos); self._campos = null; }
-        if (self.linhas != null) { let j: int = 0; while (j < len(self.linhas)) { free(self.linhas[j]); j += 1; } free(self.linhas); self.linhas = null; }
+        if (self.rows != null) { let j: int = 0; while (j < len(self.rows)) { free(self.rows[j]); j += 1; } free(self.rows); self.rows = null; }
     }
     /// Substitui o conteúdo por uma nova análise. Invalida as visualizações anteriores; retorna o próprio documento.
-    assis analisar(entrada: text, separador: byte): DocumentoCSV {
+    fn parse(entrada: text, separador: byte): CsvDocument {
         // Preserva a entrada antes de invalidar possíveis visualizações deste documento.
-        let n: int = len(entrada); let dados: *byte = alloc<byte>(n); defer free(dados);
+        let n: int = len(entrada); let data: *byte = alloc<byte>(n); defer free(data);
         let origem: *byte = bytes(entrada); let copia: int = 0;
-        while (copia < n) { dados[copia] = origem[copia]; copia += 1; }
-        self.dispose(); self.assis_fodase();
-        let documento: DocumentoCSV = self;
-        if (separador == 0 || separador >= 128 || separador == 34 || separador == 10 || separador == 13) { documento.ok = false; documento.posicao = 0; return documento; }
+        while (copia < n) { data[copia] = origem[copia]; copia += 1; }
+        self.dispose(); self.init();
+        let documento: CsvDocument = self;
+        if (separador == 0 || separador >= 128 || separador == 34 || separador == 10 || separador == 13) { documento.ok = false; documento.position = 0; return documento; }
         if (n == 0) { return documento; }
-        let i: int = 0; let linha: Array<text> = new Array<text>(); documento.linhas.push(linha);
+        let i: int = 0; let linha: Array<text> = new Array<text>(); documento.rows.push(linha);
         while (true) {
-            let campo: Texto = new Texto(); documento._campos.push(campo);
-            if (i < n && dados[i] == 34) {
+            let campo: String = new String(); documento._campos.push(campo);
+            if (i < n && data[i] == 34) {
                 i += 1; let fechado: bool = false;
                 while (i < n) {
-                    if (dados[i] == 34) {
-                        if (i + 1 < n && dados[i + 1] == 34) { campo.adicionar_byte(byte(34)); i += 2; }
+                    if (data[i] == 34) {
+                        if (i + 1 < n && data[i + 1] == 34) { campo.append_byte(byte(34)); i += 2; }
                         else { i += 1; fechado = true; break; }
-                    } else { campo.adicionar_byte(dados[i]); i += 1; }
+                    } else { campo.append_byte(data[i]); i += 1; }
                 }
-                if (!fechado) { documento.ok = false; documento.posicao = i; return documento; }
+                if (!fechado) { documento.ok = false; documento.position = i; return documento; }
             } else {
-                while (i < n && dados[i] != separador && dados[i] != 10 && dados[i] != 13) {
-                    if (dados[i] == 34) { documento.ok = false; documento.posicao = i; return documento; }
-                    campo.adicionar_byte(dados[i]); i += 1;
+                while (i < n && data[i] != separador && data[i] != 10 && data[i] != 13) {
+                    if (data[i] == 34) { documento.ok = false; documento.position = i; return documento; }
+                    campo.append_byte(data[i]); i += 1;
                 }
             }
-            linha.push(campo.visualizacao());
+            linha.push(campo.view());
             if (i == n) { return documento; }
-            if (dados[i] == separador) { i += 1; continue; }
-            if (dados[i] == 13) { if (i + 1 >= n || dados[i + 1] != 10) { documento.ok = false; documento.posicao = i; return documento; } i += 1; }
-            else if (dados[i] != 10) { documento.ok = false; documento.posicao = i; return documento; }
+            if (data[i] == separador) { i += 1; continue; }
+            if (data[i] == 13) { if (i + 1 >= n || data[i + 1] != 10) { documento.ok = false; documento.position = i; return documento; } i += 1; }
+            else if (data[i] != 10) { documento.ok = false; documento.position = i; return documento; }
             i += 1; if (i == n) { return documento; }
-            linha = new Array<text>(); documento.linhas.push(linha);
+            linha = new Array<text>(); documento.rows.push(linha);
         }
     }
 }
 
 /// Analisa CSV com separador ASCII configurável, campos entre aspas, escape "", LF/CRLF e quebras dentro de aspas. Preserva UTF-8 e campos vazios. Entrada vazia produz zero linhas. CR isolado ou bytes após aspas de fechamento são erros recuperáveis. O(n) amortizado; resultado copia os campos.
-assis ler_csv(entrada: text, separador: byte): DocumentoCSV {
-    let documento: DocumentoCSV = new DocumentoCSV();
-    return documento.analisar(entrada, separador);
+fn read_csv(entrada: text, separador: byte): CsvDocument {
+    let documento: CsvDocument = new CsvDocument();
+    return documento.parse(entrada, separador);
 }

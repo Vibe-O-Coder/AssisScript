@@ -1,0 +1,15 @@
+namespace time;
+public value struct Deadline { let valid: bool; let instant: int; }
+/// Deadline monotônico; não sofre ajuste do relógio civil. Overflow é recuperável.
+public safe fn after(milissegundos: int): Deadline {
+    val current: int = monotonic_ms();
+    if (current < 0 || milissegundos < 0 || milissegundos > 0x7fff_ffff_ffff_ffff - current) { return new Deadline(false, 0); }
+    return new Deadline(true, current + milissegundos);
+}
+public safe fn remaining(prazo: Deadline): int {
+    val current: int = monotonic_ms();if (!prazo.valid || current < 0) { return -1; }if (current >= prazo.instant) { return 0; }return prazo.instant - current;
+}
+/// Espera cooperativa em fatias de até 50 ms; false em falha nativa.
+public safe fn wait_until(prazo: Deadline): bool {
+    while (true) { let n: int = remaining(prazo);if (n < 0) { return false; }if (n == 0) { return true; }if (n > 50) { n = 50; }if (sleep_ms(n) < 0) { return false; } }
+}

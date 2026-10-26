@@ -1,6 +1,21 @@
 # Inventário inicial de procedência — 24/10/2026
 
-Este é um inventário técnico dos arquivos encontrados, sem atribuir uma licença ao projeto. Nenhum LICENSE/COPYING foi localizado na raiz ou nos fontes distribuídos. O responsável precisa definir direitos e licenças antes de uma oferta comercial. Esta entrega não decide isso.
+**Atualização alpha.10, 25/10/2026:** o responsável forneceu `docs/LICENSE` e escolheu CC BY-NC-SA 4.0. O mesmo texto, sem alterações, agora está na raiz em [LICENSE](../LICENSE). Os READMEs declaram uso não comercial, crédito, criação de bibliotecas e forks, distinguindo código independente de material incorporado. A política de suporte/compatibilidade está em [SUPPORT.md](SUPPORT.md). Foram incluídos [avisos de terceiros](../THIRD_PARTY_NOTICES.md) e textos da toolchain Windows. Permanecem abertas a confirmação de direitos das imagens e a auditoria completa dos componentes ligados nos dois destinos; P6-POLICY recebe somente crédito parcial. A tabela seguinte preserva as observações históricas e deve ser lida com esta atualização.
+
+## Inventário atual da alpha.10
+
+| Componente atual | Evidência | Limite da revisão |
+| --- | --- | --- |
+| Compilador e emissores C11 | src/assisc.c, frontend/lexer, HIR/ranges e backends PE/ELF | Fonte e comandos de reconstrução distribuídos; licença original escolhida pelo responsável |
+| Runtime nativo | Assembly, includes e blobs regeneráveis com LF determinístico | Sem libc nos programas gerados; dependências do próprio compilador são distintas |
+| Stdlib | 16 módulos e catálogo inglês da alpha.10 | Código fonte distribuído; aliases culturais legados explicitamente separados na migração |
+| Editor/LSP | JavaScript e reference.json, sem dependências npm obrigatórias | Node é requisito do editor/LSP/testes, não dos executáveis gerados |
+| Build Windows | GCC MSYS2 15.2.0 local, -static/-static-libgcc | Avisos da toolchain incluídos; a CI pode usar uma versão mais nova e precisa de revisão própria |
+| Build Linux | GCC/ambiente registrados nos logs e relatórios desta entrega, -static | Auditoria completa dos componentes estaticamente ligados ainda pendente |
+| Imagens | assets e gerador de ícones existente | Direitos/autoria ainda não confirmados independentemente |
+| Distribuição | LICENSE, avisos, READMEs e checksums em ZIP/VSIX/instaladores | Política publicada; não equivale a uma certificação jurídica ou de produção |
+
+## Inventário histórico da base
 
 | Componente | Evidência local | Situação a resolver |
 | --- | --- | --- |

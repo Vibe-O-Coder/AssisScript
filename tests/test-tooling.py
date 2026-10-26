@@ -40,7 +40,7 @@ class Tooling(base.Evolution):
             mapping=json.loads(Path(str(binary)+'.map.json').read_text(encoding='utf-8'));self.assertEqual(mapping['format'],'AssisScript-map-v1');self.assertTrue(any(f['name']=='dobro' and f['size']>0 for f in mapping['functions']));self.assertTrue(any(s['line']==5 for s in mapping['lines']));self.assertTrue(all(s['file']==str(source) for s in mapping['lines']))
             if target=='linux-x64' and os.name!='nt':
                 r=subprocess.run(['readelf','--debug-dump=decodedline','--debug-dump=info',binary],capture_output=True,text=True,timeout=15);self.assertEqual(r.returncode,0,r.stderr);self.assertEqual(r.stderr,'');self.assertIn('DW_TAG_subprogram',r.stdout)
-                self.assertIsNotNone(shutil.which('gdb'),'GDB é necessário para validar o gate de depuração')
+                self.assertIsNotNone(shutil.which('gdb'),'GDB é necessário para validate o gate de depuração')
                 r=subprocess.run(['gdb','-nx','-nh','-batch','-ex','break '+str(source)+':2','-ex','run','-ex','bt','-ex','info line',binary],capture_output=True,text=True,timeout=20)
                 self.assertEqual(r.returncode,0,r.stderr);self.assertIn('Breakpoint 1, dobro',r.stdout);self.assertIn('assis_assis',r.stdout);self.assertIn('line 2',r.stdout.lower())
 

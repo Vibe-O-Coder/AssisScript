@@ -34,8 +34,8 @@ class GenericClasses(unittest.TestCase):
                       'ASSIS Aplicar<T>{private let f:pure assis(T):T;'
                       'assis assis_fodase(f:pure assis(T):T):void{self.f=f;}'
                       'assis aplicar(v:T):T{return self.f(v);}'
-                      'assis obter():pure assis(T):T{return self.f;}}' + main(
-            'let a:Aplicar<int>=new Aplicar<int>(dobro);print(a.aplicar(21),a.obter()(6));free(a);'), '42 12\n')
+                      'assis get():pure assis(T):T{return self.f;}}' + main(
+            'let a:Aplicar<int>=new Aplicar<int>(dobro);print(a.aplicar(21),a.get()(6));free(a);'), '42 12\n')
         self.rejected('assis comum(v:int):int{return v;}ASSIS C<T>{let f:pure assis(T):T;}' + main(
             'let c:C<int>=new C<int>();c.f=comum;'), 'não é possível usar')
 
@@ -48,10 +48,10 @@ class GenericClasses(unittest.TestCase):
             'print(b.ler(),usar::<int>(f));free(f);'), '42 42\n')
 
     def test_concrete_child_and_concrete_base(self):
-        self.accepted('ASSIS Raiz{assis valor():int{return 10;}}'
+        self.accepted('ASSIS Raiz{assis value():int{return 10;}}'
                       'ASSIS Meio<T> extends Raiz{let v:T;assis ler(v:T):T{return v;}}'
-                      'ASSIS Fim extends Meio<int>{assis valor():int{return 42;}}' + main(
-            'let f:Fim=new Fim();let r:Raiz=f;print(r.valor(),f.ler(7));free(f);'), '42 7\n')
+                      'ASSIS End extends Meio<int>{assis value():int{return 42;}}' + main(
+            'let f:End=new End();let r:Raiz=f;print(r.value(),f.ler(7));free(f);'), '42 7\n')
 
     def test_reordered_type_parameters_in_inheritance(self):
         self.accepted('ASSIS Base<A,B>{let a:A;let b:B;assis primeiro():A{return self.a;}'
@@ -61,13 +61,13 @@ class GenericClasses(unittest.TestCase):
             'let b:Base<bool,int>=c;print(b.primeiro(),b.segundo());free(c);'), 'aSsIs 9\n')
 
     def test_finite_recursive_types_and_method_queue(self):
-        self.accepted('ASSIS Elo<T>{let v:T;let proximo:Elo<T>;'
-                      'assis ler():T{if(self.proximo==null){return self.v;}return self.proximo.ler();}}' + main(
-            'let a:Elo<int>=new Elo<int>();a.v=42;let b:Elo<int>=new Elo<int>();b.proximo=a;'
+        self.accepted('ASSIS Elo<T>{let v:T;let next:Elo<T>;'
+                      'assis ler():T{if(self.next==null){return self.v;}return self.next.ler();}}' + main(
+            'let a:Elo<int>=new Elo<int>();a.v=42;let b:Elo<int>=new Elo<int>();b.next=a;'
             'print(b.ler());free(b);free(a);'), '42\n')
-        self.accepted('ASSIS A<T>{assis criar():B<T>{return new B<T>();}}'
-                      'ASSIS B<U>{assis criar():A<U>{return new A<U>();}}' + main(
-            'let a:A<bool>=new A<bool>();let b:B<bool>=a.criar();let c:A<bool>=b.criar();'
+        self.accepted('ASSIS A<T>{assis create():B<T>{return new B<T>();}}'
+                      'ASSIS B<U>{assis create():A<U>{return new A<U>();}}' + main(
+            'let a:A<bool>=new A<bool>();let b:B<bool>=a.create();let c:A<bool>=b.create();'
             'free(c);free(b);free(a);'))
 
     def test_nested_collections_and_class_types(self):
@@ -104,7 +104,7 @@ class GenericClasses(unittest.TestCase):
 
     def test_private_constructor_and_no_callers_authority(self):
         self.accepted('ASSIS C<T>{private assis assis_fodase():void{}'
-                      'assis criar():C<T>{return new C<T>();}}' + main(''))
+                      'assis create():C<T>{return new C<T>();}}' + main(''))
         self.rejected('ASSIS C<T>{private assis assis_fodase():void{}}' + main(
             'let c:C<int>=new C<int>();'), 'inicializador privado')
         self.rejected('ASSIS C<T>{private let v:T;assis espia():T{return externo::<C<T>>(self);}}'
@@ -139,8 +139,8 @@ class GenericClasses(unittest.TestCase):
     def test_expansion_in_bases_fields_and_queued_methods(self):
         for cls in ['ASSIS C<T> extends C<Array<T>>{}',
                     'ASSIS C<T>{let v:C<Array<T>>;}',
-                    'ASSIS C<T>{assis criar():void{let c:C<Array<T>>=new C<Array<T>>();}}',
-                    'ASSIS C<T>{assis criar():C<Array<T>>{return null;}}']:
+                    'ASSIS C<T>{assis create():void{let c:C<Array<T>>=new C<Array<T>>();}}',
+                    'ASSIS C<T>{assis create():C<Array<T>>{return null;}}']:
             self.rejected(cls + main('let c:C<int>=new C<int>();'), 'limite de expansão')
 
     def test_cache_and_shared_specialization_budget(self):

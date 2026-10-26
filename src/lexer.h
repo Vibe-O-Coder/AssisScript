@@ -9,6 +9,8 @@ enum {
 };
 typedef struct { const char *name; int kind; } Word;
 static const Word words[]={
+    {"fn",T_FN},{"class",T_CLASS},{"import",T_IMPORT},
+    {"slice_of",T_SLICE_MAKE},{"read_bytes",T_READ},{"monotonic_ms",T_NOW},{"write_bytes",T_WRITE_BYTES},{"sleep_ms",T_SLEEP},{"civil_ms",T_CIVIL},{"file_sync",T_FILE_SYNC},{"file_replace",T_FILE_REPLACE},{"file_remove",T_FILE_REMOVE},{"File",T_FILE},{"file_open",T_FILE_OPEN},{"file_read",T_FILE_READ},{"file_write",T_FILE_WRITE},{"file_close",T_FILE_CLOSE},{"io_error",T_IO_ERROR},{"arg_count",T_ARGC},{"arg_size",T_ARG_LEN},{"arg_copy",T_ARG_COPY},
     {"slice",T_SLICE},{"fatia",T_SLICE_MAKE},
     {"ASSIS",T_CLASS},{"ASSIS_FODASE",T_EXTENDS},{"assis",T_FN},{"Assis",T_LET},
     {"AssIs",T_I64},{"AssiS",T_U8},{"FodAsE",T_BOOL},{"FoDaSe",T_TEXT},{"FODase",T_VOID},

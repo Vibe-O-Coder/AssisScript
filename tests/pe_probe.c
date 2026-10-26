@@ -75,11 +75,11 @@ static MS void *mock_command(void){return command_line;}
 static MS void *mock_argv(const uint16_t *line,int *argc){if(line!=command_line)bad("command line inesperada");static uint16_t *args[]={command_line,NULL};*argc=1;return args;}
 static MS void *mock_local_free(void *p){(void)p;return NULL;}
 static MS void *mock_alloc(void *address,size_t length,uint32_t flags,uint32_t protection){
-    if(address||flags!=0x3000||protection!=4)bad("argumentos de VirtualAlloc");
+    if(address||flags!=0x3000||protection!=4)bad("arg_count de VirtualAlloc");
     void *p=mmap(NULL,length,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);return p==MAP_FAILED?NULL:p;
 }
 static MS int mock_free(void *address,size_t length,uint32_t flags){
-    if(length||flags!=0x8000)bad("argumentos de VirtualFree");return !munmap(address,(size_t)rd64(address));
+    if(length||flags!=0x8000)bad("arg_count de VirtualFree");return !munmap(address,(size_t)rd64(address));
 }
 static uintptr_t resolve(const char *name){
     if(!strcmp(name,"ExitProcess"))return (uintptr_t)mock_exit;
@@ -108,7 +108,7 @@ static uintptr_t resolve(const char *name){
 int main(int argc,char **argv){
     if(argc!=2)bad("use pe_probe programa.exe");FILE *fp=fopen(argv[1],"rb");if(!fp)bad("arquivo não encontrado");
     if(fseek(fp,0,SEEK_END))bad("fseek");long length=ftell(fp);rewind(fp);
-    if(length<1024||length>64*1024*1024)bad("tamanho do PE");unsigned char *file=malloc((size_t)length);if(!file)bad("memória");
+    if(length<1024||length>64*1024*1024)bad("size do PE");unsigned char *file=malloc((size_t)length);if(!file)bad("memória");
     if(fread(file,1,(size_t)length,fp)!=(size_t)length)bad("leitura");fclose(fp);
     if(memcmp(file,"MZ",2))bad("assinatura DOS");uint32_t pe=rd32(file+0x3c);
     if(pe>(uint32_t)length-264||memcmp(file+pe,"PE\0\0",4)||rd16(file+pe+4)!=0x8664)bad("assinatura PE x64");
@@ -129,8 +129,8 @@ int main(int argc,char **argv){
     if((uint64_t)reloc+reloc_size>image_size)bad("limites de relocations");
     for(uint32_t at=0;at<reloc_size;){
         if(reloc_size-at<8)bad("bloco de relocations");uint32_t page=rd32(image+reloc+at),size=rd32(image+reloc+at+4);
-        if(size<8||size>reloc_size-at||size%4)bad("tamanho de relocations");
-        for(uint32_t p=8;p<size;p+=2){uint16_t item=rd16(image+reloc+at+p);if(!item)continue;if(item>>12!=10)bad("tipo de relocation");uint64_t site=(uint64_t)page+(item&4095);if(site+8>image_size)bad("site de relocation");put64(image+site,rd64(image+site)+delta);}
+        if(size<8||size>reloc_size-at||size%4)bad("size de relocations");
+        for(uint32_t p=8;p<size;p+=2){uint16_t item=rd16(image+reloc+at+p);if(!item)continue;if(item>>12!=10)bad("kind de relocation");uint64_t site=(uint64_t)page+(item&4095);if(site+8>image_size)bad("site de relocation");put64(image+site,rd64(image+site)+delta);}
         at+=size;
     }
     uint32_t imports=rd32(op+120);if((uint64_t)imports+40>image_size)bad("tabela de imports");

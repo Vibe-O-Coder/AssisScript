@@ -4,8 +4,8 @@
     "pure": "pure assis proíbe efeitos, IO, relógio, ponteiros e alocação no heap. Aceita escalares, callbacks pure e registros/variantes Copy. Recursão direta de cauda é eliminada em modo otimizado. Não garante término.",
     "private": "Restringe um campo ou método à classe que o declara, incluindo chamadas em outra instância da mesma classe. Subclasses e funções no mesmo arquivo não recebem acesso. Métodos privados não participam de sobrescrita.",
     "let": "Declara variável local inicializada ou campo com tipo explícito. Nomes aceitam letras ASCII, números após o primeiro caractere e sublinhado.",
-    "int": "Inteiro com sinal de 64 bits, em complemento de dois. Operações aritméticas usam overflow modular; divisão trunca em direção a zero.",
-    "byte": "Inteiro sem sinal de 8 bits (0 a 255). A conversão byte(valor) preserva os oito bits inferiores.",
+    "int": "ParsedInt com sinal de 64 bits, em complemento de dois. Operações aritméticas usam overflow modular; divisão trunca em direção a zero.",
+    "byte": "ParsedInt sem sinal de 8 bits (0 a 255). A conversão byte(valor) preserva os oito bits inferiores.",
     "bool": "Booleano. Condições exigem bool; int não é convertido implicitamente.",
     "text": "Referência a texto UTF-8 imutável, terminado por byte zero. text(buffer: *byte) cria visão emprestada: o buffer deve ser válido, terminado em zero e permanecer vivo. Não copie nem libere essa visão. Indexação e len medem bytes.",
     "bytes": "bytes(texto: text): *byte retorna visão emprestada em O(1). Não modificar, liberar ou usar após invalidar o proprietário. Acesso por ponteiro não verifica limites; limite os índices a [0, len(texto)).",
@@ -16,11 +16,11 @@
     "return": "Encerra a função ou método. O valor deve ser atribuível ao tipo de retorno; void usa return;.",
     "print": "Avalia os argumentos da esquerda para a direita, imprime separados por espaço e termina com quebra de linha. Booleanos preservam a saída histórica aSsIs/fOdAsE.",
     "new": "Constrói classe/struct/coleção no heap, ou valor Copy no frame. Enum exige .Variante(args). Structs legadas continuam referências; value struct é uma cópia independente.",
-    "free": "Libera uma alocação original/null. Classes gerenciadas destroem campos own pelo tipo dinâmico; coleções/Arquivo usam seus adaptadores. Não chama dispose legado por nome. Lista proprietária transfere/destrói elementos explicitamente.",
+    "free": "Libera uma alocação original/null. Classes gerenciadas destroem campos own pelo tipo dinâmico; coleções/File usam seus adaptadores. Não chama dispose legado por nome. OwnedList proprietária transfere/destrói elementos explicitamente.",
     "self": "Referência à instância atual, disponível somente em métodos de ASSIS.",
     "true": "Constante bool verdadeira.",
     "false": "Constante bool falsa.",
-    "null": "Referência nula para ponteiros, classes, structs legadas, coleções e Arquivo. Não é atribuível a text, callbacks ou valores Copy.",
+    "null": "Referência nula para ponteiros, classes, structs legadas, coleções e File. Não é atribuível a text, callbacks ou valores Copy.",
     "break": "Encerra o laço while mais interno.",
     "continue": "Inicia a próxima iteração do laço while mais interno.",
     "extends": "Declara herança simples de uma classe ASSIS. Métodos são virtuais e sobrescritas preservam a assinatura. Structs não participam de herança.",
@@ -39,41 +39,46 @@
     "defer": "defer free(variavel); agenda liberação no fim do bloco, inclusive em return, break e continue. A variável não pode ser reatribuída.",
     "div": "div { ... } agrupa código num escopo lexical. Recursos own e defer são liberados ao sair. Homenagem às divs do Assis, sem dependência de HTML.",
     "for": "for (let i: int = 0; i < limite; i += 1) { ... }. continue executa o incremento. A variável inicial existe somente no laço.",
-    "ler_bytes": "ler_bytes(buffer: *byte, capacidade: int): int lê stdin: quantidade de bytes, 0 em EOF, -1 em erro. Não acrescenta zero. Buffer own verifica a capacidade e exige exclusividade.",
-    "agora": "agora(): int retorna milissegundos monotônicos, sem relação com data civil, ou -1 em erro. Use diferenças para medir intervalos.",
+    "read_bytes": "ler_bytes(buffer: *byte, capacidade: int): int lê stdin: quantidade de bytes, 0 em EOF, -1 em erro. Não acrescenta zero. Buffer own verifica a capacidade e exige exclusividade.",
+    "monotonic_ms": "agora(): int retorna milissegundos monotônicos, sem relação com data civil, ou -1 em erro. Use diferenças para medir intervalos.",
     "safe": "safe assis verifica um subconjunto gerenciado. Chamadas legadas, ponteiros brutos e texto externo exigem unsafe { ... }. Não implica pureza nem isolamento de processos. --safe exige entrada safe.",
     "unsafe": "Marca a fronteira explícita com operações legadas dentro de safe. Não desliga privacidade, pureza, ownership nem a verificação de tipos.",
     "value": "value struct declara registro Copy imutável por valor, com layout nativo, sem alocação. Campos admitem escalares, funções pure e outros valores Copy.",
     "enum": "Declara variantes Copy: enum Option<T>{None;Some(T);}. Construa com new Option<int>.Some(42). Sem alocação; cargas não aceitam recursos own ou text.",
     "match": "Matching exaustivo de enum. Cada variante deve aparecer uma vez, com vínculos imutáveis locais ao braço. O sujeito é avaliado uma vez.",
-    "Arquivo": "Recurso de arquivo opaco. Exige own/borrow, fecha automaticamente, pode ser nulo após falha de abertura. Não pode ser forjado ou copiado.",
-    "arquivo_abrir": "arquivo_abrir(caminho:text,modo:int):own Arquivo. Modos 0=ler, 1=criar/truncar, 2=anexar. Falha retorna null; erro_io fornece código nativo. Caminho UTF-8 convertido em UTF-16 no Windows.",
-    "arquivo_ler": "arquivo_ler(arquivo:borrow mut Arquivo,buffer:borrow mut *byte,capacidade:int):int. Quantidade lida, zero em EOF, erro nativo negativo. Buffers gerenciados têm limite verificado.",
-    "arquivo_escrever": "arquivo_escrever(arquivo:borrow mut Arquivo,buffer:borrow *byte,quantidade:int):int. Escrita pode ser curta; erro nativo negativo. Repita até concluir.",
-    "arquivo_fechar": "arquivo_fechar(arquivo:borrow mut Arquivo):int. Fecha o handle sem liberar o proprietário, retorna zero ou erro negativo, é idempotente. own ainda libera o invólucro.",
-    "erro_io": "erro_io():int. Último erro de IO/argumentos, positivo; a próxima operação pode substituí-lo. Não é estado de outra thread.",
-    "argumentos": "argumentos():int. Quantidade de argumentos, incluindo o executável no índice zero.",
-    "argumento_tamanho": "argumento_tamanho(indice:int):int. Comprimento em bytes excluindo NUL; -1 para índice inválido. Windows converte UTF-16 estrito para UTF-8.",
-    "argumento_copiar": "argumento_copiar(indice:int,buffer:*byte,capacidade:int):int. Copia argumento e NUL, retorna bytes sem NUL, -1 para erro. Requer capacidade maior que argumento_tamanho; não trunca.",
+    "File": "Recurso de arquivo opaco. Exige own/borrow, fecha automaticamente, pode ser nulo após falha de abertura. Não pode ser forjado ou copiado.",
+    "file_open": "arquivo_abrir(caminho:text,modo:int):own File. Modos 0=ler, 1=criar/truncar, 2=anexar. Falha retorna null; erro_io fornece código nativo. Caminho UTF-8 convertido em UTF-16 no Windows.",
+    "file_read": "arquivo_ler(arquivo:borrow mut File,buffer:borrow mut *byte,capacidade:int):int. Quantidade lida, zero em EOF, erro nativo negativo. Buffers gerenciados têm limite verificado.",
+    "file_write": "arquivo_escrever(arquivo:borrow mut File,buffer:borrow *byte,quantidade:int):int. Escrita pode ser curta; erro nativo negativo. Repita até concluir.",
+    "file_close": "arquivo_fechar(arquivo:borrow mut File):int. Fecha o handle sem liberar o proprietário, retorna zero ou erro negativo, é idempotente. own ainda libera o invólucro.",
+    "io_error": "erro_io():int. Último erro de IO/argumentos, positivo; a próxima operação pode substituí-lo. Não é estado de outra thread.",
+    "arg_count": "argumentos():int. Quantidade de argumentos, incluindo o executável no índice zero.",
+    "arg_size": "argumento_tamanho(indice:int):int. Comprimento em bytes excluindo NUL; -1 para índice inválido. Windows converte UTF-16 estrito para UTF-8.",
+    "arg_copy": "argumento_copiar(indice:int,buffer:*byte,capacidade:int):int. Copia argumento e NUL, retorna bytes sem NUL, -1 para erro. Requer capacidade maior que argumento_tamanho; não trunca.",
     "namespace": "Namespace nominal do módulo; use namespace nome;.",
     "public": "Exporta função ou tipo do módulo.",
     "f32": "Real IEEE-754 de 32 bits.",
     "f64": "Real IEEE-754 de 64 bits.",
-    "i8": "Inteiro com sinal de 8 bits.",
-    "i16": "Inteiro com sinal de 16 bits.",
-    "i32": "Inteiro com sinal de 32 bits.",
-    "u16": "Inteiro sem sinal de 16 bits.",
-    "u32": "Inteiro sem sinal de 32 bits.",
-    "u64": "Inteiro sem sinal de 64 bits.",
-    "dormir": "Espera síncrona; 0 ou -1 com erro_io.",
-    "relogio_civil": "Milissegundos desde Unix epoch UTC.",
-    "escrever_bytes": "Saída binária stdout (1)/stderr (2), com contagem parcial.",
-    "arquivo_sincronizar": "Solicita persistência de dados; 0 ou -1.",
-    "arquivo_substituir": "Substituição atômica no mesmo filesystem; 0 ou -1.",
-    "arquivo_remover": "Remove arquivo; 0 ou -1.",
+    "i8": "ParsedInt com sinal de 8 bits.",
+    "i16": "ParsedInt com sinal de 16 bits.",
+    "i32": "ParsedInt com sinal de 32 bits.",
+    "u16": "ParsedInt sem sinal de 16 bits.",
+    "u32": "ParsedInt sem sinal de 32 bits.",
+    "u64": "ParsedInt sem sinal de 64 bits.",
+    "sleep_ms": "Espera síncrona; 0 ou -1 com erro_io.",
+    "civil_ms": "Milissegundos desde Unix epoch UTC.",
+    "write_bytes": "Saída binária stdout (1)/stderr (2), com contagem parcial.",
+    "file_sync": "Solicita persistência de dados; 0 ou -1.",
+    "file_replace": "Substituição atômica no mesmo filesystem; 0 ou -1.",
+    "file_remove": "Remove arquivo; 0 ou -1.",
     "slice": "Fatia de buffer gerenciado com endereço/comprimento inline e vida verificada. Exige borrow; não pode escapar para campos, ser liberada ou copiar seu proprietário.",
-    "fatia": "fatia(buffer,inicio,quantidade):slice<T>. Confere limites sem overflow; suporta subfatias e empréstimos compartilhados/exclusivos.",
-    "final": "final ASSIS sela a classe contra herança, inclusive especializações genéricas. Protege invariantes de construtores e métodos das bibliotecas."
+    "slice_of": "fatia(buffer,inicio,quantidade):slice<T>. Confere limites sem overflow; suporta subfatias e empréstimos compartilhados/exclusivos.",
+    "final": "final ASSIS sela a classe contra herança, inclusive especializações genéricas. Protege invariantes de construtores e métodos das bibliotecas.",
+    "fn": "Declares a function or method. Canonical English spelling.",
+    "class": "Declares a class.",
+    "import": "Imports a source module.",
+    "main": "Program entry with no parameters and int/void return.",
+    "init": "Class constructor returning void."
   },
   "signatures": {
     "text": {
@@ -83,9 +88,9 @@
       ]
     },
     "bytes": {
-      "label": "bytes(texto: text): *byte",
+      "label": "bytes(strings: text): *byte",
       "params": [
-        "texto: text"
+        "strings: text"
       ]
     },
     "print": {
@@ -95,21 +100,21 @@
       ]
     },
     "free": {
-      "label": "free(valor: objeto ou ponteiro): void",
+      "label": "free(value: objeto ou ponteiro): void",
       "params": [
-        "valor: objeto ou ponteiro"
+        "value: objeto ou ponteiro"
       ]
     },
     "len": {
-      "label": "len(valor: text ou Array<T> ou HashMap<K, V>): int",
+      "label": "len(value: text ou Array<T> ou HashMap<K, V>): int",
       "params": [
-        "valor: text ou Array<T> ou HashMap<K, V>"
+        "value: text ou Array<T> ou HashMap<K, V>"
       ]
     },
     "alloc": {
-      "label": "alloc<T>(quantidade: int): *T",
+      "label": "alloc<T>(count: int): *T",
       "params": [
-        "quantidade: int"
+        "count: int"
       ]
     },
     "assert": {
@@ -120,134 +125,134 @@
       ]
     },
     "int": {
-      "label": "int(valor: int ou byte ou bool): int",
+      "label": "int(value: int ou byte ou bool): int",
       "params": [
-        "valor: int ou byte ou bool"
+        "value: int ou byte ou bool"
       ]
     },
     "byte": {
-      "label": "byte(valor: int ou byte ou bool): byte",
+      "label": "byte(value: int ou byte ou bool): byte",
       "params": [
-        "valor: int ou byte ou bool"
+        "value: int ou byte ou bool"
       ]
     },
     "bool": {
-      "label": "bool(valor: int ou byte ou bool): bool",
+      "label": "bool(value: int ou byte ou bool): bool",
       "params": [
-        "valor: int ou byte ou bool"
+        "value: int ou byte ou bool"
       ]
     },
     "move": {
-      "label": "move(proprietario): mesmo tipo",
+      "label": "move(proprietario): mesmo kind",
       "params": [
         "proprietario: own"
       ]
     },
-    "ler_bytes": {
-      "label": "ler_bytes(buffer: *byte, capacidade: int): int",
+    "read_bytes": {
+      "label": "read_bytes(buffer: *byte, capacity: int): int",
       "params": [
         "buffer: *byte",
-        "capacidade: int"
+        "capacity: int"
       ]
     },
-    "agora": {
-      "label": "agora(): int",
+    "monotonic_ms": {
+      "label": "monotonic_ms(): int",
       "params": []
     },
-    "arquivo_abrir": {
-      "label": "arquivo_abrir(caminho: text, modo: int): own Arquivo",
+    "file_open": {
+      "label": "file_open(caminho: text, modo: int): own File",
       "params": [
         "caminho: text",
         "modo: int"
       ]
     },
-    "arquivo_ler": {
-      "label": "arquivo_ler(arquivo: Arquivo, buffer: *byte, capacidade: int): int",
+    "file_read": {
+      "label": "file_read(arquivo: File, buffer: *byte, capacity: int): int",
       "params": [
-        "arquivo: Arquivo",
+        "arquivo: File",
         "buffer: *byte",
-        "capacidade: int"
+        "capacity: int"
       ]
     },
-    "arquivo_escrever": {
-      "label": "arquivo_escrever(arquivo: Arquivo, buffer: *byte, quantidade: int): int",
+    "file_write": {
+      "label": "file_write(arquivo: File, buffer: *byte, count: int): int",
       "params": [
-        "arquivo: Arquivo",
+        "arquivo: File",
         "buffer: *byte",
-        "quantidade: int"
+        "count: int"
       ]
     },
-    "arquivo_fechar": {
-      "label": "arquivo_fechar(arquivo: Arquivo): int",
+    "file_close": {
+      "label": "file_close(arquivo: File): int",
       "params": [
-        "arquivo: Arquivo"
+        "arquivo: File"
       ]
     },
-    "erro_io": {
-      "label": "erro_io(): int",
+    "io_error": {
+      "label": "io_error(): int",
       "params": []
     },
-    "argumentos": {
-      "label": "argumentos(): int",
+    "arg_count": {
+      "label": "arg_count(): int",
       "params": []
     },
-    "argumento_tamanho": {
-      "label": "argumento_tamanho(indice: int): int",
+    "arg_size": {
+      "label": "arg_size(indice: int): int",
       "params": [
         "indice: int"
       ]
     },
-    "argumento_copiar": {
-      "label": "argumento_copiar(indice: int, buffer: *byte, capacidade: int): int",
+    "arg_copy": {
+      "label": "arg_copy(indice: int, buffer: *byte, capacity: int): int",
       "params": [
         "indice: int",
         "buffer: *byte",
-        "capacidade: int"
+        "capacity: int"
       ]
     },
-    "dormir": {
-      "label": "dormir(milissegundos: int): int",
+    "sleep_ms": {
+      "label": "sleep_ms(milissegundos: int): int",
       "params": [
         "milissegundos: int"
       ]
     },
-    "relogio_civil": {
-      "label": "relogio_civil(): int",
+    "civil_ms": {
+      "label": "civil_ms(): int",
       "params": []
     },
-    "escrever_bytes": {
-      "label": "escrever_bytes(canal: int, borrow dados: *byte, quantidade: int): int",
+    "write_bytes": {
+      "label": "write_bytes(canal: int, borrow data: *byte, count: int): int",
       "params": [
         "canal: int",
-        "borrow dados: *byte",
-        "quantidade: int"
+        "borrow data: *byte",
+        "count: int"
       ]
     },
-    "arquivo_sincronizar": {
-      "label": "arquivo_sincronizar(borrow mut arquivo: Arquivo): int",
+    "file_sync": {
+      "label": "file_sync(borrow mut arquivo: File): int",
       "params": [
-        "borrow mut arquivo: Arquivo"
+        "borrow mut arquivo: File"
       ]
     },
-    "arquivo_substituir": {
-      "label": "arquivo_substituir(origem: text, destino: text): int",
+    "file_replace": {
+      "label": "file_replace(origem: text, destino: text): int",
       "params": [
         "origem: text",
         "destino: text"
       ]
     },
-    "arquivo_remover": {
-      "label": "arquivo_remover(caminho: text): int",
+    "file_remove": {
+      "label": "file_remove(caminho: text): int",
       "params": [
         "caminho: text"
       ]
     },
-    "fatia": {
-      "label": "fatia(buffer: *T ou slice<T>, inicio: int, quantidade: int): slice<T>",
+    "slice_of": {
+      "label": "slice_of(buffer: *T ou slice<T>, start: int, count: int): slice<T>",
       "params": [
         "buffer: *T ou slice<T>",
-        "inicio: int",
-        "quantidade: int"
+        "start: int",
+        "count: int"
       ]
     }
   },

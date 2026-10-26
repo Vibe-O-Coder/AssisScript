@@ -28,14 +28,14 @@ with tempfile.TemporaryDirectory(prefix='assis-alpha8-bench-') as temp:
     context=runpy.run_path(str(ROOT/'tools/benchmark-values-io.py'));sys.argv=previous_argv
     report=json.loads((folder/'baseline.json').read_text(encoding='utf-8'));report['nativeFeatures']=[]
     run=context['run'];peak=context['peak_memory'];compiler=context['compiler'];n=args.iterations
-    document=b'{"valor":[1,2,true,null,"acao"]}'
+    document=b'{"value":[1,2,true,null,"acao"]}'
     json_n=max(1000,n//100)
     payload=''.join(f'b[{i}]=byte({c});' for i,c in enumerate(document))
     workloads=[
         ('f64',f'safe assis assis_assis():int{{let total:f64=0.0;for(let i:int=0;i<{n};i+=1){{total+=f64(i)*0.5;}}print(total);return 0;}}',float(n*(n-1)/4).hex().encode()+b'\n'),
         ('u32',f'safe assis assis_assis():int{{let total:u32=u32(0);for(let i:int=0;i<{n};i+=1){{total+=u32(i);}}print(total);return 0;}}',str((n*(n-1)//2)%(1<<32)).encode()+b'\n'),
-        ('json','#yuri <std/json.assis>\nsafe assis assis_assis():int{own b:*byte=alloc<byte>('+str(len(document))+');'+payload+f'for(let i:int=0;i<{json_n};i+=1){{assert(json::validar(b,{len(document)},64,4096).valido);}}print({json_n});return 0;}}',str(json_n).encode()+b'\n'),
-        ('eventos','#yuri <std/eventos.assis>\nsafe assis acao(borrow mut l:eventos::Loop,n:int):void{if(n<'+str(json_n)+'){assert(eventos::agendar(l,0,n+1,acao)>0);}}safe assis assis_assis():int{own l:eventos::Loop=eventos::criar(1);assert(eventos::agendar(l,0,1,acao)>0);print(eventos::executar(l,'+str(json_n)+'));return 0;}',str(json_n).encode()+b'\n')
+        ('json','#yuri <std/json.assis>\nsafe assis assis_assis():int{own b:*byte=alloc<byte>('+str(len(document))+');'+payload+f'for(let i:int=0;i<{json_n};i+=1){{assert(json::validate(b,{len(document)},64,4096).valid);}}print({json_n});return 0;}}',str(json_n).encode()+b'\n'),
+        ('events','#yuri <std/events.assis>\nsafe assis acao(borrow mut l:events::Loop,n:int):void{if(n<'+str(json_n)+'){assert(events::schedule(l,0,n+1,acao)>0);}}safe assis assis_assis():int{own l:events::Loop=events::create(1);assert(events::schedule(l,0,1,acao)>0);print(events::run(l,'+str(json_n)+'));return 0;}',str(json_n).encode()+b'\n')
     ]
     records=[]
     for name,source,expected in workloads:
@@ -67,6 +67,6 @@ with tempfile.TemporaryDirectory(prefix='assis-alpha8-bench-') as temp:
     text='# Evolução alpha.8 — '+report['compiler']+'\n\n'+(folder/'baseline.md').read_text(encoding='utf-8')
     text+='\n## Novos recursos nativos\n\n| Variante | Compilar (ms) | Executar (ms) | Bytes | Pico de RAM (bytes) |\n| --- | ---: | ---: | ---: | ---: |\n'
     for r in report['nativeFeatures']:text+=f'| {r["variant"]} | {r["compileMedianMs"]:.3f} | {r["medianMs"]:.3f} | {r["binaryBytes"]} | {max(r["peakMemoryBytes"])} |\n'
-    text+='\nSaídas conferidas por fórmulas independentes e contratos de JSON/eventos, em debug e nos dois modos. Não há baseline histórico para tipos/APIs que a alpha.7 não admite. Custos de iniciar processo estão incluídos; RAM zero de processo curto significa indisponível. Sem ganho geral prometido.\n'
+    text+='\nSaídas conferidas por fórmulas independentes e contratos de JSON/events, em debug e nos dois modos. Não há baseline histórico para tipos/APIs que a alpha.7 não admite. Custos de iniciar processo estão incluídos; RAM zero de processo curto significa indisponível. Sem ganho geral prometido.\n'
     args.output.with_suffix('.md').write_text(text,encoding='utf-8',newline='\n')
     print(args.output)

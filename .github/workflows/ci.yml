@@ -14,15 +14,18 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y gdb binutils
       - name: Rebuild runtimes and compiler from source
         run: python3 tools/embed-runtime.py && make -B all
-      - run: make test test-pe test-dev test-evolution test-generics test-functions test-generic-classes test-collections-ast test-ownership-functions test-values test-files test-text-bytes test-cli test-alpha8 test-alpha9
+      - run: make test test-pe test-dev test-evolution test-generics test-functions test-generic-classes test-collections-ast test-ownership-functions test-values test-files test-text-bytes test-cli test-alpha8 test-alpha9 test-alpha10
+      - run: python3 tools/benchmark-optimization.py --samples 3 --output benchmarks/resultados/optimization-alpha10-linux.json --check
       - run: python3 tools/report-progress.py --check
       - run: python3 tools/generate-install-manifest.py --check
       - run: python3 tools/validate-clean.py
-      - run: python3 tools/benchmark-alpha9.py --samples 3 --iterations 2000000 --output benchmarks/resultados/evolucao-alpha9-linux.json
+      - run: python3 tools/benchmark-alpha10.py --samples 3 --iterations 2000000 --output benchmarks/resultados/evolucao-alpha10-linux.json
       - uses: actions/upload-artifact@v4
         with:
           name: linux-values-io-measurement
-          path: benchmarks/resultados/evolucao-alpha9-linux.*
+          path: |
+            benchmarks/resultados/evolucao-alpha10-linux.*
+            benchmarks/resultados/optimization-alpha10-linux.*
       - uses: actions/upload-artifact@v4
         with:
           name: linux-binary
@@ -38,17 +41,22 @@ jobs:
         with:
           python-version: '3.12'
       - uses: msys2/setup-msys2@v2
+        id: toolchain
         with:
           msystem: UCRT64
           install: mingw-w64-ucrt-x86_64-gcc
       - name: Rebuild runtimes and compiler from source
         shell: pwsh
+        env:
+          ASSIS_MSYS2: ${{ steps.toolchain.outputs.msys2-location }}
         run: |
-          $env:PATH = 'C:\msys64\ucrt64\bin;' + $env:PATH
-          $env:BINUTILS_DIR = 'C:\msys64\ucrt64\bin'
+          $toolchainBin = Join-Path $env:ASSIS_MSYS2 'ucrt64/bin'
+          $env:PATH = $toolchainBin + ';' + $env:PATH
+          $env:BINUTILS_DIR = $toolchainBin
+          "ASSIS_TOOLCHAIN_BIN=$toolchainBin" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
           python tools/embed-runtime.py
           if ($LASTEXITCODE -ne 0) { throw 'Runtime rebuild failed' }
-          ./tools/build-windows.ps1 -Compiler C:/msys64/ucrt64/bin/gcc.exe
+          ./tools/build-windows.ps1 -Compiler (Join-Path $toolchainBin 'gcc.exe')
       - name: Native compiler, editor and functional tests
         shell: pwsh
         run: |
@@ -67,22 +75,26 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Collections AST tests failed' }
           python tests/test-ownership-functions.py
           if ($LASTEXITCODE -ne 0) { throw 'Ownership function tests failed' }
-          foreach ($suite in @('values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9')) {
+          foreach ($suite in @('values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy')) {
             python ('tests/test-' + $suite + '.py')
             if ($LASTEXITCODE -ne 0) { throw ('New suite failed: ' + $suite) }
           }
+          python tools/benchmark-optimization.py --samples 3 --output benchmarks/resultados/optimization-alpha10-windows.json --check
+          if ($LASTEXITCODE -ne 0) { throw 'Performance regression gate failed' }
           python tools/generate-install-manifest.py --check
           if ($LASTEXITCODE -ne 0) { throw 'Install manifest differs from distribution' }
           python tools/report-progress.py --check
           if ($LASTEXITCODE -ne 0) { throw 'Progress report differs from checklist' }
-          python tools/validate-clean.py --cc C:/msys64/ucrt64/bin/gcc.exe --binutils-dir C:/msys64/ucrt64/bin
+          python tools/validate-clean.py --cc (Join-Path $env:ASSIS_TOOLCHAIN_BIN 'gcc.exe') --binutils-dir $env:ASSIS_TOOLCHAIN_BIN
           if ($LASTEXITCODE -ne 0) { throw 'Clean rebuild failed' }
-          python tools/benchmark-alpha9.py --samples 3 --output benchmarks/resultados/evolucao-alpha9-windows.json
+          python tools/benchmark-alpha10.py --samples 3 --output benchmarks/resultados/evolucao-alpha10-windows.json
           if ($LASTEXITCODE -ne 0) { throw 'Ownership measurement failed' }
       - uses: actions/upload-artifact@v4
         with:
           name: windows-values-io-measurement
-          path: benchmarks/resultados/evolucao-alpha9-windows.*
+          path: |
+            benchmarks/resultados/evolucao-alpha10-windows.*
+            benchmarks/resultados/optimization-alpha10-windows.*
       - uses: actions/upload-artifact@v4
         with:
           name: windows-binaries

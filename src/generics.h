@@ -240,7 +240,7 @@ static void prepare_generics(void){
         error(definitions.v[i],i<class_count?"classe declarada duas vezes":j>=class_count?"função declarada duas vezes":"nome principal declarado duas vezes");
     for(int i=0;i<generic_functions.n;i++){
         Function *f=generic_functions.v[i];
-        if(same(f->t->text,ENTRY))error(f->t,"assis_assis não pode ser genérica");
+        if(same(f->t->text,ENTRY)||same(f->t->text,"main"))error(f->t,"main/assis_assis não pode ser genérica");
         for(int j=0;j<f->params.n;j++)for(int k=0;k<j;k++)if(same(((Var*)f->params.v[j])->t->text,((Var*)f->params.v[k])->t->text))error(((Var*)f->params.v[j])->t,"parâmetro declarado duas vezes");
         if(f->pure){
             if(!pure_contract(f->result,true))error(f->t,"pure exige retorno escalar ou função pure após especialização");

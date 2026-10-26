@@ -1,16 +1,16 @@
-(* AssisScript 3.3.0-alpha.9. Palavras legadas são aliases dos tokens legíveis. *)
+(* AssisScript 3.3.0-alpha.10. Palavras legadas são aliases dos tokens legíveis. *)
 programa = { diretiva | "namespace", nome, ";" | ["public"], (classe | registro | variante | funcao) } ;
 diretiva = "#yuri", "<", caminho_terminado_em_assis, ">", [";"], fim_de_linha
           | "#body", caminho_terminado_em_pillow, [";"], fim_de_linha
-          | "importa", texto, ";" ;
+          | ("import" | "importa"), texto, ";" ;
 pacote = { diretiva_yuri | diretiva_body | comentario } ;
-classe = ["final"], "ASSIS", nome, [parametros_tipo], ["extends", nome, [argumentos_tipo]], "{", { campo | metodo }, "}" ;
+classe = ["final"], ("class" | "ASSIS"), nome, [parametros_tipo], ["extends", nome, [argumentos_tipo]], "{", { campo | metodo }, "}" ;
 registro = ["value"], "struct", nome, [parametros_tipo], "{", { campo }, "}" ;
 variante = "enum", nome, [parametros_tipo], "{", caso, {caso}, "}" ;
 caso = nome, ["(", [tipo, {",", tipo}], ")"], ";" ;
 campo = ["private"], ("let" | "own"), nome, ":", tipo, ";" ;
-funcao = ["pure" | "safe"], "assis", nome, [parametros_tipo], "(", [parametros], ")", ":", retorno, bloco ;
-metodo = ["private"], "assis", nome, "(", [receptor, [",", parametros] | parametros], ")", ":", retorno, bloco ;
+funcao = ["pure" | "safe"], ("fn" | "assis"), nome, [parametros_tipo], "(", [parametros], ")", ":", retorno, bloco ;
+metodo = ["private"], ("fn" | "assis"), nome, "(", [receptor, [",", parametros] | parametros], ")", ":", retorno, bloco ;
 receptor = "borrow", ["mut"], "self" ;
 modo = "own" | "borrow", ["mut"] ;
 parametro = [modo], nome, ":", tipo ;
@@ -20,7 +20,7 @@ parametros_tipo = "<", nome, {",", nome}, ">" ;
 argumentos_tipo = "<", tipo, {",", tipo}, ">" ;
 tipo = {"*"}, ("int" | "byte" | "i8" | "i16" | "i32" | "i64" | "u8" | "u16" | "u32" | "u64" | "f32" | "f64" | "bool" | "text" | "void" | "Arquivo" | "slice", "<", tipo, ">" | nome, [argumentos_tipo] | tipo_funcao) ;
 tipo_argumento = [modo], tipo ;
-tipo_funcao = ["pure" | "safe"], "assis", "(", [tipo_argumento, {",", tipo_argumento}], ")", ":", ["own" | "borrow", ["mut"], "(", inteiro, ")"], tipo ;
+tipo_funcao = ["pure" | "safe"], ("fn" | "assis"), "(", [tipo_argumento, {",", tipo_argumento}], ")", ":", ["own" | "borrow", ["mut"], "(", inteiro, ")"], tipo ;
 bloco = "{", {instrucao}, "}" ;
 instrucao = bloco | ("let" | "val"), nome, ":", tipo, "=", expressao, ";"
           | "div", bloco | "unsafe", bloco

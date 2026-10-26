@@ -1,0 +1,19 @@
+#yuri <std/unicode.assis>
+#yuri <std/owned.assis>
+
+pure fn double(value: int): int { return value * 2; }
+
+safe fn main(): int {
+    own values: Array<int> = [1, 2, 3];
+    for (let i: int = 0; i < len(values); i += 1) {
+        print(double(values[i]));
+    }
+    own buffer: *byte = alloc<byte>(3);
+    buffer[0] = byte(65); buffer[1] = byte(0); buffer[2] = byte(66);
+    own message: unicode::String = new unicode::String();
+    assert(message.load(slice_of(buffer, 0, 3)));
+    own items: owned::OwnedList<unicode::String> = new owned::OwnedList<unicode::String>();
+    items.push_front(move(message));
+    print(items.get(0).size());
+    return 0;
+}

@@ -1,6 +1,6 @@
-importa "std/matematica";
-importa "std/texto";
-importa "std/memoria";
+importa "std/math";
+importa "std/strings";
+importa "std/memory";
 importa "bibliotecas/operacoes.assis";
 
 te

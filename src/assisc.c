@@ -38,9 +38,10 @@ static bool target_windows=true;
 static bool target_windows=false;
 #endif
 
-#define VERSION "3.3.0-alpha.9"
+#include "version.h"
+#define VERSION ASSIS_VERSION
 #define ENTRY "assis_assis"
-#define CTOR "assis_fodase"
+#define CTOR "init"
 #define MAX_SOURCE (16 * 1024 * 1024)
 #define MAX_NEST 512
 
@@ -170,7 +171,7 @@ static void immediate(int reg,uint64_t value){
     else if(optimize&&(int64_t)value>=INT32_MIN&&(int64_t)value<=INT32_MAX){INS(0x48,0xc7);u8(&code,0xc0+(unsigned)reg);u32(&code,(uint32_t)value);}
     else{u8(&code,0x48);u8(&code,0xb8+(unsigned)reg);u64(&code,value);}
 }
-static void movreg(int dst,int src){INS(0x48,0x89);u8(&code,0xc0+(unsigned)(src*8+dst));}
+static void movreg(int dst,int src){if(optimize&&dst==src)return;INS(0x48,0x89);u8(&code,0xc0+(unsigned)(src*8+dst));}
 static void load_stack(int reg,int offset){INS(0x48,0x8b);u8(&code,0x84+(unsigned)(reg*8));u8(&code,0x24);u32(&code,(uint32_t)offset);}
 static void load_label(int label){if(target_windows){INS(0x48,0xb8);fix(&code,label,false);}else{INS(0x48,0x8d,0x05);fix(&code,label,true);}}
 static void call_virtual(int slot){
@@ -248,6 +249,7 @@ static bool constant(Node *n,uint64_t *value){
     case T_AND:*value=!!a&&!!b;break;case T_OR:*value=!!a||!!b;break;default:return false;
     }return true;
 }
+#include "ranges.h"
 #include "ir.h"
 static void load_local(int reg,Var *v){
     if(inline_type(v->ty)){local_address(reg,v);return;}
@@ -280,6 +282,8 @@ static void gen_address(Node *n){
         if(!value_type(n->a->ty))nonnull(n->t);INS(0x48,0x05);u32(&code,(uint32_t)n->field->offset);
     }
     else if(n->kind==N_INDEX){
+        if(optimize&&n->bounds_proven){gen_expr(n->a);load_local(RCX,n->b->var);if(slice_type(n->a->ty)){INS(0x48,0x8b,0x00);}else if(collection_of(n->a->ty)){INS(0x48,0x8b,0x40,0x18);}}
+        else{
         gen_expr(n->a);INS(0x50);gen_expr(n->b);movreg(RCX,RAX);INS(0x58);nonnull(n->t);
         if(slice_type(n->a->ty)){
             int valid=new_label();INS(0x48,0x3b,0x48,0x08);branch_if(0x82,valid);panic_at(9,n->t);mark(valid,&code);INS(0x48,0x8b,0x00);
@@ -289,10 +293,15 @@ static void gen_address(Node *n){
         }else if(n->a->ty.depth&&n->a->ownership){
             /* Only original managed buffer addresses reach this path. The
              * allocator header records requested bytes, including zero. */
-            INS(0x48,0x8b,0x50,0xf0);if(value_size(n->ty)>1){INS(0x50);movreg(RAX,RDX);INS(0x31,0xd2);immediate(RSI,(uint64_t)value_size(n->ty));INS(0x48,0xf7,0xf6);movreg(RDX,RAX);INS(0x58);}
+            INS(0x48,0x8b,0x50,0xf0);int size=value_size(n->ty);
+            if(optimize&&size>1&&!(size&(size-1))){unsigned shift=0;while((1u<<shift)!=(unsigned)size)shift++;INS(0x48,0xc1,0xea);u8(&code,shift);}
+            else if(size>1){INS(0x50);movreg(RAX,RDX);INS(0x31,0xd2);immediate(RSI,(uint64_t)size);INS(0x48,0xf7,0xf6);movreg(RDX,RAX);INS(0x58);}
             int valid=new_label();INS(0x48,0x39,0xd1);branch_if(0x82,valid);panic_at(9,n->t);mark(valid,&code);
         }
-        if(value_size(n->ty)>1){INS(0x48,0x69,0xc9);u32(&code,(uint32_t)value_size(n->ty));}INS(0x48,0x01,0xc8);
+        }
+        int size=value_size(n->ty);
+        if(optimize&&(size==1||size==2||size==4||size==8)){INS(0x48,0x8d,0x04);u8(&code,0x08+(size==8?192:size==4?128:size==2?64:0));}
+        else{if(size>1){INS(0x48,0x69,0xc9);u32(&code,(uint32_t)size);}INS(0x48,0x01,0xc8);}
     }else if(n->kind==N_UNARY&&n->op=='*'){gen_expr(n->a);nonnull(n->t);}
     else fatal("posição gravável inválida no backend");
 }
@@ -338,6 +347,11 @@ static void gen_operation(int op,Type left,Type right,Token *t){
 static bool constant_operation(int op,Node *right){
     uint64_t value;if(!optimize||!constant(right,&value))return false;
     if((op==T_SHL||op==T_SHR)&&value<64){INS(0x48,0xc1);u8(&code,op==T_SHL?0xe0:0xf8);u8(&code,(unsigned)value);return true;}
+    if((int64_t)value>=INT32_MIN&&(int64_t)value<=INT32_MAX){
+        unsigned opcode=op=='+'?0:op=='-'?5:op=='&'?4:op=='|'?1:op=='^'?6:8;
+        if(opcode<8){INS(0x48,0x81);u8(&code,0xc0+opcode*8);u32(&code,(uint32_t)value);return true;}
+    }
+    if(op=='*'&&(value==3||value==5||value==9)){INS(0x48,0x8d,0x04);u8(&code,value==3?0x40:value==5?0x80:0xc0);return true;}
     if((op!='/'&&op!='%')||!value)return false;
     uint64_t magnitude=(int64_t)value<0?0-value:value;
     if(!(magnitude&(magnitude-1))){
@@ -351,6 +365,28 @@ static bool constant_operation(int op,Node *right){
     }
     /* Nonzero literals other than -1 cannot trigger either division trap. */
     immediate(RCX,value);INS(0x48,0x99,0x48,0xf7,0xf9);if(op=='%')movreg(RAX,RDX);return true;
+}
+/* Inline only bounded, nontrapping scalar expression leaves. Arguments are
+ * names/literals, so substitution cannot reorder effects, traps or mutation.
+ * Semantic/ownership passes already validated the original call. */
+static bool inline_leaf(Node *n,Function *f,int *budget){
+    if(!n||--*budget<0||!(equal_type(n->ty,type_i64)||equal_type(n->ty,type_u8)||equal_type(n->ty,type_bool)))return false;
+    if(n->kind==N_INT||n->kind==N_BOOL)return true;
+    if(n->kind==N_NAME){for(int i=0;i<f->params.n;i++)if(n->var==f->params.v[i])return true;return false;}
+    if(n->kind==N_UNARY&&(n->op=='+'||n->op=='-'||n->op=='~'||n->op=='!'))return inline_leaf(n->a,f,budget);
+    if(n->kind==N_BINARY&&n->op!='/'&&n->op!='%'&&n->op!=T_SHL&&n->op!=T_SHR)return inline_leaf(n->a,f,budget)&&inline_leaf(n->b,f,budget);
+    return false;
+}
+static Node *inline_substitute(Node *n,Node *call){
+    if(n->kind==N_NAME)for(int i=0;i<call->fn->params.n;i++)if(n->var==call->fn->params.v[i])return call->items.v[i];
+    Node *copy_node=mem(sizeof(*copy_node));*copy_node=*n;
+    if(n->a)copy_node->a=inline_substitute(n->a,call);if(n->b)copy_node->b=inline_substitute(n->b,call);return copy_node;
+}
+static bool inline_call(Node *n){
+    Function *f=n->fn;if(!optimize||debug_symbols||!f||!f->pure||f->owner||f->params.n>4||f->body->items.n!=1)return false;
+    Node *ret=f->body->items.v[0];int budget=16;if(ret->kind!=N_RETURN||!inline_leaf(ret->a,f,&budget))return false;
+    for(int i=0;i<n->items.n;i++){Node *a=n->items.v[i];if((a->kind!=N_NAME&&a->kind!=N_INT&&a->kind!=N_BOOL)||!(equal_type(a->ty,type_i64)||equal_type(a->ty,type_u8)||equal_type(a->ty,type_bool)))return false;}
+    gen_expr(inline_substitute(ret->a,n));return true;
 }
 static void gen_expr_inner(Node *n){
     uint64_t folded;if(optimize&&constant(n,&folded)){immediate(RAX,folded);return;}
@@ -444,6 +480,7 @@ static void gen_expr_inner(Node *n){
         else if(n->op==T_U8||n->op==T_I64||n->op==T_NUMTYPE){gen_numeric_cast(((Node*)n->items.v[0])->ty,n->ty);}
         else if(n->op==T_BOOL){if(floating(((Node*)n->items.v[0])->ty)){movreg(RCX,RAX);immediate(RDX,((Node*)n->items.v[0])->ty.kind==TY_F32?UINT64_C(0x7fffffff):UINT64_C(0x7fffffffffffffff));INS(0x48,0x21,0xd0);}INS(0x48,0x85,0xc0);bool_result(0x95);}break;
     case N_CALL:
+        if(inline_call(n))break;
         if(!n->fn){
             /* Evaluate the callee once, before arguments. The saved address is
              * below the argument area and does not change the native ABI. */
@@ -529,9 +566,12 @@ static void gen_false(Node *n,int label){
         }
     }
     if(optimize&&n->kind==N_BINARY&&(n->op==T_EQ||n->op==T_NE||n->op=='<'||n->op=='>'||n->op==T_LE||n->op==T_GE)&&!equal_type(n->a->ty,type_str)&&!value_type(n->a->ty)&&!floating(n->a->ty)&&(!integer(n->a->ty)||equal_type(n->a->ty,type_i64)||equal_type(n->a->ty,type_u8))){
-        gen_expr(n->a);if(!operand_rcx(n->b)){INS(0x50);gen_expr(n->b);movreg(RCX,RAX);INS(0x58);}
+        gen_expr(n->a);
         unsigned cc=n->op==T_EQ?0x85:n->op==T_NE?0x84:n->op=='<'?0x8d:n->op==T_LE?0x8f:n->op=='>'?0x8e:0x8c;
-        INS(0x48,0x39,0xc8);branch_if(cc,label);return;
+        uint64_t value;
+        if(constant(n->b,&value)&&(int64_t)value>=INT32_MIN&&(int64_t)value<=INT32_MAX){INS(0x48,0x3d);u32(&code,(uint32_t)value);}
+        else{if(!operand_rcx(n->b)){INS(0x50);gen_expr(n->b);movreg(RCX,RAX);INS(0x58);}INS(0x48,0x39,0xc8);}
+        branch_if(cc,label);return;
     }
     gen_expr(n);INS(0x48,0x85,0xc0);branch_if(0x84,label);
 }
@@ -604,13 +644,18 @@ static void gen_stmt(Node *n){
     n->code_end=code.n;
 }
 static size_t entry_offset;
-static void count_uses(Node *n){
-    if(!n)return;if(n->kind==N_NAME&&n->var)n->var->uses++;
-    count_uses(n->a);count_uses(n->b);count_uses(n->c);count_uses(n->step);
-    for(int i=0;i<n->items.n;i++)count_uses(n->items.v[i]);
+static void count_uses(Node *n,int depth){
+    if(!n)return;
+    /* Saturation bounds compile-time work and avoids signed score overflow.
+     * A use in an inner loop should outrank one-time setup references. */
+    int weight=1<<(depth>4?12:depth*3);
+    if(n->kind==N_NAME&&n->var){int *uses=&n->var->uses;*uses=*uses>INT_MAX-weight?INT_MAX:*uses+weight;}
+    int nested=n->kind==N_WHILE?depth+1:depth;
+    count_uses(n->a,nested);count_uses(n->b,nested);count_uses(n->c,depth);count_uses(n->step,nested);
+    for(int i=0;i<n->items.n;i++)count_uses(n->items.v[i],depth);
 }
 static void allocate_registers(Function *f){
-    if(!optimize)return;count_uses(f->body);const int registers[]={3,12,13,14};
+    if(!optimize)return;count_uses(f->body,0);const int registers[]={3,12,13,14};
     for(int r=0;r<4;r++){
         Var *best=NULL;
         for(int i=0;i<f->vars.n;i++){Var *v=f->vars.v[i];if(v->reg<0&&!v->address_taken&&(numeric(v->ty)||equal_type(v->ty,type_bool))&&v->uses&&(!best||v->uses>best->uses))best=v;}
@@ -631,8 +676,11 @@ static void generate(void){
         Function *f=all_functions.v[i];generating=f;mark(f->label,&code);return_label=new_label();loop_count=0;cleanups.n=0;
         allocate_registers(f);
         INS(0x55,0x48,0x89,0xe5);
+        unsigned saved[4],saved_count=0;
+        const unsigned candidates[]={3,12,13,14};
+        if(optimize)for(int r=0;r<4;r++)for(int j=0;j<f->vars.n;j++)if(((Var*)f->vars.v[j])->reg==(int)candidates[r]){saved[saved_count++]=candidates[r];break;}
         uint32_t slots=(uint32_t)(f->slots+(f->owner?1:0));
-        uint32_t locals=(slots+(optimize?4:0))*8;locals=(locals+15)&~15u;
+        uint32_t locals=(slots+saved_count)*8;locals=(locals+15)&~15u;
         /* Check before touching the frame: also covers exceptionally large
          * locals, not just recursive call count. Keep headroom for diagnostics. */
         movreg(RAX,RSP);INS(0x48,0x2d);u32(&code,locals);INS(0x49,0x3b,0x47,0x68);
@@ -644,7 +692,7 @@ static void generate(void){
             INS(0x48,0x81,0xec);u32(&code,4096);INS(0x85,0x04,0x24,0x48,0xff,0xc9);branch_if(0x85,probe);
             if(locals%4096){INS(0x48,0x81,0xec);u32(&code,locals%4096);}
         }else{INS(0x48,0x81,0xec);u32(&code,locals);}
-        if(optimize){const unsigned regs[]={3,12,13,14};for(int r=0;r<4;r++){u8(&code,regs[r]>=8?0x4c:0x48);u8(&code,0x89);u8(&code,0x85+((regs[r]&7)*8));u32(&code,(uint32_t)(-8*(slots+(unsigned)r+1)));}}
+        for(unsigned r=0;r<saved_count;r++){u8(&code,saved[r]>=8?0x4c:0x48);u8(&code,0x89);u8(&code,0x85+((saved[r]&7)*8));u32(&code,(uint32_t)(-8*(slots+r+1)));}
         int count=f->params.n+(f->owner?1:0);
         if(f->owner){INS(0x48,0x8b,0x85);u32(&code,(uint32_t)(16+8*(count-1)));INS(0x48,0x89,0x45,0xf8);}
         for(int j=0;j<f->params.n;j++){
@@ -658,7 +706,7 @@ static void generate(void){
         gen_cleanup(0);
         if(isvoid(f->result)){INS(0x31,0xc0);}else panic_at(7,f->t);
         mark(return_label,&code);
-        if(optimize){const unsigned regs[]={3,12,13,14};for(int r=0;r<4;r++){u8(&code,regs[r]>=8?0x4c:0x48);u8(&code,0x8b);u8(&code,0x85+((regs[r]&7)*8));u32(&code,(uint32_t)(-8*(slots+(unsigned)r+1)));}}
+        for(unsigned r=0;r<saved_count;r++){u8(&code,saved[r]>=8?0x4c:0x48);u8(&code,0x8b);u8(&code,0x85+((saved[r]&7)*8));u32(&code,(uint32_t)(-8*(slots+r+1)));}
         INS(0xc9,0xc3);f->code_end=code.n;
     }
     /* One drop function per concrete record. Calls keep recursive types finite
@@ -788,8 +836,16 @@ static int run_program(double timeout){
 #else
 static int run_program(double timeout){
     wchar_t temp[32768],directory[32768],path[32768];DWORD n=GetTempPathW(32768,temp);
-    if(!n||n>=32768||!GetTempFileNameW(temp,L"ass",0,directory))fatal("não foi possível criar diretório temporário (Windows %lu)",(unsigned long)GetLastError());
-    if(!DeleteFileW(directory)||!CreateDirectoryW(directory,NULL))fatal("não foi possível preparar diretório temporário");
+    if(!n||n+96>=32768)fatal("não foi possível criar diretório temporário (Windows %lu)",(unsigned long)GetLastError());
+    /* Reserve the directory atomically. A temporary file followed by
+     * DeleteFile/CreateDirectory races other runs and antivirus scanners. */
+    bool created=false;
+    for(unsigned attempt=0;attempt<128;attempt++){
+        swprintf(directory,32768,L"%lsassis-%lu-%llu-%u",temp,(unsigned long)GetCurrentProcessId(),(unsigned long long)GetTickCount64(),attempt);
+        if(CreateDirectoryW(directory,NULL)){created=true;break;}
+        if(GetLastError()!=ERROR_ALREADY_EXISTS)fatal("não foi possível preparar diretório temporário (Windows %lu)",(unsigned long)GetLastError());
+    }
+    if(!created)fatal("não foi possível reservar diretório temporário exclusivo");
     if(wcslen(directory)+16>=32768)fatal("caminho temporário grande demais");
     wcscpy(path,directory);wcscat(path,L"\\programa.exe");char *utf8=utf8_path(path);write_executable(utf8);free(utf8);fflush(NULL);
     STARTUPINFOW si={0};PROCESS_INFORMATION pi={0};si.cb=sizeof(si);si.dwFlags=STARTF_USESTDHANDLES;
@@ -821,10 +877,10 @@ static int compiler_main(int argc,char **argv){
     if(same(cmd,"doctor")){
         puts("AssisScript " VERSION "\nHost: " HOST_NAME "\nBackends: ELF64 Linux / PE32+ Windows x64\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis");return 0;
     }
-    if(same(cmd,"new")||same(cmd,"init")||same(cmd,"criar")){if(argc!=3)fatal("use: assis new <pasta>");create_project(argv[2]);return 0;}
+    if(same(cmd,"new")||same(cmd,"init")||same(cmd,"create")){if(argc!=3)fatal("use: assis new <pasta>");create_project(argv[2]);return 0;}
     if(same(cmd,"fmt"))return format_command(argc,argv);
     bool testing=same(cmd,"test"),documenting=same(cmd,"doc"),inspecting_ir=same(cmd,"ir");
-    bool build=same(cmd,"build")||same(cmd,"compilar"),run=same(cmd,"run")||same(cmd,"executar");
+    bool build=same(cmd,"build")||same(cmd,"compilar"),run=same(cmd,"run")||same(cmd,"run");
     run=run||testing;
     bool locking=same(cmd,"lock");
     bool validate=same(cmd,"check")||same(cmd,"verificar")||locking||documenting||inspecting_ir,show_tokens=same(cmd,"tokens");
@@ -865,7 +921,7 @@ static int compiler_main(int argc,char **argv){
     if(!input)input="assis.assis";module_search_paths();initialize_packages(input);Vec expanded={0};load_module(input,NULL,stdin_source,&expanded,0);tokens=expanded;
     if(!locking)package_lock(false);
     if(show_tokens){for(int i=0;i<tokens.n;i++){Token *t=tokens.v[i];printf("%4d:%-3d %-18s %s\n",t->line,t->col,token_name(t),t->text);}return 0;}
-    scan_namespaces();parse();if(testing)prepare_tests();bind_namespaces();check();check_ownership();check_safety();prepare_ir();if(inspecting_ir){print_ir();return 0;}if(locking){package_lock(true);return 0;}if(documenting){document_api(output);return 0;}if(validate){if(json_diagnostics)puts("{\"ok\":true}");else printf("ASSIS: %s passou na análise de sintaxe e tipos.\n",input);return 0;}
+    scan_namespaces();parse();if(testing)prepare_tests();bind_namespaces();check();check_ownership();check_safety();prepare_ir();prepare_ranges();if(inspecting_ir){print_ir();return 0;}if(locking){package_lock(true);return 0;}if(documenting){document_api(output);return 0;}if(validate){if(json_diagnostics)puts("{\"ok\":true}");else printf("ASSIS: %s passou na análise de sintaxe e tipos.\n",input);return 0;}
     generate();if(run)return run_program(timeout);
     if(!output){
         size_t len=strlen(input);char *name=copy(input,len);char *slash=strrchr(name,'/'),*dot=strrchr(name,'.');

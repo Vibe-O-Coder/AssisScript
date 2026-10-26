@@ -189,7 +189,7 @@ function activate(context) {
         const args = [command, file]; if(command !== 'fmt')for (const dir of config(uri).get('includePaths', [])) args.push('-I', path.resolve(root, dir));
         if (command === 'run' || command === 'test') args.push('--timeout', String(config(uri).get('runTimeout', 10)));
         const definition = { ...supplied, type: 'assisscript', command };
-        const result = new vscode.Task(definition, folder || vscode.TaskScope.Workspace, { build: 'Compilar', check: 'Verificar', run: 'Compilar e executar', fmt: 'Formatar', test: 'Testar', doc: 'Gerar API' }[command], 'AssisScript', new vscode.ProcessExecution(compiler(uri), args, { cwd: root }), '$assisscript');
+        const result = new vscode.Task(definition, folder || vscode.TaskScope.Workspace, { build: 'Compilar', check: 'Verificar', run: 'Compilar e run', fmt: 'Formatar', test: 'Testar', doc: 'Gerar API' }[command], 'AssisScript', new vscode.ProcessExecution(compiler(uri), args, { cwd: root }), '$assisscript');
         if (command === 'build') result.group = vscode.TaskGroup.Build;
         return result;
     }

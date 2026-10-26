@@ -27,7 +27,7 @@ static void scan_namespaces(void){
             if(exported&&!name->file->space)error(name,"public exige namespace no módulo");
             ModuleSymbol *symbol=mem(sizeof(*symbol));symbol->token=name;symbol->local=name->text;symbol->type=type;
             symbol->exported=exported||!name->file->space;symbol->qualified=name->file->space?qualified_name(name->file->space,name->text):name->text;
-            if(name->file->space&&same(symbol->local,ENTRY))error(name,"entrada assis_assis deve ficar no módulo sem namespace");
+            if(name->file->space&&(same(symbol->local,ENTRY)||same(symbol->local,"main")))error(name,"entrada main/assis_assis deve ficar no módulo sem namespace");
             name->text=symbol->qualified;push(&module_symbols,symbol);exported=false;header=true;
         }
         if(t->kind==T_FILE_END||t->kind==T_EOF){if(exported)error(t,"public sem declaração");}

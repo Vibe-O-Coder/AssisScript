@@ -2,7 +2,7 @@
   "name": "assisscript",
   "displayName": "AssisScript",
   "description": "IntelliSense, diagnósticos do compilador nativo e tarefas para AssisScript.",
-  "version": "3.3.0-alpha.9",
+  "version": "3.3.0-alpha.10",
   "publisher": "assisscript-local",
   "engines": {
     "vscode": "^1.85.0"
@@ -88,7 +88,7 @@
       },
       {
         "command": "assisscript.run",
-        "title": "AssisScript: Compilar e executar"
+        "title": "AssisScript: Compilar e run"
       },
       {
         "command": "assisscript.documentation",
@@ -141,7 +141,7 @@
         "assisscript.entryFile": {
           "type": "string",
           "default": "assis.assis",
-          "description": "Arquivo de entrada das tarefas, relativo à pasta do projeto.",
+          "description": "File de entrada das tarefas, relativo à pasta do projeto.",
           "scope": "resource"
         },
         "assisscript.diagnostics": {
@@ -154,7 +154,7 @@
           "type": "number",
           "default": 350,
           "minimum": 100,
-          "description": "Intervalo sem digitação antes da verificação (ms).",
+          "description": "Range sem digitação antes da verificação (ms).",
           "scope": "resource"
         },
         "assisscript.runTimeout": {

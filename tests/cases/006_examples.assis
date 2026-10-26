@@ -11,7 +11,7 @@ assis assis_assis(): AssIs {
     Assis AssisFodase: AssIs = 41;
     Assis FodaseFodase: *AssIs = &AssisFodase;
     *FodaseFodase += 1;
-    FODASE("Inteiro alterado por ponteiro:", AssisFodase);
+    FODASE("ParsedInt alterado por ponteiro:", AssisFodase);
     foDASE(AssisAssis);
     // FodaseFodase aponta para a pilha; não se usa foDASE nele.
     Fodase 0;

@@ -29,15 +29,15 @@
     },
     {
       "name": "keyword.control.assis",
-      "match": "\\b(?:importa|ASSIS_FODASE|assIS|fodASE|ASSis|Fodase|FODasE|FodASE|if|else|while|return|break|continue|extends|for|div|defer|match)\\b"
+      "match": "\\b(?:import|importa|ASSIS_FODASE|assIS|fodASE|ASSis|Fodase|FODasE|FodASE|if|else|while|return|break|continue|extends|for|div|defer|match)\\b"
     },
     {
       "name": "storage.type.assis",
-      "match": "\\b(?:ASSIS|assis|Assis|AssIs|AssiS|FodAsE|FoDaSe|FODase|let|val|pure|safe|unsafe|private|final|namespace|public|i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|int|byte|bool|text|void|struct|value(?=\\s+struct\\b)|enum|Arquivo|slice|Array|HashMap|own|borrow|mut)\\b"
+      "match": "\\b(?:class|ASSIS|fn|assis|Assis|AssIs|AssiS|FodAsE|FoDaSe|FODase|let|val|pure|safe|unsafe|private|final|namespace|public|i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|int|byte|bool|text|void|struct|value(?=\\s+struct\\b)|enum|File|slice|Array|HashMap|own|borrow|mut)\\b"
     },
     {
       "name": "support.function.assis",
-      "match": "\\b(?:FODASE_fodase|ASSIS_fodase|FODASE|fodase|foDASE|new|free|print|len|fatia|alloc|assert|bytes|move|ler_bytes|agora|dormir|relogio_civil|escrever_bytes|arquivo_sincronizar|arquivo_substituir|arquivo_remover|arquivo_abrir|arquivo_ler|arquivo_escrever|arquivo_fechar|erro_io|argumentos|argumento_tamanho|argumento_copiar)\\b"
+      "match": "\\b(?:FODASE_fodase|ASSIS_fodase|FODASE|fodase|foDASE|new|free|print|len|slice_of|alloc|assert|bytes|move|read_bytes|monotonic_ms|sleep_ms|civil_ms|write_bytes|file_sync|file_replace|file_remove|file_open|file_read|file_write|file_close|io_error|arg_count|arg_size|arg_copy)\\b"
     },
     {
       "name": "constant.language.assis",

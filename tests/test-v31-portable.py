@@ -8,12 +8,13 @@ import subprocess
 import tempfile
 import sys
 import json
+import os
 
 root = Path(__file__).resolve().parent.parent
 compiler = root / 'bin' / ('assis.exe' if sys.platform == 'win32' else 'assis')
-fixtures = root / 'build/v31-fixtures'
+fixtures = Path(os.environ.get('ASSIS_FIXTURE_DIR', root / 'build/v31-fixtures'))
 sources = sorted(fixtures.glob('*.assis'))
-assert len(sources) >= 7, 'Gere o corpus com ASSIS_FIXTURE_DIR antes de executar'
+assert len(sources) >= 7, 'Gere o corpus com ASSIS_FIXTURE_DIR antes de run'
 count = 0
 for source in sources:
     for options in [[], ['--no-opt']]:
@@ -28,7 +29,7 @@ for name in ['12_relatorio_vendas', '13_codificacao']:
 if sys.platform == 'linux':
     with tempfile.TemporaryDirectory(prefix='assis-v31-install-') as temp:
         all_optional=[lib['name'] for lib in json.loads((root/'stdlib/catalogo.json').read_text())['libraries'] if not lib['required']]
-        for name, options, optional in [('minimal', ['--minimal'], []), ('selected', ['--with', 'csv,algoritmos'], ['csv', 'algoritmos']), ('full', [], all_optional), ('log', ['--with','log'], ['log','cli'])]:
+        for name, options, optional in [('minimal', ['--minimal'], []), ('selected', ['--with', 'csv,algorithms'], ['csv', 'algorithms']), ('full', [], all_optional), ('log', ['--with','log'], ['log','cli'])]:
             prefix = Path(temp) / name
             subprocess.run(['sh', root / 'instalar.sh', '--prefix', prefix, '--no-path', *options], check=True, capture_output=True)
             catalog = json.loads((prefix / 'share/assisscript/stdlib/catalogo.json').read_text())

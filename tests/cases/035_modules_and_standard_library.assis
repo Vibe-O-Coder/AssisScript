@@ -1,8 +1,8 @@
 importa "../../exemplos/bibliotecas/operacoes";
 importa "../../exemplos/bibliotecas/operacoes.assis";
-importa "std/matematica";
-importa "std/texto";
-importa "std/memoria";
+importa "std/math";
+importa "std/strings";
+importa "std/memory";
 assis assis_assis(): AssIs {
     Assis AssisAssis: Assis_Fodase = fodase Assis_Fodase(21);
     FODASE(AssisAssis.AssisFodase());

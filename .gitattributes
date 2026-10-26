@@ -1,0 +1,7 @@
+* text=auto eol=lf
+bin/assis -text
+*.exe -text
+*.png -text
+*.ico -text
+*.zip -text
+*.vsix -text

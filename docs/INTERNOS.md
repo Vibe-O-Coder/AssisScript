@@ -1,5 +1,7 @@
 # Implementação 3.3.0-alpha.6
 
+**Atualização alpha.10:** sintaxe e APIs canônicas em inglês; imports e nomes antigos da stdlib exigem migração. Veja [ENGLISH-API.md](ENGLISH-API.md) e o [handoff atual](HANDOFF-3.3-ALPHA.10.md). As grafias históricas da sintaxe continuam aliases.
+
 **Atualização alpha.9:** [Recursos/fatias e backend](RECURSOS-E-FATIAS.md) complementam os contratos abaixo: classes gerenciadas com receptor, slice<T>, texto UTF-8 com comprimento, vtable com drop e ELF PIE. [Handoff atual](HANDOFF-3.3-ALPHA.9.md).
 
 O fluxo agora inclui check_ownership e check_safety após tipos/pureza e antes de qualquer emissão. TypeRef conserva modos dos parâmetros, modo/origem do retorno e efeito safe, com igualdade/caches estruturais. Clonagem de templates preserva esses metadados por identidade.

@@ -4,19 +4,19 @@ O executável nativo passa a abrir, ler, escrever e fechar arquivos, além de re
 
 | API | Contrato |
 | --- | --- |
-| `arquivo_abrir(caminho: text, modo: int): own Arquivo` | 0: leitura; 1: criar/truncar; 2: anexar/criar. Retorna null na falha e exige destino/retorno own. |
-| `arquivo_ler(arquivo, buffer, capacidade): int` | Empréstimos exclusivos de Arquivo e buffer *byte. Retorna bytes, zero em EOF ou código nativo negativo. Pode ler menos que a capacidade. |
-| `arquivo_escrever(arquivo, buffer, quantidade): int` | Empresta Arquivo exclusivamente e buffer para leitura. Retorna quantidade escrita ou erro negativo; pode escrever menos que o pedido. |
-| `arquivo_fechar(arquivo): int` | Fecha o handle, mantendo o invólucro own. Idempotente, retorna zero ou erro negativo. |
-| `erro_io(): int` | Último código positivo de IO/argumentos, substituído por operações posteriores. Capturar imediatamente. Códigos nativos não são portáveis. |
-| `argumentos(): int` | Inclui executável no índice zero. |
-| `argumento_tamanho(indice): int` | Bytes sem NUL ou -1 em erro. |
-| `argumento_copiar(indice, buffer, capacidade): int` | Copia argumento e terminador; retorna bytes sem NUL, -1 em erro. Não trunca; capacidade deve exceder o comprimento. |
+| `file_open(caminho: text, modo: int): own File` | 0: leitura; 1: criar/truncar; 2: anexar/criar. Retorna null na falha e exige destino/retorno own. |
+| `file_read(arquivo, buffer, capacity): int` | Empréstimos exclusivos de Arquivo e buffer *byte. Retorna bytes, zero em EOF ou código nativo negativo. Pode ler menos que a capacidade. |
+| `file_write(arquivo, buffer, count): int` | Empresta Arquivo exclusivamente e buffer para leitura. Retorna quantidade escrita ou erro negativo; pode escrever menos que o pedido. |
+| `file_close(arquivo): int` | Fecha o handle, mantendo o invólucro own. Idempotente, retorna zero ou erro negativo. |
+| `io_error(): int` | Último código positivo de IO/argumentos, substituído por operações posteriores. Capturar imediatamente. Códigos nativos não são portáveis. |
+| `arg_count(): int` | Inclui executável no índice zero. |
+| `arg_size(indice): int` | Bytes sem NUL ou -1 em erro. |
+| `arg_copy(indice, buffer, capacity): int` | Copia argumento e terminador; retorna bytes sem NUL, -1 em erro. Não trunca; capacidade deve exceder o comprimento. |
 | `len(buffer own/borrow): int` | Capacidade em elementos, inclusive em campos e retornos emprestados. Ponteiros legados são rejeitados. |
 
 Arquivo é opaco; não admite new, campos, casts, cópia implícita ou acesso ao handle. Pode atravessar assinaturas own/borrow, ser movido e compor campos own de structs. A limpeza fecha o handle e libera o invólucro uma vez, inclusive após fechamento explícito e nos desvios return/break/continue. Fechamento em um destrutor não transforma sua falha em erro retornado: use fechamento explícito para observar erro. Uma falha fatal termina o processo e depende da liberação de handles pelo OS.
 
-A limpeza automática preserva `erro_io`, inclusive ao substituir um campo own ou limpar parâmetros antes de devolver uma falha de abertura. Operações explícitas de IO/argumentos podem substituí-lo. Assim o chamador consegue consultar o erro da operação que acabou de falhar.
+A limpeza automática preserva `io_error`, inclusive ao substituir um campo own ou limpar parâmetros antes de devolver uma falha de abertura. Operações explícitas de IO/argumentos podem substituí-lo. Assim o chamador consegue consultar o erro da operação que acabou de falhar.
 
 Entradas/saídas em buffers gerenciados conferem a quantidade contra a capacidade antes de chamar o OS. O empréstimo se mantém durante a avaliação dos argumentos; calcule `len(buffer)` antes da chamada exclusiva. Leitura exige buffer mutável; escrita permite empréstimo compartilhado. Chamadas de IO nunca são pure. O perfil safe admite os recursos verificados; ponteiros/text legados continuam exigindo unsafe.
 
@@ -24,20 +24,20 @@ Windows converte caminhos UTF-8 estritos em UTF-16 e argumentos em sentido inver
 
 ## Bytes e UTF-8
 
-`stdlib/texto.assis` acrescenta `Utf8Passo` por valor e funções safe `utf8_proximo`, `utf8_contar` e `utf8_valido`, sobre borrow *byte e comprimento explícito. NUL é um ponto de código válido. Rejeitam comprimentos inválidos, sequências truncadas, overlong, surrogates e pontos acima de U+10FFFF. Offsets são bytes; contagem é de pontos de código, sem normalização ou segmentação de grafemas.
+`stdlib/strings.assis` acrescenta `Utf8Step` por valor e funções safe `utf8_next`, `utf8_count` e `utf8_valid`, sobre borrow *byte e comprimento explícito. NUL é um ponto de código válido. Rejeitam comprimentos inválidos, sequências truncadas, overlong, surrogates e pontos acima de U+10FFFF. Offsets são bytes; contagem é de pontos de código, sem normalização ou segmentação de grafemas.
 
-`stdlib/conversoes.assis` oferece `formatar_int_buffer(numero, borrow mut buffer)`, sem alocação e sem terminador, incluindo INT64_MIN. Exige capacidade mínima de 20 bytes e retorna -1 se insuficiente. A representação geral de text com comprimento/vidas e slices de dados continuam pendentes; estas APIs de bytes não redefinem o text legado.
+`stdlib/convert.assis` oferece `format_int_buffer(numero, borrow mut buffer)`, sem alocação e sem terminador, incluindo INT64_MIN. Exige capacidade mínima de 20 bytes e retorna -1 se insuficiente. A representação geral de text com comprimento/vidas e slices de dados continuam pendentes; estas APIs de bytes não redefinem o text legado.
 
 ## Aplicação A: agregador CSV em fluxo
 
-[21_relatorio_csv_stream.assis](../exemplos/21_relatorio_csv_stream.assis) é uma CLI completa para um dialeto delimitado: cabeçalho literal `valor` sem aspas, uma coluna de inteiros decimais int64, aspas opcionais nos campos numéricos, LF/CRLF e último registro opcionalmente sem LF. Rejeita campos extras, vazios, NUL, sinais `+`, aspas inválidas, CR isolado, linhas longas e overflow de cada número ou da soma. Não é um parser CSV geral: multiline, múltiplas colunas, BOM e comentários não são aceitos.
+[21_relatorio_csv_stream.assis](../exemplos/21_relatorio_csv_stream.assis) é uma CLI completa para um dialeto delimitado: cabeçalho literal `value` sem aspas, uma coluna de inteiros decimais int64, aspas opcionais nos campos numéricos, LF/CRLF e último registro opcionalmente sem LF. Rejeita campos extras, vazios, NUL, sinais `+`, aspas inválidas, CR isolado, linhas longas e overflow de cada número ou da soma. Não é um parser CSV geral: multiline, múltiplas colunas, BOM e comentários não são aceitos.
 
 ```text
 assis build exemplos/21_relatorio_csv_stream.assis --safe --debug -o relatorio
 relatorio entrada.csv saida.csv
 ```
 
-No Windows, executar `relatorio.exe`. Entrada de exemplo: `valor\n1\n"-2"\n43\n`. Saída persistida: `registros,total\n3,42\n`. Códigos: 0 sucesso; 1 IO; 2 CSV inválido/limite; 3 overflow; 64 uso. A saída é aberta somente após validar e ler toda a entrada, preservando um arquivo existente nos erros de parse. Falhas após a abertura da saída podem deixar um arquivo incompleto; não há substituição atômica nem garantia de durabilidade contra queda de energia.
+No Windows, executar `relatorio.exe`. Entrada de exemplo: `value\n1\n"-2"\n43\n`. Saída persistida: `registros,total\n3,42\n`. Códigos: 0 sucesso; 1 IO; 2 CSV inválido/limite; 3 overflow; 64 uso. A saída é aberta somente após validar e ler toda a entrada, preservando um arquivo existente nos erros de parse. Falhas após a abertura da saída podem deixar um arquivo incompleto; não há substituição atômica nem garantia de durabilidade contra queda de energia.
 
 Usa um bloco de 65536 bytes, linha de 24 bytes e pequenos buffers de saída, sem crescimento proporcional à entrada. A parte numérica usa Result/ResumoCsv por valor. Recursos de arquivo e buffers são own; a conversão C dos argumentos fica em uma função safe com bloco unsafe explícito, mantendo o buffer vivo até terminar a abertura. Esse adaptador limita caminhos a 16384 bytes. O programa é independente dos fontes depois de compilado.
 
@@ -47,6 +47,6 @@ A aplicação A especificada foi atendida nesse dialeto. JSON geral, diretórios
 
 ## Continuação alpha.8
 
-Inteiros de largura fixa e f32/f64 têm [contrato numérico](NUMEROS.md). Módulos `namespace`/`public` e resolução offline com `assis.pkg`/`assis.lock` estão em [pacotes](PACOTES-E-NAMESPACES.md). `cli`, `json`, `tempo`, `log`, `iteradores` e `eventos` são bibliotecas opcionais novas, com empréstimos explícitos e limites documentados.
+Inteiros de largura fixa e f32/f64 têm [contrato numérico](NUMEROS.md). Módulos `namespace`/`public` e resolução offline com `assis.pkg`/`assis.lock` estão em [pacotes](PACOTES-E-NAMESPACES.md). `cli`, `json`, `time`, `log`, `iterators` e `events` são bibliotecas opcionais novas, com empréstimos explícitos e limites documentados.
 
 Comandos `fmt`, `test`, `doc`, LSP independente e símbolos/DWARF: [ferramentas](FERRAMENTAS-ALPHA.8.md). Relógio civil, espera, saída binária, cancelamento e persistência: [contratos](EVENTOS-E-PERSISTENCIA.md). Classes/Texto gerenciados gerais, variantes Move, capturas e slices gerais permanecem abertos; os caminhos C continuam com a fronteira legada documentada.

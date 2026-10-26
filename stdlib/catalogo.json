@@ -1,53 +1,61 @@
 {
-  "version": "3.3.0-alpha.9",
+  "version": "3.3.0-alpha.10",
   "libraries": [
     {
-      "name": "matematica",
+      "name": "math",
       "required": true,
       "doc": "BIBLIOTECA-matematica.md",
-      "description": "Mínimo, máximo, limites e valor absoluto."
+      "description": "Mínimo, máximo, limites e valor absoluto.",
+      "dependencies": []
     },
     {
-      "name": "texto",
+      "name": "strings",
       "required": true,
       "doc": "BIBLIOTECA-texto.md",
-      "description": "Texto proprietário, busca linear, recorte e espaços."
+      "description": "Texto proprietário, busca linear, recorte e espaços.",
+      "dependencies": []
     },
     {
-      "name": "memoria",
+      "name": "memory",
       "required": true,
       "doc": "BIBLIOTECA-memoria.md",
-      "description": "Preenchimento e cópia de buffers nativos."
+      "description": "Preenchimento e cópia de buffers nativos.",
+      "dependencies": []
     },
     {
-      "name": "erros",
+      "name": "errors",
       "required": true,
       "doc": "BIBLIOTECA-erros.md",
-      "description": "Resultados recuperáveis e aritmética verificada."
+      "description": "Resultados recuperáveis e aritmética verificada.",
+      "dependencies": []
     },
     {
-      "name": "conversoes",
+      "name": "convert",
       "required": true,
       "doc": "BIBLIOTECA-conversoes.md",
-      "description": "Conversão decimal estrita e formatação de int64."
+      "description": "Conversão decimal estrita e formatação de int64.",
+      "dependencies": []
     },
     {
-      "name": "algoritmos",
+      "name": "algorithms",
       "required": false,
       "doc": "BIBLIOTECA-algoritmos.md",
-      "description": "Heapsort, busca binária, deduplicação e map/filter/fold com callbacks pure."
+      "description": "Heapsort, busca binária, deduplicação e map/filter/fold com callbacks pure.",
+      "dependencies": []
     },
     {
       "name": "csv",
       "required": false,
       "doc": "BIBLIOTECA-csv.md",
-      "description": "Leitura de CSV com aspas, escapes e CRLF."
+      "description": "Leitura de CSV com aspas, escapes e CRLF.",
+      "dependencies": []
     },
     {
-      "name": "codificacao",
+      "name": "encoding",
       "required": false,
       "doc": "BIBLIOTECA-codificacao.md",
-      "description": "Hexadecimal e Base64 com validação estrita."
+      "description": "Hexadecimal e Base64 com validação estrita.",
+      "dependencies": []
     },
     {
       "name": "cli",
@@ -64,7 +72,7 @@
       "dependencies": []
     },
     {
-      "name": "tempo",
+      "name": "time",
       "required": false,
       "doc": "BIBLIOTECA-tempo.md",
       "description": "Prazos monotônicos e espera cooperativa.",
@@ -80,14 +88,14 @@
       ]
     },
     {
-      "name": "iteradores",
+      "name": "iterators",
       "required": false,
       "doc": "BIBLIOTECA-iteradores.md",
       "description": "Intervalos e pipelines imutáveis sem alocações intermediárias.",
       "dependencies": []
     },
     {
-      "name": "eventos",
+      "name": "events",
       "required": false,
       "doc": "BIBLIOTECA-eventos.md",
       "description": "Fila limitada de uma thread com temporizadores e cancelamento.",
@@ -101,7 +109,7 @@
       "dependencies": []
     },
     {
-      "name": "proprios",
+      "name": "owned",
       "required": false,
       "doc": "BIBLIOTECA-proprios.md",
       "description": "Lista limitada de proprietários com transferência e empréstimos.",

@@ -1,6 +1,6 @@
-# Estimativa de conclusão — 3.3.0-alpha.9
+# Estimativa de conclusão — 3.3.0-alpha.10
 
-Data: 25/10/2026. **Conclusão estimada: 76%** (75,5 pontos de 100).
+Data: 25/10/2026. **Conclusão estimada: 77%** (76,5 pontos de 100).
 
 Escopo: Conclusão do plano de evolução das fases 0–6, incluindo a trilha funcional e as aplicações A/B/C. Não inclui construir o navegador, HTDL, estilos ou motor de busca.
 
@@ -20,8 +20,8 @@ As etapas F0–F4 estão incorporadas aos critérios: efeitos/ordem superior na 
 | 3 — Texto, números e aplicação CLI | 15 | 100% | 15 |
 | 4 — Integração, rede e serviços | 15 | 30% | 4,5 |
 | 5 — Backend e depuração | 10 | 50% | 5,0 |
-| 6 — Ferramentas e oferta delimitada | 10 | 60% | 6,0 |
-| **Total** | **100** | **76% estimados** | **75,5** |
+| 6 — Ferramentas e oferta delimitada | 10 | 70% | 7,0 |
+| **Total** | **100** | **77% estimados** | **76,5** |
 
 ## Histórico pela mesma régua
 
@@ -33,6 +33,7 @@ As etapas F0–F4 estão incorporadas aos critérios: efeitos/ordem superior na 
 | 3.3.0-alpha.7 | 56% (56,0 pontos) | Avaliação desta entrega |
 | 3.3.0-alpha.8 | 70% (70,0 pontos) | Avaliação desta entrega |
 | 3.3.0-alpha.9 | 76% (75,5 pontos) | Avaliação desta entrega |
+| 3.3.0-alpha.10 | 77% (76,5 pontos) | Avaliação desta entrega |
 
 Cada registro histórico congela seus 35 estados; atualizações futuras não alteram retroativamente esses estados.
 
@@ -42,11 +43,11 @@ Cada registro histórico congela seus 35 estados; atualizações futuras não al
 
 | Critério | Estado | Evidência e limites |
 | --- | --- | --- |
-| P0-BASE — Baseline, hashes e reconstrução local comparável | Concluído no escopo do critério | [Documento](VALIDACAO-3.3-ALPHA.9.md) — Baseline alpha.8 preservada e reconstrução da entrega atual. |
+| P0-BASE — Baseline, hashes e reconstrução local comparável | Concluído no escopo do critério | [Documento](VALIDACAO-3.3-ALPHA.10.md) — Estado alpha.9 preservado em commit Git antes das mudanças; reconstrução limpa da entrega atual. |
 | P0-PRIV — Encapsulamento nominal e rejeições de B01 nos dois destinos | Concluído no escopo do critério | [Documento](CONTRATOS-E-SEGURANCA.md) |
 | P0-SAFE — Fronteira safe/unsafe obrigatória e garantias para text externo | Parcial (50%) | [Documento](OWNERSHIP-FUNCOES.md) — Perfil safe exige fronteira unsafe; migração global e text externo permanecem abertos. |
 | P0-FLOW — Auditoria de aliases, fluxo, laços e empréstimos completos | Concluído no escopo do critério | [Documento](OWNERSHIP-FUNCOES.md) — Auditoria do modelo gerenciado suportado; bloqueios conservadores em laços/campos. Não abrange ponteiros legados. |
-| P0-CI — Matriz adversa contínua Windows/Linux e inventário técnico | Parcial (50%) | [Documento](PROCEDENCIA.md) |
+| P0-CI — Matriz adversa contínua Windows/Linux e inventário técnico | Parcial (50%) | [Documento](PROCEDENCIA.md) — Matriz acionada no GitHub e falhas iniciais de ambiente corrigidas; inventário completo dos componentes dos binários ainda parcial. |
 
 ### Fase 1 — Tipos estruturados e especialização
 
@@ -93,7 +94,7 @@ Cada registro histórico congela seus 35 estados; atualizações futuras não al
 | Critério | Estado | Evidência e limites |
 | --- | --- | --- |
 | P5-IR — Frontend separado e IR tipada com fluxo/efeitos | Parcial (50%) | [Documento](RECURSOS-E-FATIAS.md) — Lexer/frontend separados da emissão; HIR tipada com blocos, efeitos, sucessores e DCE conservadora. Expressões ainda AST; sem SSA/backend por IR completo. |
-| P5-OPT — Otimizações comprovadas, TCO, intervalos e alocação de registradores | Parcial (50%) | [Documento](MELHORIAS-3.2.md) |
+| P5-OPT — Otimizações comprovadas, TCO, intervalos e alocação de registradores | Parcial (50%) | [Documento](OPTIMIZATION-ALPHA.10.md) — Hash inteiro/alocação corrigidos; salvamento seletivo, ponderação por laço, imediatos/LEA, inlining escalar e prova conservadora de bounds. Alocação global, métodos e otimização ampla continuam abertos. |
 | P5-ABI — ABI documentada e validada para interfaces e retornos compostos | Parcial (50%) | [Documento](ABI-NATIVA.md) — ABI interna LVS1, cópia/retornos compostos e adaptadores OS documentados e validados. ABI C pública, FFI e callbacks externos pendentes. |
 | P5-DEBUG — ELF PIE, símbolos/linhas e depuração nativa | Concluído no escopo do critério | [Documento](RECURSOS-E-FATIAS.md) — ELF ET_DYN/PIE, RIP/vtables relativos, símbolos/DWARF e GDB com parâmetros/locais escalares e escopos. Windows conserva mapas; sem PDB ou descrição de compostos. |
 | P5-TARGET — Backend extensível e novos alvos ARM64/macOS validados | Pendente | [Documento](PLANO-EVOLUCAO-E-HANDOFF.md) |
@@ -102,12 +103,12 @@ Cada registro histórico congela seus 35 estados; atualizações futuras não al
 
 | Critério | Estado | Evidência e limites |
 | --- | --- | --- |
-| P6-INSTALL — Instalação, atualização e remoção offline preservam dados | Concluído no escopo do critério | [Documento](VALIDACAO-3.3-ALPHA.9.md) — Catálogo/instaladores sincronizados com 16 bibliotecas e preservação de dados. |
+| P6-INSTALL — Instalação, atualização e remoção offline preservam dados | Concluído no escopo do critério | [Documento](VALIDACAO-3.3-ALPHA.10.md) — Catálogo/instaladores sincronizados com 16 bibliotecas e preservação de dados. |
 | P6-TOOLS — Editor, documentação, fmt/test/doc e LSP independente | Concluído no escopo do critério | [Documento](FERRAMENTAS-ALPHA.8.md) — fmt/test/doc nativos, editor com namespaces/pacotes e LSP independente por stdio, sem dependências npm. Formatter cobre indentação, LF e espaços finais. |
-| P6-RELEASE — Pacotes coerentes e reconstrução local limpa reproduzível | Concluído no escopo do critério | [Documento](VALIDACAO-3.3-ALPHA.9.md) — Pacotes e reconstrução da entrega atual. |
-| P6-POLICY — Licença/procedência resolvidas e política de suporte/compatibilidade | Pendente | [Documento](PROCEDENCIA.md) |
+| P6-RELEASE — Pacotes coerentes e reconstrução local limpa reproduzível | Concluído no escopo do critério | [Documento](VALIDACAO-3.3-ALPHA.10.md) — Pacotes e reconstrução da entrega atual. |
+| P6-POLICY — Licença/procedência resolvidas e política de suporte/compatibilidade | Parcial (50%) | [Documento](PROCEDENCIA.md) — Licença CC BY-NC-SA escolhida pelo responsável, suporte/compatibilidade e avisos Windows publicados; direitos de imagens e auditoria completa de componentes ainda abertos. |
 | P6-ACCEPT — Terceiro instala, depura e distribui aplicações A/B/C pelo manual | Pendente | [Documento](PLANO-EVOLUCAO-E-HANDOFF.md) |
 
-A evidência vinculada também descreve limites, inclusive para critérios pendentes. A base de bibliotecas, distribuição, vidas explícitas, recursos compostos, fatias/texto gerenciado, valores Copy/variantes e a aplicação A delimitada já existe; variantes Move/capturas, aplicações B/C, integração externa, conclusão da HIR e novos alvos concentram o restante. Licença e direitos de componentes dependem de decisão do responsável.
+A evidência vinculada também descreve limites, inclusive para critérios pendentes. A base de bibliotecas, distribuição, vidas explícitas, recursos compostos, fatias/texto gerenciado, valores Copy/variantes e a aplicação A delimitada já existe; variantes Move/capturas, aplicações B/C, integração externa, conclusão da HIR e novos alvos concentram o restante. A licença foi escolhida pelo responsável; direitos de imagens e auditoria completa de componentes permanecem abertos.
 
 Fonte auditável: [PROGRESSO.json](PROGRESSO.json). Gerar com `python tools/report-progress.py`; verificar com `python tools/report-progress.py --check`. Relatórios históricos de versões anteriores permanecem preservados; a porcentagem começa a ser publicada na alpha.5.

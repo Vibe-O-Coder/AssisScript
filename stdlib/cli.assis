@@ -1,66 +1,66 @@
 namespace cli;
 
-public struct Argumento { let ok: bool; own dados: *byte; let tamanho: int; }
-public value struct Inteiro { let ok: bool; let valor: int; let posicao: int; }
+public struct Argument { let ok: bool; own data: *byte; let size: int; }
+public value struct ParsedInt { let ok: bool; let value: int; let position: int; }
 
 /// Cópia independente de argumento Unicode, com comprimento e NUL final.
-public safe assis argumento(indice: int): own Argumento {
-    val n: int = argumento_tamanho(indice);
-    if (n < 0 || n == 0x7fff_ffff_ffff_ffff) { return new Argumento(false, alloc<byte>(0), 0); }
-    own dados: *byte = alloc<byte>(n + 1);
-    if (argumento_copiar(indice, dados, n + 1) != n) { return new Argumento(false, alloc<byte>(0), 0); }
-    return new Argumento(true, move(dados), n);
+public safe fn argument(indice: int): own Argument {
+    val n: int = arg_size(indice);
+    if (n < 0 || n == 0x7fff_ffff_ffff_ffff) { return new Argument(false, alloc<byte>(0), 0); }
+    own data: *byte = alloc<byte>(n + 1);
+    if (arg_copy(indice, data, n + 1) != n) { return new Argument(false, alloc<byte>(0), 0); }
+    return new Argument(true, move(data), n);
 }
 
 /// Decimal int64 estrito sobre bytes; não depende de terminador ou text C.
-public safe assis inteiro(borrow dados: *byte, tamanho: int): Inteiro {
-    if (tamanho <= 0 || tamanho > len(dados)) { return new Inteiro(false, 0, 0); }
+public safe fn parse_integer(borrow data: *byte, size: int): ParsedInt {
+    if (size <= 0 || size > len(data)) { return new ParsedInt(false, 0, 0); }
     let i: int = 0;let negativo: bool = false;
-    if (dados[0] == 45 || dados[0] == 43) { negativo = dados[0] == 45;i = 1; }
-    if (i == tamanho) { return new Inteiro(false, 0, i); }
+    if (data[0] == 45 || data[0] == 43) { negativo = data[0] == 45;i = 1; }
+    if (i == size) { return new ParsedInt(false, 0, i); }
     let limite: int = -0x7fff_ffff_ffff_ffff;
     if (negativo) { limite = -0x8000_0000_0000_0000; }
-    let valor: int = 0;
-    while (i < tamanho) {
-        val c: int = int(dados[i]);if (c < 48 || c > 57) { return new Inteiro(false, 0, i); }
+    let value: int = 0;
+    while (i < size) {
+        val c: int = int(data[i]);if (c < 48 || c > 57) { return new ParsedInt(false, 0, i); }
         val d: int = c - 48;
-        if (valor < limite / 10) { return new Inteiro(false, 0, i); }
-        valor *= 10;if (valor < limite + d) { return new Inteiro(false, 0, i); }valor -= d;i += 1;
+        if (value < limite / 10) { return new ParsedInt(false, 0, i); }
+        value *= 10;if (value < limite + d) { return new ParsedInt(false, 0, i); }value -= d;i += 1;
     }
-    if (!negativo) { valor = -valor; }return new Inteiro(true, valor, tamanho);
+    if (!negativo) { value = -value; }return new ParsedInt(true, value, size);
 }
 
 /// Lê até EOF; retorna -1 em falha ou se o arquivo exceder a capacidade.
 /// Capacidade zero aceita somente arquivo vazio. Memória auxiliar: 4096 bytes.
-public safe assis ler_limitado(borrow mut arquivo: Arquivo, borrow mut destino: *byte): int {
+public safe fn read_bounded(borrow mut arquivo: File, borrow mut destino: *byte): int {
     own bloco: *byte = alloc<byte>(4096);let total: int = 0;
     while (true) {
-        val n: int = arquivo_ler(arquivo, bloco, 4096);if (n < 0) { return -1; }if (n == 0) { return total; }
+        val n: int = file_read(arquivo, bloco, 4096);if (n < 0) { return -1; }if (n == 0) { return total; }
         if (n > len(destino) - total) { return -1; }
         for (let i: int = 0; i < n; i += 1) { destino[total + i] = bloco[i]; }total += n;
     }
 }
 
 /// Escrita completa com tratamento de operações parciais. -1 em falha.
-public safe assis escrever_tudo(borrow mut arquivo: Arquivo, borrow dados: *byte, tamanho: int): int {
-    if (tamanho < 0 || tamanho > len(dados)) { return -1; }
+public safe fn write_all(borrow mut arquivo: File, borrow data: *byte, size: int): int {
+    if (size < 0 || size > len(data)) { return -1; }
     own bloco: *byte = alloc<byte>(4096);let total: int = 0;
-    while (total < tamanho) {
-        let n: int = tamanho - total;if (n > 4096) { n = 4096; }
-        for (let i: int = 0; i < n; i += 1) { bloco[i] = dados[total + i]; }
-        val escritos: int = arquivo_escrever(arquivo, bloco, n);if (escritos <= 0) { return -1; }total += escritos;
+    while (total < size) {
+        let n: int = size - total;if (n > 4096) { n = 4096; }
+        for (let i: int = 0; i < n; i += 1) { bloco[i] = data[total + i]; }
+        val escritos: int = file_write(arquivo, bloco, n);if (escritos <= 0) { return -1; }total += escritos;
     }
     return total;
 }
 
 /// Saída binária completa em stdout (1) ou stderr (2), incluindo NUL.
-public safe assis saida(canal: int, borrow dados: *byte, tamanho: int): int {
-    if (tamanho < 0 || tamanho > len(dados) || (canal != 1 && canal != 2)) { return -1; }
+public safe fn saida(canal: int, borrow data: *byte, size: int): int {
+    if (size < 0 || size > len(data) || (canal != 1 && canal != 2)) { return -1; }
     own bloco: *byte = alloc<byte>(4096);let total: int = 0;
-    while (total < tamanho) {
-        let n: int = tamanho - total;if (n > 4096) { n = 4096; }
-        for (let i: int = 0; i < n; i += 1) { bloco[i] = dados[total + i]; }
-        val escritos: int = escrever_bytes(canal, bloco, n);if (escritos <= 0) { return -1; }total += escritos;
+    while (total < size) {
+        let n: int = size - total;if (n > 4096) { n = 4096; }
+        for (let i: int = 0; i < n; i += 1) { bloco[i] = data[total + i]; }
+        val escritos: int = write_bytes(canal, bloco, n);if (escritos <= 0) { return -1; }total += escritos;
     }
     return total;
 }

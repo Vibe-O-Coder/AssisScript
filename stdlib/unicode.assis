@@ -2,55 +2,55 @@ namespace unicode;
 
 /// Offset do primeiro erro UTF-8, ou -1. NUL é dado válido. Rejeita overlong,
 /// substitutos, continuações isoladas, truncamento e pontos acima de U+10FFFF.
-public safe assis erro(borrow dados:slice<byte>):int {
+public safe fn error(borrow data:slice<byte>):int {
     let i:int=0;
-    while(i<len(dados)){
-        val c:int=int(dados[i]);let n:int=0;let minimo:int=128;let maximo:int=191;
+    while(i<len(data)){
+        val c:int=int(data[i]);let n:int=0;let min:int=128;let max:int=191;
         if(c<128){i+=1;continue;}
         if(c>=194 && c<=223){n=2;}
-        else if(c>=224 && c<=239){n=3;if(c==224){minimo=160;}if(c==237){maximo=159;}}
-        else if(c>=240 && c<=244){n=4;if(c==240){minimo=144;}if(c==244){maximo=143;}}
+        else if(c>=224 && c<=239){n=3;if(c==224){min=160;}if(c==237){max=159;}}
+        else if(c>=240 && c<=244){n=4;if(c==240){min=144;}if(c==244){max=143;}}
         else{return i;}
-        if(n>len(dados)-i){return i;}
-        val segundo:int=int(dados[i+1]);if(segundo<minimo || segundo>maximo){return i+1;}
-        for(let j:int=2;j<n;j+=1){if(dados[i+j]<128 || dados[i+j]>191){return i+j;}}
+        if(n>len(data)-i){return i;}
+        val segundo:int=int(data[i+1]);if(segundo<min || segundo>max){return i+1;}
+        for(let j:int=2;j<n;j+=1){if(data[i+j]<128 || data[i+j]>191){return i+j;}}
         i+=n;
     }
     return -1;
 }
 
 /// Próximo offset de byte. Requer entrada UTF-8 válida e fronteira de código.
-public safe assis proximo(borrow dados:slice<byte>,indice:int):int {
-    assert(indice>=0 && indice<len(dados));val c:int=int(dados[indice]);
+public safe fn next(borrow data:slice<byte>,indice:int):int {
+    assert(indice>=0 && indice<len(data));val c:int=int(data[indice]);
     if(c<128){return indice+1;}if(c<224){return indice+2;}if(c<240){return indice+3;}return indice+4;
 }
 
-/// Texto com bytes/comprimento explícitos e propriedade automática. Todos os
+/// String com bytes/comprimento explícitos e propriedade automática. Todos os
 /// estados públicos são UTF-8 válidos, inclusive vazio e NUL. Não normaliza.
-public final ASSIS Texto {
-    private own dados:*byte;
-    private let quantidade:int;
+public final class String {
+    private own data:*byte;
+    private let count:int;
 
-    assis assis_fodase(borrow mut self):void{self.dados=alloc<byte>(0);}
-    assis tamanho(borrow self):int{return self.quantidade;}
+    fn init(borrow mut self):void{self.data=alloc<byte>(0);}
+    fn size(borrow self):int{return self.count;}
 
     /// Falha recuperável preserva o conteúdo anterior. O(n), cópia independente.
-    assis carregar(borrow mut self,borrow entrada:slice<byte>):bool {
-        if(erro(entrada)>=0){return false;}
+    fn load(borrow mut self,borrow entrada:slice<byte>):bool {
+        if(error(entrada)>=0){return false;}
         own novos:*byte=alloc<byte>(len(entrada));
         for(let i:int=0;i<len(entrada);i+=1){novos[i]=entrada[i];}
-        self.dados=move(novos);self.quantidade=len(entrada);return true;
+        self.data=move(novos);self.count=len(entrada);return true;
     }
 
-    assis visualizar(borrow self):borrow(self) slice<byte>{return fatia(self.dados,0,self.quantidade);}
+    fn as_slice(borrow self):borrow(self) slice<byte>{return slice_of(self.data,0,self.count);}
 
     /// Recorte por offset de bytes; exige fronteiras UTF-8. Empréstimo conserva
     /// a origem, bloqueia mutação/liberação do texto até o fim de seu escopo.
-    assis recortar(borrow self,inicio:int,quantidade:int):borrow(self) slice<byte> {
-        assert(inicio>=0 && inicio<=self.quantidade && quantidade>=0 && quantidade<=self.quantidade-inicio);
-        val fim:int=inicio+quantidade;
-        assert(inicio==self.quantidade || self.dados[inicio]<128 || self.dados[inicio]>=192);
-        assert(fim==self.quantidade || self.dados[fim]<128 || self.dados[fim]>=192);
-        return fatia(self.dados,inicio,quantidade);
+    fn slice_range(borrow self,start:int,count:int):borrow(self) slice<byte> {
+        assert(start>=0 && start<=self.count && count>=0 && count<=self.count-start);
+        val end:int=start+count;
+        assert(start==self.count || self.data[start]<128 || self.data[start]>=192);
+        assert(end==self.count || self.data[end]<128 || self.data[end]>=192);
+        return slice_of(self.data,start,count);
     }
 }

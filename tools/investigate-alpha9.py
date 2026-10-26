@@ -18,14 +18,14 @@ args=parser.parse_args();assert 7<=args.samples<=51
 current=ROOT/'bin'/('assis.exe' if os.name=='nt' else 'assis');baseline=args.baseline.resolve()
 report=json.loads(args.report.read_text(encoding='utf-8'));assert report['compilerSha256']==hashlib.sha256(current.read_bytes()).hexdigest()
 n=10_000_000;expected=(str(n*n)+'\n').encode()
-source=next(r['source'] for r in report['results'] if r['variant']=='atual-heap').replace(str(report['iterations']),str(n))
+source=next(r['source'] for r in report['results'] if r['variant']=='current-heap').replace(str(report['iterations']),str(n))
 def run(command,output=None):
     r=subprocess.run(list(map(str,command)),capture_output=True,timeout=60)
     assert r.returncode==0 and not r.stderr,(command,r.returncode,r.stderr)
     if output is not None:assert r.stdout==output,(command,r.stdout,output)
 with tempfile.TemporaryDirectory(prefix='assis-alpha9-investigate-') as temp:
     folder=Path(temp);file=folder/'main.assis';file.write_text(source,encoding='utf-8');rows=[]
-    for compiler,label in [(baseline,'alpha8'),(current,'atual')]:
+    for compiler,label in [(baseline,'alpha8'),(current,'current')]:
         for flags in [[],['--no-opt']]:
             variant=label+('-sem-opt' if flags else '');binary=folder/(variant+('.exe' if os.name=='nt' else ''))
             run([compiler,'build',file,'--debug','-o',binary,*flags]);run([binary],expected)

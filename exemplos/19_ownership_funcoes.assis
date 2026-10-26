@@ -1,4 +1,4 @@
-#yuri <std/algoritmos.assis>
+#yuri <std/algorithms.assis>
 
 struct Relatorio {
     own valores: Array<int>;

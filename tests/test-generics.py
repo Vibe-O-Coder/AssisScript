@@ -22,11 +22,11 @@ class Generics(unittest.TestCase):
             'val t:text=identidade::<text>("ação");print(t);'), 'ação\n')
 
     def test_structs_multiple_parameters_and_scoped_type_variables(self):
-        self.accepted('struct Caixa<T>{let valor:T;}struct Par<A,B>{let a:A;let b:B;}'
+        self.accepted('struct Caixa<T>{let value:T;}struct Par<A,B>{let a:A;let b:B;}'
                       'assis primeiro<T,U>(a:T,b:U):T{return a;}' + main(
             'own a:Caixa<int>=new Caixa<int>(42);own b:Caixa<text>=new Caixa<text>("oi");'
             'own p:Par<byte,bool>=new Par<byte,bool>(byte(7),true);'
-            'print(a.valor,b.valor,p.a,p.b,primeiro::<int,bool>(9,false));'), '42 oi 7 aSsIs 9\n')
+            'print(a.value,b.value,p.a,p.b,primeiro::<int,bool>(9,false));'), '42 oi 7 aSsIs 9\n')
 
     def test_transitive_queue_recursion_and_repeated_instances(self):
         self.accepted('pure assis par<T>(v:T,n:int):bool{if(n==0){return true;}return impar::<T>(v,n-1);}'
@@ -36,25 +36,25 @@ class Generics(unittest.TestCase):
             'aSsIs fOdAsE 3628800\n')
 
     def test_nested_types_arrays_maps_and_contextual_literals(self):
-        self.accepted('struct Caixa<T>{let valor:T;}'
-                      'assis criar<T>(v:T):Caixa<T>{return new Caixa<T>(v);}'
+        self.accepted('struct Caixa<T>{let value:T;}'
+                      'assis create<T>(v:T):Caixa<T>{return new Caixa<T>(v);}'
                       'assis lista<T>(v:T):Array<T>{return [v,v];}' + main(
-            'let c:Caixa<Array<int>>=criar::<Array<int>>([3,4]);'
+            'let c:Caixa<Array<int>>=create::<Array<int>>([3,4]);'
             'let a:Array<Caixa<Array<int>>>=lista::<Caixa<Array<int>>>(c);'
             'let m:HashMap<int,Caixa<Array<int>>>=new HashMap<int,Caixa<Array<int>>>();'
-            'm.set(1,c);print(m.get(1).valor[1],len(a));free(m);free(a);free(c.valor);free(c);'), '4 2\n')
+            'm.set(1,c);print(m.get(1).value[1],len(a));free(m);free(a);free(c.value);free(c);'), '4 2\n')
 
     def test_pointer_substitution_and_finite_recursive_struct(self):
-        self.accepted('struct Elo<T>{let valor:T;let proximo:Elo<T>;}'
-                      'assis carregar<T>(p:*T):T{return *p;}' + main(
-            'let x:int=17;print(carregar::<int>(&x));'
+        self.accepted('struct Elo<T>{let value:T;let next:Elo<T>;}'
+                      'assis load<T>(p:*T):T{return *p;}' + main(
+            'let x:int=17;print(load::<int>(&x));'
             'let a:Elo<int>=new Elo<int>(1,null);let b:Elo<int>=new Elo<int>(2,a);'
-            'print(b.proximo.valor);free(b);free(a);'), '17\n1\n')
+            'print(b.next.value);free(b);free(a);'), '17\n1\n')
 
     def test_nominal_identity_and_no_conflation_of_type_parameters(self):
         for code in [
-            'struct Caixa<T>{let valor:T;}' + main('let a:Caixa<int>=new Caixa<int>(1);let b:Caixa<byte>=a;'),
-            'struct A<T>{let valor:T;}struct B<T>{let valor:T;}' + main('let a:A<int>=new B<int>(1);'),
+            'struct Caixa<T>{let value:T;}' + main('let a:Caixa<int>=new Caixa<int>(1);let b:Caixa<byte>=a;'),
+            'struct A<T>{let value:T;}struct B<T>{let value:T;}' + main('let a:A<int>=new B<int>(1);'),
             'assis escolher<T,U>(a:T,b:U):T{return b;}' + main('print(escolher::<int,bool>(1,true));'),
         ]:
             self.rejected(code, 'não é possível usar')
@@ -77,30 +77,30 @@ class Generics(unittest.TestCase):
                 self.rejected(code, message)
 
     def test_private_access_does_not_gain_callers_authority(self):
-        self.rejected('ASSIS Segredo{private let valor:int;assis ler():int{return espiar::<Segredo>(self);}}'
-                      'assis espiar<T>(v:T):int{return v.valor;}' + main(''), 'campo privado')
-        self.rejected('struct Caixa<T>{private let valor:T;}' + main('let c:Caixa<int>=new Caixa<int>(1);'), 'campo privado')
-        self.rejected('struct Caixa<T>{private let valor:T;}'
-                      'assis espiar<T>(v:Caixa<T>):T{return v.valor;}' + main(
+        self.rejected('ASSIS Segredo{private let value:int;assis ler():int{return espiar::<Segredo>(self);}}'
+                      'assis espiar<T>(v:T):int{return v.value;}' + main(''), 'campo privado')
+        self.rejected('struct Caixa<T>{private let value:T;}' + main('let c:Caixa<int>=new Caixa<int>(1);'), 'campo privado')
+        self.rejected('struct Caixa<T>{private let value:T;}'
+                      'assis espiar<T>(v:Caixa<T>):T{return v.value;}' + main(
             'let c:Caixa<int>=new Caixa<int>();print(espiar::<int>(c));'), 'campo privado')
         self.rejected('assis espiar<T>(v:Array<T>):int{return v._length;}' + main(
             'let a:Array<int>=[1];print(espiar::<int>(a));'), 'campo privado')
 
     def test_pure_templates_reject_effects_even_when_unused(self):
         for body in ['print(v);return v;', 'if(false){print(1);}return v;',
-                     'let n:int=agora();return v;', 'return comum::<T>(v);',
+                     'let n:int=monotonic_ms();return v;', 'return comum::<T>(v);',
                      'let p:*T=alloc<T>(1);return v;', 'let s:text="a";return v;']:
             self.rejected('assis comum<T>(v:T):T{return v;}pure assis f<T>(v:T):T{' + body + '}' + main(''), 'pure')
         self.rejected('pure assis f<T>(v:T):T{return v;}' + main('print(f::<text>("x"));'), 'pure')
         self.rejected('pure assis f<T>(v:T):T{v=v;return v;}' + main('print(f::<int>(1));'), 'imutável')
 
     def test_ownership_is_checked_on_each_concrete_instance(self):
-        self.accepted('struct Caixa<T>{let valor:T;}'
+        self.accepted('struct Caixa<T>{let value:T;}'
                       'assis local<T>(v:T):int{own c:Caixa<T>=new Caixa<T>(v);return 1;}' + main(
             'print(local::<int>(42),local::<text>("oi"));'), '1 1\n')
         self.rejected('assis id<T>(v:T):T{return v;}' + main(
             'own a:Array<int>=[1];let b:Array<int>=id::<Array<int>>(a);'), 'não pode escapar')
-        self.rejected('struct Caixa<T>{let valor:T;}'
+        self.rejected('struct Caixa<T>{let value:T;}'
                       'assis local<T>(v:T):int{own c:Caixa<T>=new Caixa<T>(v);return 1;}' + main(
             'let a:Array<int>=[1];print(local::<Array<int>>(a));'), 'own struct exige campos')
 

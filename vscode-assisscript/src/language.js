@@ -24,7 +24,7 @@ const builtinSignatures = {
     foDASE: { label: 'foDASE(AssisAssis: objeto ou ponteiro): FODase', params: ['AssisAssis: objeto ou ponteiro'] },
     ASSIS_fodase: { label: 'ASSIS_fodase(AssisAssis: AssIs): *AssiS', params: ['AssisAssis: AssIs'] },
     FODASE_fodase: { label: 'FODASE_fodase(AssisAssis: FoDaSe): AssIs', params: ['AssisAssis: FoDaSe'] },
-    ...Object.fromEntries(['AssIs', 'AssiS', 'FodAsE'].map(name => [name, { label: `${name}(AssisAssis: inteiro ou booleano): ${name}`, params: ['AssisAssis: inteiro ou booleano'] }]))
+    ...Object.fromEntries(['AssIs', 'AssiS', 'FodAsE'].map(name => [name, { label: `${name}(AssisAssis: parse_integer ou booleano): ${name}`, params: ['AssisAssis: parse_integer ou booleano'] }]))
 };
 Object.assign(keywords, reference.keywords);
 Object.assign(builtinSignatures, reference.signatures);
@@ -118,7 +118,7 @@ function analyze(text, file) {
             result += ' ';
         }
         while (v(i) === '*') { result += '*'; i++; }
-        if (['pure', 'safe', 'assis'].includes(v(i))) {
+        if (['pure', 'safe', 'assis', 'fn'].includes(v(i))) {
             if (['pure', 'safe'].includes(v(i))) { result += v(i) + ' '; i++; }
             result += v(i++) || '';
             if (v(i++) !== '(') return { type: result, next: i };
@@ -164,12 +164,12 @@ function analyze(text, file) {
         symbols.push(symbol); return symbol;
     }
     for (let i = 0; i < tokens.length; i++) {
-        if (v(i) === 'importa' && tokens[i + 1]?.kind === 'string') {
+        if (['importa', 'import'].includes(v(i)) && tokens[i + 1]?.kind === 'string') {
             let name; try { name = JSON.parse(v(i + 1)); } catch { continue; }
             imports.push({ name, start: tokens[i + 1].start, end: tokens[i + 1].end });
         }
         if (['#yuri', '#body'].includes(v(i)) && tokens[i + 1]?.kind === 'importPath') imports.push({ name: v(i + 1), start: tokens[i + 1].start, end: tokens[i + 1].end, package: v(i) === '#body' });
-        if (['ASSIS', 'struct', 'enum'].includes(v(i)) && tokens[i + 1]) {
+        if (['ASSIS', 'class', 'struct', 'enum'].includes(v(i)) && tokens[i + 1]) {
             const typeParams = parametersAt(i + 2), extendsClass = ['ASSIS_FODASE', 'extends'].includes(v(typeParams.next));
             const base = extendsClass ? readType(typeParams.next + 1) : undefined, open = base ? base.next : typeParams.next;
             const cls = add(tokens[i + 1], 'class', { typeParams: typeParams.names, record: v(i) === 'struct', value: v(i - 1) === 'value' || v(i) === 'enum', tagged: v(i) === 'enum', base: base?.type, bodyStart: tokens[open]?.start, bodyEnd: tokens[pairs.get(open)]?.end ?? text.length, open });
@@ -185,7 +185,7 @@ function analyze(text, file) {
     const classAt = offset => symbols.filter(s => s.kind === 'class' && s.bodyStart < offset && s.bodyEnd > offset).sort((a, b) => b.bodyStart - a.bodyStart)[0];
     for (let i = 0; i < tokens.length; i++) {
         const typeParams = parametersAt(i + 2);
-        if (v(i) === 'assis' && tokens[i + 1] && v(typeParams.next) === '(') {
+        if (['assis', 'fn'].includes(v(i)) && tokens[i + 1] && v(typeParams.next) === '(') {
             const close = pairs.get(typeParams.next); if (close === undefined) continue;
             const owner = classAt(tokens[i].start), params = []; let body = close + 1;
             while (body < tokens.length && !['{', ';', '}'].includes(v(body))) body++;
@@ -286,7 +286,7 @@ function typeTokenText(tokens) {
     return tokens.map((t, i) => (i && /\w$/.test(tokens[i - 1].value) && /^\w/.test(t.value) ? ' ' : '') + t.value).join('').replace(/,/g, ', ').replace(/(?<!:):(?!:)/g, ': ');
 }
 function functionParts(type) {
-    const match = /^(?:(?:pure|safe) )?assis\(/.exec(type || ''); if (!match) return undefined;
+    const match = /^(?:(?:pure|safe) )?(?:assis|fn)\(/.exec(type || ''); if (!match) return undefined;
     let depth = 0, start = match[0].length, end = start; const params = [];
     for (; end < type.length; end++) {
         const c = type[end];
@@ -362,7 +362,7 @@ function signatureAt(model, offset, models) {
                     const params = members(models, callee.type).filter(s => s.kind === 'field').map(s => ({ name: s.name, type: s.type }));
                     fn = { label: `new ${callee.type}(${params.map(p => `${p.name}: ${p.type}`).join(', ')}): ${callee.type}`, params, documentation: cls.documentation };
                 } else if (reference[genericParts(callee.type)?.kind]) fn = { label: `new ${callee.type}(): ${callee.type}`, params: [], documentation: keywords[name.value] };
-                else fn = members(models, callee.type, new Set(), ownerAt(model, offset)).find(s => s.name === 'assis_fodase');
+                else fn = members(models, callee.type, new Set(), ownerAt(model, offset)).find(s => ['init', 'assis_fodase'].includes(s.name));
             }
             const callback = functionParts(fn?.type);
             const signature = fn?.params ? { label: fn.label, params: fn.params.map(parameterLabel), documentation: fn.documentation }

@@ -66,7 +66,7 @@ report = dict(platform=platform.platform(), cpu=platform.processor(), samples=ar
 heap = 'struct Par{let x:int;let y:int;}assis item(n:int):own Par{return new Par(n,n+1);}'
 value = 'value struct Par{let x:int;let y:int;}pure assis item(n:int):Par{return new Par(n,n+1);}'
 body = 'assis assis_assis():int{let total:int=0;for(let i:int=0;i<N;i+=1){BIND p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}'
-definitions = [('atual-heap', compiler, heap + body.replace('BIND', 'own')), ('atual-valor', compiler, value + body.replace('BIND', 'val'))]
+definitions = [('current-heap', compiler, heap + body.replace('BIND', 'own')), ('current-value', compiler, value + body.replace('BIND', 'val'))]
 if args.baseline:
     definitions.insert(0, (args.baseline_label+'-heap', args.baseline.resolve(), heap + body.replace('BIND', 'own')))
     report['baselineSha256'] = hashlib.sha256(args.baseline.read_bytes()).hexdigest()
@@ -105,7 +105,7 @@ with tempfile.TemporaryDirectory(prefix='assis-values-io-', ignore_cleanup_error
     input_file,output=folder/'entrada á 日本.csv',folder/'saida á 日本.csv'
     for rows in [max(1000,args.csv_rows//10),args.csv_rows]:
         with input_file.open('wb') as f:
-            f.write(b'valor\n'); chunk=b'"1234567"\r\n'*1000
+            f.write(b'value\n'); chunk=b'"1234567"\r\n'*1000
             for _ in range(rows//1000):f.write(chunk)
             f.write(b'"1234567"\r\n'*(rows%1000))
         expected_out=f'Registros {rows} total {1234567*rows}\n'.encode()
@@ -117,11 +117,11 @@ with tempfile.TemporaryDirectory(prefix='assis-values-io-', ignore_cleanup_error
         record['medianMs']=statistics.median(record['samplesMs']);record['outputSha256']=hashlib.sha256(output.read_bytes()).hexdigest()
         report['csv'].append(record)
     # Separate the fixed process/runtime cost, including Windows DLL/argument setup.
-    startup_variants=[('atual',compiler)]
+    startup_variants=[('current',compiler)]
     if args.baseline:startup_variants.insert(0,(args.baseline_label,args.baseline.resolve()))
-    file=folder/'inicio.assis';file.write_text('assis assis_assis():int{print(0);return 0;}',encoding='utf-8')
+    file=folder/'start.assis';file.write_text('assis assis_assis():int{print(0);return 0;}',encoding='utf-8')
     for name,cc in startup_variants:
-        binary=folder/(name+'-inicio'+('.exe' if os.name=='nt' else ''))
+        binary=folder/(name+'-start'+('.exe' if os.name=='nt' else ''))
         run([cc,'build',file,'-o',binary])
         report['startup'].append(dict(variant=name,samplesMs=[],peakMemoryBytes=[],path=str(binary)))
     for sample in range(args.samples+1):
@@ -138,9 +138,9 @@ text+=f'{args.samples} amostras por variante; {args.iterations} iterações; in�
 text+='| Variante | Compilar (ms) | Executar (ms) | Binário (bytes) | Pico de RAM (bytes) |\n| --- | ---: | ---: | ---: | ---: |\n'
 for r in report['results']:text+=f'| {r["variant"]} | {r["compileMedianMs"]:.3f} | {r["medianMs"]:.3f} | {r["binaryBytes"]} | {max(r["peakMemoryBytes"])} |\n'
 text+='\nA comparação heap/Copy altera representação e custo de alocação; não mede equivalência geral com C ou ganho universal. RSS zero em processo curto significa medição indisponível, não consumo zero.\n\n'
-text+='| CSV (linhas) | Entrada (bytes) | Mediana (ms) | Pico de RAM (bytes) |\n| --- | ---: | ---: | ---: |\n'
+text+='| CSV (rows) | Entrada (bytes) | Mediana (ms) | Pico de RAM (bytes) |\n| --- | ---: | ---: | ---: |\n'
 for r in report['csv']:text+=f'| {r["rows"]} | {r["inputBytes"]} | {r["medianMs"]:.3f} | {max(r["peakMemoryBytes"])} |\n'
-text+='\nA CLI usa buffers fixos, verifica inteiros, erros e liberação em debug. Este ensaio local não é um teste de serviço prolongado ou de durabilidade contra queda de energia.\n'
+text+='\nA CLI usa buffers fixos, verifica inteiros, errors e liberação em debug. Este ensaio local não é um teste de serviço prolongado ou de durabilidade contra queda de energia.\n'
 text+='\n| Início/print/saída | Mediana (ms) | Pico de RAM (bytes) |\n| --- | ---: | ---: |\n'
 for r in report['startup']:text+=f'| {r["variant"]} | {r["medianMs"]:.3f} | {max(r["peakMemoryBytes"])} |\n'
 args.output.with_suffix('.md').write_text(text,encoding='utf-8')

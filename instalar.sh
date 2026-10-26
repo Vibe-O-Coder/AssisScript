@@ -44,6 +44,7 @@ mkdir -p "$prefix/share/assisscript/assets"
 cp "$root/bin/assis" "$prefix/bin/assis"
 chmod 755 "$prefix/bin/assis"
 cp "$root/README.md" "$prefix/share/assisscript/README.md"
+cp "$root/README.en.md" "$root/README.pt-BR.md" "$root/README.es.md" "$root/LICENSE" "$root/THIRD_PARTY_NOTICES.md" "$prefix/share/assisscript/"
 cp "$root/exemplos/"*.assis "$prefix/share/assisscript/exemplos/"
 cp -R "$root/exemplos/." "$prefix/share/assisscript/exemplos/"
 cp "$root/exemplos/"*.pillow "$prefix/share/assisscript/exemplos/"
@@ -60,10 +61,14 @@ cp "$root/stdlib/catalogo.json" "$prefix/share/assisscript/stdlib/"
 cp "$root/docs/GRAMATICA.ebnf" "$prefix/share/assisscript/docs/GRAMATICA.ebnf"
 cp "$root/docs/"*.md "$prefix/share/assisscript/docs/"
 cp "$root/docs/"*.json "$prefix/share/assisscript/docs/"
-printf '%s\n' 'AssisScript 3.3.0-alpha.8' > "$prefix/share/assisscript/INSTALADO"
+cp "$root/docs/LICENSE" "$prefix/share/assisscript/docs/"
+mkdir -p "$prefix/share/assisscript/docs/third-party"
+cp "$root/docs/third-party/"*.txt "$prefix/share/assisscript/docs/third-party/"
+printf 'AssisScript %s\n' "$ASSIS_VERSION" > "$prefix/share/assisscript/INSTALADO"
 manifest="$prefix/share/assisscript/INSTALADOS.txt"
 {
-    printf '%s\n' README.md stdlib/catalogo.json stdlib/catalogo.sh INSTALADO tools/assis-lsp.js vscode-assisscript/src/language.js vscode-assisscript/src/reference.json vscode-assisscript/package.json
+    printf '%s\n' README.md README.en.md README.pt-BR.md README.es.md LICENSE THIRD_PARTY_NOTICES.md docs/LICENSE stdlib/catalogo.json stdlib/catalogo.sh INSTALADO tools/assis-lsp.js vscode-assisscript/src/language.js vscode-assisscript/src/reference.json vscode-assisscript/package.json
+    for notice in "$root/docs/third-party/"*.txt; do printf '%s\n' "${notice#"$root/"}"; done
     find "$root/exemplos" -type f | while IFS= read -r example; do printf '%s\n' "${example#"$root/"}"; done
     for lib in $ASSIS_REQUIRED $optional; do printf 'stdlib/%s.assis\n' "$lib"; done
     for file in "$root/docs/"*.md "$root/docs/"*.json "$root/docs/"*.ebnf "$root/exemplos/"*.assis "$root/exemplos/"*.pillow "$root/exemplos/bibliotecas/"*.assis "$root/assets/"*.ico "$root/benchmarks/resultados/"*.md "$root/benchmarks/resultados/"*.json; do

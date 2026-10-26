@@ -2,55 +2,55 @@
   "Classe genérica": {
     "prefix": "genericaclasse",
     "body": [
-      "ASSIS ${1:Caixa}<${2:T}> {",
-      "    private let ${3:valor}: ${2:T};",
-      "    assis assis_fodase(${3:valor}: ${2:T}): void { self.${3:valor} = ${3:valor}; }",
-      "    assis ler(): ${2:T} { return self.${3:valor}; }",
+      "class ${1:Box}<${2:T}> {",
+      "    private let ${3:value}: ${2:T};",
+      "    fn init(${3:value}: ${2:T}): void { self.${3:value} = ${3:value}; }",
+      "    fn get(): ${2:T} { return self.${3:value}; }",
       "    $0",
       "}"
     ]
   },
   "Callback puro": {
     "prefix": "callback",
-    "body": "val ${1:f}: pure assis(${2:int}): ${3:int} = ${0:dobro};"
+    "body": "val ${1:f}: pure fn(${2:int}): ${3:int} = ${0:double};"
   },
   "Função genérica": {
     "prefix": "genericafuncao",
     "body": [
-      "assis ${1:identidade}<${2:T}>(${3:valor}: ${2:T}): ${2:T} {",
-      "    return ${3:valor};",
+      "fn ${1:identity}<${2:T}>(${3:value}: ${2:T}): ${2:T} {",
+      "    return ${3:value};",
       "}"
     ]
   },
   "Struct genérica": {
     "prefix": "genericstruct",
     "body": [
-      "struct ${1:Caixa}<${2:T}> {",
-      "    let ${3:valor}: ${2:T};",
+      "struct ${1:Box}<${2:T}> {",
+      "    let ${3:value}: ${2:T};",
       "}"
     ]
   },
   "Chamada genérica": {
     "prefix": "genericachamada",
-    "body": "${1:identidade}::<${2:int}>(${0:42})"
+    "body": "${1:identity}::<${2:int}>(${0:42})"
   },
   "Função pura": {
     "prefix": "pura",
     "body": [
-      "pure assis ${1:calcular}(${2:valor}: int): int {",
-      "    val ${3:resultado}: int = ${2:valor} * 2;",
-      "    return ${3:resultado};",
+      "pure fn ${1:calculate}(${2:value}: int): int {",
+      "    val ${3:result}: int = ${2:value} * 2;",
+      "    return ${3:result};",
       "}"
     ]
   },
   "Valor imutável": {
     "prefix": "val",
-    "body": "val ${1:valor}: ${2:int} = ${0:42};"
+    "body": "val ${1:value}: ${2:int} = ${0:42};"
   },
   "Programa": {
     "prefix": "principal",
     "body": [
-      "assis assis_assis(): int {",
+      "fn main(): int {",
       "    $0",
       "    return 0;",
       "}"
@@ -60,17 +60,17 @@
     "prefix": "funcao",
     "body": [
       "/// ${1:Descrição técnica da função.}",
-      "assis ${2:calcular}(${3:valor: int}): ${4:int} {",
-      "    ${0:return valor;}",
+      "fn ${2:calculate}(${3:value: int}): ${4:int} {",
+      "    ${0:return value;}",
       "}"
     ]
   },
   "Classe": {
     "prefix": "classe",
     "body": [
-      "ASSIS ${1:Pessoa} {",
+      "class ${1:Pessoa} {",
       "    let ${2:nome}: ${3:text};",
-      "    assis assis_fodase(${2:nome}: ${3:text}): void {",
+      "    fn init(${2:nome}: ${3:text}): void {",
       "        self.${2:nome} = ${2:nome};",
       "    }",
       "    $0",
@@ -120,7 +120,7 @@
   },
   "Importar": {
     "prefix": "yuri",
-    "body": "#yuri <${1:std/matematica.assis}>"
+    "body": "#yuri <${1:std/math.assis}>"
   },
   "Pacote": {
     "prefix": "body",
@@ -161,7 +161,7 @@
   "Função safe com empréstimo": {
     "prefix": "safeborrow",
     "body": [
-      "safe assis ${1:consultar}(borrow ${2:entrada}: ${3:Array<int>}): ${4:int} {",
+      "safe fn ${1:consultar}(borrow ${2:entrada}: ${3:Array<int>}): ${4:int} {",
       "    ${0:return len(entrada);}",
       "}"
     ],
@@ -176,7 +176,7 @@
     ],
     "description": "Fronteira explícita com código legado"
   },
-  "Registro por valor": {
+  "Registro por value": {
     "prefix": "valorregistro",
     "body": [
       "value struct ${1:Ponto} {",
@@ -185,7 +185,7 @@
     ],
     "description": "Registro Copy imutável sem alocação"
   },
-  "Enum por valor": {
+  "Enum por value": {
     "prefix": "enum",
     "body": [
       "enum ${1:Option}<T> { None; Some(T); }"
@@ -197,7 +197,7 @@
     "body": [
       "match (${1:opcao}) {",
       "    None { ${2} }",
-      "    Some(${3:valor}) { ${4} }",
+      "    Some(${3:value}) { ${4} }",
       "}"
     ],
     "description": "Braços com vínculos imutáveis"
@@ -207,8 +207,8 @@
     "body": [
       "namespace ${1:nome};",
       "",
-      "public pure assis ${2:funcao}(valor: int): int {",
-      "    return valor;",
+      "public pure fn ${2:funcao}(value: int): int {",
+      "    return value;",
       "}"
     ],
     "description": "Namespace e função pública"
@@ -216,23 +216,23 @@
   "Teste nativo": {
     "prefix": "teste",
     "body": [
-      "safe assis test_${1:nome}(): void {",
+      "safe fn test_${1:nome}(): void {",
       "    assert(${2:true});",
       "}"
     ],
     "description": "Função executada por assis test"
   },
   "Fatia gerenciada": {
-    "prefix": "fatia",
+    "prefix": "slice_of",
     "body": [
-      "borrow ${1:visao}: slice<${2:byte}> = fatia(${3:buffer}, ${4:0}, ${5:len(buffer)});"
+      "borrow ${1:visao}: slice<${2:byte}> = slice_of(${3:buffer}, ${4:0}, ${5:len(buffer)});"
     ],
     "description": "Fatia com limites e vida do buffer"
   },
   "Método com receptor": {
     "prefix": "receptor",
     "body": [
-      "assis ${1:nome}(borrow ${2:mut }self): ${3:void} {",
+      "fn ${1:nome}(borrow ${2:mut }self): ${3:void} {",
       "    $0",
       "}"
     ],

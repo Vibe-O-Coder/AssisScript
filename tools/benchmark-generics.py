@@ -92,6 +92,6 @@ markdown += ('\nOs fontes e hashes estão no JSON adjacente. Esta carga mede uma
              'não mede RAM, explosão de combinações, structs, closures ou aplicações reais. '
              'Não sustenta uma conclusão geral de desempenho ou paridade com C/C++.\n'
              f'\nBinários manual/genérico idênticos: otimizado={report["identicalOptimized"]}; sem otimização={report["identicalUnoptimized"]}. '
-             'Quando os bytes são iguais, diferenças de tempo refletem variação de execução, não código diferente devido a generics.\n')
+             'Quando os bytes são iguais, diferenças de time refletem variação de execução, não código diferente devido a generics.\n')
 args.output.with_suffix('.md').write_text(markdown, encoding='utf-8')
 print(markdown)

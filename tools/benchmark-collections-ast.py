@@ -100,7 +100,7 @@ markdown = ('# Migração AST das coleções — alpha.5\n\n' + report['compiler
             'Base: ' + report['baseline'] + '.\n\n'
             f'Conclusão estimada do plano nesta entrega: **{report["completionEstimatePercent"]}%**, pela [régua de progresso](../../docs/PROGRESSO.md). A porcentagem mede atendimento do plano e não desempenho.\n\n'
             f'{args.samples} amostras intercaladas após aquecimento, com/sem otimização. '
-            'Cada tipo nominal acrescenta Array<Tag> e HashMap<int,Tag>; há também Array<int>/HashMap<int,int>. '
+            'Cada kind nominal acrescenta Array<Tag> e HashMap<int,Tag>; há também Array<int>/HashMap<int,int>. '
             f'O laço usa {iterations} elementos e confere `2*(3*N*(N-1)/2+7*N)`. '
             'Compilação e execução incluem início de processo.\n\n'
             '| Compilador | Tipos nominais | Modo | Compilação mediana ms | Execução mediana ms | Mín–máx execução ms | Bytes |\n'
@@ -111,7 +111,7 @@ for r in report['results']:
 markdown += ('\nFontes, hashes e amostras no JSON adjacente. A carga exercita especializações distintas e '
              'crescimento de código, com operações escalares de coleção. Não mede RAM, vidas entre funções, '
              'estruturas persistentes, textos grandes ou aplicações reais. Tempos de execução incluem startup e '
-             'não sustentam uma conclusão de desempenho geral. Layout, hashing, bounds e algoritmos são preservados.\n')
-markdown += f'\nTodos os pares de executáveis são idênticos byte a byte: {report["allBinariesIdentical"]}. Quando os bytes coincidem, variações no tempo de execução não correspondem a alterações no código emitido.\n'
+             'não sustentam uma conclusão de desempenho geral. Layout, hashing, bounds e algorithms são preservados.\n')
+markdown += f'\nTodos os pares de executáveis são idênticos byte a byte: {report["allBinariesIdentical"]}. Quando os bytes coincidem, variações no time de execução não correspondem a alterações no código emitido.\n'
 args.output.with_suffix('.md').write_text(markdown, encoding='utf-8')
 print(markdown)

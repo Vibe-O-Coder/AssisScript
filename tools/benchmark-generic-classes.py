@@ -40,11 +40,11 @@ def program(count, generic):
         name = f'Caixa<Tag{i}>' if generic else f'Caixa{i}'
         body.append(f'let c{i}:{name}=new {name}();')
         if not generic:
-            declarations.append(f'ASSIS Caixa{i}{{let valor:Tag{i};'
+            declarations.append(f'ASSIS Caixa{i}{{let value:Tag{i};'
                                 f'assis ler(v:Tag{i}):Tag{i}{{return v;}}'
                                 'assis calcular(v:int):int{return v*3+7;}}')
     if generic:
-        declarations.append('ASSIS Caixa<T>{let valor:T;assis ler(v:T):T{return v;}'
+        declarations.append('ASSIS Caixa<T>{let value:T;assis ler(v:T):T{return v;}'
                             'assis calcular(v:int):int{return v*3+7;}}')
     body.append('let total:int=0;'
                 f'for(let i:int=0;i<{iterations};i+=1){{total+=c0.calcular(i);}}print(total);')

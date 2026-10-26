@@ -1,19 +1,19 @@
 #yuri <std/unicode.assis>
-#yuri <std/proprios.assis>
+#yuri <std/owned.assis>
 
 safe assis assis_assis():int {
-    own dados:*byte=alloc<byte>(4);
-    dados[0]=byte(65);dados[1]=byte(0);dados[2]=byte(195);dados[3]=byte(169);
-    own texto:unicode::Texto=new unicode::Texto();
-    assert(texto.carregar(fatia(dados,0,4)));
-    own lista:proprios::Lista<unicode::Texto>=new proprios::Lista<unicode::Texto>();
-    lista.inserir(move(texto));
+    own data:*byte=alloc<byte>(4);
+    data[0]=byte(65);data[1]=byte(0);data[2]=byte(195);data[3]=byte(169);
+    own strings:unicode::String=new unicode::String();
+    assert(strings.load(slice_of(data,0,4)));
+    own lista:owned::OwnedList<unicode::String>=new owned::OwnedList<unicode::String>();
+    lista.push_front(move(strings));
     {
-        borrow entrada:unicode::Texto=lista.obter(0);
-        borrow trecho:slice<byte>=entrada.recortar(2,2);
-        print(entrada.tamanho(),len(trecho),int(trecho[0]),int(trecho[1]));
+        borrow entrada:unicode::String=lista.get(0);
+        borrow trecho:slice<byte>=entrada.slice_range(2,2);
+        print(entrada.size(),len(trecho),int(trecho[0]),int(trecho[1]));
     }
-    own extraido:unicode::Texto=lista.retirar();
-    print(lista.tamanho(),extraido.tamanho());
+    own extraido:unicode::String=lista.pop_front();
+    print(lista.size(),extraido.size());
     return 0;
 }

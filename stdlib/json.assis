@@ -1,142 +1,142 @@
-#yuri <std/texto.assis>
+#yuri <std/strings.assis>
 namespace json;
 
 /// Tokens: 0 EOF, 1 string, 2 number, 3 true, 4 false, 5 null; pontuação ASCII.
 /// Os offsets são bytes no buffer original; o token não retém referências.
-public value struct Token { let tipo: int; let inicio: int; let fim: int; let proximo: int; let valido: bool; }
-public value struct Resultado { let valido: bool; let posicao: int; let tokens: int; }
+public value struct Token { let kind: int; let start: int; let end: int; let next: int; let valid: bool; }
+public value struct ValidationResult { let valid: bool; let position: int; let tokens: int; }
 
-pure assis espaco(c: byte): bool { return c == 32 || c == 9 || c == 10 || c == 13; }
-pure assis digito(c: byte): bool { return c >= 48 && c <= 57; }
-pure assis hex(c: byte): int {
+pure fn whitespace(c: byte): bool { return c == 32 || c == 9 || c == 10 || c == 13; }
+pure fn digit(c: byte): bool { return c >= 48 && c <= 57; }
+pure fn hex(c: byte): int {
     if (c >= 48 && c <= 57) { return int(c) - 48; }
     if (c >= 65 && c <= 70) { return int(c) - 55; }
     if (c >= 97 && c <= 102) { return int(c) - 87; }
     return -1;
 }
-safe assis unidade(borrow dados: *byte, tamanho: int, inicio: int): int {
-    if (inicio < 0 || inicio > tamanho || tamanho - inicio < 4) { return -1; }
+safe fn code_unit(borrow data: *byte, size: int, start: int): int {
+    if (start < 0 || start > size || size - start < 4) { return -1; }
     let n: int = 0;
-    for (let i: int = 0; i < 4; i += 1) { val d: int = hex(dados[inicio + i]); if (d < 0) { return -1; } n = n * 16 + d; }
+    for (let i: int = 0; i < 4; i += 1) { val d: int = hex(data[start + i]); if (d < 0) { return -1; } n = n * 16 + d; }
     return n;
 }
 
 /// Lexer estrito, sem alocação. Não valida a gramática do documento sozinho.
-public safe assis proximo(borrow dados: *byte, tamanho: int, inicio: int): Token {
-    if (tamanho < 0 || tamanho > len(dados) || inicio < 0 || inicio > tamanho) { return new Token(-1, inicio, inicio, inicio, false); }
-    let i: int = inicio;
-    while (i < tamanho && espaco(dados[i])) { i += 1; }
+public safe fn next(borrow data: *byte, size: int, start: int): Token {
+    if (size < 0 || size > len(data) || start < 0 || start > size) { return new Token(-1, start, start, start, false); }
+    let i: int = start;
+    while (i < size && whitespace(data[i])) { i += 1; }
     val comeco: int = i;
-    if (i == tamanho) { return new Token(0, i, i, i, true); }
-    val c: byte = dados[i]; i += 1;
+    if (i == size) { return new Token(0, i, i, i, true); }
+    val c: byte = data[i]; i += 1;
     if (c == 123 || c == 125 || c == 91 || c == 93 || c == 58 || c == 44) { return new Token(int(c), comeco, i, i, true); }
     if (c == 34) {
-        while (i < tamanho) {
-            val b: byte = dados[i]; i += 1;
+        while (i < size) {
+            val b: byte = data[i]; i += 1;
             if (b == 34) { return new Token(1, comeco, i, i, true); }
             if (b < 32) { return new Token(-1, i - 1, i, i, false); }
             if (b == 92) {
-                if (i == tamanho) { break; }
-                val e: byte = dados[i]; i += 1;
+                if (i == size) { break; }
+                val e: byte = data[i]; i += 1;
                 if (e == 117) {
-                    val ponto: int = unidade(dados, tamanho, i);
-                    if (ponto < 0 || (ponto >= 56320 && ponto <= 57343)) { return new Token(-1, i, i, i, false); }
+                    val codepoint: int = code_unit(data, size, i);
+                    if (codepoint < 0 || (codepoint >= 56320 && codepoint <= 57343)) { return new Token(-1, i, i, i, false); }
                     i += 4;
-                    if (ponto >= 55296 && ponto <= 56319) {
-                        if (tamanho - i < 6 || dados[i] != 92 || dados[i + 1] != 117) { return new Token(-1, i, i, i, false); }
-                        val baixo: int = unidade(dados, tamanho, i + 2);
+                    if (codepoint >= 55296 && codepoint <= 56319) {
+                        if (size - i < 6 || data[i] != 92 || data[i + 1] != 117) { return new Token(-1, i, i, i, false); }
+                        val baixo: int = code_unit(data, size, i + 2);
                         if (baixo < 56320 || baixo > 57343) { return new Token(-1, i, i, i, false); }
                         i += 6;
                     }
                 } else if (e != 34 && e != 92 && e != 47 && e != 98 && e != 102 && e != 110 && e != 114 && e != 116) { return new Token(-1, i - 1, i, i, false); }
             } else if (b >= 128) {
-                val passo: Utf8Passo = utf8_proximo(dados, tamanho, i - 1);
-                if (!passo.valido) { return new Token(-1, i - 1, i, i, false); }
-                i = passo.proximo;
+                val step: Utf8Step = utf8_next(data, size, i - 1);
+                if (!step.valid) { return new Token(-1, i - 1, i, i, false); }
+                i = step.next;
             }
         }
         return new Token(-1, i, i, i, false);
     }
-    if (c == 45 || digito(c)) {
+    if (c == 45 || digit(c)) {
         i = comeco;
-        if (dados[i] == 45) { i += 1; }
-        if (i == tamanho || !digito(dados[i])) { return new Token(-1, i, i, i, false); }
-        if (dados[i] == 48) { i += 1; }
-        else { while (i < tamanho && digito(dados[i])) { i += 1; } }
-        if (i < tamanho && dados[i] == 46) {
+        if (data[i] == 45) { i += 1; }
+        if (i == size || !digit(data[i])) { return new Token(-1, i, i, i, false); }
+        if (data[i] == 48) { i += 1; }
+        else { while (i < size && digit(data[i])) { i += 1; } }
+        if (i < size && data[i] == 46) {
             i += 1; val primeiro: int = i;
-            while (i < tamanho && digito(dados[i])) { i += 1; }
+            while (i < size && digit(data[i])) { i += 1; }
             if (i == primeiro) { return new Token(-1, i, i, i, false); }
         }
-        if (i < tamanho && (dados[i] == 101 || dados[i] == 69)) {
-            i += 1; if (i < tamanho && (dados[i] == 43 || dados[i] == 45)) { i += 1; }
-            val primeiro: int = i; while (i < tamanho && digito(dados[i])) { i += 1; }
+        if (i < size && (data[i] == 101 || data[i] == 69)) {
+            i += 1; if (i < size && (data[i] == 43 || data[i] == 45)) { i += 1; }
+            val primeiro: int = i; while (i < size && digit(data[i])) { i += 1; }
             if (i == primeiro) { return new Token(-1, i, i, i, false); }
         }
         return new Token(2, comeco, i, i, true);
     }
-    if (c == 116 && tamanho - comeco >= 4 && dados[comeco + 1] == 114 && dados[comeco + 2] == 117 && dados[comeco + 3] == 101) { return new Token(3, comeco, comeco + 4, comeco + 4, true); }
-    if (c == 102 && tamanho - comeco >= 5 && dados[comeco + 1] == 97 && dados[comeco + 2] == 108 && dados[comeco + 3] == 115 && dados[comeco + 4] == 101) { return new Token(4, comeco, comeco + 5, comeco + 5, true); }
-    if (c == 110 && tamanho - comeco >= 4 && dados[comeco + 1] == 117 && dados[comeco + 2] == 108 && dados[comeco + 3] == 108) { return new Token(5, comeco, comeco + 4, comeco + 4, true); }
+    if (c == 116 && size - comeco >= 4 && data[comeco + 1] == 114 && data[comeco + 2] == 117 && data[comeco + 3] == 101) { return new Token(3, comeco, comeco + 4, comeco + 4, true); }
+    if (c == 102 && size - comeco >= 5 && data[comeco + 1] == 97 && data[comeco + 2] == 108 && data[comeco + 3] == 115 && data[comeco + 4] == 101) { return new Token(4, comeco, comeco + 5, comeco + 5, true); }
+    if (c == 110 && size - comeco >= 4 && data[comeco + 1] == 117 && data[comeco + 2] == 108 && data[comeco + 3] == 108) { return new Token(5, comeco, comeco + 4, comeco + 4, true); }
     return new Token(-1, comeco, i, i, false);
 }
 
-struct Parser { let token: Token; let tamanho: int; let limite: int; let tokens: int; let maximo: int; let erro: int; }
-safe assis avancar(borrow mut p: Parser, borrow dados: *byte): bool {
-    if (p.erro >= 0) { return false; }
-    p.token = proximo(dados, p.tamanho, p.token.proximo);
-    if (!p.token.valido) { p.erro = p.token.inicio; return false; }
-    if (p.token.tipo != 0) {
-        if (p.tokens == p.maximo) { p.erro = p.token.inicio; return false; }
+struct Parser { let token: Token; let size: int; let limite: int; let tokens: int; let max: int; let error: int; }
+safe fn advance(borrow mut p: Parser, borrow data: *byte): bool {
+    if (p.error >= 0) { return false; }
+    p.token = next(data, p.size, p.token.next);
+    if (!p.token.valid) { p.error = p.token.start; return false; }
+    if (p.token.kind != 0) {
+        if (p.tokens == p.max) { p.error = p.token.start; return false; }
         p.tokens += 1;
     }
     return true;
 }
-safe assis valor(borrow mut p: Parser, borrow dados: *byte, profundidade: int): bool {
-    val tipo: int = p.token.tipo;
-    if (tipo >= 1 && tipo <= 5) { return avancar(p, dados); }
-    if ((tipo != 123 && tipo != 91) || profundidade >= p.limite) { p.erro = p.token.inicio; return false; }
-    val fim: int = 93 + (tipo - 91) / 32 * 32;
-    if (!avancar(p, dados)) { return false; }
-    if (p.token.tipo == fim) { return avancar(p, dados); }
+safe fn value(borrow mut p: Parser, borrow data: *byte, profundidade: int): bool {
+    val kind: int = p.token.kind;
+    if (kind >= 1 && kind <= 5) { return advance(p, data); }
+    if ((kind != 123 && kind != 91) || profundidade >= p.limite) { p.error = p.token.start; return false; }
+    val end: int = 93 + (kind - 91) / 32 * 32;
+    if (!advance(p, data)) { return false; }
+    if (p.token.kind == end) { return advance(p, data); }
     while (true) {
-        if (tipo == 123) {
-            if (p.token.tipo != 1) { p.erro = p.token.inicio; return false; }
-            if (!avancar(p, dados)) { return false; }
-            if (p.token.tipo != 58) { p.erro = p.token.inicio; return false; }
-            if (!avancar(p, dados)) { return false; }
+        if (kind == 123) {
+            if (p.token.kind != 1) { p.error = p.token.start; return false; }
+            if (!advance(p, data)) { return false; }
+            if (p.token.kind != 58) { p.error = p.token.start; return false; }
+            if (!advance(p, data)) { return false; }
         }
-        if (!valor(p, dados, profundidade + 1)) { return false; }
-        if (p.token.tipo == fim) { return avancar(p, dados); }
-        if (p.token.tipo != 44) { p.erro = p.token.inicio; return false; }
-        if (!avancar(p, dados)) { return false; }
+        if (!value(p, data, profundidade + 1)) { return false; }
+        if (p.token.kind == end) { return advance(p, data); }
+        if (p.token.kind != 44) { p.error = p.token.start; return false; }
+        if (!advance(p, data)) { return false; }
     }
 }
 
 /// Valida um documento UTF-8 inteiro, profundidade 1..64 e orçamento de tokens.
 /// Memória O(profundidade), tempo O(bytes). Não constrói árvore nem converte números.
-public safe assis validar(borrow dados: *byte, tamanho: int, profundidade: int, max_tokens: int): Resultado {
-    if (tamanho < 0 || tamanho > len(dados) || profundidade < 1 || profundidade > 64 || max_tokens < 1) { return new Resultado(false, 0, 0); }
-    own p: Parser = new Parser(new Token(0, 0, 0, 0, true), tamanho, profundidade, 0, max_tokens, -1);
-    if (!avancar(p, dados) || !valor(p, dados, 0)) { return new Resultado(false, p.erro, p.tokens); }
-    if (p.token.tipo != 0) { return new Resultado(false, p.token.inicio, p.tokens); }
-    return new Resultado(true, tamanho, p.tokens);
+public safe fn validate(borrow data: *byte, size: int, profundidade: int, max_tokens: int): ValidationResult {
+    if (size < 0 || size > len(data) || profundidade < 1 || profundidade > 64 || max_tokens < 1) { return new ValidationResult(false, 0, 0); }
+    own p: Parser = new Parser(new Token(0, 0, 0, 0, true), size, profundidade, 0, max_tokens, -1);
+    if (!advance(p, data) || !value(p, data, 0)) { return new ValidationResult(false, p.error, p.tokens); }
+    if (p.token.kind != 0) { return new ValidationResult(false, p.token.start, p.tokens); }
+    return new ValidationResult(true, size, p.tokens);
 }
 
 /// Serializa bytes UTF-8 como string JSON; NUL vira \u0000. Sem terminador.
 /// -1 para UTF-8/tamanho/capacidade inválidos. Falha preserva destino.
-public safe assis citar(borrow dados: *byte, tamanho: int, borrow mut destino: *byte): int {
-    if (!utf8_valido(dados, tamanho)) { return -1; }
+public safe fn quote(borrow data: *byte, size: int, borrow mut destino: *byte): int {
+    if (!utf8_valid(data, size)) { return -1; }
     let necessario: int = 2;
-    for (let i: int = 0; i < tamanho; i += 1) {
-        val c: byte = dados[i];let extra: int = 1;
+    for (let i: int = 0; i < size; i += 1) {
+        val c: byte = data[i];let extra: int = 1;
         if (c < 32) { extra = 6; } else if (c == 34 || c == 92) { extra = 2; }
         if (necessario > len(destino) - extra) { return -1; } necessario += extra;
     }
     if (necessario > len(destino)) { return -1; }
     destino[0] = byte(34);let n: int = 1;
-    for (let i: int = 0; i < tamanho; i += 1) {
-        val c: byte = dados[i];
+    for (let i: int = 0; i < size; i += 1) {
+        val c: byte = data[i];
         if (c < 32) {
             destino[n] = byte(92);destino[n + 1] = byte(117);destino[n + 2] = byte(48);destino[n + 3] = byte(48);
             destino[n + 4] = byte(48 + int(c) / 16);val baixo: int = int(c) % 16;

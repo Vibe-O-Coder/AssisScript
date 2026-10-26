@@ -23,10 +23,10 @@ test('compilação estática: build não executa e binário roda sozinho', () =>
     const absent = path.join(temp, 'invalido'); rejection(['build', source, '-o', absent], /não é possível/); assert(!fs.existsSync(absent) && !fs.existsSync(absent + '.exe'));
 });
 test('comentários, delimitadores, strings, BOM e CRLF', () => {
-    const source = write('comentarios.assis', '\ufeffmiyabi palavras livres, te to importa "ausente"\r\nte\r\n texto livre\r\n te comentário interno to\r\nto\r\nassis assis_assis(): AssIs { FODASE("miyabi te to"); Fodase 0; }');
+    const source = write('comentarios.assis', '\ufeffmiyabi palavras livres, te to importa "ausente"\r\nte\r\n strings livre\r\n te comentário interno to\r\nto\r\nassis assis_assis(): AssIs { FODASE("miyabi te to"); Fodase 0; }');
     const r = run(['run', source]); assert.equal(r.status, 0, r.stderr); assert.equal(r.stdout, 'miyabi te to\n');
-    for (const [text, message] of [['te sem fim', /sem fechamento to/], ['to', /sem comentário te/], ['miyabiAssis', /use ASSIS/], ['teAssis', /use ASSIS/]]) {
-        rejection(['check', write('comentario-erro.assis', text)], message);
+    for (const [text, message] of [['te sem end', /sem fechamento to/], ['to', /sem comentário te/], ['miyabiAssis', /use ASSIS/], ['teAssis', /use ASSIS/]]) {
+        rejection(['check', write('comentario-error.assis', text)], message);
     }
 });
 test('módulos: importação transitiva, repetida e herança entre arquivos', () => {
@@ -37,11 +37,11 @@ test('módulos: importação transitiva, repetida e herança entre arquivos', ()
     assert.equal(run(['check', path.join(temp, 'modulos/base.assis'), '--library']).status, 0);
     rejection(['build', path.join(temp, 'modulos/base.assis'), '-o', path.join(temp, 'sem-entrada')], /falta a entrada/);
 });
-test('erros de importação: ciclos, ausência, colisões e fronteiras de arquivo', () => {
+test('errors de importação: ciclos, ausência, colisões e fronteiras de arquivo', () => {
     const a = write('ciclo/a.assis', 'importa "b";'); write('ciclo/b.assis', 'importa "a";');
     const cycle = rejection(['check', a], /ciclo de importação/); assert(cycle.file.endsWith('b.assis'));
     rejection(['check', write('ausente.assis', 'importa "nao-existe";')], /módulo não encontrado/);
-    rejection(['check', write('sem-ponto.assis', 'importa "std/texto"')], /esperado ;/);
+    rejection(['check', write('sem-codepoint.assis', 'importa "std/strings"')], /esperado ;/);
     rejection(['check', write('caminho-nulo.assis', 'importa "abc\\0";')], /byte nulo/);
     write('incompleto.assis', 'assis AssisAssis(): AssIs { Fodase 1;');
     const d = rejection(['check', write('fronteira.assis', 'importa "incompleto"; }')], /esperad/); assert(d.file.endsWith('incompleto.assis'));
@@ -50,8 +50,8 @@ test('erros de importação: ciclos, ausência, colisões e fronteiras de arquiv
     rejection(['check', write('duplicado.assis', 'importa "duplicado-a"; importa "duplicado-b"; assis assis_assis(): AssIs { Fodase 0; }')], /função declarada duas vezes/);
 });
 test('diagnóstico do módulo aponta arquivo e linha corretos', () => {
-    const lib = write('erro-biblioteca.assis', 'miyabi biblioteca\nassis AssisAssis(): AssIs {\n    Fodase aSsIs;\n}');
-    const d = rejection(['check', write('erro-principal.assis', 'importa "erro-biblioteca"; assis assis_assis(): AssIs { Fodase 0; }')], /não é possível/);
+    const lib = write('error-biblioteca.assis', 'miyabi biblioteca\nassis AssisAssis(): AssIs {\n    Fodase aSsIs;\n}');
+    const d = rejection(['check', write('error-principal.assis', 'importa "error-biblioteca"; assis assis_assis(): AssIs { Fodase 0; }')], /não é possível/);
     assert.equal(d.file, lib); assert.equal(d.line, 3); assert.equal(d.column, 5); assert.equal(d.code, 'A001');
 });
 test('stdin, overlays e colunas UTF-16 usam posições do editor', () => {
@@ -77,7 +77,7 @@ test('fontes importados e extensão exe final são protegidos contra sobrescrita
     const r = run(['build', main, '-o', output]); assert.equal(r.status, 2, r.stderr); assert.deepEqual(fs.readFileSync(lib), original);
 });
 test('bibliotecas padrão: matemática, texto UTF-8 e memória', () => {
-    const source = write('padrao.assis', `importa "std/matematica"; importa "std/texto"; importa "std/memoria";
+    const source = write('padrao.assis', `importa "std/math"; importa "std/strings"; importa "std/memory";
 assis assis_assis(): AssIs {
     FODASE(Assis_assis_fodase(-5, 2), Assis_fodase_assis(-5, 2), Assis_fodase_fodase(99, 0, 10), Assis_assis_assis(-42));
     FODASE(Fodase_assis_fodase("ação", "aç"), Fodase_fodase_assis("ação", "ão"), Fodase_assis_fodase("a", "ab"), Fodase_fodase_assis("", ""));

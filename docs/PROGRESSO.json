@@ -1,5 +1,5 @@
 {
-  "version": "3.3.0-alpha.9",
+  "version": "3.3.0-alpha.10",
   "date": "25/10/2026",
   "scope": "Conclusão do plano de evolução das fases 0–6, incluindo a trilha funcional e as aplicações A/B/C. Não inclui construir o navegador, HTDL, estilos ou motor de busca.",
   "phases": [
@@ -12,8 +12,8 @@
           "id": "P0-BASE",
           "name": "Baseline, hashes e reconstrução local comparável",
           "status": "complete",
-          "evidence": "VALIDACAO-3.3-ALPHA.9.md",
-          "notes": "Baseline alpha.8 preservada e reconstrução da entrega atual."
+          "evidence": "VALIDACAO-3.3-ALPHA.10.md",
+          "notes": "Estado alpha.9 preservado em commit Git antes das mudanças; reconstrução limpa da entrega atual."
         },
         {
           "id": "P0-PRIV",
@@ -39,7 +39,8 @@
           "id": "P0-CI",
           "name": "Matriz adversa contínua Windows/Linux e inventário técnico",
           "status": "partial",
-          "evidence": "PROCEDENCIA.md"
+          "evidence": "PROCEDENCIA.md",
+          "notes": "Matriz acionada no GitHub e falhas iniciais de ambiente corrigidas; inventário completo dos componentes dos binários ainda parcial."
         }
       ]
     },
@@ -219,7 +220,8 @@
           "id": "P5-OPT",
           "name": "Otimizações comprovadas, TCO, intervalos e alocação de registradores",
           "status": "partial",
-          "evidence": "MELHORIAS-3.2.md"
+          "evidence": "OPTIMIZATION-ALPHA.10.md",
+          "notes": "Hash inteiro/alocação corrigidos; salvamento seletivo, ponderação por laço, imediatos/LEA, inlining escalar e prova conservadora de bounds. Alocação global, métodos e otimização ampla continuam abertos."
         },
         {
           "id": "P5-ABI",
@@ -252,7 +254,7 @@
           "id": "P6-INSTALL",
           "name": "Instalação, atualização e remoção offline preservam dados",
           "status": "complete",
-          "evidence": "VALIDACAO-3.3-ALPHA.9.md",
+          "evidence": "VALIDACAO-3.3-ALPHA.10.md",
           "notes": "Catálogo/instaladores sincronizados com 16 bibliotecas e preservação de dados."
         },
         {
@@ -266,14 +268,15 @@
           "id": "P6-RELEASE",
           "name": "Pacotes coerentes e reconstrução local limpa reproduzível",
           "status": "complete",
-          "evidence": "VALIDACAO-3.3-ALPHA.9.md",
+          "evidence": "VALIDACAO-3.3-ALPHA.10.md",
           "notes": "Pacotes e reconstrução da entrega atual."
         },
         {
           "id": "P6-POLICY",
           "name": "Licença/procedência resolvidas e política de suporte/compatibilidade",
-          "status": "pending",
-          "evidence": "PROCEDENCIA.md"
+          "status": "partial",
+          "evidence": "PROCEDENCIA.md",
+          "notes": "Licença CC BY-NC-SA escolhida pelo responsável, suporte/compatibilidade e avisos Windows publicados; direitos de imagens e auditoria completa de componentes ainda abertos."
         },
         {
           "id": "P6-ACCEPT",
@@ -536,6 +539,48 @@
         "P6-POLICY": "pending",
         "P6-ACCEPT": "pending"
       }
+    },
+    {
+      "version": "3.3.0-alpha.10",
+      "note": "Otimizações comprovadas e APIs inglesas; licença/suporte avançam parcialmente. Sem crédito para recursos ou aceites ainda ausentes.",
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "partial",
+        "P0-FLOW": "complete",
+        "P0-CI": "partial",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "complete",
+        "P2-VALUE": "complete",
+        "P2-ADT": "partial",
+        "P3-TEXT": "complete",
+        "P3-NUM": "complete",
+        "P3-IO": "complete",
+        "P3-LIB": "complete",
+        "P3-PKG": "complete",
+        "P4-FFI": "pending",
+        "P4-EVENT": "complete",
+        "P4-NET": "pending",
+        "P4-STORE": "partial",
+        "P4-SOAK": "pending",
+        "P5-IR": "partial",
+        "P5-OPT": "partial",
+        "P5-ABI": "partial",
+        "P5-DEBUG": "complete",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "complete",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "partial",
+        "P6-ACCEPT": "pending"
+      },
+      "retrospective": false
     }
   ]
 }

@@ -38,19 +38,19 @@ class Cli(base.Evolution):
                     count = len(oracle) if expected_count is None else expected_count
                     total = sum(oracle) if expected_total is None else expected_total
                     self.assertEqual(output.read_bytes(), f'registros,total\n{count},{total}\n'.encode())
-            for data in [b'valor\n', b'valor\n1\n"-2"\n43', b'valor\r\n0\r\n-1\r\n1\r\n',
-                         b'valor\n-9223372036854775808\n', b'valor\n9223372036854775807\n']:
+            for data in [b'value\n', b'value\n1\n"-2"\n43', b'value\r\n0\r\n-1\r\n1\r\n',
+                         b'value\n-9223372036854775808\n', b'value\n9223372036854775807\n']:
                 run(data)
-            for data in [b'', b'outra\n1\n', b'valor', b'valor\n\n', b'valor\n1,2\n', b'valor\n+1\n',
-                         b'valor\n1\x00\n', b'valor\n"1\n', b'valor\n1\r2\n', b'valor\n1\r',
-                         b'valor\n' + b'0'*25 + b'\n', b'valor\n\xff\n']:
+            for data in [b'', b'outra\n1\n', b'value', b'value\n\n', b'value\n1,2\n', b'value\n+1\n',
+                         b'value\n1\x00\n', b'value\n"1\n', b'value\n1\r2\n', b'value\n1\r',
+                         b'value\n' + b'0'*25 + b'\n', b'value\n\xff\n']:
                 run(data, 2)
-            for data in [b'valor\n9223372036854775808\n', b'valor\n-9223372036854775809\n',
-                         b'valor\n9223372036854775807\n1\n', b'valor\n-9223372036854775808\n-1\n']:
+            for data in [b'value\n9223372036854775808\n', b'value\n-9223372036854775809\n',
+                         b'value\n9223372036854775807\n1\n', b'value\n-9223372036854775808\n-1\n']:
                 run(data, 3)
             # Records cross every 64 KiB boundary; no newline-aligned read assumption.
-            run(b'valor\n' + b'"1234567"\r\n' * 100_000)
-            entry.write_bytes(b'valor\n1\n')
+            run(b'value\n' + b'"1234567"\r\n' * 100_000)
+            entry.write_bytes(b'value\n1\n')
             for args, code in [([], 64), ([self.temp/'missing.csv', output], 1), ([entry, self.temp/'missing'/'out.csv'], 1), ([self.temp, output], 1)]:
                 p = subprocess.run([binary, *map(str, args)], capture_output=True, timeout=30)
                 self.assertEqual(p.returncode, code, (args, p.stdout, p.stderr))
@@ -58,12 +58,12 @@ class Cli(base.Evolution):
             # The output is not opened before complete validation of the input.
             output.write_bytes(b'preservado')
             original = hashlib.sha256(output.read_bytes()).hexdigest()
-            entry.write_bytes(b'valor\n1\nruim\n')
+            entry.write_bytes(b'value\n1\nruim\n')
             p = subprocess.run([binary, entry, output], capture_output=True, timeout=30)
             self.assertEqual(p.returncode, 2)
             self.assertEqual(hashlib.sha256(output.read_bytes()).hexdigest(), original)
             # Exercise OS permission errors as an unprivileged process when running as root.
-            entry.write_bytes(b'valor\n1\n')
+            entry.write_bytes(b'value\n1\n')
             if os.name == 'nt':
                 output.chmod(stat.S_IREAD)
                 try:

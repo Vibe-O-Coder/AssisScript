@@ -1,18 +1,18 @@
 /// Preenche quantidade bytes com valor. Exige quantidade >= 0 e destino válido para todo o intervalo; não verifica limites de ponteiro bruto.
-assis preencher(destino: *byte, quantidade: int, valor: byte): void {
-    assert(quantidade >= 0); let i: int = 0;
-    while (i < quantidade) { destino[i] = valor; i += 1; }
+fn fill(destino: *byte, count: int, value: byte): void {
+    assert(count >= 0); let i: int = 0;
+    while (i < count) { destino[i] = value; i += 1; }
 }
 /// Copia quantidade bytes da origem para destino. Exige buffers válidos sem sobreposição e quantidade >= 0; não verifica limites.
-assis copiar(destino: *byte, origem: *byte, quantidade: int): void {
-    assert(quantidade >= 0); let i: int = 0;
-    while (i < quantidade) { destino[i] = origem[i]; i += 1; }
+fn copy(destino: *byte, origem: *byte, count: int): void {
+    assert(count >= 0); let i: int = 0;
+    while (i < count) { destino[i] = origem[i]; i += 1; }
 }
 
 // Compatibilidade com 2.x
-miyabi O chamador garante tamanho, validade e tempo de vida dos ponteiros.
+miyabi O chamador garante size, validade e time de vida dos ponteiros.
 /// Preenche bytes; quantidade não positiva não altera a memória. Exige destino válido (API legada).
-assis Assis_Assis_Fodase(AssisAssis: *AssiS, AssisFodase: AssIs, FodaseAssis: AssiS): FODase {
+fn Assis_Assis_Fodase(AssisAssis: *AssiS, AssisFodase: AssIs, FodaseAssis: AssiS): FODase {
     Assis FodaseFodase: AssIs = 0;
     ASSis (FodaseFodase < AssisFodase) {
         AssisAssis[FodaseFodase] = FodaseAssis;
@@ -21,7 +21,7 @@ assis Assis_Assis_Fodase(AssisAssis: *AssiS, AssisFodase: AssIs, FodaseAssis: As
 }
 miyabi Cópia da origem para o destino; buffers não podem se sobrepor.
 /// Copia bytes sem validar limites ou sobreposição; quantidade não positiva não altera memória (API legada).
-assis Assis_Fodase_Assis(AssisAssis: *AssiS, AssisFodase: *AssiS, FodaseAssis: AssIs): FODase {
+fn Assis_Fodase_Assis(AssisAssis: *AssiS, AssisFodase: *AssiS, FodaseAssis: AssIs): FODase {
     Assis FodaseFodase: AssIs = 0;
     ASSis (FodaseFodase < FodaseAssis) {
         AssisAssis[FodaseFodase] = AssisFodase[FodaseFodase];

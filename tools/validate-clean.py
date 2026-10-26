@@ -49,7 +49,7 @@ with tempfile.TemporaryDirectory(prefix='assis-clean-') as temp:
     subprocess.run([sys.executable, ROOT / 'tests/test-generic-classes.py'], env=environment, check=True)
     subprocess.run([sys.executable, ROOT / 'tests/test-collections-ast.py'], env=environment, check=True)
     subprocess.run([sys.executable, ROOT / 'tests/test-ownership-functions.py'], env=environment, check=True)
-    for suite in ['values', 'files', 'text-bytes', 'cli', 'numbers', 'packages', 'json', 'system', 'tooling', 'slices', 'managed-classes', 'backend-alpha9']:
+    for suite in ['values', 'files', 'text-bytes', 'cli', 'numbers', 'packages', 'json', 'system', 'tooling', 'slices', 'managed-classes', 'backend-alpha9', 'optimization', 'english-api', 'release-policy']:
         subprocess.run([sys.executable, ROOT / ('tests/test-' + suite + '.py')], env=environment, check=True)
     installed = ROOT / 'bin' / binary.name
     record = dict(platform=sys.platform, compiler=cc,

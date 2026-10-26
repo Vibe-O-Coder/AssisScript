@@ -27,7 +27,7 @@ Saída: `41`. O cálculo não depende do terminal; a função de entrada concent
 
 `val nome: Tipo = expressão;` exige inicialização e aceita int, byte, bool, text e funções sem captura. O vínculo não pode receber `=`, atribuição composta ou ter seu endereço extraído com `&`. O valor pode ser copiado para um `let` independente. Escopos internos podem ocultar o nome como no núcleo anterior. `val` é local: não declara campos nem modifica assinaturas de parâmetros comuns.
 
-`val` de text fixa o vínculo; **não comprova a vida nem congela a memória de um buffer externo**. `text(buffer)` e `bytes(texto)` conservam o contrato legado documentado. Por isso text ainda não entra nas assinaturas puras. Objetos, coleções e ponteiros não são aceitos em `val` nesta etapa; estender a palavra a referências mutáveis sem constância profunda produziria uma garantia enganosa.
+`val` de text fixa o vínculo; **não comprova a vida nem congela a memória de um buffer externo**. `text(buffer)` e `bytes(strings)` conservam o contrato legado documentado. Por isso text ainda não entra nas assinaturas puras. Objetos, coleções e ponteiros não são aceitos em `val` nesta etapa; estender a palavra a referências mutáveis sem constância profunda produziria uma garantia enganosa.
 
 `let`/`Assis` continuam mutáveis para compatibilidade. Prefira `val` em cálculos novos quando não precisar atualizar o vínculo. `for(val i: int=0; i<3; i+=1)` é rejeitado, porque seu incremento tenta reatribuir i.
 
@@ -53,6 +53,6 @@ Tipos de função com efeitos, valores de função, callbacks e composição for
 
 ## Continuação alpha.8
 
-Inteiros de largura fixa e f32/f64 têm [contrato numérico](NUMEROS.md). Módulos `namespace`/`public` e resolução offline com `assis.pkg`/`assis.lock` estão em [pacotes](PACOTES-E-NAMESPACES.md). `cli`, `json`, `tempo`, `log`, `iteradores` e `eventos` são bibliotecas opcionais novas, com empréstimos explícitos e limites documentados.
+Inteiros de largura fixa e f32/f64 têm [contrato numérico](NUMEROS.md). Módulos `namespace`/`public` e resolução offline com `assis.pkg`/`assis.lock` estão em [pacotes](PACOTES-E-NAMESPACES.md). `cli`, `json`, `time`, `log`, `iterators` e `events` são bibliotecas opcionais novas, com empréstimos explícitos e limites documentados.
 
 Comandos `fmt`, `test`, `doc`, LSP independente e símbolos/DWARF: [ferramentas](FERRAMENTAS-ALPHA.8.md). Relógio civil, espera, saída binária, cancelamento e persistência: [contratos](EVENTOS-E-PERSISTENCIA.md). Classes/Texto gerenciados gerais, variantes Move, capturas e slices gerais permanecem abertos; os caminhos C continuam com a fronteira legada documentada.

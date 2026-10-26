@@ -39,10 +39,10 @@ class Functions(unittest.TestCase):
     def test_generic_specialized_values_and_function_type_substitution(self):
         self.accepted('pure assis id<T>(v:T):T{return v;}'
             'pure assis aplicar<T>(f:pure assis(T):T,v:T):T{return f(v);}'
-            'pure assis obter<T>():pure assis(T):T{return id::<T>;}' + main(
+            'pure assis get<T>():pure assis(T):T{return id::<T>;}' + main(
             'val f:pure assis(int):int=id::<int>;'
             'print(aplicar::<int>(f,42),aplicar::<byte>(id::<byte>,byte(7)),'
-            'obter::<bool>()(true),id::<pure assis(int):int>(f)(9));'), '42 7 aSsIs 9\n')
+            'get::<bool>()(true),id::<pure assis(int):int>(f)(9));'), '42 7 aSsIs 9\n')
 
     def test_mutable_alias_shadowing_and_scope_restoration(self):
         self.accepted(PURE + main(
@@ -56,9 +56,9 @@ class Functions(unittest.TestCase):
     def test_effectful_callbacks_void_text_and_safe_widening(self):
         self.accepted(PURE +
             'assis eco(t:text):void{print(t);}'
-            'assis executar(f:assis(text):void):void{f("ação");}'
+            'assis run(f:assis(text):void):void{f("ação");}'
             'assis escolher():assis(int):int{return dobro;}' + main(
-            'val f:assis(int):int=dobro;print(f(21),escolher()(3));executar(eco);'),
+            'val f:assis(int):int=dobro;print(f(21),escolher()(3));run(eco);'),
             '42 6\nação\n')
 
     def test_reject_effect_laundering_through_assignments_returns_and_arguments(self):
@@ -71,7 +71,7 @@ class Functions(unittest.TestCase):
         ]:
             self.rejected(prefix + 'assis usar(f:pure assis(int):int):int{return f(1);}' + main(body),
                           'não é possível usar')
-        self.rejected(prefix + 'assis obter():pure assis(int):int{return efeito;}' + main(''),
+        self.rejected(prefix + 'assis get():pure assis(int):int{return efeito;}' + main(''),
                       'não é possível usar')
 
     def test_pure_bodies_reject_transitive_effects_and_dead_branches(self):
@@ -128,8 +128,8 @@ class Functions(unittest.TestCase):
     def test_native_argument_order_callee_once_and_many_arguments(self):
         self.accepted('assis a(v:int):int{print(v);return v;}'
             'assis soma(a:int,b:int,c:int,d:int,e:int,f:int,g:int,h:int):int{return a+b+c+d+e+f+g+h;}'
-            'assis obter():assis(int,int,int,int,int,int,int,int):int{print(0);return soma;}' + main(
-            'print(obter()(a(1),a(2),a(3),a(4),a(5),a(6),a(7),a(8)));'),
+            'assis get():assis(int,int,int,int,int,int,int,int):int{print(0);return soma;}' + main(
+            'print(get()(a(1),a(2),a(3),a(4),a(5),a(6),a(7),a(8)));'),
             '0\n1\n2\n3\n4\n5\n6\n7\n8\n36\n')
 
     def test_fields_arrays_pointers_privacy_and_owner_lifetime(self):
@@ -144,8 +144,8 @@ class Functions(unittest.TestCase):
         self.rejected(PURE + main('own a:Array<pure assis(int):int>=[dobro];free(a);a[0](1);'), 'movido ou liberado')
 
     def test_managed_arguments_cannot_escape_through_indirect_calls(self):
-        self.rejected('assis tamanho(a:Array<int>):int{return len(a);}' + main(
-            'val f:assis(Array<int>):int=tamanho;own a:Array<int>=[1];print(f(a));'), 'não pode escapar')
+        self.rejected('assis size(a:Array<int>):int{return len(a);}' + main(
+            'val f:assis(Array<int>):int=size;own a:Array<int>=[1];print(f(a));'), 'não pode escapar')
 
     def test_methods_remain_bound_calls_without_implicit_closures(self):
         self.accepted(PURE + 'ASSIS C{assis usar(f:pure assis(int):int):int{return f(21);}}' + main(
@@ -177,7 +177,7 @@ class Functions(unittest.TestCase):
         self.accepted(main(f'own a:Array<{ty}>=new Array<{ty}>();print(len(a));'), '0\n')
 
     def test_generic_map_filter_fold_empty_and_ordered_results(self):
-        self.accepted('#yuri <std/algoritmos.assis>\n' + PURE +
+        self.accepted('#yuri <std/algorithms.assis>\n' + PURE +
             'pure assis par(v:int):bool{return v%2==0;}'
             'pure assis somar(a:int,v:int):int{return a+v;}'
             'pure assis para_byte(v:int):byte{return byte(v);}' + main(
@@ -191,7 +191,7 @@ class Functions(unittest.TestCase):
             'let f:Array<int>=filter::<int>(vazio,par);defer free(f);'
             'print(len(m),len(f),fold::<int,int>(vazio,42,somar));'),
             '20 2 2 4 1 4\n0 0 42\n')
-        self.rejected('#yuri <std/algoritmos.assis>\n'
+        self.rejected('#yuri <std/algorithms.assis>\n'
             'assis efeito(v:int):int{print(v);return v;}' + main(
             'let a:Array<int>=[1];map::<int,int>(a,efeito);'), 'não é possível usar')
 

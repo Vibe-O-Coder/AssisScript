@@ -1,5 +1,7 @@
 # AssisScript — plano de evolução e passagem para a próxima instância
 
+**Continuação atual — 3.3.0-alpha.10: 77% (76,5/100 pontos).** Otimizações medidas, prova conservadora de bounds, sintaxe/APIs canônicas em inglês, READMEs em três idiomas, licença selecionada e política de suporte. P6-POLICY avança somente a parcial; recursos maiores e a meta de 90–100% permanecem abertos. [Handoff](HANDOFF-3.3-ALPHA.10.md), [validação](VALIDACAO-3.3-ALPHA.10.md), [migração](ENGLISH-API.md), [progresso](PROGRESSO.md). Entradas seguintes são históricas.
+
 **Continuação atual — 3.3.0-alpha.9: 76% (75,5/100 pontos).** Classes gerenciadas/receptores, fatias com vidas, texto UTF-8 e lista proprietária, HIR inicial, ELF PIE e locais escalares no GDB. Alvo de 90–100% ainda não atingido. [Handoff atual](HANDOFF-3.3-ALPHA.9.md), [validação](VALIDACAO-3.3-ALPHA.9.md), [progresso](PROGRESSO.md). Entradas seguintes são históricas.
 
 **Continuação atual, 25/10/2026 — 3.3.0-alpha.8:** números nativos, namespaces/pacotes offline, seis bibliotecas CLI, eventos cooperativos, persistência recuperável e ferramentas/depuração. **Conclusão estimada: 70% (70/100 pontos)** pela régua original, atingindo o alvo de 70–80% no limite inferior. [Handoff](HANDOFF-3.3-ALPHA.8.md), [validação](VALIDACAO-3.3-ALPHA.8.md), [progresso](PROGRESSO.md). Pendências de ownership geral, capturas, text/slices, FFI/rede/B/C/24 horas, PIE e licença permanecem explícitas. As entradas seguintes são históricas.

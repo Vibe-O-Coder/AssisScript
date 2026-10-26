@@ -14,7 +14,7 @@ struct Var { Token *t;Type ty;int slot,length_slot,ownership,shared,loop,reg,use
 typedef struct { Token *t;Type ty;int slot,offset;Class *owner;bool private,owned; } Field;
 typedef struct { Token *t;Vec fields;int tag; } Variant;
 enum { N_INT,N_STR,N_BOOL,N_NULL,N_NAME,N_SELF,N_UNARY,N_BINARY,N_CALL,N_MEMBER,N_INDEX,N_NEW,N_BUILTIN,N_BLOCK,N_LET,N_ASSIGN,N_IF,N_WHILE,N_RETURN,N_PRINT,N_FREE,N_BREAK,N_CONTINUE,N_EXPR,N_ARRAY,N_DEFER,N_UNSAFE,N_MATCH,N_ARM };
-struct Node { int kind,op;Token *t,*variant_name;Node *a,*b,*c,*step;Vec items,type_args;Type ty,decl;Var *var,*place,*temp;Field *field;Variant *variant;Function *fn;Class *cls;int slot,ownership;size_t code_start,code_end;bool lvalue,immutable,specialized,replace_owned,unreachable; };
+struct Node { int kind,op;Token *t,*variant_name;Node *a,*b,*c,*step;Vec items,type_args;Type ty,decl;Var *var,*place,*temp;Field *field;Variant *variant;Function *fn;Class *cls;int slot,ownership;size_t code_start,code_end;bool lvalue,immutable,specialized,replace_owned,unreachable,bounds_proven; };
 struct Function { Token *t;Vec params,vars,type_params,type_args;Type result;Node *body;Class *owner;Function *generic;Var *receiver;Token *site,*result_source;DefId id;int label,expansion,result_mode,result_from,receiver_mode,slots;size_t code_end;bool private,pure,safe; };
 struct Class { Token *t,*site;Token *base_name;Type base_type;Class *base,*generic;Vec own_fields,own_methods,fields,methods,type_params,type_args,variants;DefId id;TypeRef *type_ref;char *display;int state,label,drop_label,owned_state,expansion,size,value_state;bool record,value,tagged,sealed; };
 static Vec classes,functions,all_functions,generic_classes,generic_functions;
@@ -58,7 +58,7 @@ static TypeId type_identity(Type t){
 }
 static const char *collection_display(const char *name);
 static const char *type_base(Type t){
-    return numeric_name(t)?numeric_name(t):t.kind==TY_OBJ?collection_display(t.name):t.kind==TY_I64?"int":t.kind==TY_U8?"byte":t.kind==TY_BOOL?"bool":t.kind==TY_STR?"text":t.kind==TY_FILE?"Arquivo":t.kind==TY_VOID?"void":t.kind==TY_VAR||t.kind==TY_APPLY?t.name:"nulo";
+    return numeric_name(t)?numeric_name(t):t.kind==TY_OBJ?collection_display(t.name):t.kind==TY_I64?"int":t.kind==TY_U8?"byte":t.kind==TY_BOOL?"bool":t.kind==TY_STR?"text":t.kind==TY_FILE?"File":t.kind==TY_VOID?"void":t.kind==TY_VAR||t.kind==TY_APPLY?t.name:"nulo";
 }
 static void type_spelling(Type t,char *out,size_t cap){
     if(!cap)return;out[0]=0;
@@ -233,6 +233,7 @@ static void parse_type_params(Vec *out){
 }
 static Function *parse_function(Class *owner){
     Function *f=mem(sizeof(*f));f->t=expect(T_ID);f->id=++next_definition;f->owner=owner;Vec previous=type_parameters;
+    if(owner&&same(f->t->text,"assis_fodase")){Token *alias=mem(sizeof(*alias));*alias=*f->t;alias->text=CTOR;f->t=alias;}
     parse_type_params(&f->type_params);if(owner&&f->type_params.n)error(f->t,"métodos genéricos ainda não são suportados");type_parameters=owner?owner->type_params:f->type_params;expect('(');
     if(peek()->kind!=')'){do{Var *v=mem(sizeof(*v));v->ownership=parse_ownership();if(owner&&peek()->kind==T_SELF){Token *self=take();if(f->params.n||f->receiver_mode||v->ownership<2)error(self,"receptor exige borrow self ou borrow mut self na primeira posição");f->receiver_mode=v->ownership;f->safe=true;}else{v->t=expect(T_ID);expect(':');v->ty=parse_type();push(&f->params,v);}}while(accept(','));}
     expect(')');expect(':');f->result_mode=parse_result_mode(&f->result_source,false,&f->result_from);
@@ -274,7 +275,7 @@ static void parse(void){
 static Class *find_class(const char *name){for(int i=0;i<classes.n;i++){Class *c=classes.v[i];if(same(c->t->text,name))return c;}return NULL;}
 static Function *find_fn(const char *name){for(int i=0;i<functions.n;i++){Function *f=functions.v[i];if(same(f->t->text,name))return f;}return NULL;}
 static Field *find_field(Class *c,const char *name){for(int i=0;i<c->fields.n;i++){Field *f=c->fields.v[i];if(same(f->t->text,name))return f;}return NULL;}
-static Function *find_method(Class *c,const char *name,int *slot){for(int i=0;i<c->methods.n;i++){Function *f=c->methods.v[i];if(same(f->t->text,name)){if(slot)*slot=i;return f;}}return NULL;}
+static Function *find_method(Class *c,const char *name,int *slot){if(same(name,"assis_fodase"))name=CTOR;for(int i=0;i<c->methods.n;i++){Function *f=c->methods.v[i];if(same(f->t->text,name)){if(slot)*slot=i;return f;}}return NULL;}
 static bool object(Type t){return t.depth==0&&t.kind==TY_OBJ;}
 static bool value_type(Type t){Class *c=object(t)?find_class(t.name):NULL;return c&&c->value;}
 static bool inline_type(Type t){return value_type(t)||slice_type(t);}
@@ -530,18 +531,18 @@ static Type check_expr(Node *n){
             require_assign(type_i64,check_expr(n->items.v[1]),n->t);require_assign(type_i64,check_expr(n->items.v[2]),n->t);break;
         }
         if(n->op==T_CIVIL||n->op==T_ARGC||n->op==T_IO_ERROR){if(n->items.n)error(n->t,"%s recebe zero argumentos",n->t->text);ty=type_i64;break;}
-        if(n->op==T_SLEEP||n->op==T_ARG_LEN){if(n->items.n!=1)error(n->t,"argumento_tamanho recebe índice int");require_assign(type_i64,check_expr(n->items.v[0]),n->t);ty=type_i64;break;}
-        if(n->op==T_WRITE_BYTES||n->op==T_ARG_COPY){if(n->items.n!=3)error(n->t,"argumento_copiar recebe índice, buffer *byte e capacidade");require_assign(type_i64,check_expr(n->items.v[0]),n->t);require_assign(pointer(type_u8),check_expr(n->items.v[1]),n->t);require_assign(type_i64,check_expr(n->items.v[2]),n->t);ty=type_i64;break;}
-        if(n->op==T_FILE_OPEN){if(n->items.n!=2)error(n->t,"arquivo_abrir recebe caminho text e modo int");require_assign(type_str,check_expr(n->items.v[0]),n->t);require_assign(type_i64,check_expr(n->items.v[1]),n->t);ty=type_file;break;}
-        if(n->op==T_FILE_SYNC||n->op==T_FILE_CLOSE){if(n->items.n!=1)error(n->t,"arquivo_fechar recebe Arquivo");require_assign(type_file,check_expr(n->items.v[0]),n->t);ty=type_i64;break;}
-        if(n->op==T_FILE_REPLACE){if(n->items.n!=2)error(n->t,"arquivo_substituir recebe origem e destino text");require_assign(type_str,check_expr(n->items.v[0]),n->t);require_assign(type_str,check_expr(n->items.v[1]),n->t);ty=type_i64;break;}
-        if(n->op==T_FILE_REMOVE){if(n->items.n!=1)error(n->t,"arquivo_remover recebe caminho text");require_assign(type_str,check_expr(n->items.v[0]),n->t);ty=type_i64;break;}
-        if(n->op==T_FILE_READ||n->op==T_FILE_WRITE){if(n->items.n!=3)error(n->t,"IO recebe Arquivo, buffer *byte e quantidade");require_assign(type_file,check_expr(n->items.v[0]),n->t);require_assign(pointer(type_u8),check_expr(n->items.v[1]),n->t);require_assign(type_i64,check_expr(n->items.v[2]),n->t);ty=type_i64;break;}
+        if(n->op==T_SLEEP||n->op==T_ARG_LEN){if(n->items.n!=1)error(n->t,"arg_size recebe índice int");require_assign(type_i64,check_expr(n->items.v[0]),n->t);ty=type_i64;break;}
+        if(n->op==T_WRITE_BYTES||n->op==T_ARG_COPY){if(n->items.n!=3)error(n->t,"arg_copy recebe índice, buffer *byte e capacidade");require_assign(type_i64,check_expr(n->items.v[0]),n->t);require_assign(pointer(type_u8),check_expr(n->items.v[1]),n->t);require_assign(type_i64,check_expr(n->items.v[2]),n->t);ty=type_i64;break;}
+        if(n->op==T_FILE_OPEN){if(n->items.n!=2)error(n->t,"file_open recebe caminho text e modo int");require_assign(type_str,check_expr(n->items.v[0]),n->t);require_assign(type_i64,check_expr(n->items.v[1]),n->t);ty=type_file;break;}
+        if(n->op==T_FILE_SYNC||n->op==T_FILE_CLOSE){if(n->items.n!=1)error(n->t,"file_close recebe File");require_assign(type_file,check_expr(n->items.v[0]),n->t);ty=type_i64;break;}
+        if(n->op==T_FILE_REPLACE){if(n->items.n!=2)error(n->t,"file_replace recebe origem e destino text");require_assign(type_str,check_expr(n->items.v[0]),n->t);require_assign(type_str,check_expr(n->items.v[1]),n->t);ty=type_i64;break;}
+        if(n->op==T_FILE_REMOVE){if(n->items.n!=1)error(n->t,"file_remove recebe caminho text");require_assign(type_str,check_expr(n->items.v[0]),n->t);ty=type_i64;break;}
+        if(n->op==T_FILE_READ||n->op==T_FILE_WRITE){if(n->items.n!=3)error(n->t,"IO recebe File, buffer *byte e quantidade");require_assign(type_file,check_expr(n->items.v[0]),n->t);require_assign(pointer(type_u8),check_expr(n->items.v[1]),n->t);require_assign(type_i64,check_expr(n->items.v[2]),n->t);ty=type_i64;break;}
         if(n->op==T_NOW){if(n->items.n)error(n->t,"agora recebe zero argumentos");ty=type_i64;break;}
         if(n->op==T_READ){
-            if(n->items.n!=2)error(n->t,"ler_bytes recebe buffer *byte e capacidade int");
+            if(n->items.n!=2)error(n->t,"read_bytes recebe buffer *byte e capacidade int");
             require_assign(pointer(type_u8),check_expr(n->items.v[0]),n->t);
-            if(!numeric(check_expr(n->items.v[1])))error(n->t,"ler_bytes exige capacidade inteira");ty=type_i64;break;
+            if(!numeric(check_expr(n->items.v[1])))error(n->t,"read_bytes exige capacidade inteira");ty=type_i64;break;
         }
         if(n->op==T_ASSERT){if(n->items.n<1||n->items.n>2)error(n->t,"assert recebe condição e mensagem text opcional");if(n->items.n==2)require_assign(type_str,check_expr(n->items.v[1]),((Node*)n->items.v[1])->t);}
         else if(n->items.n!=1)error(n->t,"%s recebe exatamente um argumento",n->t->text);
@@ -638,7 +639,9 @@ static void check(void){
         for(int j=0;j<i;j++)if(same(f->t->text,((Function*)functions.v[j])->t->text))error(f->t,"função declarada duas vezes");signature(f);
     }
     for(int i=0;i<classes.n;i++){Class *c=classes.v[i];instantiation_site=c->site;instantiation_name=c->generic?c->generic->t->text:NULL;layout(c);}instantiation_site=NULL;
-    main_function=test_driver?test_driver:find_fn(ENTRY);if(!main_function&&!library_check)error(tokens.v[0],"falta a entrada: assis assis_assis(): AssIs { Fodase 0; }");
+    Function *english_main=find_fn("main"),*legacy_main=find_fn(ENTRY);
+    if(english_main&&legacy_main&&!test_driver)error(english_main->t,"declare somente uma entrada: main ou assis_assis");
+    main_function=test_driver?test_driver:english_main?english_main:legacy_main;if(!main_function&&!library_check)error(tokens.v[0],"falta a entrada: fn main(): int { return 0; }");
     if(main_function&&(main_function->params.n||(!isvoid(main_function->result)&&!equal_type(main_function->result,type_i64))))error(main_function->t,"assis_assis recebe zero parâmetros e retorna AssIs ou FODase");
     for(int i=0;i<all_functions.n;i++){
         checking=all_functions.v[i];bindings.n=0;scope_start=0;loop_depth=0;check_depth=0;

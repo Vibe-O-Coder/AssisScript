@@ -38,7 +38,7 @@ own m: HashMap<int,int> = new HashMap<int,int>(); m.set(1,7);
 div { borrow r: HashMap<int,int> = m; print(r.get(1)); }`),'42 42\n43\n3\n7\n');
 });
 test('limpeza funciona em return, break, continue e for aninhado',()=>{
-    execute(record+`assis valor(): int {
+    execute(record+`assis value(): int {
 own p: P = new P(91);
 for(let i:int=0; i<8; i+=1) {
  own a:Array<int>=[i];
@@ -46,14 +46,14 @@ for(let i:int=0; i<8; i+=1) {
  if(i==2){continue;} if(i==5){return p.x;}
 }
 return 0;}
-`+main('print(valor());'),'91\n');
+`+main('print(value());'),'91\n');
 });
 test('free consome own e zera o slot, inclusive em ramos distintos',()=>{
     execute(record+main('own p:P=new P(1); if(p.x==1){free(p);} else {own q:P=move(p); print(q.x);}'));
 });
 test('defer free captura uma variável estável e libera no retorno',()=>{
-    execute(`assis valor(): int { let p:*int=alloc<int>(2); defer free(p); p[0]=72; return p[0]; }`+main('print(valor());'),'72\n');
-    execute('#yuri <std/texto.assis>\n'+main('let t:Texto=new Texto();defer free(t);t.adicionar("oi");print(t.visualizacao());t.dispose();let p:*int=alloc<int>(1);defer free(p);*p=12;print(*p);'),'oi\n12\n');
+    execute(`assis value(): int { let p:*int=alloc<int>(2); defer free(p); p[0]=72; return p[0]; }`+main('print(value());'),'72\n');
+    execute('#yuri <std/strings.assis>\n'+main('let t:String=new String();defer free(t);t.append("oi");print(t.view());t.dispose();let p:*int=alloc<int>(1);defer free(p);*p=12;print(*p);'),'oi\n12\n');
 });
 test('ownership rejeita alias, fuga, free duplo e conflitos de empréstimo',()=>{
     const cases=[
@@ -147,23 +147,23 @@ test('registradores preservam valores em chamadas, recursão e alias de locais',
     execute('assis fib(n:int):int {if(n<2){return n;}return fib(n-1)+fib(n-2);}\n'+main('let a:int=11;let b:int=13;let c:int=17;let d:int=19;let p:*int=&a;*p=23;let v:byte=byte(255);v+=1;print(a,b,c,d,fib(20),v);'),'23 13 17 19 6765 0\n');
 });
 test('texto concatena, divide, junta e substitui preservando UTF-8 e partes vazias',()=>{
-    execute('#yuri <std/texto.assis>\n'+main(`
-let c:Texto=concatenar("ação", "! "); print(c.visualizacao()); c.dispose();free(c);
-let a:Array<text>=["a", "", "ç"];let j:Texto=juntar(a,"|");print(j.visualizacao());j.dispose();free(j);free(a);
-let partes:Array<Texto>=dividir("::ação::::x::", "::");print(len(partes));
-for(let i:int=0;i<len(partes);i+=1){let p:Texto=partes[i];print(p.visualizacao());p.dispose();free(p);}free(partes);
-let r:Texto=substituir("aaaaa ação ação", "aa", "b");print(r.visualizacao());r.dispose();free(r);
-let e:Texto=substituir("açãoação", "ação", "");assert(e.tamanho()==0);e.dispose();free(e);
-let vazias:Array<Texto>=dividir("", ",");assert(len(vazias)==1);let v:Texto=vazias[0];assert(v.tamanho()==0);free(v);free(vazias);
+    execute('#yuri <std/strings.assis>\n'+main(`
+let c:String=concat("ação", "! "); print(c.view()); c.dispose();free(c);
+let a:Array<text>=["a", "", "ç"];let j:String=join(a,"|");print(j.view());j.dispose();free(j);free(a);
+let partes:Array<String>=split("::ação::::x::", "::");print(len(partes));
+for(let i:int=0;i<len(partes);i+=1){let p:String=partes[i];print(p.view());p.dispose();free(p);}free(partes);
+let r:String=replace("aaaaa ação ação", "aa", "b");print(r.view());r.dispose();free(r);
+let e:String=replace("açãoação", "ação", "");assert(e.size()==0);e.dispose();free(e);
+let vazias:Array<String>=split("", ",");assert(len(vazias)==1);let v:String=vazias[0];assert(v.size()==0);free(v);free(vazias);
 `),'ação! \na||ç\n5\n\nação\n\nx\n\nbba ação ação\n');
 });
-test('ler_bytes lê entrada binária, EOF e respeita capacidade de own',()=>{
-    const file=source(main('own b:*byte=alloc<byte>(8);let n:int=ler_bytes(b,8);print(n,b[0],b[1],b[2]);print(ler_bytes(b,8));'));
+test('read_bytes lê entrada binária, EOF e respeita capacity de own',()=>{
+    const file=source(main('own b:*byte=alloc<byte>(8);let n:int=read_bytes(b,8);print(n,b[0],b[1],b[2]);print(read_bytes(b,8));'));
     for(const flags of [[],['--no-opt']]){const r=invoke(['run',file,'--debug',...flags],{input:Buffer.from([65,0,255])});assert.equal(r.status,0,r.stderr);assert.equal(r.stdout,'3 65 0 255\n0\n');}
-    const bad=invoke(['run',source(main('own b:*byte=alloc<byte>(1);print(ler_bytes(b,2));'))],{input:'abc'});assert.equal(bad.status,70);assert.match(bad.stderr,/alocação inválido/);
-    const shared=invoke(['check',source(main('own b:*byte=alloc<byte>(8);borrow r:*byte=b;ler_bytes(r,8);'))]);assert.equal(shared.status,1);assert.match(shared.stderr,/exclusivo/);
+    const bad=invoke(['run',source(main('own b:*byte=alloc<byte>(1);print(read_bytes(b,2));'))],{input:'abc'});assert.equal(bad.status,70);assert.match(bad.stderr,/alocação inválido/);
+    const shared=invoke(['check',source(main('own b:*byte=alloc<byte>(8);borrow r:*byte=b;read_bytes(r,8);'))]);assert.equal(shared.status,1);assert.match(shared.stderr,/exclusivo/);
 });
-test('ler_linha preserva linhas sucessivas e agora é monotônico em milissegundos',()=>{
-    const file=source('#yuri <std/texto.assis>\n'+main('let inicio:int=agora();for(let i:int=0;i<4;i+=1){let linha:Texto=ler_linha();print(linha.visualizacao());linha.dispose();free(linha);}assert(inicio>=0 && agora()>=inicio);'));
+test('read_line preserva rows sucessivas e monotonic_ms é monotônico em milissegundos',()=>{
+    const file=source('#yuri <std/strings.assis>\n'+main('let start:int=monotonic_ms();for(let i:int=0;i<4;i+=1){let linha:String=read_line();print(linha.view());linha.dispose();free(linha);}assert(start>=0 && monotonic_ms()>=start);'));
     for(const flags of [[],['--no-opt']]){const r=invoke(['run',file,'--debug',...flags],{input:'ação\r\n\nultima'});assert.equal(r.status,0,r.stderr);assert.equal(r.stdout,'ação\n\nultima\n\n');}
 });

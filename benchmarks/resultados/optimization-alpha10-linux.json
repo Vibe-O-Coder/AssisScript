@@ -1,0 +1,235 @@
+{
+  "format": "AssisScript-optimization-v1",
+  "platform": "posix",
+  "samples": 7,
+  "entries": 20000,
+  "compilers": {
+    "candidate": {
+      "sha256": "d5e733bbeb652ee641f5fa009d4f9caf0ffcd0886824ce9f03d14978cccef94b",
+      "version": "AssisScript 3.3.0-alpha.10 (nativo, Linux x86_64)"
+    },
+    "baseline": {
+      "sha256": "0f1f42b59cfdf66d6b92e6cc3bcd4d283a5004cb19dd429722b585c2acd1c7be",
+      "version": "AssisScript 3.3.0-alpha.9 (nativo, Linux x86_64)"
+    }
+  },
+  "workloads": {
+    "hash_stride_1": {
+      "candidate": {
+        "compile_ms": 24.8776,
+        "bytes": 25440,
+        "run_ms": [
+          10.9794,
+          11.3108,
+          11.3545,
+          13.6429,
+          10.0876,
+          11.495,
+          10.2995
+        ],
+        "median_ms": 11.3108
+      },
+      "baseline": {
+        "compile_ms": 19.2825,
+        "bytes": 25400,
+        "run_ms": [
+          7.7539,
+          7.1176,
+          9.1971,
+          8.2093,
+          7.9072,
+          7.1856,
+          8.3663
+        ],
+        "median_ms": 7.9072
+      }
+    },
+    "hash_stride_64": {
+      "candidate": {
+        "compile_ms": 22.8407,
+        "bytes": 25440,
+        "run_ms": [
+          11.2418,
+          11.9115,
+          12.2608,
+          11.372,
+          15.5767,
+          11.5351,
+          9.8232
+        ],
+        "median_ms": 11.5351
+      },
+      "baseline": {
+        "compile_ms": 24.1668,
+        "bytes": 25400,
+        "run_ms": [
+          26.9474,
+          28.113,
+          29.2312,
+          28.1078,
+          27.2102,
+          26.6971,
+          28.8036
+        ],
+        "median_ms": 28.1078
+      }
+    },
+    "hash_stride_4096": {
+      "candidate": {
+        "compile_ms": 21.4325,
+        "bytes": 25440,
+        "run_ms": [
+          11.5848,
+          12.1692,
+          10.7299,
+          11.5268,
+          11.3584,
+          10.7131,
+          9.3022
+        ],
+        "median_ms": 11.3584
+      },
+      "baseline": {
+        "compile_ms": 21.3011,
+        "bytes": 25400,
+        "run_ms": [
+          1476.8567,
+          1245.4313,
+          1114.4727,
+          1099.5895,
+          1100.8128,
+          1100.9101,
+          1130.5836
+        ],
+        "median_ms": 1114.4727
+      }
+    },
+    "hash_stride_65536": {
+      "candidate": {
+        "compile_ms": 29.4825,
+        "bytes": 25440,
+        "run_ms": [
+          12.1219,
+          20.100662,
+          18.682116,
+          10.047,
+          9.1508,
+          9.265766,
+          9.505432
+        ],
+        "median_ms": 10.047
+      },
+      "baseline": {
+        "compile_ms": 24.611,
+        "bytes": 25400,
+        "run_ms": [
+          15915.563241,
+          25302.144648,
+          31212.016977,
+          15597.579506,
+          12849.047484,
+          13845.506526,
+          13393.885715
+        ],
+        "median_ms": 15597.579506
+      }
+    },
+    "large_zero_allocations": {
+      "candidate": {
+        "compile_ms": 30.722188,
+        "bytes": 8193,
+        "run_ms": [
+          6.571389,
+          5.456837,
+          6.226745,
+          6.4134,
+          7.1175,
+          5.550188,
+          5.464817
+        ],
+        "median_ms": 6.226745
+      },
+      "baseline": {
+        "compile_ms": 21.188187,
+        "bytes": 8193,
+        "run_ms": [
+          1837.703079,
+          1677.260745,
+          1795.997555,
+          1804.3935,
+          1685.052927,
+          1654.484363,
+          1761.27633
+        ],
+        "median_ms": 1761.27633
+      }
+    },
+    "scalar_leaf_calls": {
+      "candidate": {
+        "compile_ms": 20.816878,
+        "bytes": 8193,
+        "run_ms": [
+          19.1802,
+          19.7372,
+          20.5733,
+          26.631,
+          22.4327,
+          17.6701,
+          22.5248
+        ],
+        "median_ms": 20.5733
+      },
+      "baseline": {
+        "compile_ms": 19.204326,
+        "bytes": 8193,
+        "run_ms": [
+          61.6379,
+          43.0382,
+          56.1697,
+          51.6216,
+          50.2939,
+          53.2853,
+          49.6995
+        ],
+        "median_ms": 51.6216
+      }
+    },
+    "fib35": {
+      "candidate": {
+        "compile_ms": 23.4975,
+        "bytes": 8193,
+        "run_ms": [
+          118.862201,
+          111.1224,
+          115.0258,
+          103.6971,
+          104.4668,
+          100.8667,
+          93.9722
+        ],
+        "median_ms": 104.4668
+      },
+      "baseline": {
+        "compile_ms": 20.5567,
+        "bytes": 8193,
+        "run_ms": [
+          125.4219,
+          126.9411,
+          112.8204,
+          111.434,
+          106.1503,
+          117.2926,
+          111.0555
+        ],
+        "median_ms": 112.8204
+      }
+    }
+  },
+  "max_stride_ratio": 1.0198306043781165,
+  "host": {
+    "system": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "logical_cpus": 8
+  }
+}

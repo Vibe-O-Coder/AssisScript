@@ -1,0 +1,23 @@
+namespace iterators;
+public value struct Range { let current: int; let end: int; let step: int; }
+public enum Step { End; Item(int, Range); }
+
+/// Range imutável [atual,fim), ou decrescente com passo negativo.
+/// Step zero termina; overflow após o último item termina sem dar a volta.
+public pure fn next(it: Range): Step {
+    if (it.step == 0 || (it.step > 0 && it.current >= it.end) || (it.step < 0 && it.current <= it.end)) { return new Step.End(); }
+    let seguinte: Range = new Range(it.end, it.end, 0);
+    if ((it.step > 0 && it.current <= 0x7fff_ffff_ffff_ffff - it.step) || (it.step < 0 && it.current >= -0x8000_0000_0000_0000 - it.step)) { seguinte = new Range(it.current + it.step, it.end, it.step); }
+    return new Step.Item(it.current, seguinte);
+}
+
+/// Pipeline map/filter/fold sem alocações intermediárias. Custo O(n).
+public pure fn reduce<A>(intervalo: Range, inicial: A, transformar: pure fn(int): int, aceitar: pure fn(int): bool, combinar: pure fn(A, int): A): A {
+    let it: Range = intervalo;let acumulado: A = inicial;
+    while (true) {
+        match (next(it)) {
+            End { return acumulado; }
+            Item(value, seguinte) { val novo: int = transformar(value);if (aceitar(novo)) { acumulado = combinar(acumulado, novo); }it = seguinte; }
+        }
+    }
+}

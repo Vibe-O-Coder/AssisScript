@@ -1,4 +1,5 @@
 # Generated from catalogo.json; sourced by the offline installer.
-ASSIS_REQUIRED='matematica texto memoria erros conversoes'
-ASSIS_OPTIONAL='algoritmos csv codificacao cli json tempo log iteradores eventos unicode proprios'
+ASSIS_VERSION='3.3.0-alpha.10'
+ASSIS_REQUIRED='math strings memory errors convert'
+ASSIS_OPTIONAL='algorithms csv encoding cli json time log iterators events unicode owned'
 ASSIS_DEPENDENCIES='log:cli'

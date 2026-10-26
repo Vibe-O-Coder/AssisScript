@@ -9,7 +9,7 @@ async function run() {
     fs.mkdirSync(folder, { recursive: true });
     const file = path.join(folder, 'assis.assis'), library = path.join(folder, 'biblioteca.assis');
     const source = `importa "biblioteca";
-importa "std/matematica";
+importa "std/math";
 assis assis_assis(): AssIs {
     Assis AssisAssis: FodaseAssis = fodase FodaseAssis();
     FODASE(AssisAssis.AssisFodase());
@@ -46,7 +46,7 @@ assis assis_assis(): AssIs {
         assert.equal(errors.range.start.line, 8); checks.push('erro não salvo');
         await replace(document, source); await until(() => vscode.languages.getDiagnostics(document.uri).length === 0, 'Diagnóstico antigo não foi removido'); checks.push('remoção de erro');
         dependency = await vscode.workspace.openTextDocument(library);
-        await replace(dependency, libSource.replace('assis Assis_Assis(): AssIs { Fodase 21; }', 'assis Assis_Assis(): FoDaSe { Fodase "texto"; }'));
+        await replace(dependency, libSource.replace('assis Assis_Assis(): AssIs { Fodase 21; }', 'assis Assis_Assis(): FoDaSe { Fodase "strings"; }'));
         await vscode.window.showTextDocument(document); await vscode.commands.executeCommand('assisscript.check');
         assert(vscode.languages.getDiagnostics(document.uri).some(d => d.code === 'A001'), 'Snapshot de dependência não salva'); checks.push('overlay de dependência');
         await replace(dependency, libSource); await replace(document, source); await document.save(); await dependency.save();
@@ -55,10 +55,10 @@ assis assis_assis(): AssIs {
         fs.writeFileSync(packageFile, '#yuri <moderna.assis>\n');
         fs.writeFileSync(modernLib, '/// Retorna o dobro com overflow modular.\nassis dobro(valor: int): int { return valor * 2; }\nstruct Pessoa { let nome: text; }\n');
         const modern = `#body src.pillow
-#yuri <std/matematica.assis>
+#yuri <std/math.assis>
 assis assis_assis(): int {
     let numeros: Array<int> = [10, 20];
-    numeros.push(maximo(30, 40));
+    numeros.push(max(30, 40));
     let mapa: HashMap<text, int> = new HashMap<text, int>();
     mapa.set("vida", dobro(21));
     print(mapa.get("vida"));
@@ -70,7 +70,7 @@ assis assis_assis(): int {
         assert.match(hoverText(arrayHover), /value: int/); assert.match(hoverText(arrayHover), /amortizado/); checks.push('hover técnico Array<int>');
         const mapHover = await vscode.commands.executeCommand('vscode.executeHoverProvider', document.uri, document.positionAt(modern.indexOf('.get') + 2));
         assert.match(hoverText(mapHover), /key: text/); assert.match(hoverText(mapHover), /ausente/); checks.push('hover técnico HashMap');
-        const stdHover = await vscode.commands.executeCommand('vscode.executeHoverProvider', document.uri, document.positionAt(modern.indexOf('maximo') + 2));
+        const stdHover = await vscode.commands.executeCommand('vscode.executeHoverProvider', document.uri, document.positionAt(modern.indexOf('max') + 2));
         assert.match(hoverText(stdHover), /maior/); checks.push('documentação da biblioteca legível');
         const packageHover = await vscode.commands.executeCommand('vscode.executeHoverProvider', document.uri, document.positionAt(modern.indexOf('dobro') + 2));
         assert.match(hoverText(packageHover), /overflow modular/); checks.push('documentação transitiva #body');
@@ -84,9 +84,9 @@ assis assis_assis(): int {
         await vscode.commands.executeCommand('assisscript.documentation'); checks.push('manual offline abre no editor');
         assert(commands.includes('assisscript.libraries'));
         await vscode.commands.executeCommand('assisscript.libraries', 'csv'); checks.push('manual individual CSV abre offline');
-        const v31 = '#yuri <std/conversoes.assis>\nassis assis_assis(): int { let valor: ResultadoInt = inteiro_de_texto("42"); let a: Array<int> = [42]; let saida: int = 0; a.try_get(0, &saida); free(a); free(valor); return 0; }';
+        const v31 = '#yuri <std/convert.assis>\nassis assis_assis(): int { let value: IntResult = parse_int("42"); let a: Array<int> = [42]; let saida: int = 0; a.try_get(0, &saida); free(a); free(value); return 0; }';
         await replace(document, v31); await document.save();
-        const converted = await vscode.commands.executeCommand('vscode.executeHoverProvider', document.uri, document.positionAt(v31.indexOf('inteiro_de_texto') + 2));
+        const converted = await vscode.commands.executeCommand('vscode.executeHoverProvider', document.uri, document.positionAt(v31.indexOf('parse_int') + 2));
         assert.match(hoverText(converted), /overflow/); checks.push('hover da conversão segura transitiva');
         const recoverable = await vscode.commands.executeCommand('vscode.executeHoverProvider', document.uri, document.positionAt(v31.indexOf('.try_get') + 2));
         assert.match(hoverText(recoverable), /output: \*int/); checks.push('hover tipado try_get');

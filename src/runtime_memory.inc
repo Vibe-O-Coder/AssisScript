@@ -118,10 +118,16 @@ asrt_alloc:
     mov qword ptr [rax+24], 0x41534953
     inc qword ptr [r15+80]
     lea r8, [rax+32]
+    /* Direct OS mappings are already zero filled. Avoid faulting in every
+     * untouched page of a large allocation. Pool reuse still clears bytes,
+     * including in debug mode after the free poison. */
+    cmp r14d, 10
+    je .Lallocation_ready
     mov rdi, r8
     mov rcx, r13
     xor eax, eax
     rep stosb
+.Lallocation_ready:
     mov rax, r8
     pop r14
     pop r13

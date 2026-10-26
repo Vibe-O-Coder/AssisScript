@@ -43,7 +43,7 @@ class Values(base.Evolution):
         self.rejected(code + main(''.join('new C();' for _ in range(4100))), 'frame de função')
 
     def test_managed_functional_callbacks_with_copy_records(self):
-        code = '#yuri <std/algoritmos.assis>\n' + POINT
+        code = '#yuri <std/algorithms.assis>\n' + POINT
         code += 'pure assis dobro(p:P):P{return new P(p.x*2,p.y*2);}pure assis soma(a:int,p:P):int{return a+p.x+p.y;}'
         self.accepted(code + main('own a:Array<P>=[new P(20,1)];own b:Array<P>=map_own::<P,P>(a,dobro);'
                       'print(fold_borrow::<P,int>(b,0,soma));'), '42\n')
@@ -54,9 +54,9 @@ class Values(base.Evolution):
 
     def test_callbacks_in_records_and_symbolic_match_bindings(self):
         code = POINT + 'value struct F{let f:pure assis(P):P;}enum E<T>{None;Some(pure assis(T):T);}'
-        code += 'assis executar(n:int):int{print("efeito");return n;}'
+        code += 'assis run(n:int):int{print("efeito");return n;}'
         code += 'pure assis dobro(p:P):P{return new P(p.x*2,p.y*2);}'
-        code += 'pure assis aplicar<T>(e:E<T>,v:T):T{match(e){None{return v;}Some(executar){return executar(v);}}}'
+        code += 'pure assis aplicar<T>(e:E<T>,v:T):T{match(e){None{return v;}Some(run){return run(v);}}}'
         self.accepted(code + main('val f:F=new F(dobro);val p:P=f.f(new P(10,11));'
                       'val q:P=aplicar::<P>(new E<P>.Some(dobro),p);print(q.x+q.y);'), '84\n')
 
@@ -99,7 +99,7 @@ class Values(base.Evolution):
         self.accepted(code + main('for(let i:int=0;i<3;i+=1){own r:R=new R(i);match(new O<int>.Some(i)){None{break;}Some(x){if(x<2){continue;}print(x);}}}'), '2\n')
 
     def test_result_option_standard_library(self):
-        self.accepted('#yuri <std/erros.assis>\npure assis dobro(n:int):int{return n*2;}' +
+        self.accepted('#yuri <std/errors.assis>\npure assis dobro(n:int):int{return n*2;}' +
                       main('print(option_or::<int>(option_map::<int,int>(new Option<int>.Some(21),dobro),0));'
                            'match(result_map::<int,int,int>(new Result<int,int>.Err(7),dobro)){Ok(v){print(v);}Err(e){print(e);}}'), '42\n7\n')
 

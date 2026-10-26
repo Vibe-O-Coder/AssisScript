@@ -1,0 +1,63 @@
+/// ValidationResult recuperável de operação inteira. codigo: 0=sucesso, 1=vazio, 2=formato, 3=overflow, 4=divisão por zero, 5=intervalo. posicao é um offset de bytes, ou -1.
+struct IntResult {
+    let ok: bool;
+    let value: int;
+    let code: int;
+    let position: int;
+}
+
+/// Cria um resultado de sucesso. O chamador libera o registro com free.
+fn result_ok(value: int): IntResult { return new IntResult(true, value, 0, -1); }
+
+/// Cria um erro recuperável sem encerrar o programa. O chamador libera o registro com free.
+fn result_error(code: int, position: int): IntResult { return new IntResult(false, 0, code, position); }
+
+/// Retorna descrição estática de um código de IntResult; não exige liberação.
+fn error_message(code: int): text {
+    if (code == 0) { return "sucesso"; }
+    if (code == 1) { return "entrada vazia"; }
+    if (code == 2) { return "formato invalido"; }
+    if (code == 3) { return "inteiro fora do intervalo de 64 bits"; }
+    if (code == 4) { return "divisao por zero"; }
+    if (code == 5) { return "intervalo invalido"; }
+    return "erro desconhecido";
+}
+
+/// Soma sem overflow silencioso; informa codigo=3 se o resultado não couber em int64.
+fn checked_add(a: int, b: int): IntResult {
+    if ((b > 0 && a > 0x7fff_ffff_ffff_ffff - b) || (b < 0 && a < -0x8000_0000_0000_0000 - b)) { return result_error(3, -1); }
+    return result_ok(a + b);
+}
+
+/// Divide com erro recuperável para zero e INT64_MIN/-1. Divisão trunca em direção a zero.
+fn checked_div(a: int, b: int): IntResult {
+    if (b == 0) { return result_error(4, -1); }
+    if (a == -0x8000_0000_0000_0000 && b == -1) { return result_error(3, -1); }
+    return result_ok(a / b);
+}
+/// Valor opcional Copy, sem alocação. Some contém um valor; None não contém carga.
+enum Option<T> { None; Some(T); }
+
+/// ValidationResult recuperável Copy, sem alocação. T e E precisam ter layout por valor.
+enum Result<T, E> { Ok(T); Err(E); }
+
+/// Extrai o valor ou devolve a alternativa, preservando ambos os argumentos.
+pure fn option_or<T>(opcao: Option<T>, alternativa: T): T {
+    match (opcao) { None { return alternativa; } Some(value) { return value; } }
+}
+
+/// Transforma somente Some com um callback pure; None continua None.
+pure fn option_map<T, U>(opcao: Option<T>, transformar: pure fn(T): U): Option<U> {
+    match (opcao) {
+        None { return new Option<U>.None(); }
+        Some(value) { return new Option<U>.Some(transformar(value)); }
+    }
+}
+
+/// Transforma o sucesso preservando o erro e a ordem de avaliação do callback pure.
+pure fn result_map<T, U, E>(resultado: Result<T, E>, transformar: pure fn(T): U): Result<U, E> {
+    match (resultado) {
+        Ok(value) { return new Result<U, E>.Ok(transformar(value)); }
+        Err(error) { return new Result<U, E>.Err(error); }
+    }
+}
