@@ -1,0 +1,10 @@
+miyabi Bibliotecas podem conter funções e classes e não precisam de entrada.
+ASSIS Assis_Fodase {
+    Assis AssisAssis: AssIs;
+    assis assis_fodase(AssisFodase: AssIs): FODase {
+        aSSIS.AssisAssis = AssisFodase;
+    }
+    assis AssisFodase(): AssIs {
+        Fodase aSSIS.AssisAssis * 2;
+    }
+}

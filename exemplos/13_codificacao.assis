@@ -1,0 +1,10 @@
+#yuri <std/codificacao.assis>
+
+assis assis_assis(): int {
+    let pacote: Array<byte> = [byte(0), byte(1), byte(254), byte(255)];
+    let transporte: Texto = base64_codificar(pacote); print("Base64:", transporte.visualizacao());
+    let recebido: ResultadoBytes = base64_decodificar(transporte.visualizacao()); let status: int = 0;
+    if (!recebido.ok) { print("Pacote invalido no byte", recebido.posicao); status = 1; }
+    else { let hex: Texto = hexadecimal_codificar(recebido.dados); print("Hex:", hex.visualizacao()); hex.dispose(); free(hex); }
+    recebido.dispose(); free(recebido); transporte.dispose(); free(transporte); free(pacote); return status;
+}

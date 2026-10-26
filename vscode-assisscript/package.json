@@ -1,0 +1,231 @@
+{
+  "name": "assisscript",
+  "displayName": "AssisScript",
+  "description": "IntelliSense, diagnósticos do compilador nativo e tarefas para AssisScript.",
+  "version": "3.3.0-alpha.9",
+  "publisher": "assisscript-local",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "onLanguage:assisscript",
+    "onTaskType:assisscript",
+    "onLanguage:assisscript-package"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "A edição está disponível; o compilador e as tarefas exigem uma pasta confiável."
+    },
+    "virtualWorkspaces": false
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "assisscript",
+        "aliases": [
+          "AssisScript",
+          "assis"
+        ],
+        "extensions": [
+          ".assis"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/source.png",
+          "dark": "./icons/source.png"
+        }
+      },
+      {
+        "id": "assisscript-package",
+        "aliases": [
+          "AssisScript Package"
+        ],
+        "extensions": [
+          ".pillow"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/source.png",
+          "dark": "./icons/source.png"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "assisscript",
+        "scopeName": "source.assis",
+        "path": "./syntaxes/assis.tmLanguage.json"
+      },
+      {
+        "language": "assisscript-package",
+        "scopeName": "source.pillow",
+        "path": "./syntaxes/pillow.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "assisscript",
+        "path": "./snippets/assis.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "assisscript.libraries",
+        "title": "AssisScript: Documentação das bibliotecas nativas"
+      },
+      {
+        "command": "assisscript.check",
+        "title": "AssisScript: Verificar arquivo"
+      },
+      {
+        "command": "assisscript.build",
+        "title": "AssisScript: Compilar programa"
+      },
+      {
+        "command": "assisscript.run",
+        "title": "AssisScript: Compilar e executar"
+      },
+      {
+        "command": "assisscript.documentation",
+        "title": "AssisScript: Abrir documentação da linguagem"
+      },
+      {
+        "command": "assisscript.icons",
+        "title": "AssisScript: Ativar ícones de arquivos"
+      },
+      {
+        "command": "assisscript.fmt",
+        "title": "AssisScript: Formatar arquivo"
+      },
+      {
+        "command": "assisscript.test",
+        "title": "AssisScript: Executar testes do arquivo"
+      },
+      {
+        "command": "assisscript.doc",
+        "title": "AssisScript: Gerar documentação da API"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "assisscript.run",
+          "when": "resourceLangId == assisscript && isWorkspaceTrusted",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "AssisScript",
+      "properties": {
+        "assisscript.compilerPath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "description": "Caminho para assis/assis.exe. Vazio usa o compilador incluído ou o PATH."
+        },
+        "assisscript.includePaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Pastas de bibliotecas (-I), relativas à pasta do projeto.",
+          "scope": "resource"
+        },
+        "assisscript.entryFile": {
+          "type": "string",
+          "default": "assis.assis",
+          "description": "Arquivo de entrada das tarefas, relativo à pasta do projeto.",
+          "scope": "resource"
+        },
+        "assisscript.diagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Verificar sintaxe e tipos durante a edição.",
+          "scope": "resource"
+        },
+        "assisscript.validationDelay": {
+          "type": "number",
+          "default": 350,
+          "minimum": 100,
+          "description": "Intervalo sem digitação antes da verificação (ms).",
+          "scope": "resource"
+        },
+        "assisscript.runTimeout": {
+          "type": "number",
+          "default": 10,
+          "minimum": 0.01,
+          "description": "Limite de execução em segundos.",
+          "scope": "resource"
+        }
+      }
+    },
+    "taskDefinitions": [
+      {
+        "type": "assisscript",
+        "required": [
+          "command"
+        ],
+        "properties": {
+          "command": {
+            "type": "string",
+            "enum": [
+              "build",
+              "check",
+              "run",
+              "fmt",
+              "test",
+              "doc"
+            ]
+          },
+          "file": {
+            "type": "string"
+          }
+        }
+      }
+    ],
+    "problemMatchers": [
+      {
+        "name": "assisscript",
+        "owner": "assisscript",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^(.+):(\\d+):(\\d+): (A\\d+): (.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "code": 4,
+          "message": 5
+        }
+      }
+    ],
+    "configurationDefaults": {
+      "[assisscript]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+        "editor.quickSuggestions": {
+          "other": true,
+          "comments": false,
+          "strings": false
+        }
+      }
+    },
+    "iconThemes": [
+      {
+        "id": "assisscript-icons",
+        "label": "AssisScript (Miyabi)",
+        "path": "./icons/assisscript-icons.json"
+      }
+    ]
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "icon": "icons/source.png"
+}

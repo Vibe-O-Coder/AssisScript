@@ -1,0 +1,8 @@
+#body src.pillow
+
+assis assis_assis(): int {
+    let ponto: Ponto = new Ponto(3, 4);
+    print("Distância ao quadrado:", distancia_quadrada(ponto));
+    free(ponto);
+    return 0;
+}

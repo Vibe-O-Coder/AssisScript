@@ -1,0 +1,85 @@
+{
+  "platform": "Windows-10-10.0.19045-SP0",
+  "cpu": "Intel64 Family 6 Model 94 Stepping 3, GenuineIntel",
+  "samples": 7,
+  "iterations": 10000000,
+  "includesProcessStartup": true,
+  "expected": "150000055000000",
+  "compiler": "AssisScript 3.3.0-alpha.1 (nativo, Windows x64)",
+  "results": [
+    {
+      "variant": "atual-legado",
+      "compileMs": 44.378,
+      "binaryBytes": 99328,
+      "sha256": "1a018b188ff93f728d797868074105f89ff2020a1276c45aac17d5b542e01097",
+      "samplesMs": [
+        54.7792,
+        50.7639,
+        50.3366,
+        50.0393,
+        50.5585,
+        49.1792,
+        49.9119
+      ],
+      "medianMs": 50.3366,
+      "minMs": 49.1792,
+      "maxMs": 54.7792
+    },
+    {
+      "variant": "atual-puro",
+      "compileMs": 25.8089,
+      "binaryBytes": 99328,
+      "sha256": "1a018b188ff93f728d797868074105f89ff2020a1276c45aac17d5b542e01097",
+      "samplesMs": [
+        52.03,
+        48.6864,
+        48.841,
+        50.834,
+        48.3379,
+        47.8527,
+        49.0786
+      ],
+      "medianMs": 48.841,
+      "minMs": 47.8527,
+      "maxMs": 52.03
+    },
+    {
+      "variant": "atual-puro-sem-opt",
+      "compileMs": 17.7434,
+      "binaryBytes": 99328,
+      "sha256": "ef7601d31e37ef30a2da46e18867a344f5e9167359a48ce5127d1c73afbc6e1c",
+      "samplesMs": [
+        95.8453,
+        88.5082,
+        86.2002,
+        82.145,
+        83.9883,
+        84.8393,
+        79.0757
+      ],
+      "medianMs": 84.8393,
+      "minMs": 79.0757,
+      "maxMs": 95.8453
+    },
+    {
+      "variant": "base-3.2-legado",
+      "compileMs": 16.1003,
+      "binaryBytes": 99328,
+      "sha256": "1a018b188ff93f728d797868074105f89ff2020a1276c45aac17d5b542e01097",
+      "samplesMs": [
+        57.8249,
+        50.1571,
+        51.5168,
+        48.0775,
+        49.0157,
+        52.7491,
+        49.237
+      ],
+      "medianMs": 50.1571,
+      "minMs": 48.0775,
+      "maxMs": 57.8249
+    }
+  ],
+  "baseline": "AssisScript 3.2.0 (nativo, Windows x64)",
+  "optimizedBinariesIdentical": true
+}

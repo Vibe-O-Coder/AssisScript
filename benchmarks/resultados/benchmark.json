@@ -1,0 +1,373 @@
+{
+  "generatedAt": "2026-10-24T16:11:34.509Z",
+  "platform": "win32 10.0.19045 x64",
+  "cpu": "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz",
+  "node": "v24.17.0",
+  "samples": 7,
+  "warmups": 1,
+  "includesProcessStartup": true,
+  "variants": [
+    {
+      "name": "3.0 anterior",
+      "version": "AssisScript 3.0.0 (nativo, Windows x64)"
+    },
+    {
+      "name": "3.1 otimizado",
+      "version": "AssisScript 3.1.0 (nativo, Windows x64)"
+    },
+    {
+      "name": "3.1 sem otimização",
+      "version": "AssisScript 3.1.0 (nativo, Windows x64)"
+    }
+  ],
+  "results": [
+    {
+      "case": "aritmetica",
+      "variant": "3.0 anterior",
+      "binaryBytes": 98816,
+      "compile": {
+        "medianMs": 50.5535,
+        "minMs": 49.4219,
+        "maxMs": 50.6209,
+        "samplesMs": [
+          49.4219,
+          50.5535,
+          50.6209
+        ]
+      },
+      "execution": {
+        "medianMs": 369.9508,
+        "minMs": 331.5637,
+        "maxMs": 388.478,
+        "samplesMs": [
+          349.8697,
+          376.4129,
+          369.9508,
+          388.478,
+          376.3909,
+          369.3378,
+          331.5637
+        ]
+      }
+    },
+    {
+      "case": "aritmetica",
+      "variant": "3.1 otimizado",
+      "binaryBytes": 98304,
+      "compile": {
+        "medianMs": 52.6937,
+        "minMs": 50.2457,
+        "maxMs": 55.765,
+        "samplesMs": [
+          50.2457,
+          52.6937,
+          55.765
+        ]
+      },
+      "execution": {
+        "medianMs": 192.5911,
+        "minMs": 184.8051,
+        "maxMs": 209.1733,
+        "samplesMs": [
+          184.8051,
+          188.7497,
+          208.5691,
+          209.1733,
+          202.4244,
+          192.5911,
+          189.1029
+        ]
+      }
+    },
+    {
+      "case": "aritmetica",
+      "variant": "3.1 sem otimização",
+      "binaryBytes": 98816,
+      "compile": {
+        "medianMs": 48.4728,
+        "minMs": 46.7672,
+        "maxMs": 49.4172,
+        "samplesMs": [
+          48.4728,
+          46.7672,
+          49.4172
+        ]
+      },
+      "execution": {
+        "medianMs": 323.1682,
+        "minMs": 312.2365,
+        "maxMs": 355.3602,
+        "samplesMs": [
+          340.8476,
+          355.3602,
+          319.934,
+          312.2365,
+          323.1682,
+          314.9634,
+          332.5771
+        ]
+      }
+    },
+    {
+      "case": "hashmap",
+      "variant": "3.0 anterior",
+      "binaryBytes": 114176,
+      "compile": {
+        "medianMs": 51.6373,
+        "minMs": 48.2793,
+        "maxMs": 52.2037,
+        "samplesMs": [
+          52.2037,
+          48.2793,
+          51.6373
+        ]
+      },
+      "execution": {
+        "medianMs": 136.8105,
+        "minMs": 131.3096,
+        "maxMs": 141.3283,
+        "samplesMs": [
+          131.3096,
+          137.7222,
+          138.3658,
+          136.0426,
+          141.3283,
+          135.0134,
+          136.8105
+        ]
+      }
+    },
+    {
+      "case": "hashmap",
+      "variant": "3.1 otimizado",
+      "binaryBytes": 113152,
+      "compile": {
+        "medianMs": 49.6897,
+        "minMs": 49.031,
+        "maxMs": 53.6626,
+        "samplesMs": [
+          49.6897,
+          49.031,
+          53.6626
+        ]
+      },
+      "execution": {
+        "medianMs": 98.3335,
+        "minMs": 94.6654,
+        "maxMs": 105.7687,
+        "samplesMs": [
+          96.7394,
+          94.6654,
+          99.7707,
+          95.2754,
+          105.7687,
+          98.3335,
+          100.2738
+        ]
+      }
+    },
+    {
+      "case": "hashmap",
+      "variant": "3.1 sem otimização",
+      "binaryBytes": 116736,
+      "compile": {
+        "medianMs": 53.8942,
+        "minMs": 52.034,
+        "maxMs": 59.6709,
+        "samplesMs": [
+          52.034,
+          53.8942,
+          59.6709
+        ]
+      },
+      "execution": {
+        "medianMs": 108.1598,
+        "minMs": 105.3997,
+        "maxMs": 112.692,
+        "samplesMs": [
+          105.7813,
+          108.438,
+          106.2193,
+          108.1598,
+          105.3997,
+          112.692,
+          108.676
+        ]
+      }
+    },
+    {
+      "case": "array",
+      "variant": "3.0 anterior",
+      "binaryBytes": 104960,
+      "compile": {
+        "medianMs": 52.9341,
+        "minMs": 49.6807,
+        "maxMs": 58.8936,
+        "samplesMs": [
+          58.8936,
+          49.6807,
+          52.9341
+        ]
+      },
+      "execution": {
+        "medianMs": 66.9005,
+        "minMs": 66.6234,
+        "maxMs": 76.3628,
+        "samplesMs": [
+          66.7618,
+          76.3628,
+          68.3522,
+          66.6234,
+          66.9005,
+          68.7736,
+          66.7548
+        ]
+      }
+    },
+    {
+      "case": "array",
+      "variant": "3.1 otimizado",
+      "binaryBytes": 104448,
+      "compile": {
+        "medianMs": 49.9379,
+        "minMs": 49.2838,
+        "maxMs": 50.5184,
+        "samplesMs": [
+          50.5184,
+          49.9379,
+          49.2838
+        ]
+      },
+      "execution": {
+        "medianMs": 62.662,
+        "minMs": 61.4939,
+        "maxMs": 66.6753,
+        "samplesMs": [
+          64.1209,
+          61.7628,
+          66.6753,
+          62.662,
+          63.8615,
+          61.4939,
+          61.6014
+        ]
+      }
+    },
+    {
+      "case": "array",
+      "variant": "3.1 sem otimização",
+      "binaryBytes": 105984,
+      "compile": {
+        "medianMs": 48.4462,
+        "minMs": 47.9699,
+        "maxMs": 52.6572,
+        "samplesMs": [
+          47.9699,
+          48.4462,
+          52.6572
+        ]
+      },
+      "execution": {
+        "medianMs": 67.9183,
+        "minMs": 66.3858,
+        "maxMs": 69.5559,
+        "samplesMs": [
+          67.9183,
+          68.7532,
+          66.3858,
+          66.5659,
+          67.1925,
+          69.5559,
+          69.0582
+        ]
+      }
+    },
+    {
+      "case": "texto-prefixo",
+      "variant": "3.0 anterior",
+      "binaryBytes": 100864,
+      "compile": {
+        "medianMs": 53.1324,
+        "minMs": 49.9696,
+        "maxMs": 58.3822,
+        "samplesMs": [
+          58.3822,
+          49.9696,
+          53.1324
+        ]
+      },
+      "execution": {
+        "medianMs": 305.6707,
+        "minMs": 287.1061,
+        "maxMs": 334.8054,
+        "samplesMs": [
+          334.8054,
+          287.1061,
+          307.4524,
+          291.929,
+          300.9635,
+          310.5458,
+          305.6707
+        ]
+      }
+    },
+    {
+      "case": "texto-prefixo",
+      "variant": "3.1 otimizado",
+      "binaryBytes": 100352,
+      "compile": {
+        "medianMs": 57.3744,
+        "minMs": 54.0932,
+        "maxMs": 66.6938,
+        "samplesMs": [
+          66.6938,
+          57.3744,
+          54.0932
+        ]
+      },
+      "execution": {
+        "medianMs": 47.3677,
+        "minMs": 44.7637,
+        "maxMs": 50.5958,
+        "samplesMs": [
+          47.7118,
+          50.5958,
+          44.7637,
+          47.738,
+          46.9623,
+          46.6652,
+          47.3677
+        ]
+      }
+    },
+    {
+      "case": "texto-prefixo",
+      "variant": "3.1 sem otimização",
+      "binaryBytes": 100864,
+      "compile": {
+        "medianMs": 51.8761,
+        "minMs": 47.9053,
+        "maxMs": 54.7679,
+        "samplesMs": [
+          51.8761,
+          47.9053,
+          54.7679
+        ]
+      },
+      "execution": {
+        "medianMs": 47.7356,
+        "minMs": 43.4702,
+        "maxMs": 51.8257,
+        "samplesMs": [
+          48.7872,
+          43.4702,
+          47.082,
+          49.2067,
+          51.8257,
+          47.6856,
+          47.7356
+        ]
+      }
+    }
+  ]
+}

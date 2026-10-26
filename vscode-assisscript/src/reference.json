@@ -1,0 +1,409 @@
+{
+  "keywords": {
+    "val": "Declara vínculo local imutável de escalar, text, função sem captura ou valor Copy. Reatribuição e extração de endereço são rejeitadas. text conserva sua vida externa; value struct/enum têm imutabilidade por valor.",
+    "pure": "pure assis proíbe efeitos, IO, relógio, ponteiros e alocação no heap. Aceita escalares, callbacks pure e registros/variantes Copy. Recursão direta de cauda é eliminada em modo otimizado. Não garante término.",
+    "private": "Restringe um campo ou método à classe que o declara, incluindo chamadas em outra instância da mesma classe. Subclasses e funções no mesmo arquivo não recebem acesso. Métodos privados não participam de sobrescrita.",
+    "let": "Declara variável local inicializada ou campo com tipo explícito. Nomes aceitam letras ASCII, números após o primeiro caractere e sublinhado.",
+    "int": "Inteiro com sinal de 64 bits, em complemento de dois. Operações aritméticas usam overflow modular; divisão trunca em direção a zero.",
+    "byte": "Inteiro sem sinal de 8 bits (0 a 255). A conversão byte(valor) preserva os oito bits inferiores.",
+    "bool": "Booleano. Condições exigem bool; int não é convertido implicitamente.",
+    "text": "Referência a texto UTF-8 imutável, terminado por byte zero. text(buffer: *byte) cria visão emprestada: o buffer deve ser válido, terminado em zero e permanecer vivo. Não copie nem libere essa visão. Indexação e len medem bytes.",
+    "bytes": "bytes(texto: text): *byte retorna visão emprestada em O(1). Não modificar, liberar ou usar após invalidar o proprietário. Acesso por ponteiro não verifica limites; limite os índices a [0, len(texto)).",
+    "void": "Ausência de valor de retorno. Não pode ser usado como variável, campo, parâmetro, ponteiro ou elemento de coleção.",
+    "if": "Executa o bloco se a expressão bool for verdadeira. O corpo exige chaves.",
+    "else": "Bloco alternativo de if. Admite else if.",
+    "while": "Avalia uma condição bool antes de cada iteração. break encerra o laço e continue inicia a próxima avaliação.",
+    "return": "Encerra a função ou método. O valor deve ser atribuível ao tipo de retorno; void usa return;.",
+    "print": "Avalia os argumentos da esquerda para a direita, imprime separados por espaço e termina com quebra de linha. Booleanos preservam a saída histórica aSsIs/fOdAsE.",
+    "new": "Constrói classe/struct/coleção no heap, ou valor Copy no frame. Enum exige .Variante(args). Structs legadas continuam referências; value struct é uma cópia independente.",
+    "free": "Libera uma alocação original/null. Classes gerenciadas destroem campos own pelo tipo dinâmico; coleções/Arquivo usam seus adaptadores. Não chama dispose legado por nome. Lista proprietária transfere/destrói elementos explicitamente.",
+    "self": "Referência à instância atual, disponível somente em métodos de ASSIS.",
+    "true": "Constante bool verdadeira.",
+    "false": "Constante bool falsa.",
+    "null": "Referência nula para ponteiros, classes, structs legadas, coleções e Arquivo. Não é atribuível a text, callbacks ou valores Copy.",
+    "break": "Encerra o laço while mais interno.",
+    "continue": "Inicia a próxima iteração do laço while mais interno.",
+    "extends": "Declara herança simples de uma classe ASSIS. Métodos são virtuais e sobrescritas preservam a assinatura. Structs não participam de herança.",
+    "struct": "Declara um registro nominal, também parametrizado: struct Caixa<T>{let valor:T;}. Campos públicos por padrão, private restringe acesso. Usa referência ao heap; atribuição compartilha a instância. Não admite métodos nem herança; use free ou own quando compatível.",
+    "Array": "Array<T>: sequência dinâmica homogênea. Aceita literal [...] em contexto tipado, indexação gravável com verificação de limites, len, push, pop, insert, remove, get, set, contains, reverse, reserve, clear e dispose. Cópias compartilham a coleção.",
+    "HashMap": "HashMap<K, V>: tabela hash tipada com endereçamento aberto e crescimento automático. K deve ser text, int, byte ou bool. Igualdade de chaves text compara bytes UTF-8. Operações esperadas O(1); ordem de iteração não é garantida.",
+    "yuri": "#yuri <biblioteca.assis>: inclui um módulo uma única vez na compilação. Exige extensão .assis e uma linha própria. Pesquisa relativa ao arquivo, -I, ASSIS_PATH e std/.",
+    "body": "#body src.pillow: inclui um pacote .pillow. O manifesto reúne #yuri e outros #body; caminhos internos são relativos ao manifesto. Ciclos são diagnosticados.",
+    "alloc": "alloc<T>(quantidade): aloca um buffer zerado de elementos T e retorna *T. Valida quantidade negativa e overflow em bytes. Ponteiros brutos não verificam limites. Textos em buffers começam como ponteiros nulos; atribua texto antes de ler.",
+    "len": "len(text/Array/HashMap):int mantém o contrato anterior. len(buffer own/borrow):int retorna capacidade em elementos, inclusive através de campos e retornos emprestados. Ponteiros legados não são aceitos. len(slice<T>) retorna quantidade em O(1).",
+    "assert": "Verifica uma precondição bool. Aceita mensagem text opcional, avaliada apenas na falha. Se falsa, imprime o contexto e encerra com diagnóstico e status 70. Permanece ativo em todos os builds.",
+    "own": "Proprietário afim em locais, parâmetros, retornos e campos de structs. Transferência exige move ou alocação/retorno own. Limpeza automática inclusive em retornos e movimentos parciais.",
+    "borrow": "Empréstimo compartilhado lexical ou parâmetro. borrow(origem) Tipo no retorno declara de qual parâmetro borrow a vida depende. Não permite mutação ou escape para código legado.",
+    "mut": "borrow mut cria empréstimo exclusivo: permite alterar os dados e suspende o acesso direto ao proprietário.",
+    "move": "Transfere um own ou campo own para declaração, parâmetro, campo ou retorno own. Invalida e zera a origem; proprietários emprestados não podem ser consumidos.",
+    "defer": "defer free(variavel); agenda liberação no fim do bloco, inclusive em return, break e continue. A variável não pode ser reatribuída.",
+    "div": "div { ... } agrupa código num escopo lexical. Recursos own e defer são liberados ao sair. Homenagem às divs do Assis, sem dependência de HTML.",
+    "for": "for (let i: int = 0; i < limite; i += 1) { ... }. continue executa o incremento. A variável inicial existe somente no laço.",
+    "ler_bytes": "ler_bytes(buffer: *byte, capacidade: int): int lê stdin: quantidade de bytes, 0 em EOF, -1 em erro. Não acrescenta zero. Buffer own verifica a capacidade e exige exclusividade.",
+    "agora": "agora(): int retorna milissegundos monotônicos, sem relação com data civil, ou -1 em erro. Use diferenças para medir intervalos.",
+    "safe": "safe assis verifica um subconjunto gerenciado. Chamadas legadas, ponteiros brutos e texto externo exigem unsafe { ... }. Não implica pureza nem isolamento de processos. --safe exige entrada safe.",
+    "unsafe": "Marca a fronteira explícita com operações legadas dentro de safe. Não desliga privacidade, pureza, ownership nem a verificação de tipos.",
+    "value": "value struct declara registro Copy imutável por valor, com layout nativo, sem alocação. Campos admitem escalares, funções pure e outros valores Copy.",
+    "enum": "Declara variantes Copy: enum Option<T>{None;Some(T);}. Construa com new Option<int>.Some(42). Sem alocação; cargas não aceitam recursos own ou text.",
+    "match": "Matching exaustivo de enum. Cada variante deve aparecer uma vez, com vínculos imutáveis locais ao braço. O sujeito é avaliado uma vez.",
+    "Arquivo": "Recurso de arquivo opaco. Exige own/borrow, fecha automaticamente, pode ser nulo após falha de abertura. Não pode ser forjado ou copiado.",
+    "arquivo_abrir": "arquivo_abrir(caminho:text,modo:int):own Arquivo. Modos 0=ler, 1=criar/truncar, 2=anexar. Falha retorna null; erro_io fornece código nativo. Caminho UTF-8 convertido em UTF-16 no Windows.",
+    "arquivo_ler": "arquivo_ler(arquivo:borrow mut Arquivo,buffer:borrow mut *byte,capacidade:int):int. Quantidade lida, zero em EOF, erro nativo negativo. Buffers gerenciados têm limite verificado.",
+    "arquivo_escrever": "arquivo_escrever(arquivo:borrow mut Arquivo,buffer:borrow *byte,quantidade:int):int. Escrita pode ser curta; erro nativo negativo. Repita até concluir.",
+    "arquivo_fechar": "arquivo_fechar(arquivo:borrow mut Arquivo):int. Fecha o handle sem liberar o proprietário, retorna zero ou erro negativo, é idempotente. own ainda libera o invólucro.",
+    "erro_io": "erro_io():int. Último erro de IO/argumentos, positivo; a próxima operação pode substituí-lo. Não é estado de outra thread.",
+    "argumentos": "argumentos():int. Quantidade de argumentos, incluindo o executável no índice zero.",
+    "argumento_tamanho": "argumento_tamanho(indice:int):int. Comprimento em bytes excluindo NUL; -1 para índice inválido. Windows converte UTF-16 estrito para UTF-8.",
+    "argumento_copiar": "argumento_copiar(indice:int,buffer:*byte,capacidade:int):int. Copia argumento e NUL, retorna bytes sem NUL, -1 para erro. Requer capacidade maior que argumento_tamanho; não trunca.",
+    "namespace": "Namespace nominal do módulo; use namespace nome;.",
+    "public": "Exporta função ou tipo do módulo.",
+    "f32": "Real IEEE-754 de 32 bits.",
+    "f64": "Real IEEE-754 de 64 bits.",
+    "i8": "Inteiro com sinal de 8 bits.",
+    "i16": "Inteiro com sinal de 16 bits.",
+    "i32": "Inteiro com sinal de 32 bits.",
+    "u16": "Inteiro sem sinal de 16 bits.",
+    "u32": "Inteiro sem sinal de 32 bits.",
+    "u64": "Inteiro sem sinal de 64 bits.",
+    "dormir": "Espera síncrona; 0 ou -1 com erro_io.",
+    "relogio_civil": "Milissegundos desde Unix epoch UTC.",
+    "escrever_bytes": "Saída binária stdout (1)/stderr (2), com contagem parcial.",
+    "arquivo_sincronizar": "Solicita persistência de dados; 0 ou -1.",
+    "arquivo_substituir": "Substituição atômica no mesmo filesystem; 0 ou -1.",
+    "arquivo_remover": "Remove arquivo; 0 ou -1.",
+    "slice": "Fatia de buffer gerenciado com endereço/comprimento inline e vida verificada. Exige borrow; não pode escapar para campos, ser liberada ou copiar seu proprietário.",
+    "fatia": "fatia(buffer,inicio,quantidade):slice<T>. Confere limites sem overflow; suporta subfatias e empréstimos compartilhados/exclusivos.",
+    "final": "final ASSIS sela a classe contra herança, inclusive especializações genéricas. Protege invariantes de construtores e métodos das bibliotecas."
+  },
+  "signatures": {
+    "text": {
+      "label": "text(buffer: *byte): text",
+      "params": [
+        "buffer: *byte"
+      ]
+    },
+    "bytes": {
+      "label": "bytes(texto: text): *byte",
+      "params": [
+        "texto: text"
+      ]
+    },
+    "print": {
+      "label": "print(valores...): void",
+      "params": [
+        "valores..."
+      ]
+    },
+    "free": {
+      "label": "free(valor: objeto ou ponteiro): void",
+      "params": [
+        "valor: objeto ou ponteiro"
+      ]
+    },
+    "len": {
+      "label": "len(valor: text ou Array<T> ou HashMap<K, V>): int",
+      "params": [
+        "valor: text ou Array<T> ou HashMap<K, V>"
+      ]
+    },
+    "alloc": {
+      "label": "alloc<T>(quantidade: int): *T",
+      "params": [
+        "quantidade: int"
+      ]
+    },
+    "assert": {
+      "label": "assert(condicao: bool, mensagem?: text): void",
+      "params": [
+        "condicao: bool",
+        "mensagem?: text"
+      ]
+    },
+    "int": {
+      "label": "int(valor: int ou byte ou bool): int",
+      "params": [
+        "valor: int ou byte ou bool"
+      ]
+    },
+    "byte": {
+      "label": "byte(valor: int ou byte ou bool): byte",
+      "params": [
+        "valor: int ou byte ou bool"
+      ]
+    },
+    "bool": {
+      "label": "bool(valor: int ou byte ou bool): bool",
+      "params": [
+        "valor: int ou byte ou bool"
+      ]
+    },
+    "move": {
+      "label": "move(proprietario): mesmo tipo",
+      "params": [
+        "proprietario: own"
+      ]
+    },
+    "ler_bytes": {
+      "label": "ler_bytes(buffer: *byte, capacidade: int): int",
+      "params": [
+        "buffer: *byte",
+        "capacidade: int"
+      ]
+    },
+    "agora": {
+      "label": "agora(): int",
+      "params": []
+    },
+    "arquivo_abrir": {
+      "label": "arquivo_abrir(caminho: text, modo: int): own Arquivo",
+      "params": [
+        "caminho: text",
+        "modo: int"
+      ]
+    },
+    "arquivo_ler": {
+      "label": "arquivo_ler(arquivo: Arquivo, buffer: *byte, capacidade: int): int",
+      "params": [
+        "arquivo: Arquivo",
+        "buffer: *byte",
+        "capacidade: int"
+      ]
+    },
+    "arquivo_escrever": {
+      "label": "arquivo_escrever(arquivo: Arquivo, buffer: *byte, quantidade: int): int",
+      "params": [
+        "arquivo: Arquivo",
+        "buffer: *byte",
+        "quantidade: int"
+      ]
+    },
+    "arquivo_fechar": {
+      "label": "arquivo_fechar(arquivo: Arquivo): int",
+      "params": [
+        "arquivo: Arquivo"
+      ]
+    },
+    "erro_io": {
+      "label": "erro_io(): int",
+      "params": []
+    },
+    "argumentos": {
+      "label": "argumentos(): int",
+      "params": []
+    },
+    "argumento_tamanho": {
+      "label": "argumento_tamanho(indice: int): int",
+      "params": [
+        "indice: int"
+      ]
+    },
+    "argumento_copiar": {
+      "label": "argumento_copiar(indice: int, buffer: *byte, capacidade: int): int",
+      "params": [
+        "indice: int",
+        "buffer: *byte",
+        "capacidade: int"
+      ]
+    },
+    "dormir": {
+      "label": "dormir(milissegundos: int): int",
+      "params": [
+        "milissegundos: int"
+      ]
+    },
+    "relogio_civil": {
+      "label": "relogio_civil(): int",
+      "params": []
+    },
+    "escrever_bytes": {
+      "label": "escrever_bytes(canal: int, borrow dados: *byte, quantidade: int): int",
+      "params": [
+        "canal: int",
+        "borrow dados: *byte",
+        "quantidade: int"
+      ]
+    },
+    "arquivo_sincronizar": {
+      "label": "arquivo_sincronizar(borrow mut arquivo: Arquivo): int",
+      "params": [
+        "borrow mut arquivo: Arquivo"
+      ]
+    },
+    "arquivo_substituir": {
+      "label": "arquivo_substituir(origem: text, destino: text): int",
+      "params": [
+        "origem: text",
+        "destino: text"
+      ]
+    },
+    "arquivo_remover": {
+      "label": "arquivo_remover(caminho: text): int",
+      "params": [
+        "caminho: text"
+      ]
+    },
+    "fatia": {
+      "label": "fatia(buffer: *T ou slice<T>, inicio: int, quantidade: int): slice<T>",
+      "params": [
+        "buffer: *T ou slice<T>",
+        "inicio: int",
+        "quantidade: int"
+      ]
+    }
+  },
+  "Array": {
+    "try_get": {
+      "params": [
+        "index: int",
+        "output: *T"
+      ],
+      "type": "bool",
+      "documentation": "Busca recuperável: copia o elemento para *output e retorna true. Índice inválido ou output nulo retorna false sem alterar a saída."
+    },
+    "try_pop": {
+      "params": [
+        "output: *T"
+      ],
+      "type": "bool",
+      "documentation": "Remove o último elemento e copia para *output. Vazio ou output nulo retorna false sem alterar saída nem coleção."
+    },
+    "push": {
+      "params": [
+        "value: T"
+      ],
+      "type": "void",
+      "documentation": "Acrescenta value ao final. Cresce a capacidade geometricamente quando necessário. Custo amortizado O(1); pode realocar o buffer."
+    },
+    "pop": {
+      "params": [],
+      "type": "T",
+      "documentation": "Remove e retorna o último elemento em O(1). Exige len(array) > 0; array vazio encerra com falha de precondição."
+    },
+    "get": {
+      "params": [
+        "index: int"
+      ],
+      "type": "T",
+      "documentation": "Retorna o elemento no índice em O(1). Exige 0 <= index < len(array). Equivale à leitura array[index]."
+    },
+    "set": {
+      "params": [
+        "index: int",
+        "value: T"
+      ],
+      "type": "void",
+      "documentation": "Substitui o elemento no índice em O(1), sem alterar o tamanho. Exige índice válido e valor atribuível a T."
+    },
+    "insert": {
+      "params": [
+        "index: int",
+        "value: T"
+      ],
+      "type": "void",
+      "documentation": "Insere value antes de index, deslocando os elementos seguintes. Aceita index == len(array). Custo O(n); índices negativos ou maiores que o tamanho falham."
+    },
+    "remove": {
+      "params": [
+        "index: int"
+      ],
+      "type": "T",
+      "documentation": "Remove e retorna o elemento do índice, preservando a ordem dos demais. Custo O(n). Exige índice válido."
+    },
+    "contains": {
+      "params": [
+        "value: T"
+      ],
+      "type": "bool",
+      "documentation": "Busca linear O(n). Textos são comparados por conteúdo; objetos e coleções por identidade de referência."
+    },
+    "reverse": {
+      "params": [],
+      "type": "void",
+      "documentation": "Inverte a ordem dos elementos no próprio array em O(n), sem criar outra coleção."
+    },
+    "reserve": {
+      "params": [
+        "capacity: int"
+      ],
+      "type": "void",
+      "documentation": "Garante capacidade para pelo menos capacity elementos, sem alterar o tamanho. Não reduz a capacidade. Exige 0 <= capacity <= 2^60 - 1; falha se não houver memória."
+    },
+    "clear": {
+      "params": [],
+      "type": "void",
+      "documentation": "Remove logicamente todos os elementos em O(1), preservando o buffer. Não libera os objetos referenciados pelos elementos."
+    },
+    "dispose": {
+      "params": [],
+      "type": "void",
+      "documentation": "Libera o buffer e reinicia tamanho/capacidade para zero. A coleção permanece válida e pode ser reutilizada. free(array) executa esta liberação automaticamente."
+    }
+  },
+  "HashMap": {
+    "try_get": {
+      "params": [
+        "key: K",
+        "output: *V"
+      ],
+      "type": "bool",
+      "documentation": "Busca recuperável em uma sondagem: copia o valor para *output e retorna true. Chave ausente ou output nulo retorna false sem alterar a saída."
+    },
+    "set": {
+      "params": [
+        "key: K",
+        "value: V"
+      ],
+      "type": "void",
+      "documentation": "Insere ou substitui o valor da chave. Substituição não altera len(map). Custo esperado O(1); crescimento faz rehash O(n). Não assume posse de objetos armazenados."
+    },
+    "get": {
+      "params": [
+        "key: K"
+      ],
+      "type": "V",
+      "documentation": "Retorna o valor associado em custo esperado O(1). Chave ausente encerra com falha de precondição; use has ou get_or quando a ausência for esperada."
+    },
+    "get_or": {
+      "params": [
+        "key: K",
+        "fallback: V"
+      ],
+      "type": "V",
+      "documentation": "Retorna o valor da chave ou fallback se ausente. Não insere a chave. Ambos os argumentos são avaliados antes da chamada."
+    },
+    "has": {
+      "params": [
+        "key: K"
+      ],
+      "type": "bool",
+      "documentation": "Informa se a chave existe, com custo esperado O(1). Não altera a tabela."
+    },
+    "remove": {
+      "params": [
+        "key: K"
+      ],
+      "type": "bool",
+      "documentation": "Remove a chave e retorna true se existia. Mantém a cadeia de colisões por tombstone. Não libera o objeto associado."
+    },
+    "clear": {
+      "params": [],
+      "type": "void",
+      "documentation": "Remove todas as entradas e tombstones em O(capacidade), preservando os buffers. Objetos armazenados continuam sob responsabilidade do chamador."
+    },
+    "keys": {
+      "params": [],
+      "type": "Array<K>",
+      "documentation": "Cria um novo Array<K> com as chaves presentes em ordem não especificada. Custo O(capacidade). O chamador deve liberar o array retornado."
+    },
+    "values": {
+      "params": [],
+      "type": "Array<V>",
+      "documentation": "Cria um novo Array<V> com os valores presentes. Usa a mesma ordem de keys se não houver alterações entre chamadas. Custo O(capacidade); o chamador libera o array."
+    },
+    "dispose": {
+      "params": [],
+      "type": "void",
+      "documentation": "Libera os buffers de chaves, valores e estados e reinicia a tabela vazia. Pode ser reutilizada. Não libera objetos armazenados. free(map) faz isso automaticamente."
+    }
+  }
+}

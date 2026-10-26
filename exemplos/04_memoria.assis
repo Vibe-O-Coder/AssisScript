@@ -1,0 +1,18 @@
+// Oito bytes no heap, preenchidos e lidos por endereço.
+assis assis_assis(): AssIs {
+    Assis AssisAssis: *AssiS = ASSIS_fodase(8);
+    Assis FodaseAssis: AssIs = 0;
+    ASSis (FodaseAssis < 8) {
+        AssisAssis[FodaseAssis] = AssiS((FodaseAssis + 1) * 10);
+        FodaseAssis += 1;
+    }
+    FODASE("Primeiro byte:", *AssisAssis);
+    FODASE("Terceiro byte:", *(AssisAssis + 2));
+    Assis AssisFodase: AssIs = 41;
+    Assis FodaseFodase: *AssIs = &AssisFodase;
+    *FodaseFodase += 1;
+    FODASE("Inteiro alterado por ponteiro:", AssisFodase);
+    foDASE(AssisAssis);
+    // FodaseFodase aponta para a pilha; não se usa foDASE nele.
+    Fodase 0;
+}

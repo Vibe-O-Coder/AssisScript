@@ -1,0 +1,21 @@
+importa "std/matematica";
+importa "std/texto";
+importa "std/memoria";
+importa "bibliotecas/operacoes.assis";
+
+te
+    Programa distribuído entre vários arquivos.
+    Todas as bibliotecas entram no executável durante a compilação.
+to
+assis assis_assis(): AssIs {
+    Assis AssisAssis: Assis_Fodase = fodase Assis_Fodase(21);
+    FODASE(AssisAssis.AssisFodase());
+    FODASE(Assis_fodase_fodase(99, 0, 10));
+    FODASE(Fodase_assis_fodase("AssisScript", "Assis"));
+    Assis AssisFodase: *AssiS = ASSIS_fodase(4);
+    Assis_Assis_Fodase(AssisFodase, 4, AssiS(65));
+    FODASE(AssisFodase[3]);
+    foDASE(AssisFodase);
+    foDASE(AssisAssis);
+    Fodase 0;
+}

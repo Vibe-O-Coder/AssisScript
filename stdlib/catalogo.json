@@ -1,0 +1,111 @@
+{
+  "version": "3.3.0-alpha.9",
+  "libraries": [
+    {
+      "name": "matematica",
+      "required": true,
+      "doc": "BIBLIOTECA-matematica.md",
+      "description": "Mínimo, máximo, limites e valor absoluto."
+    },
+    {
+      "name": "texto",
+      "required": true,
+      "doc": "BIBLIOTECA-texto.md",
+      "description": "Texto proprietário, busca linear, recorte e espaços."
+    },
+    {
+      "name": "memoria",
+      "required": true,
+      "doc": "BIBLIOTECA-memoria.md",
+      "description": "Preenchimento e cópia de buffers nativos."
+    },
+    {
+      "name": "erros",
+      "required": true,
+      "doc": "BIBLIOTECA-erros.md",
+      "description": "Resultados recuperáveis e aritmética verificada."
+    },
+    {
+      "name": "conversoes",
+      "required": true,
+      "doc": "BIBLIOTECA-conversoes.md",
+      "description": "Conversão decimal estrita e formatação de int64."
+    },
+    {
+      "name": "algoritmos",
+      "required": false,
+      "doc": "BIBLIOTECA-algoritmos.md",
+      "description": "Heapsort, busca binária, deduplicação e map/filter/fold com callbacks pure."
+    },
+    {
+      "name": "csv",
+      "required": false,
+      "doc": "BIBLIOTECA-csv.md",
+      "description": "Leitura de CSV com aspas, escapes e CRLF."
+    },
+    {
+      "name": "codificacao",
+      "required": false,
+      "doc": "BIBLIOTECA-codificacao.md",
+      "description": "Hexadecimal e Base64 com validação estrita."
+    },
+    {
+      "name": "cli",
+      "required": false,
+      "doc": "BIBLIOTECA-cli.md",
+      "description": "Argumentos own, inteiros de bytes e IO completo com limites.",
+      "dependencies": []
+    },
+    {
+      "name": "json",
+      "required": false,
+      "doc": "BIBLIOTECA-json.md",
+      "description": "Lexer, validador e strings JSON UTF-8 com limites.",
+      "dependencies": []
+    },
+    {
+      "name": "tempo",
+      "required": false,
+      "doc": "BIBLIOTECA-tempo.md",
+      "description": "Prazos monotônicos e espera cooperativa.",
+      "dependencies": []
+    },
+    {
+      "name": "log",
+      "required": false,
+      "doc": "BIBLIOTECA-log.md",
+      "description": "Log em stderr com timestamp civil, níveis e filtro.",
+      "dependencies": [
+        "cli"
+      ]
+    },
+    {
+      "name": "iteradores",
+      "required": false,
+      "doc": "BIBLIOTECA-iteradores.md",
+      "description": "Intervalos e pipelines imutáveis sem alocações intermediárias.",
+      "dependencies": []
+    },
+    {
+      "name": "eventos",
+      "required": false,
+      "doc": "BIBLIOTECA-eventos.md",
+      "description": "Fila limitada de uma thread com temporizadores e cancelamento.",
+      "dependencies": []
+    },
+    {
+      "name": "unicode",
+      "required": false,
+      "doc": "BIBLIOTECA-unicode.md",
+      "description": "Texto UTF-8 gerenciado com NUL, fatias e erros recuperáveis.",
+      "dependencies": []
+    },
+    {
+      "name": "proprios",
+      "required": false,
+      "doc": "BIBLIOTECA-proprios.md",
+      "description": "Lista limitada de proprietários com transferência e empréstimos.",
+      "dependencies": []
+    }
+  ]
+}

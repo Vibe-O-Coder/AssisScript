@@ -1,0 +1,168 @@
+{
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "cpu": "x86_64",
+  "samples": 7,
+  "iterations": 5000000,
+  "includesProcessStartup": true,
+  "expected": "37500027500000",
+  "compiler": "AssisScript 3.3.0-alpha.3 (nativo, Linux x86_64)",
+  "compilerSha256": "e46483d8a44401086312ae9646006203fb56e9e760c2aa6364b13c83cde53e72",
+  "results": [
+    {
+      "variant": "direta",
+      "source": "assis assis_assis():int{val f:pure assis(int):int=calcular;let total:int=0;for(let i:int=0;i<5000000;i+=1){total+=calcular(i);}print(total);return 0;}\npure assis calcular(n:int):int{return n*3+7;}\npure assis aplicar<T>(f:pure assis(T):T,v:T):T{return f(v);}\n",
+      "compileSamplesMs": [
+        27.634801,
+        22.118957,
+        24.211328,
+        26.689569,
+        25.143188,
+        21.657063,
+        19.870101
+      ],
+      "samplesMs": [
+        25.299351,
+        25.307822,
+        24.435812,
+        26.626187,
+        24.475617,
+        26.437687,
+        25.984981
+      ],
+      "binaryBytes": 8193,
+      "sha256": "26eb006701969f69869788be4bf5355b0c3b425fa3b00e76bb71386e5555ad70",
+      "medianMs": 25.307822,
+      "compileMedianMs": 24.211328
+    },
+    {
+      "variant": "indireta",
+      "source": "assis assis_assis():int{val f:pure assis(int):int=calcular;let total:int=0;for(let i:int=0;i<5000000;i+=1){total+=f(i);}print(total);return 0;}\npure assis calcular(n:int):int{return n*3+7;}\npure assis aplicar<T>(f:pure assis(T):T,v:T):T{return f(v);}\n",
+      "compileSamplesMs": [
+        23.424552,
+        22.024328,
+        25.434477,
+        18.658652,
+        19.810748,
+        20.071273,
+        25.339134
+      ],
+      "samplesMs": [
+        26.429988,
+        29.067353,
+        28.72954,
+        29.694873,
+        28.906198,
+        32.754918,
+        28.606302
+      ],
+      "binaryBytes": 8193,
+      "sha256": "392901ebfb504c0849403e9ebfca7b661a148d5c6a8c4fdd0fed6363023333ca",
+      "medianMs": 28.906198,
+      "compileMedianMs": 22.024328
+    },
+    {
+      "variant": "ordem-superior",
+      "source": "assis assis_assis():int{val f:pure assis(int):int=calcular;let total:int=0;for(let i:int=0;i<5000000;i+=1){total+=aplicar::<int>(f,i);}print(total);return 0;}\npure assis calcular(n:int):int{return n*3+7;}\npure assis aplicar<T>(f:pure assis(T):T,v:T):T{return f(v);}\n",
+      "compileSamplesMs": [
+        21.582165,
+        27.913316,
+        27.555772,
+        18.041293,
+        23.189657,
+        22.147349,
+        15.557932
+      ],
+      "samplesMs": [
+        44.470491,
+        51.565858,
+        51.264409,
+        49.074087,
+        49.590714,
+        49.848976,
+        52.547725
+      ],
+      "binaryBytes": 8193,
+      "sha256": "b9d2adb0fa0f29d830737167a4d407a6ee1f915cd58010286dcde311cf70228f",
+      "medianMs": 49.848976,
+      "compileMedianMs": 22.147349
+    },
+    {
+      "variant": "direta-sem-opt",
+      "source": "assis assis_assis():int{val f:pure assis(int):int=calcular;let total:int=0;for(let i:int=0;i<5000000;i+=1){total+=calcular(i);}print(total);return 0;}\npure assis calcular(n:int):int{return n*3+7;}\npure assis aplicar<T>(f:pure assis(T):T,v:T):T{return f(v);}\n",
+      "compileSamplesMs": [
+        25.529602,
+        26.009894,
+        24.96877,
+        20.094116,
+        23.118249,
+        24.048712,
+        19.512983
+      ],
+      "samplesMs": [
+        42.100389,
+        40.499665,
+        42.168168,
+        38.839816,
+        47.59685,
+        41.791307,
+        43.083141
+      ],
+      "binaryBytes": 8193,
+      "sha256": "2777b6fcf3b99700129875040b7460383081ce9282ffa37575ef262703586276",
+      "medianMs": 42.100389,
+      "compileMedianMs": 24.048712
+    },
+    {
+      "variant": "indireta-sem-opt",
+      "source": "assis assis_assis():int{val f:pure assis(int):int=calcular;let total:int=0;for(let i:int=0;i<5000000;i+=1){total+=f(i);}print(total);return 0;}\npure assis calcular(n:int):int{return n*3+7;}\npure assis aplicar<T>(f:pure assis(T):T,v:T):T{return f(v);}\n",
+      "compileSamplesMs": [
+        20.898885,
+        23.932916,
+        18.360357,
+        24.939225,
+        20.360197,
+        23.247175,
+        25.154064
+      ],
+      "samplesMs": [
+        46.877123,
+        43.710845,
+        43.692249,
+        42.389761,
+        47.752527,
+        43.678704,
+        47.165127
+      ],
+      "binaryBytes": 8193,
+      "sha256": "3d13702c2d603baa0741be41380ec43466303fdd59dcf5aaa6d608dfedc15ea2",
+      "medianMs": 43.710845,
+      "compileMedianMs": 23.247175
+    },
+    {
+      "variant": "ordem-superior-sem-opt",
+      "source": "assis assis_assis():int{val f:pure assis(int):int=calcular;let total:int=0;for(let i:int=0;i<5000000;i+=1){total+=aplicar::<int>(f,i);}print(total);return 0;}\npure assis calcular(n:int):int{return n*3+7;}\npure assis aplicar<T>(f:pure assis(T):T,v:T):T{return f(v);}\n",
+      "compileSamplesMs": [
+        24.687956,
+        22.546543,
+        25.066189,
+        22.280854,
+        18.266527,
+        23.957214,
+        20.942376
+      ],
+      "samplesMs": [
+        69.553552,
+        69.782722,
+        74.044838,
+        74.290843,
+        69.161823,
+        71.247019,
+        74.333423
+      ],
+      "binaryBytes": 8193,
+      "sha256": "c5d34aa02144168c2171c13e0fbe9c5d6ed11f54fcb6a5c3f7299fb5106289d0",
+      "medianMs": 71.247019,
+      "compileMedianMs": 22.546543
+    }
+  ]
+}

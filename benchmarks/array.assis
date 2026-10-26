@@ -1,0 +1,7 @@
+assis assis_assis(): int {
+    let valores: Array<int> = []; let i: int = 0;
+    while (i < 1000000) { valores.push(i); i += 1; }
+    i = 0; let total: int = 0;
+    while (i < len(valores)) { total += valores[i]; i += 1; }
+    print(total); free(valores); return 0;
+}

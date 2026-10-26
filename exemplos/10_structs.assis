@@ -1,0 +1,30 @@
+/// Registro nominal. Atribuição compartilha a referência, como as classes.
+struct Pessoa {
+    let nome: text;
+    let idade: int;
+}
+
+ASSIS Cadastro {
+    let pessoas: Array<Pessoa>;
+
+    assis assis_fodase(): void {
+        self.pessoas = new Array<Pessoa>();
+    }
+
+    /// Acrescenta uma referência de Pessoa ao cadastro; não clona o registro.
+    assis adicionar(pessoa: Pessoa): void {
+        self.pessoas.push(pessoa);
+    }
+}
+
+assis assis_assis(): int {
+    let cadastro: Cadastro = new Cadastro();
+    let pessoa: Pessoa = new Pessoa("Miyabi", 24);
+    cadastro.adicionar(pessoa);
+    pessoa.idade += 1;
+    print(cadastro.pessoas[0].nome, cadastro.pessoas[0].idade);
+    free(cadastro.pessoas);
+    free(cadastro);
+    free(pessoa);
+    return 0;
+}

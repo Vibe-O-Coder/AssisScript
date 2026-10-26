@@ -1,0 +1,26 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "assisscript.entryFile": "exemplos/09_colecoes.assis",
+    "workbench.iconTheme": "assisscript-icons"
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Testar extensão AssisScript",
+        "type": "extensionHost",
+        "request": "launch",
+        "runtimeExecutable": "${execPath}",
+        "args": [
+          "--extensionDevelopmentPath=${workspaceFolder}/vscode-assisscript",
+          "${workspaceFolder}"
+        ]
+      }
+    ]
+  }
+}

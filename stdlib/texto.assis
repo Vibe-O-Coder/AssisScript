@@ -1,0 +1,242 @@
+/// Testa se texto começa com prefixo, comparando bytes UTF-8 até o primeiro byte zero. Custo O(len(prefixo)).
+assis comeca_com(texto: text, prefixo: text): bool {
+    let tamanho: int = len(prefixo);
+    if (tamanho > len(texto)) { return false; }
+    let dados: *byte = bytes(texto); let esperado: *byte = bytes(prefixo);
+    let i: int = 0;
+    while (i < tamanho) { if (dados[i] != esperado[i]) { return false; } i += 1; }
+    return true;
+}
+/// Testa se texto termina com sufixo, comparando bytes UTF-8. Sufixo vazio retorna true.
+assis termina_com(texto: text, sufixo: text): bool {
+    let tamanho: int = len(sufixo); let inicio: int = len(texto) - tamanho;
+    if (inicio < 0) { return false; }
+    let dados: *byte = bytes(texto); let esperado: *byte = bytes(sufixo);
+    let i: int = 0;
+    while (i < tamanho) { if (dados[inicio + i] != esperado[i]) { return false; } i += 1; }
+    return true;
+}
+/// Busca trecho UTF-8 usando KMP em O(n+m) e O(m) de memória temporária. Trecho vazio retorna true.
+assis contem(texto: text, trecho: text): bool {
+    return encontrar_texto(texto, trecho) >= 0;
+}
+
+/// Retorna primeiro offset de bytes do trecho, ou -1. KMP O(n+m); trecho vazio retorna 0. Não altera nem retém os textos.
+assis encontrar_texto(texto: text, trecho: text): int {
+    let n: int = len(texto); let m: int = len(trecho);
+    if (m == 0) { return 0; } if (m > n) { return -1; }
+    let dados: *byte = bytes(texto); let padrao: *byte = bytes(trecho);
+    let prefixos: *int = alloc<int>(m); let i: int = 1; let j: int = 0;
+    while (i < m) {
+        while (j > 0 && padrao[i] != padrao[j]) { j = prefixos[j - 1]; }
+        if (padrao[i] == padrao[j]) { j += 1; } prefixos[i] = j; i += 1;
+    }
+    i = 0; j = 0;
+    while (i < n) {
+        while (j > 0 && dados[i] != padrao[j]) { j = prefixos[j - 1]; }
+        if (dados[i] == padrao[j]) { j += 1; }
+        if (j == m) { free(prefixos); return i - m + 1; } i += 1;
+    }
+    free(prefixos); return -1;
+}
+
+/// Texto UTF-8 proprietário com crescimento amortizado. Campos _ são internos. visualizacao() é emprestada e invalida após mutação/dispose. Para liberar: objeto.dispose(); free(objeto).
+ASSIS Texto {
+    private let _dados: *byte;
+    private let _tamanho: int;
+    private let _capacidade: int;
+
+    /// Retorna tamanho em bytes, sem o terminador zero. O(1).
+    assis tamanho(): int { return self._tamanho; }
+
+    /// Retorna text emprestado; não liberar nem guardar após mutações ou dispose do proprietário.
+    assis visualizacao(): text { if (self._dados == null) { return ""; } return text(self._dados); }
+
+    /// Reserva capacidade em bytes, incluindo terminador. Crescimento geométrico; invalida visualizações se realocar.
+    assis reservar(minimo: int): void {
+        assert(minimo >= 0); if (minimo <= self._capacidade) { return; }
+        let capacidade: int = self._capacidade; if (capacidade < 32) { capacidade = 32; }
+        while (capacidade < minimo) { if (capacidade > 0x3fff_ffff_ffff_ffff) { capacidade = minimo; } else { capacidade *= 2; } }
+        let novos: *byte = alloc<byte>(capacidade); let i: int = 0;
+        while (i < self._tamanho) { novos[i] = self._dados[i]; i += 1; }
+        free(self._dados); self._dados = novos; self._capacidade = capacidade;
+    }
+
+    /// Acrescenta bytes UTF-8 em O(n) amortizado. Aceita o próprio texto, inclusive se o buffer crescer.
+    assis adicionar(entrada: text): void {
+        let n: int = len(entrada); if (n == 0) { return; }
+        assert(n <= 0x7fff_ffff_ffff_fffe - self._tamanho);
+        let total: int = self._tamanho + n; let origem: *byte = bytes(entrada); let i: int = 0;
+        if (total + 1 > self._capacidade) {
+            let capacidade: int = self._capacidade;
+            if (capacidade < 32) { capacidade = 32; }
+            while (capacidade < total + 1) {
+                if (capacidade > 0x3fff_ffff_ffff_ffff) { capacidade = total + 1; } else { capacidade *= 2; }
+            }
+            let novos: *byte = alloc<byte>(capacidade);
+            while (i < self._tamanho) { novos[i] = self._dados[i]; i += 1; }
+            i = 0; while (i < n) { novos[self._tamanho + i] = origem[i]; i += 1; }
+            free(self._dados); self._dados = novos; self._capacidade = capacidade;
+        } else { while (i < n) { self._dados[self._tamanho + i] = origem[i]; i += 1; } }
+        self._tamanho = total; self._dados[total] = byte(0);
+    }
+
+    /// Acrescenta byte não nulo. Use para ASCII ou bytes completos de UTF-8; a biblioteca não valida Unicode.
+    assis adicionar_byte(valor: byte): void {
+        assert(valor != 0 && self._tamanho <= 0x7fff_ffff_ffff_fffd);
+        if (self._tamanho + 2 > self._capacidade) { self.reservar(self._tamanho + 2); }
+        self._dados[self._tamanho] = valor; self._tamanho += 1; self._dados[self._tamanho] = byte(0);
+    }
+
+    /// Esvazia o texto preservando capacidade. Invalida visualizações anteriores.
+    assis limpar(): void { self._tamanho = 0; if (self._dados != null) { self._dados[0] = byte(0); } }
+
+    /// Remove o último byte em O(1). Exige texto não vazio; invalida visualizações e pode cortar uma sequência UTF-8.
+    assis remover_ultimo_byte(): void { assert(self._tamanho > 0); self._tamanho -= 1; self._dados[self._tamanho] = byte(0); }
+
+    /// Libera o buffer, permite repetição e reutilização do objeto. Não libera o próprio objeto.
+    assis dispose(): void { free(self._dados); self._dados = null; self._tamanho = 0; self._capacidade = 0; }
+}
+
+/// Copia intervalo de bytes em um Texto proprietário. Exige 0 <= inicio <= len e 0 <= quantidade <= len-inicio. Não ajusta fronteiras UTF-8.
+assis recortar_texto(entrada: text, inicio: int, quantidade: int): Texto {
+    let n: int = len(entrada); assert(inicio >= 0 && inicio <= n && quantidade >= 0 && quantidade <= n - inicio);
+    let resultado: Texto = new Texto();
+    if (quantidade == 0) { return resultado; }
+    let dados: *byte = bytes(entrada); let buffer: *byte = alloc<byte>(quantidade + 1); let i: int = 0;
+    while (i < quantidade) { buffer[i] = dados[inicio + i]; i += 1; }
+    resultado.adicionar(text(buffer)); free(buffer); return resultado;
+}
+
+/// Remove espaços ASCII, tab, CR e LF das extremidades; preserva os bytes UTF-8 internos. Retorna Texto proprietário.
+assis aparar_texto(entrada: text): Texto {
+    let dados: *byte = bytes(entrada); let inicio: int = 0; let fim: int = len(entrada);
+    while (inicio < fim && (dados[inicio] == 32 || dados[inicio] == 9 || dados[inicio] == 10 || dados[inicio] == 13)) { inicio += 1; }
+    while (fim > inicio && (dados[fim - 1] == 32 || dados[fim - 1] == 9 || dados[fim - 1] == 10 || dados[fim - 1] == 13)) { fim -= 1; }
+    return recortar_texto(entrada, inicio, fim - inicio);
+}
+
+/// Concatena duas entradas, copiando-as para um Texto independente. O(n+m).
+assis concatenar(a: text, b: text): Texto {
+    let resultado: Texto = new Texto(); resultado.adicionar(a); resultado.adicionar(b); return resultado;
+}
+
+/// Junta textos com separador, copiando os bytes. Array vazio produz Texto vazio.
+assis juntar(partes: Array<text>, separador: text): Texto {
+    let resultado: Texto = new Texto();
+    for (let i: int = 0; i < len(partes); i += 1) {
+        if (i > 0) { resultado.adicionar(separador); } resultado.adicionar(partes[i]);
+    }
+    return resultado;
+}
+
+/// Divide por separador não vazio em O(n+m), com KMP. Preserva partes vazias.
+/// Cada Texto do array possui seus bytes: dispose/free em cada parte e free no array.
+assis dividir(entrada: text, separador: text): Array<Texto> {
+    let n: int = len(entrada); let m: int = len(separador); assert(m > 0);
+    let dados: *byte = bytes(entrada); let padrao: *byte = bytes(separador);
+    let prefixos: *int = alloc<int>(m); defer free(prefixos);
+    let j: int = 0;
+    for (let i: int = 1; i < m; i += 1) {
+        while (j > 0 && padrao[i] != padrao[j]) { j = prefixos[j - 1]; }
+        if (padrao[i] == padrao[j]) { j += 1; } prefixos[i] = j;
+    }
+    let resultado: Array<Texto> = new Array<Texto>(); let inicio: int = 0; j = 0;
+    for (let i: int = 0; i < n; i += 1) {
+        while (j > 0 && dados[i] != padrao[j]) { j = prefixos[j - 1]; }
+        if (dados[i] == padrao[j]) { j += 1; }
+        if (j == m) {
+            resultado.push(recortar_texto(entrada, inicio, i - m + 1 - inicio));
+            inicio = i + 1; j = 0;
+        }
+    }
+    resultado.push(recortar_texto(entrada, inicio, n - inicio)); return resultado;
+}
+
+/// Substitui ocorrências sem sobreposição. Busca não vazia; substituto pode ser vazio.
+/// Retorna Texto independente; libera todas as partes temporárias.
+assis substituir(entrada: text, busca: text, substituto: text): Texto {
+    let partes: Array<Texto> = dividir(entrada, busca); let resultado: Texto = new Texto();
+    for (let i: int = 0; i < len(partes); i += 1) {
+        if (i > 0) { resultado.adicionar(substituto); }
+        let parte: Texto = partes[i]; resultado.adicionar(parte.visualizacao()); parte.dispose(); free(parte);
+    }
+    free(partes); return resultado;
+}
+
+/// Lê UTF-8 da entrada padrão até LF ou EOF, removendo um CR final.
+/// EOF sem dados retorna Texto vazio. Uma leitura por byte; para volume use ler_bytes.
+assis ler_linha(): Texto {
+    let resultado: Texto = new Texto(); let buffer: *byte = alloc<byte>(1); defer free(buffer);
+    while (true) {
+        let lidos: int = ler_bytes(buffer, 1); assert(lidos >= 0, "falha ao ler entrada padrao");
+        if (lidos == 0 || buffer[0] == 10) { break; }
+        resultado.adicionar_byte(buffer[0]);
+    }
+    let n: int = resultado.tamanho();
+    if (n > 0 && resultado.visualizacao()[n - 1] == 13) { resultado.remover_ultimo_byte(); }
+    return resultado;
+}
+
+// Compatibilidade com 2.x
+miyabi Predicados de texto em bytes UTF-8; respeitam o primeiro byte nulo.
+/// Testa prefixo por comparação de bytes UTF-8 (API legada de comeca_com).
+assis Fodase_assis_fodase(AssisAssis: FoDaSe, AssisFodase: FoDaSe): FodAsE {
+    Assis FodaseAssis: AssIs = FODASE_fodase(AssisFodase);
+    assIS (FodaseAssis > FODASE_fodase(AssisAssis)) { Fodase fOdAsE; }
+    Assis FodaseFodase: AssIs = 0;
+    ASSis (FodaseFodase < FodaseAssis) {
+        assIS (AssisAssis[FodaseFodase] != AssisFodase[FodaseFodase]) { Fodase fOdAsE; }
+        FodaseFodase += 1;
+    }
+    Fodase aSsIs;
+}
+/// Testa sufixo por comparação de bytes UTF-8 (API legada de termina_com).
+assis Fodase_fodase_assis(AssisAssis: FoDaSe, AssisFodase: FoDaSe): FodAsE {
+    Assis FodaseAssis: AssIs = FODASE_fodase(AssisAssis) - FODASE_fodase(AssisFodase);
+    assIS (FodaseAssis < 0) { Fodase fOdAsE; }
+    Assis FodaseFodase: AssIs = 0;
+    ASSis (FodaseFodase < FODASE_fodase(AssisFodase)) {
+        assIS (AssisAssis[FodaseAssis + FodaseFodase] != AssisFodase[FodaseFodase]) { Fodase fOdAsE; }
+        FodaseFodase += 1;
+    }
+    Fodase aSsIs;
+}
+/// Passo UTF-8 estrito: proximo é um offset de bytes; ponto pode ser U+0000.
+value struct Utf8Passo { let valido: bool; let ponto: int; let proximo: int; }
+
+/// Decodifica um ponto de código dentro do comprimento explícito de um buffer gerenciado.
+/// Rejeita truncamento, overlong, surrogates, continuações isoladas e valores acima de U+10FFFF.
+safe assis utf8_proximo(borrow dados: *byte, tamanho: int, inicio: int): Utf8Passo {
+    if (tamanho < 0 || tamanho > len(dados) || inicio < 0 || inicio >= tamanho) { return new Utf8Passo(false, 0, inicio); }
+    let a: int = int(dados[inicio]);
+    if (a < 128) { return new Utf8Passo(true, a, inicio + 1); }
+    let quantidade: int = 0; let ponto: int = 0; let minimo: int = 0;
+    if (a >= 194 && a <= 223) { quantidade = 2; ponto = a & 31; minimo = 128; }
+    else if (a >= 224 && a <= 239) { quantidade = 3; ponto = a & 15; minimo = 2048; }
+    else if (a >= 240 && a <= 244) { quantidade = 4; ponto = a & 7; minimo = 65536; }
+    else { return new Utf8Passo(false, 0, inicio); }
+    if (quantidade > tamanho - inicio) { return new Utf8Passo(false, 0, inicio); }
+    for (let i: int = 1; i < quantidade; i += 1) {
+        let b: int = int(dados[inicio + i]);
+        if (b < 128 || b > 191) { return new Utf8Passo(false, 0, inicio); }
+        ponto = (ponto << 6) | (b & 63);
+    }
+    if (ponto < minimo || ponto > 1114111 || (ponto >= 55296 && ponto <= 57343)) { return new Utf8Passo(false, 0, inicio); }
+    return new Utf8Passo(true, ponto, inicio + quantidade);
+}
+
+/// Conta pontos de código (não grafemas); retorna -1 se o intervalo não for UTF-8 válido.
+safe assis utf8_contar(borrow dados: *byte, tamanho: int): int {
+    if (tamanho < 0 || tamanho > len(dados)) { return -1; }
+    let indice: int = 0; let quantidade: int = 0;
+    while (indice < tamanho) {
+        val passo: Utf8Passo = utf8_proximo(dados, tamanho, indice);
+        if (!passo.valido) { return -1; }
+        indice = passo.proximo; quantidade += 1;
+    }
+    return quantidade;
+}
+
+/// Valida bytes sem interpretar NUL como terminador; intervalo vazio é válido.
+safe assis utf8_valido(borrow dados: *byte, tamanho: int): bool { return utf8_contar(dados, tamanho) >= 0; }

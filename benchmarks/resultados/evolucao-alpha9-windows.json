@@ -1,0 +1,821 @@
+{
+  "platform": "Windows-10-10.0.19045-SP0",
+  "cpu": "Intel64 Family 6 Model 94 Stepping 3, GenuineIntel",
+  "samples": 7,
+  "iterations": 2000000,
+  "compiler": "AssisScript 3.3.0-alpha.9 (nativo, Windows x64)",
+  "compilerSha256": "8365fac951362a6da23903a0ad576051d5e7507a7244f956d9bcedbe11bb92b0",
+  "completionMetricVersion": "3.3.0-alpha.9",
+  "completionEstimatePercent": 76,
+  "peakMemoryMetric": "PeakWorkingSetSize bytes",
+  "includesProcessStartup": true,
+  "results": [
+    {
+      "variant": "alpha8-heap",
+      "source": "struct Par{let x:int;let y:int;}assis item(n:int):own Par{return new Par(n,n+1);}assis assis_assis():int{let total:int=0;for(let i:int=0;i<2000000;i+=1){own p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}",
+      "compileSamplesMs": [
+        14.609600002586376,
+        15.928300002997275,
+        15.721900002972689,
+        15.397399998619221,
+        15.658199998142663,
+        15.426399993884843,
+        19.585299996833783
+      ],
+      "samplesMs": [
+        64.92410000646487,
+        58.74050000420539,
+        56.20919999637408,
+        54.8179000033997,
+        52.25919999793405,
+        56.278899995959364,
+        53.916999997454695
+      ],
+      "peakMemoryBytes": [
+        5320704,
+        5320704,
+        5328896,
+        5316608,
+        5320704,
+        5328896,
+        5324800
+      ],
+      "binaryBytes": 102400,
+      "binarySha256": "7b73918378eaae6d1fef24e9b3a409bced572cfd91390e643f091586ddaf84ac",
+      "medianMs": 56.20919999637408,
+      "compileMedianMs": 15.658199998142663
+    },
+    {
+      "variant": "atual-heap",
+      "source": "struct Par{let x:int;let y:int;}assis item(n:int):own Par{return new Par(n,n+1);}assis assis_assis():int{let total:int=0;for(let i:int=0;i<2000000;i+=1){own p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}",
+      "compileSamplesMs": [
+        15.488400000322144,
+        15.123199998924974,
+        18.611799998325296,
+        15.004799999587703,
+        15.522100002272055,
+        15.168199999607168,
+        22.29250000527827
+      ],
+      "samplesMs": [
+        181.88609999924665,
+        56.86740000237478,
+        56.055599998217076,
+        54.81320000399137,
+        56.856899995182175,
+        56.382399998256005,
+        54.17879999731667
+      ],
+      "peakMemoryBytes": [
+        5324800,
+        5324800,
+        5320704,
+        5320704,
+        5337088,
+        5324800,
+        5324800
+      ],
+      "binaryBytes": 102400,
+      "binarySha256": "7b73918378eaae6d1fef24e9b3a409bced572cfd91390e643f091586ddaf84ac",
+      "medianMs": 56.382399998256005,
+      "compileMedianMs": 15.488400000322144
+    },
+    {
+      "variant": "atual-valor",
+      "source": "value struct Par{let x:int;let y:int;}pure assis item(n:int):Par{return new Par(n,n+1);}assis assis_assis():int{let total:int=0;for(let i:int=0;i<2000000;i+=1){val p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}",
+      "compileSamplesMs": [
+        15.201199996226933,
+        15.018500002042856,
+        16.028199999709614,
+        15.67100000102073,
+        15.79420000052778,
+        17.305299996223766,
+        19.979099997726735
+      ],
+      "samplesMs": [
+        59.07450000086101,
+        51.366500003496185,
+        45.89520000445191,
+        44.80640000110725,
+        45.63919999782229,
+        45.7687000016449,
+        46.8609999952605
+      ],
+      "peakMemoryBytes": [
+        5267456,
+        5251072,
+        5267456,
+        5255168,
+        5259264,
+        5255168,
+        5255168
+      ],
+      "binaryBytes": 102400,
+      "binarySha256": "b19e3a1045a254b3b155ee7fbc0600f4a5af22e01a221b6abef474817d5eeda9",
+      "medianMs": 45.89520000445191,
+      "compileMedianMs": 15.79420000052778
+    },
+    {
+      "variant": "alpha8-heap-sem-opt",
+      "source": "struct Par{let x:int;let y:int;}assis item(n:int):own Par{return new Par(n,n+1);}assis assis_assis():int{let total:int=0;for(let i:int=0;i<2000000;i+=1){own p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}",
+      "compileSamplesMs": [
+        16.256199996860232,
+        14.584199998353142,
+        15.526399998634588,
+        15.782200003741309,
+        15.591400006087497,
+        15.097099996637553,
+        18.7798000042676
+      ],
+      "samplesMs": [
+        63.897200001520105,
+        66.49589999869931,
+        62.98499999684282,
+        65.37410000601085,
+        66.06669999746373,
+        66.16099999519065,
+        62.50029999500839
+      ],
+      "peakMemoryBytes": [
+        5320704,
+        5320704,
+        5320704,
+        5324800,
+        5328896,
+        5328896,
+        5324800
+      ],
+      "binaryBytes": 102400,
+      "binarySha256": "0ffc7cf150da88b21bcb67d22f0711e2c799fc7bd0606abce065a34872a63787",
+      "medianMs": 65.37410000601085,
+      "compileMedianMs": 15.591400006087497
+    },
+    {
+      "variant": "atual-heap-sem-opt",
+      "source": "struct Par{let x:int;let y:int;}assis item(n:int):own Par{return new Par(n,n+1);}assis assis_assis():int{let total:int=0;for(let i:int=0;i<2000000;i+=1){own p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}",
+      "compileSamplesMs": [
+        16.806899999210145,
+        16.645200004859362,
+        16.674499995133374,
+        15.100399999937508,
+        15.337400000134949,
+        23.365699998976197,
+        17.497000000730623
+      ],
+      "samplesMs": [
+        61.68169999727979,
+        66.71250000363216,
+        62.870700006897096,
+        61.12069999653613,
+        62.32340000133263,
+        63.8838000013493,
+        63.98320000153035
+      ],
+      "peakMemoryBytes": [
+        5324800,
+        5320704,
+        5328896,
+        5324800,
+        5324800,
+        5320704,
+        5320704
+      ],
+      "binaryBytes": 102400,
+      "binarySha256": "0ffc7cf150da88b21bcb67d22f0711e2c799fc7bd0606abce065a34872a63787",
+      "medianMs": 62.870700006897096,
+      "compileMedianMs": 16.674499995133374
+    },
+    {
+      "variant": "atual-valor-sem-opt",
+      "source": "value struct Par{let x:int;let y:int;}pure assis item(n:int):Par{return new Par(n,n+1);}assis assis_assis():int{let total:int=0;for(let i:int=0;i<2000000;i+=1){val p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}",
+      "compileSamplesMs": [
+        14.43200000358047,
+        15.727899997727945,
+        15.156400004343595,
+        14.889600002788939,
+        16.504799998074304,
+        16.426700000010896,
+        15.88659999833908
+      ],
+      "samplesMs": [
+        58.18900000303984,
+        57.998600001155864,
+        56.907099999079946,
+        56.13390000507934,
+        55.172200001834426,
+        54.91089999850374,
+        57.20889999793144
+      ],
+      "peakMemoryBytes": [
+        5259264,
+        5255168,
+        5267456,
+        5255168,
+        5259264,
+        5251072,
+        5263360
+      ],
+      "binaryBytes": 102400,
+      "binarySha256": "9830d6a6a25c763a6a28d4c3ea5f0cb8dae972488f67171a66fe7808bacebdd3",
+      "medianMs": 56.907099999079946,
+      "compileMedianMs": 15.727899997727945
+    }
+  ],
+  "csv": [
+    {
+      "rows": 100000,
+      "inputBytes": 1100006,
+      "samplesMs": [
+        116.85080000461312,
+        29.84209999704035,
+        30.32750000420492,
+        34.61840000090888,
+        34.16350000043167,
+        31.909700002870522,
+        33.72220000164816
+      ],
+      "peakMemoryBytes": [
+        5558272,
+        5550080,
+        5558272,
+        5541888,
+        5562368,
+        5550080,
+        5550080
+      ],
+      "medianMs": 33.72220000164816,
+      "outputSha256": "d8cfeb9aa561530ee4373dba79e8c0ed407e281f92c1815f89ba9967a57e0718"
+    },
+    {
+      "rows": 1000000,
+      "inputBytes": 11000006,
+      "samplesMs": [
+        260.808500002895,
+        197.67249999858905,
+        215.68349999870406,
+        191.00780000007944,
+        195.723500000895,
+        189.57529999897815,
+        192.9604000033578
+      ],
+      "peakMemoryBytes": [
+        5545984,
+        5554176,
+        5554176,
+        5558272,
+        5550080,
+        5545984,
+        5550080
+      ],
+      "medianMs": 195.723500000895,
+      "outputSha256": "1b929753ce39f25d0e836f52c3a173cd559de971db4377714878cf84fd19f70a"
+    }
+  ],
+  "startup": [
+    {
+      "variant": "alpha8",
+      "samplesMs": [
+        15.681300006690435,
+        14.081799999985378,
+        14.029899997694883,
+        14.985399997385684,
+        14.319600006274413,
+        14.649600001575891,
+        14.54129999910947
+      ],
+      "peakMemoryBytes": [
+        5255168,
+        5259264,
+        5251072,
+        5259264,
+        5259264,
+        5255168,
+        5267456
+      ],
+      "medianMs": 14.54129999910947
+    },
+    {
+      "variant": "atual",
+      "samplesMs": [
+        15.398100003949367,
+        14.535299997078255,
+        15.65909999771975,
+        14.462599996477365,
+        14.655700004368555,
+        14.611800004786346,
+        14.324800002214033
+      ],
+      "peakMemoryBytes": [
+        5259264,
+        5255168,
+        5255168,
+        5251072,
+        5259264,
+        5255168,
+        5255168
+      ],
+      "medianMs": 14.611800004786346
+    }
+  ],
+  "baselineSha256": "a581522d3a23bfcf0da4e786c152a96847adceadf3208ead9d9a348cede130c4",
+  "nativeFeatures": [
+    {
+      "variant": "slice",
+      "source": "safe assis assis_assis():int{own b:*int=alloc<int>(2000000);for(let i:int=0;i<2000000;i+=1){b[i]=i;}borrow s:slice<int>=fatia(b,0,2000000);let total:int=0;for(let i:int=0;i<len(s);i+=1){total+=s[i];}print(total);return 0;}",
+      "expectedStdout": "1999999000000\n",
+      "compileSamplesMs": [
+        14.99820000026375,
+        12.178600001789164,
+        12.0150000002468,
+        12.013700004899874,
+        11.910099994565826,
+        11.80459999886807,
+        13.11600000190083
+      ],
+      "samplesMs": [
+        45.475200000510085,
+        46.14899999432964,
+        44.57479999837233,
+        44.76689999864902,
+        47.80089999985648,
+        45.52219999459339,
+        44.776099995942786
+      ],
+      "peakMemoryBytes": [
+        20905984,
+        20914176,
+        20914176,
+        20905984,
+        20910080,
+        20901888,
+        20905984
+      ],
+      "binaryBytes": 102912,
+      "binarySha256": "e5f12a79370841eb93b16e1ba7cd27f775bf03b09b020f09239330174dc6d2d3",
+      "medianMs": 45.475200000510085,
+      "compileMedianMs": 12.0150000002468
+    },
+    {
+      "variant": "slice-sem-opt",
+      "source": "safe assis assis_assis():int{own b:*int=alloc<int>(2000000);for(let i:int=0;i<2000000;i+=1){b[i]=i;}borrow s:slice<int>=fatia(b,0,2000000);let total:int=0;for(let i:int=0;i<len(s);i+=1){total+=s[i];}print(total);return 0;}",
+      "expectedStdout": "1999999000000\n",
+      "compileSamplesMs": [
+        16.721699998015538,
+        12.552500003948808,
+        12.289499994949438,
+        12.566299999889452,
+        11.267900001257658,
+        12.804600002709776,
+        12.103100001695566
+      ],
+      "samplesMs": [
+        51.62469999777386,
+        51.006100002268795,
+        51.36040000070352,
+        53.723499993793666,
+        49.977900001977105,
+        53.27600000600796,
+        52.8684999953839
+      ],
+      "peakMemoryBytes": [
+        20914176,
+        20905984,
+        20901888,
+        20905984,
+        20914176,
+        20922368,
+        20905984
+      ],
+      "binaryBytes": 102912,
+      "binarySha256": "423a89f842588bb13ee5205d8518e82e2becc880de4ab0c54ad467166caa8838",
+      "medianMs": 51.62469999777386,
+      "compileMedianMs": 12.552500003948808
+    },
+    {
+      "variant": "unicode",
+      "source": "#yuri <std/unicode.assis>\nsafe assis assis_assis():int{own b:*byte=alloc<byte>(1024);for(let i:int=0;i<1024;i+=1){b[i]=byte(65);}own t:unicode::Texto=new unicode::Texto();let total:int=0;for(let i:int=0;i<1953;i+=1){assert(t.carregar(fatia(b,0,1024)));total+=t.tamanho();}print(total);return 0;}",
+      "expectedStdout": "1999872\n",
+      "compileSamplesMs": [
+        20.656699998653494,
+        13.339900004211813,
+        13.69900000281632,
+        13.38229999964824,
+        14.594400003261399,
+        14.663799993286375,
+        14.641300003859214
+      ],
+      "samplesMs": [
+        30.554999997548293,
+        29.23230000305921,
+        30.327499996928964,
+        29.143300002033357,
+        29.922800000349525,
+        30.10329999960959,
+        29.97499999764841
+      ],
+      "peakMemoryBytes": [
+        5406720,
+        5398528,
+        5394432,
+        5394432,
+        5398528,
+        5394432,
+        5402624
+      ],
+      "binaryBytes": 109568,
+      "binarySha256": "06ec447a88efcfb08e9818c1783fe42bd743c593e30167ec681f21c159ed4e03",
+      "medianMs": 29.97499999764841,
+      "compileMedianMs": 14.594400003261399
+    },
+    {
+      "variant": "unicode-sem-opt",
+      "source": "#yuri <std/unicode.assis>\nsafe assis assis_assis():int{own b:*byte=alloc<byte>(1024);for(let i:int=0;i<1024;i+=1){b[i]=byte(65);}own t:unicode::Texto=new unicode::Texto();let total:int=0;for(let i:int=0;i<1953;i+=1){assert(t.carregar(fatia(b,0,1024)));total+=t.tamanho();}print(total);return 0;}",
+      "expectedStdout": "1999872\n",
+      "compileSamplesMs": [
+        16.555100002733525,
+        14.47080000070855,
+        14.973299999837764,
+        15.689499996369705,
+        13.695200002985075,
+        14.665800001239404,
+        14.667600000393577
+      ],
+      "samplesMs": [
+        37.936000000627246,
+        38.35439999966184,
+        37.54690000641858,
+        37.71920000144746,
+        38.39159999915864,
+        38.31979999813484,
+        38.55230000044685
+      ],
+      "peakMemoryBytes": [
+        5398528,
+        5394432,
+        5390336,
+        5398528,
+        5406720,
+        5394432,
+        5402624
+      ],
+      "binaryBytes": 110592,
+      "binarySha256": "760a1af4245ca7b0c39b71e1576f4d366a6465a78f1f8baa820411b7e2975dcb",
+      "medianMs": 38.31979999813484,
+      "compileMedianMs": 14.667600000393577
+    },
+    {
+      "variant": "proprios",
+      "source": "#yuri <std/proprios.assis>\nstruct R{own b:*byte;}safe assis assis_assis():int{let total:int=0;for(let i:int=0;i<1953;i+=1){own l:proprios::Lista<R>=new proprios::Lista<R>();for(let j:int=0;j<128;j+=1){l.inserir(new R(alloc<byte>(16)));}total+=l.tamanho();}print(total);return 0;}",
+      "expectedStdout": "249984\n",
+      "compileSamplesMs": [
+        18.4268000011798,
+        16.38979999552248,
+        12.993199998163618,
+        13.995399996929336,
+        14.148700000077952,
+        13.738400004513096,
+        15.389899999718182
+      ],
+      "samplesMs": [
+        31.94690000236733,
+        34.82500000245636,
+        32.158200003323145,
+        32.14460000162944,
+        31.08069999871077,
+        31.263600001693703,
+        31.009899998025503
+      ],
+      "peakMemoryBytes": [
+        5324800,
+        5324800,
+        5328896,
+        5324800,
+        5341184,
+        5324800,
+        5328896
+      ],
+      "binaryBytes": 106496,
+      "binarySha256": "a40dab5812eba9e3b69b3f50ac641b394f96c394ebbb14bbcd64f91d2b4fc98c",
+      "medianMs": 31.94690000236733,
+      "compileMedianMs": 14.148700000077952
+    },
+    {
+      "variant": "proprios-sem-opt",
+      "source": "#yuri <std/proprios.assis>\nstruct R{own b:*byte;}safe assis assis_assis():int{let total:int=0;for(let i:int=0;i<1953;i+=1){own l:proprios::Lista<R>=new proprios::Lista<R>();for(let j:int=0;j<128;j+=1){l.inserir(new R(alloc<byte>(16)));}total+=l.tamanho();}print(total);return 0;}",
+      "expectedStdout": "249984\n",
+      "compileSamplesMs": [
+        16.39660000364529,
+        14.164400003210176,
+        13.991599997098092,
+        13.59509999747388,
+        13.70679999672575,
+        14.520000004267786,
+        13.400499999988824
+      ],
+      "samplesMs": [
+        32.58240000286605,
+        33.05579999869224,
+        32.037500001024455,
+        31.584800002747215,
+        32.65819999796804,
+        32.308400004694704,
+        31.50420000019949
+      ],
+      "peakMemoryBytes": [
+        5328896,
+        5328896,
+        5324800,
+        5324800,
+        5328896,
+        5324800,
+        5328896
+      ],
+      "binaryBytes": 107008,
+      "binarySha256": "a17dabe121b34b26f33fc960285bfc7f82c9b8645618738c9262e0100bcd2866",
+      "medianMs": 32.308400004694704,
+      "compileMedianMs": 13.991599997098092
+    }
+  ],
+  "benchmarkScope": "alpha.8 comparable workloads; current bounded slices, UTF-8 snapshots and ownership lists; no network, concurrency or 24-hour claim",
+  "sourceHashes": {
+    "src\\assisc.c": "a7743538808f2c44503d623e6dd270c79cf1120d0bc66ee8282b399619137fef",
+    "src\\collections.h": "5e4cb10802afa9ad30f3dd4073eeff2ce507b58d63021521b11387d7349eb735",
+    "src\\debug_info.h": "5f085fe7f41b83da71ba1594cf3c3f29261b9770dbcd42491c887781ad33953d",
+    "src\\devtools.h": "083540331c9b61456f992117be2f2996de28a2cfcaa70efef631cadf593ecaf3",
+    "src\\elf_format.h": "8aa29e334756432f62b458f411bd16dd29d86da6f2746814c3309b1d2c910322",
+    "src\\frontend.h": "fc2261acc8f35926f00c18aa3f8fd2ba3927f195c9a236456b77fdffa9ceded1",
+    "src\\generics.h": "7d91cb6fcd58c0faa8c41711b03b603ce6ee0f239bd5f2ffcdfed8b08c424935",
+    "src\\icon_blob.h": "795889a45b0c826f940fbf2c10c92f09cabaaf1812d4bace949454dd9586a0eb",
+    "src\\install_files.inc": "90af90b4df1b37b175ade01e2ba19d9cf761bb67d6d92d9f36c503a6287bfa92",
+    "src\\install_optional.inc": "5b3ef118d9f09d0ed2c634597c8436f1e3e44150bbe317fb73c7a85bcc2ab8bd",
+    "src\\ir.h": "bfffef077f08d05052bda1e6ab08af1882838fa5796f82e1734d442a4d409000",
+    "src\\lexer.h": "f26beab84225f124077a3ae7f9a0f00f91329ebe19ff91d23f910dc050b86321",
+    "src\\modules.h": "6a01193df6f6b84279c7f498cc626f8fa0302d9b853274a96b5c320296f31e6c",
+    "src\\namespaces.h": "c2b141ce5dc531309d814f8eb990223bd3e4f7e96a32cebbd12d0346f2bed5d1",
+    "src\\numeric.h": "a6264e101ddeff3ff503cb8e601365988c5df0cbc44baa85cc85464fa65f4feb",
+    "src\\numeric_emit.h": "90d9991939841fbadb2048a3f913b5d654c6c65f720d6a72a8847a05550594ba",
+    "src\\ownership.h": "3257ead2fe834d8f48e09c219f179ac3dd3f338a0277c302bc3509a166cc3c28",
+    "src\\packages.h": "f5c8e65219b99737795061143530b7b49e3dad8c07ff26eaa80f8098d3c5919e",
+    "src\\pe_writer.h": "7e2f23383bad3c6264e9e7d899624ef0b8f56f8c7ce2a9f7632da3110c3c3e39",
+    "src\\runtime.S": "ae4e749f7fe29b7555f4808a6971f4fe293b21696837fa8d488950433926c28d",
+    "src\\runtime_blob.h": "9a80d8dbda59018a0e167eb5f454af257d8a2fdd78a1dc9875eabba534e3c426",
+    "src\\runtime_files.inc": "dd052a0e13320a35995cd5d380d036fb2caa82c27b0b7be0100161d6a9bd268c",
+    "src\\runtime_io.inc": "012bba759ce7516082c3da327c03e0db9cd31d3b61d37123b7b4dfa7b9afeaa9",
+    "src\\runtime_memory.inc": "c92026c65c67a59e006b4f0f7b134c4e3def32d645203d0aefb22936b43832db",
+    "src\\runtime_numeric.inc": "f17f1bcc70b1634cb8714882ee648bd0f904262041fc4bd383f105cf84606cb2",
+    "src\\runtime_system.inc": "254389a232be341125fd55ab0023c5499fbbdbfb191ea8e6ba1c4b32c59b97e5",
+    "src\\runtime_win.S": "e1d7b95572585e2fe490e683876f589be836535d278330457a5ba4fef4030989",
+    "src\\runtime_win_blob.h": "2f110eefabc432dd4b11047da75d7909ab47cfc82691d3b0e69276f4cfa7f8ea",
+    "src\\safety.h": "aa68b1c54ff42e58c9e989b3d0c65d6872d4ef3df9454bc59a100bbad1687209",
+    "src\\sha256.h": "db32be4734bdc0d90a82ca8f0654fbf9b16159baa1538da416558f941614230b",
+    "src\\windows_setup.c": "8cfa56d028a436412af54e637d9af870af7e32f16442ecd1c9960b27aed36219",
+    "stdlib\\algoritmos.assis": "55883c0530c7356b9f2724f5df86450c126ecb88ae76379f9cd8e3a1ac4ded0a",
+    "stdlib\\catalogo.json": "2e157e8ab71f38c209c35e18d824510deafac887041e4ece510461e8270e7979",
+    "stdlib\\catalogo.sh": "81ad0e6f10c253bc5e56fef85479d190016ecbe81cfff2915fe2c850af42598a",
+    "stdlib\\cli.assis": "6efdaa484a71ebf2bc15a0605c6239320f0ea197ddbe5834db754f117aaf0c22",
+    "stdlib\\codificacao.assis": "2a265bdc39780ea00e1072f9beed025dba229fda369148d6605fa1afc020c888",
+    "stdlib\\conversoes.assis": "e1c13c7d54dcc32d380ee991689a612ccc3e1eda3c1cf1e1afa53543c0e7b0dd",
+    "stdlib\\csv.assis": "fa7305a15b4b3842481144b0efe7467d69dfa3becfc2f13f0650860c3e3081e1",
+    "stdlib\\erros.assis": "e3839985342e2bdfb706f85faf2d98abc996d86781837fa52cddf7fa7cefe9cb",
+    "stdlib\\eventos.assis": "9bf72dd158736ce2418154e23bc21af0094f4126c7c1fff3e913d63053f3e425",
+    "stdlib\\iteradores.assis": "86fe183af04814466908790cc178f381236e107e82dffa22a7196a9c2d5f19e9",
+    "stdlib\\json.assis": "3a99442a4f05510c3e6f9d0bf52ed7854fa11e2a3953adf8875f265b54b21d25",
+    "stdlib\\log.assis": "8ffecc03639bed00b5520ad7817bd8382f44c8c227bdff158a47972089adc5ba",
+    "stdlib\\matematica.assis": "3942aac8eba8157f6dae42997c7feefb19a221a7582ff27f60a9a6620efe471b",
+    "stdlib\\memoria.assis": "35d6fae19ae8da638adae6cf5a9149ad60a62f13d97cc588d9bb303788d7985b",
+    "stdlib\\proprios.assis": "56965dd1d0b29a42455b143bdea34830cdce947f571004af2cb3533e6c84bfd8",
+    "stdlib\\tempo.assis": "ba64b6bf872cdcc21d7e922cefaddb30bb68029ea4b86fa18583f454a9918dae",
+    "stdlib\\texto.assis": "371c5b092fbcfd35e73be6933e01d7163a12d2b27a1f4689dd45010158964b13",
+    "stdlib\\unicode.assis": "bf78ead5e44c1982892ca2452c9de84c690143fa841052caf724ff3d61c44de2"
+  },
+  "investigation": {
+    "iterations": 10000000,
+    "samples": 21,
+    "warmups": 2,
+    "source": "struct Par{let x:int;let y:int;}assis item(n:int):own Par{return new Par(n,n+1);}assis assis_assis():int{let total:int=0;for(let i:int=0;i<10000000;i+=1){own p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}",
+    "expectedStdout": "100000000000000\n",
+    "baselineSha256": "a581522d3a23bfcf0da4e786c152a96847adceadf3208ead9d9a348cede130c4",
+    "rows": [
+      {
+        "variant": "alpha8",
+        "flags": [],
+        "compileSamplesMs": [
+          11.844100001326296,
+          13.494400001945905,
+          12.28139999875566,
+          10.677699996449519,
+          207.5884000005317,
+          9.998699999414384,
+          11.152499995660037,
+          12.274400003661867,
+          231.57029999856604,
+          11.790500000643078,
+          14.070099998207297,
+          11.822899999970105,
+          205.10640000429703,
+          18.16790000157198,
+          10.29450000351062,
+          16.056400003435556,
+          220.79110000049695,
+          12.464300001738593,
+          10.73799999721814,
+          16.97089999652235,
+          387.42310000088764
+        ],
+        "samplesMs": [
+          263.8589999987744,
+          418.564299994614,
+          234.73070000181906,
+          273.8616000060574,
+          235.87570000381675,
+          271.3967000017874,
+          253.4070999972755,
+          211.17170000070473,
+          241.06400000164285,
+          257.75979999889387,
+          214.50110000296263,
+          229.96010000497336,
+          276.79290000378387,
+          216.51330000167945,
+          209.25289999286178,
+          213.23359999951208,
+          209.2451999997138,
+          202.70329999766545,
+          268.35230000142474,
+          277.395199998864,
+          221.23210000427207
+        ],
+        "binaryBytes": 102400,
+        "binarySha256": "c95b55d62aa31cdeed228bef80870b1cdf0baf6ff79023f0b57b795b2209b1b6",
+        "medianMs": 235.87570000381675,
+        "compileMedianMs": 12.464300001738593
+      },
+      {
+        "variant": "alpha8-sem-opt",
+        "flags": [
+          "--no-opt"
+        ],
+        "compileSamplesMs": [
+          12.60560000082478,
+          351.51450000557816,
+          17.10340000136057,
+          18.592799999169074,
+          89.29340000031516,
+          284.11810000397963,
+          10.793199995532632,
+          10.847699995792937,
+          43.53840000112541,
+          280.66360000229906,
+          12.3710999978357,
+          13.928599997598212,
+          97.99429999839049,
+          337.46509999764385,
+          11.406599995098077,
+          12.287799996556714,
+          73.46890000189887,
+          265.41090000682743,
+          12.511600005382206,
+          15.395599999465048,
+          74.75249999697553
+        ],
+        "samplesMs": [
+          455.0749000045471,
+          385.0950999985798,
+          263.8756000014837,
+          288.84760000073584,
+          348.3501999944565,
+          320.7831999970949,
+          266.10770000115735,
+          329.753800004255,
+          278.0050000001211,
+          261.1509999987902,
+          249.95009999838658,
+          247.22489999840036,
+          291.67579999921145,
+          253.81309999647783,
+          246.71269999817014,
+          246.09540000528796,
+          237.8762000007555,
+          242.3936000050162,
+          347.28919999906793,
+          285.52270000363933,
+          268.2596000013291
+        ],
+        "binaryBytes": 102400,
+        "binarySha256": "3b1cc6019cadfe021116500a77a4cd8ef5daee91607f2af370653995b71e6903",
+        "medianMs": 268.2596000013291,
+        "compileMedianMs": 18.592799999169074
+      },
+      {
+        "variant": "atual",
+        "flags": [],
+        "compileSamplesMs": [
+          11.442300005001016,
+          11.1927999969339,
+          280.07419999630656,
+          12.268600003153551,
+          13.518499996280298,
+          11.324999999487773,
+          200.59829999809153,
+          11.231100004806649,
+          10.950599993520882,
+          10.850200000277255,
+          304.09259999578353,
+          11.112599997431971,
+          14.115999998466577,
+          14.561699994374067,
+          273.6685999989277,
+          11.362799996277317,
+          10.971399999107234,
+          12.11689999763621,
+          215.8410999982152,
+          23.412700000335462,
+          11.417100002290681
+        ],
+        "samplesMs": [
+          216.6765999936615,
+          257.9535000040778,
+          204.2695999989519,
+          261.48660000035306,
+          293.35210000135703,
+          248.0178000041633,
+          250.02780000068014,
+          244.18339999829186,
+          222.88299999490846,
+          224.48089999670628,
+          255.29749999986961,
+          211.54979999846546,
+          225.69400000065798,
+          205.89940000354545,
+          203.80329999898095,
+          210.9368000019458,
+          251.53539999882923,
+          212.7018000028329,
+          266.19669999490725,
+          248.81559999630554,
+          255.20140000298852
+        ],
+        "binaryBytes": 102400,
+        "binarySha256": "c95b55d62aa31cdeed228bef80870b1cdf0baf6ff79023f0b57b795b2209b1b6",
+        "medianMs": 244.18339999829186,
+        "compileMedianMs": 12.11689999763621
+      },
+      {
+        "variant": "atual-sem-opt",
+        "flags": [
+          "--no-opt"
+        ],
+        "compileSamplesMs": [
+          11.189199998625554,
+          12.816100002964959,
+          87.16110000386834,
+          311.4391999988584,
+          10.82539999333676,
+          11.505499998747837,
+          53.29179999534972,
+          312.8022000018973,
+          11.191400000825524,
+          10.994600001140498,
+          78.72979999956442,
+          289.1260999967926,
+          11.916899995412678,
+          14.495900002657436,
+          65.79280000005383,
+          328.9191999938339,
+          10.059499996714294,
+          22.244399995543063,
+          45.88030000013532,
+          340.9010999966995,
+          13.196100000641309
+        ],
+        "samplesMs": [
+          255.5138999960036,
+          306.6894000003231,
+          277.4638999981107,
+          288.177700000233,
+          265.14660000248114,
+          321.82040000043344,
+          247.73479999566916,
+          298.1110999971861,
+          255.40039999759756,
+          291.0252000001492,
+          263.5733999995864,
+          260.98869999987073,
+          371.1766999986139,
+          428.3122999986517,
+          248.1294000026537,
+          247.67449999490054,
+          247.84559999534395,
+          242.18090000067605,
+          383.4381000051508,
+          331.50449999811826,
+          343.66310000041267
+        ],
+        "binaryBytes": 102400,
+        "binarySha256": "3b1cc6019cadfe021116500a77a4cd8ef5daee91607f2af370653995b71e6903",
+        "medianMs": 277.4638999981107,
+        "compileMedianMs": 22.244399995543063
+      }
+    ]
+  }
+}

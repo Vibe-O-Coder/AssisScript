@@ -1,0 +1,118 @@
+{
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "cpu": "x86_64",
+  "samples": 7,
+  "iterations": 10000000,
+  "includesProcessStartup": true,
+  "expected": "150000055000000",
+  "compiler": "AssisScript 3.3.0-alpha.2 (nativo, Linux x86_64)",
+  "compilerSha256": "2fb410c3f6c45b06a3144891a3c4c94eecea1a2f38aeb8296720f84acfb75820",
+  "results": [
+    {
+      "variant": "manual",
+      "source": "assis assis_assis():int{let total:int=0;for(let i:int=0;i<10000000;i+=1){total+=calcular(i);}print(total);return 0;}\npure assis calcular(n:int):int{return int(n)*3+7;}\n",
+      "binaryBytes": 8193,
+      "compileSamplesMs": [
+        19.072543,
+        23.977692,
+        19.881436,
+        21.980331,
+        24.218155,
+        20.98727,
+        19.948383
+      ],
+      "samplesMs": [
+        53.302971,
+        53.160568,
+        51.973071,
+        60.896776,
+        46.974743,
+        64.574232,
+        58.299951
+      ],
+      "sha256": "951e1fce4da27e829c122188409240406a6b4046624dbb49e75a04e09c2f0d27",
+      "medianMs": 53.302971,
+      "compileMedianMs": 20.98727
+    },
+    {
+      "variant": "generico",
+      "source": "assis assis_assis():int{let total:int=0;for(let i:int=0;i<10000000;i+=1){total+=calcular::<int>(i);}print(total);return 0;}\npure assis calcular<T>(n:T):int{return int(n)*3+7;}\n",
+      "binaryBytes": 8193,
+      "compileSamplesMs": [
+        19.487372,
+        22.829177,
+        20.110897,
+        22.263179,
+        20.178331,
+        21.950577,
+        19.310941
+      ],
+      "samplesMs": [
+        50.769229,
+        52.650172,
+        50.78376,
+        60.325944,
+        52.739696,
+        63.442557,
+        48.659437
+      ],
+      "sha256": "951e1fce4da27e829c122188409240406a6b4046624dbb49e75a04e09c2f0d27",
+      "medianMs": 52.650172,
+      "compileMedianMs": 20.178331
+    },
+    {
+      "variant": "manual-sem-opt",
+      "source": "assis assis_assis():int{let total:int=0;for(let i:int=0;i<10000000;i+=1){total+=calcular(i);}print(total);return 0;}\npure assis calcular(n:int):int{return int(n)*3+7;}\n",
+      "binaryBytes": 8193,
+      "compileSamplesMs": [
+        20.082995,
+        19.400957,
+        20.719907,
+        21.303028,
+        21.723337,
+        25.712329,
+        20.037153
+      ],
+      "samplesMs": [
+        86.993942,
+        77.365358,
+        89.342818,
+        91.576187,
+        82.2648,
+        81.66389,
+        85.809644
+      ],
+      "sha256": "99a2b9c34dbd5756dabb451c9b890282c67a88e842155a79c0a2565b55052607",
+      "medianMs": 85.809644,
+      "compileMedianMs": 20.719907
+    },
+    {
+      "variant": "generico-sem-opt",
+      "source": "assis assis_assis():int{let total:int=0;for(let i:int=0;i<10000000;i+=1){total+=calcular::<int>(i);}print(total);return 0;}\npure assis calcular<T>(n:T):int{return int(n)*3+7;}\n",
+      "binaryBytes": 8193,
+      "compileSamplesMs": [
+        20.010193,
+        18.65156,
+        20.623106,
+        18.867395,
+        27.41583,
+        24.842615,
+        23.059006
+      ],
+      "samplesMs": [
+        99.528343,
+        82.544701,
+        81.031243,
+        84.431763,
+        89.718057,
+        82.318741,
+        100.906195
+      ],
+      "sha256": "99a2b9c34dbd5756dabb451c9b890282c67a88e842155a79c0a2565b55052607",
+      "medianMs": 84.431763,
+      "compileMedianMs": 20.623106
+    }
+  ],
+  "identicalOptimized": true,
+  "identicalUnoptimized": true
+}

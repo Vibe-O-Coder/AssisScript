@@ -1,0 +1,13 @@
+#yuri <std/eventos.assis>
+
+safe assis contar(borrow mut loop: eventos::Loop, valor: int): void {
+    print(valor);
+    if (valor < 3) { assert(eventos::agendar(loop, 1, valor + 1, contar) != 0); }
+}
+
+safe assis assis_assis(): int {
+    own loop: eventos::Loop = eventos::criar(16);
+    assert(eventos::agendar(loop, 0, 1, contar) != 0);
+    assert(eventos::executar(loop, 10) == 3);
+    return 0;
+}

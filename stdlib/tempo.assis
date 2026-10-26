@@ -1,0 +1,15 @@
+namespace tempo;
+public value struct Prazo { let valido: bool; let instante: int; }
+/// Prazo monotônico; não sofre ajuste do relógio civil. Overflow é recuperável.
+public safe assis apos(milissegundos: int): Prazo {
+    val atual: int = agora();
+    if (atual < 0 || milissegundos < 0 || milissegundos > 0x7fff_ffff_ffff_ffff - atual) { return new Prazo(false, 0); }
+    return new Prazo(true, atual + milissegundos);
+}
+public safe assis restante(prazo: Prazo): int {
+    val atual: int = agora();if (!prazo.valido || atual < 0) { return -1; }if (atual >= prazo.instante) { return 0; }return prazo.instante - atual;
+}
+/// Espera cooperativa em fatias de até 50 ms; false em falha nativa.
+public safe assis esperar(prazo: Prazo): bool {
+    while (true) { let n: int = restante(prazo);if (n < 0) { return false; }if (n == 0) { return true; }if (n > 50) { n = 50; }if (dormir(n) < 0) { return false; } }
+}

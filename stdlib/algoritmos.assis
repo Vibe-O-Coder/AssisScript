@@ -1,0 +1,89 @@
+/// Restaura um heap máximo no intervalo [0, tamanho). Uso interno de ordenar_inteiros; não exige alocação auxiliar.
+assis heap_descer(valores: Array<int>, raiz: int, tamanho: int): void {
+    while (raiz < tamanho / 2) {
+        let filho: int = raiz * 2 + 1;
+        if (filho + 1 < tamanho && valores[filho] < valores[filho + 1]) { filho += 1; }
+        if (valores[raiz] >= valores[filho]) { return; }
+        let troca: int = valores[raiz]; valores[raiz] = valores[filho]; valores[filho] = troca; raiz = filho;
+    }
+    // Um heap de tamanho par tem um último pai com apenas um filho.
+    let filho_final: int = raiz * 2 + 1;
+    if (filho_final < tamanho && valores[raiz] < valores[filho_final]) {
+        let troca_final: int = valores[raiz]; valores[raiz] = valores[filho_final]; valores[filho_final] = troca_final;
+    }
+}
+
+/// Ordena Array<int> crescente no próprio array. Heapsort O(n log n) inclusive no pior caso, O(1) auxiliar; não estável. Aceita vazio, duplicatas e extremos int64.
+assis ordenar_inteiros(valores: Array<int>): void {
+    let n: int = len(valores); let i: int = n / 2;
+    while (i > 0) { i -= 1; heap_descer(valores, i, n); }
+    let fim: int = n;
+    while (fim > 1) { fim -= 1; let troca: int = valores[0]; valores[0] = valores[fim]; valores[fim] = troca; heap_descer(valores, 0, fim); }
+}
+
+/// Primeiro índice cujo valor é >= procurado, ou len se todos forem menores. Exige array crescente. O(log n).
+assis limite_inferior(valores: Array<int>, procurado: int): int {
+    let inicio: int = 0; let fim: int = len(valores);
+    while (inicio < fim) { let meio: int = inicio + (fim - inicio) / 2; if (valores[meio] < procurado) { inicio = meio + 1; } else { fim = meio; } }
+    return inicio;
+}
+
+/// Busca em array crescente, retorna primeiro índice igual ou -1. O(log n).
+assis busca_binaria(valores: Array<int>, procurado: int): int {
+    let i: int = limite_inferior(valores, procurado); if (i < len(valores) && valores[i] == procurado) { return i; } return -1;
+}
+
+/// Remove duplicatas consecutivas de array já crescente no próprio array. Preserva capacidade; retorna novo tamanho. O(n).
+assis unicos_ordenados(valores: Array<int>): int {
+    let n: int = len(valores); if (n == 0) { return 0; } let destino: int = 1; let i: int = 1;
+    while (i < n) { if (valores[i] != valores[destino - 1]) { valores[destino] = valores[i]; destino += 1; } i += 1; }
+    while (len(valores) > destino) { valores.pop(); } return destino;
+}
+
+/// Novo array, mesma ordem; não altera nem libera entrada. Callback pure escalar. O(n); resultado exige free/defer free no chamador.
+assis map<T, U>(entrada: Array<T>, transformar: pure assis(T): U): Array<U> {
+    let saida: Array<U> = new Array<U>();
+    let n: int = len(entrada);
+    for (let i: int = 0; i < n; i += 1) { saida.push(transformar(entrada[i])); }
+    return saida;
+}
+
+/// Novo array com os valores aceitos, na ordem de entrada. Não assume posse dos elementos. O(n); resultado exige free/defer free.
+assis filter<T>(entrada: Array<T>, aceitar: pure assis(T): bool): Array<T> {
+    let saida: Array<T> = new Array<T>();
+    let n: int = len(entrada);
+    for (let i: int = 0; i < n; i += 1) { if (aceitar(entrada[i])) { saida.push(entrada[i]); } }
+    return saida;
+}
+
+/// Redução da esquerda para a direita; retorna inicial no vazio. O(n), sem novo array. Callback pure e acumulador escalar.
+assis fold<T, A>(entrada: Array<T>, inicial: A, combinar: pure assis(A, T): A): A {
+    let acumulador: A = inicial;
+    let n: int = len(entrada);
+    for (let i: int = 0; i < n; i += 1) { acumulador = combinar(acumulador, entrada[i]); }
+    return acumulador;
+}
+
+/// Map gerenciado: entrada emprestada, nova saída own; limpeza automática no chamador. T/U escalares ou funções pure.
+safe assis map_own<T, U>(borrow entrada: Array<T>, transformar: pure assis(T): U): own Array<U> {
+    own saida: Array<U> = new Array<U>();
+    val n: int = len(entrada);
+    for (let i: int = 0; i < n; i += 1) { saida.push(transformar(entrada[i])); }
+    return move(saida);
+}
+
+/// Filter gerenciado: preserva entrada e ordem; a saída tem proprietário independente.
+safe assis filter_own<T>(borrow entrada: Array<T>, aceitar: pure assis(T): bool): own Array<T> {
+    own saida: Array<T> = new Array<T>();
+    val n: int = len(entrada);
+    for (let i: int = 0; i < n; i += 1) { if (aceitar(entrada[i])) { saida.push(entrada[i]); } }
+    return move(saida);
+}
+
+/// Fold sem cópia/consumo do array; acumulador e callback pure escalares.
+safe assis fold_borrow<T, A>(borrow entrada: Array<T>, inicial: A, combinar: pure assis(A, T): A): A {
+    let acumulador: A = inicial;
+    val n: int = len(entrada);
+    for (let i: int = 0; i < n; i += 1) { acumulador = combinar(acumulador, entrada[i]); }
+    return acumulador;
+}

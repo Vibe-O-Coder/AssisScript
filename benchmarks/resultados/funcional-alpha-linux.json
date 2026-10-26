@@ -1,0 +1,85 @@
+{
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "cpu": "x86_64",
+  "samples": 7,
+  "iterations": 10000000,
+  "includesProcessStartup": true,
+  "expected": "150000055000000",
+  "compiler": "AssisScript 3.3.0-alpha.1 (nativo, Linux x86_64)",
+  "results": [
+    {
+      "variant": "atual-legado",
+      "compileMs": 14.383095,
+      "binaryBytes": 8193,
+      "sha256": "7c3ec35fd619814b33446e9735592ed7eb52413b76922bb38593357957e1fd36",
+      "samplesMs": [
+        48.29112,
+        46.480337,
+        46.292547,
+        56.008511,
+        50.336504,
+        48.223087,
+        56.792568
+      ],
+      "medianMs": 48.29112,
+      "minMs": 46.292547,
+      "maxMs": 56.792568
+    },
+    {
+      "variant": "atual-puro",
+      "compileMs": 20.392617,
+      "binaryBytes": 8193,
+      "sha256": "7c3ec35fd619814b33446e9735592ed7eb52413b76922bb38593357957e1fd36",
+      "samplesMs": [
+        61.20062,
+        62.689861,
+        44.241794,
+        44.948137,
+        58.517861,
+        58.966332,
+        46.201167
+      ],
+      "medianMs": 58.517861,
+      "minMs": 44.241794,
+      "maxMs": 62.689861
+    },
+    {
+      "variant": "atual-puro-sem-opt",
+      "compileMs": 17.629477,
+      "binaryBytes": 8193,
+      "sha256": "42231c95fc88a2a128a60d414bea9a53be169635789063527bfb9ade9915f8f5",
+      "samplesMs": [
+        84.532102,
+        80.029274,
+        82.017608,
+        88.955118,
+        88.932158,
+        84.168046,
+        85.785515
+      ],
+      "medianMs": 84.532102,
+      "minMs": 80.029274,
+      "maxMs": 88.955118
+    },
+    {
+      "variant": "base-3.2-legado",
+      "compileMs": 18.920828,
+      "binaryBytes": 8193,
+      "sha256": "7c3ec35fd619814b33446e9735592ed7eb52413b76922bb38593357957e1fd36",
+      "samplesMs": [
+        57.796268,
+        66.86846,
+        53.611353,
+        51.835115,
+        57.85854,
+        55.774842,
+        53.10865
+      ],
+      "medianMs": 55.774842,
+      "minMs": 51.835115,
+      "maxMs": 66.86846
+    }
+  ],
+  "baseline": "AssisScript 3.2.0 (nativo, Linux x86_64)",
+  "optimizedBinariesIdentical": true
+}

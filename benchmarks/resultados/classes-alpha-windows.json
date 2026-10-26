@@ -1,0 +1,476 @@
+{
+  "platform": "Windows-10-10.0.19045-SP0",
+  "cpu": "Intel64 Family 6 Model 94 Stepping 3, GenuineIntel",
+  "samples": 7,
+  "iterations": 1000000,
+  "includesProcessStartup": true,
+  "expected": "1500005500000",
+  "compiler": "AssisScript 3.3.0-alpha.4 (nativo, Windows x64)",
+  "compilerSha256": "0ea9693021f720b296c5da461831c0e9f7f84ae91b9f9b76716d26ee4d656f2a",
+  "results": [
+    {
+      "variant": "manual",
+      "instances": 1,
+      "flags": [],
+      "source": "assis assis_assis():int{let c0:Caixa0=new Caixa0();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);return 0;}\nstruct Tag0{let marcador:int;}\nASSIS Caixa0{let valor:Tag0;assis ler(v:Tag0):Tag0{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        12.5809,
+        12.2911,
+        13.3201,
+        13.0961,
+        12.8923,
+        12.2765,
+        12.1606
+      ],
+      "samplesMs": [
+        323.6327,
+        323.0075,
+        317.8821,
+        311.6872,
+        324.577,
+        317.9894,
+        323.1533
+      ],
+      "binaryBytes": 99840,
+      "sha256": "6d8b720b7e88ce57bd7d5c54a58b98f5f6205ce02509bf1580e18af3d585c9e5",
+      "medianMs": 323.0075,
+      "compileMedianMs": 12.5809
+    },
+    {
+      "variant": "generico",
+      "instances": 1,
+      "flags": [],
+      "source": "assis assis_assis():int{let c0:Caixa<Tag0>=new Caixa<Tag0>();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);return 0;}\nstruct Tag0{let marcador:int;}\nASSIS Caixa<T>{let valor:T;assis ler(v:T):T{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        12.2592,
+        12.6815,
+        13.3339,
+        11.8875,
+        12.865,
+        13.7598,
+        12.3566
+      ],
+      "samplesMs": [
+        319.0971,
+        317.4486,
+        316.7395,
+        323.2874,
+        325.0523,
+        331.35,
+        320.1989
+      ],
+      "binaryBytes": 99840,
+      "sha256": "6d8b720b7e88ce57bd7d5c54a58b98f5f6205ce02509bf1580e18af3d585c9e5",
+      "medianMs": 320.1989,
+      "compileMedianMs": 12.6815
+    },
+    {
+      "variant": "manual-sem-opt",
+      "instances": 1,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let c0:Caixa0=new Caixa0();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);return 0;}\nstruct Tag0{let marcador:int;}\nASSIS Caixa0{let valor:Tag0;assis ler(v:Tag0):Tag0{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        14.0709,
+        12.8429,
+        13.2444,
+        13.4979,
+        12.7686,
+        12.4438,
+        12.6747
+      ],
+      "samplesMs": [
+        347.0257,
+        328.9931,
+        329.2884,
+        338.7492,
+        329.7262,
+        322.8477,
+        336.334
+      ],
+      "binaryBytes": 99840,
+      "sha256": "6b4f446c2772e8fcbde90b3df871021c412bbf6b7dc9b4e01fd403ff68a1cb9f",
+      "medianMs": 329.7262,
+      "compileMedianMs": 12.8429
+    },
+    {
+      "variant": "generico-sem-opt",
+      "instances": 1,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let c0:Caixa<Tag0>=new Caixa<Tag0>();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);return 0;}\nstruct Tag0{let marcador:int;}\nASSIS Caixa<T>{let valor:T;assis ler(v:T):T{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        11.7155,
+        12.8072,
+        12.6797,
+        11.7889,
+        12.4775,
+        11.1366,
+        12.5992
+      ],
+      "samplesMs": [
+        325.2163,
+        333.0521,
+        323.0897,
+        327.89,
+        328.4598,
+        324.1651,
+        332.9605
+      ],
+      "binaryBytes": 99840,
+      "sha256": "6b4f446c2772e8fcbde90b3df871021c412bbf6b7dc9b4e01fd403ff68a1cb9f",
+      "medianMs": 327.89,
+      "compileMedianMs": 12.4775
+    },
+    {
+      "variant": "manual",
+      "instances": 8,
+      "flags": [],
+      "source": "assis assis_assis():int{let c0:Caixa0=new Caixa0();let c1:Caixa1=new Caixa1();let c2:Caixa2=new Caixa2();let c3:Caixa3=new Caixa3();let c4:Caixa4=new Caixa4();let c5:Caixa5=new Caixa5();let c6:Caixa6=new Caixa6();let c7:Caixa7=new Caixa7();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);free(c1);free(c2);free(c3);free(c4);free(c5);free(c6);free(c7);return 0;}\nstruct Tag0{let marcador:int;}\nASSIS Caixa0{let valor:Tag0;assis ler(v:Tag0):Tag0{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag1{let marcador:int;}\nASSIS Caixa1{let valor:Tag1;assis ler(v:Tag1):Tag1{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag2{let marcador:int;}\nASSIS Caixa2{let valor:Tag2;assis ler(v:Tag2):Tag2{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag3{let marcador:int;}\nASSIS Caixa3{let valor:Tag3;assis ler(v:Tag3):Tag3{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag4{let marcador:int;}\nASSIS Caixa4{let valor:Tag4;assis ler(v:Tag4):Tag4{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag5{let marcador:int;}\nASSIS Caixa5{let valor:Tag5;assis ler(v:Tag5):Tag5{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag6{let marcador:int;}\nASSIS Caixa6{let valor:Tag6;assis ler(v:Tag6):Tag6{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag7{let marcador:int;}\nASSIS Caixa7{let valor:Tag7;assis ler(v:Tag7):Tag7{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        14.8042,
+        12.8186,
+        13.7072,
+        13.1055,
+        12.1838,
+        13.4388,
+        12.5047
+      ],
+      "samplesMs": [
+        325.383,
+        343.7393,
+        334.8392,
+        324.6163,
+        320.0099,
+        327.2984,
+        328.3777
+      ],
+      "binaryBytes": 102400,
+      "sha256": "9c4195d01f81f1b9af06f5c144c45a2cf278a6a581f04716852c0af7016f7872",
+      "medianMs": 327.2984,
+      "compileMedianMs": 13.1055
+    },
+    {
+      "variant": "generico",
+      "instances": 8,
+      "flags": [],
+      "source": "assis assis_assis():int{let c0:Caixa<Tag0>=new Caixa<Tag0>();let c1:Caixa<Tag1>=new Caixa<Tag1>();let c2:Caixa<Tag2>=new Caixa<Tag2>();let c3:Caixa<Tag3>=new Caixa<Tag3>();let c4:Caixa<Tag4>=new Caixa<Tag4>();let c5:Caixa<Tag5>=new Caixa<Tag5>();let c6:Caixa<Tag6>=new Caixa<Tag6>();let c7:Caixa<Tag7>=new Caixa<Tag7>();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);free(c1);free(c2);free(c3);free(c4);free(c5);free(c6);free(c7);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nASSIS Caixa<T>{let valor:T;assis ler(v:T):T{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        13.6258,
+        14.2537,
+        14.1813,
+        13.2158,
+        12.3239,
+        13.0515,
+        12.7164
+      ],
+      "samplesMs": [
+        327.6386,
+        365.0094,
+        319.9965,
+        329.8956,
+        328.6544,
+        321.843,
+        322.6997
+      ],
+      "binaryBytes": 102400,
+      "sha256": "62337e479bf3a127b602b21a8f8354982fedb925c0072c7e8b2b1f0437635016",
+      "medianMs": 327.6386,
+      "compileMedianMs": 13.2158
+    },
+    {
+      "variant": "manual-sem-opt",
+      "instances": 8,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let c0:Caixa0=new Caixa0();let c1:Caixa1=new Caixa1();let c2:Caixa2=new Caixa2();let c3:Caixa3=new Caixa3();let c4:Caixa4=new Caixa4();let c5:Caixa5=new Caixa5();let c6:Caixa6=new Caixa6();let c7:Caixa7=new Caixa7();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);free(c1);free(c2);free(c3);free(c4);free(c5);free(c6);free(c7);return 0;}\nstruct Tag0{let marcador:int;}\nASSIS Caixa0{let valor:Tag0;assis ler(v:Tag0):Tag0{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag1{let marcador:int;}\nASSIS Caixa1{let valor:Tag1;assis ler(v:Tag1):Tag1{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag2{let marcador:int;}\nASSIS Caixa2{let valor:Tag2;assis ler(v:Tag2):Tag2{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag3{let marcador:int;}\nASSIS Caixa3{let valor:Tag3;assis ler(v:Tag3):Tag3{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag4{let marcador:int;}\nASSIS Caixa4{let valor:Tag4;assis ler(v:Tag4):Tag4{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag5{let marcador:int;}\nASSIS Caixa5{let valor:Tag5;assis ler(v:Tag5):Tag5{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag6{let marcador:int;}\nASSIS Caixa6{let valor:Tag6;assis ler(v:Tag6):Tag6{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag7{let marcador:int;}\nASSIS Caixa7{let valor:Tag7;assis ler(v:Tag7):Tag7{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        13.3146,
+        12.6904,
+        12.1574,
+        12.5207,
+        12.4575,
+        12.9278,
+        13.4641
+      ],
+      "samplesMs": [
+        324.6907,
+        352.6576,
+        328.7471,
+        335.7559,
+        325.3836,
+        328.1421,
+        328.2329
+      ],
+      "binaryBytes": 102400,
+      "sha256": "469bdb730214e102dcee36c4b55dfa6bf44cc2f8026df89a6d6590ab7fb8c294",
+      "medianMs": 328.2329,
+      "compileMedianMs": 12.6904
+    },
+    {
+      "variant": "generico-sem-opt",
+      "instances": 8,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let c0:Caixa<Tag0>=new Caixa<Tag0>();let c1:Caixa<Tag1>=new Caixa<Tag1>();let c2:Caixa<Tag2>=new Caixa<Tag2>();let c3:Caixa<Tag3>=new Caixa<Tag3>();let c4:Caixa<Tag4>=new Caixa<Tag4>();let c5:Caixa<Tag5>=new Caixa<Tag5>();let c6:Caixa<Tag6>=new Caixa<Tag6>();let c7:Caixa<Tag7>=new Caixa<Tag7>();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);free(c1);free(c2);free(c3);free(c4);free(c5);free(c6);free(c7);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nASSIS Caixa<T>{let valor:T;assis ler(v:T):T{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        12.8853,
+        12.8147,
+        12.5234,
+        13.3924,
+        13.292,
+        14.3824,
+        12.3045
+      ],
+      "samplesMs": [
+        338.1202,
+        352.9196,
+        330.8732,
+        330.4453,
+        321.8052,
+        330.3916,
+        329.532
+      ],
+      "binaryBytes": 102400,
+      "sha256": "c9eba93bd5e6237bc94f8dfd978c00bef2085806af5207f3599d1238665806ed",
+      "medianMs": 330.4453,
+      "compileMedianMs": 12.8853
+    },
+    {
+      "variant": "manual",
+      "instances": 32,
+      "flags": [],
+      "source": "assis assis_assis():int{let c0:Caixa0=new Caixa0();let c1:Caixa1=new Caixa1();let c2:Caixa2=new Caixa2();let c3:Caixa3=new Caixa3();let c4:Caixa4=new Caixa4();let c5:Caixa5=new Caixa5();let c6:Caixa6=new Caixa6();let c7:Caixa7=new Caixa7();let c8:Caixa8=new Caixa8();let c9:Caixa9=new Caixa9();let c10:Caixa10=new Caixa10();let c11:Caixa11=new Caixa11();let c12:Caixa12=new Caixa12();let c13:Caixa13=new Caixa13();let c14:Caixa14=new Caixa14();let c15:Caixa15=new Caixa15();let c16:Caixa16=new Caixa16();let c17:Caixa17=new Caixa17();let c18:Caixa18=new Caixa18();let c19:Caixa19=new Caixa19();let c20:Caixa20=new Caixa20();let c21:Caixa21=new Caixa21();let c22:Caixa22=new Caixa22();let c23:Caixa23=new Caixa23();let c24:Caixa24=new Caixa24();let c25:Caixa25=new Caixa25();let c26:Caixa26=new Caixa26();let c27:Caixa27=new Caixa27();let c28:Caixa28=new Caixa28();let c29:Caixa29=new Caixa29();let c30:Caixa30=new Caixa30();let c31:Caixa31=new Caixa31();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);free(c1);free(c2);free(c3);free(c4);free(c5);free(c6);free(c7);free(c8);free(c9);free(c10);free(c11);free(c12);free(c13);free(c14);free(c15);free(c16);free(c17);free(c18);free(c19);free(c20);free(c21);free(c22);free(c23);free(c24);free(c25);free(c26);free(c27);free(c28);free(c29);free(c30);free(c31);return 0;}\nstruct Tag0{let marcador:int;}\nASSIS Caixa0{let valor:Tag0;assis ler(v:Tag0):Tag0{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag1{let marcador:int;}\nASSIS Caixa1{let valor:Tag1;assis ler(v:Tag1):Tag1{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag2{let marcador:int;}\nASSIS Caixa2{let valor:Tag2;assis ler(v:Tag2):Tag2{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag3{let marcador:int;}\nASSIS Caixa3{let valor:Tag3;assis ler(v:Tag3):Tag3{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag4{let marcador:int;}\nASSIS Caixa4{let valor:Tag4;assis ler(v:Tag4):Tag4{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag5{let marcador:int;}\nASSIS Caixa5{let valor:Tag5;assis ler(v:Tag5):Tag5{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag6{let marcador:int;}\nASSIS Caixa6{let valor:Tag6;assis ler(v:Tag6):Tag6{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag7{let marcador:int;}\nASSIS Caixa7{let valor:Tag7;assis ler(v:Tag7):Tag7{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag8{let marcador:int;}\nASSIS Caixa8{let valor:Tag8;assis ler(v:Tag8):Tag8{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag9{let marcador:int;}\nASSIS Caixa9{let valor:Tag9;assis ler(v:Tag9):Tag9{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag10{let marcador:int;}\nASSIS Caixa10{let valor:Tag10;assis ler(v:Tag10):Tag10{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag11{let marcador:int;}\nASSIS Caixa11{let valor:Tag11;assis ler(v:Tag11):Tag11{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag12{let marcador:int;}\nASSIS Caixa12{let valor:Tag12;assis ler(v:Tag12):Tag12{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag13{let marcador:int;}\nASSIS Caixa13{let valor:Tag13;assis ler(v:Tag13):Tag13{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag14{let marcador:int;}\nASSIS Caixa14{let valor:Tag14;assis ler(v:Tag14):Tag14{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag15{let marcador:int;}\nASSIS Caixa15{let valor:Tag15;assis ler(v:Tag15):Tag15{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag16{let marcador:int;}\nASSIS Caixa16{let valor:Tag16;assis ler(v:Tag16):Tag16{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag17{let marcador:int;}\nASSIS Caixa17{let valor:Tag17;assis ler(v:Tag17):Tag17{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag18{let marcador:int;}\nASSIS Caixa18{let valor:Tag18;assis ler(v:Tag18):Tag18{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag19{let marcador:int;}\nASSIS Caixa19{let valor:Tag19;assis ler(v:Tag19):Tag19{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag20{let marcador:int;}\nASSIS Caixa20{let valor:Tag20;assis ler(v:Tag20):Tag20{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag21{let marcador:int;}\nASSIS Caixa21{let valor:Tag21;assis ler(v:Tag21):Tag21{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag22{let marcador:int;}\nASSIS Caixa22{let valor:Tag22;assis ler(v:Tag22):Tag22{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag23{let marcador:int;}\nASSIS Caixa23{let valor:Tag23;assis ler(v:Tag23):Tag23{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag24{let marcador:int;}\nASSIS Caixa24{let valor:Tag24;assis ler(v:Tag24):Tag24{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag25{let marcador:int;}\nASSIS Caixa25{let valor:Tag25;assis ler(v:Tag25):Tag25{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag26{let marcador:int;}\nASSIS Caixa26{let valor:Tag26;assis ler(v:Tag26):Tag26{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag27{let marcador:int;}\nASSIS Caixa27{let valor:Tag27;assis ler(v:Tag27):Tag27{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag28{let marcador:int;}\nASSIS Caixa28{let valor:Tag28;assis ler(v:Tag28):Tag28{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag29{let marcador:int;}\nASSIS Caixa29{let valor:Tag29;assis ler(v:Tag29):Tag29{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag30{let marcador:int;}\nASSIS Caixa30{let valor:Tag30;assis ler(v:Tag30):Tag30{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag31{let marcador:int;}\nASSIS Caixa31{let valor:Tag31;assis ler(v:Tag31):Tag31{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        14.5031,
+        15.0166,
+        14.2328,
+        14.2881,
+        13.2037,
+        14.4961,
+        13.9431
+      ],
+      "samplesMs": [
+        353.4811,
+        374.8604,
+        337.5218,
+        347.3093,
+        341.6094,
+        345.3765,
+        354.8675
+      ],
+      "binaryBytes": 112128,
+      "sha256": "4304ffbc2d6f21af834fe26489380d33d02ff6ea84e1cb83ab170cfa9b055ab4",
+      "medianMs": 347.3093,
+      "compileMedianMs": 14.2881
+    },
+    {
+      "variant": "generico",
+      "instances": 32,
+      "flags": [],
+      "source": "assis assis_assis():int{let c0:Caixa<Tag0>=new Caixa<Tag0>();let c1:Caixa<Tag1>=new Caixa<Tag1>();let c2:Caixa<Tag2>=new Caixa<Tag2>();let c3:Caixa<Tag3>=new Caixa<Tag3>();let c4:Caixa<Tag4>=new Caixa<Tag4>();let c5:Caixa<Tag5>=new Caixa<Tag5>();let c6:Caixa<Tag6>=new Caixa<Tag6>();let c7:Caixa<Tag7>=new Caixa<Tag7>();let c8:Caixa<Tag8>=new Caixa<Tag8>();let c9:Caixa<Tag9>=new Caixa<Tag9>();let c10:Caixa<Tag10>=new Caixa<Tag10>();let c11:Caixa<Tag11>=new Caixa<Tag11>();let c12:Caixa<Tag12>=new Caixa<Tag12>();let c13:Caixa<Tag13>=new Caixa<Tag13>();let c14:Caixa<Tag14>=new Caixa<Tag14>();let c15:Caixa<Tag15>=new Caixa<Tag15>();let c16:Caixa<Tag16>=new Caixa<Tag16>();let c17:Caixa<Tag17>=new Caixa<Tag17>();let c18:Caixa<Tag18>=new Caixa<Tag18>();let c19:Caixa<Tag19>=new Caixa<Tag19>();let c20:Caixa<Tag20>=new Caixa<Tag20>();let c21:Caixa<Tag21>=new Caixa<Tag21>();let c22:Caixa<Tag22>=new Caixa<Tag22>();let c23:Caixa<Tag23>=new Caixa<Tag23>();let c24:Caixa<Tag24>=new Caixa<Tag24>();let c25:Caixa<Tag25>=new Caixa<Tag25>();let c26:Caixa<Tag26>=new Caixa<Tag26>();let c27:Caixa<Tag27>=new Caixa<Tag27>();let c28:Caixa<Tag28>=new Caixa<Tag28>();let c29:Caixa<Tag29>=new Caixa<Tag29>();let c30:Caixa<Tag30>=new Caixa<Tag30>();let c31:Caixa<Tag31>=new Caixa<Tag31>();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);free(c1);free(c2);free(c3);free(c4);free(c5);free(c6);free(c7);free(c8);free(c9);free(c10);free(c11);free(c12);free(c13);free(c14);free(c15);free(c16);free(c17);free(c18);free(c19);free(c20);free(c21);free(c22);free(c23);free(c24);free(c25);free(c26);free(c27);free(c28);free(c29);free(c30);free(c31);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nstruct Tag8{let marcador:int;}\nstruct Tag9{let marcador:int;}\nstruct Tag10{let marcador:int;}\nstruct Tag11{let marcador:int;}\nstruct Tag12{let marcador:int;}\nstruct Tag13{let marcador:int;}\nstruct Tag14{let marcador:int;}\nstruct Tag15{let marcador:int;}\nstruct Tag16{let marcador:int;}\nstruct Tag17{let marcador:int;}\nstruct Tag18{let marcador:int;}\nstruct Tag19{let marcador:int;}\nstruct Tag20{let marcador:int;}\nstruct Tag21{let marcador:int;}\nstruct Tag22{let marcador:int;}\nstruct Tag23{let marcador:int;}\nstruct Tag24{let marcador:int;}\nstruct Tag25{let marcador:int;}\nstruct Tag26{let marcador:int;}\nstruct Tag27{let marcador:int;}\nstruct Tag28{let marcador:int;}\nstruct Tag29{let marcador:int;}\nstruct Tag30{let marcador:int;}\nstruct Tag31{let marcador:int;}\nASSIS Caixa<T>{let valor:T;assis ler(v:T):T{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        13.7857,
+        14.7313,
+        15.2897,
+        15.0214,
+        14.474,
+        14.9362,
+        14.5158
+      ],
+      "samplesMs": [
+        340.1791,
+        415.44,
+        339.2031,
+        332.8028,
+        337.9573,
+        327.6609,
+        334.329
+      ],
+      "binaryBytes": 112128,
+      "sha256": "a26e17905aa7347b14c86b4a436dfaf96d83ea906c35061c3705789a3541b364",
+      "medianMs": 337.9573,
+      "compileMedianMs": 14.7313
+    },
+    {
+      "variant": "manual-sem-opt",
+      "instances": 32,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let c0:Caixa0=new Caixa0();let c1:Caixa1=new Caixa1();let c2:Caixa2=new Caixa2();let c3:Caixa3=new Caixa3();let c4:Caixa4=new Caixa4();let c5:Caixa5=new Caixa5();let c6:Caixa6=new Caixa6();let c7:Caixa7=new Caixa7();let c8:Caixa8=new Caixa8();let c9:Caixa9=new Caixa9();let c10:Caixa10=new Caixa10();let c11:Caixa11=new Caixa11();let c12:Caixa12=new Caixa12();let c13:Caixa13=new Caixa13();let c14:Caixa14=new Caixa14();let c15:Caixa15=new Caixa15();let c16:Caixa16=new Caixa16();let c17:Caixa17=new Caixa17();let c18:Caixa18=new Caixa18();let c19:Caixa19=new Caixa19();let c20:Caixa20=new Caixa20();let c21:Caixa21=new Caixa21();let c22:Caixa22=new Caixa22();let c23:Caixa23=new Caixa23();let c24:Caixa24=new Caixa24();let c25:Caixa25=new Caixa25();let c26:Caixa26=new Caixa26();let c27:Caixa27=new Caixa27();let c28:Caixa28=new Caixa28();let c29:Caixa29=new Caixa29();let c30:Caixa30=new Caixa30();let c31:Caixa31=new Caixa31();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);free(c1);free(c2);free(c3);free(c4);free(c5);free(c6);free(c7);free(c8);free(c9);free(c10);free(c11);free(c12);free(c13);free(c14);free(c15);free(c16);free(c17);free(c18);free(c19);free(c20);free(c21);free(c22);free(c23);free(c24);free(c25);free(c26);free(c27);free(c28);free(c29);free(c30);free(c31);return 0;}\nstruct Tag0{let marcador:int;}\nASSIS Caixa0{let valor:Tag0;assis ler(v:Tag0):Tag0{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag1{let marcador:int;}\nASSIS Caixa1{let valor:Tag1;assis ler(v:Tag1):Tag1{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag2{let marcador:int;}\nASSIS Caixa2{let valor:Tag2;assis ler(v:Tag2):Tag2{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag3{let marcador:int;}\nASSIS Caixa3{let valor:Tag3;assis ler(v:Tag3):Tag3{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag4{let marcador:int;}\nASSIS Caixa4{let valor:Tag4;assis ler(v:Tag4):Tag4{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag5{let marcador:int;}\nASSIS Caixa5{let valor:Tag5;assis ler(v:Tag5):Tag5{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag6{let marcador:int;}\nASSIS Caixa6{let valor:Tag6;assis ler(v:Tag6):Tag6{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag7{let marcador:int;}\nASSIS Caixa7{let valor:Tag7;assis ler(v:Tag7):Tag7{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag8{let marcador:int;}\nASSIS Caixa8{let valor:Tag8;assis ler(v:Tag8):Tag8{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag9{let marcador:int;}\nASSIS Caixa9{let valor:Tag9;assis ler(v:Tag9):Tag9{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag10{let marcador:int;}\nASSIS Caixa10{let valor:Tag10;assis ler(v:Tag10):Tag10{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag11{let marcador:int;}\nASSIS Caixa11{let valor:Tag11;assis ler(v:Tag11):Tag11{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag12{let marcador:int;}\nASSIS Caixa12{let valor:Tag12;assis ler(v:Tag12):Tag12{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag13{let marcador:int;}\nASSIS Caixa13{let valor:Tag13;assis ler(v:Tag13):Tag13{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag14{let marcador:int;}\nASSIS Caixa14{let valor:Tag14;assis ler(v:Tag14):Tag14{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag15{let marcador:int;}\nASSIS Caixa15{let valor:Tag15;assis ler(v:Tag15):Tag15{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag16{let marcador:int;}\nASSIS Caixa16{let valor:Tag16;assis ler(v:Tag16):Tag16{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag17{let marcador:int;}\nASSIS Caixa17{let valor:Tag17;assis ler(v:Tag17):Tag17{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag18{let marcador:int;}\nASSIS Caixa18{let valor:Tag18;assis ler(v:Tag18):Tag18{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag19{let marcador:int;}\nASSIS Caixa19{let valor:Tag19;assis ler(v:Tag19):Tag19{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag20{let marcador:int;}\nASSIS Caixa20{let valor:Tag20;assis ler(v:Tag20):Tag20{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag21{let marcador:int;}\nASSIS Caixa21{let valor:Tag21;assis ler(v:Tag21):Tag21{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag22{let marcador:int;}\nASSIS Caixa22{let valor:Tag22;assis ler(v:Tag22):Tag22{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag23{let marcador:int;}\nASSIS Caixa23{let valor:Tag23;assis ler(v:Tag23):Tag23{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag24{let marcador:int;}\nASSIS Caixa24{let valor:Tag24;assis ler(v:Tag24):Tag24{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag25{let marcador:int;}\nASSIS Caixa25{let valor:Tag25;assis ler(v:Tag25):Tag25{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag26{let marcador:int;}\nASSIS Caixa26{let valor:Tag26;assis ler(v:Tag26):Tag26{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag27{let marcador:int;}\nASSIS Caixa27{let valor:Tag27;assis ler(v:Tag27):Tag27{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag28{let marcador:int;}\nASSIS Caixa28{let valor:Tag28;assis ler(v:Tag28):Tag28{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag29{let marcador:int;}\nASSIS Caixa29{let valor:Tag29;assis ler(v:Tag29):Tag29{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag30{let marcador:int;}\nASSIS Caixa30{let valor:Tag30;assis ler(v:Tag30):Tag30{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag31{let marcador:int;}\nASSIS Caixa31{let valor:Tag31;assis ler(v:Tag31):Tag31{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        16.3772,
+        15.9282,
+        14.2117,
+        14.8637,
+        13.9089,
+        13.223,
+        13.8167
+      ],
+      "samplesMs": [
+        377.8565,
+        504.6878,
+        344.1178,
+        329.4874,
+        328.5649,
+        333.0197,
+        356.8395
+      ],
+      "binaryBytes": 111616,
+      "sha256": "aa5309e10caa75bcf952fe5261f1b723c9a5d552f65dfe72d6740b33a2b7d54c",
+      "medianMs": 344.1178,
+      "compileMedianMs": 14.2117
+    },
+    {
+      "variant": "generico-sem-opt",
+      "instances": 32,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let c0:Caixa<Tag0>=new Caixa<Tag0>();let c1:Caixa<Tag1>=new Caixa<Tag1>();let c2:Caixa<Tag2>=new Caixa<Tag2>();let c3:Caixa<Tag3>=new Caixa<Tag3>();let c4:Caixa<Tag4>=new Caixa<Tag4>();let c5:Caixa<Tag5>=new Caixa<Tag5>();let c6:Caixa<Tag6>=new Caixa<Tag6>();let c7:Caixa<Tag7>=new Caixa<Tag7>();let c8:Caixa<Tag8>=new Caixa<Tag8>();let c9:Caixa<Tag9>=new Caixa<Tag9>();let c10:Caixa<Tag10>=new Caixa<Tag10>();let c11:Caixa<Tag11>=new Caixa<Tag11>();let c12:Caixa<Tag12>=new Caixa<Tag12>();let c13:Caixa<Tag13>=new Caixa<Tag13>();let c14:Caixa<Tag14>=new Caixa<Tag14>();let c15:Caixa<Tag15>=new Caixa<Tag15>();let c16:Caixa<Tag16>=new Caixa<Tag16>();let c17:Caixa<Tag17>=new Caixa<Tag17>();let c18:Caixa<Tag18>=new Caixa<Tag18>();let c19:Caixa<Tag19>=new Caixa<Tag19>();let c20:Caixa<Tag20>=new Caixa<Tag20>();let c21:Caixa<Tag21>=new Caixa<Tag21>();let c22:Caixa<Tag22>=new Caixa<Tag22>();let c23:Caixa<Tag23>=new Caixa<Tag23>();let c24:Caixa<Tag24>=new Caixa<Tag24>();let c25:Caixa<Tag25>=new Caixa<Tag25>();let c26:Caixa<Tag26>=new Caixa<Tag26>();let c27:Caixa<Tag27>=new Caixa<Tag27>();let c28:Caixa<Tag28>=new Caixa<Tag28>();let c29:Caixa<Tag29>=new Caixa<Tag29>();let c30:Caixa<Tag30>=new Caixa<Tag30>();let c31:Caixa<Tag31>=new Caixa<Tag31>();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);free(c1);free(c2);free(c3);free(c4);free(c5);free(c6);free(c7);free(c8);free(c9);free(c10);free(c11);free(c12);free(c13);free(c14);free(c15);free(c16);free(c17);free(c18);free(c19);free(c20);free(c21);free(c22);free(c23);free(c24);free(c25);free(c26);free(c27);free(c28);free(c29);free(c30);free(c31);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nstruct Tag8{let marcador:int;}\nstruct Tag9{let marcador:int;}\nstruct Tag10{let marcador:int;}\nstruct Tag11{let marcador:int;}\nstruct Tag12{let marcador:int;}\nstruct Tag13{let marcador:int;}\nstruct Tag14{let marcador:int;}\nstruct Tag15{let marcador:int;}\nstruct Tag16{let marcador:int;}\nstruct Tag17{let marcador:int;}\nstruct Tag18{let marcador:int;}\nstruct Tag19{let marcador:int;}\nstruct Tag20{let marcador:int;}\nstruct Tag21{let marcador:int;}\nstruct Tag22{let marcador:int;}\nstruct Tag23{let marcador:int;}\nstruct Tag24{let marcador:int;}\nstruct Tag25{let marcador:int;}\nstruct Tag26{let marcador:int;}\nstruct Tag27{let marcador:int;}\nstruct Tag28{let marcador:int;}\nstruct Tag29{let marcador:int;}\nstruct Tag30{let marcador:int;}\nstruct Tag31{let marcador:int;}\nASSIS Caixa<T>{let valor:T;assis ler(v:T):T{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        14.1658,
+        23.9589,
+        15.498,
+        14.2967,
+        15.2902,
+        15.404,
+        14.8816
+      ],
+      "samplesMs": [
+        376.6115,
+        432.0255,
+        330.5069,
+        328.6701,
+        335.5826,
+        337.7823,
+        334.0844
+      ],
+      "binaryBytes": 111616,
+      "sha256": "47b22409c2021af35670ad0e4ad546c8bfe0c1732229a500727ac09d4d4f8e99",
+      "medianMs": 335.5826,
+      "compileMedianMs": 15.2902
+    },
+    {
+      "variant": "manual",
+      "instances": 64,
+      "flags": [],
+      "source": "assis assis_assis():int{let c0:Caixa0=new Caixa0();let c1:Caixa1=new Caixa1();let c2:Caixa2=new Caixa2();let c3:Caixa3=new Caixa3();let c4:Caixa4=new Caixa4();let c5:Caixa5=new Caixa5();let c6:Caixa6=new Caixa6();let c7:Caixa7=new Caixa7();let c8:Caixa8=new Caixa8();let c9:Caixa9=new Caixa9();let c10:Caixa10=new Caixa10();let c11:Caixa11=new Caixa11();let c12:Caixa12=new Caixa12();let c13:Caixa13=new Caixa13();let c14:Caixa14=new Caixa14();let c15:Caixa15=new Caixa15();let c16:Caixa16=new Caixa16();let c17:Caixa17=new Caixa17();let c18:Caixa18=new Caixa18();let c19:Caixa19=new Caixa19();let c20:Caixa20=new Caixa20();let c21:Caixa21=new Caixa21();let c22:Caixa22=new Caixa22();let c23:Caixa23=new Caixa23();let c24:Caixa24=new Caixa24();let c25:Caixa25=new Caixa25();let c26:Caixa26=new Caixa26();let c27:Caixa27=new Caixa27();let c28:Caixa28=new Caixa28();let c29:Caixa29=new Caixa29();let c30:Caixa30=new Caixa30();let c31:Caixa31=new Caixa31();let c32:Caixa32=new Caixa32();let c33:Caixa33=new Caixa33();let c34:Caixa34=new Caixa34();let c35:Caixa35=new Caixa35();let c36:Caixa36=new Caixa36();let c37:Caixa37=new Caixa37();let c38:Caixa38=new Caixa38();let c39:Caixa39=new Caixa39();let c40:Caixa40=new Caixa40();let c41:Caixa41=new Caixa41();let c42:Caixa42=new Caixa42();let c43:Caixa43=new Caixa43();let c44:Caixa44=new Caixa44();let c45:Caixa45=new Caixa45();let c46:Caixa46=new Caixa46();let c47:Caixa47=new Caixa47();let c48:Caixa48=new Caixa48();let c49:Caixa49=new Caixa49();let c50:Caixa50=new Caixa50();let c51:Caixa51=new Caixa51();let c52:Caixa52=new Caixa52();let c53:Caixa53=new Caixa53();let c54:Caixa54=new Caixa54();let c55:Caixa55=new Caixa55();let c56:Caixa56=new Caixa56();let c57:Caixa57=new Caixa57();let c58:Caixa58=new Caixa58();let c59:Caixa59=new Caixa59();let c60:Caixa60=new Caixa60();let c61:Caixa61=new Caixa61();let c62:Caixa62=new Caixa62();let c63:Caixa63=new Caixa63();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);free(c1);free(c2);free(c3);free(c4);free(c5);free(c6);free(c7);free(c8);free(c9);free(c10);free(c11);free(c12);free(c13);free(c14);free(c15);free(c16);free(c17);free(c18);free(c19);free(c20);free(c21);free(c22);free(c23);free(c24);free(c25);free(c26);free(c27);free(c28);free(c29);free(c30);free(c31);free(c32);free(c33);free(c34);free(c35);free(c36);free(c37);free(c38);free(c39);free(c40);free(c41);free(c42);free(c43);free(c44);free(c45);free(c46);free(c47);free(c48);free(c49);free(c50);free(c51);free(c52);free(c53);free(c54);free(c55);free(c56);free(c57);free(c58);free(c59);free(c60);free(c61);free(c62);free(c63);return 0;}\nstruct Tag0{let marcador:int;}\nASSIS Caixa0{let valor:Tag0;assis ler(v:Tag0):Tag0{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag1{let marcador:int;}\nASSIS Caixa1{let valor:Tag1;assis ler(v:Tag1):Tag1{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag2{let marcador:int;}\nASSIS Caixa2{let valor:Tag2;assis ler(v:Tag2):Tag2{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag3{let marcador:int;}\nASSIS Caixa3{let valor:Tag3;assis ler(v:Tag3):Tag3{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag4{let marcador:int;}\nASSIS Caixa4{let valor:Tag4;assis ler(v:Tag4):Tag4{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag5{let marcador:int;}\nASSIS Caixa5{let valor:Tag5;assis ler(v:Tag5):Tag5{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag6{let marcador:int;}\nASSIS Caixa6{let valor:Tag6;assis ler(v:Tag6):Tag6{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag7{let marcador:int;}\nASSIS Caixa7{let valor:Tag7;assis ler(v:Tag7):Tag7{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag8{let marcador:int;}\nASSIS Caixa8{let valor:Tag8;assis ler(v:Tag8):Tag8{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag9{let marcador:int;}\nASSIS Caixa9{let valor:Tag9;assis ler(v:Tag9):Tag9{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag10{let marcador:int;}\nASSIS Caixa10{let valor:Tag10;assis ler(v:Tag10):Tag10{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag11{let marcador:int;}\nASSIS Caixa11{let valor:Tag11;assis ler(v:Tag11):Tag11{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag12{let marcador:int;}\nASSIS Caixa12{let valor:Tag12;assis ler(v:Tag12):Tag12{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag13{let marcador:int;}\nASSIS Caixa13{let valor:Tag13;assis ler(v:Tag13):Tag13{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag14{let marcador:int;}\nASSIS Caixa14{let valor:Tag14;assis ler(v:Tag14):Tag14{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag15{let marcador:int;}\nASSIS Caixa15{let valor:Tag15;assis ler(v:Tag15):Tag15{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag16{let marcador:int;}\nASSIS Caixa16{let valor:Tag16;assis ler(v:Tag16):Tag16{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag17{let marcador:int;}\nASSIS Caixa17{let valor:Tag17;assis ler(v:Tag17):Tag17{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag18{let marcador:int;}\nASSIS Caixa18{let valor:Tag18;assis ler(v:Tag18):Tag18{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag19{let marcador:int;}\nASSIS Caixa19{let valor:Tag19;assis ler(v:Tag19):Tag19{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag20{let marcador:int;}\nASSIS Caixa20{let valor:Tag20;assis ler(v:Tag20):Tag20{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag21{let marcador:int;}\nASSIS Caixa21{let valor:Tag21;assis ler(v:Tag21):Tag21{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag22{let marcador:int;}\nASSIS Caixa22{let valor:Tag22;assis ler(v:Tag22):Tag22{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag23{let marcador:int;}\nASSIS Caixa23{let valor:Tag23;assis ler(v:Tag23):Tag23{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag24{let marcador:int;}\nASSIS Caixa24{let valor:Tag24;assis ler(v:Tag24):Tag24{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag25{let marcador:int;}\nASSIS Caixa25{let valor:Tag25;assis ler(v:Tag25):Tag25{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag26{let marcador:int;}\nASSIS Caixa26{let valor:Tag26;assis ler(v:Tag26):Tag26{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag27{let marcador:int;}\nASSIS Caixa27{let valor:Tag27;assis ler(v:Tag27):Tag27{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag28{let marcador:int;}\nASSIS Caixa28{let valor:Tag28;assis ler(v:Tag28):Tag28{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag29{let marcador:int;}\nASSIS Caixa29{let valor:Tag29;assis ler(v:Tag29):Tag29{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag30{let marcador:int;}\nASSIS Caixa30{let valor:Tag30;assis ler(v:Tag30):Tag30{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag31{let marcador:int;}\nASSIS Caixa31{let valor:Tag31;assis ler(v:Tag31):Tag31{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag32{let marcador:int;}\nASSIS Caixa32{let valor:Tag32;assis ler(v:Tag32):Tag32{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag33{let marcador:int;}\nASSIS Caixa33{let valor:Tag33;assis ler(v:Tag33):Tag33{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag34{let marcador:int;}\nASSIS Caixa34{let valor:Tag34;assis ler(v:Tag34):Tag34{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag35{let marcador:int;}\nASSIS Caixa35{let valor:Tag35;assis ler(v:Tag35):Tag35{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag36{let marcador:int;}\nASSIS Caixa36{let valor:Tag36;assis ler(v:Tag36):Tag36{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag37{let marcador:int;}\nASSIS Caixa37{let valor:Tag37;assis ler(v:Tag37):Tag37{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag38{let marcador:int;}\nASSIS Caixa38{let valor:Tag38;assis ler(v:Tag38):Tag38{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag39{let marcador:int;}\nASSIS Caixa39{let valor:Tag39;assis ler(v:Tag39):Tag39{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag40{let marcador:int;}\nASSIS Caixa40{let valor:Tag40;assis ler(v:Tag40):Tag40{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag41{let marcador:int;}\nASSIS Caixa41{let valor:Tag41;assis ler(v:Tag41):Tag41{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag42{let marcador:int;}\nASSIS Caixa42{let valor:Tag42;assis ler(v:Tag42):Tag42{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag43{let marcador:int;}\nASSIS Caixa43{let valor:Tag43;assis ler(v:Tag43):Tag43{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag44{let marcador:int;}\nASSIS Caixa44{let valor:Tag44;assis ler(v:Tag44):Tag44{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag45{let marcador:int;}\nASSIS Caixa45{let valor:Tag45;assis ler(v:Tag45):Tag45{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag46{let marcador:int;}\nASSIS Caixa46{let valor:Tag46;assis ler(v:Tag46):Tag46{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag47{let marcador:int;}\nASSIS Caixa47{let valor:Tag47;assis ler(v:Tag47):Tag47{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag48{let marcador:int;}\nASSIS Caixa48{let valor:Tag48;assis ler(v:Tag48):Tag48{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag49{let marcador:int;}\nASSIS Caixa49{let valor:Tag49;assis ler(v:Tag49):Tag49{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag50{let marcador:int;}\nASSIS Caixa50{let valor:Tag50;assis ler(v:Tag50):Tag50{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag51{let marcador:int;}\nASSIS Caixa51{let valor:Tag51;assis ler(v:Tag51):Tag51{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag52{let marcador:int;}\nASSIS Caixa52{let valor:Tag52;assis ler(v:Tag52):Tag52{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag53{let marcador:int;}\nASSIS Caixa53{let valor:Tag53;assis ler(v:Tag53):Tag53{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag54{let marcador:int;}\nASSIS Caixa54{let valor:Tag54;assis ler(v:Tag54):Tag54{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag55{let marcador:int;}\nASSIS Caixa55{let valor:Tag55;assis ler(v:Tag55):Tag55{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag56{let marcador:int;}\nASSIS Caixa56{let valor:Tag56;assis ler(v:Tag56):Tag56{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag57{let marcador:int;}\nASSIS Caixa57{let valor:Tag57;assis ler(v:Tag57):Tag57{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag58{let marcador:int;}\nASSIS Caixa58{let valor:Tag58;assis ler(v:Tag58):Tag58{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag59{let marcador:int;}\nASSIS Caixa59{let valor:Tag59;assis ler(v:Tag59):Tag59{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag60{let marcador:int;}\nASSIS Caixa60{let valor:Tag60;assis ler(v:Tag60):Tag60{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag61{let marcador:int;}\nASSIS Caixa61{let valor:Tag61;assis ler(v:Tag61):Tag61{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag62{let marcador:int;}\nASSIS Caixa62{let valor:Tag62;assis ler(v:Tag62):Tag62{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag63{let marcador:int;}\nASSIS Caixa63{let valor:Tag63;assis ler(v:Tag63):Tag63{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        29.712,
+        38.286,
+        29.9454,
+        30.4306,
+        29.0914,
+        28.7474,
+        31.9232
+      ],
+      "samplesMs": [
+        329.9284,
+        397.4812,
+        334.2606,
+        337.7675,
+        337.8574,
+        335.946,
+        343.624
+      ],
+      "binaryBytes": 124928,
+      "sha256": "78057b5f34219faea438832bd0babfa45c65e170816e4379edcd378b5ed640b8",
+      "medianMs": 337.7675,
+      "compileMedianMs": 29.9454
+    },
+    {
+      "variant": "generico",
+      "instances": 64,
+      "flags": [],
+      "source": "assis assis_assis():int{let c0:Caixa<Tag0>=new Caixa<Tag0>();let c1:Caixa<Tag1>=new Caixa<Tag1>();let c2:Caixa<Tag2>=new Caixa<Tag2>();let c3:Caixa<Tag3>=new Caixa<Tag3>();let c4:Caixa<Tag4>=new Caixa<Tag4>();let c5:Caixa<Tag5>=new Caixa<Tag5>();let c6:Caixa<Tag6>=new Caixa<Tag6>();let c7:Caixa<Tag7>=new Caixa<Tag7>();let c8:Caixa<Tag8>=new Caixa<Tag8>();let c9:Caixa<Tag9>=new Caixa<Tag9>();let c10:Caixa<Tag10>=new Caixa<Tag10>();let c11:Caixa<Tag11>=new Caixa<Tag11>();let c12:Caixa<Tag12>=new Caixa<Tag12>();let c13:Caixa<Tag13>=new Caixa<Tag13>();let c14:Caixa<Tag14>=new Caixa<Tag14>();let c15:Caixa<Tag15>=new Caixa<Tag15>();let c16:Caixa<Tag16>=new Caixa<Tag16>();let c17:Caixa<Tag17>=new Caixa<Tag17>();let c18:Caixa<Tag18>=new Caixa<Tag18>();let c19:Caixa<Tag19>=new Caixa<Tag19>();let c20:Caixa<Tag20>=new Caixa<Tag20>();let c21:Caixa<Tag21>=new Caixa<Tag21>();let c22:Caixa<Tag22>=new Caixa<Tag22>();let c23:Caixa<Tag23>=new Caixa<Tag23>();let c24:Caixa<Tag24>=new Caixa<Tag24>();let c25:Caixa<Tag25>=new Caixa<Tag25>();let c26:Caixa<Tag26>=new Caixa<Tag26>();let c27:Caixa<Tag27>=new Caixa<Tag27>();let c28:Caixa<Tag28>=new Caixa<Tag28>();let c29:Caixa<Tag29>=new Caixa<Tag29>();let c30:Caixa<Tag30>=new Caixa<Tag30>();let c31:Caixa<Tag31>=new Caixa<Tag31>();let c32:Caixa<Tag32>=new Caixa<Tag32>();let c33:Caixa<Tag33>=new Caixa<Tag33>();let c34:Caixa<Tag34>=new Caixa<Tag34>();let c35:Caixa<Tag35>=new Caixa<Tag35>();let c36:Caixa<Tag36>=new Caixa<Tag36>();let c37:Caixa<Tag37>=new Caixa<Tag37>();let c38:Caixa<Tag38>=new Caixa<Tag38>();let c39:Caixa<Tag39>=new Caixa<Tag39>();let c40:Caixa<Tag40>=new Caixa<Tag40>();let c41:Caixa<Tag41>=new Caixa<Tag41>();let c42:Caixa<Tag42>=new Caixa<Tag42>();let c43:Caixa<Tag43>=new Caixa<Tag43>();let c44:Caixa<Tag44>=new Caixa<Tag44>();let c45:Caixa<Tag45>=new Caixa<Tag45>();let c46:Caixa<Tag46>=new Caixa<Tag46>();let c47:Caixa<Tag47>=new Caixa<Tag47>();let c48:Caixa<Tag48>=new Caixa<Tag48>();let c49:Caixa<Tag49>=new Caixa<Tag49>();let c50:Caixa<Tag50>=new Caixa<Tag50>();let c51:Caixa<Tag51>=new Caixa<Tag51>();let c52:Caixa<Tag52>=new Caixa<Tag52>();let c53:Caixa<Tag53>=new Caixa<Tag53>();let c54:Caixa<Tag54>=new Caixa<Tag54>();let c55:Caixa<Tag55>=new Caixa<Tag55>();let c56:Caixa<Tag56>=new Caixa<Tag56>();let c57:Caixa<Tag57>=new Caixa<Tag57>();let c58:Caixa<Tag58>=new Caixa<Tag58>();let c59:Caixa<Tag59>=new Caixa<Tag59>();let c60:Caixa<Tag60>=new Caixa<Tag60>();let c61:Caixa<Tag61>=new Caixa<Tag61>();let c62:Caixa<Tag62>=new Caixa<Tag62>();let c63:Caixa<Tag63>=new Caixa<Tag63>();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);free(c1);free(c2);free(c3);free(c4);free(c5);free(c6);free(c7);free(c8);free(c9);free(c10);free(c11);free(c12);free(c13);free(c14);free(c15);free(c16);free(c17);free(c18);free(c19);free(c20);free(c21);free(c22);free(c23);free(c24);free(c25);free(c26);free(c27);free(c28);free(c29);free(c30);free(c31);free(c32);free(c33);free(c34);free(c35);free(c36);free(c37);free(c38);free(c39);free(c40);free(c41);free(c42);free(c43);free(c44);free(c45);free(c46);free(c47);free(c48);free(c49);free(c50);free(c51);free(c52);free(c53);free(c54);free(c55);free(c56);free(c57);free(c58);free(c59);free(c60);free(c61);free(c62);free(c63);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nstruct Tag8{let marcador:int;}\nstruct Tag9{let marcador:int;}\nstruct Tag10{let marcador:int;}\nstruct Tag11{let marcador:int;}\nstruct Tag12{let marcador:int;}\nstruct Tag13{let marcador:int;}\nstruct Tag14{let marcador:int;}\nstruct Tag15{let marcador:int;}\nstruct Tag16{let marcador:int;}\nstruct Tag17{let marcador:int;}\nstruct Tag18{let marcador:int;}\nstruct Tag19{let marcador:int;}\nstruct Tag20{let marcador:int;}\nstruct Tag21{let marcador:int;}\nstruct Tag22{let marcador:int;}\nstruct Tag23{let marcador:int;}\nstruct Tag24{let marcador:int;}\nstruct Tag25{let marcador:int;}\nstruct Tag26{let marcador:int;}\nstruct Tag27{let marcador:int;}\nstruct Tag28{let marcador:int;}\nstruct Tag29{let marcador:int;}\nstruct Tag30{let marcador:int;}\nstruct Tag31{let marcador:int;}\nstruct Tag32{let marcador:int;}\nstruct Tag33{let marcador:int;}\nstruct Tag34{let marcador:int;}\nstruct Tag35{let marcador:int;}\nstruct Tag36{let marcador:int;}\nstruct Tag37{let marcador:int;}\nstruct Tag38{let marcador:int;}\nstruct Tag39{let marcador:int;}\nstruct Tag40{let marcador:int;}\nstruct Tag41{let marcador:int;}\nstruct Tag42{let marcador:int;}\nstruct Tag43{let marcador:int;}\nstruct Tag44{let marcador:int;}\nstruct Tag45{let marcador:int;}\nstruct Tag46{let marcador:int;}\nstruct Tag47{let marcador:int;}\nstruct Tag48{let marcador:int;}\nstruct Tag49{let marcador:int;}\nstruct Tag50{let marcador:int;}\nstruct Tag51{let marcador:int;}\nstruct Tag52{let marcador:int;}\nstruct Tag53{let marcador:int;}\nstruct Tag54{let marcador:int;}\nstruct Tag55{let marcador:int;}\nstruct Tag56{let marcador:int;}\nstruct Tag57{let marcador:int;}\nstruct Tag58{let marcador:int;}\nstruct Tag59{let marcador:int;}\nstruct Tag60{let marcador:int;}\nstruct Tag61{let marcador:int;}\nstruct Tag62{let marcador:int;}\nstruct Tag63{let marcador:int;}\nASSIS Caixa<T>{let valor:T;assis ler(v:T):T{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        20.0609,
+        39.7869,
+        20.1439,
+        20.0318,
+        20.6234,
+        20.4013,
+        20.7702
+      ],
+      "samplesMs": [
+        341.8073,
+        361.7697,
+        333.2515,
+        327.1295,
+        342.8732,
+        336.9401,
+        332.8012
+      ],
+      "binaryBytes": 124928,
+      "sha256": "7e504cc8a9ad949a985138a159c9912ce2eedde4622259fbb4104d9b1f09efe0",
+      "medianMs": 336.9401,
+      "compileMedianMs": 20.4013
+    },
+    {
+      "variant": "manual-sem-opt",
+      "instances": 64,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let c0:Caixa0=new Caixa0();let c1:Caixa1=new Caixa1();let c2:Caixa2=new Caixa2();let c3:Caixa3=new Caixa3();let c4:Caixa4=new Caixa4();let c5:Caixa5=new Caixa5();let c6:Caixa6=new Caixa6();let c7:Caixa7=new Caixa7();let c8:Caixa8=new Caixa8();let c9:Caixa9=new Caixa9();let c10:Caixa10=new Caixa10();let c11:Caixa11=new Caixa11();let c12:Caixa12=new Caixa12();let c13:Caixa13=new Caixa13();let c14:Caixa14=new Caixa14();let c15:Caixa15=new Caixa15();let c16:Caixa16=new Caixa16();let c17:Caixa17=new Caixa17();let c18:Caixa18=new Caixa18();let c19:Caixa19=new Caixa19();let c20:Caixa20=new Caixa20();let c21:Caixa21=new Caixa21();let c22:Caixa22=new Caixa22();let c23:Caixa23=new Caixa23();let c24:Caixa24=new Caixa24();let c25:Caixa25=new Caixa25();let c26:Caixa26=new Caixa26();let c27:Caixa27=new Caixa27();let c28:Caixa28=new Caixa28();let c29:Caixa29=new Caixa29();let c30:Caixa30=new Caixa30();let c31:Caixa31=new Caixa31();let c32:Caixa32=new Caixa32();let c33:Caixa33=new Caixa33();let c34:Caixa34=new Caixa34();let c35:Caixa35=new Caixa35();let c36:Caixa36=new Caixa36();let c37:Caixa37=new Caixa37();let c38:Caixa38=new Caixa38();let c39:Caixa39=new Caixa39();let c40:Caixa40=new Caixa40();let c41:Caixa41=new Caixa41();let c42:Caixa42=new Caixa42();let c43:Caixa43=new Caixa43();let c44:Caixa44=new Caixa44();let c45:Caixa45=new Caixa45();let c46:Caixa46=new Caixa46();let c47:Caixa47=new Caixa47();let c48:Caixa48=new Caixa48();let c49:Caixa49=new Caixa49();let c50:Caixa50=new Caixa50();let c51:Caixa51=new Caixa51();let c52:Caixa52=new Caixa52();let c53:Caixa53=new Caixa53();let c54:Caixa54=new Caixa54();let c55:Caixa55=new Caixa55();let c56:Caixa56=new Caixa56();let c57:Caixa57=new Caixa57();let c58:Caixa58=new Caixa58();let c59:Caixa59=new Caixa59();let c60:Caixa60=new Caixa60();let c61:Caixa61=new Caixa61();let c62:Caixa62=new Caixa62();let c63:Caixa63=new Caixa63();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);free(c1);free(c2);free(c3);free(c4);free(c5);free(c6);free(c7);free(c8);free(c9);free(c10);free(c11);free(c12);free(c13);free(c14);free(c15);free(c16);free(c17);free(c18);free(c19);free(c20);free(c21);free(c22);free(c23);free(c24);free(c25);free(c26);free(c27);free(c28);free(c29);free(c30);free(c31);free(c32);free(c33);free(c34);free(c35);free(c36);free(c37);free(c38);free(c39);free(c40);free(c41);free(c42);free(c43);free(c44);free(c45);free(c46);free(c47);free(c48);free(c49);free(c50);free(c51);free(c52);free(c53);free(c54);free(c55);free(c56);free(c57);free(c58);free(c59);free(c60);free(c61);free(c62);free(c63);return 0;}\nstruct Tag0{let marcador:int;}\nASSIS Caixa0{let valor:Tag0;assis ler(v:Tag0):Tag0{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag1{let marcador:int;}\nASSIS Caixa1{let valor:Tag1;assis ler(v:Tag1):Tag1{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag2{let marcador:int;}\nASSIS Caixa2{let valor:Tag2;assis ler(v:Tag2):Tag2{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag3{let marcador:int;}\nASSIS Caixa3{let valor:Tag3;assis ler(v:Tag3):Tag3{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag4{let marcador:int;}\nASSIS Caixa4{let valor:Tag4;assis ler(v:Tag4):Tag4{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag5{let marcador:int;}\nASSIS Caixa5{let valor:Tag5;assis ler(v:Tag5):Tag5{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag6{let marcador:int;}\nASSIS Caixa6{let valor:Tag6;assis ler(v:Tag6):Tag6{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag7{let marcador:int;}\nASSIS Caixa7{let valor:Tag7;assis ler(v:Tag7):Tag7{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag8{let marcador:int;}\nASSIS Caixa8{let valor:Tag8;assis ler(v:Tag8):Tag8{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag9{let marcador:int;}\nASSIS Caixa9{let valor:Tag9;assis ler(v:Tag9):Tag9{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag10{let marcador:int;}\nASSIS Caixa10{let valor:Tag10;assis ler(v:Tag10):Tag10{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag11{let marcador:int;}\nASSIS Caixa11{let valor:Tag11;assis ler(v:Tag11):Tag11{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag12{let marcador:int;}\nASSIS Caixa12{let valor:Tag12;assis ler(v:Tag12):Tag12{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag13{let marcador:int;}\nASSIS Caixa13{let valor:Tag13;assis ler(v:Tag13):Tag13{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag14{let marcador:int;}\nASSIS Caixa14{let valor:Tag14;assis ler(v:Tag14):Tag14{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag15{let marcador:int;}\nASSIS Caixa15{let valor:Tag15;assis ler(v:Tag15):Tag15{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag16{let marcador:int;}\nASSIS Caixa16{let valor:Tag16;assis ler(v:Tag16):Tag16{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag17{let marcador:int;}\nASSIS Caixa17{let valor:Tag17;assis ler(v:Tag17):Tag17{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag18{let marcador:int;}\nASSIS Caixa18{let valor:Tag18;assis ler(v:Tag18):Tag18{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag19{let marcador:int;}\nASSIS Caixa19{let valor:Tag19;assis ler(v:Tag19):Tag19{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag20{let marcador:int;}\nASSIS Caixa20{let valor:Tag20;assis ler(v:Tag20):Tag20{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag21{let marcador:int;}\nASSIS Caixa21{let valor:Tag21;assis ler(v:Tag21):Tag21{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag22{let marcador:int;}\nASSIS Caixa22{let valor:Tag22;assis ler(v:Tag22):Tag22{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag23{let marcador:int;}\nASSIS Caixa23{let valor:Tag23;assis ler(v:Tag23):Tag23{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag24{let marcador:int;}\nASSIS Caixa24{let valor:Tag24;assis ler(v:Tag24):Tag24{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag25{let marcador:int;}\nASSIS Caixa25{let valor:Tag25;assis ler(v:Tag25):Tag25{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag26{let marcador:int;}\nASSIS Caixa26{let valor:Tag26;assis ler(v:Tag26):Tag26{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag27{let marcador:int;}\nASSIS Caixa27{let valor:Tag27;assis ler(v:Tag27):Tag27{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag28{let marcador:int;}\nASSIS Caixa28{let valor:Tag28;assis ler(v:Tag28):Tag28{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag29{let marcador:int;}\nASSIS Caixa29{let valor:Tag29;assis ler(v:Tag29):Tag29{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag30{let marcador:int;}\nASSIS Caixa30{let valor:Tag30;assis ler(v:Tag30):Tag30{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag31{let marcador:int;}\nASSIS Caixa31{let valor:Tag31;assis ler(v:Tag31):Tag31{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag32{let marcador:int;}\nASSIS Caixa32{let valor:Tag32;assis ler(v:Tag32):Tag32{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag33{let marcador:int;}\nASSIS Caixa33{let valor:Tag33;assis ler(v:Tag33):Tag33{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag34{let marcador:int;}\nASSIS Caixa34{let valor:Tag34;assis ler(v:Tag34):Tag34{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag35{let marcador:int;}\nASSIS Caixa35{let valor:Tag35;assis ler(v:Tag35):Tag35{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag36{let marcador:int;}\nASSIS Caixa36{let valor:Tag36;assis ler(v:Tag36):Tag36{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag37{let marcador:int;}\nASSIS Caixa37{let valor:Tag37;assis ler(v:Tag37):Tag37{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag38{let marcador:int;}\nASSIS Caixa38{let valor:Tag38;assis ler(v:Tag38):Tag38{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag39{let marcador:int;}\nASSIS Caixa39{let valor:Tag39;assis ler(v:Tag39):Tag39{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag40{let marcador:int;}\nASSIS Caixa40{let valor:Tag40;assis ler(v:Tag40):Tag40{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag41{let marcador:int;}\nASSIS Caixa41{let valor:Tag41;assis ler(v:Tag41):Tag41{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag42{let marcador:int;}\nASSIS Caixa42{let valor:Tag42;assis ler(v:Tag42):Tag42{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag43{let marcador:int;}\nASSIS Caixa43{let valor:Tag43;assis ler(v:Tag43):Tag43{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag44{let marcador:int;}\nASSIS Caixa44{let valor:Tag44;assis ler(v:Tag44):Tag44{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag45{let marcador:int;}\nASSIS Caixa45{let valor:Tag45;assis ler(v:Tag45):Tag45{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag46{let marcador:int;}\nASSIS Caixa46{let valor:Tag46;assis ler(v:Tag46):Tag46{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag47{let marcador:int;}\nASSIS Caixa47{let valor:Tag47;assis ler(v:Tag47):Tag47{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag48{let marcador:int;}\nASSIS Caixa48{let valor:Tag48;assis ler(v:Tag48):Tag48{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag49{let marcador:int;}\nASSIS Caixa49{let valor:Tag49;assis ler(v:Tag49):Tag49{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag50{let marcador:int;}\nASSIS Caixa50{let valor:Tag50;assis ler(v:Tag50):Tag50{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag51{let marcador:int;}\nASSIS Caixa51{let valor:Tag51;assis ler(v:Tag51):Tag51{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag52{let marcador:int;}\nASSIS Caixa52{let valor:Tag52;assis ler(v:Tag52):Tag52{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag53{let marcador:int;}\nASSIS Caixa53{let valor:Tag53;assis ler(v:Tag53):Tag53{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag54{let marcador:int;}\nASSIS Caixa54{let valor:Tag54;assis ler(v:Tag54):Tag54{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag55{let marcador:int;}\nASSIS Caixa55{let valor:Tag55;assis ler(v:Tag55):Tag55{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag56{let marcador:int;}\nASSIS Caixa56{let valor:Tag56;assis ler(v:Tag56):Tag56{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag57{let marcador:int;}\nASSIS Caixa57{let valor:Tag57;assis ler(v:Tag57):Tag57{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag58{let marcador:int;}\nASSIS Caixa58{let valor:Tag58;assis ler(v:Tag58):Tag58{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag59{let marcador:int;}\nASSIS Caixa59{let valor:Tag59;assis ler(v:Tag59):Tag59{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag60{let marcador:int;}\nASSIS Caixa60{let valor:Tag60;assis ler(v:Tag60):Tag60{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag61{let marcador:int;}\nASSIS Caixa61{let valor:Tag61;assis ler(v:Tag61):Tag61{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag62{let marcador:int;}\nASSIS Caixa62{let valor:Tag62;assis ler(v:Tag62):Tag62{return v;}assis calcular(v:int):int{return v*3+7;}}\nstruct Tag63{let marcador:int;}\nASSIS Caixa63{let valor:Tag63;assis ler(v:Tag63):Tag63{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        28.0773,
+        31.338,
+        30.2916,
+        28.2143,
+        29.7722,
+        28.8189,
+        30.4118
+      ],
+      "samplesMs": [
+        337.5568,
+        341.1289,
+        326.8613,
+        331.0309,
+        337.5397,
+        342.1149,
+        326.8701
+      ],
+      "binaryBytes": 123904,
+      "sha256": "3e211d2eca43a9627cd9f95382fa823c6b651e8875bc659b4b922aa3a9de3ebb",
+      "medianMs": 337.5397,
+      "compileMedianMs": 29.7722
+    },
+    {
+      "variant": "generico-sem-opt",
+      "instances": 64,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let c0:Caixa<Tag0>=new Caixa<Tag0>();let c1:Caixa<Tag1>=new Caixa<Tag1>();let c2:Caixa<Tag2>=new Caixa<Tag2>();let c3:Caixa<Tag3>=new Caixa<Tag3>();let c4:Caixa<Tag4>=new Caixa<Tag4>();let c5:Caixa<Tag5>=new Caixa<Tag5>();let c6:Caixa<Tag6>=new Caixa<Tag6>();let c7:Caixa<Tag7>=new Caixa<Tag7>();let c8:Caixa<Tag8>=new Caixa<Tag8>();let c9:Caixa<Tag9>=new Caixa<Tag9>();let c10:Caixa<Tag10>=new Caixa<Tag10>();let c11:Caixa<Tag11>=new Caixa<Tag11>();let c12:Caixa<Tag12>=new Caixa<Tag12>();let c13:Caixa<Tag13>=new Caixa<Tag13>();let c14:Caixa<Tag14>=new Caixa<Tag14>();let c15:Caixa<Tag15>=new Caixa<Tag15>();let c16:Caixa<Tag16>=new Caixa<Tag16>();let c17:Caixa<Tag17>=new Caixa<Tag17>();let c18:Caixa<Tag18>=new Caixa<Tag18>();let c19:Caixa<Tag19>=new Caixa<Tag19>();let c20:Caixa<Tag20>=new Caixa<Tag20>();let c21:Caixa<Tag21>=new Caixa<Tag21>();let c22:Caixa<Tag22>=new Caixa<Tag22>();let c23:Caixa<Tag23>=new Caixa<Tag23>();let c24:Caixa<Tag24>=new Caixa<Tag24>();let c25:Caixa<Tag25>=new Caixa<Tag25>();let c26:Caixa<Tag26>=new Caixa<Tag26>();let c27:Caixa<Tag27>=new Caixa<Tag27>();let c28:Caixa<Tag28>=new Caixa<Tag28>();let c29:Caixa<Tag29>=new Caixa<Tag29>();let c30:Caixa<Tag30>=new Caixa<Tag30>();let c31:Caixa<Tag31>=new Caixa<Tag31>();let c32:Caixa<Tag32>=new Caixa<Tag32>();let c33:Caixa<Tag33>=new Caixa<Tag33>();let c34:Caixa<Tag34>=new Caixa<Tag34>();let c35:Caixa<Tag35>=new Caixa<Tag35>();let c36:Caixa<Tag36>=new Caixa<Tag36>();let c37:Caixa<Tag37>=new Caixa<Tag37>();let c38:Caixa<Tag38>=new Caixa<Tag38>();let c39:Caixa<Tag39>=new Caixa<Tag39>();let c40:Caixa<Tag40>=new Caixa<Tag40>();let c41:Caixa<Tag41>=new Caixa<Tag41>();let c42:Caixa<Tag42>=new Caixa<Tag42>();let c43:Caixa<Tag43>=new Caixa<Tag43>();let c44:Caixa<Tag44>=new Caixa<Tag44>();let c45:Caixa<Tag45>=new Caixa<Tag45>();let c46:Caixa<Tag46>=new Caixa<Tag46>();let c47:Caixa<Tag47>=new Caixa<Tag47>();let c48:Caixa<Tag48>=new Caixa<Tag48>();let c49:Caixa<Tag49>=new Caixa<Tag49>();let c50:Caixa<Tag50>=new Caixa<Tag50>();let c51:Caixa<Tag51>=new Caixa<Tag51>();let c52:Caixa<Tag52>=new Caixa<Tag52>();let c53:Caixa<Tag53>=new Caixa<Tag53>();let c54:Caixa<Tag54>=new Caixa<Tag54>();let c55:Caixa<Tag55>=new Caixa<Tag55>();let c56:Caixa<Tag56>=new Caixa<Tag56>();let c57:Caixa<Tag57>=new Caixa<Tag57>();let c58:Caixa<Tag58>=new Caixa<Tag58>();let c59:Caixa<Tag59>=new Caixa<Tag59>();let c60:Caixa<Tag60>=new Caixa<Tag60>();let c61:Caixa<Tag61>=new Caixa<Tag61>();let c62:Caixa<Tag62>=new Caixa<Tag62>();let c63:Caixa<Tag63>=new Caixa<Tag63>();let total:int=0;for(let i:int=0;i<1000000;i+=1){total+=c0.calcular(i);}print(total);free(c0);free(c1);free(c2);free(c3);free(c4);free(c5);free(c6);free(c7);free(c8);free(c9);free(c10);free(c11);free(c12);free(c13);free(c14);free(c15);free(c16);free(c17);free(c18);free(c19);free(c20);free(c21);free(c22);free(c23);free(c24);free(c25);free(c26);free(c27);free(c28);free(c29);free(c30);free(c31);free(c32);free(c33);free(c34);free(c35);free(c36);free(c37);free(c38);free(c39);free(c40);free(c41);free(c42);free(c43);free(c44);free(c45);free(c46);free(c47);free(c48);free(c49);free(c50);free(c51);free(c52);free(c53);free(c54);free(c55);free(c56);free(c57);free(c58);free(c59);free(c60);free(c61);free(c62);free(c63);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nstruct Tag8{let marcador:int;}\nstruct Tag9{let marcador:int;}\nstruct Tag10{let marcador:int;}\nstruct Tag11{let marcador:int;}\nstruct Tag12{let marcador:int;}\nstruct Tag13{let marcador:int;}\nstruct Tag14{let marcador:int;}\nstruct Tag15{let marcador:int;}\nstruct Tag16{let marcador:int;}\nstruct Tag17{let marcador:int;}\nstruct Tag18{let marcador:int;}\nstruct Tag19{let marcador:int;}\nstruct Tag20{let marcador:int;}\nstruct Tag21{let marcador:int;}\nstruct Tag22{let marcador:int;}\nstruct Tag23{let marcador:int;}\nstruct Tag24{let marcador:int;}\nstruct Tag25{let marcador:int;}\nstruct Tag26{let marcador:int;}\nstruct Tag27{let marcador:int;}\nstruct Tag28{let marcador:int;}\nstruct Tag29{let marcador:int;}\nstruct Tag30{let marcador:int;}\nstruct Tag31{let marcador:int;}\nstruct Tag32{let marcador:int;}\nstruct Tag33{let marcador:int;}\nstruct Tag34{let marcador:int;}\nstruct Tag35{let marcador:int;}\nstruct Tag36{let marcador:int;}\nstruct Tag37{let marcador:int;}\nstruct Tag38{let marcador:int;}\nstruct Tag39{let marcador:int;}\nstruct Tag40{let marcador:int;}\nstruct Tag41{let marcador:int;}\nstruct Tag42{let marcador:int;}\nstruct Tag43{let marcador:int;}\nstruct Tag44{let marcador:int;}\nstruct Tag45{let marcador:int;}\nstruct Tag46{let marcador:int;}\nstruct Tag47{let marcador:int;}\nstruct Tag48{let marcador:int;}\nstruct Tag49{let marcador:int;}\nstruct Tag50{let marcador:int;}\nstruct Tag51{let marcador:int;}\nstruct Tag52{let marcador:int;}\nstruct Tag53{let marcador:int;}\nstruct Tag54{let marcador:int;}\nstruct Tag55{let marcador:int;}\nstruct Tag56{let marcador:int;}\nstruct Tag57{let marcador:int;}\nstruct Tag58{let marcador:int;}\nstruct Tag59{let marcador:int;}\nstruct Tag60{let marcador:int;}\nstruct Tag61{let marcador:int;}\nstruct Tag62{let marcador:int;}\nstruct Tag63{let marcador:int;}\nASSIS Caixa<T>{let valor:T;assis ler(v:T):T{return v;}assis calcular(v:int):int{return v*3+7;}}",
+      "compileSamplesMs": [
+        32.2996,
+        20.3438,
+        20.3917,
+        20.147,
+        21.0424,
+        20.5937,
+        20.8971
+      ],
+      "samplesMs": [
+        337.4659,
+        335.6435,
+        335.9152,
+        333.613,
+        341.6239,
+        329.6932,
+        332.0598
+      ],
+      "binaryBytes": 123904,
+      "sha256": "e0d50270b6a2a903e3b3fff88d65da2dfb480532aae021e9852a48ef4013b6c0",
+      "medianMs": 335.6435,
+      "compileMedianMs": 20.5937
+    }
+  ]
+}

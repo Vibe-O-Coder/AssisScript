@@ -1,0 +1,19 @@
+#yuri <std/unicode.assis>
+#yuri <std/proprios.assis>
+
+safe assis assis_assis():int {
+    own dados:*byte=alloc<byte>(4);
+    dados[0]=byte(65);dados[1]=byte(0);dados[2]=byte(195);dados[3]=byte(169);
+    own texto:unicode::Texto=new unicode::Texto();
+    assert(texto.carregar(fatia(dados,0,4)));
+    own lista:proprios::Lista<unicode::Texto>=new proprios::Lista<unicode::Texto>();
+    lista.inserir(move(texto));
+    {
+        borrow entrada:unicode::Texto=lista.obter(0);
+        borrow trecho:slice<byte>=entrada.recortar(2,2);
+        print(entrada.tamanho(),len(trecho),int(trecho[0]),int(trecho[1]));
+    }
+    own extraido:unicode::Texto=lista.retirar();
+    print(lista.tamanho(),extraido.tamanho());
+    return 0;
+}

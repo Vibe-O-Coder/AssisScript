@@ -1,0 +1,17 @@
+
+            ASSIS AssisAssis {
+                Assis Assis_assis: AssIs; Assis Assis_fodase: AssiS;
+                Assis Fodase_assis: FodAsE; Assis Fodase_fodase: FoDaSe;
+                Assis Assis_Fodase: *AssiS; Assis Fodase_Assis: AssisAssis;
+            }
+        
+assis assis_assis(): AssIs {
+
+            Assis AssisFodase: AssisAssis = fodase AssisAssis();
+            FODASE(AssisFodase.Assis_assis, AssisFodase.Assis_fodase,
+                AssisFodase.Fodase_assis, AssisFodase.Fodase_fodase == "",
+                AssisFodase.Assis_Fodase == fOdase, AssisFodase.Fodase_Assis == fOdase);
+            foDASE(AssisFodase);
+        
+Fodase 0;
+}

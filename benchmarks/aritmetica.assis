@@ -1,0 +1,5 @@
+assis assis_assis(): int {
+    let i: int = 0; let total: int = 0;
+    while (i < 50000000) { total += (i * 8 + 7) & 1023; i += 1; }
+    print(total); return 0;
+}

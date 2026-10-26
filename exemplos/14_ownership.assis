@@ -1,0 +1,22 @@
+// A div do Assis agora organiza recursos com vida delimitada.
+struct Ponto { let x: int; let y: int; }
+
+assis assis_assis(): int {
+    own ponto: Ponto = new Ponto(10, 20);
+    div {
+        borrow leitura: Ponto = ponto;
+        print("Miyabi encontrou", leitura.x, leitura.y);
+    }
+    div {
+        borrow mut escrita: Ponto = ponto;
+        escrita.x += 1;
+    }
+    own destino: Ponto = move(ponto);
+    div {
+        own valores: Array<int> = [destino.x, destino.y];
+        for (let i: int = 0; i < len(valores); i += 1) {
+            print("div", i, valores[i]);
+        }
+    }
+    return 0;
+}

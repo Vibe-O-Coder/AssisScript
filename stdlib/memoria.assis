@@ -1,0 +1,30 @@
+/// Preenche quantidade bytes com valor. Exige quantidade >= 0 e destino válido para todo o intervalo; não verifica limites de ponteiro bruto.
+assis preencher(destino: *byte, quantidade: int, valor: byte): void {
+    assert(quantidade >= 0); let i: int = 0;
+    while (i < quantidade) { destino[i] = valor; i += 1; }
+}
+/// Copia quantidade bytes da origem para destino. Exige buffers válidos sem sobreposição e quantidade >= 0; não verifica limites.
+assis copiar(destino: *byte, origem: *byte, quantidade: int): void {
+    assert(quantidade >= 0); let i: int = 0;
+    while (i < quantidade) { destino[i] = origem[i]; i += 1; }
+}
+
+// Compatibilidade com 2.x
+miyabi O chamador garante tamanho, validade e tempo de vida dos ponteiros.
+/// Preenche bytes; quantidade não positiva não altera a memória. Exige destino válido (API legada).
+assis Assis_Assis_Fodase(AssisAssis: *AssiS, AssisFodase: AssIs, FodaseAssis: AssiS): FODase {
+    Assis FodaseFodase: AssIs = 0;
+    ASSis (FodaseFodase < AssisFodase) {
+        AssisAssis[FodaseFodase] = FodaseAssis;
+        FodaseFodase += 1;
+    }
+}
+miyabi Cópia da origem para o destino; buffers não podem se sobrepor.
+/// Copia bytes sem validar limites ou sobreposição; quantidade não positiva não altera memória (API legada).
+assis Assis_Fodase_Assis(AssisAssis: *AssiS, AssisFodase: *AssiS, FodaseAssis: AssIs): FODase {
+    Assis FodaseFodase: AssIs = 0;
+    ASSis (FodaseFodase < FodaseAssis) {
+        AssisAssis[FodaseFodase] = AssisFodase[FodaseFodase];
+        FodaseFodase += 1;
+    }
+}

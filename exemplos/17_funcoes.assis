@@ -1,0 +1,25 @@
+#yuri <std/algoritmos.assis>
+
+pure assis dobro(v: int): int { return v * 2; }
+pure assis par(v: int): bool { return v % 2 == 0; }
+pure assis somar(a: int, v: int): int { return a + v; }
+pure assis identidade<T>(v: T): T { return v; }
+
+pure assis compor(f: pure assis(int): int, g: pure assis(int): int, v: int): int {
+    return f(g(v));
+}
+
+pure assis escolher(): pure assis(int): int { return dobro; }
+
+assis assis_assis(): int {
+    val f: pure assis(int): int = identidade::<int>;
+    print(compor(escolher(), f, 21));
+    let entrada: Array<int> = [1, 2, 3, 4];
+    defer free(entrada);
+    let pares: Array<int> = filter::<int>(entrada, par);
+    defer free(pares);
+    let dobrados: Array<int> = map::<int, int>(pares, dobro);
+    defer free(dobrados);
+    print(fold::<int, int>(dobrados, 0, somar));
+    return 0;
+}

@@ -1,0 +1,34 @@
+#yuri <std/matematica.assis>
+
+assis assis_assis(): int {
+    let numeros: Array<int> = [10, 20, 30];
+    numeros.push(40);
+    numeros.insert(1, 15);
+    numeros[0] += 2;
+    print("Primeiro:", numeros[0], "tamanho:", len(numeros));
+    print("Removidos:", numeros.remove(1), numeros.pop());
+    numeros.reverse();
+    let i: int = 0;
+    while (i < len(numeros)) {
+        print("Elemento:", numeros[i]);
+        i += 1;
+    }
+
+    let pontos: HashMap<text, int> = new HashMap<text, int>();
+    pontos.set("Miyabi", 100);
+    pontos.set("Yuri", maximo(42, 75));
+    pontos.set("Yuri", pontos.get("Yuri") + 5);
+    print("Yuri:", pontos.get("Yuri"));
+    print("Ausente:", pontos.get_or("ninguém", 0));
+
+    let nomes: Array<text> = pontos.keys();
+    i = 0;
+    while (i < len(nomes)) {
+        print(nomes[i], pontos.get(nomes[i]));
+        i += 1;
+    }
+    free(nomes);
+    free(pontos);
+    free(numeros);
+    return 0;
+}

@@ -1,0 +1,23 @@
+namespace iteradores;
+public value struct Intervalo { let atual: int; let fim: int; let passo: int; }
+public enum Passo { Fim; Item(int, Intervalo); }
+
+/// Intervalo imutável [atual,fim), ou decrescente com passo negativo.
+/// Passo zero termina; overflow após o último item termina sem dar a volta.
+public pure assis proximo(it: Intervalo): Passo {
+    if (it.passo == 0 || (it.passo > 0 && it.atual >= it.fim) || (it.passo < 0 && it.atual <= it.fim)) { return new Passo.Fim(); }
+    let seguinte: Intervalo = new Intervalo(it.fim, it.fim, 0);
+    if ((it.passo > 0 && it.atual <= 0x7fff_ffff_ffff_ffff - it.passo) || (it.passo < 0 && it.atual >= -0x8000_0000_0000_0000 - it.passo)) { seguinte = new Intervalo(it.atual + it.passo, it.fim, it.passo); }
+    return new Passo.Item(it.atual, seguinte);
+}
+
+/// Pipeline map/filter/fold sem alocações intermediárias. Custo O(n).
+public pure assis reduzir<A>(intervalo: Intervalo, inicial: A, transformar: pure assis(int): int, aceitar: pure assis(int): bool, combinar: pure assis(A, int): A): A {
+    let it: Intervalo = intervalo;let acumulado: A = inicial;
+    while (true) {
+        match (proximo(it)) {
+            Fim { return acumulado; }
+            Item(valor, seguinte) { val novo: int = transformar(valor);if (aceitar(novo)) { acumulado = combinar(acumulado, novo); }it = seguinte; }
+        }
+    }
+}

@@ -1,0 +1,5 @@
+AssisScript-lock 1
+compiler 3.3.0-alpha.9
+manifest	assis.pkg	dd19fae9e4d593117ac781d5d24ddce9d43fcc5be0d0f36a07ea04b9b772f88d
+manifest	vendor/medidas/assis.pkg	7c748add61514be5585bce1b20dbf9dcb8069b57baa22425859dbd881cd15649
+source	vendor/medidas/api.assis	5f3270555fdd623d9edcff4578971f2ab3b83bbef6550fafc3f89e3026dc7e71

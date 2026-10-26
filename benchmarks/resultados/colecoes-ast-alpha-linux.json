@@ -1,0 +1,539 @@
+{
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "cpu": "x86_64",
+  "samples": 7,
+  "iterations": 2000,
+  "includesProcessStartup": true,
+  "expected": "12022000",
+  "compiler": "AssisScript 3.3.0-alpha.5 (nativo, Linux x86_64)",
+  "baseline": "AssisScript 3.3.0-alpha.4 (nativo, Linux x86_64)",
+  "compilerSha256": "9408324128831092715217eac62d75805bb58627d1c2f53932b53c3bfc2daba1",
+  "baselineSha256": "bec5401cf789cd242eeb12c49121f0ce1e3d314602e82cb7136a6ab213e50c31",
+  "results": [
+    {
+      "variant": "alpha4",
+      "nominalTypes": 1,
+      "flags": [],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}",
+      "compileSamplesMs": [
+        32.9463,
+        21.5186,
+        24.5737,
+        28.4507,
+        31.037,
+        29.232,
+        31.9844
+      ],
+      "samplesMs": [
+        1.5627,
+        1.5027,
+        1.478,
+        1.3084,
+        1.4267,
+        2.2241,
+        1.4926
+      ],
+      "binaryBytes": 41968,
+      "sha256": "a51dd87d50541f1e305f345bb29d0abfa9197faa10a76e40b45b4ae02e3fe8f5",
+      "medianMs": 1.4926,
+      "compileMedianMs": 29.232
+    },
+    {
+      "variant": "alpha5",
+      "nominalTypes": 1,
+      "flags": [],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}",
+      "compileSamplesMs": [
+        22.5061,
+        24.6889,
+        19.0092,
+        19.5375,
+        19.3154,
+        23.3959,
+        19.2257
+      ],
+      "samplesMs": [
+        1.6589,
+        1.3984,
+        1.4464,
+        1.3905,
+        1.7592,
+        1.3572,
+        1.4949
+      ],
+      "binaryBytes": 41968,
+      "sha256": "a51dd87d50541f1e305f345bb29d0abfa9197faa10a76e40b45b4ae02e3fe8f5",
+      "medianMs": 1.4464,
+      "compileMedianMs": 19.5375
+    },
+    {
+      "variant": "alpha4",
+      "nominalTypes": 1,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}",
+      "compileSamplesMs": [
+        23.0085,
+        29.0874,
+        20.3803,
+        18.3451,
+        21.973,
+        22.4828,
+        19.1833
+      ],
+      "samplesMs": [
+        1.6479,
+        2.4153,
+        1.9805,
+        1.3454,
+        1.3544,
+        1.6165,
+        1.5323
+      ],
+      "binaryBytes": 46064,
+      "sha256": "304d335a9f76019c255c33179151d1181168e5991ac0be701299fff6c309626b",
+      "medianMs": 1.6165,
+      "compileMedianMs": 21.973
+    },
+    {
+      "variant": "alpha5",
+      "nominalTypes": 1,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}",
+      "compileSamplesMs": [
+        23.8871,
+        23.7127,
+        21.7612,
+        18.5547,
+        20.6418,
+        18.0948,
+        19.2891
+      ],
+      "samplesMs": [
+        1.8698,
+        1.8764,
+        1.7183,
+        1.3977,
+        1.4164,
+        1.4872,
+        1.5802
+      ],
+      "binaryBytes": 46064,
+      "sha256": "304d335a9f76019c255c33179151d1181168e5991ac0be701299fff6c309626b",
+      "medianMs": 1.5802,
+      "compileMedianMs": 20.6418
+    },
+    {
+      "variant": "alpha4",
+      "nominalTypes": 8,
+      "flags": [],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();let a1:Array<Tag1>=[];let m1:HashMap<int,Tag1>=new HashMap<int,Tag1>();let a2:Array<Tag2>=[];let m2:HashMap<int,Tag2>=new HashMap<int,Tag2>();let a3:Array<Tag3>=[];let m3:HashMap<int,Tag3>=new HashMap<int,Tag3>();let a4:Array<Tag4>=[];let m4:HashMap<int,Tag4>=new HashMap<int,Tag4>();let a5:Array<Tag5>=[];let m5:HashMap<int,Tag5>=new HashMap<int,Tag5>();let a6:Array<Tag6>=[];let m6:HashMap<int,Tag6>=new HashMap<int,Tag6>();let a7:Array<Tag7>=[];let m7:HashMap<int,Tag7>=new HashMap<int,Tag7>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a1);free(m1);free(a2);free(m2);free(a3);free(m3);free(a4);free(m4);free(a5);free(m5);free(a6);free(m6);free(a7);free(m7);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}",
+      "compileSamplesMs": [
+        38.3617,
+        38.8114,
+        31.1083,
+        38.1804,
+        32.8575,
+        36.8892,
+        56.5206
+      ],
+      "samplesMs": [
+        1.4863,
+        2.1354,
+        1.7725,
+        1.4582,
+        1.6538,
+        1.5634,
+        2.0825
+      ],
+      "binaryBytes": 154072,
+      "sha256": "2944dbf8c15a3bc2b2c25526306329b0a6f3c4bc4aaa438f76e755ebe83eef41",
+      "medianMs": 1.6538,
+      "compileMedianMs": 38.1804
+    },
+    {
+      "variant": "alpha5",
+      "nominalTypes": 8,
+      "flags": [],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();let a1:Array<Tag1>=[];let m1:HashMap<int,Tag1>=new HashMap<int,Tag1>();let a2:Array<Tag2>=[];let m2:HashMap<int,Tag2>=new HashMap<int,Tag2>();let a3:Array<Tag3>=[];let m3:HashMap<int,Tag3>=new HashMap<int,Tag3>();let a4:Array<Tag4>=[];let m4:HashMap<int,Tag4>=new HashMap<int,Tag4>();let a5:Array<Tag5>=[];let m5:HashMap<int,Tag5>=new HashMap<int,Tag5>();let a6:Array<Tag6>=[];let m6:HashMap<int,Tag6>=new HashMap<int,Tag6>();let a7:Array<Tag7>=[];let m7:HashMap<int,Tag7>=new HashMap<int,Tag7>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a1);free(m1);free(a2);free(m2);free(a3);free(m3);free(a4);free(m4);free(a5);free(m5);free(a6);free(m6);free(a7);free(m7);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}",
+      "compileSamplesMs": [
+        30.1995,
+        29.1965,
+        27.5595,
+        25.7645,
+        25.5907,
+        29.1741,
+        29.3426
+      ],
+      "samplesMs": [
+        1.5921,
+        1.8537,
+        1.4634,
+        1.6377,
+        2.8857,
+        1.3363,
+        1.5095
+      ],
+      "binaryBytes": 154072,
+      "sha256": "2944dbf8c15a3bc2b2c25526306329b0a6f3c4bc4aaa438f76e755ebe83eef41",
+      "medianMs": 1.5921,
+      "compileMedianMs": 29.1741
+    },
+    {
+      "variant": "alpha4",
+      "nominalTypes": 8,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();let a1:Array<Tag1>=[];let m1:HashMap<int,Tag1>=new HashMap<int,Tag1>();let a2:Array<Tag2>=[];let m2:HashMap<int,Tag2>=new HashMap<int,Tag2>();let a3:Array<Tag3>=[];let m3:HashMap<int,Tag3>=new HashMap<int,Tag3>();let a4:Array<Tag4>=[];let m4:HashMap<int,Tag4>=new HashMap<int,Tag4>();let a5:Array<Tag5>=[];let m5:HashMap<int,Tag5>=new HashMap<int,Tag5>();let a6:Array<Tag6>=[];let m6:HashMap<int,Tag6>=new HashMap<int,Tag6>();let a7:Array<Tag7>=[];let m7:HashMap<int,Tag7>=new HashMap<int,Tag7>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a1);free(m1);free(a2);free(m2);free(a3);free(m3);free(a4);free(m4);free(a5);free(m5);free(a6);free(m6);free(a7);free(m7);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}",
+      "compileSamplesMs": [
+        35.0313,
+        37.7949,
+        34.6233,
+        36.3697,
+        65.4368,
+        37.5321,
+        35.2629
+      ],
+      "samplesMs": [
+        1.5897,
+        2.3448,
+        1.8145,
+        2.1531,
+        2.8614,
+        1.6858,
+        1.6075
+      ],
+      "binaryBytes": 174552,
+      "sha256": "9e45fc55e651485fb1796fd54e78ecc345c4d13b2dcbbd8e8dc3925fc2b18671",
+      "medianMs": 1.8145,
+      "compileMedianMs": 36.3697
+    },
+    {
+      "variant": "alpha5",
+      "nominalTypes": 8,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();let a1:Array<Tag1>=[];let m1:HashMap<int,Tag1>=new HashMap<int,Tag1>();let a2:Array<Tag2>=[];let m2:HashMap<int,Tag2>=new HashMap<int,Tag2>();let a3:Array<Tag3>=[];let m3:HashMap<int,Tag3>=new HashMap<int,Tag3>();let a4:Array<Tag4>=[];let m4:HashMap<int,Tag4>=new HashMap<int,Tag4>();let a5:Array<Tag5>=[];let m5:HashMap<int,Tag5>=new HashMap<int,Tag5>();let a6:Array<Tag6>=[];let m6:HashMap<int,Tag6>=new HashMap<int,Tag6>();let a7:Array<Tag7>=[];let m7:HashMap<int,Tag7>=new HashMap<int,Tag7>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a1);free(m1);free(a2);free(m2);free(a3);free(m3);free(a4);free(m4);free(a5);free(m5);free(a6);free(m6);free(a7);free(m7);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}",
+      "compileSamplesMs": [
+        31.1241,
+        26.7792,
+        30.9146,
+        25.4144,
+        58.5008,
+        29.1324,
+        26.8982
+      ],
+      "samplesMs": [
+        1.6309,
+        1.5836,
+        2.102,
+        2.2073,
+        2.8413,
+        1.715,
+        1.5251
+      ],
+      "binaryBytes": 174552,
+      "sha256": "9e45fc55e651485fb1796fd54e78ecc345c4d13b2dcbbd8e8dc3925fc2b18671",
+      "medianMs": 1.715,
+      "compileMedianMs": 29.1324
+    },
+    {
+      "variant": "alpha4",
+      "nominalTypes": 32,
+      "flags": [],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();let a1:Array<Tag1>=[];let m1:HashMap<int,Tag1>=new HashMap<int,Tag1>();let a2:Array<Tag2>=[];let m2:HashMap<int,Tag2>=new HashMap<int,Tag2>();let a3:Array<Tag3>=[];let m3:HashMap<int,Tag3>=new HashMap<int,Tag3>();let a4:Array<Tag4>=[];let m4:HashMap<int,Tag4>=new HashMap<int,Tag4>();let a5:Array<Tag5>=[];let m5:HashMap<int,Tag5>=new HashMap<int,Tag5>();let a6:Array<Tag6>=[];let m6:HashMap<int,Tag6>=new HashMap<int,Tag6>();let a7:Array<Tag7>=[];let m7:HashMap<int,Tag7>=new HashMap<int,Tag7>();let a8:Array<Tag8>=[];let m8:HashMap<int,Tag8>=new HashMap<int,Tag8>();let a9:Array<Tag9>=[];let m9:HashMap<int,Tag9>=new HashMap<int,Tag9>();let a10:Array<Tag10>=[];let m10:HashMap<int,Tag10>=new HashMap<int,Tag10>();let a11:Array<Tag11>=[];let m11:HashMap<int,Tag11>=new HashMap<int,Tag11>();let a12:Array<Tag12>=[];let m12:HashMap<int,Tag12>=new HashMap<int,Tag12>();let a13:Array<Tag13>=[];let m13:HashMap<int,Tag13>=new HashMap<int,Tag13>();let a14:Array<Tag14>=[];let m14:HashMap<int,Tag14>=new HashMap<int,Tag14>();let a15:Array<Tag15>=[];let m15:HashMap<int,Tag15>=new HashMap<int,Tag15>();let a16:Array<Tag16>=[];let m16:HashMap<int,Tag16>=new HashMap<int,Tag16>();let a17:Array<Tag17>=[];let m17:HashMap<int,Tag17>=new HashMap<int,Tag17>();let a18:Array<Tag18>=[];let m18:HashMap<int,Tag18>=new HashMap<int,Tag18>();let a19:Array<Tag19>=[];let m19:HashMap<int,Tag19>=new HashMap<int,Tag19>();let a20:Array<Tag20>=[];let m20:HashMap<int,Tag20>=new HashMap<int,Tag20>();let a21:Array<Tag21>=[];let m21:HashMap<int,Tag21>=new HashMap<int,Tag21>();let a22:Array<Tag22>=[];let m22:HashMap<int,Tag22>=new HashMap<int,Tag22>();let a23:Array<Tag23>=[];let m23:HashMap<int,Tag23>=new HashMap<int,Tag23>();let a24:Array<Tag24>=[];let m24:HashMap<int,Tag24>=new HashMap<int,Tag24>();let a25:Array<Tag25>=[];let m25:HashMap<int,Tag25>=new HashMap<int,Tag25>();let a26:Array<Tag26>=[];let m26:HashMap<int,Tag26>=new HashMap<int,Tag26>();let a27:Array<Tag27>=[];let m27:HashMap<int,Tag27>=new HashMap<int,Tag27>();let a28:Array<Tag28>=[];let m28:HashMap<int,Tag28>=new HashMap<int,Tag28>();let a29:Array<Tag29>=[];let m29:HashMap<int,Tag29>=new HashMap<int,Tag29>();let a30:Array<Tag30>=[];let m30:HashMap<int,Tag30>=new HashMap<int,Tag30>();let a31:Array<Tag31>=[];let m31:HashMap<int,Tag31>=new HashMap<int,Tag31>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a1);free(m1);free(a2);free(m2);free(a3);free(m3);free(a4);free(m4);free(a5);free(m5);free(a6);free(m6);free(a7);free(m7);free(a8);free(m8);free(a9);free(m9);free(a10);free(m10);free(a11);free(m11);free(a12);free(m12);free(a13);free(m13);free(a14);free(m14);free(a15);free(m15);free(a16);free(m16);free(a17);free(m17);free(a18);free(m18);free(a19);free(m19);free(a20);free(m20);free(a21);free(m21);free(a22);free(m22);free(a23);free(m23);free(a24);free(m24);free(a25);free(m25);free(a26);free(m26);free(a27);free(m27);free(a28);free(m28);free(a29);free(m29);free(a30);free(m30);free(a31);free(m31);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nstruct Tag8{let marcador:int;}\nstruct Tag9{let marcador:int;}\nstruct Tag10{let marcador:int;}\nstruct Tag11{let marcador:int;}\nstruct Tag12{let marcador:int;}\nstruct Tag13{let marcador:int;}\nstruct Tag14{let marcador:int;}\nstruct Tag15{let marcador:int;}\nstruct Tag16{let marcador:int;}\nstruct Tag17{let marcador:int;}\nstruct Tag18{let marcador:int;}\nstruct Tag19{let marcador:int;}\nstruct Tag20{let marcador:int;}\nstruct Tag21{let marcador:int;}\nstruct Tag22{let marcador:int;}\nstruct Tag23{let marcador:int;}\nstruct Tag24{let marcador:int;}\nstruct Tag25{let marcador:int;}\nstruct Tag26{let marcador:int;}\nstruct Tag27{let marcador:int;}\nstruct Tag28{let marcador:int;}\nstruct Tag29{let marcador:int;}\nstruct Tag30{let marcador:int;}\nstruct Tag31{let marcador:int;}",
+      "compileSamplesMs": [
+        85.7326,
+        75.3282,
+        83.9794,
+        77.5769,
+        114.3341,
+        83.1898,
+        81.5833
+      ],
+      "samplesMs": [
+        1.7688,
+        1.5721,
+        1.5706,
+        1.9985,
+        1.5269,
+        1.7757,
+        2.1167
+      ],
+      "binaryBytes": 544280,
+      "sha256": "9ef71e5749cf60e13e75612cf00f72bbf07538926b91e27638876456fce93a12",
+      "medianMs": 1.7688,
+      "compileMedianMs": 83.1898
+    },
+    {
+      "variant": "alpha5",
+      "nominalTypes": 32,
+      "flags": [],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();let a1:Array<Tag1>=[];let m1:HashMap<int,Tag1>=new HashMap<int,Tag1>();let a2:Array<Tag2>=[];let m2:HashMap<int,Tag2>=new HashMap<int,Tag2>();let a3:Array<Tag3>=[];let m3:HashMap<int,Tag3>=new HashMap<int,Tag3>();let a4:Array<Tag4>=[];let m4:HashMap<int,Tag4>=new HashMap<int,Tag4>();let a5:Array<Tag5>=[];let m5:HashMap<int,Tag5>=new HashMap<int,Tag5>();let a6:Array<Tag6>=[];let m6:HashMap<int,Tag6>=new HashMap<int,Tag6>();let a7:Array<Tag7>=[];let m7:HashMap<int,Tag7>=new HashMap<int,Tag7>();let a8:Array<Tag8>=[];let m8:HashMap<int,Tag8>=new HashMap<int,Tag8>();let a9:Array<Tag9>=[];let m9:HashMap<int,Tag9>=new HashMap<int,Tag9>();let a10:Array<Tag10>=[];let m10:HashMap<int,Tag10>=new HashMap<int,Tag10>();let a11:Array<Tag11>=[];let m11:HashMap<int,Tag11>=new HashMap<int,Tag11>();let a12:Array<Tag12>=[];let m12:HashMap<int,Tag12>=new HashMap<int,Tag12>();let a13:Array<Tag13>=[];let m13:HashMap<int,Tag13>=new HashMap<int,Tag13>();let a14:Array<Tag14>=[];let m14:HashMap<int,Tag14>=new HashMap<int,Tag14>();let a15:Array<Tag15>=[];let m15:HashMap<int,Tag15>=new HashMap<int,Tag15>();let a16:Array<Tag16>=[];let m16:HashMap<int,Tag16>=new HashMap<int,Tag16>();let a17:Array<Tag17>=[];let m17:HashMap<int,Tag17>=new HashMap<int,Tag17>();let a18:Array<Tag18>=[];let m18:HashMap<int,Tag18>=new HashMap<int,Tag18>();let a19:Array<Tag19>=[];let m19:HashMap<int,Tag19>=new HashMap<int,Tag19>();let a20:Array<Tag20>=[];let m20:HashMap<int,Tag20>=new HashMap<int,Tag20>();let a21:Array<Tag21>=[];let m21:HashMap<int,Tag21>=new HashMap<int,Tag21>();let a22:Array<Tag22>=[];let m22:HashMap<int,Tag22>=new HashMap<int,Tag22>();let a23:Array<Tag23>=[];let m23:HashMap<int,Tag23>=new HashMap<int,Tag23>();let a24:Array<Tag24>=[];let m24:HashMap<int,Tag24>=new HashMap<int,Tag24>();let a25:Array<Tag25>=[];let m25:HashMap<int,Tag25>=new HashMap<int,Tag25>();let a26:Array<Tag26>=[];let m26:HashMap<int,Tag26>=new HashMap<int,Tag26>();let a27:Array<Tag27>=[];let m27:HashMap<int,Tag27>=new HashMap<int,Tag27>();let a28:Array<Tag28>=[];let m28:HashMap<int,Tag28>=new HashMap<int,Tag28>();let a29:Array<Tag29>=[];let m29:HashMap<int,Tag29>=new HashMap<int,Tag29>();let a30:Array<Tag30>=[];let m30:HashMap<int,Tag30>=new HashMap<int,Tag30>();let a31:Array<Tag31>=[];let m31:HashMap<int,Tag31>=new HashMap<int,Tag31>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a1);free(m1);free(a2);free(m2);free(a3);free(m3);free(a4);free(m4);free(a5);free(m5);free(a6);free(m6);free(a7);free(m7);free(a8);free(m8);free(a9);free(m9);free(a10);free(m10);free(a11);free(m11);free(a12);free(m12);free(a13);free(m13);free(a14);free(m14);free(a15);free(m15);free(a16);free(m16);free(a17);free(m17);free(a18);free(m18);free(a19);free(m19);free(a20);free(m20);free(a21);free(m21);free(a22);free(m22);free(a23);free(m23);free(a24);free(m24);free(a25);free(m25);free(a26);free(m26);free(a27);free(m27);free(a28);free(m28);free(a29);free(m29);free(a30);free(m30);free(a31);free(m31);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nstruct Tag8{let marcador:int;}\nstruct Tag9{let marcador:int;}\nstruct Tag10{let marcador:int;}\nstruct Tag11{let marcador:int;}\nstruct Tag12{let marcador:int;}\nstruct Tag13{let marcador:int;}\nstruct Tag14{let marcador:int;}\nstruct Tag15{let marcador:int;}\nstruct Tag16{let marcador:int;}\nstruct Tag17{let marcador:int;}\nstruct Tag18{let marcador:int;}\nstruct Tag19{let marcador:int;}\nstruct Tag20{let marcador:int;}\nstruct Tag21{let marcador:int;}\nstruct Tag22{let marcador:int;}\nstruct Tag23{let marcador:int;}\nstruct Tag24{let marcador:int;}\nstruct Tag25{let marcador:int;}\nstruct Tag26{let marcador:int;}\nstruct Tag27{let marcador:int;}\nstruct Tag28{let marcador:int;}\nstruct Tag29{let marcador:int;}\nstruct Tag30{let marcador:int;}\nstruct Tag31{let marcador:int;}",
+      "compileSamplesMs": [
+        56.1119,
+        56.646,
+        54.4964,
+        48.4479,
+        52.7341,
+        63.9033,
+        52.9118
+      ],
+      "samplesMs": [
+        1.7523,
+        2.0871,
+        1.718,
+        1.3898,
+        1.9647,
+        1.539,
+        1.9742
+      ],
+      "binaryBytes": 544280,
+      "sha256": "9ef71e5749cf60e13e75612cf00f72bbf07538926b91e27638876456fce93a12",
+      "medianMs": 1.7523,
+      "compileMedianMs": 54.4964
+    },
+    {
+      "variant": "alpha4",
+      "nominalTypes": 32,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();let a1:Array<Tag1>=[];let m1:HashMap<int,Tag1>=new HashMap<int,Tag1>();let a2:Array<Tag2>=[];let m2:HashMap<int,Tag2>=new HashMap<int,Tag2>();let a3:Array<Tag3>=[];let m3:HashMap<int,Tag3>=new HashMap<int,Tag3>();let a4:Array<Tag4>=[];let m4:HashMap<int,Tag4>=new HashMap<int,Tag4>();let a5:Array<Tag5>=[];let m5:HashMap<int,Tag5>=new HashMap<int,Tag5>();let a6:Array<Tag6>=[];let m6:HashMap<int,Tag6>=new HashMap<int,Tag6>();let a7:Array<Tag7>=[];let m7:HashMap<int,Tag7>=new HashMap<int,Tag7>();let a8:Array<Tag8>=[];let m8:HashMap<int,Tag8>=new HashMap<int,Tag8>();let a9:Array<Tag9>=[];let m9:HashMap<int,Tag9>=new HashMap<int,Tag9>();let a10:Array<Tag10>=[];let m10:HashMap<int,Tag10>=new HashMap<int,Tag10>();let a11:Array<Tag11>=[];let m11:HashMap<int,Tag11>=new HashMap<int,Tag11>();let a12:Array<Tag12>=[];let m12:HashMap<int,Tag12>=new HashMap<int,Tag12>();let a13:Array<Tag13>=[];let m13:HashMap<int,Tag13>=new HashMap<int,Tag13>();let a14:Array<Tag14>=[];let m14:HashMap<int,Tag14>=new HashMap<int,Tag14>();let a15:Array<Tag15>=[];let m15:HashMap<int,Tag15>=new HashMap<int,Tag15>();let a16:Array<Tag16>=[];let m16:HashMap<int,Tag16>=new HashMap<int,Tag16>();let a17:Array<Tag17>=[];let m17:HashMap<int,Tag17>=new HashMap<int,Tag17>();let a18:Array<Tag18>=[];let m18:HashMap<int,Tag18>=new HashMap<int,Tag18>();let a19:Array<Tag19>=[];let m19:HashMap<int,Tag19>=new HashMap<int,Tag19>();let a20:Array<Tag20>=[];let m20:HashMap<int,Tag20>=new HashMap<int,Tag20>();let a21:Array<Tag21>=[];let m21:HashMap<int,Tag21>=new HashMap<int,Tag21>();let a22:Array<Tag22>=[];let m22:HashMap<int,Tag22>=new HashMap<int,Tag22>();let a23:Array<Tag23>=[];let m23:HashMap<int,Tag23>=new HashMap<int,Tag23>();let a24:Array<Tag24>=[];let m24:HashMap<int,Tag24>=new HashMap<int,Tag24>();let a25:Array<Tag25>=[];let m25:HashMap<int,Tag25>=new HashMap<int,Tag25>();let a26:Array<Tag26>=[];let m26:HashMap<int,Tag26>=new HashMap<int,Tag26>();let a27:Array<Tag27>=[];let m27:HashMap<int,Tag27>=new HashMap<int,Tag27>();let a28:Array<Tag28>=[];let m28:HashMap<int,Tag28>=new HashMap<int,Tag28>();let a29:Array<Tag29>=[];let m29:HashMap<int,Tag29>=new HashMap<int,Tag29>();let a30:Array<Tag30>=[];let m30:HashMap<int,Tag30>=new HashMap<int,Tag30>();let a31:Array<Tag31>=[];let m31:HashMap<int,Tag31>=new HashMap<int,Tag31>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a1);free(m1);free(a2);free(m2);free(a3);free(m3);free(a4);free(m4);free(a5);free(m5);free(a6);free(m6);free(a7);free(m7);free(a8);free(m8);free(a9);free(m9);free(a10);free(m10);free(a11);free(m11);free(a12);free(m12);free(a13);free(m13);free(a14);free(m14);free(a15);free(m15);free(a16);free(m16);free(a17);free(m17);free(a18);free(m18);free(a19);free(m19);free(a20);free(m20);free(a21);free(m21);free(a22);free(m22);free(a23);free(m23);free(a24);free(m24);free(a25);free(m25);free(a26);free(m26);free(a27);free(m27);free(a28);free(m28);free(a29);free(m29);free(a30);free(m30);free(a31);free(m31);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nstruct Tag8{let marcador:int;}\nstruct Tag9{let marcador:int;}\nstruct Tag10{let marcador:int;}\nstruct Tag11{let marcador:int;}\nstruct Tag12{let marcador:int;}\nstruct Tag13{let marcador:int;}\nstruct Tag14{let marcador:int;}\nstruct Tag15{let marcador:int;}\nstruct Tag16{let marcador:int;}\nstruct Tag17{let marcador:int;}\nstruct Tag18{let marcador:int;}\nstruct Tag19{let marcador:int;}\nstruct Tag20{let marcador:int;}\nstruct Tag21{let marcador:int;}\nstruct Tag22{let marcador:int;}\nstruct Tag23{let marcador:int;}\nstruct Tag24{let marcador:int;}\nstruct Tag25{let marcador:int;}\nstruct Tag26{let marcador:int;}\nstruct Tag27{let marcador:int;}\nstruct Tag28{let marcador:int;}\nstruct Tag29{let marcador:int;}\nstruct Tag30{let marcador:int;}\nstruct Tag31{let marcador:int;}",
+      "compileSamplesMs": [
+        82.3802,
+        85.7354,
+        80.2418,
+        78.4395,
+        76.8879,
+        81.965,
+        77.6312
+      ],
+      "samplesMs": [
+        1.7997,
+        1.6433,
+        1.66,
+        2.4721,
+        1.6293,
+        1.7458,
+        1.9579
+      ],
+      "binaryBytes": 609816,
+      "sha256": "7fda2b8bf2aabf624697706fb30ec1071303c624557ef8681c27f3a18fbe1e5b",
+      "medianMs": 1.7458,
+      "compileMedianMs": 80.2418
+    },
+    {
+      "variant": "alpha5",
+      "nominalTypes": 32,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();let a1:Array<Tag1>=[];let m1:HashMap<int,Tag1>=new HashMap<int,Tag1>();let a2:Array<Tag2>=[];let m2:HashMap<int,Tag2>=new HashMap<int,Tag2>();let a3:Array<Tag3>=[];let m3:HashMap<int,Tag3>=new HashMap<int,Tag3>();let a4:Array<Tag4>=[];let m4:HashMap<int,Tag4>=new HashMap<int,Tag4>();let a5:Array<Tag5>=[];let m5:HashMap<int,Tag5>=new HashMap<int,Tag5>();let a6:Array<Tag6>=[];let m6:HashMap<int,Tag6>=new HashMap<int,Tag6>();let a7:Array<Tag7>=[];let m7:HashMap<int,Tag7>=new HashMap<int,Tag7>();let a8:Array<Tag8>=[];let m8:HashMap<int,Tag8>=new HashMap<int,Tag8>();let a9:Array<Tag9>=[];let m9:HashMap<int,Tag9>=new HashMap<int,Tag9>();let a10:Array<Tag10>=[];let m10:HashMap<int,Tag10>=new HashMap<int,Tag10>();let a11:Array<Tag11>=[];let m11:HashMap<int,Tag11>=new HashMap<int,Tag11>();let a12:Array<Tag12>=[];let m12:HashMap<int,Tag12>=new HashMap<int,Tag12>();let a13:Array<Tag13>=[];let m13:HashMap<int,Tag13>=new HashMap<int,Tag13>();let a14:Array<Tag14>=[];let m14:HashMap<int,Tag14>=new HashMap<int,Tag14>();let a15:Array<Tag15>=[];let m15:HashMap<int,Tag15>=new HashMap<int,Tag15>();let a16:Array<Tag16>=[];let m16:HashMap<int,Tag16>=new HashMap<int,Tag16>();let a17:Array<Tag17>=[];let m17:HashMap<int,Tag17>=new HashMap<int,Tag17>();let a18:Array<Tag18>=[];let m18:HashMap<int,Tag18>=new HashMap<int,Tag18>();let a19:Array<Tag19>=[];let m19:HashMap<int,Tag19>=new HashMap<int,Tag19>();let a20:Array<Tag20>=[];let m20:HashMap<int,Tag20>=new HashMap<int,Tag20>();let a21:Array<Tag21>=[];let m21:HashMap<int,Tag21>=new HashMap<int,Tag21>();let a22:Array<Tag22>=[];let m22:HashMap<int,Tag22>=new HashMap<int,Tag22>();let a23:Array<Tag23>=[];let m23:HashMap<int,Tag23>=new HashMap<int,Tag23>();let a24:Array<Tag24>=[];let m24:HashMap<int,Tag24>=new HashMap<int,Tag24>();let a25:Array<Tag25>=[];let m25:HashMap<int,Tag25>=new HashMap<int,Tag25>();let a26:Array<Tag26>=[];let m26:HashMap<int,Tag26>=new HashMap<int,Tag26>();let a27:Array<Tag27>=[];let m27:HashMap<int,Tag27>=new HashMap<int,Tag27>();let a28:Array<Tag28>=[];let m28:HashMap<int,Tag28>=new HashMap<int,Tag28>();let a29:Array<Tag29>=[];let m29:HashMap<int,Tag29>=new HashMap<int,Tag29>();let a30:Array<Tag30>=[];let m30:HashMap<int,Tag30>=new HashMap<int,Tag30>();let a31:Array<Tag31>=[];let m31:HashMap<int,Tag31>=new HashMap<int,Tag31>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a1);free(m1);free(a2);free(m2);free(a3);free(m3);free(a4);free(m4);free(a5);free(m5);free(a6);free(m6);free(a7);free(m7);free(a8);free(m8);free(a9);free(m9);free(a10);free(m10);free(a11);free(m11);free(a12);free(m12);free(a13);free(m13);free(a14);free(m14);free(a15);free(m15);free(a16);free(m16);free(a17);free(m17);free(a18);free(m18);free(a19);free(m19);free(a20);free(m20);free(a21);free(m21);free(a22);free(m22);free(a23);free(m23);free(a24);free(m24);free(a25);free(m25);free(a26);free(m26);free(a27);free(m27);free(a28);free(m28);free(a29);free(m29);free(a30);free(m30);free(a31);free(m31);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nstruct Tag8{let marcador:int;}\nstruct Tag9{let marcador:int;}\nstruct Tag10{let marcador:int;}\nstruct Tag11{let marcador:int;}\nstruct Tag12{let marcador:int;}\nstruct Tag13{let marcador:int;}\nstruct Tag14{let marcador:int;}\nstruct Tag15{let marcador:int;}\nstruct Tag16{let marcador:int;}\nstruct Tag17{let marcador:int;}\nstruct Tag18{let marcador:int;}\nstruct Tag19{let marcador:int;}\nstruct Tag20{let marcador:int;}\nstruct Tag21{let marcador:int;}\nstruct Tag22{let marcador:int;}\nstruct Tag23{let marcador:int;}\nstruct Tag24{let marcador:int;}\nstruct Tag25{let marcador:int;}\nstruct Tag26{let marcador:int;}\nstruct Tag27{let marcador:int;}\nstruct Tag28{let marcador:int;}\nstruct Tag29{let marcador:int;}\nstruct Tag30{let marcador:int;}\nstruct Tag31{let marcador:int;}",
+      "compileSamplesMs": [
+        55.8658,
+        50.6455,
+        53.5498,
+        50.9962,
+        52.8777,
+        49.7665,
+        61.7898
+      ],
+      "samplesMs": [
+        1.641,
+        1.4639,
+        2.0876,
+        1.7449,
+        1.4686,
+        1.8789,
+        1.7427
+      ],
+      "binaryBytes": 609816,
+      "sha256": "7fda2b8bf2aabf624697706fb30ec1071303c624557ef8681c27f3a18fbe1e5b",
+      "medianMs": 1.7427,
+      "compileMedianMs": 52.8777
+    },
+    {
+      "variant": "alpha4",
+      "nominalTypes": 64,
+      "flags": [],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();let a1:Array<Tag1>=[];let m1:HashMap<int,Tag1>=new HashMap<int,Tag1>();let a2:Array<Tag2>=[];let m2:HashMap<int,Tag2>=new HashMap<int,Tag2>();let a3:Array<Tag3>=[];let m3:HashMap<int,Tag3>=new HashMap<int,Tag3>();let a4:Array<Tag4>=[];let m4:HashMap<int,Tag4>=new HashMap<int,Tag4>();let a5:Array<Tag5>=[];let m5:HashMap<int,Tag5>=new HashMap<int,Tag5>();let a6:Array<Tag6>=[];let m6:HashMap<int,Tag6>=new HashMap<int,Tag6>();let a7:Array<Tag7>=[];let m7:HashMap<int,Tag7>=new HashMap<int,Tag7>();let a8:Array<Tag8>=[];let m8:HashMap<int,Tag8>=new HashMap<int,Tag8>();let a9:Array<Tag9>=[];let m9:HashMap<int,Tag9>=new HashMap<int,Tag9>();let a10:Array<Tag10>=[];let m10:HashMap<int,Tag10>=new HashMap<int,Tag10>();let a11:Array<Tag11>=[];let m11:HashMap<int,Tag11>=new HashMap<int,Tag11>();let a12:Array<Tag12>=[];let m12:HashMap<int,Tag12>=new HashMap<int,Tag12>();let a13:Array<Tag13>=[];let m13:HashMap<int,Tag13>=new HashMap<int,Tag13>();let a14:Array<Tag14>=[];let m14:HashMap<int,Tag14>=new HashMap<int,Tag14>();let a15:Array<Tag15>=[];let m15:HashMap<int,Tag15>=new HashMap<int,Tag15>();let a16:Array<Tag16>=[];let m16:HashMap<int,Tag16>=new HashMap<int,Tag16>();let a17:Array<Tag17>=[];let m17:HashMap<int,Tag17>=new HashMap<int,Tag17>();let a18:Array<Tag18>=[];let m18:HashMap<int,Tag18>=new HashMap<int,Tag18>();let a19:Array<Tag19>=[];let m19:HashMap<int,Tag19>=new HashMap<int,Tag19>();let a20:Array<Tag20>=[];let m20:HashMap<int,Tag20>=new HashMap<int,Tag20>();let a21:Array<Tag21>=[];let m21:HashMap<int,Tag21>=new HashMap<int,Tag21>();let a22:Array<Tag22>=[];let m22:HashMap<int,Tag22>=new HashMap<int,Tag22>();let a23:Array<Tag23>=[];let m23:HashMap<int,Tag23>=new HashMap<int,Tag23>();let a24:Array<Tag24>=[];let m24:HashMap<int,Tag24>=new HashMap<int,Tag24>();let a25:Array<Tag25>=[];let m25:HashMap<int,Tag25>=new HashMap<int,Tag25>();let a26:Array<Tag26>=[];let m26:HashMap<int,Tag26>=new HashMap<int,Tag26>();let a27:Array<Tag27>=[];let m27:HashMap<int,Tag27>=new HashMap<int,Tag27>();let a28:Array<Tag28>=[];let m28:HashMap<int,Tag28>=new HashMap<int,Tag28>();let a29:Array<Tag29>=[];let m29:HashMap<int,Tag29>=new HashMap<int,Tag29>();let a30:Array<Tag30>=[];let m30:HashMap<int,Tag30>=new HashMap<int,Tag30>();let a31:Array<Tag31>=[];let m31:HashMap<int,Tag31>=new HashMap<int,Tag31>();let a32:Array<Tag32>=[];let m32:HashMap<int,Tag32>=new HashMap<int,Tag32>();let a33:Array<Tag33>=[];let m33:HashMap<int,Tag33>=new HashMap<int,Tag33>();let a34:Array<Tag34>=[];let m34:HashMap<int,Tag34>=new HashMap<int,Tag34>();let a35:Array<Tag35>=[];let m35:HashMap<int,Tag35>=new HashMap<int,Tag35>();let a36:Array<Tag36>=[];let m36:HashMap<int,Tag36>=new HashMap<int,Tag36>();let a37:Array<Tag37>=[];let m37:HashMap<int,Tag37>=new HashMap<int,Tag37>();let a38:Array<Tag38>=[];let m38:HashMap<int,Tag38>=new HashMap<int,Tag38>();let a39:Array<Tag39>=[];let m39:HashMap<int,Tag39>=new HashMap<int,Tag39>();let a40:Array<Tag40>=[];let m40:HashMap<int,Tag40>=new HashMap<int,Tag40>();let a41:Array<Tag41>=[];let m41:HashMap<int,Tag41>=new HashMap<int,Tag41>();let a42:Array<Tag42>=[];let m42:HashMap<int,Tag42>=new HashMap<int,Tag42>();let a43:Array<Tag43>=[];let m43:HashMap<int,Tag43>=new HashMap<int,Tag43>();let a44:Array<Tag44>=[];let m44:HashMap<int,Tag44>=new HashMap<int,Tag44>();let a45:Array<Tag45>=[];let m45:HashMap<int,Tag45>=new HashMap<int,Tag45>();let a46:Array<Tag46>=[];let m46:HashMap<int,Tag46>=new HashMap<int,Tag46>();let a47:Array<Tag47>=[];let m47:HashMap<int,Tag47>=new HashMap<int,Tag47>();let a48:Array<Tag48>=[];let m48:HashMap<int,Tag48>=new HashMap<int,Tag48>();let a49:Array<Tag49>=[];let m49:HashMap<int,Tag49>=new HashMap<int,Tag49>();let a50:Array<Tag50>=[];let m50:HashMap<int,Tag50>=new HashMap<int,Tag50>();let a51:Array<Tag51>=[];let m51:HashMap<int,Tag51>=new HashMap<int,Tag51>();let a52:Array<Tag52>=[];let m52:HashMap<int,Tag52>=new HashMap<int,Tag52>();let a53:Array<Tag53>=[];let m53:HashMap<int,Tag53>=new HashMap<int,Tag53>();let a54:Array<Tag54>=[];let m54:HashMap<int,Tag54>=new HashMap<int,Tag54>();let a55:Array<Tag55>=[];let m55:HashMap<int,Tag55>=new HashMap<int,Tag55>();let a56:Array<Tag56>=[];let m56:HashMap<int,Tag56>=new HashMap<int,Tag56>();let a57:Array<Tag57>=[];let m57:HashMap<int,Tag57>=new HashMap<int,Tag57>();let a58:Array<Tag58>=[];let m58:HashMap<int,Tag58>=new HashMap<int,Tag58>();let a59:Array<Tag59>=[];let m59:HashMap<int,Tag59>=new HashMap<int,Tag59>();let a60:Array<Tag60>=[];let m60:HashMap<int,Tag60>=new HashMap<int,Tag60>();let a61:Array<Tag61>=[];let m61:HashMap<int,Tag61>=new HashMap<int,Tag61>();let a62:Array<Tag62>=[];let m62:HashMap<int,Tag62>=new HashMap<int,Tag62>();let a63:Array<Tag63>=[];let m63:HashMap<int,Tag63>=new HashMap<int,Tag63>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a1);free(m1);free(a2);free(m2);free(a3);free(m3);free(a4);free(m4);free(a5);free(m5);free(a6);free(m6);free(a7);free(m7);free(a8);free(m8);free(a9);free(m9);free(a10);free(m10);free(a11);free(m11);free(a12);free(m12);free(a13);free(m13);free(a14);free(m14);free(a15);free(m15);free(a16);free(m16);free(a17);free(m17);free(a18);free(m18);free(a19);free(m19);free(a20);free(m20);free(a21);free(m21);free(a22);free(m22);free(a23);free(m23);free(a24);free(m24);free(a25);free(m25);free(a26);free(m26);free(a27);free(m27);free(a28);free(m28);free(a29);free(m29);free(a30);free(m30);free(a31);free(m31);free(a32);free(m32);free(a33);free(m33);free(a34);free(m34);free(a35);free(m35);free(a36);free(m36);free(a37);free(m37);free(a38);free(m38);free(a39);free(m39);free(a40);free(m40);free(a41);free(m41);free(a42);free(m42);free(a43);free(m43);free(a44);free(m44);free(a45);free(m45);free(a46);free(m46);free(a47);free(m47);free(a48);free(m48);free(a49);free(m49);free(a50);free(m50);free(a51);free(m51);free(a52);free(m52);free(a53);free(m53);free(a54);free(m54);free(a55);free(m55);free(a56);free(m56);free(a57);free(m57);free(a58);free(m58);free(a59);free(m59);free(a60);free(m60);free(a61);free(m61);free(a62);free(m62);free(a63);free(m63);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nstruct Tag8{let marcador:int;}\nstruct Tag9{let marcador:int;}\nstruct Tag10{let marcador:int;}\nstruct Tag11{let marcador:int;}\nstruct Tag12{let marcador:int;}\nstruct Tag13{let marcador:int;}\nstruct Tag14{let marcador:int;}\nstruct Tag15{let marcador:int;}\nstruct Tag16{let marcador:int;}\nstruct Tag17{let marcador:int;}\nstruct Tag18{let marcador:int;}\nstruct Tag19{let marcador:int;}\nstruct Tag20{let marcador:int;}\nstruct Tag21{let marcador:int;}\nstruct Tag22{let marcador:int;}\nstruct Tag23{let marcador:int;}\nstruct Tag24{let marcador:int;}\nstruct Tag25{let marcador:int;}\nstruct Tag26{let marcador:int;}\nstruct Tag27{let marcador:int;}\nstruct Tag28{let marcador:int;}\nstruct Tag29{let marcador:int;}\nstruct Tag30{let marcador:int;}\nstruct Tag31{let marcador:int;}\nstruct Tag32{let marcador:int;}\nstruct Tag33{let marcador:int;}\nstruct Tag34{let marcador:int;}\nstruct Tag35{let marcador:int;}\nstruct Tag36{let marcador:int;}\nstruct Tag37{let marcador:int;}\nstruct Tag38{let marcador:int;}\nstruct Tag39{let marcador:int;}\nstruct Tag40{let marcador:int;}\nstruct Tag41{let marcador:int;}\nstruct Tag42{let marcador:int;}\nstruct Tag43{let marcador:int;}\nstruct Tag44{let marcador:int;}\nstruct Tag45{let marcador:int;}\nstruct Tag46{let marcador:int;}\nstruct Tag47{let marcador:int;}\nstruct Tag48{let marcador:int;}\nstruct Tag49{let marcador:int;}\nstruct Tag50{let marcador:int;}\nstruct Tag51{let marcador:int;}\nstruct Tag52{let marcador:int;}\nstruct Tag53{let marcador:int;}\nstruct Tag54{let marcador:int;}\nstruct Tag55{let marcador:int;}\nstruct Tag56{let marcador:int;}\nstruct Tag57{let marcador:int;}\nstruct Tag58{let marcador:int;}\nstruct Tag59{let marcador:int;}\nstruct Tag60{let marcador:int;}\nstruct Tag61{let marcador:int;}\nstruct Tag62{let marcador:int;}\nstruct Tag63{let marcador:int;}",
+      "compileSamplesMs": [
+        179.9539,
+        172.4341,
+        154.9046,
+        170.4456,
+        155.356,
+        155.742,
+        163.2732
+      ],
+      "samplesMs": [
+        1.6124,
+        1.7578,
+        1.9554,
+        1.6453,
+        1.6483,
+        2.04,
+        1.5735
+      ],
+      "binaryBytes": 1059096,
+      "sha256": "4d6756df107a8e3b2dc2b05ce9d31f73da8f9fcb9700fde3b4e2b64634191c80",
+      "medianMs": 1.6483,
+      "compileMedianMs": 163.2732
+    },
+    {
+      "variant": "alpha5",
+      "nominalTypes": 64,
+      "flags": [],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();let a1:Array<Tag1>=[];let m1:HashMap<int,Tag1>=new HashMap<int,Tag1>();let a2:Array<Tag2>=[];let m2:HashMap<int,Tag2>=new HashMap<int,Tag2>();let a3:Array<Tag3>=[];let m3:HashMap<int,Tag3>=new HashMap<int,Tag3>();let a4:Array<Tag4>=[];let m4:HashMap<int,Tag4>=new HashMap<int,Tag4>();let a5:Array<Tag5>=[];let m5:HashMap<int,Tag5>=new HashMap<int,Tag5>();let a6:Array<Tag6>=[];let m6:HashMap<int,Tag6>=new HashMap<int,Tag6>();let a7:Array<Tag7>=[];let m7:HashMap<int,Tag7>=new HashMap<int,Tag7>();let a8:Array<Tag8>=[];let m8:HashMap<int,Tag8>=new HashMap<int,Tag8>();let a9:Array<Tag9>=[];let m9:HashMap<int,Tag9>=new HashMap<int,Tag9>();let a10:Array<Tag10>=[];let m10:HashMap<int,Tag10>=new HashMap<int,Tag10>();let a11:Array<Tag11>=[];let m11:HashMap<int,Tag11>=new HashMap<int,Tag11>();let a12:Array<Tag12>=[];let m12:HashMap<int,Tag12>=new HashMap<int,Tag12>();let a13:Array<Tag13>=[];let m13:HashMap<int,Tag13>=new HashMap<int,Tag13>();let a14:Array<Tag14>=[];let m14:HashMap<int,Tag14>=new HashMap<int,Tag14>();let a15:Array<Tag15>=[];let m15:HashMap<int,Tag15>=new HashMap<int,Tag15>();let a16:Array<Tag16>=[];let m16:HashMap<int,Tag16>=new HashMap<int,Tag16>();let a17:Array<Tag17>=[];let m17:HashMap<int,Tag17>=new HashMap<int,Tag17>();let a18:Array<Tag18>=[];let m18:HashMap<int,Tag18>=new HashMap<int,Tag18>();let a19:Array<Tag19>=[];let m19:HashMap<int,Tag19>=new HashMap<int,Tag19>();let a20:Array<Tag20>=[];let m20:HashMap<int,Tag20>=new HashMap<int,Tag20>();let a21:Array<Tag21>=[];let m21:HashMap<int,Tag21>=new HashMap<int,Tag21>();let a22:Array<Tag22>=[];let m22:HashMap<int,Tag22>=new HashMap<int,Tag22>();let a23:Array<Tag23>=[];let m23:HashMap<int,Tag23>=new HashMap<int,Tag23>();let a24:Array<Tag24>=[];let m24:HashMap<int,Tag24>=new HashMap<int,Tag24>();let a25:Array<Tag25>=[];let m25:HashMap<int,Tag25>=new HashMap<int,Tag25>();let a26:Array<Tag26>=[];let m26:HashMap<int,Tag26>=new HashMap<int,Tag26>();let a27:Array<Tag27>=[];let m27:HashMap<int,Tag27>=new HashMap<int,Tag27>();let a28:Array<Tag28>=[];let m28:HashMap<int,Tag28>=new HashMap<int,Tag28>();let a29:Array<Tag29>=[];let m29:HashMap<int,Tag29>=new HashMap<int,Tag29>();let a30:Array<Tag30>=[];let m30:HashMap<int,Tag30>=new HashMap<int,Tag30>();let a31:Array<Tag31>=[];let m31:HashMap<int,Tag31>=new HashMap<int,Tag31>();let a32:Array<Tag32>=[];let m32:HashMap<int,Tag32>=new HashMap<int,Tag32>();let a33:Array<Tag33>=[];let m33:HashMap<int,Tag33>=new HashMap<int,Tag33>();let a34:Array<Tag34>=[];let m34:HashMap<int,Tag34>=new HashMap<int,Tag34>();let a35:Array<Tag35>=[];let m35:HashMap<int,Tag35>=new HashMap<int,Tag35>();let a36:Array<Tag36>=[];let m36:HashMap<int,Tag36>=new HashMap<int,Tag36>();let a37:Array<Tag37>=[];let m37:HashMap<int,Tag37>=new HashMap<int,Tag37>();let a38:Array<Tag38>=[];let m38:HashMap<int,Tag38>=new HashMap<int,Tag38>();let a39:Array<Tag39>=[];let m39:HashMap<int,Tag39>=new HashMap<int,Tag39>();let a40:Array<Tag40>=[];let m40:HashMap<int,Tag40>=new HashMap<int,Tag40>();let a41:Array<Tag41>=[];let m41:HashMap<int,Tag41>=new HashMap<int,Tag41>();let a42:Array<Tag42>=[];let m42:HashMap<int,Tag42>=new HashMap<int,Tag42>();let a43:Array<Tag43>=[];let m43:HashMap<int,Tag43>=new HashMap<int,Tag43>();let a44:Array<Tag44>=[];let m44:HashMap<int,Tag44>=new HashMap<int,Tag44>();let a45:Array<Tag45>=[];let m45:HashMap<int,Tag45>=new HashMap<int,Tag45>();let a46:Array<Tag46>=[];let m46:HashMap<int,Tag46>=new HashMap<int,Tag46>();let a47:Array<Tag47>=[];let m47:HashMap<int,Tag47>=new HashMap<int,Tag47>();let a48:Array<Tag48>=[];let m48:HashMap<int,Tag48>=new HashMap<int,Tag48>();let a49:Array<Tag49>=[];let m49:HashMap<int,Tag49>=new HashMap<int,Tag49>();let a50:Array<Tag50>=[];let m50:HashMap<int,Tag50>=new HashMap<int,Tag50>();let a51:Array<Tag51>=[];let m51:HashMap<int,Tag51>=new HashMap<int,Tag51>();let a52:Array<Tag52>=[];let m52:HashMap<int,Tag52>=new HashMap<int,Tag52>();let a53:Array<Tag53>=[];let m53:HashMap<int,Tag53>=new HashMap<int,Tag53>();let a54:Array<Tag54>=[];let m54:HashMap<int,Tag54>=new HashMap<int,Tag54>();let a55:Array<Tag55>=[];let m55:HashMap<int,Tag55>=new HashMap<int,Tag55>();let a56:Array<Tag56>=[];let m56:HashMap<int,Tag56>=new HashMap<int,Tag56>();let a57:Array<Tag57>=[];let m57:HashMap<int,Tag57>=new HashMap<int,Tag57>();let a58:Array<Tag58>=[];let m58:HashMap<int,Tag58>=new HashMap<int,Tag58>();let a59:Array<Tag59>=[];let m59:HashMap<int,Tag59>=new HashMap<int,Tag59>();let a60:Array<Tag60>=[];let m60:HashMap<int,Tag60>=new HashMap<int,Tag60>();let a61:Array<Tag61>=[];let m61:HashMap<int,Tag61>=new HashMap<int,Tag61>();let a62:Array<Tag62>=[];let m62:HashMap<int,Tag62>=new HashMap<int,Tag62>();let a63:Array<Tag63>=[];let m63:HashMap<int,Tag63>=new HashMap<int,Tag63>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a1);free(m1);free(a2);free(m2);free(a3);free(m3);free(a4);free(m4);free(a5);free(m5);free(a6);free(m6);free(a7);free(m7);free(a8);free(m8);free(a9);free(m9);free(a10);free(m10);free(a11);free(m11);free(a12);free(m12);free(a13);free(m13);free(a14);free(m14);free(a15);free(m15);free(a16);free(m16);free(a17);free(m17);free(a18);free(m18);free(a19);free(m19);free(a20);free(m20);free(a21);free(m21);free(a22);free(m22);free(a23);free(m23);free(a24);free(m24);free(a25);free(m25);free(a26);free(m26);free(a27);free(m27);free(a28);free(m28);free(a29);free(m29);free(a30);free(m30);free(a31);free(m31);free(a32);free(m32);free(a33);free(m33);free(a34);free(m34);free(a35);free(m35);free(a36);free(m36);free(a37);free(m37);free(a38);free(m38);free(a39);free(m39);free(a40);free(m40);free(a41);free(m41);free(a42);free(m42);free(a43);free(m43);free(a44);free(m44);free(a45);free(m45);free(a46);free(m46);free(a47);free(m47);free(a48);free(m48);free(a49);free(m49);free(a50);free(m50);free(a51);free(m51);free(a52);free(m52);free(a53);free(m53);free(a54);free(m54);free(a55);free(m55);free(a56);free(m56);free(a57);free(m57);free(a58);free(m58);free(a59);free(m59);free(a60);free(m60);free(a61);free(m61);free(a62);free(m62);free(a63);free(m63);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nstruct Tag8{let marcador:int;}\nstruct Tag9{let marcador:int;}\nstruct Tag10{let marcador:int;}\nstruct Tag11{let marcador:int;}\nstruct Tag12{let marcador:int;}\nstruct Tag13{let marcador:int;}\nstruct Tag14{let marcador:int;}\nstruct Tag15{let marcador:int;}\nstruct Tag16{let marcador:int;}\nstruct Tag17{let marcador:int;}\nstruct Tag18{let marcador:int;}\nstruct Tag19{let marcador:int;}\nstruct Tag20{let marcador:int;}\nstruct Tag21{let marcador:int;}\nstruct Tag22{let marcador:int;}\nstruct Tag23{let marcador:int;}\nstruct Tag24{let marcador:int;}\nstruct Tag25{let marcador:int;}\nstruct Tag26{let marcador:int;}\nstruct Tag27{let marcador:int;}\nstruct Tag28{let marcador:int;}\nstruct Tag29{let marcador:int;}\nstruct Tag30{let marcador:int;}\nstruct Tag31{let marcador:int;}\nstruct Tag32{let marcador:int;}\nstruct Tag33{let marcador:int;}\nstruct Tag34{let marcador:int;}\nstruct Tag35{let marcador:int;}\nstruct Tag36{let marcador:int;}\nstruct Tag37{let marcador:int;}\nstruct Tag38{let marcador:int;}\nstruct Tag39{let marcador:int;}\nstruct Tag40{let marcador:int;}\nstruct Tag41{let marcador:int;}\nstruct Tag42{let marcador:int;}\nstruct Tag43{let marcador:int;}\nstruct Tag44{let marcador:int;}\nstruct Tag45{let marcador:int;}\nstruct Tag46{let marcador:int;}\nstruct Tag47{let marcador:int;}\nstruct Tag48{let marcador:int;}\nstruct Tag49{let marcador:int;}\nstruct Tag50{let marcador:int;}\nstruct Tag51{let marcador:int;}\nstruct Tag52{let marcador:int;}\nstruct Tag53{let marcador:int;}\nstruct Tag54{let marcador:int;}\nstruct Tag55{let marcador:int;}\nstruct Tag56{let marcador:int;}\nstruct Tag57{let marcador:int;}\nstruct Tag58{let marcador:int;}\nstruct Tag59{let marcador:int;}\nstruct Tag60{let marcador:int;}\nstruct Tag61{let marcador:int;}\nstruct Tag62{let marcador:int;}\nstruct Tag63{let marcador:int;}",
+      "compileSamplesMs": [
+        111.2771,
+        116.2559,
+        116.691,
+        112.4177,
+        113.0125,
+        110.2216,
+        104.6761
+      ],
+      "samplesMs": [
+        1.8731,
+        1.8709,
+        1.5378,
+        2.1374,
+        1.8075,
+        1.7852,
+        1.82
+      ],
+      "binaryBytes": 1059096,
+      "sha256": "4d6756df107a8e3b2dc2b05ce9d31f73da8f9fcb9700fde3b4e2b64634191c80",
+      "medianMs": 1.82,
+      "compileMedianMs": 112.4177
+    },
+    {
+      "variant": "alpha4",
+      "nominalTypes": 64,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();let a1:Array<Tag1>=[];let m1:HashMap<int,Tag1>=new HashMap<int,Tag1>();let a2:Array<Tag2>=[];let m2:HashMap<int,Tag2>=new HashMap<int,Tag2>();let a3:Array<Tag3>=[];let m3:HashMap<int,Tag3>=new HashMap<int,Tag3>();let a4:Array<Tag4>=[];let m4:HashMap<int,Tag4>=new HashMap<int,Tag4>();let a5:Array<Tag5>=[];let m5:HashMap<int,Tag5>=new HashMap<int,Tag5>();let a6:Array<Tag6>=[];let m6:HashMap<int,Tag6>=new HashMap<int,Tag6>();let a7:Array<Tag7>=[];let m7:HashMap<int,Tag7>=new HashMap<int,Tag7>();let a8:Array<Tag8>=[];let m8:HashMap<int,Tag8>=new HashMap<int,Tag8>();let a9:Array<Tag9>=[];let m9:HashMap<int,Tag9>=new HashMap<int,Tag9>();let a10:Array<Tag10>=[];let m10:HashMap<int,Tag10>=new HashMap<int,Tag10>();let a11:Array<Tag11>=[];let m11:HashMap<int,Tag11>=new HashMap<int,Tag11>();let a12:Array<Tag12>=[];let m12:HashMap<int,Tag12>=new HashMap<int,Tag12>();let a13:Array<Tag13>=[];let m13:HashMap<int,Tag13>=new HashMap<int,Tag13>();let a14:Array<Tag14>=[];let m14:HashMap<int,Tag14>=new HashMap<int,Tag14>();let a15:Array<Tag15>=[];let m15:HashMap<int,Tag15>=new HashMap<int,Tag15>();let a16:Array<Tag16>=[];let m16:HashMap<int,Tag16>=new HashMap<int,Tag16>();let a17:Array<Tag17>=[];let m17:HashMap<int,Tag17>=new HashMap<int,Tag17>();let a18:Array<Tag18>=[];let m18:HashMap<int,Tag18>=new HashMap<int,Tag18>();let a19:Array<Tag19>=[];let m19:HashMap<int,Tag19>=new HashMap<int,Tag19>();let a20:Array<Tag20>=[];let m20:HashMap<int,Tag20>=new HashMap<int,Tag20>();let a21:Array<Tag21>=[];let m21:HashMap<int,Tag21>=new HashMap<int,Tag21>();let a22:Array<Tag22>=[];let m22:HashMap<int,Tag22>=new HashMap<int,Tag22>();let a23:Array<Tag23>=[];let m23:HashMap<int,Tag23>=new HashMap<int,Tag23>();let a24:Array<Tag24>=[];let m24:HashMap<int,Tag24>=new HashMap<int,Tag24>();let a25:Array<Tag25>=[];let m25:HashMap<int,Tag25>=new HashMap<int,Tag25>();let a26:Array<Tag26>=[];let m26:HashMap<int,Tag26>=new HashMap<int,Tag26>();let a27:Array<Tag27>=[];let m27:HashMap<int,Tag27>=new HashMap<int,Tag27>();let a28:Array<Tag28>=[];let m28:HashMap<int,Tag28>=new HashMap<int,Tag28>();let a29:Array<Tag29>=[];let m29:HashMap<int,Tag29>=new HashMap<int,Tag29>();let a30:Array<Tag30>=[];let m30:HashMap<int,Tag30>=new HashMap<int,Tag30>();let a31:Array<Tag31>=[];let m31:HashMap<int,Tag31>=new HashMap<int,Tag31>();let a32:Array<Tag32>=[];let m32:HashMap<int,Tag32>=new HashMap<int,Tag32>();let a33:Array<Tag33>=[];let m33:HashMap<int,Tag33>=new HashMap<int,Tag33>();let a34:Array<Tag34>=[];let m34:HashMap<int,Tag34>=new HashMap<int,Tag34>();let a35:Array<Tag35>=[];let m35:HashMap<int,Tag35>=new HashMap<int,Tag35>();let a36:Array<Tag36>=[];let m36:HashMap<int,Tag36>=new HashMap<int,Tag36>();let a37:Array<Tag37>=[];let m37:HashMap<int,Tag37>=new HashMap<int,Tag37>();let a38:Array<Tag38>=[];let m38:HashMap<int,Tag38>=new HashMap<int,Tag38>();let a39:Array<Tag39>=[];let m39:HashMap<int,Tag39>=new HashMap<int,Tag39>();let a40:Array<Tag40>=[];let m40:HashMap<int,Tag40>=new HashMap<int,Tag40>();let a41:Array<Tag41>=[];let m41:HashMap<int,Tag41>=new HashMap<int,Tag41>();let a42:Array<Tag42>=[];let m42:HashMap<int,Tag42>=new HashMap<int,Tag42>();let a43:Array<Tag43>=[];let m43:HashMap<int,Tag43>=new HashMap<int,Tag43>();let a44:Array<Tag44>=[];let m44:HashMap<int,Tag44>=new HashMap<int,Tag44>();let a45:Array<Tag45>=[];let m45:HashMap<int,Tag45>=new HashMap<int,Tag45>();let a46:Array<Tag46>=[];let m46:HashMap<int,Tag46>=new HashMap<int,Tag46>();let a47:Array<Tag47>=[];let m47:HashMap<int,Tag47>=new HashMap<int,Tag47>();let a48:Array<Tag48>=[];let m48:HashMap<int,Tag48>=new HashMap<int,Tag48>();let a49:Array<Tag49>=[];let m49:HashMap<int,Tag49>=new HashMap<int,Tag49>();let a50:Array<Tag50>=[];let m50:HashMap<int,Tag50>=new HashMap<int,Tag50>();let a51:Array<Tag51>=[];let m51:HashMap<int,Tag51>=new HashMap<int,Tag51>();let a52:Array<Tag52>=[];let m52:HashMap<int,Tag52>=new HashMap<int,Tag52>();let a53:Array<Tag53>=[];let m53:HashMap<int,Tag53>=new HashMap<int,Tag53>();let a54:Array<Tag54>=[];let m54:HashMap<int,Tag54>=new HashMap<int,Tag54>();let a55:Array<Tag55>=[];let m55:HashMap<int,Tag55>=new HashMap<int,Tag55>();let a56:Array<Tag56>=[];let m56:HashMap<int,Tag56>=new HashMap<int,Tag56>();let a57:Array<Tag57>=[];let m57:HashMap<int,Tag57>=new HashMap<int,Tag57>();let a58:Array<Tag58>=[];let m58:HashMap<int,Tag58>=new HashMap<int,Tag58>();let a59:Array<Tag59>=[];let m59:HashMap<int,Tag59>=new HashMap<int,Tag59>();let a60:Array<Tag60>=[];let m60:HashMap<int,Tag60>=new HashMap<int,Tag60>();let a61:Array<Tag61>=[];let m61:HashMap<int,Tag61>=new HashMap<int,Tag61>();let a62:Array<Tag62>=[];let m62:HashMap<int,Tag62>=new HashMap<int,Tag62>();let a63:Array<Tag63>=[];let m63:HashMap<int,Tag63>=new HashMap<int,Tag63>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a1);free(m1);free(a2);free(m2);free(a3);free(m3);free(a4);free(m4);free(a5);free(m5);free(a6);free(m6);free(a7);free(m7);free(a8);free(m8);free(a9);free(m9);free(a10);free(m10);free(a11);free(m11);free(a12);free(m12);free(a13);free(m13);free(a14);free(m14);free(a15);free(m15);free(a16);free(m16);free(a17);free(m17);free(a18);free(m18);free(a19);free(m19);free(a20);free(m20);free(a21);free(m21);free(a22);free(m22);free(a23);free(m23);free(a24);free(m24);free(a25);free(m25);free(a26);free(m26);free(a27);free(m27);free(a28);free(m28);free(a29);free(m29);free(a30);free(m30);free(a31);free(m31);free(a32);free(m32);free(a33);free(m33);free(a34);free(m34);free(a35);free(m35);free(a36);free(m36);free(a37);free(m37);free(a38);free(m38);free(a39);free(m39);free(a40);free(m40);free(a41);free(m41);free(a42);free(m42);free(a43);free(m43);free(a44);free(m44);free(a45);free(m45);free(a46);free(m46);free(a47);free(m47);free(a48);free(m48);free(a49);free(m49);free(a50);free(m50);free(a51);free(m51);free(a52);free(m52);free(a53);free(m53);free(a54);free(m54);free(a55);free(m55);free(a56);free(m56);free(a57);free(m57);free(a58);free(m58);free(a59);free(m59);free(a60);free(m60);free(a61);free(m61);free(a62);free(m62);free(a63);free(m63);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nstruct Tag8{let marcador:int;}\nstruct Tag9{let marcador:int;}\nstruct Tag10{let marcador:int;}\nstruct Tag11{let marcador:int;}\nstruct Tag12{let marcador:int;}\nstruct Tag13{let marcador:int;}\nstruct Tag14{let marcador:int;}\nstruct Tag15{let marcador:int;}\nstruct Tag16{let marcador:int;}\nstruct Tag17{let marcador:int;}\nstruct Tag18{let marcador:int;}\nstruct Tag19{let marcador:int;}\nstruct Tag20{let marcador:int;}\nstruct Tag21{let marcador:int;}\nstruct Tag22{let marcador:int;}\nstruct Tag23{let marcador:int;}\nstruct Tag24{let marcador:int;}\nstruct Tag25{let marcador:int;}\nstruct Tag26{let marcador:int;}\nstruct Tag27{let marcador:int;}\nstruct Tag28{let marcador:int;}\nstruct Tag29{let marcador:int;}\nstruct Tag30{let marcador:int;}\nstruct Tag31{let marcador:int;}\nstruct Tag32{let marcador:int;}\nstruct Tag33{let marcador:int;}\nstruct Tag34{let marcador:int;}\nstruct Tag35{let marcador:int;}\nstruct Tag36{let marcador:int;}\nstruct Tag37{let marcador:int;}\nstruct Tag38{let marcador:int;}\nstruct Tag39{let marcador:int;}\nstruct Tag40{let marcador:int;}\nstruct Tag41{let marcador:int;}\nstruct Tag42{let marcador:int;}\nstruct Tag43{let marcador:int;}\nstruct Tag44{let marcador:int;}\nstruct Tag45{let marcador:int;}\nstruct Tag46{let marcador:int;}\nstruct Tag47{let marcador:int;}\nstruct Tag48{let marcador:int;}\nstruct Tag49{let marcador:int;}\nstruct Tag50{let marcador:int;}\nstruct Tag51{let marcador:int;}\nstruct Tag52{let marcador:int;}\nstruct Tag53{let marcador:int;}\nstruct Tag54{let marcador:int;}\nstruct Tag55{let marcador:int;}\nstruct Tag56{let marcador:int;}\nstruct Tag57{let marcador:int;}\nstruct Tag58{let marcador:int;}\nstruct Tag59{let marcador:int;}\nstruct Tag60{let marcador:int;}\nstruct Tag61{let marcador:int;}\nstruct Tag62{let marcador:int;}\nstruct Tag63{let marcador:int;}",
+      "compileSamplesMs": [
+        170.5762,
+        165.0925,
+        169.5924,
+        155.9325,
+        157.4365,
+        177.0947,
+        155.5578
+      ],
+      "samplesMs": [
+        1.7967,
+        1.7309,
+        1.6784,
+        1.8268,
+        1.7842,
+        1.7446,
+        2.1042
+      ],
+      "binaryBytes": 1190168,
+      "sha256": "2fb5975931ee8307df25d203a960f9bf3c8f0c911bb7e748aad01c9e462aec56",
+      "medianMs": 1.7842,
+      "compileMedianMs": 165.0925
+    },
+    {
+      "variant": "alpha5",
+      "nominalTypes": 64,
+      "flags": [
+        "--no-opt"
+      ],
+      "source": "assis assis_assis():int{let a:Array<int>=[];let m:HashMap<int,int>=new HashMap<int,int>();let a0:Array<Tag0>=[];let m0:HashMap<int,Tag0>=new HashMap<int,Tag0>();let a1:Array<Tag1>=[];let m1:HashMap<int,Tag1>=new HashMap<int,Tag1>();let a2:Array<Tag2>=[];let m2:HashMap<int,Tag2>=new HashMap<int,Tag2>();let a3:Array<Tag3>=[];let m3:HashMap<int,Tag3>=new HashMap<int,Tag3>();let a4:Array<Tag4>=[];let m4:HashMap<int,Tag4>=new HashMap<int,Tag4>();let a5:Array<Tag5>=[];let m5:HashMap<int,Tag5>=new HashMap<int,Tag5>();let a6:Array<Tag6>=[];let m6:HashMap<int,Tag6>=new HashMap<int,Tag6>();let a7:Array<Tag7>=[];let m7:HashMap<int,Tag7>=new HashMap<int,Tag7>();let a8:Array<Tag8>=[];let m8:HashMap<int,Tag8>=new HashMap<int,Tag8>();let a9:Array<Tag9>=[];let m9:HashMap<int,Tag9>=new HashMap<int,Tag9>();let a10:Array<Tag10>=[];let m10:HashMap<int,Tag10>=new HashMap<int,Tag10>();let a11:Array<Tag11>=[];let m11:HashMap<int,Tag11>=new HashMap<int,Tag11>();let a12:Array<Tag12>=[];let m12:HashMap<int,Tag12>=new HashMap<int,Tag12>();let a13:Array<Tag13>=[];let m13:HashMap<int,Tag13>=new HashMap<int,Tag13>();let a14:Array<Tag14>=[];let m14:HashMap<int,Tag14>=new HashMap<int,Tag14>();let a15:Array<Tag15>=[];let m15:HashMap<int,Tag15>=new HashMap<int,Tag15>();let a16:Array<Tag16>=[];let m16:HashMap<int,Tag16>=new HashMap<int,Tag16>();let a17:Array<Tag17>=[];let m17:HashMap<int,Tag17>=new HashMap<int,Tag17>();let a18:Array<Tag18>=[];let m18:HashMap<int,Tag18>=new HashMap<int,Tag18>();let a19:Array<Tag19>=[];let m19:HashMap<int,Tag19>=new HashMap<int,Tag19>();let a20:Array<Tag20>=[];let m20:HashMap<int,Tag20>=new HashMap<int,Tag20>();let a21:Array<Tag21>=[];let m21:HashMap<int,Tag21>=new HashMap<int,Tag21>();let a22:Array<Tag22>=[];let m22:HashMap<int,Tag22>=new HashMap<int,Tag22>();let a23:Array<Tag23>=[];let m23:HashMap<int,Tag23>=new HashMap<int,Tag23>();let a24:Array<Tag24>=[];let m24:HashMap<int,Tag24>=new HashMap<int,Tag24>();let a25:Array<Tag25>=[];let m25:HashMap<int,Tag25>=new HashMap<int,Tag25>();let a26:Array<Tag26>=[];let m26:HashMap<int,Tag26>=new HashMap<int,Tag26>();let a27:Array<Tag27>=[];let m27:HashMap<int,Tag27>=new HashMap<int,Tag27>();let a28:Array<Tag28>=[];let m28:HashMap<int,Tag28>=new HashMap<int,Tag28>();let a29:Array<Tag29>=[];let m29:HashMap<int,Tag29>=new HashMap<int,Tag29>();let a30:Array<Tag30>=[];let m30:HashMap<int,Tag30>=new HashMap<int,Tag30>();let a31:Array<Tag31>=[];let m31:HashMap<int,Tag31>=new HashMap<int,Tag31>();let a32:Array<Tag32>=[];let m32:HashMap<int,Tag32>=new HashMap<int,Tag32>();let a33:Array<Tag33>=[];let m33:HashMap<int,Tag33>=new HashMap<int,Tag33>();let a34:Array<Tag34>=[];let m34:HashMap<int,Tag34>=new HashMap<int,Tag34>();let a35:Array<Tag35>=[];let m35:HashMap<int,Tag35>=new HashMap<int,Tag35>();let a36:Array<Tag36>=[];let m36:HashMap<int,Tag36>=new HashMap<int,Tag36>();let a37:Array<Tag37>=[];let m37:HashMap<int,Tag37>=new HashMap<int,Tag37>();let a38:Array<Tag38>=[];let m38:HashMap<int,Tag38>=new HashMap<int,Tag38>();let a39:Array<Tag39>=[];let m39:HashMap<int,Tag39>=new HashMap<int,Tag39>();let a40:Array<Tag40>=[];let m40:HashMap<int,Tag40>=new HashMap<int,Tag40>();let a41:Array<Tag41>=[];let m41:HashMap<int,Tag41>=new HashMap<int,Tag41>();let a42:Array<Tag42>=[];let m42:HashMap<int,Tag42>=new HashMap<int,Tag42>();let a43:Array<Tag43>=[];let m43:HashMap<int,Tag43>=new HashMap<int,Tag43>();let a44:Array<Tag44>=[];let m44:HashMap<int,Tag44>=new HashMap<int,Tag44>();let a45:Array<Tag45>=[];let m45:HashMap<int,Tag45>=new HashMap<int,Tag45>();let a46:Array<Tag46>=[];let m46:HashMap<int,Tag46>=new HashMap<int,Tag46>();let a47:Array<Tag47>=[];let m47:HashMap<int,Tag47>=new HashMap<int,Tag47>();let a48:Array<Tag48>=[];let m48:HashMap<int,Tag48>=new HashMap<int,Tag48>();let a49:Array<Tag49>=[];let m49:HashMap<int,Tag49>=new HashMap<int,Tag49>();let a50:Array<Tag50>=[];let m50:HashMap<int,Tag50>=new HashMap<int,Tag50>();let a51:Array<Tag51>=[];let m51:HashMap<int,Tag51>=new HashMap<int,Tag51>();let a52:Array<Tag52>=[];let m52:HashMap<int,Tag52>=new HashMap<int,Tag52>();let a53:Array<Tag53>=[];let m53:HashMap<int,Tag53>=new HashMap<int,Tag53>();let a54:Array<Tag54>=[];let m54:HashMap<int,Tag54>=new HashMap<int,Tag54>();let a55:Array<Tag55>=[];let m55:HashMap<int,Tag55>=new HashMap<int,Tag55>();let a56:Array<Tag56>=[];let m56:HashMap<int,Tag56>=new HashMap<int,Tag56>();let a57:Array<Tag57>=[];let m57:HashMap<int,Tag57>=new HashMap<int,Tag57>();let a58:Array<Tag58>=[];let m58:HashMap<int,Tag58>=new HashMap<int,Tag58>();let a59:Array<Tag59>=[];let m59:HashMap<int,Tag59>=new HashMap<int,Tag59>();let a60:Array<Tag60>=[];let m60:HashMap<int,Tag60>=new HashMap<int,Tag60>();let a61:Array<Tag61>=[];let m61:HashMap<int,Tag61>=new HashMap<int,Tag61>();let a62:Array<Tag62>=[];let m62:HashMap<int,Tag62>=new HashMap<int,Tag62>();let a63:Array<Tag63>=[];let m63:HashMap<int,Tag63>=new HashMap<int,Tag63>();for(let i:int=0;i<2000;i+=1){a.push(i*3+7);m.set(i,i*3+7);}let total:int=0;for(let i:int=0;i<2000;i+=1){total+=a[i]+m.get(i);}print(total);free(a0);free(m0);free(a1);free(m1);free(a2);free(m2);free(a3);free(m3);free(a4);free(m4);free(a5);free(m5);free(a6);free(m6);free(a7);free(m7);free(a8);free(m8);free(a9);free(m9);free(a10);free(m10);free(a11);free(m11);free(a12);free(m12);free(a13);free(m13);free(a14);free(m14);free(a15);free(m15);free(a16);free(m16);free(a17);free(m17);free(a18);free(m18);free(a19);free(m19);free(a20);free(m20);free(a21);free(m21);free(a22);free(m22);free(a23);free(m23);free(a24);free(m24);free(a25);free(m25);free(a26);free(m26);free(a27);free(m27);free(a28);free(m28);free(a29);free(m29);free(a30);free(m30);free(a31);free(m31);free(a32);free(m32);free(a33);free(m33);free(a34);free(m34);free(a35);free(m35);free(a36);free(m36);free(a37);free(m37);free(a38);free(m38);free(a39);free(m39);free(a40);free(m40);free(a41);free(m41);free(a42);free(m42);free(a43);free(m43);free(a44);free(m44);free(a45);free(m45);free(a46);free(m46);free(a47);free(m47);free(a48);free(m48);free(a49);free(m49);free(a50);free(m50);free(a51);free(m51);free(a52);free(m52);free(a53);free(m53);free(a54);free(m54);free(a55);free(m55);free(a56);free(m56);free(a57);free(m57);free(a58);free(m58);free(a59);free(m59);free(a60);free(m60);free(a61);free(m61);free(a62);free(m62);free(a63);free(m63);free(a);free(m);return 0;}\nstruct Tag0{let marcador:int;}\nstruct Tag1{let marcador:int;}\nstruct Tag2{let marcador:int;}\nstruct Tag3{let marcador:int;}\nstruct Tag4{let marcador:int;}\nstruct Tag5{let marcador:int;}\nstruct Tag6{let marcador:int;}\nstruct Tag7{let marcador:int;}\nstruct Tag8{let marcador:int;}\nstruct Tag9{let marcador:int;}\nstruct Tag10{let marcador:int;}\nstruct Tag11{let marcador:int;}\nstruct Tag12{let marcador:int;}\nstruct Tag13{let marcador:int;}\nstruct Tag14{let marcador:int;}\nstruct Tag15{let marcador:int;}\nstruct Tag16{let marcador:int;}\nstruct Tag17{let marcador:int;}\nstruct Tag18{let marcador:int;}\nstruct Tag19{let marcador:int;}\nstruct Tag20{let marcador:int;}\nstruct Tag21{let marcador:int;}\nstruct Tag22{let marcador:int;}\nstruct Tag23{let marcador:int;}\nstruct Tag24{let marcador:int;}\nstruct Tag25{let marcador:int;}\nstruct Tag26{let marcador:int;}\nstruct Tag27{let marcador:int;}\nstruct Tag28{let marcador:int;}\nstruct Tag29{let marcador:int;}\nstruct Tag30{let marcador:int;}\nstruct Tag31{let marcador:int;}\nstruct Tag32{let marcador:int;}\nstruct Tag33{let marcador:int;}\nstruct Tag34{let marcador:int;}\nstruct Tag35{let marcador:int;}\nstruct Tag36{let marcador:int;}\nstruct Tag37{let marcador:int;}\nstruct Tag38{let marcador:int;}\nstruct Tag39{let marcador:int;}\nstruct Tag40{let marcador:int;}\nstruct Tag41{let marcador:int;}\nstruct Tag42{let marcador:int;}\nstruct Tag43{let marcador:int;}\nstruct Tag44{let marcador:int;}\nstruct Tag45{let marcador:int;}\nstruct Tag46{let marcador:int;}\nstruct Tag47{let marcador:int;}\nstruct Tag48{let marcador:int;}\nstruct Tag49{let marcador:int;}\nstruct Tag50{let marcador:int;}\nstruct Tag51{let marcador:int;}\nstruct Tag52{let marcador:int;}\nstruct Tag53{let marcador:int;}\nstruct Tag54{let marcador:int;}\nstruct Tag55{let marcador:int;}\nstruct Tag56{let marcador:int;}\nstruct Tag57{let marcador:int;}\nstruct Tag58{let marcador:int;}\nstruct Tag59{let marcador:int;}\nstruct Tag60{let marcador:int;}\nstruct Tag61{let marcador:int;}\nstruct Tag62{let marcador:int;}\nstruct Tag63{let marcador:int;}",
+      "compileSamplesMs": [
+        114.3758,
+        115.4387,
+        108.9826,
+        103.5531,
+        109.8922,
+        108.6494,
+        116.5343
+      ],
+      "samplesMs": [
+        2.3801,
+        1.8924,
+        1.7184,
+        1.7419,
+        1.8219,
+        1.8663,
+        1.7427
+      ],
+      "binaryBytes": 1190168,
+      "sha256": "2fb5975931ee8307df25d203a960f9bf3c8f0c911bb7e748aad01c9e462aec56",
+      "medianMs": 1.8219,
+      "compileMedianMs": 109.8922
+    }
+  ],
+  "comparisons": [
+    {
+      "nominalTypes": 1,
+      "flags": [],
+      "identicalBinary": true,
+      "compileMedianChangePercent": -33.16399835796386
+    },
+    {
+      "nominalTypes": 1,
+      "flags": [
+        "--no-opt"
+      ],
+      "identicalBinary": true,
+      "compileMedianChangePercent": -6.058344331679788
+    },
+    {
+      "nominalTypes": 8,
+      "flags": [],
+      "identicalBinary": true,
+      "compileMedianChangePercent": -23.58880472703272
+    },
+    {
+      "nominalTypes": 8,
+      "flags": [
+        "--no-opt"
+      ],
+      "identicalBinary": true,
+      "compileMedianChangePercent": -19.89925679892878
+    },
+    {
+      "nominalTypes": 32,
+      "flags": [],
+      "identicalBinary": true,
+      "compileMedianChangePercent": -34.49148813917091
+    },
+    {
+      "nominalTypes": 32,
+      "flags": [
+        "--no-opt"
+      ],
+      "identicalBinary": true,
+      "compileMedianChangePercent": -34.102051549192566
+    },
+    {
+      "nominalTypes": 64,
+      "flags": [],
+      "identicalBinary": true,
+      "compileMedianChangePercent": -31.147487768966375
+    },
+    {
+      "nominalTypes": 64,
+      "flags": [
+        "--no-opt"
+      ],
+      "identicalBinary": true,
+      "compileMedianChangePercent": -33.435982858094704
+    }
+  ],
+  "allBinariesIdentical": true,
+  "completionEstimatePercent": 34,
+  "completionMetricVersion": "3.3.0-alpha.5"
+}

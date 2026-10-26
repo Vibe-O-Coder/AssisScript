@@ -1,0 +1,234 @@
+{
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "cpu": "x86_64",
+  "iterations": 200000,
+  "samples": 7,
+  "includesProcessStartup": true,
+  "expected": "40000000000",
+  "compiler": "AssisScript 3.3.0-alpha.6 (nativo, Linux x86_64)",
+  "compilerSha256": "76224baea569a614e98870e8ee472c9a8b510808a1baf5a4d1bd00e96fc14210",
+  "baselineSha256": "9408324128831092715217eac62d75805bb58627d1c2f53932b53c3bfc2daba1",
+  "baselineVersion": "AssisScript 3.3.0-alpha.5 (nativo, Linux x86_64)",
+  "historicalBaseline": true,
+  "completionMetricVersion": "3.3.0-alpha.6",
+  "completionEstimatePercent": 45,
+  "peakMemoryMetric": "maximum resident set KiB converted to bytes",
+  "results": [
+    {
+      "variant": "alpha5-manual",
+      "source": "struct Caixa{let dados:Array<int>;}\nassis calcular(n:int):int{let r:Caixa=new Caixa([n,n+1]);\nlet total:int=r.dados[0]+r.dados[1];free(r.dados);free(r);return total;}\nassis assis_assis():int{let total:int=0;\nfor(let i:int=0;i<200000;i+=1){total+=calcular(i);}print(total);return 0;}\n",
+      "compileSamplesMs": [
+        20.7473,
+        18.8011,
+        26.3965,
+        20.8455,
+        21.0419,
+        19.7989,
+        19.4919
+      ],
+      "samplesMs": [
+        23.7165,
+        17.4281,
+        18.5509,
+        18.1103,
+        24.5366,
+        19.6064,
+        19.3321
+      ],
+      "peakMemoryBytes": [
+        270336,
+        270336,
+        270336,
+        270336,
+        270336,
+        270336,
+        270336
+      ],
+      "binaryBytes": 16896,
+      "sha256": "cc9bdcc7ccc6dc667e9964b3645e3bb8dd7ee5b21d4f1140b1d01f328727f81b",
+      "medianMs": 19.3321,
+      "compileMedianMs": 20.7473,
+      "peakMemoryMedianBytes": 270336
+    },
+    {
+      "variant": "alpha6-manual",
+      "source": "struct Caixa{let dados:Array<int>;}\nassis calcular(n:int):int{let r:Caixa=new Caixa([n,n+1]);\nlet total:int=r.dados[0]+r.dados[1];free(r.dados);free(r);return total;}\nassis assis_assis():int{let total:int=0;\nfor(let i:int=0;i<200000;i+=1){total+=calcular(i);}print(total);return 0;}\n",
+      "compileSamplesMs": [
+        18.8397,
+        20.3827,
+        20.2568,
+        18.0214,
+        22.2255,
+        20.556,
+        19.3278
+      ],
+      "samplesMs": [
+        20.4702,
+        24.2516,
+        20.2646,
+        18.7107,
+        19.9562,
+        18.4464,
+        23.9146
+      ],
+      "peakMemoryBytes": [
+        270336,
+        270336,
+        270336,
+        270336,
+        270336,
+        270336,
+        270336
+      ],
+      "binaryBytes": 16896,
+      "sha256": "cc9bdcc7ccc6dc667e9964b3645e3bb8dd7ee5b21d4f1140b1d01f328727f81b",
+      "medianMs": 20.2646,
+      "compileMedianMs": 20.2568,
+      "peakMemoryMedianBytes": 270336
+    },
+    {
+      "variant": "alpha6-own",
+      "source": "struct Caixa{own dados:Array<int>;}\nsafe assis criar(n:int):own Caixa{return new Caixa([n,n+1]);}\nsafe assis ler(borrow r:Caixa):int{return r.dados[0]+r.dados[1];}\nsafe assis calcular(n:int):int{own r:Caixa=criar(n);return ler(r);}\nassis assis_assis():int{let total:int=0;\nfor(let i:int=0;i<200000;i+=1){total+=calcular(i);}print(total);return 0;}\n",
+      "compileSamplesMs": [
+        20.937,
+        21.4098,
+        20.2065,
+        19.5289,
+        24.2978,
+        18.8775,
+        20.0533
+      ],
+      "samplesMs": [
+        21.2361,
+        21.2488,
+        30.3075,
+        28.1023,
+        23.0864,
+        21.6917,
+        24.2966
+      ],
+      "peakMemoryBytes": [
+        270336,
+        270336,
+        270336,
+        270336,
+        270336,
+        270336,
+        270336
+      ],
+      "binaryBytes": 16896,
+      "sha256": "c110574f2d2de8392101f0c1e5aaa5304d23f05ed179474d67378ae15f47ad12",
+      "medianMs": 23.0864,
+      "compileMedianMs": 20.2065,
+      "peakMemoryMedianBytes": 270336
+    },
+    {
+      "variant": "alpha5-manual-sem-opt",
+      "source": "struct Caixa{let dados:Array<int>;}\nassis calcular(n:int):int{let r:Caixa=new Caixa([n,n+1]);\nlet total:int=r.dados[0]+r.dados[1];free(r.dados);free(r);return total;}\nassis assis_assis():int{let total:int=0;\nfor(let i:int=0;i<200000;i+=1){total+=calcular(i);}print(total);return 0;}\n",
+      "compileSamplesMs": [
+        20.4139,
+        20.8826,
+        20.2895,
+        19.178,
+        19.5435,
+        21.1104,
+        21.8317
+      ],
+      "samplesMs": [
+        19.6694,
+        20.77,
+        19.8126,
+        21.3835,
+        22.5219,
+        20.0688,
+        27.3955
+      ],
+      "peakMemoryBytes": [
+        270336,
+        270336,
+        270336,
+        270336,
+        270336,
+        270336,
+        270336
+      ],
+      "binaryBytes": 16896,
+      "sha256": "bf64715d076690940f9a28bb2880350adb6dc7830563bac40b676dde4531efbd",
+      "medianMs": 20.77,
+      "compileMedianMs": 20.4139,
+      "peakMemoryMedianBytes": 270336
+    },
+    {
+      "variant": "alpha6-manual-sem-opt",
+      "source": "struct Caixa{let dados:Array<int>;}\nassis calcular(n:int):int{let r:Caixa=new Caixa([n,n+1]);\nlet total:int=r.dados[0]+r.dados[1];free(r.dados);free(r);return total;}\nassis assis_assis():int{let total:int=0;\nfor(let i:int=0;i<200000;i+=1){total+=calcular(i);}print(total);return 0;}\n",
+      "compileSamplesMs": [
+        19.4506,
+        21.7721,
+        19.3844,
+        23.2513,
+        23.5114,
+        22.7344,
+        21.4154
+      ],
+      "samplesMs": [
+        19.5127,
+        20.4516,
+        20.8831,
+        26.8289,
+        25.8042,
+        30.2702,
+        31.0716
+      ],
+      "peakMemoryBytes": [
+        270336,
+        270336,
+        270336,
+        270336,
+        270336,
+        270336,
+        270336
+      ],
+      "binaryBytes": 16896,
+      "sha256": "bf64715d076690940f9a28bb2880350adb6dc7830563bac40b676dde4531efbd",
+      "medianMs": 25.8042,
+      "compileMedianMs": 21.7721,
+      "peakMemoryMedianBytes": 270336
+    },
+    {
+      "variant": "alpha6-own-sem-opt",
+      "source": "struct Caixa{own dados:Array<int>;}\nsafe assis criar(n:int):own Caixa{return new Caixa([n,n+1]);}\nsafe assis ler(borrow r:Caixa):int{return r.dados[0]+r.dados[1];}\nsafe assis calcular(n:int):int{own r:Caixa=criar(n);return ler(r);}\nassis assis_assis():int{let total:int=0;\nfor(let i:int=0;i<200000;i+=1){total+=calcular(i);}print(total);return 0;}\n",
+      "compileSamplesMs": [
+        16.7568,
+        20.8913,
+        19.579,
+        23.5834,
+        20.3822,
+        19.3194,
+        20.5909
+      ],
+      "samplesMs": [
+        22.6166,
+        22.3467,
+        25.4425,
+        28.7464,
+        27.2153,
+        23.7624,
+        26.8726
+      ],
+      "peakMemoryBytes": [
+        270336,
+        270336,
+        270336,
+        270336,
+        270336,
+        270336,
+        270336
+      ],
+      "binaryBytes": 16896,
+      "sha256": "91a386a92af394c0695d9c0ee73c11d52f67e0a33574748954648b173ac58dae",
+      "medianMs": 25.4425,
+      "compileMedianMs": 20.3822,
+      "peakMemoryMedianBytes": 270336
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+/// Núcleo puro: não lê estado externo e compõe apenas funções puras.
+pure assis dobro(valor: int): int { return valor * 2; }
+
+pure assis total_com_taxa(quantidade: int, preco: int): int {
+    val subtotal: int = quantidade * preco;
+    return subtotal + dobro(quantidade);
+}
+
+pure assis fatorial(n: int): int {
+    if (n < 2) { return 1; }
+    return n * fatorial(n - 1);
+}
+
+/// A borda com efeitos recebe o resultado do cálculo e faz a saída.
+assis assis_assis(): int {
+    val quantidade: int = 3;
+    val preco: int = 100;
+    print(total_com_taxa(quantidade, preco), fatorial(10));
+    return 0;
+}

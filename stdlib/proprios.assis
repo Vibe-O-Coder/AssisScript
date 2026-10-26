@@ -1,0 +1,38 @@
+namespace proprios;
+
+struct No<T> { own valor:T; own proximo:No<T>; }
+
+safe assis elemento<T>(borrow no:No<T>,indice:int):borrow(no) T {
+    assert(no!=null && indice>=0);
+    if(indice==0){return no.valor;}
+    return elemento::<T>(no.proximo,indice-1);
+}
+
+/// Coleção limitada de recursos Move. Inserção/remoção na frente O(1), leitura
+/// por índice O(n). Destruição O(n) recursiva; limite de 1024 nós.
+public final ASSIS Lista<T> {
+    private own inicio:No<T>;
+    private let quantidade:int;
+
+    assis tamanho(borrow self):int{return self.quantidade;}
+
+    assis inserir(borrow mut self,own valor:T):void {
+        assert(self.quantidade<1024);
+        own anterior:No<T>=move(self.inicio);
+        self.inicio=new No<T>(move(valor),move(anterior));
+        self.quantidade+=1;
+    }
+
+    assis obter(borrow self,indice:int):borrow(self) T {
+        assert(indice>=0 && indice<self.quantidade);
+        return elemento::<T>(self.inicio,indice);
+    }
+
+    assis retirar(borrow mut self):own T {
+        assert(self.quantidade>0);
+        own no:No<T>=move(self.inicio);
+        self.inicio=move(no.proximo);
+        self.quantidade-=1;
+        return move(no.valor);
+    }
+}

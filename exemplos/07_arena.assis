@@ -1,0 +1,48 @@
+miyabi Arena de treino: dois objetos, ataque virtual, vida e memória manual.
+ASSIS AssisAssis {
+    Assis Assis_assis: AssIs;
+    Assis Fodase_assis: AssIs;
+
+    assis assis_fodase(AssisFodase: AssIs, FodaseAssis: AssIs): FODase {
+        aSSIS.Assis_assis = AssisFodase;
+        aSSIS.Fodase_assis = FodaseAssis;
+    }
+
+    assis FodaseFodase(): AssIs {
+        Fodase aSSIS.Fodase_assis;
+    }
+
+    assis Assis_Fodase(AssisFodase: AssisAssis): FODase {
+        Assis FodaseAssis: AssIs = aSSIS.FodaseFodase();
+        AssisFodase.Assis_assis -= FodaseAssis;
+        FODASE("Dano:", FodaseAssis, "| Vida restante:", AssisFodase.Assis_assis);
+    }
+}
+
+ASSIS AssisAssisAssis ASSIS_FODASE AssisAssis {
+    assis FodaseFodase(): AssIs {
+        Fodase aSSIS.Fodase_assis * 2;
+    }
+}
+
+assis assis_assis(): AssIs {
+    Assis AssisFodase: AssisAssis = fodase AssisAssis(100, 12);
+    Assis FodaseAssis: AssisAssis = fodase AssisAssisAssis(100, 12);
+    FODASE("ASSIS ARENA: ataque comum contra ataque especializado.");
+    Assis AssisFodaseAssis: AssIs = 1;
+    ASSis (AssisFodase.Assis_assis > 0 && FodaseAssis.Assis_assis > 0) {
+        FODASE("Turno", AssisFodaseAssis);
+        AssisFodase.Assis_Fodase(FodaseAssis);
+        assIS (FodaseAssis.Assis_assis <= 0) { FODasE; }
+        FodaseAssis.Assis_Fodase(AssisFodase);
+        AssisFodaseAssis += 1;
+    }
+    assIS (AssisFodase.Assis_assis <= 0) {
+        FODASE("A classe derivada venceu. Fodase.");
+    } fodASE {
+        FODASE("A classe base venceu. Assis.");
+    }
+    foDASE(AssisFodase);
+    foDASE(FodaseAssis);
+    Fodase 0;
+}

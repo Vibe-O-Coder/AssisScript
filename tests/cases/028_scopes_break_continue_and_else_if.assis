@@ -1,0 +1,16 @@
+
+assis assis_assis(): AssIs {
+
+            Assis AssisAssis: AssIs = 10;
+            { Assis AssisAssis: AssIs = AssisAssis + 1; FODASE(AssisAssis); }
+            Assis AssisFodase: AssIs = 0;
+            ASSis (aSsIs) {
+                AssisFodase += 1;
+                assIS (AssisFodase == 2) { FodASE; }
+                fodASE assIS (AssisFodase == 4) { FODasE; }
+                fodASE { FODASE(AssisFodase); }
+            }
+            FODASE(AssisAssis);
+        
+Fodase 0;
+}

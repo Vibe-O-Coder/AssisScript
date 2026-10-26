@@ -1,0 +1,91 @@
+namespace eventos;
+
+/// Fila de uma thread. IDs não são reutilizados. Os campos são implementação;
+/// as operações verificam os comprimentos antes de acessar a fila.
+public struct Loop {
+    own acoes: Array<safe assis(borrow mut Loop, int): void>;
+    own estados: Array<int>;
+    own prazos: Array<int>;
+    own ids: Array<int>;
+    let proximo: int;
+    let capacidade: int;
+    let parado: bool;
+    let executando: bool;
+}
+
+public safe assis criar(capacidade: int): own Loop {
+    assert(capacidade > 0 && capacidade <= 65536);
+    return new Loop(new Array<safe assis(borrow mut Loop, int): void>(), new Array<int>(), new Array<int>(), new Array<int>(), 1, capacidade, false, false);
+}
+
+safe assis valido(borrow loop: Loop): bool {
+    if (loop.acoes == null || loop.estados == null || loop.ids == null || loop.prazos == null) { return false; }
+    return len(loop.acoes) == len(loop.estados) && len(loop.ids) == len(loop.prazos) && len(loop.ids) == len(loop.acoes)
+        && len(loop.ids) <= loop.capacidade && loop.capacidade > 0 && loop.capacidade <= 65536;
+}
+
+/// Agenda uma ação com efeitos explícitos e estado escalar. 0 indica falha.
+/// A ação recebe empréstimo exclusivo apenas durante a chamada; pode reagendar.
+public safe assis agendar(borrow mut loop: Loop, atraso: int, estado: int, acao: safe assis(borrow mut Loop, int): void): int {
+    if (!valido(loop) || atraso < 0 || loop.proximo <= 0 || loop.proximo == 0x7fff_ffff_ffff_ffff) { return 0; }
+    val instante: int = agora();
+    if (instante < 0 || atraso > 0x7fff_ffff_ffff_ffff - instante) { return 0; }
+    let posicao: int = 0;
+    while (posicao < len(loop.ids) && loop.ids[posicao] != 0) { posicao += 1; }
+    if (posicao == len(loop.ids) && posicao == loop.capacidade) { return 0; }
+    val id: int = loop.proximo;
+    if (posicao == len(loop.ids)) {
+        loop.acoes.push(acao); loop.estados.push(estado); loop.prazos.push(instante + atraso); loop.ids.push(id);
+    } else {
+        loop.acoes[posicao] = acao; loop.estados[posicao] = estado; loop.prazos[posicao] = instante + atraso; loop.ids[posicao] = id;
+    }
+    loop.proximo += 1;
+    return id;
+}
+
+/// Cancela uma ação ainda pendente. ID expirado/desconhecido retorna false.
+public safe assis cancelar(borrow mut loop: Loop, id: int): bool {
+    if (!valido(loop) || id <= 0) { return false; }
+    for (let i: int = 0; i < len(loop.ids); i += 1) {
+        if (loop.ids[i] == id) { loop.ids[i] = 0; return true; }
+    }
+    return false;
+}
+
+public safe assis parar(borrow mut loop: Loop): void { loop.parado = true; }
+
+/// Executa até limite ações ou esvaziar/parar a fila. Ordem: prazo, depois ID.
+/// -1: relógio/espera/estado inválido; -2: execução reentrante; >=0: ações.
+/// Não cria threads. Uma ação longa bloqueia a fila; cancelamento é cooperativo.
+public safe assis executar(borrow mut loop: Loop, limite: int): int {
+    if (!valido(loop) || limite < 0) { return -1; }
+    if (loop.executando) { return -2; }
+    loop.executando = true; loop.parado = false;
+    let executadas: int = 0;
+    while (executadas < limite && !loop.parado) {
+        if (!valido(loop)) { loop.executando = false; return -1; }
+        let escolhido: int = -1;
+        for (let i: int = 0; i < len(loop.ids); i += 1) {
+            if (loop.ids[i] > 0) {
+                if (escolhido < 0) { escolhido = i; }
+                else if (loop.prazos[i] < loop.prazos[escolhido] || (loop.prazos[i] == loop.prazos[escolhido] && loop.ids[i] < loop.ids[escolhido])) { escolhido = i; }
+            }
+        }
+        if (escolhido < 0) { break; }
+        val instante: int = agora();
+        if (instante < 0) { loop.executando = false; return -1; }
+        if (loop.prazos[escolhido] > instante) {
+            let espera: int = loop.prazos[escolhido] - instante;
+            if (espera > 50) { espera = 50; }
+            if (dormir(espera) < 0) { loop.executando = false; return -1; }
+        } else {
+            val estado: int = loop.estados[escolhido];
+            let acao: safe assis(borrow mut Loop, int): void = loop.acoes[escolhido];
+            loop.ids[escolhido] = 0;
+            acao(loop, estado);
+            executadas += 1;
+        }
+    }
+    loop.executando = false;
+    return executadas;
+}

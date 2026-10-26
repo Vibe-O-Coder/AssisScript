@@ -1,0 +1,12 @@
+/// Ponto cartesiano com coordenadas inteiras de 64 bits.
+struct Ponto {
+    let x: int;
+    let y: int;
+}
+
+/// Retorna x*x + y*y, sem extrair raiz quadrada. Usa overflow modular de int.
+/// @param ponto Referência válida a um Ponto.
+/// @return Quadrado da distância à origem.
+assis distancia_quadrada(ponto: Ponto): int {
+    return ponto.x * ponto.x + ponto.y * ponto.y;
+}

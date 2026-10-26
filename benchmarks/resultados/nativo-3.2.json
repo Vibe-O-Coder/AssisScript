@@ -1,0 +1,320 @@
+{
+  "generatedAt": "2026-10-24T22:03:42.811315+00:00",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu": "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "cCompiler": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "cFlags": [
+    "-O2",
+    "-std=c11",
+    "-static"
+  ],
+  "compiler": "AssisScript 3.2.0 (nativo, Linux x86_64)",
+  "samples": 5,
+  "includesProcessStartup": true,
+  "warmups": 1,
+  "results": [
+    {
+      "case": "aritmetica",
+      "variant": "C -O2",
+      "medianMs": 19.0304,
+      "minMs": 18.324,
+      "maxMs": 25.4892,
+      "samplesMs": [
+        18.4605,
+        18.324,
+        19.0304,
+        19.9641,
+        25.4892
+      ],
+      "stdout": "246639936"
+    },
+    {
+      "case": "aritmetica",
+      "variant": "Python",
+      "medianMs": 2922.5742,
+      "minMs": 2846.6979,
+      "maxMs": 4553.6345,
+      "samplesMs": [
+        4553.6345,
+        3956.6962,
+        2885.89,
+        2922.5742,
+        2846.6979
+      ],
+      "stdout": "246639936"
+    },
+    {
+      "case": "aritmetica",
+      "variant": "AssisScript",
+      "medianMs": 17.1336,
+      "minMs": 16.7603,
+      "maxMs": 18.4042,
+      "samplesMs": [
+        18.4042,
+        17.3105,
+        17.1336,
+        16.7603,
+        16.9205
+      ],
+      "stdout": "246639936"
+    },
+    {
+      "case": "aritmetica",
+      "variant": "AssisScript --no-opt",
+      "medianMs": 70.4,
+      "minMs": 69.5886,
+      "maxMs": 71.026,
+      "samplesMs": [
+        71.026,
+        70.3875,
+        70.4298,
+        69.5886,
+        70.4
+      ],
+      "stdout": "246639936"
+    },
+    {
+      "case": "aritmetica",
+      "variant": "AssisScript anterior",
+      "medianMs": 26.8554,
+      "minMs": 26.6109,
+      "maxMs": 28.9712,
+      "samplesMs": [
+        28.1682,
+        28.9712,
+        26.6109,
+        26.7582,
+        26.8554
+      ],
+      "stdout": "246639936"
+    },
+    {
+      "case": "collatz",
+      "variant": "C -O2",
+      "medianMs": 47.3714,
+      "minMs": 46.1608,
+      "maxMs": 48.1595,
+      "samplesMs": [
+        46.1608,
+        47.3714,
+        48.1595,
+        47.3985,
+        47.0842
+      ],
+      "stdout": "22938602"
+    },
+    {
+      "case": "collatz",
+      "variant": "Python",
+      "medianMs": 3886.638671,
+      "minMs": 3693.000266,
+      "maxMs": 4049.920198,
+      "samplesMs": [
+        3886.638671,
+        3943.053977,
+        3828.643218,
+        3693.000266,
+        4049.920198
+      ],
+      "stdout": "22938602"
+    },
+    {
+      "case": "collatz",
+      "variant": "AssisScript",
+      "medianMs": 67.541639,
+      "minMs": 66.515923,
+      "maxMs": 68.948685,
+      "samplesMs": [
+        67.731802,
+        67.541639,
+        66.515923,
+        67.138321,
+        68.948685
+      ],
+      "stdout": "22938602"
+    },
+    {
+      "case": "collatz",
+      "variant": "AssisScript --no-opt",
+      "medianMs": 524.26406,
+      "minMs": 515.112592,
+      "maxMs": 536.025392,
+      "samplesMs": [
+        536.025392,
+        524.26406,
+        515.112592,
+        534.547517,
+        518.413238
+      ],
+      "stdout": "22938602"
+    },
+    {
+      "case": "collatz",
+      "variant": "AssisScript anterior",
+      "medianMs": 452.04563,
+      "minMs": 449.701886,
+      "maxMs": 462.492772,
+      "samplesMs": [
+        449.701886,
+        452.04563,
+        452.767539,
+        462.492772,
+        451.638895
+      ],
+      "stdout": "22938602"
+    },
+    {
+      "case": "alocacao",
+      "variant": "C -O2",
+      "medianMs": 12.521501,
+      "minMs": 11.928331,
+      "maxMs": 12.933745,
+      "samplesMs": [
+        11.928331,
+        12.659249,
+        12.339472,
+        12.933745,
+        12.521501
+      ],
+      "stdout": "499999500000"
+    },
+    {
+      "case": "alocacao",
+      "variant": "Python",
+      "medianMs": 353.173911,
+      "minMs": 344.606524,
+      "maxMs": 378.288682,
+      "samplesMs": [
+        353.173911,
+        378.288682,
+        355.803103,
+        344.606524,
+        350.873304
+      ],
+      "stdout": "499999500000"
+    },
+    {
+      "case": "alocacao",
+      "variant": "AssisScript",
+      "medianMs": 17.924387,
+      "minMs": 17.871923,
+      "maxMs": 18.030415,
+      "samplesMs": [
+        17.958428,
+        17.871923,
+        18.030415,
+        17.920082,
+        17.924387
+      ],
+      "stdout": "499999500000"
+    },
+    {
+      "case": "alocacao",
+      "variant": "AssisScript --no-opt",
+      "medianMs": 18.05104,
+      "minMs": 17.589382,
+      "maxMs": 18.696922,
+      "samplesMs": [
+        18.582083,
+        17.780112,
+        18.05104,
+        18.696922,
+        17.589382
+      ],
+      "stdout": "499999500000"
+    },
+    {
+      "case": "alocacao",
+      "variant": "AssisScript anterior",
+      "medianMs": 10874.096086,
+      "minMs": 10441.967032,
+      "maxMs": 12293.109476,
+      "samplesMs": [
+        10466.021778,
+        11838.886624,
+        12293.109476,
+        10874.096086,
+        10441.967032
+      ],
+      "stdout": "499999500000"
+    },
+    {
+      "case": "texto-indice",
+      "variant": "C -O2",
+      "medianMs": 0.832909,
+      "minMs": 0.660056,
+      "maxMs": 0.967063,
+      "samplesMs": [
+        0.832909,
+        0.660056,
+        0.863868,
+        0.967063,
+        0.703121
+      ],
+      "stdout": "2910000"
+    },
+    {
+      "case": "texto-indice",
+      "variant": "Python",
+      "medianMs": 23.706061,
+      "minMs": 22.67708,
+      "maxMs": 24.367507,
+      "samplesMs": [
+        23.706061,
+        23.162298,
+        24.367507,
+        23.869884,
+        22.67708
+      ],
+      "stdout": "2910000"
+    },
+    {
+      "case": "texto-indice",
+      "variant": "AssisScript",
+      "medianMs": 0.609153,
+      "minMs": 0.597444,
+      "maxMs": 0.660453,
+      "samplesMs": [
+        0.609153,
+        0.619968,
+        0.602505,
+        0.597444,
+        0.660453
+      ],
+      "stdout": "2910000"
+    },
+    {
+      "case": "texto-indice",
+      "variant": "AssisScript --no-opt",
+      "medianMs": 713.445406,
+      "minMs": 668.169032,
+      "maxMs": 822.703263,
+      "samplesMs": [
+        668.169032,
+        668.453019,
+        771.828028,
+        822.703263,
+        713.445406
+      ],
+      "stdout": "2910000"
+    },
+    {
+      "case": "texto-indice",
+      "variant": "AssisScript anterior",
+      "medianMs": 729.011783,
+      "minMs": 675.65173,
+      "maxMs": 801.117066,
+      "samplesMs": [
+        734.998357,
+        689.30318,
+        801.117066,
+        729.011783,
+        675.65173
+      ],
+      "stdout": "2910000"
+    }
+  ],
+  "baseline": "AssisScript 3.1.0 (nativo, Linux x86_64)"
+}

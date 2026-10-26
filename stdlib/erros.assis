@@ -1,0 +1,63 @@
+/// Resultado recuperável de operação inteira. codigo: 0=sucesso, 1=vazio, 2=formato, 3=overflow, 4=divisão por zero, 5=intervalo. posicao é um offset de bytes, ou -1.
+struct ResultadoInt {
+    let ok: bool;
+    let valor: int;
+    let codigo: int;
+    let posicao: int;
+}
+
+/// Cria um resultado de sucesso. O chamador libera o registro com free.
+assis resultado_ok(valor: int): ResultadoInt { return new ResultadoInt(true, valor, 0, -1); }
+
+/// Cria um erro recuperável sem encerrar o programa. O chamador libera o registro com free.
+assis resultado_erro(codigo: int, posicao: int): ResultadoInt { return new ResultadoInt(false, 0, codigo, posicao); }
+
+/// Retorna descrição estática de um código de ResultadoInt; não exige liberação.
+assis mensagem_erro(codigo: int): text {
+    if (codigo == 0) { return "sucesso"; }
+    if (codigo == 1) { return "entrada vazia"; }
+    if (codigo == 2) { return "formato invalido"; }
+    if (codigo == 3) { return "inteiro fora do intervalo de 64 bits"; }
+    if (codigo == 4) { return "divisao por zero"; }
+    if (codigo == 5) { return "intervalo invalido"; }
+    return "erro desconhecido";
+}
+
+/// Soma sem overflow silencioso; informa codigo=3 se o resultado não couber em int64.
+assis somar_seguro(a: int, b: int): ResultadoInt {
+    if ((b > 0 && a > 0x7fff_ffff_ffff_ffff - b) || (b < 0 && a < -0x8000_0000_0000_0000 - b)) { return resultado_erro(3, -1); }
+    return resultado_ok(a + b);
+}
+
+/// Divide com erro recuperável para zero e INT64_MIN/-1. Divisão trunca em direção a zero.
+assis dividir_seguro(a: int, b: int): ResultadoInt {
+    if (b == 0) { return resultado_erro(4, -1); }
+    if (a == -0x8000_0000_0000_0000 && b == -1) { return resultado_erro(3, -1); }
+    return resultado_ok(a / b);
+}
+/// Valor opcional Copy, sem alocação. Some contém um valor; None não contém carga.
+enum Option<T> { None; Some(T); }
+
+/// Resultado recuperável Copy, sem alocação. T e E precisam ter layout por valor.
+enum Result<T, E> { Ok(T); Err(E); }
+
+/// Extrai o valor ou devolve a alternativa, preservando ambos os argumentos.
+pure assis option_or<T>(opcao: Option<T>, alternativa: T): T {
+    match (opcao) { None { return alternativa; } Some(valor) { return valor; } }
+}
+
+/// Transforma somente Some com um callback pure; None continua None.
+pure assis option_map<T, U>(opcao: Option<T>, transformar: pure assis(T): U): Option<U> {
+    match (opcao) {
+        None { return new Option<U>.None(); }
+        Some(valor) { return new Option<U>.Some(transformar(valor)); }
+    }
+}
+
+/// Transforma o sucesso preservando o erro e a ordem de avaliação do callback pure.
+pure assis result_map<T, U, E>(resultado: Result<T, E>, transformar: pure assis(T): U): Result<U, E> {
+    match (resultado) {
+        Ok(valor) { return new Result<U, E>.Ok(transformar(valor)); }
+        Err(erro) { return new Result<U, E>.Err(erro); }
+    }
+}

@@ -1,0 +1,11 @@
+
+assis assis_assis(): AssIs {
+
+            FODASE(2 + 3 * 4, (2 + 3) * 4, 9 / 2, -9 / 2, -9 % 2);
+            FODASE(0xffff_ffff_ffff_ffff, 0b1111, 1_000, 007);
+            FODASE(0x8000000000000000 / -1, 0x8000000000000000 % -1);
+            FODASE(-8 >> 2, 1 << 63, ~0, 0x7fff_ffff_ffff_ffff * 2);
+            FODASE(AssiS(-1), AssIs(aSsIs), FodAsE(0), FodAsE(2));
+        
+Fodase 0;
+}

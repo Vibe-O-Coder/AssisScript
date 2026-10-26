@@ -1,0 +1,7 @@
+assis assis_assis(): int {
+    let mapa: HashMap<int, int> = new HashMap<int, int>(); let i: int = 0;
+    while (i < 100000) { mapa.set(i, i * 2); i += 1; }
+    let rodada: int = 0; let total: int = 0;
+    while (rodada < 20) { i = 0; while (i < 100000) { total += mapa.get(i); i += 1; } rodada += 1; }
+    print(total); free(mapa); return 0;
+}

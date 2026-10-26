@@ -1,0 +1,110 @@
+{
+  "name": "AssisScript Package",
+  "scopeName": "source.pillow",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "name": "meta.preprocessor.assis",
+      "begin": "^\\s*#(?:yuri|body)\\b",
+      "end": "$",
+      "patterns": [
+        {
+          "name": "string.quoted.other.assis",
+          "match": "<[^>]*>|[\\w./\\\\-]+\\.pillow"
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.double.assis",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.assis",
+          "match": "\\\\(?:[nrt0\"\\\\]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4})"
+        }
+      ]
+    },
+    {
+      "name": "keyword.control.assis",
+      "match": "\\b(?:importa|ASSIS_FODASE|assIS|fodASE|ASSis|Fodase|FODasE|FodASE|if|else|while|return|break|continue|extends)\\b"
+    },
+    {
+      "name": "storage.type.assis",
+      "match": "\\b(?:ASSIS|assis|Assis|AssIs|AssiS|FodAsE|FoDaSe|FODase|let|int|byte|bool|text|void|struct|Array|HashMap)\\b"
+    },
+    {
+      "name": "support.function.assis",
+      "match": "\\b(?:FODASE_fodase|ASSIS_fodase|FODASE|fodase|foDASE|new|free|print|len|alloc|assert)\\b"
+    },
+    {
+      "name": "constant.language.assis",
+      "match": "\\b(?:aSsIs|fOdAsE|fOdase|aSSIS|true|false|null|self)\\b"
+    },
+    {
+      "name": "constant.numeric.assis",
+      "match": "\\b(?:0[xX][0-9a-fA-F_]+|0[bB][01_]+|[0-9][0-9_]*)\\b"
+    },
+    {
+      "name": "entity.name.function.assis",
+      "match": "\\b[A-Za-z_][A-Za-z_0-9]*(?=\\s*\\()"
+    },
+    {
+      "name": "keyword.operator.assis",
+      "match": "[+*/%=!<>&|^~?:-]+"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.assis",
+          "begin": "\\bmiyabi\\b|//",
+          "end": "$"
+        },
+        {
+          "name": "comment.block.assis",
+          "begin": "\\bte\\b",
+          "end": "\\bto\\b",
+          "patterns": [
+            {
+              "include": "#wordComment"
+            }
+          ]
+        },
+        {
+          "name": "comment.block.assis",
+          "begin": "/\\*",
+          "end": "\\*/",
+          "patterns": [
+            {
+              "include": "#legacyComment"
+            }
+          ]
+        }
+      ]
+    },
+    "wordComment": {
+      "name": "comment.block.assis",
+      "begin": "\\bte\\b",
+      "end": "\\bto\\b",
+      "patterns": [
+        {
+          "include": "#wordComment"
+        }
+      ]
+    },
+    "legacyComment": {
+      "name": "comment.block.assis",
+      "begin": "/\\*",
+      "end": "\\*/",
+      "patterns": [
+        {
+          "include": "#legacyComment"
+        }
+      ]
+    }
+  }
+}

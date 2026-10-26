@@ -1,0 +1,80 @@
+#yuri <std/texto.assis>
+
+/// Resultado proprietário de decodificação binária. ok=false indica formato inválido em posicao (offset de bytes). Libere com dispose(); free(). dados pode conter um prefixo parcial no erro.
+ASSIS ResultadoBytes {
+    let ok: bool;
+    let posicao: int;
+    let dados: Array<byte>;
+    /// Inicializa resultado de sucesso vazio.
+    assis assis_fodase(): void { self.ok = true; self.posicao = -1; self.dados = new Array<byte>(); }
+    /// Libera o array de bytes; repetição é segura.
+    assis dispose(): void { free(self.dados); self.dados = null; }
+}
+
+/// Codifica todos os bytes (inclusive zero) como hexadecimal minúsculo. O(n). Retorna Texto proprietário.
+assis hexadecimal_codificar(dados: Array<byte>): Texto {
+    let resultado: Texto = new Texto(); let tabela: *byte = bytes("0123456789abcdef"); let i: int = 0;
+    while (i < len(dados)) { let b: int = int(dados[i]); resultado.adicionar_byte(tabela[b >> 4]); resultado.adicionar_byte(tabela[b & 15]); i += 1; }
+    return resultado;
+}
+
+/// Valor de dígito hexadecimal ASCII ou -1. Uso interno da decodificação.
+assis hexadecimal_digito(c: byte): int {
+    if (c >= 48 && c <= 57) { return int(c) - 48; }
+    if (c >= 65 && c <= 70) { return int(c) - 55; }
+    if (c >= 97 && c <= 102) { return int(c) - 87; } return -1;
+}
+
+/// Decodifica hexadecimal estrito sem prefixo/espaços; aceita ambas as caixas. Comprimento ímpar e dígitos inválidos retornam erro, sem abortar. O(n).
+assis hexadecimal_decodificar(entrada: text): ResultadoBytes {
+    let resultado: ResultadoBytes = new ResultadoBytes(); let n: int = len(entrada); let i: int = 0; let dados: *byte = bytes(entrada);
+    if (n % 2 != 0) { resultado.ok = false; resultado.posicao = n - 1; return resultado; }
+    resultado.dados.reserve(n / 2);
+    while (i < n) {
+        let a: int = hexadecimal_digito(dados[i]); let b: int = hexadecimal_digito(dados[i + 1]);
+        if (a < 0 || b < 0) { resultado.ok = false; resultado.posicao = i; if (a >= 0) { resultado.posicao = i + 1; } return resultado; }
+        resultado.dados.push(byte((a << 4) | b)); i += 2;
+    } return resultado;
+}
+
+/// Base64 padrão com alfabeto +/ e padding =, sem quebra de linha; aceita bytes zero. O(n). Retorna Texto proprietário.
+assis base64_codificar(dados: Array<byte>): Texto {
+    let resultado: Texto = new Texto(); let tabela: *byte = bytes("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+    let i: int = 0; let n: int = len(dados);
+    while (i < n) {
+        let a: int = int(dados[i]); let b: int = 0; let c: int = 0;
+        if (i + 1 < n) { b = int(dados[i + 1]); } if (i + 2 < n) { c = int(dados[i + 2]); }
+        resultado.adicionar_byte(tabela[a >> 2]); resultado.adicionar_byte(tabela[((a & 3) << 4) | (b >> 4)]);
+        if (i + 1 < n) { resultado.adicionar_byte(tabela[((b & 15) << 2) | (c >> 6)]); } else { resultado.adicionar_byte(byte(61)); }
+        if (i + 2 < n) { resultado.adicionar_byte(tabela[c & 63]); } else { resultado.adicionar_byte(byte(61)); } i += 3;
+    } return resultado;
+}
+
+/// Valor de caractere Base64 padrão ou -1. Não aceita padding como dígito.
+assis base64_digito(c: byte): int {
+    if (c >= 65 && c <= 90) { return int(c) - 65; } if (c >= 97 && c <= 122) { return int(c) - 71; }
+    if (c >= 48 && c <= 57) { return int(c) + 4; } if (c == 43) { return 62; } if (c == 47) { return 63; } return -1;
+}
+
+/// Decodifica Base64 padrão estrito: exige múltiplo de quatro, padding final e bits de padding canônicos. Não aceita espaços nem alfabeto URL. Formato inválido é recuperável. O(n).
+assis base64_decodificar(entrada: text): ResultadoBytes {
+    let resultado: ResultadoBytes = new ResultadoBytes(); let n: int = len(entrada); let dados: *byte = bytes(entrada); let i: int = 0;
+    if (n % 4 != 0) { resultado.ok = false; resultado.posicao = n; return resultado; }
+    resultado.dados.reserve(n / 4 * 3);
+    while (i < n) {
+        let a: int = base64_digito(dados[i]); let b: int = base64_digito(dados[i + 1]);
+        let c: int = base64_digito(dados[i + 2]); let d: int = base64_digito(dados[i + 3]);
+        if (a < 0 || b < 0) { resultado.ok = false; resultado.posicao = i; if (a >= 0) { resultado.posicao = i + 1; } return resultado; }
+        if (dados[i + 2] == 61) {
+            if (i + 4 != n || dados[i + 3] != 61 || (b & 15) != 0) { resultado.ok = false; resultado.posicao = i + 2; return resultado; }
+            resultado.dados.push(byte((a << 2) | (b >> 4))); return resultado;
+        }
+        if (c < 0) { resultado.ok = false; resultado.posicao = i + 2; return resultado; }
+        if (dados[i + 3] == 61) {
+            if (i + 4 != n || (c & 3) != 0) { resultado.ok = false; resultado.posicao = i + 3; return resultado; }
+            resultado.dados.push(byte((a << 2) | (b >> 4))); resultado.dados.push(byte((b << 4) | (c >> 2))); return resultado;
+        }
+        if (d < 0) { resultado.ok = false; resultado.posicao = i + 3; return resultado; }
+        resultado.dados.push(byte((a << 2) | (b >> 4))); resultado.dados.push(byte((b << 4) | (c >> 2))); resultado.dados.push(byte((c << 6) | d)); i += 4;
+    } return resultado;
+}

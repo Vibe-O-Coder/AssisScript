@@ -1,0 +1,45 @@
+// Valida configuração JSON de até 1 MiB e substitui uma cópia persistente.
+// Uso: config entrada.json destino.json temporario.json
+// O temporário deve ser novo e estar no mesmo filesystem do destino.
+#yuri <std/json.assis>
+#yuri <std/cli.assis>
+
+safe assis abrir(indice: int, modo: int): own Arquivo {
+    unsafe {
+        val n: int = argumento_tamanho(indice);
+        if (n < 0 || n > 16384) { return arquivo_abrir("", 9); }
+        let p: *byte = alloc<byte>(n + 1);defer free(p);
+        if (argumento_copiar(indice, p, n + 1) != n) { return arquivo_abrir("", 9); }
+        return arquivo_abrir(text(p), modo);
+    }
+}
+safe assis concluir(remover: bool): int {
+    unsafe {
+        val a: int = argumento_tamanho(3);val b: int = argumento_tamanho(2);
+        if (a < 0 || b < 0 || a > 16384 || b > 16384) { return -1; }
+        let origem: *byte = alloc<byte>(a + 1);defer free(origem);
+        let destino: *byte = alloc<byte>(b + 1);defer free(destino);
+        if (argumento_copiar(3, origem, a + 1) != a || argumento_copiar(2, destino, b + 1) != b) { return -1; }
+        if (remover) { return arquivo_remover(text(origem)); }
+        return arquivo_substituir(text(origem), text(destino));
+    }
+}
+safe assis assis_assis(): int {
+    if (argumentos() != 4) { print("Uso: config entrada destino temporario-novo");return 64; }
+    own entrada: Arquivo = abrir(1, 0);
+    if (entrada == null) { print("Erro de abertura", erro_io());return 1; }
+    own dados: *byte = alloc<byte>(1048576);
+    val n: int = cli::ler_limitado(entrada, dados);
+    if (n < 0) { print("Erro de leitura ou limite de 1 MiB");return 1; }
+    if (arquivo_fechar(entrada) < 0) { return 1; }
+    val resultado: json::Resultado = json::validar(dados, n, 64, 262144);
+    if (!resultado.valido) { print("JSON invalido no byte", resultado.posicao);return 2; }
+    own temporario: Arquivo = abrir(3, 3);
+    if (temporario == null) { print("Temporario deve ser novo", erro_io());return 1; }
+    if (cli::escrever_tudo(temporario, dados, n) < 0 || arquivo_sincronizar(temporario) < 0) {
+        arquivo_fechar(temporario);concluir(true);print("Erro de persistencia");return 1;
+    }
+    if (arquivo_fechar(temporario) < 0) { concluir(true);return 1; }
+    if (concluir(false) < 0) { concluir(true);print("Erro de substituicao");return 1; }
+    print("Configuracao validada", resultado.tokens);return 0;
+}

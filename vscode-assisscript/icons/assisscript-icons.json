@@ -1,0 +1,18 @@
+{
+  "iconDefinitions": {
+    "assis-source": {
+      "iconPath": "source.png"
+    },
+    "assis-program": {
+      "iconPath": "compiled.png"
+    }
+  },
+  "fileExtensions": {
+    "assis": "assis-source",
+    "pillow": "assis-source"
+  },
+  "languageIds": {
+    "assisscript": "assis-source",
+    "assisscript-package": "assis-source"
+  }
+}

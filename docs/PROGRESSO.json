@@ -1,0 +1,541 @@
+{
+  "version": "3.3.0-alpha.9",
+  "date": "25/10/2026",
+  "scope": "Conclusão do plano de evolução das fases 0–6, incluindo a trilha funcional e as aplicações A/B/C. Não inclui construir o navegador, HTDL, estilos ou motor de busca.",
+  "phases": [
+    {
+      "id": 0,
+      "name": "Baseline e segurança",
+      "weight": 15,
+      "items": [
+        {
+          "id": "P0-BASE",
+          "name": "Baseline, hashes e reconstrução local comparável",
+          "status": "complete",
+          "evidence": "VALIDACAO-3.3-ALPHA.9.md",
+          "notes": "Baseline alpha.8 preservada e reconstrução da entrega atual."
+        },
+        {
+          "id": "P0-PRIV",
+          "name": "Encapsulamento nominal e rejeições de B01 nos dois destinos",
+          "status": "complete",
+          "evidence": "CONTRATOS-E-SEGURANCA.md"
+        },
+        {
+          "id": "P0-SAFE",
+          "name": "Fronteira safe/unsafe obrigatória e garantias para text externo",
+          "status": "partial",
+          "evidence": "OWNERSHIP-FUNCOES.md",
+          "notes": "Perfil safe exige fronteira unsafe; migração global e text externo permanecem abertos."
+        },
+        {
+          "id": "P0-FLOW",
+          "name": "Auditoria de aliases, fluxo, laços e empréstimos completos",
+          "status": "complete",
+          "evidence": "OWNERSHIP-FUNCOES.md",
+          "notes": "Auditoria do modelo gerenciado suportado; bloqueios conservadores em laços/campos. Não abrange ponteiros legados."
+        },
+        {
+          "id": "P0-CI",
+          "name": "Matriz adversa contínua Windows/Linux e inventário técnico",
+          "status": "partial",
+          "evidence": "PROCEDENCIA.md"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Tipos estruturados e especialização",
+      "weight": 15,
+      "items": [
+        {
+          "id": "P1-TYPES",
+          "name": "Identidades, aplicações estruturadas e cache canônico limitado",
+          "status": "complete",
+          "evidence": "GENERICS.md"
+        },
+        {
+          "id": "P1-FUN",
+          "name": "Funções e structs genéricas por AST com validação concreta",
+          "status": "complete",
+          "evidence": "GENERICS.md"
+        },
+        {
+          "id": "P1-CLASS",
+          "name": "Classes genéricas, herança, métodos e privacidade nominal",
+          "status": "complete",
+          "evidence": "HANDOFF-3.3-ALPHA.4.md"
+        },
+        {
+          "id": "P1-EFFECT",
+          "name": "Tipos de função com efeitos, valores, callbacks e composição",
+          "status": "complete",
+          "evidence": "FUNCOES-E-EFEITOS.md"
+        },
+        {
+          "id": "P1-COL",
+          "name": "Corpos de Array/HashMap na especialização AST comum",
+          "status": "complete",
+          "evidence": "HANDOFF-3.3-ALPHA.5.md"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Ownership e dados funcionais",
+      "weight": 20,
+      "items": [
+        {
+          "id": "P2-LOCAL",
+          "name": "Análise de fluxo e exclusividade para recursos da aplicação",
+          "status": "complete",
+          "evidence": "OWNERSHIP-FUNCOES.md",
+          "notes": "Fluxo/exclusividade para buffers, coleções escalares/funções e structs gerenciadas; outros recursos continuam em P2-DROP."
+        },
+        {
+          "id": "P2-LIFE",
+          "name": "Consumo, empréstimos e vidas em assinaturas/retornos",
+          "status": "complete",
+          "evidence": "OWNERSHIP-FUNCOES.md",
+          "notes": "Consumo e retornos com uma origem explícita; contratos também em generics/callbacks. Sem inferência ou união de vidas."
+        },
+        {
+          "id": "P2-DROP",
+          "name": "Campos proprietários, destruição composta e movimento parcial",
+          "status": "complete",
+          "evidence": "RECURSOS-E-FATIAS.md",
+          "notes": "Structs/classes com campos own, receptor verificado, destruição dinâmica, movimentos parciais e lista proprietária limitada. Recursos externos requerem adaptadores; Array/HashMap legados não assumem elementos."
+        },
+        {
+          "id": "P2-VALUE",
+          "name": "Layout por valor, contratos Copy/Move e dados imutáveis",
+          "status": "complete",
+          "evidence": "VALORES-E-VARIANTES.md",
+          "notes": "Layout Copy inline imutável, cópias em chamadas/retornos/coleções e contrato separado Move para recursos own. Campos Move inline são rejeitados."
+        },
+        {
+          "id": "P2-ADT",
+          "name": "Variantes, Result/Option, matching e capturas verificadas",
+          "status": "partial",
+          "evidence": "VALORES-E-VARIANTES.md",
+          "notes": "Enums genéricos Copy, matching exaustivo, Option/Result; capturas/closures e variantes Move continuam pendentes."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Texto, números e aplicação CLI",
+      "weight": 15,
+      "items": [
+        {
+          "id": "P3-TEXT",
+          "name": "Texto com comprimento/vidas, bytes e APIs Unicode",
+          "status": "complete",
+          "evidence": "BIBLIOTECA-unicode.md",
+          "notes": "API nova unicode::Texto com UTF-8/NUL/comprimento, own em campos/listas e slices com vidas em parâmetros/retornos. text C e Texto legado preservam contrato anterior; sem grafemas/normalização."
+        },
+        {
+          "id": "P3-NUM",
+          "name": "Inteiros de largura fixa e números de ponto flutuante",
+          "status": "complete",
+          "evidence": "NUMEROS.md",
+          "notes": "Inteiros de largura fixa e f32/f64 nativos, layout/ABI/coleções, overflow/conversões e IEEE verificados; print real hexadecimal exato."
+        },
+        {
+          "id": "P3-IO",
+          "name": "Arquivos, caminhos e argumentos com aplicação A validada",
+          "status": "complete",
+          "evidence": "IO-E-APLICACAO-A.md",
+          "notes": "Arquivos own, argumentos/caminhos Unicode e aplicação A em CSV numérico de uma coluna, com fluxo limitado, erros e permissões nos dois sistemas. Sem API geral de diretórios/JSON."
+        },
+        {
+          "id": "P3-LIB",
+          "name": "Bibliotecas CLI, JSON, tempo, logs e iteradores com recursos seguros",
+          "status": "complete",
+          "evidence": "BIBLIOTECAS.md",
+          "notes": "CLI own, JSON UTF-8 com limites, tempo/logs e pipelines imutáveis entregues no escopo CLI. DOM/JSON incremental, CSV legado geral e APIs mais amplas permanecem evolução."
+        },
+        {
+          "id": "P3-PKG",
+          "name": "Namespaces e pacotes versionados com lockfile offline",
+          "status": "complete",
+          "evidence": "PACOTES-E-NAMESPACES.md",
+          "notes": "Namespaces/visibilidade nominal, versões exatas, dependências transitivas vendorizadas e lockfile SHA-256 offline; sem registro/download."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Integração, rede e serviços",
+      "weight": 15,
+      "items": [
+        {
+          "id": "P4-FFI",
+          "name": "ABI C/FFI com recursos e callbacks externos",
+          "status": "pending",
+          "evidence": "PLANO-EVOLUCAO-E-HANDOFF.md"
+        },
+        {
+          "id": "P4-EVENT",
+          "name": "Event loop, temporizadores, cancelamento e efeitos explícitos",
+          "status": "complete",
+          "evidence": "EVENTOS-E-PERSISTENCIA.md",
+          "notes": "Fila cooperativa limitada de uma thread, callbacks safe sem captura, relógios, prazos, IDs/cancelamento, reagendamento, parada e orçamento. Sem polling de descritores ou preempção."
+        },
+        {
+          "id": "P4-NET",
+          "name": "Rede, DNS e HTTP/TLS com limites e aplicação B",
+          "status": "pending",
+          "evidence": "PLANO-EVOLUCAO-E-HANDOFF.md"
+        },
+        {
+          "id": "P4-STORE",
+          "name": "Persistência, processos e IPC com aplicação C",
+          "status": "partial",
+          "evidence": "EVENTOS-E-PERSISTENCIA.md",
+          "notes": "Persistência nativa, criação exclusiva, sync/substituição e configuração reaberta após reinício. Processos/IPC, serviço C completo e durabilidade por queda de energia pendentes."
+        },
+        {
+          "id": "P4-SOAK",
+          "name": "Concorrência definida e validação prolongada de 24 horas",
+          "status": "pending",
+          "evidence": "PLANO-EVOLUCAO-E-HANDOFF.md"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Backend e depuração",
+      "weight": 10,
+      "items": [
+        {
+          "id": "P5-IR",
+          "name": "Frontend separado e IR tipada com fluxo/efeitos",
+          "status": "partial",
+          "evidence": "RECURSOS-E-FATIAS.md",
+          "notes": "Lexer/frontend separados da emissão; HIR tipada com blocos, efeitos, sucessores e DCE conservadora. Expressões ainda AST; sem SSA/backend por IR completo."
+        },
+        {
+          "id": "P5-OPT",
+          "name": "Otimizações comprovadas, TCO, intervalos e alocação de registradores",
+          "status": "partial",
+          "evidence": "MELHORIAS-3.2.md"
+        },
+        {
+          "id": "P5-ABI",
+          "name": "ABI documentada e validada para interfaces e retornos compostos",
+          "status": "partial",
+          "evidence": "ABI-NATIVA.md",
+          "notes": "ABI interna LVS1, cópia/retornos compostos e adaptadores OS documentados e validados. ABI C pública, FFI e callbacks externos pendentes."
+        },
+        {
+          "id": "P5-DEBUG",
+          "name": "ELF PIE, símbolos/linhas e depuração nativa",
+          "status": "complete",
+          "evidence": "RECURSOS-E-FATIAS.md",
+          "notes": "ELF ET_DYN/PIE, RIP/vtables relativos, símbolos/DWARF e GDB com parâmetros/locais escalares e escopos. Windows conserva mapas; sem PDB ou descrição de compostos."
+        },
+        {
+          "id": "P5-TARGET",
+          "name": "Backend extensível e novos alvos ARM64/macOS validados",
+          "status": "pending",
+          "evidence": "PLANO-EVOLUCAO-E-HANDOFF.md"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Ferramentas e oferta delimitada",
+      "weight": 10,
+      "items": [
+        {
+          "id": "P6-INSTALL",
+          "name": "Instalação, atualização e remoção offline preservam dados",
+          "status": "complete",
+          "evidence": "VALIDACAO-3.3-ALPHA.9.md",
+          "notes": "Catálogo/instaladores sincronizados com 16 bibliotecas e preservação de dados."
+        },
+        {
+          "id": "P6-TOOLS",
+          "name": "Editor, documentação, fmt/test/doc e LSP independente",
+          "status": "complete",
+          "evidence": "FERRAMENTAS-ALPHA.8.md",
+          "notes": "fmt/test/doc nativos, editor com namespaces/pacotes e LSP independente por stdio, sem dependências npm. Formatter cobre indentação, LF e espaços finais."
+        },
+        {
+          "id": "P6-RELEASE",
+          "name": "Pacotes coerentes e reconstrução local limpa reproduzível",
+          "status": "complete",
+          "evidence": "VALIDACAO-3.3-ALPHA.9.md",
+          "notes": "Pacotes e reconstrução da entrega atual."
+        },
+        {
+          "id": "P6-POLICY",
+          "name": "Licença/procedência resolvidas e política de suporte/compatibilidade",
+          "status": "pending",
+          "evidence": "PROCEDENCIA.md"
+        },
+        {
+          "id": "P6-ACCEPT",
+          "name": "Terceiro instala, depura e distribui aplicações A/B/C pelo manual",
+          "status": "pending",
+          "evidence": "PLANO-EVOLUCAO-E-HANDOFF.md"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "version": "3.3.0-alpha.4",
+      "date": "25/10/2026",
+      "retrospective": true,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "pending",
+        "P0-FLOW": "partial",
+        "P0-CI": "partial",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "pending",
+        "P2-LOCAL": "partial",
+        "P2-LIFE": "pending",
+        "P2-DROP": "pending",
+        "P2-VALUE": "pending",
+        "P2-ADT": "pending",
+        "P3-TEXT": "pending",
+        "P3-NUM": "pending",
+        "P3-IO": "pending",
+        "P3-LIB": "partial",
+        "P3-PKG": "pending",
+        "P4-FFI": "pending",
+        "P4-EVENT": "pending",
+        "P4-NET": "pending",
+        "P4-STORE": "pending",
+        "P4-SOAK": "pending",
+        "P5-IR": "pending",
+        "P5-OPT": "partial",
+        "P5-ABI": "pending",
+        "P5-DEBUG": "pending",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "partial",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "pending",
+        "P6-ACCEPT": "pending"
+      }
+    },
+    {
+      "version": "3.3.0-alpha.5",
+      "date": "25/10/2026",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "pending",
+        "P0-FLOW": "partial",
+        "P0-CI": "partial",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "partial",
+        "P2-LIFE": "pending",
+        "P2-DROP": "pending",
+        "P2-VALUE": "pending",
+        "P2-ADT": "pending",
+        "P3-TEXT": "pending",
+        "P3-NUM": "pending",
+        "P3-IO": "pending",
+        "P3-LIB": "partial",
+        "P3-PKG": "pending",
+        "P4-FFI": "pending",
+        "P4-EVENT": "pending",
+        "P4-NET": "pending",
+        "P4-STORE": "pending",
+        "P4-SOAK": "pending",
+        "P5-IR": "pending",
+        "P5-OPT": "partial",
+        "P5-ABI": "pending",
+        "P5-DEBUG": "pending",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "partial",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "pending",
+        "P6-ACCEPT": "pending"
+      }
+    },
+    {
+      "version": "3.3.0-alpha.6",
+      "date": "25/10/2026",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "partial",
+        "P0-FLOW": "complete",
+        "P0-CI": "partial",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "partial",
+        "P2-VALUE": "pending",
+        "P2-ADT": "pending",
+        "P3-TEXT": "pending",
+        "P3-NUM": "pending",
+        "P3-IO": "pending",
+        "P3-LIB": "partial",
+        "P3-PKG": "pending",
+        "P4-FFI": "pending",
+        "P4-EVENT": "pending",
+        "P4-NET": "pending",
+        "P4-STORE": "pending",
+        "P4-SOAK": "pending",
+        "P5-IR": "pending",
+        "P5-OPT": "partial",
+        "P5-ABI": "pending",
+        "P5-DEBUG": "pending",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "partial",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "pending",
+        "P6-ACCEPT": "pending"
+      }
+    },
+    {
+      "version": "3.3.0-alpha.7",
+      "date": "25/10/2026",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "partial",
+        "P0-FLOW": "complete",
+        "P0-CI": "partial",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "partial",
+        "P2-VALUE": "complete",
+        "P2-ADT": "partial",
+        "P3-TEXT": "partial",
+        "P3-NUM": "pending",
+        "P3-IO": "complete",
+        "P3-LIB": "partial",
+        "P3-PKG": "pending",
+        "P4-FFI": "pending",
+        "P4-EVENT": "pending",
+        "P4-NET": "pending",
+        "P4-STORE": "pending",
+        "P4-SOAK": "pending",
+        "P5-IR": "pending",
+        "P5-OPT": "partial",
+        "P5-ABI": "partial",
+        "P5-DEBUG": "pending",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "partial",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "pending",
+        "P6-ACCEPT": "pending"
+      }
+    },
+    {
+      "version": "3.3.0-alpha.8",
+      "date": "25/10/2026",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "partial",
+        "P0-FLOW": "complete",
+        "P0-CI": "partial",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "partial",
+        "P2-VALUE": "complete",
+        "P2-ADT": "partial",
+        "P3-TEXT": "partial",
+        "P3-NUM": "complete",
+        "P3-IO": "complete",
+        "P3-LIB": "complete",
+        "P3-PKG": "complete",
+        "P4-FFI": "pending",
+        "P4-EVENT": "complete",
+        "P4-NET": "pending",
+        "P4-STORE": "partial",
+        "P4-SOAK": "pending",
+        "P5-IR": "pending",
+        "P5-OPT": "partial",
+        "P5-ABI": "partial",
+        "P5-DEBUG": "partial",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "complete",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "pending",
+        "P6-ACCEPT": "pending"
+      }
+    },
+    {
+      "version": "3.3.0-alpha.9",
+      "date": "25/10/2026",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "partial",
+        "P0-FLOW": "complete",
+        "P0-CI": "partial",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "complete",
+        "P2-VALUE": "complete",
+        "P2-ADT": "partial",
+        "P3-TEXT": "complete",
+        "P3-NUM": "complete",
+        "P3-IO": "complete",
+        "P3-LIB": "complete",
+        "P3-PKG": "complete",
+        "P4-FFI": "pending",
+        "P4-EVENT": "complete",
+        "P4-NET": "pending",
+        "P4-STORE": "partial",
+        "P4-SOAK": "pending",
+        "P5-IR": "partial",
+        "P5-OPT": "partial",
+        "P5-ABI": "partial",
+        "P5-DEBUG": "complete",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "complete",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "pending",
+        "P6-ACCEPT": "pending"
+      }
+    }
+  ]
+}

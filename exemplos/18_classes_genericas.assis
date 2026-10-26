@@ -1,0 +1,23 @@
+// Classes genéricas conservam memória legada e métodos com efeitos.
+// As funções de cálculo podem continuar puras.
+pure assis dobro(valor: int): int { return valor * 2; }
+
+ASSIS Caixa<T> {
+    private let valor: T;
+    assis assis_fodase(valor: T): void { self.valor = valor; }
+    assis ler(): T { return self.valor; }
+}
+
+ASSIS Transformacao<T> extends Caixa<T> {
+    assis aplicar(funcao: pure assis(T): T): T {
+        return funcao(self.ler());
+    }
+}
+
+assis assis_assis(): int {
+    let caixa: Transformacao<int> = new Transformacao<int>(21);
+    let base: Caixa<int> = caixa;
+    print(base.ler(), caixa.aplicar(dobro));
+    free(caixa);
+    return 0;
+}
