@@ -4,8 +4,8 @@
     "body": [
       "class ${1:Box}<${2:T}> {",
       "    private let ${3:value}: ${2:T};",
-      "    fn init(${3:value}: ${2:T}): void { self.${3:value} = ${3:value}; }",
-      "    fn get(): ${2:T} { return self.${3:value}; }",
+      "    fn init(borrow mut self, ${3:value}: ${2:T}): void { self.${3:value} = ${3:value}; }",
+      "    fn get(borrow self): ${2:T} { return self.${3:value}; }",
       "    $0",
       "}"
     ]
@@ -50,7 +50,7 @@
   "Programa": {
     "prefix": "principal",
     "body": [
-      "fn main(): int {",
+      "safe fn main(): int {",
       "    $0",
       "    return 0;",
       "}"
@@ -68,10 +68,10 @@
   "Classe": {
     "prefix": "classe",
     "body": [
-      "class ${1:Pessoa} {",
-      "    let ${2:nome}: ${3:text};",
-      "    fn init(${2:nome}: ${3:text}): void {",
-      "        self.${2:nome} = ${2:nome};",
+      "class ${1:Counter} {",
+      "    let ${2:value}: ${3:int};",
+      "    fn init(borrow mut self, ${2:value}: ${3:int}): void {",
+      "        self.${2:value} = ${2:value};",
       "    }",
       "    $0",
       "}"
@@ -120,20 +120,20 @@
   },
   "Importar": {
     "prefix": "yuri",
-    "body": "#yuri <${1:std/math.assis}>"
+    "body": "import \"${1:std/math.assis}\";"
   },
   "Pacote": {
     "prefix": "body",
-    "body": "#body ${1:src}.pillow"
+    "body": "import \"${1:src}.pillow\";"
   },
   "Comentário": {
     "prefix": "comentario",
-    "body": "miyabi $0"
+    "body": "// $0"
   },
   "Escopo div": {
     "prefix": "div",
     "body": [
-      "div {",
+      "{",
       "    $0",
       "}"
     ]
@@ -237,5 +237,13 @@
       "}"
     ],
     "description": "Receptor gerenciado com contrato explícito"
+  },
+  "Constante global": {
+    "prefix": "const",
+    "body": "const ${1:LIMIT}: ${2:int} = ${0:42};"
+  },
+  "Saída sem separador": {
+    "prefix": "write",
+    "body": "write(${0:\"Hello\"});"
   }
 }

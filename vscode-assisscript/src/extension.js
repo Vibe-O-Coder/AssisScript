@@ -65,7 +65,8 @@ function activate(context) {
             const entry = path.resolve(workspace(document.uri), config(document.uri).get('entryFile', 'assis.assis'));
             const useEntry=document.uri.fsPath!==entry&&fs.existsSync(path.join(path.dirname(entry),'assis.pkg'))&&language.collectProject(entry,opts).some(m=>m.file===document.uri.fsPath);
             const args = ['check', useEntry?entry:document.uri.fsPath, ...(useEntry?[]:['--stdin']), '--diagnostics=json'];
-            if (!useEntry&&document.uri.fsPath !== entry && !model.symbols.some(s => s.kind === 'function' && s.name === 'assis_assis')) args.push('--library');
+            if (!useEntry&&document.uri.fsPath !== entry && !model.symbols.some(s => s.kind === 'function' && s.name === 'main')) args.push('--library');
+            if (config(document.uri).get('legacyMode', false)) args.push('--legacy');
             for (const dir of opts.includePaths) args.push('-I', dir);
             const dirty = vscode.workspace.textDocuments.filter(d => d.uri.scheme === 'file' && ['assisscript', 'assisscript-package'].includes(d.languageId) && ((d.isDirty&&d.uri.toString()!==key)||(useEntry&&d.uri.toString()===key)));
             if (dirty.length) {
@@ -187,6 +188,7 @@ function activate(context) {
         const entry = path.resolve(root, supplied.file || (['fmt','test','doc'].includes(command) ? uri.fsPath : config(uri).get('entryFile', 'assis.assis')));
         const file = fs.existsSync(entry) ? entry : uri.fsPath;
         const args = [command, file]; if(command !== 'fmt')for (const dir of config(uri).get('includePaths', [])) args.push('-I', path.resolve(root, dir));
+        if (command !== 'fmt' && config(uri).get('legacyMode', false)) args.push('--legacy');
         if (command === 'run' || command === 'test') args.push('--timeout', String(config(uri).get('runTimeout', 10)));
         const definition = { ...supplied, type: 'assisscript', command };
         const result = new vscode.Task(definition, folder || vscode.TaskScope.Workspace, { build: 'Compilar', check: 'Verificar', run: 'Compilar e run', fmt: 'Formatar', test: 'Testar', doc: 'Gerar API' }[command], 'AssisScript', new vscode.ProcessExecution(compiler(uri), args, { cwd: root }), '$assisscript');

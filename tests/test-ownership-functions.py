@@ -13,13 +13,13 @@ spec.loader.exec_module(evolution)
 main = evolution.main
 RECORD = 'struct P{let x:int;}'
 FUNCS = '''
-assis create(n:int):own P{return new P(n);}
-assis ler(borrow p:P):int{return p.x;}
-assis mudar(borrow mut p:P,n:int):void{p.x=n;}
-assis consumir(own p:P):int{return p.x;}
-assis passar(own p:P):own P{return move(p);}
-assis ver(borrow p:P):borrow(p) P{return p;}
-assis exclusivo(borrow mut p:P):borrow mut(p) P{return p;}
+fn create(n:int):own P{return new P(n);}
+fn ler(borrow p:P):int{return p.x;}
+fn mudar(borrow mut p:P,n:int):void{p.x=n;}
+fn consumir(own p:P):int{return p.x;}
+fn passar(own p:P):own P{return move(p);}
+fn ver(borrow p:P):borrow(p) P{return p;}
+fn exclusivo(borrow mut p:P):borrow mut(p) P{return p;}
 '''
 
 
@@ -39,16 +39,16 @@ class OwnershipFunctions(unittest.TestCase):
                       '{borrow mut a:P=exclusivo(p);{borrow b:P=ver(a);print(b.x);}mudar(a,42);}print(p.x);'), '1\n1\n42\n')
 
     def test_contracts_in_function_values_and_callbacks(self):
-        self.accepted(RECORD + FUNCS + 'assis aplicar(f:assis(own P):own P,own p:P):own P{return f(move(p));}' +
-                      main('val f:assis(borrow P):int=ler;val g:assis(borrow P):borrow(0) P=ver;'
+        self.accepted(RECORD + FUNCS + 'fn aplicar(f:fn(own P):own P,own p:P):own P{return f(move(p));}' +
+                      main('val f:fn(borrow P):int=ler;val g:fn(borrow P):borrow(0) P=ver;'
                            'own p:P=aplicar(passar,create(42));{borrow b:P=g(p);print(f(b));}'), '42\n')
-        for declaration in ['val f:assis(P):int=ler;', 'val f:assis(borrow mut P):int=ler;',
-                            'val f:assis(own P):P=passar;', 'val f:assis(borrow P):borrow(0) P=exclusivo;']:
+        for declaration in ['val f:fn(P):int=ler;', 'val f:fn(borrow mut P):int=ler;',
+                            'val f:fn(own P):P=passar;', 'val f:fn(borrow P):borrow(0) P=exclusivo;']:
             self.rejected(RECORD + FUNCS + main(declaration), 'não é possível usar')
 
     def test_generic_contracts_preserve_metadata(self):
-        self.accepted(RECORD + 'assis id<T>(own v:T):own T{return move(v);}'
-                      'assis ref<T>(borrow v:T):borrow(v) T{return v;}' +
+        self.accepted(RECORD + 'fn id<T>(own v:T):own T{return move(v);}'
+                      'fn ref<T>(borrow v:T):borrow(v) T{return v;}' +
                       main('own p:P=id::<P>(new P(42));borrow b:P=ref::<P>(p);print(b.x);'), '42\n')
 
     def test_use_after_move_and_implicit_copy(self):
@@ -65,12 +65,12 @@ class OwnershipFunctions(unittest.TestCase):
 
     def test_return_lifetimes_are_not_inferred_from_type(self):
         for fn, message in [
-            ('assis f(borrow p:P):borrow(p) P{own q:P=new P();return q;}', 'referência local'),
-            ('assis f(borrow p:P,borrow q:P):borrow(p) P{return q;}', 'parâmetro declarado'),
-            ('assis f(own p:P):borrow(p) P{return p;}', 'origem borrow'),
-            ('assis f(borrow p:P):borrow mut(p) P{return p;}', 'origem borrow'),
-            ('assis f(borrow p:P):P{return p;}', 'não pode escapar'),
-            ('assis f():own P{own p:P=new P();return p;}', 'alocação nova'),
+            ('fn f(borrow p:P):borrow(p) P{own q:P=new P();return q;}', 'referência local'),
+            ('fn f(borrow p:P,borrow q:P):borrow(p) P{return q;}', 'parâmetro declarado'),
+            ('fn f(own p:P):borrow(p) P{return p;}', 'origem borrow'),
+            ('fn f(borrow p:P):borrow mut(p) P{return p;}', 'origem borrow'),
+            ('fn f(borrow p:P):P{return p;}', 'não pode escapar'),
+            ('fn f():own P{own p:P=new P();return p;}', 'alocação nova'),
         ]:
             self.rejected(RECORD + fn + main(''), message)
 
@@ -80,15 +80,15 @@ class OwnershipFunctions(unittest.TestCase):
             self.rejected(RECORD + FUNCS + main(body), 'compartilhada')
 
     def test_argument_loans_last_until_call(self):
-        f = 'assis misto(borrow p:P,own q:P):int{return p.x+q.x;}'
+        f = 'fn misto(borrow p:P,own q:P):int{return p.x+q.x;}'
         self.rejected(RECORD + f + main('own p:P=new P();print(misto(p,move(p)));'), 'borrow ativo')
-        f = 'assis dois(borrow mut p:P,borrow q:P):void{}'
+        f = 'fn dois(borrow mut p:P,borrow q:P):void{}'
         self.rejected(RECORD + f + main('own p:P=new P();dois(p,p);'), 'borrow mut ativo')
-        f = 'assis dois(borrow p:P,borrow mut q:P):void{}'
+        f = 'fn dois(borrow p:P,borrow mut q:P):void{}'
         self.rejected(RECORD + f + main('own p:P=new P();dois(p,p);'), 'incompatível')
 
     def test_nested_calls_and_saved_assignment_address(self):
-        f = 'assis eliminar(own p:Array<int>):int{return 0;}'
+        f = 'fn eliminar(own p:Array<int>):int{return 0;}'
         self.rejected(f + main('own a:Array<int>=[1];a[0]=eliminar(move(a));'), 'borrow ativo')
         self.rejected(f + main('own a:Array<int>=[1];a[eliminar(move(a))]=2;'), 'borrow ativo')
         self.rejected(f + main('own a:Array<int>=[1];print(a,eliminar(move(a)));'), 'borrow ativo')
@@ -100,19 +100,19 @@ class OwnershipFunctions(unittest.TestCase):
             self.rejected(RECORD + main(body), 'mutação' if 'borrow b' in body else 'borrow mut ativo')
 
     def test_branch_join_uses_only_live_paths(self):
-        self.accepted(RECORD + FUNCS + 'assis f(own p:P,b:bool):int{if(b){return consumir(move(p));}return p.x+1;}' +
+        self.accepted(RECORD + FUNCS + 'fn f(own p:P,b:bool):int{if(b){return consumir(move(p));}return p.x+1;}' +
                       main('print(f(create(41),false),f(create(42),true));'), '42 42\n')
         self.rejected(RECORD + FUNCS + main('own p:P=create(1);if(true){consumir(move(p));}print(p.x);'), 'movido ou liberado')
 
     def test_loops_cannot_consume_outer_owners_even_in_condition(self):
-        f = 'assis end(own p:P):bool{return false;}'
+        f = 'fn end(own p:P):bool{return false;}'
         for body in ['own p:P=new P();while(end(move(p))){}',
                      'own p:P=new P();while(true){consumir(move(p));break;}']:
             self.rejected(RECORD + FUNCS + f + main(body), 'externo dentro de laço')
         self.accepted(RECORD + FUNCS + main('for(let i:int=0;i<100;i+=1){own p:P=create(i);if(i%2==0){continue;}consumir(move(p));}'))
 
     def test_buffer_contracts_and_bounds(self):
-        f = 'assis ver_buffer(borrow p:*int):borrow(p) *int{return p;}assis gravar(borrow mut p:*int):void{p[1]=42;}'
+        f = 'fn ver_buffer(borrow p:*int):borrow(p) *int{return p;}fn gravar(borrow mut p:*int):void{p[1]=42;}'
         self.accepted(f + main('own p:*int=alloc<int>(2);gravar(p);borrow b:*int=ver_buffer(p);print(b[1]);'), '42\n')
         source = self.source(f + main('own p:*int=alloc<int>(1);print(ver_buffer(p)[1]);'))
         for flags in [[], ['--no-opt']]:
@@ -142,7 +142,7 @@ class OwnershipFunctions(unittest.TestCase):
     def test_owned_records_cannot_enter_legacy_or_hide_raw_resources(self):
         self.rejected('struct C{own a:Array<int>;}' + main('let c:C=new C([1]);'), 'não pode escapar')
         self.rejected('struct C{let a:Array<int>;}' + main('own c:C=new C([1]);'), 'campos own explícitos')
-        self.accepted('ASSIS C{own a:Array<int>;}' + main('own c:C=new C();'))
+        self.accepted('class C{own a:Array<int>;}' + main('own c:C=new C();'))
 
     def test_recursive_owned_records_and_empty_fields(self):
         rec = 'struct OwnedList{let n:int;own prox:OwnedList;}'
@@ -150,50 +150,50 @@ class OwnershipFunctions(unittest.TestCase):
                       'own b:OwnedList=new OwnedList(7,move(a));print(b.prox.n);'), '42\n')
 
     def test_owned_parameters_drop_on_all_exits(self):
-        f = 'assis f(own a:Array<int>,b:bool):void{if(b){return;}a.push(42);}'
+        f = 'fn f(own a:Array<int>,b:bool):void{if(b){return;}a.push(42);}'
         self.accepted(f + main('for(let i:int=0;i<1000;i+=1){f([1,2],i%2==0);}'))
 
     def test_shared_derived_results_cannot_mutate_or_free(self):
         for body in ['own p:P=new P();ver(p).x=2;', 'own p:P=new P();free(ver(p));']:
             self.rejected(RECORD + FUNCS + main(body), 'mutação' if '.x=' in body else 'proprietário original')
-        f = 'assis ver_array(borrow a:Array<int>):borrow(a) Array<int>{return a;}'
+        f = 'fn ver_array(borrow a:Array<int>):borrow(a) Array<int>{return a;}'
         for body in ['ver_array(a)[0]=2;', 'ver_array(a).push(2);']:
             self.rejected(f + main('own a:Array<int>=[1];' + body), 'mutação')
 
     def test_safe_profile_and_explicit_legacy_boundary(self):
-        safe_main = lambda b: main(b).replace('assis assis_assis', 'safe assis assis_assis')
-        self.accepted('assis legado(n:int):int{return n+1;}safe assis f(own a:Array<int>):int{return a[0];}' +
+        safe_main = lambda b: main(b).replace('fn main', 'safe fn main')
+        self.accepted('fn legado(n:int):int{return n+1;}safe fn f(own a:Array<int>):int{return a[0];}' +
                       safe_main('own a:Array<int>=[42];val s:text="ação";print(f(move(a)),len(s));'
                                 'unsafe{let p:*int=alloc<int>(1);p[0]=7;print(legado(p[0]));free(p);}'), '42 6\n8\n')
         for body, message in [
             ('let p:*int=alloc<int>(1);free(p);', 'safe exige own/borrow'),
             ('own p:*byte=alloc<byte>(2);print(text(p));', 'ponteiro gerenciado'),
             ('let s:text="a";', 'safe exige own/borrow'),
-            ('val s:text="a";print(bytes(s));', 'text externo'),
+            ('val s:text="a";print(bytes(s));', 'endereços não são texto'),
             ('print(legado(1));', 'chamada legada'),
-            ('val f:assis(int):int=legado;print(f(1));', 'chamada legada'),
+            ('val f:fn(int):int=legado;print(f(1));', 'chamada legada'),
             ('unsafe{own a:Array<int>=[1];let b:Array<int>=a;}', 'não pode escapar'),
         ]:
-            self.rejected('assis legado(n:int):int{return n;}' + safe_main(body), message)
-        self.rejected('safe assis f(p:*int):int{return p[0];}' + main(''), 'safe exige own/borrow na assinatura')
-        self.rejected('safe assis f(borrow p:text):int{return len(p);}' + main(''), 'text de vida externa')
+            self.rejected('fn legado(n:int):int{return n;}' + safe_main(body), message)
+        self.rejected('safe fn f(p:*int):int{return p[0];}' + main(''), 'safe exige own/borrow na assinatura')
+        self.rejected('safe fn f(borrow p:text):int{return len(p);}' + main(''), 'text de vida externa')
         source = self.source(main(''))
         result = self.invoke('check', source, '--safe')
         self.assertEqual(result.returncode, 1)
         self.assertIn('--safe exige entrada', result.stderr)
 
     def test_safe_function_values_keep_effect_and_ownership(self):
-        safe_main = lambda b: main(b).replace('assis assis_assis', 'safe assis assis_assis')
-        f = 'safe assis size(borrow a:Array<int>):int{return len(a);}'
-        self.accepted(f + safe_main('val f:safe assis(borrow Array<int>):int=size;own a:Array<int>=[1,2];print(f(a));'), '2\n')
-        self.rejected('assis legado(n:int):int{return n;}' + main('val f:safe assis(int):int=legado;'), 'não é possível usar')
+        safe_main = lambda b: main(b).replace('fn main', 'safe fn main')
+        f = 'safe fn size(borrow a:Array<int>):int{return len(a);}'
+        self.accepted(f + safe_main('val f:safe fn(borrow Array<int>):int=size;own a:Array<int>=[1,2];print(f(a));'), '2\n')
+        self.rejected('fn legado(n:int):int{return n;}' + main('val f:safe fn(int):int=legado;'), 'não é possível usar')
 
     def test_managed_functional_library_and_example(self):
-        safe_main = lambda b: main(b).replace('assis assis_assis', 'safe assis assis_assis')
-        f = '''#yuri <std/algorithms.assis>
-pure assis dobro(n:int):int{return n*2;}
-pure assis par(n:int):bool{return n%2==0;}
-pure assis somar(a:int,b:int):int{return a+b;}
+        safe_main = lambda b: main(b).replace('fn main', 'safe fn main')
+        f = '''import "std/algorithms.assis";
+pure fn dobro(n:int):int{return n*2;}
+pure fn par(n:int):bool{return n%2==0;}
+pure fn somar(a:int,b:int):int{return a+b;}
 '''
         self.accepted(f + safe_main('own a:Array<int>=[1,2,3,4];own b:Array<int>=map_own::<int,int>(a,dobro);'
                       'own c:Array<int>=filter_own::<int>(a,par);'
@@ -204,17 +204,17 @@ pure assis somar(a:int,b:int):int{return a+b;}
         self.assertEqual((result.returncode, result.stdout, result.stderr), (0, '6 3 24\n4 8 12\n', ''))
 
     def test_signature_lifetime_and_type_validation(self):
-        for declaration in ['assis f(own n:int):int{return n;}',
-                            'assis f():own int{return 1;}',
-                            'assis f(borrow p:P):borrow(inexistente) P{return p;}',
-                            'assis f(cb:assis(borrow P):borrow(1) P):void{}']:
+        for declaration in ['fn f(own n:int):int{return n;}',
+                            'fn f():own int{return 1;}',
+                            'fn f(borrow p:P):borrow(inexistente) P{return p;}',
+                            'fn f(cb:fn(borrow P):borrow(1) P):void{}']:
             self.rejected(RECORD + declaration + main(''), 'propriedade exige referência' if 'own n:int' in declaration or 'own int' in declaration else 'origem')
-        self.rejected(RECORD + 'assis f(borrow p:P,borrow q:P):borrow(q) P{return q;}' +
-                      main('val g:assis(borrow P,borrow P):borrow(0) P=f;'), 'não é possível usar')
+        self.rejected(RECORD + 'fn f(borrow p:P,borrow q:P):borrow(q) P{return q;}' +
+                      main('val g:fn(borrow P,borrow P):borrow(0) P=f;'), 'não é possível usar')
 
     def test_field_lifetimes_and_bounds_survive_function_returns(self):
         rec = 'struct C{own b:*int;}'
-        f = 'assis ver(borrow c:C):borrow(c) *int{return c.b;}'
+        f = 'fn ver(borrow c:C):borrow(c) *int{return c.b;}'
         self.accepted(rec + f + main('own c:C=new C(alloc<int>(2));c.b[1]=42;{borrow b:*int=ver(c);print(b[1]);}'), '42\n')
         self.rejected(rec + f + main('own c:C=new C(alloc<int>(2));borrow b:*int=ver(c);c.b=alloc<int>(3);'), 'mutação')
         source = self.source(rec + f + main('own c:C=new C(alloc<int>(1));print(ver(c)[1]);'))
@@ -227,7 +227,7 @@ pure assis somar(a:int,b:int):int{return a+b;}
         rec = 'struct C{own a:Array<int>;}'
         self.rejected(rec + main('own c:C=new C([1]);own a:Array<int>=move(c.a);if(true){c.a=[2];}print(c.a[0]);'), 'movido ou liberado')
         rec = 'struct OwnedList{let n:int;own prox:OwnedList;}'
-        f = 'assis lista(n:int):own OwnedList{if(n==0){return new OwnedList();}return new OwnedList(n,lista(n-1));}'
+        f = 'fn lista(n:int):own OwnedList{if(n==0){return new OwnedList();}return new OwnedList(n,lista(n-1));}'
         self.accepted(rec + f + main('for(let i:int=0;i<50;i+=1){own l:OwnedList=lista(64);assert(l.prox.n==63);}'))
 
 

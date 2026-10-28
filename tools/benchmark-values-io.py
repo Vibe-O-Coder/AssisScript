@@ -25,7 +25,13 @@ assert 1000 <= args.csv_rows <= 10_000_000
 compiler = ROOT / 'bin' / ('assis.exe' if os.name == 'nt' else 'assis')
 
 
+legacy_support = {}
+
 def run(command, expected=None):
+    if len(command)>1 and command[1] in ("build","run","check") and "--safe" not in command and "--legacy" not in command:
+        key=str(command[0])
+        if key not in legacy_support:legacy_support[key]=b"--legacy" in subprocess.check_output([command[0],"help"])
+        if legacy_support[key]:command=[*command,"--legacy"]
     p = subprocess.run(list(map(str, command)), capture_output=True, timeout=120)
     assert p.returncode == 0 and not p.stderr, (command, p.returncode, p.stderr.decode(errors='replace'))
     if expected is not None:
@@ -63,9 +69,9 @@ report = dict(platform=platform.platform(), cpu=platform.processor(), samples=ar
               completionMetricVersion=progress['version'], completionEstimatePercent=int(points + .5),
               peakMemoryMetric='PeakWorkingSetSize bytes' if os.name == 'nt' else 'maximum resident set KiB converted to bytes; zero means unobserved for a short process',
               includesProcessStartup=True, results=[], csv=[], startup=[])
-heap = 'struct Par{let x:int;let y:int;}assis item(n:int):own Par{return new Par(n,n+1);}'
-value = 'value struct Par{let x:int;let y:int;}pure assis item(n:int):Par{return new Par(n,n+1);}'
-body = 'assis assis_assis():int{let total:int=0;for(let i:int=0;i<N;i+=1){BIND p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}'
+heap = 'struct Par{let x:int;let y:int;}fn item(n:int):own Par{return new Par(n,n+1);}'
+value = 'value struct Par{let x:int;let y:int;}pure fn item(n:int):Par{return new Par(n,n+1);}'
+body = 'fn main():int{let total:int=0;for(let i:int=0;i<N;i+=1){BIND p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}'
 definitions = [('current-heap', compiler, heap + body.replace('BIND', 'own')), ('current-value', compiler, value + body.replace('BIND', 'val'))]
 if args.baseline:
     definitions.insert(0, (args.baseline_label+'-heap', args.baseline.resolve(), heap + body.replace('BIND', 'own')))
@@ -119,7 +125,7 @@ with tempfile.TemporaryDirectory(prefix='assis-values-io-', ignore_cleanup_error
     # Separate the fixed process/runtime cost, including Windows DLL/argument setup.
     startup_variants=[('current',compiler)]
     if args.baseline:startup_variants.insert(0,(args.baseline_label,args.baseline.resolve()))
-    file=folder/'start.assis';file.write_text('assis assis_assis():int{print(0);return 0;}',encoding='utf-8')
+    file=folder/'start.assis';file.write_text('fn main():int{print(0);return 0;}',encoding='utf-8')
     for name,cc in startup_variants:
         binary=folder/(name+'-start'+('.exe' if os.name=='nt' else ''))
         run([cc,'build',file,'-o',binary])

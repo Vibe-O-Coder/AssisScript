@@ -1,0 +1,1342 @@
+{
+  "version": "3.3.0-alpha.15",
+  "date": "2026-10-28",
+  "status": "passed",
+  "scope": "Windows/Linux native execution, scalar IR/liveness and Mach-O structural validation; qualified 24-hour Windows/Linux polling and persistence endurance",
+  "native": {
+    "windows": {
+      "platform": "win32",
+      "compilerSha256": "96a7f046c263290d3a603e0c7fc6e4c1be2f330a466d793f2af537aa4a592f58",
+      "passed": true,
+      "suites": [
+        {
+          "suite": "evolution",
+          "returnCode": 0,
+          "tests": 12,
+          "seconds": 7.856621999999334,
+          "log": "windows-release-evolution.log"
+        },
+        {
+          "suite": "generics",
+          "returnCode": 0,
+          "tests": 13,
+          "seconds": 7.752466800004186,
+          "log": "windows-release-generics.log"
+        },
+        {
+          "suite": "functions",
+          "returnCode": 0,
+          "tests": 19,
+          "seconds": 9.821940699999686,
+          "log": "windows-release-functions.log"
+        },
+        {
+          "suite": "generic-classes",
+          "returnCode": 0,
+          "tests": 17,
+          "seconds": 14.19584770000074,
+          "log": "windows-release-generic-classes.log"
+        },
+        {
+          "suite": "collections-ast",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 9.08797329999652,
+          "log": "windows-release-collections-ast.log"
+        },
+        {
+          "suite": "ownership-functions",
+          "returnCode": 0,
+          "tests": 26,
+          "seconds": 13.161339999998745,
+          "log": "windows-release-ownership-functions.log"
+        },
+        {
+          "suite": "values",
+          "returnCode": 0,
+          "tests": 21,
+          "seconds": 9.416357900001458,
+          "log": "windows-release-values.log"
+        },
+        {
+          "suite": "files",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 4.209427900001174,
+          "log": "windows-release-files.log"
+        },
+        {
+          "suite": "text-bytes",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 2.210046300002432,
+          "log": "windows-release-text-bytes.log"
+        },
+        {
+          "suite": "cli",
+          "returnCode": 0,
+          "tests": 1,
+          "seconds": 1.6751712999976007,
+          "log": "windows-release-cli.log"
+        },
+        {
+          "suite": "numbers",
+          "returnCode": 0,
+          "tests": 11,
+          "seconds": 4.372641699999804,
+          "log": "windows-release-numbers.log"
+        },
+        {
+          "suite": "packages",
+          "returnCode": 0,
+          "tests": 13,
+          "seconds": 3.6266966000039247,
+          "log": "windows-release-packages.log"
+        },
+        {
+          "suite": "json",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 5.274866899999324,
+          "log": "windows-release-json.log"
+        },
+        {
+          "suite": "system",
+          "returnCode": 0,
+          "tests": 8,
+          "seconds": 2.953365000001213,
+          "log": "windows-release-system.log"
+        },
+        {
+          "suite": "tooling",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 1.0972518999988097,
+          "log": "windows-release-tooling.log"
+        },
+        {
+          "suite": "slices",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 3.3505844000028446,
+          "log": "windows-release-slices.log"
+        },
+        {
+          "suite": "managed-classes",
+          "returnCode": 0,
+          "tests": 9,
+          "seconds": 3.939425399999891,
+          "log": "windows-release-managed-classes.log"
+        },
+        {
+          "suite": "backend-alpha9",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 1.137223300000187,
+          "log": "windows-release-backend-alpha9.log"
+        },
+        {
+          "suite": "optimization",
+          "returnCode": 0,
+          "tests": 6,
+          "seconds": 19.962074099996244,
+          "log": "windows-release-optimization.log"
+        },
+        {
+          "suite": "english-api",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 4.4110696999996435,
+          "log": "windows-release-english-api.log"
+        },
+        {
+          "suite": "release-policy",
+          "returnCode": 0,
+          "tests": 2,
+          "seconds": 2.4057776000045124,
+          "log": "windows-release-release-policy.log"
+        },
+        {
+          "suite": "ffi",
+          "returnCode": 0,
+          "tests": 9,
+          "seconds": 11.853551799998968,
+          "log": "windows-release-ffi.log"
+        },
+        {
+          "suite": "http",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 25.512466100000893,
+          "log": "windows-release-http.log"
+        },
+        {
+          "suite": "process",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 15.657670000000508,
+          "log": "windows-release-process.log"
+        },
+        {
+          "suite": "applications-bc",
+          "returnCode": 0,
+          "tests": 3,
+          "seconds": 2.7721976000029827,
+          "log": "windows-release-applications-bc.log"
+        },
+        {
+          "suite": "safe-default",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 5.183845899999142,
+          "log": "windows-release-safe-default.log"
+        },
+        {
+          "suite": "net",
+          "returnCode": 0,
+          "tests": 8,
+          "seconds": 20.081907399995544,
+          "log": "windows-release-net.log"
+        },
+        {
+          "suite": "move-enums",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 7.647978000000876,
+          "log": "windows-release-move-enums.log"
+        },
+        {
+          "suite": "closures",
+          "returnCode": 0,
+          "tests": 15,
+          "seconds": 10.558434899998247,
+          "log": "windows-release-closures.log"
+        },
+        {
+          "suite": "usability",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 7.276937700000417,
+          "log": "windows-release-usability.log"
+        },
+        {
+          "suite": "backend-evolution",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 7.9268557999967015,
+          "log": "windows-release-backend-evolution.log"
+        }
+      ],
+      "testCount": 283
+    },
+    "linux": {
+      "platform": "linux",
+      "compilerSha256": "dbab5395ac9f9abfdbd2ec92c5569ad4bf03abff5dfe56c03da71e649cf60a28",
+      "passed": true,
+      "suites": [
+        {
+          "suite": "evolution",
+          "returnCode": 0,
+          "tests": 12,
+          "seconds": 12.119526408999999,
+          "log": "linux-release-evolution.log"
+        },
+        {
+          "suite": "generics",
+          "returnCode": 0,
+          "tests": 13,
+          "seconds": 7.634696343999998,
+          "log": "linux-release-generics.log"
+        },
+        {
+          "suite": "functions",
+          "returnCode": 0,
+          "tests": 19,
+          "seconds": 7.577841905999996,
+          "log": "linux-release-functions.log"
+        },
+        {
+          "suite": "generic-classes",
+          "returnCode": 0,
+          "tests": 17,
+          "seconds": 10.197108850999996,
+          "log": "linux-release-generic-classes.log"
+        },
+        {
+          "suite": "collections-ast",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 5.536362472,
+          "log": "linux-release-collections-ast.log"
+        },
+        {
+          "suite": "ownership-functions",
+          "returnCode": 0,
+          "tests": 26,
+          "seconds": 11.606212221999996,
+          "log": "linux-release-ownership-functions.log"
+        },
+        {
+          "suite": "values",
+          "returnCode": 0,
+          "tests": 21,
+          "seconds": 6.9812000330000075,
+          "log": "linux-release-values.log"
+        },
+        {
+          "suite": "files",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 2.1593594670000016,
+          "log": "linux-release-files.log"
+        },
+        {
+          "suite": "text-bytes",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 1.4383350269999937,
+          "log": "linux-release-text-bytes.log"
+        },
+        {
+          "suite": "cli",
+          "returnCode": 0,
+          "tests": 1,
+          "seconds": 0.6768399779999896,
+          "log": "linux-release-cli.log"
+        },
+        {
+          "suite": "numbers",
+          "returnCode": 0,
+          "tests": 11,
+          "seconds": 2.253139998000009,
+          "log": "linux-release-numbers.log"
+        },
+        {
+          "suite": "packages",
+          "returnCode": 0,
+          "tests": 13,
+          "seconds": 2.028848971000002,
+          "log": "linux-release-packages.log"
+        },
+        {
+          "suite": "json",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 1.4858022610000035,
+          "log": "linux-release-json.log"
+        },
+        {
+          "suite": "system",
+          "returnCode": 0,
+          "tests": 8,
+          "seconds": 2.0231102420000013,
+          "log": "linux-release-system.log"
+        },
+        {
+          "suite": "tooling",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 0.7441844639999999,
+          "log": "linux-release-tooling.log"
+        },
+        {
+          "suite": "slices",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 2.206872083999997,
+          "log": "linux-release-slices.log"
+        },
+        {
+          "suite": "managed-classes",
+          "returnCode": 0,
+          "tests": 9,
+          "seconds": 3.9564578820000094,
+          "log": "linux-release-managed-classes.log"
+        },
+        {
+          "suite": "backend-alpha9",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 1.0993928359999927,
+          "log": "linux-release-backend-alpha9.log"
+        },
+        {
+          "suite": "optimization",
+          "returnCode": 0,
+          "tests": 6,
+          "seconds": 7.275063154000009,
+          "log": "linux-release-optimization.log"
+        },
+        {
+          "suite": "english-api",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 7.609942290999996,
+          "log": "linux-release-english-api.log"
+        },
+        {
+          "suite": "release-policy",
+          "returnCode": 0,
+          "tests": 2,
+          "seconds": 2.646530291000005,
+          "log": "linux-release-release-policy.log"
+        },
+        {
+          "suite": "ffi",
+          "returnCode": 0,
+          "tests": 9,
+          "seconds": 15.671335275999994,
+          "log": "linux-release-ffi.log"
+        },
+        {
+          "suite": "http",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 12.03973677899998,
+          "log": "linux-release-http.log"
+        },
+        {
+          "suite": "process",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 5.795049750000004,
+          "log": "linux-release-process.log"
+        },
+        {
+          "suite": "applications-bc",
+          "returnCode": 0,
+          "tests": 3,
+          "seconds": 2.2644503299999883,
+          "log": "linux-release-applications-bc.log"
+        },
+        {
+          "suite": "safe-default",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 9.553155535000002,
+          "log": "linux-release-safe-default.log"
+        },
+        {
+          "suite": "net",
+          "returnCode": 0,
+          "tests": 8,
+          "seconds": 24.540933041000017,
+          "log": "linux-release-net.log"
+        },
+        {
+          "suite": "move-enums",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 12.737292061999995,
+          "log": "linux-release-move-enums.log"
+        },
+        {
+          "suite": "closures",
+          "returnCode": 0,
+          "tests": 15,
+          "seconds": 18.80488467699999,
+          "log": "linux-release-closures.log"
+        },
+        {
+          "suite": "usability",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 7.894177547999988,
+          "log": "linux-release-usability.log"
+        },
+        {
+          "suite": "backend-evolution",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 3.007558969999991,
+          "log": "linux-release-backend-evolution.log"
+        }
+      ],
+      "testCount": 283
+    }
+  },
+  "cleanBuilds": {
+    "windows": {
+      "platform": "win32",
+      "compiler": "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "cleanBinarySha256": "96a7f046c263290d3a603e0c7fc6e4c1be2f330a466d793f2af537aa4a592f58",
+      "workspaceBinarySha256": "96a7f046c263290d3a603e0c7fc6e4c1be2f330a466d793f2af537aa4a592f58",
+      "identicalToWorkspaceBinary": true
+    },
+    "linux": {
+      "platform": "linux",
+      "compiler": "/usr/bin/gcc",
+      "cleanBinarySha256": "dbab5395ac9f9abfdbd2ec92c5569ad4bf03abff5dfe56c03da71e649cf60a28",
+      "workspaceBinarySha256": "dbab5395ac9f9abfdbd2ec92c5569ad4bf03abff5dfe56c03da71e649cf60a28",
+      "identicalToWorkspaceBinary": true
+    }
+  },
+  "examples": {
+    "windows": {
+      "compilerSha256": "96a7f046c263290d3a603e0c7fc6e4c1be2f330a466d793f2af537aa4a592f58",
+      "passed": true,
+      "examples": [
+        {
+          "file": "01_ola.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "02_objetos.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "03_polimorfismo.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "04_memoria.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "05_bits.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "06_fibonacci.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "07_arena.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "08_modulos.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "09_colecoes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "10_structs.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "11_pacotes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "12_relatorio_vendas.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "13_codificacao.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "14_ownership.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "15_funcional.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "16_generics.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "17_funcoes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "18_classes_genericas.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "19_ownership_funcoes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "20_valores_e_resultados.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "21_relatorio_csv_stream.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "22_numeros.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "23_eventos.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "24_config_json.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "25_recursos_e_unicode.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "26_english_api.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "27_http_client.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "28_persistent_service.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "29_http_polling.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "30_closures_and_owned_results.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "31_language_review.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "32_backend_evolution.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "rpg.assis",
+          "passed": true,
+          "error": ""
+        }
+      ],
+      "rpg": [
+        {
+          "seed": 1,
+          "ending": "victory",
+          "returnCode": 0,
+          "stderr": "",
+          "outputBytes": 12915
+        },
+        {
+          "seed": 5,
+          "ending": "defeat",
+          "returnCode": 0,
+          "stderr": "",
+          "outputBytes": 13754
+        }
+      ]
+    },
+    "linux": {
+      "compilerSha256": "dbab5395ac9f9abfdbd2ec92c5569ad4bf03abff5dfe56c03da71e649cf60a28",
+      "passed": true,
+      "examples": [
+        {
+          "file": "01_ola.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "02_objetos.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "03_polimorfismo.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "04_memoria.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "05_bits.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "06_fibonacci.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "07_arena.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "08_modulos.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "09_colecoes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "10_structs.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "11_pacotes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "12_relatorio_vendas.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "13_codificacao.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "14_ownership.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "15_funcional.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "16_generics.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "17_funcoes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "18_classes_genericas.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "19_ownership_funcoes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "20_valores_e_resultados.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "21_relatorio_csv_stream.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "22_numeros.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "23_eventos.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "24_config_json.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "25_recursos_e_unicode.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "26_english_api.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "27_http_client.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "28_persistent_service.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "29_http_polling.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "30_closures_and_owned_results.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "31_language_review.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "32_backend_evolution.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "rpg.assis",
+          "passed": true,
+          "error": ""
+        }
+      ],
+      "rpg": [
+        {
+          "seed": 1,
+          "ending": "victory",
+          "returnCode": 0,
+          "stderr": "",
+          "outputBytes": 12915
+        },
+        {
+          "seed": 5,
+          "ending": "defeat",
+          "returnCode": 0,
+          "stderr": "",
+          "outputBytes": 13754
+        }
+      ]
+    }
+  },
+  "macos": {
+    "status": "experimental; native execution pending",
+    "validated": "Mach-O structure, segments, bindings and entry; PE/ELF cross-generation"
+  },
+  "notes": [
+    "Manual-memory teaching examples use explicit unsafe blocks.",
+    "Roadmap credit and outstanding gates are recorded in PROGRESSO.json.",
+    "This is a local working-tree revision, not a published clean tag."
+  ],
+  "sourceHashes": {
+    "src/assisc.c": "22468fdb4015040e17af3d39d8dd4cfc98c2aa9581fcfc691925a80421f2f3c9",
+    "src/collections.h": "905c4242cba5c3ba08e066f89574f5c0391f4226d8ab58539587c07025f2d1cf",
+    "src/debug_info.h": "6d3ffe95d8bac0a2adeba6e13ab7e2d522058eb32d4c104641d2f6deeaf9ea14",
+    "src/devtools.h": "503cf4cbaf3a302227404e1eabeab606e456825ebe14b1dc30e5d32bf8e9c6c2",
+    "src/elf_format.h": "8aa29e334756432f62b458f411bd16dd29d86da6f2746814c3309b1d2c910322",
+    "src/expression_emit.h": "220fd1f95ae2c2c7d6d2e73f66e6fc293c6745116d0d374b8f6f4ece7acd446f",
+    "src/expression_ir.h": "8eaf4ced21234e8432c322fde203b225d7007fbc6e501a209deeaf6df09a1c28",
+    "src/ffi_elf.h": "ecceba924c5e56baf3fea995bdfdc33235b45fb8476ca21dc6c91cbcd71b593b",
+    "src/ffi_emit.h": "010053ca3165871397b5004ac50ca99c869ddd2d2a811d699d8fa1823dc187a8",
+    "src/frontend.h": "fe82321b5bc938dcf83fe145e878d94fd6c1df894a1b3e3142b017432ef08c34",
+    "src/generics.h": "101a6d09e61bd0b240918bb906252498348f00e9b252f77207a7ebeffdd84069",
+    "src/icon_blob.h": "74646ad2eee260df4579744e9789f405573e8124b61e8a265b61ae3d937be37a",
+    "src/install_files.inc": "9cc12736280334089bbc0fea6d9dc6c0448f0fa4a57bf0d81def09c6c3efa4f7",
+    "src/install_optional.inc": "390a94ceef3e6fe123e6481d2d132f1f4dd819a0d5cb11945ddebc33b7bd29e8",
+    "src/ir.h": "047ff32cc1777155e64205013609ab73e501209b6981aaacb96ab99821b0ecf5",
+    "src/lexer.h": "9b502b5ebfaaf130e3ca3e94e19a57ea46031a17d229a91bd26de53a1faf6d96",
+    "src/macho_writer.h": "da81962dee5592f2a6006f1b6ffb853d07728414116342b2f1333c2a8753c8e8",
+    "src/modules.h": "84662a3c9d41125ceedd2e0c665df48f935667c76903e0df491cb6e723f56a4e",
+    "src/namespaces.h": "c2362c7fe6802c50f84abab6c7767de3ac85515d36b38e7ccdfee162a838c386",
+    "src/numeric.h": "a6264e101ddeff3ff503cb8e601365988c5df0cbc44baa85cc85464fa65f4feb",
+    "src/numeric_emit.h": "90d9991939841fbadb2048a3f913b5d654c6c65f720d6a72a8847a05550594ba",
+    "src/ownership.h": "4a3148f4fba02cdecc74a750399f0bd1947dcdcf0b64830f62e88836c145e1b1",
+    "src/packages.h": "e372900c7befe0ee8d812c17a5f05cfb56e63a78589facd626f928abc488eb32",
+    "src/pe_writer.h": "1426b3a2104dc2555ed05a3ae1ce8b1a875cc2d5b49c3d70c60b2e0d92f2463e",
+    "src/ranges.h": "b3291ef9ad5c641fbf46f443cf270759842f5d823c329438d5fbd013da5b42ca",
+    "src/registers.h": "be284d42de984addf242ec0f45cde57f638d5c94dd509749d33458530502e678",
+    "src/runtime.S": "9cb1371662938ad7acfdacf2029d438d9ae580c437b26f2a9c5c5b0fa4ce2f70",
+    "src/runtime_blob.h": "e398ba9c1a4cce091b4f350ed4c10005dc3aa6091d19aab461bdbb0f61092bda",
+    "src/runtime_files.inc": "64a20a5ec8db2ffd3fe0e3d0414574c2ffd4d71d507acd7422d3b0b618943e43",
+    "src/runtime_io.inc": "012bba759ce7516082c3da327c03e0db9cd31d3b61d37123b7b4dfa7b9afeaa9",
+    "src/runtime_macos.S": "1ebf175ebcd4ca4f3eca42bf74e09fc739c4ae5ade2275f3588c9b955418470b",
+    "src/runtime_macos_blob.h": "5a3e41af86d491aad8fe79e2de89dee06d58b00f89f8a8bfa880bd509ed15474",
+    "src/runtime_memory.inc": "3ea9ff21a662e587f05a499ff82f9be5d8b8efb6763f6b5d92bd9704e6af067a",
+    "src/runtime_numeric.inc": "f17f1bcc70b1634cb8714882ee648bd0f904262041fc4bd383f105cf84606cb2",
+    "src/runtime_system.inc": "254389a232be341125fd55ab0023c5499fbbdbfb191ea8e6ba1c4b32c59b97e5",
+    "src/runtime_win.S": "7b5cfdb4c0019a050534a4cb2da4a92f09a39b93444e4eb24fcb4e09c8e3f861",
+    "src/runtime_win_blob.h": "59de03b24d1dea77f0aa6d1277d4519f849536b33f1d6354edc9743b32eefb10",
+    "src/safety.h": "8edc1b728efa0a31340f231e1f6117d13edcea42fdfee1a536ae2354bcf22b22",
+    "src/sha256.h": "db32be4734bdc0d90a82ca8f0654fbf9b16159baa1538da416558f941614230b",
+    "src/version.h": "7000caab95cfacf0fe3f728266c324291370e3f9532b7b8ef62db8dcb20a166f",
+    "src/windows_setup.c": "7f72e0a53467d2e528cef728860f7cde759c8d296a79e2ac66fc062a8be181c9"
+  },
+  "benchmarks": {
+    "windows": {
+      "backend": {
+        "path": "benchmarks/resultados/backend-alpha15-windows.json",
+        "sha256": "bbf5e3b7c08541b24ba6fee3f724c58f807aededfc2528f793bb462dfb9d28e1"
+      },
+      "optimization": {
+        "path": "benchmarks/resultados/optimization-alpha15-windows.json",
+        "sha256": "1d16618472cddbcc868ea01eef5ee890c6942b3ab1b79ee0edcd857facb9b45f"
+      }
+    },
+    "linux": {
+      "backend": {
+        "path": "benchmarks/resultados/backend-alpha15-linux.json",
+        "sha256": "f5061aa6eb0e49ba3bf19f26d36e8816efa990a00dae062c3cbcc86314e32cda"
+      },
+      "optimization": {
+        "path": "benchmarks/resultados/optimization-alpha15-linux.json",
+        "sha256": "6cb3e642ee5a42f496fb9a9e53f51648fbca606de0b2fb2011efdf7374a6b6b0"
+      }
+    }
+  },
+  "shortSoak": {
+    "windows": {
+      "path": "benchmarks/resultados/soak-alpha15-short-windows.json",
+      "elapsedSeconds": 120.52286579999782,
+      "workers": 4,
+      "qualifies24Hours": false
+    },
+    "linux": {
+      "path": "benchmarks/resultados/soak-alpha15-short-linux.json",
+      "elapsedSeconds": 120.528507258,
+      "workers": 4,
+      "qualifies24Hours": false
+    }
+  },
+  "supplemental": {
+    "node-windows": {
+      "counts": [
+        85
+      ],
+      "log": "build/review-tests/node-windows.log",
+      "sha256": "9da85f6489d66543ac34cffbb01a82ad5a8f9dfee348e110bca53c051016bd0f"
+    },
+    "native-windows": {
+      "counts": [
+        130
+      ],
+      "log": "build/review-tests/native-windows.log",
+      "sha256": "a8341381b16d7992300a6f36f90e51d050d37303c240f7c10de3e4b06dde1931"
+    },
+    "native-linux": {
+      "counts": [
+        133,
+        28,
+        41
+      ],
+      "log": "build/review-tests/native-linux.log",
+      "sha256": "0d1a3648432b9cbe8082f602cc68adda346e56105323976b58eaa34d193360d1"
+    }
+  },
+  "remoteCI": "not triggered; local results do not assert remote success",
+  "longSoak": {
+    "windows": {
+      "originalPath": "build/soak-alpha15/paced/windows.json",
+      "sha256": "6a5b1bfd49566f352ca3d69fc581608f484ffcdde9dbda076eadca3cacca419a",
+      "compilerSha256": "96a7f046c263290d3a603e0c7fc6e4c1be2f330a466d793f2af537aa4a592f58",
+      "matchesCurrentSourcesAndCompiler": true,
+      "elapsedSeconds": 86400.29380079999,
+      "workers": 4,
+      "rounds": 342519,
+      "intervalSeconds": 1.0,
+      "qualifies24Hours": true,
+      "report": {
+        "platform": "Windows-10-10.0.19045-SP0",
+        "compilerSha256": "96a7f046c263290d3a603e0c7fc6e4c1be2f330a466d793f2af537aa4a592f58",
+        "applicationSha256": {
+          "29_http_polling.assis.exe": "d061aad4952617819e196ac2e42ce038c3ef304e2df740f7f3ff6d7c91881347",
+          "28_persistent_service.assis.exe": "a9a12b990cefe8bc001063b95251dbeac523cbfe404e154ed4be291bb6f2cfa0"
+        },
+        "sourceHashes": {
+          "src/assisc.c": "22468fdb4015040e17af3d39d8dd4cfc98c2aa9581fcfc691925a80421f2f3c9",
+          "src/collections.h": "905c4242cba5c3ba08e066f89574f5c0391f4226d8ab58539587c07025f2d1cf",
+          "src/debug_info.h": "6d3ffe95d8bac0a2adeba6e13ab7e2d522058eb32d4c104641d2f6deeaf9ea14",
+          "src/devtools.h": "503cf4cbaf3a302227404e1eabeab606e456825ebe14b1dc30e5d32bf8e9c6c2",
+          "src/elf_format.h": "8aa29e334756432f62b458f411bd16dd29d86da6f2746814c3309b1d2c910322",
+          "src/expression_emit.h": "220fd1f95ae2c2c7d6d2e73f66e6fc293c6745116d0d374b8f6f4ece7acd446f",
+          "src/expression_ir.h": "8eaf4ced21234e8432c322fde203b225d7007fbc6e501a209deeaf6df09a1c28",
+          "src/ffi_elf.h": "ecceba924c5e56baf3fea995bdfdc33235b45fb8476ca21dc6c91cbcd71b593b",
+          "src/ffi_emit.h": "010053ca3165871397b5004ac50ca99c869ddd2d2a811d699d8fa1823dc187a8",
+          "src/frontend.h": "fe82321b5bc938dcf83fe145e878d94fd6c1df894a1b3e3142b017432ef08c34",
+          "src/generics.h": "101a6d09e61bd0b240918bb906252498348f00e9b252f77207a7ebeffdd84069",
+          "src/icon_blob.h": "74646ad2eee260df4579744e9789f405573e8124b61e8a265b61ae3d937be37a",
+          "src/install_files.inc": "9cc12736280334089bbc0fea6d9dc6c0448f0fa4a57bf0d81def09c6c3efa4f7",
+          "src/install_optional.inc": "390a94ceef3e6fe123e6481d2d132f1f4dd819a0d5cb11945ddebc33b7bd29e8",
+          "src/ir.h": "047ff32cc1777155e64205013609ab73e501209b6981aaacb96ab99821b0ecf5",
+          "src/lexer.h": "9b502b5ebfaaf130e3ca3e94e19a57ea46031a17d229a91bd26de53a1faf6d96",
+          "src/macho_writer.h": "da81962dee5592f2a6006f1b6ffb853d07728414116342b2f1333c2a8753c8e8",
+          "src/modules.h": "84662a3c9d41125ceedd2e0c665df48f935667c76903e0df491cb6e723f56a4e",
+          "src/namespaces.h": "c2362c7fe6802c50f84abab6c7767de3ac85515d36b38e7ccdfee162a838c386",
+          "src/numeric.h": "a6264e101ddeff3ff503cb8e601365988c5df0cbc44baa85cc85464fa65f4feb",
+          "src/numeric_emit.h": "90d9991939841fbadb2048a3f913b5d654c6c65f720d6a72a8847a05550594ba",
+          "src/ownership.h": "4a3148f4fba02cdecc74a750399f0bd1947dcdcf0b64830f62e88836c145e1b1",
+          "src/packages.h": "e372900c7befe0ee8d812c17a5f05cfb56e63a78589facd626f928abc488eb32",
+          "src/pe_writer.h": "1426b3a2104dc2555ed05a3ae1ce8b1a875cc2d5b49c3d70c60b2e0d92f2463e",
+          "src/ranges.h": "b3291ef9ad5c641fbf46f443cf270759842f5d823c329438d5fbd013da5b42ca",
+          "src/registers.h": "be284d42de984addf242ec0f45cde57f638d5c94dd509749d33458530502e678",
+          "src/runtime.S": "9cb1371662938ad7acfdacf2029d438d9ae580c437b26f2a9c5c5b0fa4ce2f70",
+          "src/runtime_blob.h": "e398ba9c1a4cce091b4f350ed4c10005dc3aa6091d19aab461bdbb0f61092bda",
+          "src/runtime_files.inc": "64a20a5ec8db2ffd3fe0e3d0414574c2ffd4d71d507acd7422d3b0b618943e43",
+          "src/runtime_io.inc": "012bba759ce7516082c3da327c03e0db9cd31d3b61d37123b7b4dfa7b9afeaa9",
+          "src/runtime_macos.S": "1ebf175ebcd4ca4f3eca42bf74e09fc739c4ae5ade2275f3588c9b955418470b",
+          "src/runtime_macos_blob.h": "5a3e41af86d491aad8fe79e2de89dee06d58b00f89f8a8bfa880bd509ed15474",
+          "src/runtime_memory.inc": "3ea9ff21a662e587f05a499ff82f9be5d8b8efb6763f6b5d92bd9704e6af067a",
+          "src/runtime_numeric.inc": "f17f1bcc70b1634cb8714882ee648bd0f904262041fc4bd383f105cf84606cb2",
+          "src/runtime_system.inc": "254389a232be341125fd55ab0023c5499fbbdbfb191ea8e6ba1c4b32c59b97e5",
+          "src/runtime_win.S": "7b5cfdb4c0019a050534a4cb2da4a92f09a39b93444e4eb24fcb4e09c8e3f861",
+          "src/runtime_win_blob.h": "59de03b24d1dea77f0aa6d1277d4519f849536b33f1d6354edc9743b32eefb10",
+          "src/safety.h": "8edc1b728efa0a31340f231e1f6117d13edcea42fdfee1a536ae2354bcf22b22",
+          "src/sha256.h": "db32be4734bdc0d90a82ca8f0654fbf9b16159baa1538da416558f941614230b",
+          "src/version.h": "7000caab95cfacf0fe3f728266c324291370e3f9532b7b8ef62db8dcb20a166f",
+          "src/windows_setup.c": "7f72e0a53467d2e528cef728860f7cde759c8d296a79e2ac66fc062a8be181c9",
+          "stdlib/algorithms.assis": "549e4d010a7c9edb36355d8548476c73fe69d7e52041d1f7bf652a0043f618f2",
+          "stdlib/catalogo.json": "d1aff89beecf4fae12069d792b7812966015bf039de9745a745161047699a70e",
+          "stdlib/catalogo.sh": "2436afc22f61c9f53472c97dff1d98c185799600f2959671e5e25b9ec5f73c06",
+          "stdlib/cli.assis": "c53e31addeed7d63d8f71dd014156dc7eed9a30565770f3ec43b631f8200c0d6",
+          "stdlib/convert.assis": "005f807feff6793aebb6a650fde152401d5581b8383624432f7170f15e6420ee",
+          "stdlib/csv.assis": "08d3a5c0fe0cafe7ff830d076b8c6a0750020a637481f705ae98589d117e74b4",
+          "stdlib/encoding.assis": "e1dbca19786f2b9b81fb62011992a2809e210030b7c000c9e9f03ee73b31dc95",
+          "stdlib/errors.assis": "ad9c4f1703d7cead9af736deca8de5ef9082b11a4b03aa503c29ede907f35e2e",
+          "stdlib/events.assis": "c463c7a13395f98448394639cbab4238662b25340dd106400b447a6bf7488225",
+          "stdlib/http.assis": "40c0f18df299e52a21c04fe3ccaf776e17a5947ec31d8c5e3fa08de01805c82f",
+          "stdlib/iterators.assis": "57e7c46d1194ee22172a82da3c9339cca6c7de98f967eb6eac9f7a33ffff401f",
+          "stdlib/json.assis": "fe96539dd9967442cf186c719a12c105fb91b6593244d605e1dad48ce00a639a",
+          "stdlib/log.assis": "b15ef60cc12b5a58835f0be9846e613db0d4d671afc0dcded7d78f9935c2e332",
+          "stdlib/math.assis": "0d09d9f3b4966ae0ee13f8f2d62098eea1ec66878e31508f09363e334cb3d8d2",
+          "stdlib/memory.assis": "7a875e5b479ff7f3f2ad5423d1346b6bc7735cbc6c8bc53a0ceae1ad868563fd",
+          "stdlib/net.assis": "376ec5e6992d50520001b8689bf2f225deccd1df113f2f8a5d2a05d01ebbc2e0",
+          "stdlib/owned.assis": "e7b81efe90b432d73d10afebb9ef0d167d60b96f6a59756a1fa1c8dcd4c69b60",
+          "stdlib/process.assis": "9b6a74ef9a54beefa08eacd20b36dc2f2f7f861283dbc5b762862343745bd464",
+          "stdlib/random.assis": "22456db64cf65bd533be3fa509857f48f4026d314f95dba23170b3f1033d0f45",
+          "stdlib/strings.assis": "7ce05b4174fed594470a53a4a50e9708d90a0b8213833ff92b436e55aeedf40d",
+          "stdlib/time.assis": "0a4fa74239155d2521b107c1f304885e3b0a3fe2e93b9542f9cdd09d28dfa062",
+          "stdlib/unicode.assis": "df36dbcecc7bedc585f621e1994a0a1b3734c7072c7b162b8904767c6929794f",
+          "exemplos/01_ola.assis": "c0c28189d2158596f3be9515367f2fe4e0aa713a8d7c91413e872655ffb51947",
+          "exemplos/02_objetos.assis": "39b35bc2541f5ceb8a1998d61c1135623137471cf6072fce10f396294cdcea4f",
+          "exemplos/03_polimorfismo.assis": "f665c4c1334d85d56a00d37a3c1442ec91ab7e2e7f0454557d9e7ccde7360f08",
+          "exemplos/04_memoria.assis": "dc5f7da79cca91f2ba598f4c4e4cef61b132cbe6d13e9937e0bd124d73eff919",
+          "exemplos/05_bits.assis": "8322c9d2ae1ab0486b8855a49e0eb75c8b9609a95555408ddb34f942253d588d",
+          "exemplos/06_fibonacci.assis": "4de079101e8292fbb6058fac9da50be2e1d4439e85a13cd28ec0d9358d700050",
+          "exemplos/07_arena.assis": "9bcbec1b3c3c210a4dc51a8cacf16a21799e97cfe75b657b125b94491dfe964c",
+          "exemplos/08_modulos.assis": "de71bb54c05e3f2bf22eef22b7f3a1e70a7870e969bf4559229f6838cdf19686",
+          "exemplos/09_colecoes.assis": "f07e79a2a7c3a2ea89579089064a3e28a719244453884e182dbc9ff9f2128795",
+          "exemplos/10_structs.assis": "061f2a7abf8fbb967f7b7ca89e4b61dd59476352ebea8fc4c3c19d95504ab8dd",
+          "exemplos/11_pacotes.assis": "c8a068c3df45ab1734899ad0ed2a6049b84eebd217d103f6f481237d9134e18e",
+          "exemplos/12_relatorio_vendas.assis": "68feabe2914ebde043750b11a7605271963ca6791d2deebc3bf7e4672dc38288",
+          "exemplos/13_codificacao.assis": "4800aed2e1801bbe0b142004ab2aa34033431f0bca0fe09252fdc08bfa094f70",
+          "exemplos/14_ownership.assis": "3a94fd3e00d376f6b1a3d44d13de1e6069e24638afda96eac8cba313fdff9b46",
+          "exemplos/15_funcional.assis": "74a8d9ed021634950c58930030b8254718c119522a2c88da324bb5abf0385e50",
+          "exemplos/16_generics.assis": "fc8ee382a1c60321ffa9ed470267131f846a8937e7b4e134fb85b7f25a38ed95",
+          "exemplos/17_funcoes.assis": "fc26002f8b1ebd8b36863d9f33f7e51a7036ba4fc041adb4b78a742f3feeaf64",
+          "exemplos/18_classes_genericas.assis": "5f9afb8ff49ee358a15cdedb957e989c9ef0eb7f867c1402d1637476afab37fd",
+          "exemplos/19_ownership_funcoes.assis": "7fcd0afcba5bca8ae9029931fd4e95e1480263bf43daa854bd8186c2730d6452",
+          "exemplos/20_valores_e_resultados.assis": "0715c6cb769c2e4f27977ae9420dac73d2559a26b3edb646fd1d74ff22562128",
+          "exemplos/21_relatorio_csv_stream.assis": "f8d002ee346e15e8e85d28215105aed9c911c2b7d5a7a04fc670eb6f26ab87d9",
+          "exemplos/22_numeros.assis": "7d86e56fb304fbb9e05bf0af264905ddc30e79923daa5372e219ff88f75f755b",
+          "exemplos/23_eventos.assis": "f9f4db5a22a133e9995269ab741ba8e8b972a0adf99da3dde3b1a21c780cb732",
+          "exemplos/24_config_json.assis": "eb6097a28e67baca72edb919a1b2b1d55d15115bedd1121ac11e9cc5bb4f3dc9",
+          "exemplos/25_recursos_e_unicode.assis": "4d75ba14da7039382d5738a4df4896c4c131f4cb1239508819b157d9077f9bc7",
+          "exemplos/26_english_api.assis": "a1055aaefc6b3ed38554789ab0bef47e6185b349713308bd392eb4d6769234bf",
+          "exemplos/27_http_client.assis": "45e315771856a2a93ef7cb1e8e3a9f35bb8b35d2f82040d8542eba02de06e6b2",
+          "exemplos/28_persistent_service.assis": "008795f850df65df47abe3f8f8ae229a777c4e40a7ce7ee5232c030ed251db10",
+          "exemplos/29_http_polling.assis": "dcc5c74cca7897d6b1734346a57d732162885283b99e226c48ff203841a51c67",
+          "exemplos/30_closures_and_owned_results.assis": "92afd2d56ce5325e98cf9a1339aed97d84ac208a9bf4cd46f6f57a5a521f9140",
+          "exemplos/31_language_review.assis": "824f250a1f7bbab49b7dfd83da6f1217ab7fd1ecd7effbd44d34a8ebd8317dbd",
+          "exemplos/32_backend_evolution.assis": "a12920a1535180d6b2a64bdf6028a582b8677c5c720e8ede9d97c57111d81841",
+          "exemplos/rpg.assis": "4991011bdcb6d81b3c68e0a2122e1f247adcc74abb7299d9c80e3af1205a7059",
+          "exemplos/src.pillow": "5bc22d578b2f0e403db709ccea9b772c131972b3c31ee24c191440cf43f0a7b8",
+          "tools/soak-native.py": "00777240e2b429198649b23d250b246bb776bb3a0d70a332a9c59bc770eee956"
+        },
+        "requestedSeconds": 86400.0,
+        "elapsedSeconds": 86400.29380079999,
+        "workers": 4,
+        "passed": true,
+        "error": null,
+        "qualifies24Hours": true,
+        "results": [
+          {
+            "worker": 0,
+            "rounds": 85632,
+            "initial": {
+              "rssBytes": 5701632,
+              "handles": 91
+            },
+            "final": {
+              "rssBytes": 5115904,
+              "handles": 91
+            },
+            "peakRssBytes": 5734400,
+            "peakHandles": 91
+          },
+          {
+            "worker": 1,
+            "rounds": 85628,
+            "initial": {
+              "rssBytes": 5693440,
+              "handles": 91
+            },
+            "final": {
+              "rssBytes": 5115904,
+              "handles": 91
+            },
+            "peakRssBytes": 5693440,
+            "peakHandles": 91
+          },
+          {
+            "worker": 2,
+            "rounds": 85629,
+            "initial": {
+              "rssBytes": 5693440,
+              "handles": 91
+            },
+            "final": {
+              "rssBytes": 5107712,
+              "handles": 91
+            },
+            "peakRssBytes": 5693440,
+            "peakHandles": 91
+          },
+          {
+            "worker": 3,
+            "rounds": 85630,
+            "initial": {
+              "rssBytes": 5689344,
+              "handles": 91
+            },
+            "final": {
+              "rssBytes": 5107712,
+              "handles": 91
+            },
+            "peakRssBytes": 5689344,
+            "peakHandles": 91
+          }
+        ],
+        "networkMode": "polling",
+        "intervalSeconds": 1.0
+      }
+    },
+    "linux": {
+      "originalPath": "build/soak-alpha15/paced/linux.json",
+      "sha256": "e581bd3b9b2efd12e7f99e4be81b7ac16eebb4c120c3ad1dcccf222765e98a47",
+      "compilerSha256": "dbab5395ac9f9abfdbd2ec92c5569ad4bf03abff5dfe56c03da71e649cf60a28",
+      "matchesCurrentSourcesAndCompiler": true,
+      "elapsedSeconds": 86400.186654427,
+      "workers": 4,
+      "rounds": 345056,
+      "intervalSeconds": 1.0,
+      "qualifies24Hours": true,
+      "report": {
+        "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "compilerSha256": "dbab5395ac9f9abfdbd2ec92c5569ad4bf03abff5dfe56c03da71e649cf60a28",
+        "applicationSha256": {
+          "29_http_polling.assis.exe": "12f55d140036753845f4f5d6ce6ca67b0891ced8fec565a558bccfd619b2f3bf",
+          "28_persistent_service.assis.exe": "a9ac3f39ab07202a1cd9781c3c689754e607f3bc0a0cb74357ceed96ab39be93"
+        },
+        "sourceHashes": {
+          "src/assisc.c": "22468fdb4015040e17af3d39d8dd4cfc98c2aa9581fcfc691925a80421f2f3c9",
+          "src/collections.h": "905c4242cba5c3ba08e066f89574f5c0391f4226d8ab58539587c07025f2d1cf",
+          "src/debug_info.h": "6d3ffe95d8bac0a2adeba6e13ab7e2d522058eb32d4c104641d2f6deeaf9ea14",
+          "src/devtools.h": "503cf4cbaf3a302227404e1eabeab606e456825ebe14b1dc30e5d32bf8e9c6c2",
+          "src/elf_format.h": "8aa29e334756432f62b458f411bd16dd29d86da6f2746814c3309b1d2c910322",
+          "src/expression_emit.h": "220fd1f95ae2c2c7d6d2e73f66e6fc293c6745116d0d374b8f6f4ece7acd446f",
+          "src/expression_ir.h": "8eaf4ced21234e8432c322fde203b225d7007fbc6e501a209deeaf6df09a1c28",
+          "src/ffi_elf.h": "ecceba924c5e56baf3fea995bdfdc33235b45fb8476ca21dc6c91cbcd71b593b",
+          "src/ffi_emit.h": "010053ca3165871397b5004ac50ca99c869ddd2d2a811d699d8fa1823dc187a8",
+          "src/frontend.h": "fe82321b5bc938dcf83fe145e878d94fd6c1df894a1b3e3142b017432ef08c34",
+          "src/generics.h": "101a6d09e61bd0b240918bb906252498348f00e9b252f77207a7ebeffdd84069",
+          "src/icon_blob.h": "74646ad2eee260df4579744e9789f405573e8124b61e8a265b61ae3d937be37a",
+          "src/install_files.inc": "9cc12736280334089bbc0fea6d9dc6c0448f0fa4a57bf0d81def09c6c3efa4f7",
+          "src/install_optional.inc": "390a94ceef3e6fe123e6481d2d132f1f4dd819a0d5cb11945ddebc33b7bd29e8",
+          "src/ir.h": "047ff32cc1777155e64205013609ab73e501209b6981aaacb96ab99821b0ecf5",
+          "src/lexer.h": "9b502b5ebfaaf130e3ca3e94e19a57ea46031a17d229a91bd26de53a1faf6d96",
+          "src/macho_writer.h": "da81962dee5592f2a6006f1b6ffb853d07728414116342b2f1333c2a8753c8e8",
+          "src/modules.h": "84662a3c9d41125ceedd2e0c665df48f935667c76903e0df491cb6e723f56a4e",
+          "src/namespaces.h": "c2362c7fe6802c50f84abab6c7767de3ac85515d36b38e7ccdfee162a838c386",
+          "src/numeric.h": "a6264e101ddeff3ff503cb8e601365988c5df0cbc44baa85cc85464fa65f4feb",
+          "src/numeric_emit.h": "90d9991939841fbadb2048a3f913b5d654c6c65f720d6a72a8847a05550594ba",
+          "src/ownership.h": "4a3148f4fba02cdecc74a750399f0bd1947dcdcf0b64830f62e88836c145e1b1",
+          "src/packages.h": "e372900c7befe0ee8d812c17a5f05cfb56e63a78589facd626f928abc488eb32",
+          "src/pe_writer.h": "1426b3a2104dc2555ed05a3ae1ce8b1a875cc2d5b49c3d70c60b2e0d92f2463e",
+          "src/ranges.h": "b3291ef9ad5c641fbf46f443cf270759842f5d823c329438d5fbd013da5b42ca",
+          "src/registers.h": "be284d42de984addf242ec0f45cde57f638d5c94dd509749d33458530502e678",
+          "src/runtime.S": "9cb1371662938ad7acfdacf2029d438d9ae580c437b26f2a9c5c5b0fa4ce2f70",
+          "src/runtime_blob.h": "e398ba9c1a4cce091b4f350ed4c10005dc3aa6091d19aab461bdbb0f61092bda",
+          "src/runtime_files.inc": "64a20a5ec8db2ffd3fe0e3d0414574c2ffd4d71d507acd7422d3b0b618943e43",
+          "src/runtime_io.inc": "012bba759ce7516082c3da327c03e0db9cd31d3b61d37123b7b4dfa7b9afeaa9",
+          "src/runtime_macos.S": "1ebf175ebcd4ca4f3eca42bf74e09fc739c4ae5ade2275f3588c9b955418470b",
+          "src/runtime_macos_blob.h": "5a3e41af86d491aad8fe79e2de89dee06d58b00f89f8a8bfa880bd509ed15474",
+          "src/runtime_memory.inc": "3ea9ff21a662e587f05a499ff82f9be5d8b8efb6763f6b5d92bd9704e6af067a",
+          "src/runtime_numeric.inc": "f17f1bcc70b1634cb8714882ee648bd0f904262041fc4bd383f105cf84606cb2",
+          "src/runtime_system.inc": "254389a232be341125fd55ab0023c5499fbbdbfb191ea8e6ba1c4b32c59b97e5",
+          "src/runtime_win.S": "7b5cfdb4c0019a050534a4cb2da4a92f09a39b93444e4eb24fcb4e09c8e3f861",
+          "src/runtime_win_blob.h": "59de03b24d1dea77f0aa6d1277d4519f849536b33f1d6354edc9743b32eefb10",
+          "src/safety.h": "8edc1b728efa0a31340f231e1f6117d13edcea42fdfee1a536ae2354bcf22b22",
+          "src/sha256.h": "db32be4734bdc0d90a82ca8f0654fbf9b16159baa1538da416558f941614230b",
+          "src/version.h": "7000caab95cfacf0fe3f728266c324291370e3f9532b7b8ef62db8dcb20a166f",
+          "src/windows_setup.c": "7f72e0a53467d2e528cef728860f7cde759c8d296a79e2ac66fc062a8be181c9",
+          "stdlib/algorithms.assis": "549e4d010a7c9edb36355d8548476c73fe69d7e52041d1f7bf652a0043f618f2",
+          "stdlib/catalogo.json": "d1aff89beecf4fae12069d792b7812966015bf039de9745a745161047699a70e",
+          "stdlib/catalogo.sh": "2436afc22f61c9f53472c97dff1d98c185799600f2959671e5e25b9ec5f73c06",
+          "stdlib/cli.assis": "c53e31addeed7d63d8f71dd014156dc7eed9a30565770f3ec43b631f8200c0d6",
+          "stdlib/convert.assis": "005f807feff6793aebb6a650fde152401d5581b8383624432f7170f15e6420ee",
+          "stdlib/csv.assis": "08d3a5c0fe0cafe7ff830d076b8c6a0750020a637481f705ae98589d117e74b4",
+          "stdlib/encoding.assis": "e1dbca19786f2b9b81fb62011992a2809e210030b7c000c9e9f03ee73b31dc95",
+          "stdlib/errors.assis": "ad9c4f1703d7cead9af736deca8de5ef9082b11a4b03aa503c29ede907f35e2e",
+          "stdlib/events.assis": "c463c7a13395f98448394639cbab4238662b25340dd106400b447a6bf7488225",
+          "stdlib/http.assis": "40c0f18df299e52a21c04fe3ccaf776e17a5947ec31d8c5e3fa08de01805c82f",
+          "stdlib/iterators.assis": "57e7c46d1194ee22172a82da3c9339cca6c7de98f967eb6eac9f7a33ffff401f",
+          "stdlib/json.assis": "fe96539dd9967442cf186c719a12c105fb91b6593244d605e1dad48ce00a639a",
+          "stdlib/log.assis": "b15ef60cc12b5a58835f0be9846e613db0d4d671afc0dcded7d78f9935c2e332",
+          "stdlib/math.assis": "0d09d9f3b4966ae0ee13f8f2d62098eea1ec66878e31508f09363e334cb3d8d2",
+          "stdlib/memory.assis": "7a875e5b479ff7f3f2ad5423d1346b6bc7735cbc6c8bc53a0ceae1ad868563fd",
+          "stdlib/net.assis": "376ec5e6992d50520001b8689bf2f225deccd1df113f2f8a5d2a05d01ebbc2e0",
+          "stdlib/owned.assis": "e7b81efe90b432d73d10afebb9ef0d167d60b96f6a59756a1fa1c8dcd4c69b60",
+          "stdlib/process.assis": "9b6a74ef9a54beefa08eacd20b36dc2f2f7f861283dbc5b762862343745bd464",
+          "stdlib/random.assis": "22456db64cf65bd533be3fa509857f48f4026d314f95dba23170b3f1033d0f45",
+          "stdlib/strings.assis": "7ce05b4174fed594470a53a4a50e9708d90a0b8213833ff92b436e55aeedf40d",
+          "stdlib/time.assis": "0a4fa74239155d2521b107c1f304885e3b0a3fe2e93b9542f9cdd09d28dfa062",
+          "stdlib/unicode.assis": "df36dbcecc7bedc585f621e1994a0a1b3734c7072c7b162b8904767c6929794f",
+          "exemplos/01_ola.assis": "c0c28189d2158596f3be9515367f2fe4e0aa713a8d7c91413e872655ffb51947",
+          "exemplos/02_objetos.assis": "39b35bc2541f5ceb8a1998d61c1135623137471cf6072fce10f396294cdcea4f",
+          "exemplos/03_polimorfismo.assis": "f665c4c1334d85d56a00d37a3c1442ec91ab7e2e7f0454557d9e7ccde7360f08",
+          "exemplos/04_memoria.assis": "dc5f7da79cca91f2ba598f4c4e4cef61b132cbe6d13e9937e0bd124d73eff919",
+          "exemplos/05_bits.assis": "8322c9d2ae1ab0486b8855a49e0eb75c8b9609a95555408ddb34f942253d588d",
+          "exemplos/06_fibonacci.assis": "4de079101e8292fbb6058fac9da50be2e1d4439e85a13cd28ec0d9358d700050",
+          "exemplos/07_arena.assis": "9bcbec1b3c3c210a4dc51a8cacf16a21799e97cfe75b657b125b94491dfe964c",
+          "exemplos/08_modulos.assis": "de71bb54c05e3f2bf22eef22b7f3a1e70a7870e969bf4559229f6838cdf19686",
+          "exemplos/09_colecoes.assis": "f07e79a2a7c3a2ea89579089064a3e28a719244453884e182dbc9ff9f2128795",
+          "exemplos/10_structs.assis": "061f2a7abf8fbb967f7b7ca89e4b61dd59476352ebea8fc4c3c19d95504ab8dd",
+          "exemplos/11_pacotes.assis": "c8a068c3df45ab1734899ad0ed2a6049b84eebd217d103f6f481237d9134e18e",
+          "exemplos/12_relatorio_vendas.assis": "68feabe2914ebde043750b11a7605271963ca6791d2deebc3bf7e4672dc38288",
+          "exemplos/13_codificacao.assis": "4800aed2e1801bbe0b142004ab2aa34033431f0bca0fe09252fdc08bfa094f70",
+          "exemplos/14_ownership.assis": "3a94fd3e00d376f6b1a3d44d13de1e6069e24638afda96eac8cba313fdff9b46",
+          "exemplos/15_funcional.assis": "74a8d9ed021634950c58930030b8254718c119522a2c88da324bb5abf0385e50",
+          "exemplos/16_generics.assis": "fc8ee382a1c60321ffa9ed470267131f846a8937e7b4e134fb85b7f25a38ed95",
+          "exemplos/17_funcoes.assis": "fc26002f8b1ebd8b36863d9f33f7e51a7036ba4fc041adb4b78a742f3feeaf64",
+          "exemplos/18_classes_genericas.assis": "5f9afb8ff49ee358a15cdedb957e989c9ef0eb7f867c1402d1637476afab37fd",
+          "exemplos/19_ownership_funcoes.assis": "7fcd0afcba5bca8ae9029931fd4e95e1480263bf43daa854bd8186c2730d6452",
+          "exemplos/20_valores_e_resultados.assis": "0715c6cb769c2e4f27977ae9420dac73d2559a26b3edb646fd1d74ff22562128",
+          "exemplos/21_relatorio_csv_stream.assis": "f8d002ee346e15e8e85d28215105aed9c911c2b7d5a7a04fc670eb6f26ab87d9",
+          "exemplos/22_numeros.assis": "7d86e56fb304fbb9e05bf0af264905ddc30e79923daa5372e219ff88f75f755b",
+          "exemplos/23_eventos.assis": "f9f4db5a22a133e9995269ab741ba8e8b972a0adf99da3dde3b1a21c780cb732",
+          "exemplos/24_config_json.assis": "eb6097a28e67baca72edb919a1b2b1d55d15115bedd1121ac11e9cc5bb4f3dc9",
+          "exemplos/25_recursos_e_unicode.assis": "4d75ba14da7039382d5738a4df4896c4c131f4cb1239508819b157d9077f9bc7",
+          "exemplos/26_english_api.assis": "a1055aaefc6b3ed38554789ab0bef47e6185b349713308bd392eb4d6769234bf",
+          "exemplos/27_http_client.assis": "45e315771856a2a93ef7cb1e8e3a9f35bb8b35d2f82040d8542eba02de06e6b2",
+          "exemplos/28_persistent_service.assis": "008795f850df65df47abe3f8f8ae229a777c4e40a7ce7ee5232c030ed251db10",
+          "exemplos/29_http_polling.assis": "dcc5c74cca7897d6b1734346a57d732162885283b99e226c48ff203841a51c67",
+          "exemplos/30_closures_and_owned_results.assis": "92afd2d56ce5325e98cf9a1339aed97d84ac208a9bf4cd46f6f57a5a521f9140",
+          "exemplos/31_language_review.assis": "824f250a1f7bbab49b7dfd83da6f1217ab7fd1ecd7effbd44d34a8ebd8317dbd",
+          "exemplos/32_backend_evolution.assis": "a12920a1535180d6b2a64bdf6028a582b8677c5c720e8ede9d97c57111d81841",
+          "exemplos/rpg.assis": "4991011bdcb6d81b3c68e0a2122e1f247adcc74abb7299d9c80e3af1205a7059",
+          "exemplos/src.pillow": "5bc22d578b2f0e403db709ccea9b772c131972b3c31ee24c191440cf43f0a7b8",
+          "tools/soak-native.py": "00777240e2b429198649b23d250b246bb776bb3a0d70a332a9c59bc770eee956"
+        },
+        "requestedSeconds": 86400.0,
+        "elapsedSeconds": 86400.186654427,
+        "workers": 4,
+        "passed": true,
+        "error": null,
+        "qualifies24Hours": true,
+        "results": [
+          {
+            "worker": 0,
+            "rounds": 86264,
+            "initial": {
+              "rssBytes": 1347584,
+              "handles": 4
+            },
+            "final": {
+              "rssBytes": 1347584,
+              "handles": 4
+            },
+            "peakRssBytes": 1347584,
+            "peakHandles": 4
+          },
+          {
+            "worker": 1,
+            "rounds": 86264,
+            "initial": {
+              "rssBytes": 1347584,
+              "handles": 4
+            },
+            "final": {
+              "rssBytes": 1347584,
+              "handles": 4
+            },
+            "peakRssBytes": 1347584,
+            "peakHandles": 4
+          },
+          {
+            "worker": 2,
+            "rounds": 86264,
+            "initial": {
+              "rssBytes": 1347584,
+              "handles": 4
+            },
+            "final": {
+              "rssBytes": 1347584,
+              "handles": 4
+            },
+            "peakRssBytes": 1347584,
+            "peakHandles": 4
+          },
+          {
+            "worker": 3,
+            "rounds": 86264,
+            "initial": {
+              "rssBytes": 1347584,
+              "handles": 4
+            },
+            "final": {
+              "rssBytes": 1347584,
+              "handles": 4
+            },
+            "peakRssBytes": 1347584,
+            "peakHandles": 4
+          }
+        ],
+        "networkMode": "polling",
+        "intervalSeconds": 1.0
+      }
+    }
+  },
+  "remainingGates": [
+    "complete IR statement/resource emission",
+    "native ARM64/macOS validation",
+    "asset rights and redistribution review",
+    "independent human acceptance"
+  ]
+}

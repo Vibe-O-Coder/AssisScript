@@ -1,0 +1,25 @@
+// B with cooperative cancellation: URL output-file [cancel-after-ms].
+import "std/net.assis";
+import "std/cli.assis";
+safe fn output_file():own File {
+    unsafe{let path:*byte=alloc<byte>(16385);defer free(path);if(arg_copy(2,path,16385)<0){return file_open("",9);}return file_open(text(path),1);}
+}
+safe fn main():int {
+    if(arg_count()<3||arg_count()>4){print("Usage: http-polling URL output-file [cancel-after-ms]");return 64;}
+    own url:cli::Argument=cli::argument(1);if(!url.ok){return 64;}
+    let cancel_after:int=10001;
+    if(arg_count()==4){own value:cli::Argument=cli::argument(3);if(!value.ok){return 64;}val parsed:cli::ParsedInt=cli::parse_integer(value.data,value.size);if(!parsed.ok||parsed.value<0||parsed.value>60000){return 64;}cancel_after=parsed.value;}
+    own request:net::Request=net::start(url.data,10000,1048576);
+    val begun:int=monotonic_ms();
+    while(!request.done()){
+        if(monotonic_ms()-begun>=cancel_after){let cancelled:bool=request.cancel();}
+        else{let progress:int=request.poll(10);}
+    }
+    if(request.error()!=0){print("Transport error",request.error(),request.native_error());return 1;}
+    if(request.status_code()<200||request.status_code()>=300){print("HTTP status",request.status_code());return 2;}
+    own output:File=output_file();if(output==null){return 3;}
+    borrow body:slice<byte>=request.body();own chunk:*byte=alloc<byte>(4096);let offset:int=0;
+    while(offset<len(body)){let size:int=len(body)-offset;if(size>4096){size=4096;}for(let i:int=0;i<size;i+=1){chunk[i]=body[offset+i];}if(cli::write_all(output,chunk,size)!=size){return 3;}offset+=size;}
+    if(file_sync(output)!=0||file_close(output)!=0){return 3;}
+    print("Downloaded",request.size(),"bytes");return 0;
+}

@@ -1,9 +1,9 @@
-miyabi comenta código inválido e palavras te to importa "ausente";
-te
+// comenta código inválido e palavras te to importa "ausente";
+/*
     comentário multilinhas
-    te aninhado to
-to
-assis assis_assis(): AssIs {
-    FODASE("miyabi te to"); miyabi comentário no end
-    Fodase 0;
+    /* aninhado */
+*/
+fn main(): int {
+    print("miyabi te to"); // comentário no end
+    return 0;
 }

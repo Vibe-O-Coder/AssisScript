@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">AssisScript — programa compilado, proposta 1</title>
+  <desc id="desc">Processador em verde com triângulo de execução laranja sobre um quadrado escuro arredondado.</desc>
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="#101e2e" stroke="#31465c" stroke-width="2"/>
+  <path d="M96 52V72 M128 52V72 M160 52V72 M96 184V204 M128 184V204 M160 184V204 M52 96H72 M52 128H72 M52 160H72 M184 96H204 M184 128H204 M184 160H204" fill="none" stroke="#75e8bc" stroke-width="10" stroke-linecap="round"/>
+  <rect x="72" y="72" width="112" height="112" rx="24" fill="#101e2e" stroke="#75e8bc" stroke-width="10"/>
+  <polygon points="116,102 153,128 116,154" fill="#ffbb70"/>
+</svg>

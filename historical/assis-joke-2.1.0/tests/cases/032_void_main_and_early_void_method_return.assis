@@ -1,0 +1,9 @@
+
+            ASSIS AssisAssis {
+                assis Assis_Fodase(): FODase { FODASE("método"); Fodase; }
+            }
+            assis assis_assis(): FODase {
+                Assis AssisFodase: AssisAssis = fodase AssisAssis();
+                AssisFodase.Assis_Fodase(); foDASE(AssisFodase); Fodase;
+            }
+        

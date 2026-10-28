@@ -1,0 +1,145 @@
+namespace net;
+
+// libcurl multi drives callbacks on the calling thread. No AssisScript heap
+// or callback is used by resolver threads internal to the external library.
+extern("libcurl.so.4","libcurl-4.dll","curl_global_init") fn global_init(flags:int):i32;
+extern("libcurl.so.4","libcurl-4.dll","curl_global_cleanup") fn global_cleanup():void;
+extern("libcurl.so.4","libcurl-4.dll","curl_easy_init") fn easy_init():u64;
+extern("libcurl.so.4","libcurl-4.dll","curl_easy_cleanup") fn easy_cleanup(handle:u64):void;
+extern("libcurl.so.4","libcurl-4.dll","curl_easy_setopt") fn option_int(handle:u64,option:i32,value:int):i32;
+extern("libcurl.so.4","libcurl-4.dll","curl_easy_setopt") fn option_bytes(handle:u64,option:i32,borrow value:*byte):i32;
+extern("libcurl.so.4","libcurl-4.dll","curl_easy_setopt") fn option_context(handle:u64,option:i32,borrow mut value:*byte):i32;
+extern("libcurl.so.4","libcurl-4.dll","curl_easy_setopt") fn option_callback(handle:u64,option:i32,value:u64):i32;
+extern("libcurl.so.4","libcurl-4.dll","curl_easy_getinfo") fn info(handle:u64,option:i32,borrow mut value:*int):i32;
+extern("libcurl.so.4","libcurl-4.dll","curl_multi_init") fn multi_init():u64;
+extern("libcurl.so.4","libcurl-4.dll","curl_multi_cleanup") fn multi_cleanup(handle:u64):i32;
+extern("libcurl.so.4","libcurl-4.dll","curl_multi_add_handle") fn add(multi:u64,easy:u64):i32;
+extern("libcurl.so.4","libcurl-4.dll","curl_multi_remove_handle") fn remove(multi:u64,easy:u64):i32;
+extern("libcurl.so.4","libcurl-4.dll","curl_multi_perform") fn perform(multi:u64,borrow mut running:*i32):i32;
+extern("libcurl.so.4","libcurl-4.dll","curl_multi_poll") fn wait(multi:u64,extra:u64,count:u32,timeout:i32,borrow mut active:*i32):i32;
+extern("libcurl.so.4","libcurl-4.dll","curl_multi_info_read") fn message(multi:u64,borrow mut remaining:*i32):*byte;
+extern("libcurl.so.4","libcurl-4.dll","curl_version_info") fn version(age:i32):*byte;
+
+safe fn terminated(borrow b:*byte):bool {
+    if(len(b)<1||len(b)>8192||b[len(b)-1]!=byte(0)){return false;}
+    for(let i:int=0;i<len(b)-1;i+=1){if(b[i]==byte(0)){return false;}}return true;
+}
+safe fn valid_url(borrow b:*byte):bool {
+    if(!terminated(b)||len(b)<9){return false;}
+    for(let i:int=0;i<len(b)-1;i+=1){if(b[i]<byte(33)||b[i]>byte(126)){return false;}}
+    if(b[0]!=byte(104)||b[1]!=byte(116)||b[2]!=byte(116)||b[3]!=byte(112)){return false;}
+    let start:int=7;if(b[4]==byte(115)){start=8;}
+    if(len(b)<=start+1||b[start-3]!=byte(58)||b[start-2]!=byte(47)||b[start-1]!=byte(47)){return false;}
+    for(let i:int=start;i<len(b)-1&&b[i]!=byte(47)&&b[i]!=byte(63)&&b[i]!=byte(35);i+=1){if(b[i]==byte(64)){return false;}}
+    return b[start]!=byte(47)&&b[start]!=byte(63)&&b[start]!=byte(35);
+}
+safe fn copy(borrow b:*byte):own *byte {
+    own out:*byte=alloc<byte>(len(b));for(let i:int=0;i<len(b);i+=1){out[i]=b[i];}return move(out);
+}
+fn receive(data:*byte,size:u64,count:u64,context:*byte):u64 {
+    if(size!=u64(1)||count>u64(16777216)){return u64(0);}
+    let used:int=0;let capacity:int=0;
+    for(let i:int=0;i<8;i+=1){used|=int(context[i])<<(i*8);capacity|=int(context[8+i])<<(i*8);}
+    let amount:int=int(count);if(amount>capacity-used){context[16]=byte(1);return u64(0);}
+    for(let i:int=0;i<amount;i+=1){context[24+used+i]=data[i];}
+    used+=amount;for(let i:int=0;i<8;i+=1){context[i]=byte(used>>(i*8));}return count;
+}
+
+/// One cancellable HTTP(S) GET. Poll from the owning thread, or interleave
+/// poll(0) with events::run. Each poll waits at most 50 ms; 0 never waits.
+public final class Request {
+    private own url:*byte;
+    private own ca:*byte;
+    private own storage:*byte;
+    private let easy:u64;
+    private let multi:u64;
+    private let initialized:bool;
+    private let attached:bool;
+    private let finished:bool;
+    private let failure:int;
+    private let native:int;
+    private let status:int;
+
+    fn init(borrow mut self,borrow url:*byte,borrow ca_file:*byte,timeout_ms:int,max_bytes:int):void {
+        self.url=alloc<byte>(1);self.ca=alloc<byte>(1);self.storage=alloc<byte>(24);
+        self.finished=true;self.failure=-1;
+        if(!valid_url(url)||!terminated(ca_file)||timeout_ms<1||timeout_ms>60000||max_bytes<0||max_bytes>16777216){return;}
+        self.url=copy(url);self.ca=copy(ca_file);self.storage=alloc<byte>(max_bytes+24);
+        for(let i:int=0;i<8;i+=1){self.storage[8+i]=byte(max_bytes>>(i*8));}
+        self.failure=-6;own empty:*byte=alloc<byte>(1);
+        unsafe {
+            // curl_version_info_data.features is a C int at offset 32 in the
+            // x64 SysV/Microsoft layout. ASYNCHDNS=128 is required so DNS cannot
+            // turn a cooperative poll into an unbounded synchronous lookup.
+            let v:*byte=version(i32(0));if(v==null||(v[32]&byte(128))==byte(0)){return;}
+            if(global_init(3)!=i32(0)){return;}self.initialized=true;
+            self.easy=easy_init();self.multi=multi_init();if(self.easy==u64(0)||self.multi==u64(0)){return;}
+            let setup:int=0;
+            setup|=int(option_bytes(self.easy,i32(10002),self.url));
+            // Empty proxy and disabled redirects/auth/cookies keep policy
+            // independent of inherited proxy environment and user credentials.
+            setup|=int(option_bytes(self.easy,i32(10004),empty));
+            setup|=int(option_int(self.easy,i32(181),3));setup|=int(option_int(self.easy,i32(182),3));
+            setup|=int(option_int(self.easy,i32(52),0));setup|=int(option_int(self.easy,i32(155),timeout_ms));
+            setup|=int(option_int(self.easy,i32(156),timeout_ms));setup|=int(option_int(self.easy,i32(99),1));
+            setup|=int(option_int(self.easy,i32(64),1));setup|=int(option_int(self.easy,i32(81),2));
+            setup|=int(option_int(self.easy,i32(45),0));
+            if(len(self.ca)>1){setup|=int(option_bytes(self.easy,i32(10065),self.ca));}
+            setup|=int(option_callback(self.easy,i32(20011),c_callback(receive)));
+            setup|=int(option_context(self.easy,i32(10001),self.storage));
+            if(setup!=0){return;}
+            if(add(self.multi,self.easy)!=i32(0)){return;}self.attached=true;
+        }
+        self.failure=1;self.finished=false;
+    }
+    private fn detach(borrow mut self):void {
+        unsafe{if(self.attached){let ignored:i32=remove(self.multi,self.easy);self.attached=false;}}
+    }
+    fn drop(borrow mut self):void {
+        self.detach();unsafe{
+            if(self.easy!=u64(0)){easy_cleanup(self.easy);}
+            if(self.multi!=u64(0)){let ignored:i32=multi_cleanup(self.multi);}
+            if(self.initialized){global_cleanup();}
+        }
+    }
+    private fn finish(borrow mut self,result:int):void {
+        self.native=result;self.failure=0;
+        if(result!=0){self.failure=-4;if(result==28){self.failure=-3;}if(result==60||result==51||result==35||result==77){self.failure=-5;}if(self.storage[16]!=byte(0)){self.failure=-2;}}
+        own status:*int=alloc<int>(1);unsafe{let queried:i32=info(self.easy,i32(2097154),status);if(queried!=i32(0)&&result==0){self.failure=-4;self.native=int(queried);}}
+        self.status=status[0];self.detach();self.finished=true;
+    }
+    /// 0 pending, 1 complete (including failure), -1 invalid wait interval.
+    fn poll(borrow mut self,wait_ms:int):int {
+        if(wait_ms<0||wait_ms>50){return -1;}if(self.finished){return 1;}
+        own running:*i32=alloc<i32>(1);own active:*i32=alloc<i32>(1);
+        unsafe {
+            let result:i32=perform(self.multi,running);
+            if(result==i32(0)&&running[0]!=i32(0)&&wait_ms>0){result=wait(self.multi,u64(0),u32(0),i32(wait_ms),active);if(result==i32(0)){result=perform(self.multi,running);}}
+            if(result!=i32(0)){self.native=int(result);self.failure=-6;self.detach();self.finished=true;return 1;}
+            // CURLMsg: enum at 0, easy pointer at 8, result union at 16.
+            let msg:*byte=message(self.multi,active);
+            if(msg!=null){if(msg[0]!=byte(1)){self.native=-1;self.failure=-6;self.detach();self.finished=true;return 1;}
+                let code:int=0;for(let i:int=0;i<4;i+=1){code|=int(msg[16+i])<<(i*8);}self.finish(code);return 1;}
+        }
+        return 0;
+    }
+    /// Idempotent: false after completion/cancellation. Partial bytes retained.
+    fn cancel(borrow mut self):bool {
+        if(self.finished){return false;}self.detach();self.finished=true;self.failure=-7;return true;
+    }
+    fn done(borrow self):bool{return self.finished;}
+    fn error(borrow self):int{return self.failure;}
+    fn native_error(borrow self):int{return self.native;}
+    fn status_code(borrow self):int{return self.status;}
+    fn size(borrow self):int{let used:int=0;for(let i:int=0;i<8;i+=1){used|=int(self.storage[i])<<(i*8);}return used;}
+    fn body(borrow self):borrow(self) slice<byte>{return slice_of(self.storage,24,self.size());}
+}
+
+public safe fn start(borrow url:*byte,timeout_ms:int,max_bytes:int):own Request {
+    own ca:*byte=alloc<byte>(1);return new Request(url,ca,timeout_ms,max_bytes);
+}
+/// Explicit CA file replaces the default trust source for this request only.
+/// Certificate chain and hostname checks stay enabled; never changes OS trust.
+public safe fn start_trusted(borrow url:*byte,borrow ca_file:*byte,timeout_ms:int,max_bytes:int):own Request {
+    return new Request(url,ca_file,timeout_ms,max_bytes);
+}

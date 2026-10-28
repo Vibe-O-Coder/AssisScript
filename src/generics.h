@@ -49,7 +49,7 @@ static Class *instantiate_class(Class *generic,Vec arguments,Token *where,Collec
     if(!intrinsic)specialization_budget(where);
     int expansion=intrinsic?0:specialization_expansion+1;
     if(expansion>MAX_GENERIC_EXPANSION)error(where,"limite de expansão de classes genéricas (64) excedido");
-    Class *c=mem(sizeof(*c));c->record=generic->record;c->value=generic->value;c->tagged=generic->tagged;c->sealed=generic->sealed;c->id=intrinsic?intrinsic->ref->definition:++next_definition;c->generic=generic;c->type_args=arguments;c->site=where;c->expansion=expansion;
+    Class *c=mem(sizeof(*c));c->record=generic->record;c->value=generic->value;c->tagged=generic->tagged;c->sealed=generic->sealed;c->closure=generic->closure;c->id=intrinsic?intrinsic->ref->definition:++next_definition;c->generic=generic;c->type_args=arguments;c->site=where;c->expansion=expansion;
     c->t=mem(sizeof(*c->t));*c->t=*generic->t;
     char symbol[64];snprintf(symbol,sizeof(symbol),"__assis_%s_%u",c->record?"struct":"class",c->id);c->t->text=intrinsic?intrinsic->name:copy(symbol,strlen(symbol));
     size_t size=strlen(generic->t->text)+3;
@@ -120,7 +120,7 @@ static Type resolve_type(Type t,Vec parameters,Vec arguments,Token *where){
         TypeRef *ref=mem(sizeof(*ref));ref->origin=t.ref->origin;ref->arguments=resolve_arguments(t.ref->arguments,parameters,arguments,where);t.ref=ref;
     }else if(t.kind==TY_FN){
         TypeRef *ref=mem(sizeof(*ref));ref->origin=t.ref->origin;ref->pure=t.ref->pure;
-        ref->modes=t.ref->modes;ref->safe=t.ref->safe;ref->result_mode=t.ref->result_mode;ref->result_from=t.ref->result_from;
+        ref->modes=t.ref->modes;ref->safe=t.ref->safe;ref->closure=t.ref->closure;ref->receiver_mode=t.ref->receiver_mode;ref->result_mode=t.ref->result_mode;ref->result_from=t.ref->result_from;
         ref->arguments=resolve_arguments(t.ref->arguments,parameters,arguments,where);
         ref->result=type_copy(resolve_type(*t.ref->result,parameters,arguments,where));t.ref=ref;
     }
@@ -149,8 +149,8 @@ static void resolve_node(Node *n,Function *f){
     if(!n)return;Vec parameters=f->generic?f->generic->type_params:(Vec){0};
     Vec arguments=f->type_args;
     if(f->owner&&f->owner->generic){parameters=f->owner->generic->type_params;arguments=f->owner->type_args;}
-    if(n->kind==N_NEW&&n->decl.kind==TY_OBJ&&!n->decl.ref&&!find_class(n->decl.name)&&!find_generic_class(n->decl.name))error(n->t,"classe inexistente para fodase: %s",n->decl.name);
-    if(n->kind==N_LET||n->kind==N_NEW||(n->kind==N_BUILTIN&&n->op==T_BUFFER))n->decl=resolve_type(n->decl,parameters,arguments,n->t);
+    if(n->kind==N_NEW&&n->decl.kind==TY_OBJ&&!n->decl.ref&&!find_class(n->decl.name)&&!find_generic_class(n->decl.name))error(n->t,"classe inexistente para new: %s",n->decl.name);
+    if(n->kind==N_LET||n->kind==N_NEW||n->kind==N_IS||n->kind==N_CAST||(n->kind==N_BUILTIN&&n->op==T_BUFFER))n->decl=resolve_type(n->decl,parameters,arguments,n->t);
     if(n->kind==N_NAME&&n->specialized){
         Function *generic=find_generic_function(n->t->text);
         if(!generic){if(find_fn(n->t->text))error(n->t,"função não genérica não aceita argumentos de tipo");error(n->t,"função genérica desconhecida: %s",n->t->text);}
@@ -240,7 +240,7 @@ static void prepare_generics(void){
         error(definitions.v[i],i<class_count?"classe declarada duas vezes":j>=class_count?"função declarada duas vezes":"nome principal declarado duas vezes");
     for(int i=0;i<generic_functions.n;i++){
         Function *f=generic_functions.v[i];
-        if(same(f->t->text,ENTRY)||same(f->t->text,"main"))error(f->t,"main/assis_assis não pode ser genérica");
+        if(same(f->t->text,ENTRY)||same(f->t->text,"main"))error(f->t,"main/main não pode ser genérica");
         for(int j=0;j<f->params.n;j++)for(int k=0;k<j;k++)if(same(((Var*)f->params.v[j])->t->text,((Var*)f->params.v[k])->t->text))error(((Var*)f->params.v[j])->t,"parâmetro declarado duas vezes");
         if(f->pure){
             if(!pure_contract(f->result,true))error(f->t,"pure exige retorno escalar ou função pure após especialização");

@@ -1,16 +1,16 @@
 
-assis assis_assis(): AssIs {
+fn main(): int {
 
-            Assis AssisAssis: AssIs = 10;
-            { Assis AssisAssis: AssIs = AssisAssis + 1; FODASE(AssisAssis); }
-            Assis AssisFodase: AssIs = 0;
-            ASSis (aSsIs) {
+            let AssisAssis: int = 10;
+            { let AssisAssis: int = AssisAssis + 1; print(AssisAssis); }
+            let AssisFodase: int = 0;
+            while (true) {
                 AssisFodase += 1;
-                assIS (AssisFodase == 2) { FodASE; }
-                fodASE assIS (AssisFodase == 4) { FODasE; }
-                fodASE { FODASE(AssisFodase); }
+                if (AssisFodase == 2) { continue; }
+                else if (AssisFodase == 4) { break; }
+                else { print(AssisFodase); }
             }
-            FODASE(AssisAssis);
+            print(AssisAssis);
         
-Fodase 0;
+return 0;
 }

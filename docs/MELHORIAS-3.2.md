@@ -9,7 +9,7 @@ Esta versão trata primeiro os gargalos observados no relatório de 24/10/2026 e
 | Backend | Até quatro escalares frequentes em registradores preservados; comparações diretamente ligadas aos desvios; divisão/resto por potência de dois com sinal correto; outras divisões constantes sem testes redundantes | Sem IR, inlining, SIMD ou ABI de argumentos em registradores |
 | Memória | `own`, `borrow`, `borrow mut`, `move`, limpeza de escopos, buffers gerenciados com limites | [Ownership local e restrições](MEMORIA-OWNERSHIP.md); não cobre o modelo completo de lifetimes entre funções |
 | Conveniência | `div {}`, `for`, `defer free` | Sem `for x in colecao` |
-| Entrada e tempo | `ler_bytes`, `agora`, `ler_linha` em std/texto | Sem arquivos, argumentos do programa ou relógio civil; ler_linha lê um byte por chamada |
+| Entrada e tempo | `read_bytes`, `monotonic_ms`, `ler_linha` em std/texto | Sem arquivos, argumentos do programa ou relógio civil; ler_linha lê um byte por chamada |
 | Texto padrão | `concatenar`, `juntar`, `dividir`, `substituir` | Retornam Texto proprietário; sem operador `+` de text |
 | Robustez | Limite de pilha com diagnóstico; debug de memória | Sem sanitizador completo para ponteiros legados |
 | Medição | C `-O2`, Python, anterior, otimizado e `--no-opt`, com saídas conferidas | Quatro cargas; início do processo incluído; não prova paridade geral com C/C++ |

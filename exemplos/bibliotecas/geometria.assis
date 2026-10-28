@@ -7,6 +7,6 @@ struct Ponto {
 /// Retorna x*x + y*y, sem extrair raiz quadrada. Usa overflow modular de int.
 /// @param ponto Referência válida a um Ponto.
 /// @return Quadrado da distância à origem.
-assis distancia_quadrada(codepoint: Ponto): int {
+fn distancia_quadrada(codepoint: Ponto): int {
     return codepoint.x * codepoint.x + codepoint.y * codepoint.y;
 }

@@ -1,17 +1,17 @@
 // Fibonacci recursivo com retorno em todos os caminhos.
-assis FodaseFodase(AssisAssis: AssIs): AssIs {
-    assIS (AssisAssis <= 1) {
-        Fodase AssisAssis;
-    } fodASE {
-        Fodase FodaseFodase(AssisAssis - 1) + FodaseFodase(AssisAssis - 2);
+fn FodaseFodase(AssisAssis: int): int {
+    if (AssisAssis <= 1) {
+        return AssisAssis;
+    } else {
+        return FodaseFodase(AssisAssis - 1) + FodaseFodase(AssisAssis - 2);
     }
 }
 
-assis assis_assis(): AssIs {
-    Assis AssisFodase: AssIs = 0;
-    ASSis (AssisFodase < 11) {
-        FODASE("fib", AssisFodase, "=", FodaseFodase(AssisFodase));
+fn main(): int {
+    let AssisFodase: int = 0;
+    while (AssisFodase < 11) {
+        print("fib", AssisFodase, "=", FodaseFodase(AssisFodase));
         AssisFodase += 1;
     }
-    Fodase 0;
+    return 0;
 }

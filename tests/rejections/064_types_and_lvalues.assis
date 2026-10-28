@@ -1,5 +1,5 @@
 
-assis assis_assis(): AssIs {
-FODASE(AssIs("a"));
-Fodase 0;
+fn main(): int {
+print(int("a"));
+return 0;
 }

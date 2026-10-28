@@ -1,0 +1,173 @@
+namespace process;
+
+/// Captured stdout and stderr, merged into one bounded binary buffer.
+/// error(): 0 completed, -1 invalid input, -2 output limit, -3 timeout,
+/// -4 OS failure. exit_code() is the child's status, separate from errors.
+public final class Output {
+    private own data:*byte;private let count:int;private let code:int;private let failure:int;
+    fn init(borrow mut self,own data:*byte,count:int,code:int,failure:int):void{self.data=move(data);self.count=count;self.code=code;self.failure=failure;}
+    fn body(borrow self):borrow(self) slice<byte>{return slice_of(self.data,0,self.count);}
+    fn size(borrow self):int{return self.count;}
+    fn exit_code(borrow self):int{return self.code;}
+    fn error(borrow self):int{return self.failure;}
+}
+safe fn failure(code:int):own Output{return new Output(alloc<byte>(0),0,-1,code);}
+
+platform("linux-x64") {
+    extern("libc.so.6","unused.dll","pipe2") fn pipe(borrow mut fds:*i32,flags:i32):i32;
+    extern("libc.so.6","unused.dll","fork") fn fork():i32;
+    extern("libc.so.6","unused.dll","dup2") fn duplicate(source:i32,destination:i32):i32;
+    extern("libc.so.6","unused.dll","close") fn close(fd:i32):i32;
+    extern("libc.so.6","unused.dll","fcntl") fn flags(fd:i32,op:i32,value:i32):i32;
+    extern("libc.so.6","unused.dll","setpgid") fn group(pid:i32,group:i32):i32;
+    extern("libc.so.6","unused.dll","execl") fn execute(path:text,name:text,option:text,borrow command:*byte,end:u64):i32;
+    extern("libc.so.6","unused.dll","_exit") fn exit(code:i32):void;
+    extern("libc.so.6","unused.dll","read") fn read(fd:i32,borrow mut data:*byte,size:u64):int;
+    extern("libc.so.6","unused.dll","waitpid") fn wait(pid:i32,borrow mut status:*i32,flags:i32):i32;
+    extern("libc.so.6","unused.dll","waitid") fn observe(kind:i32,pid:u32,borrow mut info:*i32,flags:i32):i32;
+    extern("libc.so.6","unused.dll","kill") fn kill(pid:i32,signal:i32):i32;
+    extern("libc.so.6","unused.dll","__errno_location") fn errno_address():*i32;
+    extern("libc.so.6","unused.dll","open") fn open_lock(borrow path:*byte,flags:i32,mode:i32):i32;
+    extern("libc.so.6","unused.dll","flock") fn flock(fd:i32,operation:i32):i32;
+    public final class Lock {
+        private let handle:i32;private let held:bool;
+        fn init(borrow mut self,borrow path:*byte):void{self.handle=i32(-1);unsafe{self.handle=open_lock(path,i32(524354),i32(384));if(self.handle>=i32(0)){self.held=flock(self.handle,i32(6))==i32(0);}}}
+        fn acquired(borrow self):bool{return self.held;}
+        fn drop(borrow mut self):void{unsafe{if(self.handle>=i32(0)){let ignored:i32=close(self.handle);}}}
+    }
+    final class Native {
+        let pid:i32;let reader:i32;let writer:i32;
+        fn init(borrow mut self):void{self.reader=i32(-1);self.writer=i32(-1);}
+        fn drop(borrow mut self):void{unsafe{
+            if(self.reader>=i32(0)){let ignored:i32=close(self.reader);}if(self.writer>=i32(0)){let ignored:i32=close(self.writer);}
+            if(self.pid>i32(0)){let ignored:i32=kill(-self.pid,i32(9));ignored=kill(self.pid,i32(9));own status:*i32=alloc<i32>(1);while(wait(self.pid,status,i32(0))==i32(-1)){if(*errno_address()!=i32(4)){break;}}}
+        }}
+    }
+    safe fn run(borrow command:*byte,timeout:int,limit:int):own Output {
+        own state:Native=new Native();own fds:*i32=alloc<i32>(2);own status:*i32=alloc<i32>(1);own info:*i32=alloc<i32>(32);own data:*byte=alloc<byte>(limit);own chunk:*byte=alloc<byte>(4096);
+        let count:int=0;let error:int=0;let code:int=-1;let done:bool=false;let eof:bool=false;val started:int=monotonic_ms();
+        unsafe {
+            if(pipe(fds,i32(524288))!=i32(0)){return failure(-4);}
+            state.reader=fds[0];state.writer=fds[1];state.pid=fork();if(state.pid<i32(0)){state.pid=i32(0);return failure(-4);}
+            if(state.pid==i32(0)){
+                let ignored:i32=group(i32(0),i32(0));if(ignored==i32(-1)){exit(i32(126));}
+                if(duplicate(state.writer,i32(1))==i32(-1)||duplicate(state.writer,i32(2))==i32(-1)){exit(i32(126));}
+                ignored=close(state.reader);ignored=close(state.writer);ignored=close(i32(0));
+                ignored=execute("/bin/sh","sh","-c",command,u64(0));exit(i32(127));return failure(-4);
+            }
+            let ignored:i32=group(state.pid,state.pid);ignored=close(state.writer);state.writer=i32(-1);
+            if(flags(state.reader,i32(4),i32(2048))==i32(-1)){return failure(-4);}
+            while(true){
+                let amount:int=read(state.reader,chunk,u64(4096));
+                if(amount>0){if(amount>limit-count){error=-2;break;}for(let i:int=0;i<amount;i+=1){data[count+i]=chunk[i];}count+=amount;}
+                else if(amount==0){eof=true;}
+                else {let native:i32=*errno_address();if(native!=i32(11)&&native!=i32(4)){error=-4;break;}}
+                if(!done){
+                    info[4]=i32(0);let observed:i32=observe(i32(1),u32(state.pid),info,i32(16777221));
+                    if(observed==i32(0)&&info[4]!=i32(0)){
+                        // WNOWAIT pins the leader PID until descendants have
+                        // been stopped; never signal a reaped/reused PID.
+                        ignored=kill(-state.pid,i32(9));let reaped:i32=wait(state.pid,status,i32(0));while(reaped==i32(-1)&&*errno_address()==i32(4)){reaped=wait(state.pid,status,i32(0));}
+                        if(reaped!=state.pid){error=-4;break;}done=true;state.pid=i32(0);
+                        if((int(status[0])&127)==0){code=(int(status[0])>>8)&255;}else{code=128+(int(status[0])&127);}
+                    }else if(observed==i32(-1)&&*errno_address()!=i32(4)){error=-4;break;}
+                }
+                if(done&&eof){break;}if(monotonic_ms()-started>=timeout){error=-3;break;}
+                if(amount<=0){let slept:int=sleep_ms(1);}
+            }
+        }
+        return new Output(move(data),count,code,error);
+    }
+}
+
+platform("windows-x64") {
+    extern("unused.so","KERNEL32.dll","CreatePipe") fn pipe(borrow mut reader:*u64,borrow mut writer:*u64,borrow attributes:*u64,size:u32):i32;
+    extern("unused.so","KERNEL32.dll","SetHandleInformation") fn inheritance(handle:u64,mask:u32,flags:u32):i32;
+    extern("unused.so","KERNEL32.dll","CloseHandle") fn close(handle:u64):i32;
+    extern("unused.so","KERNEL32.dll","CreateJobObjectW") fn job(attributes:u64,name:u64):u64;
+    extern("unused.so","KERNEL32.dll","AssignProcessToJobObject") fn assign(job:u64,process:u64):i32;
+    extern("unused.so","KERNEL32.dll","TerminateJobObject") fn terminate(job:u64,code:u32):i32;
+    extern("unused.so","KERNEL32.dll","TerminateProcess") fn terminate_process(process:u64,code:u32):i32;
+    extern("unused.so","KERNEL32.dll","ResumeThread") fn resume(thread:u64):u32;
+    extern("unused.so","KERNEL32.dll","CreateProcessW") fn create(application:u64,borrow mut command:*u16,process_attributes:u64,thread_attributes:u64,inherit:i32,flags:u32,environment:u64,directory:u64,borrow startup:*u64,borrow mut info:*u64):i32;
+    extern("unused.so","KERNEL32.dll","WaitForSingleObject") fn wait(handle:u64,timeout:u32):u32;
+    extern("unused.so","KERNEL32.dll","GetExitCodeProcess") fn exit_code(handle:u64,borrow mut code:*u32):i32;
+    extern("unused.so","KERNEL32.dll","PeekNamedPipe") fn available(pipe:u64,data:u64,size:u32,read:u64,borrow mut count:*u32,left:u64):i32;
+    extern("unused.so","KERNEL32.dll","ReadFile") fn read(handle:u64,borrow mut data:*byte,size:u32,borrow mut read:*u32,overlapped:u64):i32;
+    extern("unused.so","KERNEL32.dll","MultiByteToWideChar") fn wide(page:u32,flags:u32,borrow input:*byte,size:i32,borrow mut output:*u16,capacity:i32):i32;
+    extern("unused.so","KERNEL32.dll","GetLastError") fn last_error():u32;
+    extern("unused.so","KERNEL32.dll","GetSystemDirectoryW") fn system_directory(borrow mut path:*u16,size:u32):u32;
+    extern("unused.so","KERNEL32.dll","CreateFileW") fn open_lock(borrow path:*u16,access:u32,sharing:u32,attributes:u64,creation:u32,flags:u32,template:u64):u64;
+    extern("unused.so","KERNEL32.dll","LockFileEx") fn file_lock(handle:u64,flags:u32,reserved:u32,size:u32,high:u32,borrow mut overlapped:*u64):i32;
+    public final class Lock {
+        private let handle:u64;private let held:bool;
+        fn init(borrow mut self,borrow path:*byte):void{own utf16:*u16=alloc<u16>(len(path));own overlapped:*u64=alloc<u64>(4);unsafe{
+            if(wide(u32(65001),u32(8),path,i32(len(path)),utf16,i32(len(path)))>i32(0)){
+                self.handle=open_lock(utf16,u32(3221225472),u32(3),u64(0),u32(4),u32(128),u64(0));
+                if(self.handle==u64(18446744073709551615)){self.handle=u64(0);}else{self.held=file_lock(self.handle,u32(3),u32(0),u32(1),u32(0),overlapped)!=i32(0);}
+            }
+        }}
+        fn acquired(borrow self):bool{return self.held;}
+        fn drop(borrow mut self):void{unsafe{if(self.handle!=u64(0)){let ignored:i32=close(self.handle);}}}
+    }
+    final class Native {
+        let process:u64;let thread:u64;let job:u64;let reader:u64;let writer:u64;
+        fn drop(borrow mut self):void{unsafe{
+            if(self.job!=u64(0)){let ignored:i32=terminate(self.job,u32(125));}
+            if(self.process!=u64(0)){let ignored:i32=terminate_process(self.process,u32(125));let waited:u32=wait(self.process,u32(5000));ignored=close(self.process);}
+            if(self.thread!=u64(0)){let ignored:i32=close(self.thread);}if(self.reader!=u64(0)){let ignored:i32=close(self.reader);}if(self.writer!=u64(0)){let ignored:i32=close(self.writer);}if(self.job!=u64(0)){let ignored:i32=close(self.job);}
+        }}
+    }
+    safe fn run(borrow command:*byte,timeout:int,limit:int):own Output {
+        own state:Native=new Native();own reader:*u64=alloc<u64>(1);own writer:*u64=alloc<u64>(1);own attributes:*u64=alloc<u64>(3);attributes[0]=u64(24);attributes[2]=u64(1);
+        own startup:*u64=alloc<u64>(13);startup[0]=u64(104);startup[7]=u64(256)<<32;
+        own info:*u64=alloc<u64>(3);own utf16:*u16=alloc<u16>(len(command)+512);own converted:*u16=alloc<u16>(len(command));
+        own data:*byte=alloc<byte>(limit);own chunk:*byte=alloc<byte>(4096);own amount:*u32=alloc<u32>(1);own capacity:*u32=alloc<u32>(1);own exit_status:*u32=alloc<u32>(1);
+        let count:int=0;let error:int=0;let code:int=-1;val started:int=monotonic_ms();
+        unsafe {
+            if(pipe(reader,writer,attributes,u32(0))==i32(0)){return failure(-4);}state.reader=reader[0];state.writer=writer[0];
+            if(inheritance(state.reader,u32(1),u32(0))==i32(0)){return failure(-4);}
+            startup[11]=state.writer;startup[12]=state.writer;
+            let system:int=int(system_directory(utf16,u32(260)));if(system<1||system>=260){return failure(-4);}
+            // Explicit system shell, no PATH search for cmd.exe.
+            let suffix:text="\\cmd.exe /d /s /c ";let pos:int=system;
+            for(let i:int=0;i<len(suffix);i+=1){utf16[pos]=u16(suffix[i]);pos+=1;}
+            let size:int=int(wide(u32(65001),u32(8),command,i32(len(command)-1),converted,i32(len(command))));if(size<1){return failure(-1);}
+            for(let i:int=0;i<size;i+=1){utf16[pos]=converted[i];pos+=1;}
+            state.job=job(u64(0),u64(0));if(state.job==u64(0)){return failure(-4);}
+            if(create(u64(0),utf16,u64(0),u64(0),i32(1),u32(134217732),u64(0),u64(0),startup,info)==i32(0)){return failure(-4);}
+            state.process=info[0];state.thread=info[1];let ignored:i32=close(state.writer);state.writer=u64(0);
+            if(assign(state.job,state.process)==i32(0)||resume(state.thread)==u32(4294967295)){return failure(-4);}
+            while(true){
+                let pending:i32=available(state.reader,u64(0),u32(0),u64(0),capacity,u64(0));
+                let ended:bool=wait(state.process,u32(0))==u32(0);
+                if(pending==i32(0)){if(last_error()!=u32(109)){error=-4;break;}capacity[0]=u32(0);}
+                if(capacity[0]>u32(0)){
+                    let take:u32=capacity[0];if(take>u32(4096)){take=u32(4096);}
+                    if(read(state.reader,chunk,take,amount,u64(0))==i32(0)){error=-4;break;}
+                    let size:int=int(amount[0]);if(size>limit-count){error=-2;break;}for(let i:int=0;i<size;i+=1){data[count+i]=chunk[i];}count+=size;
+                }else if(ended){break;}
+                if(monotonic_ms()-started>=timeout){error=-3;break;}if(capacity[0]==u32(0)){let slept:int=sleep_ms(1);}
+            }
+            if(wait(state.process,u32(0))==u32(0)&&exit_code(state.process,exit_status)!=i32(0)){code=int(exit_status[0]);}
+        }
+        return new Output(move(data),count,code,error);
+    }
+}
+
+/// Explicit trusted shell command (/bin/sh -c or system cmd.exe /d /s /c).
+/// This API interprets shell syntax. Keep untrusted data out of commands.
+/// No shared memory: process isolation is the supported concurrency model.
+public safe fn run_shell(borrow command:*byte,timeout_ms:int,max_bytes:int):own Output {
+    if(timeout_ms<1||timeout_ms>60000||max_bytes<0||max_bytes>16777216||len(command)<2||len(command)>16384||command[len(command)-1]!=byte(0)){return failure(-1);}
+    for(let i:int=0;i<len(command)-1;i+=1){if(command[i]==byte(0)){return failure(-1);}}
+    return run(command,timeout_ms,max_bytes);
+}
+
+/// Nonblocking exclusive OS lock; released on close or process termination.
+/// The lock file remains on disk and can be reused after a crash.
+public safe fn lock(borrow path:*byte):own Lock {
+    if(len(path)<2||len(path)>16384||path[len(path)-1]!=byte(0)){own empty:*byte=alloc<byte>(1);return new Lock(empty);}
+    for(let i:int=0;i<len(path)-1;i+=1){if(path[i]==byte(0)){own empty:*byte=alloc<byte>(1);return new Lock(empty);}}
+    return new Lock(path);
+}

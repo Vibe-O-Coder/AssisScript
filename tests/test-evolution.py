@@ -16,7 +16,7 @@ INVOCATIONS = 0
 
 
 def main(body):
-    return 'assis assis_assis(): int {' + body + 'return 0;}'
+    return 'fn main(): int {' + body + 'return 0;}'
 
 
 class Evolution(unittest.TestCase):
@@ -33,6 +33,10 @@ class Evolution(unittest.TestCase):
     def invoke(self, *args, input=None):
         global INVOCATIONS
         INVOCATIONS += 1
+        # Historical corpus deliberately exercises legacy APIs. New safety
+        # regressions override this with a direct invocation of the default.
+        if args and args[0] in ('check','build','run','ir','lock','doc','test') and '--safe' not in args and '--legacy' not in args:
+            args = (*args, '--legacy')
         return subprocess.run([str(COMPILER), *map(str, args)], input=input,
                               capture_output=True, text=True, encoding='utf-8', timeout=30)
 
@@ -88,7 +92,7 @@ class Evolution(unittest.TestCase):
         for body in bodies:
             with self.subTest(body=body):
                 self.rejected(main(body), 'campo privado')
-        self.rejected('assis create():Array<int>{return [1];}' + main('print(create()._data);'), 'campo privado')
+        self.rejected('fn create():Array<int>{return [1];}' + main('print(create()._data);'), 'campo privado')
         self.rejected('struct S {let itens:Array<int>;}' + main('let s:S=new S([1]);print(s.itens._data);'), 'campo privado')
 
     def test_collection_private_methods(self):
@@ -96,21 +100,21 @@ class Evolution(unittest.TestCase):
             self.rejected(main('let m:HashMap<int,int>=new HashMap<int,int>();m.' + call + ';'), 'método privado')
 
     def test_private_members_are_nominal_not_filename_privileges(self):
-        cls = 'ASSIS Cofre {private let segredo:int;private assis value():int{return self.segredo;}assis ler():int{return self.value();}}'
+        cls = 'class Cofre {private let segredo:int;private fn value():int{return self.segredo;}fn ler():int{return self.value();}}'
         self.rejected(cls + main('let c:Cofre=new Cofre();print(c.segredo);'), 'campo privado')
         self.rejected(cls + main('let c:Cofre=new Cofre();print(c.value());'), 'método privado')
-        self.rejected(cls + 'ASSIS Filho extends Cofre {assis ler_segredo():int{return self.segredo;}}' + main(''), 'campo privado')
-        self.rejected(cls + 'ASSIS Filho extends Cofre {assis value():int{return 0;}}' + main(''), 'sobrescrita')
-        self.rejected('ASSIS A {assis v():int{return 1;}} ASSIS B extends A {private assis v():int{return 2;}}' + main(''), 'sobrescrita')
+        self.rejected(cls + 'class Filho extends Cofre {fn ler_segredo():int{return self.segredo;}}' + main(''), 'campo privado')
+        self.rejected(cls + 'class Filho extends Cofre {fn value():int{return 0;}}' + main(''), 'sobrescrita')
+        self.rejected('class A {fn v():int{return 1;}} class B extends A {private fn v():int{return 2;}}' + main(''), 'sobrescrita')
         self.rejected('struct Oculto {private let v:int;}' + main('let p:Oculto=new Oculto(1);'), 'campo privado')
-        self.rejected('ASSIS Oculto {private assis assis_fodase():void{}}' + main('let o:Oculto=new Oculto();'), 'inicializador privado')
+        self.rejected('class Oculto {private fn init():void{}}' + main('let o:Oculto=new Oculto();'), 'inicializador privado')
         result = self.invoke('check', '<colecoes>.assis', '--stdin', '--diagnostics=json',
-                             input='ASSIS __assis_falso {}' + main(''))
+                             input='class __assis_falso {}' + main(''))
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertIn('reservado', json.loads(result.stderr)['message'])
 
     def test_private_positive_paths_and_underscore_is_not_visibility(self):
-        self.accepted('ASSIS C {private let value:int;let _publico:int;private assis somar(n:int):int{return self.value+n;}assis assis_fodase():void{self.value=40;}assis ler(outro:C):int{return outro.somar(2);}}' +
+        self.accepted('class C {private let value:int;let _publico:int;private fn somar(n:int):int{return self.value+n;}fn init():void{self.value=40;}fn ler(outro:C):int{return outro.somar(2);}}' +
                       main('let c:C=new C();c._publico=7;print(c.ler(c),c._publico);free(c);'), '42 7\n')
 
     def test_collections_keep_bounds_and_public_operations(self):
@@ -123,11 +127,11 @@ class Evolution(unittest.TestCase):
     def test_standard_library_internals_and_reuse(self):
         for source, body in [('strings', 'let t:String=new String();print(t._dados);'),
                              ('csv', 'let d:CsvDocument=new CsvDocument();print(d._campos);')]:
-            self.rejected('#yuri <std/' + source + '.assis>\n' + main(body), 'campo privado')
-        self.accepted('#yuri <std/csv.assis>\n' + main('let d:CsvDocument=read_csv("a,b",byte(44));assert(d.ok);d.parse("c",byte(44));d.parse(d.rows[0][0],byte(44));print(d.rows[0][0]);d.parse("",byte(44));assert(d.ok && len(d.rows)==0);d.dispose();free(d);'), 'c\n')
+            self.rejected('import \"std/' + source + '.assis\";\n' + main(body), 'campo privado')
+        self.accepted('import "std/csv.assis";\n' + main('let d:CsvDocument=read_csv("a,b",byte(44));assert(d.ok);d.parse("c",byte(44));d.parse(d.rows[0][0],byte(44));print(d.rows[0][0]);d.parse("",byte(44));assert(d.ok && len(d.rows)==0);d.dispose();free(d);'), 'c\n')
 
     def test_val_values_scope_and_legacy_mutability(self):
-        self.accepted(main('val a:int=42;val b:byte=byte(255);val c:bool=true;val s:text="ação";{val a:int=7;print(a);}let x:int=a;x+=1;print(a,b,c,len(s),x);'), '7\n42 255 aSsIs 6 43\n')
+        self.accepted(main('val a:int=42;val b:byte=byte(255);val c:bool=true;val s:text="ação";{val a:int=7;print(a);}let x:int=a;x+=1;print(a,b,c,len(s),x);'), '7\n42 255 true 6 43\n')
         for body, message in [
             ('val a:int=1;a=2;', 'imutável'), ('val a:int=1;a+=1;', 'imutável'),
             ('val a:int=1;let p:*int=&a;', 'imutável'),
@@ -137,40 +141,40 @@ class Evolution(unittest.TestCase):
             self.rejected(main(body), message)
 
     def test_pure_composition_recursion_and_local_state(self):
-        funcs = '''pure assis dobro(n:int):int{return n*2;}
-pure assis composto(n:int):int{val d:int=dobro(n);return d+1;}
-pure assis fat(n:int):int{if(n<2){return 1;}return n*fat(n-1);}
-pure assis par(n:int):bool{if(n==0){return true;}return impar(n-1);}
-pure assis impar(n:int):bool{if(n==0){return false;}return par(n-1);}
-pure assis soma(n:int):int{let total:int=0;for(let i:int=0;i<n;i+=1){total+=i;}return total;}
-pure assis estreitar(n:int):byte{return byte(n);}
+        funcs = '''pure fn dobro(n:int):int{return n*2;}
+pure fn composto(n:int):int{val d:int=dobro(n);return d+1;}
+pure fn fat(n:int):int{if(n<2){return 1;}return n*fat(n-1);}
+pure fn par(n:int):bool{if(n==0){return true;}return impar(n-1);}
+pure fn impar(n:int):bool{if(n==0){return false;}return par(n-1);}
+pure fn soma(n:int):int{let total:int=0;for(let i:int=0;i<n;i+=1){total+=i;}return total;}
+pure fn estreitar(n:int):byte{return byte(n);}
 '''
-        self.accepted(funcs + main('print(composto(20),fat(10),par(10),soma(100),estreitar(256));'), '41 3628800 aSsIs 4950 0\n')
+        self.accepted(funcs + main('print(composto(20),fat(10),par(10),soma(100),estreitar(256));'), '41 3628800 true 4950 0\n')
 
     def test_pure_rejects_effects_even_in_unreachable_branches(self):
         bodies = ['print(n);return n;', 'return monotonic_ms();', 'let p:*int=alloc<int>(1);return n;',
-                  'let p:*byte=ASSIS_fodase(1);return n;', 'assert(true);return n;',
+                  'let p:*byte=alloc<byte>(1);return n;', 'assert(true);return n;',
                   'if(false){print(1);}return n;', 'let a:Array<int>=[1];return n;',
                   'let s:text="a";return n;', 'free(null);return n;',
                   'let p:*int=&n;return n;', 'n=2;return n;']
         for body in bodies:
-            self.rejected('pure assis f(n:int):int{' + body + '}' + main(''), 'pure' if 'n=2;' not in body else 'imutável')
-        self.rejected('assis efeito(n:int):int{print(n);return n;}pure assis f(n:int):int{return efeito(n);}' + main(''), 'com efeitos')
-        self.rejected('pure assis f(n:int):int{return g(n);}pure assis g(n:int):int{return monotonic_ms();}' + main(''), 'pure')
+            self.rejected('pure fn f(n:int):int{' + body + '}' + main(''), 'pure' if 'n=2;' not in body else 'imutável')
+        self.rejected('fn efeito(n:int):int{print(n);return n;}pure fn f(n:int):int{return efeito(n);}' + main(''), 'com efeitos')
+        self.rejected('pure fn f(n:int):int{return g(n);}pure fn g(n:int):int{return monotonic_ms();}' + main(''), 'pure')
 
     def test_pure_signature_boundaries(self):
-        for declaration in ['pure assis f(n:*int):int{return 1;}', 'pure assis f(n:text):int{return 1;}',
-                            'pure assis f():text{return "a";}', 'pure assis f():void{return;}']:
+        for declaration in ['pure fn f(n:*int):int{return 1;}', 'pure fn f(n:text):int{return 1;}',
+                            'pure fn f():text{return "a";}', 'pure fn f():void{return;}']:
             self.rejected(declaration + main(''), 'pure')
 
     def test_module_diagnostics_preserve_origin(self):
-        library = self.source('pure assis proibido():int {\n return monotonic_ms();\n}', 'lib.assis')
-        file = self.source('#yuri <lib.assis>\n' + main(''))
+        library = self.source('pure fn proibido():int {\n return monotonic_ms();\n}', 'lib.assis')
+        file = self.source('import "lib.assis";\n' + main(''))
         result = self.invoke('check', file, '--diagnostics=json')
         diagnostic = json.loads(result.stderr)
         self.assertEqual((result.returncode, diagnostic['file'], diagnostic['line']), (1, str(library), 2))
-        library.write_text('pure assis dobro(n:int):int{return n*2;}', encoding='utf-8')
-        self.accepted('#yuri <lib.assis>\n' + main('print(dobro(21));'), '42\n')
+        library.write_text('pure fn dobro(n:int):int{return n*2;}', encoding='utf-8')
+        self.accepted('import "lib.assis";\n' + main('print(dobro(21));'), '42\n')
 
 
 if __name__ == '__main__':

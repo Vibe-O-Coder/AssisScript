@@ -1,0 +1,18 @@
+namespace random;
+
+/// Reproducible xorshift64* generator for simulations and games. Not suitable
+/// for passwords, tokens or any cryptographic purpose. A zero seed is remapped.
+public final class Random {
+    private let state:u64;
+    fn init(borrow mut self,seed:u64):void{self.state=seed;if(seed==u64(0)){self.state=u64(0x9e3779b97f4a7c15);}}
+    fn next_u64(borrow mut self):u64 {
+        let x:u64=self.state;x=x^(x>>12);x=x^(x<<25);x=x^(x>>27);self.state=x;
+        return x*u64(0x2545f4914f6cdd1d);
+    }
+    /// Uniform integer in [low, high); rejection sampling avoids modulo bias.
+    fn range(borrow mut self,low:int,high:int):int {
+        assert(high>low);val span:u64=u64(high)-u64(low);val threshold:u64=(u64(0)-span)%span;
+        let value:u64=self.next_u64();while(value<threshold){value=self.next_u64();}
+        return int(u64(low)+value%span);
+    }
+}

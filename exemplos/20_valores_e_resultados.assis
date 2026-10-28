@@ -1,15 +1,14 @@
-#yuri <std/errors.assis>
-
+import "std/errors.assis";
 value struct Ponto { let x: int; let y: int; }
 
-pure assis deslocar(p: Ponto): Ponto { return new Ponto(p.x + 1, p.y + 1); }
+pure fn deslocar(p: Ponto): Ponto { return new Ponto(p.x + 1, p.y + 1); }
 
-pure assis dividir_valor(a: int, b: int): Result<int, int> {
+pure fn dividir_valor(a: int, b: int): Result<int, int> {
     if (b == 0) { return new Result<int, int>.Err(1); }
     return new Result<int, int>.Ok(a / b);
 }
 
-safe assis assis_assis(): int {
+safe fn main(): int {
     val original: Ponto = new Ponto(19, 21);
     val novo: Ponto = deslocar(original);
     print(original.x, original.y, novo.x + novo.y);

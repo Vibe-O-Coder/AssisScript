@@ -4,6 +4,11 @@
  * Native errors are recoverable. Memory-contract violations remain fatal. */
 .global asrt_args_init
 asrt_args_init:
+.ifdef AS_MACOS
+    mov qword ptr [r15+128], rdi
+    mov qword ptr [r15+120], rsi
+    ret
+.endif
 .ifdef AS_WINDOWS
     push rbp
     mov rbp, rsp

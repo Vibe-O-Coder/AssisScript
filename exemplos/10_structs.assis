@@ -4,20 +4,21 @@ struct Pessoa {
     let idade: int;
 }
 
-ASSIS Cadastro {
+class Cadastro {
     let pessoas: Array<Pessoa>;
 
-    assis assis_fodase(): void {
+    fn init(): void {
         self.pessoas = new Array<Pessoa>();
     }
 
     /// Acrescenta uma referência de Pessoa ao cadastro; não clona o registro.
-    assis append(pessoa: Pessoa): void {
+    fn append(pessoa: Pessoa): void {
         self.pessoas.push(pessoa);
     }
 }
 
-assis assis_assis(): int {
+safe fn main(): int {
+    unsafe {
     let cadastro: Cadastro = new Cadastro();
     let pessoa: Pessoa = new Pessoa("Miyabi", 24);
     cadastro.append(pessoa);
@@ -27,4 +28,6 @@ assis assis_assis(): int {
     free(cadastro);
     free(pessoa);
     return 0;
+
+    }
 }

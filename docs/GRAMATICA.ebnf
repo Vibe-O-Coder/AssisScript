@@ -1,16 +1,16 @@
-(* AssisScript 3.3.0-alpha.10. Palavras legadas são aliases dos tokens legíveis. *)
-programa = { diretiva | "namespace", nome, ";" | ["public"], (classe | registro | variante | funcao) } ;
-diretiva = "#yuri", "<", caminho_terminado_em_assis, ">", [";"], fim_de_linha
-          | "#body", caminho_terminado_em_pillow, [";"], fim_de_linha
-          | ("import" | "importa"), texto, ";" ;
-pacote = { diretiva_yuri | diretiva_body | comentario } ;
-classe = ["final"], ("class" | "ASSIS"), nome, [parametros_tipo], ["extends", nome, [argumentos_tipo]], "{", { campo | metodo }, "}" ;
+(* AssisScript 3.3.0-alpha.14: sintaxe canônica; edição histórica separada. *)
+programa = { diretiva | "namespace", nome, ";" | ["public"], (constante | classe | registro | variante | funcao | externo | plataforma) } ;
+diretiva = "import", texto, ";" ;
+constante = "const", nome, ":", tipo, "=", expressao_constante, ";" ;
+expressao_constante = expressao ; (* somente literais/constantes e operadores escalares *)
+classe = ["final"], "class", nome, [parametros_tipo], ["extends", nome, [argumentos_tipo]], "{", { campo | metodo }, "}" ;
 registro = ["value"], "struct", nome, [parametros_tipo], "{", { campo }, "}" ;
 variante = "enum", nome, [parametros_tipo], "{", caso, {caso}, "}" ;
-caso = nome, ["(", [tipo, {",", tipo}], ")"], ";" ;
+caso = nome, ["(", [payload, {",", payload}], ")"], ";" ;
+payload = ["own"], tipo ;
 campo = ["private"], ("let" | "own"), nome, ":", tipo, ";" ;
-funcao = ["pure" | "safe"], ("fn" | "assis"), nome, [parametros_tipo], "(", [parametros], ")", ":", retorno, bloco ;
-metodo = ["private"], ("fn" | "assis"), nome, "(", [receptor, [",", parametros] | parametros], ")", ":", retorno, bloco ;
+funcao = ["pure" | "safe"], "fn", nome, [parametros_tipo], "(", [parametros], ")", ":", retorno, bloco ;
+metodo = ["private"], "fn", nome, "(", [receptor, [",", parametros] | parametros], ")", ":", retorno, bloco ;
 receptor = "borrow", ["mut"], "self" ;
 modo = "own" | "borrow", ["mut"] ;
 parametro = [modo], nome, ":", tipo ;
@@ -18,12 +18,15 @@ parametros = parametro, {",", parametro} ;
 retorno = ["own" | "borrow", ["mut"], "(", (nome | "self"), ")"], tipo ;
 parametros_tipo = "<", nome, {",", nome}, ">" ;
 argumentos_tipo = "<", tipo, {",", tipo}, ">" ;
-tipo = {"*"}, ("int" | "byte" | "i8" | "i16" | "i32" | "i64" | "u8" | "u16" | "u32" | "u64" | "f32" | "f64" | "bool" | "text" | "void" | "Arquivo" | "slice", "<", tipo, ">" | nome, [argumentos_tipo] | tipo_funcao) ;
+tipo = {"*"}, ("int" | "byte" | "i8" | "i16" | "i32" | "i64" | "u8" | "u16" | "u32" | "u64" | "f32" | "f64" | "bool" | "text" | "void" | "File" | "slice", "<", tipo, ">" | nome, [argumentos_tipo] | tipo_funcao | tipo_closure) ;
 tipo_argumento = [modo], tipo ;
-tipo_funcao = ["pure" | "safe"], ("fn" | "assis"), "(", [tipo_argumento, {",", tipo_argumento}], ")", ":", ["own" | "borrow", ["mut"], "(", inteiro, ")"], tipo ;
+tipo_funcao = ["pure" | "safe"], "fn", "(", [tipo_argumento, {",", tipo_argumento}], ")", ":", ["own" | "borrow", ["mut"], "(", inteiro, ")"], tipo ;
+tipo_closure = "closure", ["mut"], "(", [tipo_argumento, {",", tipo_argumento}], ")", ":", ["own" | "borrow", ["mut"], "(", (inteiro | "self"), ")"], tipo ;
+closure = "closure", ["mut"], "[", [captura, {",", captura}], "]", "(", [parametros], ")", ":", retorno, bloco ;
+captura = ("val" | "own" | "borrow"), nome, ":", tipo, "=", expressao ;
 bloco = "{", {instrucao}, "}" ;
 instrucao = bloco | ("let" | "val"), nome, ":", tipo, "=", expressao, ";"
-          | "div", bloco | "unsafe", bloco
+          | "unsafe", bloco
           | ("own" | "borrow", ["mut"]), nome, ":", tipo, "=", expressao, ";"
           | "defer", "free", "(", nome, ")", ";"
           | "for", "(", inicializacao, expressao, ";", atribuicao, ")", bloco
@@ -31,20 +34,20 @@ instrucao = bloco | ("let" | "val"), nome, ":", tipo, "=", expressao, ";"
           | "while", "(", expressao, ")", bloco
           | "match", "(", expressao, ")", "{", {braco}, "}"
           | "return", [expressao], ";"
-          | "print", argumentos, ";" | "free", "(", expressao, ")", ";"
+          | ("print" | "write"), argumentos, ";" | "free", "(", expressao, ")", ";"
           | "assert", "(", expressao, [",", expressao], ")", ";"
           | ("break" | "continue"), ";"
           | expressao, [operador_atribuicao, expressao], ";" ;
-expressao = unaria, {operador_binario, unaria} ; (* precedência descrita no manual *)
+expressao = unaria, {operador_binario, unaria | ("is" | "as"), tipo} ; (* precedência descrita no manual *)
 unaria = ["+" | "-" | "!" | "~" | "*" | "&"], primaria,
          {".", nome | argumentos | "[", expressao, "]" | "::", argumentos_tipo} ;
-primaria = inteiro | real_decimal | texto | "true" | "false" | "null" | "self" | nome
+primaria = closure | caractere | inteiro | real_decimal | texto | "true" | "false" | "null" | "self" | "super" | nome
          | "(", expressao, ")" | "new", tipo, [".", nome], argumentos
          | "alloc", "<", tipo, ">", argumentos
-         | ("len" | "fatia" | "int" | "byte" | "i8" | "i16" | "i32" | "i64" | "u8" | "u16" | "u32" | "u64" | "f32" | "f64" | "bool" | "text" | "bytes" | "move" | "ler_bytes" | "agora"
-            | "arquivo_abrir" | "arquivo_ler" | "arquivo_escrever" | "arquivo_fechar" | "erro_io"
-            | "argumentos" | "argumento_tamanho" | "argumento_copiar" | "dormir" | "relogio_civil" | "escrever_bytes"
-            | "arquivo_sincronizar" | "arquivo_substituir" | "arquivo_remover"), argumentos
+         | ("utf8" | "len" | "slice_of" | "int" | "byte" | "i8" | "i16" | "i32" | "i64" | "u8" | "u16" | "u32" | "u64" | "f32" | "f64" | "bool" | "text" | "bytes" | "move" | "read_bytes" | "monotonic_ms"
+            | "file_open" | "file_read" | "file_write" | "file_close" | "io_error"
+            | "arg_count" | "arg_size" | "arg_copy" | "sleep_ms" | "civil_ms" | "write_bytes"
+            | "file_sync" | "file_replace" | "file_remove"), argumentos
          | "[", [expressao, {",", expressao}, [","]], "]" ;
 argumentos = "(", [expressao, {",", expressao}], ")" ;
 braco = nome, ["(", [nome, {",", nome}], ")"], bloco ;
@@ -52,19 +55,25 @@ inicializacao = ("let" | "val" | "own" | "borrow", ["mut"]), nome, ":", tipo, "=
               | atribuicao, ";" | expressao, ";" ;
 atribuicao = expressao, operador_atribuicao, expressao ;
 nome = (letra_ASCII | "_"), {letra_ASCII | digito | "_"} ;
-(* .pillow não admite declarações. void só é retorno, não elemento/ponteiro.
+(* Módulos agregadores também usam import. void só é retorno, não elemento/ponteiro.
    Funções globais, structs e classes admitem parâmetros de tipo; chamadas genéricas
    exigem ::<...>. Métodos usam parâmetros da classe; parâmetros de tipo próprios não são suportados.
    Array<T>/HashMap<K,V> continuam intrínsecos. Prefixo __assis_ é reservado.
    Literais de array exigem contexto Array<T>. Struct sem value usa referência nominal.
-   value struct e enum admitem somente campos/payloads Copy, sem own/text/ponteiros.
+   value struct e enum Copy exigem valores Copy; payload own torna enum Move alocado.
    val: locais escalares/text/função/valores Copy; sem reatribuição ou endereço.
    pure: funções globais; escalares, funções pure e valores Copy; chamadas só pure.
-   match é exaustivo, sem wildcard; vínculos de braço são cópias imutáveis.
-   Arquivo é opaco, own/borrow e sem construção new; abertura é anulável.
+   match é exaustivo; Copy copia, Move empresta ou consome com match(move(dono)).
+   File é opaco, own/borrow e sem construção new; abertura é anulável.
    private: acesso somente pela classe declaradora; não concede acesso por arquivo.
-   mut só acompanha borrow. *)
+   mut acompanha borrow ou closure; captura borrow mut permanece rejeitada. *)
 
 (* Nomes de tipos/funções podem ser qualificados: nome, {"::", nome}.
    Isso é distinto de ::<argumentos_tipo>. Literais reais decimais têm ponto e/ou expoente e tipo f64.
    Novos tipos numéricos também são conversões explícitas na posição de chamada. *)
+
+externo = "extern", "(", texto, ",", texto, ",", texto, ")", "fn", nome, "(", [parametros], ")", ":", tipo, ";" ;
+plataforma = "platform", "(", ('"linux-x64"' | '"windows-x64"' | '"macos-x64"'), ")", "{", { ["public"], (classe | registro | variante | funcao | externo) }, "}" ;
+(* c_callback(funcao_global) é builtin escalar unsafe; drop é método reservado em final class. *)
+
+caractere = "'", (byte_fonte | escape_de_byte), "'" ; (* exatamente um byte *)

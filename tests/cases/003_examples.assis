@@ -1,8 +1,8 @@
 // Todo identificador é Assis/Fodase. Textos e comentários são livres.
-assis assis_assis(): AssIs {
-    FODASE("Assis, mundo. Fodase.");
-    Assis AssisAssis: AssIs = 40;
-    Assis AssisFodase: AssIs = 2;
-    FODASE("Resposta:", AssisAssis + AssisFodase);
-    Fodase 0;
+fn main(): int {
+    print("Assis, mundo. Fodase.");
+    let AssisAssis: int = 40;
+    let AssisFodase: int = 2;
+    print("Resposta:", AssisAssis + AssisFodase);
+    return 0;
 }

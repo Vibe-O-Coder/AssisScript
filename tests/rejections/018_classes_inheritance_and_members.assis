@@ -1,5 +1,5 @@
-ASSIS AssisAssis { } assis AssisAssis(): FODase {}
-assis assis_assis(): AssIs {
+class AssisAssis { } fn AssisAssis(): void {}
+fn main(): int {
 
-Fodase 0;
+return 0;
 }

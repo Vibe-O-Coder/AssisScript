@@ -1,2 +1,2 @@
-miyabi Um pacote agrupa fontes. Os caminhos partem deste manifesto.
-#yuri <bibliotecas/geometria.assis>
+// Um pacote agrupa fontes. Os caminhos partem deste manifesto.
+import "bibliotecas/geometria.assis";

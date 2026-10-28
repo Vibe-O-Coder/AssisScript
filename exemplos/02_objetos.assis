@@ -1,21 +1,24 @@
 // Contador com construtor, estado e método de instância.
-ASSIS AssisAssis {
-    Assis Assis_assis: AssIs;
+class AssisAssis {
+    let Assis_assis: int;
 
-    assis assis_fodase(FodaseAssis: AssIs): FODase {
-        aSSIS.Assis_assis = FodaseAssis;
+    fn init(FodaseAssis: int): void {
+        self.Assis_assis = FodaseAssis;
     }
 
-    assis Assis_Fodase(): AssIs {
-        aSSIS.Assis_assis += 1;
-        Fodase aSSIS.Assis_assis;
+    fn Assis_Fodase(): int {
+        self.Assis_assis += 1;
+        return self.Assis_assis;
     }
 }
 
-assis assis_assis(): AssIs {
-    Assis AssisFodase: AssisAssis = fodase AssisAssis(40);
-    FODASE("Primeiro:", AssisFodase.Assis_Fodase());
-    FODASE("Segundo:", AssisFodase.Assis_Fodase());
-    foDASE(AssisFodase);
-    Fodase 0;
+safe fn main(): int {
+    unsafe {
+    let AssisFodase: AssisAssis = new AssisAssis(40);
+    print("Primeiro:", AssisFodase.Assis_Fodase());
+    print("Segundo:", AssisFodase.Assis_Fodase());
+    free(AssisFodase);
+    return 0;
+
+    }
 }

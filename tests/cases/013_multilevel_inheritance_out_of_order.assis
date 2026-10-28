@@ -1,21 +1,21 @@
 
-            ASSIS AssisAssisAssis ASSIS_FODASE FodaseAssis {
-                Assis Assis_Fodase: AssIs;
-                assis FodaseFodase(): AssIs { Fodase aSSIS.Assis_assis + aSSIS.Assis_Fodase; }
+            class AssisAssisAssis extends FodaseAssis {
+                let Assis_Fodase: int;
+                fn FodaseFodase(): int { return self.Assis_assis + self.Assis_Fodase; }
             }
-            ASSIS FodaseAssis ASSIS_FODASE AssisAssis { }
-            ASSIS AssisAssis {
-                Assis Assis_assis: AssIs;
-                assis assis_fodase(AssisFodase: AssIs): FODase { aSSIS.Assis_assis = AssisFodase; }
-                assis FodaseFodase(): AssIs { Fodase -1; }
+            class FodaseAssis extends AssisAssis { }
+            class AssisAssis {
+                let Assis_assis: int;
+                fn init(AssisFodase: int): void { self.Assis_assis = AssisFodase; }
+                fn FodaseFodase(): int { return -1; }
             }
         
-assis assis_assis(): AssIs {
+fn main(): int {
 
-            Assis AssisFodase: AssisAssisAssis = fodase AssisAssisAssis(40);
+            let AssisFodase: AssisAssisAssis = new AssisAssisAssis(40);
             AssisFodase.Assis_Fodase = 2;
-            Assis FodaseFodase: AssisAssis = AssisFodase;
-            FODASE(FodaseFodase.FodaseFodase()); foDASE(AssisFodase);
+            let FodaseFodase: AssisAssis = AssisFodase;
+            print(FodaseFodase.FodaseFodase()); free(AssisFodase);
         
-Fodase 0;
+return 0;
 }

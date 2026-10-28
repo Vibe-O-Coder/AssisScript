@@ -1,10 +1,10 @@
 # Recursos gerenciados e fatias — alpha.9
 
-**Atualização alpha.10:** sintaxe e APIs canônicas em inglês; imports e nomes antigos da stdlib exigem migração. Veja [ENGLISH-API.md](ENGLISH-API.md) e o [handoff atual](HANDOFF-3.3-ALPHA.10.md). As grafias históricas da sintaxe continuam aliases.
+**Atualização alpha.10:** sintaxe e APIs canônicas em inglês; imports e nomes antigos da stdlib exigem migração. Veja [ENGLISH-API.md](ENGLISH-API.md) e o [handoff atual](HANDOFF-3.3-ALPHA.10.md). A alpha.14 removeu as grafias históricas; consulte o manual atual.
 
 ## Classes e receptores
 
-`ASSIS` pode declarar campos own. Uma classe usada como own/borrow precisa ter todos os métodos com receptor explícito: `assis ler(borrow self):int` ou `assis alterar(borrow mut self,n:int):void`. O receptor aparece primeiro e não é passado pelo usuário. Métodos com receptor são safe; operações legadas exigem unsafe. Métodos antigos continuam com seu contrato manual e impedem promover a classe para own apenas por anotação.
+`class` pode declarar campos own. Uma classe usada como own/borrow precisa ter todos os métodos com receptor explícito: `assis ler(borrow self):int` ou `assis alterar(borrow mut self,n:int):void`. O receptor aparece primeiro e não é passado pelo usuário. Métodos com receptor são safe; operações legadas exigem unsafe. Métodos antigos continuam com seu contrato manual e impedem promover a classe para own apenas por anotação.
 
 Campos de referência devem ser own; os demais campos devem ser valores escalares/Copy ou text de vida externa no perfil legado. Safe rejeita text externo. Construtores com receptor mutável podem inicializar campos own, com liberação automática do valor anterior. Um receptor compartilhado não pode modificar campos nem chamar métodos mutáveis. Sobrescritas conservam o modo do receptor e os contratos anteriores.
 

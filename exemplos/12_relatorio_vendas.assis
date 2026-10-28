@@ -1,10 +1,10 @@
-#yuri <std/csv.assis>
-#yuri <std/convert.assis>
-#yuri <std/algorithms.assis>
-
+import "std/csv.assis";
+import "std/convert.assis";
+import "std/algorithms.assis";
 // Pipeline real: CSV de vendas, validação, totalização por produto e ordenação.
 // Preços são centavos inteiros; dados inválidos não são convertidos silenciosamente.
-assis assis_assis(): int {
+safe fn main(): int {
+    unsafe {
     let csv: CsvDocument = read_csv("produto;count;centavos\nCafe;3;1250\nCha;2;850\nCafe;1;1250\n", byte(59));
     if (!csv.ok) { print("CSV invalido no byte", csv.position); csv.dispose(); free(csv); return 1; }
     let totais: HashMap<text, int> = new HashMap<text, int>(); let vendas: Array<int> = [];
@@ -31,4 +31,6 @@ assis assis_assis(): int {
     }
     // As chaves emprestam textos do CSV: o documento é liberado por último.
     free(vendas); free(totais); csv.dispose(); free(csv); return status;
+
+    }
 }

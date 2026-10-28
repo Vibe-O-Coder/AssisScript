@@ -20,25 +20,36 @@ static void write_pe(const char *path){
     size_t data_rva=align_page(text_rva+code.n),imports_rva=align_page(data_rva+data.n);
     static const char *apis[]={"ExitProcess","GetStdHandle","SetConsoleOutputCP","VirtualAlloc","VirtualFree","WriteFile","ReadFile","GetTickCount64","GetLastError","CreateFileW","CloseHandle","MultiByteToWideChar","WideCharToMultiByte","GetCommandLineW","LocalFree","Sleep","GetSystemTimeAsFileTime","FlushFileBuffers","MoveFileExW","DeleteFileW","CommandLineToArgvW"};
     enum { KERNEL_COUNT=20,API_COUNT=21 };Buffer imports={0},relocs={0},resources={0};
-    unsigned char descriptors[60]={0};bytes(&imports,descriptors,sizeof(descriptors));
-    size_t iat=imports.n;for(int i=0;i<API_COUNT+2;i++)u64(&imports,0);
-    size_t ilt=imports.n;for(int i=0;i<API_COUNT+2;i++)u64(&imports,0);
+    Vec imports_all={0},dlls={0};
     for(int i=0;i<API_COUNT;i++){
-        if(imports.n%2)u8(&imports,0);size_t name=imports.n;u8(&imports,0);u8(&imports,0);
-        bytes(&imports,apis[i],strlen(apis[i])+1);
-        size_t index=(size_t)i+(i>=KERNEL_COUNT?1:0);
-        patch64(imports.v,iat+index*8,imports_rva+name);patch64(imports.v,ilt+index*8,imports_rva+name);
+        NativeImport *p=mem(sizeof(*p));p->library=i<KERNEL_COUNT?"KERNEL32.dll":"SHELL32.dll";p->symbol=(char*)apis[i];p->label=-1;push(&imports_all,p);
     }
-    size_t dll=imports.n;bytes(&imports,"KERNEL32.dll",13);
-    patch32(imports.v,0,(uint32_t)(imports_rva+ilt));patch32(imports.v,12,(uint32_t)(imports_rva+dll));patch32(imports.v,16,(uint32_t)(imports_rva+iat));
-    size_t shell=imports.n;bytes(&imports,"SHELL32.dll",12);
-    patch32(imports.v,20,(uint32_t)(imports_rva+ilt+(KERNEL_COUNT+1)*8));patch32(imports.v,32,(uint32_t)(imports_rva+shell));patch32(imports.v,36,(uint32_t)(imports_rva+iat+(KERNEL_COUNT+1)*8));
+    for(int i=0;i<native_imports.n;i++)push(&imports_all,native_imports.v[i]);
+    for(int i=0;i<imports_all.n;i++){NativeImport *p=imports_all.v[i];bool found=false;for(int j=0;j<dlls.n;j++)if(same(dlls.v[j],p->library))found=true;if(!found)push(&dlls,p->library);}
+    size_t descriptor_size=(size_t)(dlls.n+1)*20;for(size_t i=0;i<descriptor_size;i++)u8(&imports,0);
+    size_t iat=imports.n;
+    for(int d=0;d<dlls.n;d++){for(int i=0;i<imports_all.n;i++){NativeImport *p=imports_all.v[i];if(same(p->library,dlls.v[d])){p->slot=imports.n;u64(&imports,0);}}u64(&imports,0);}
+    size_t iat_size=imports.n-iat;
+    for(int d=0;d<dlls.n;d++){
+        size_t ilt=imports.n,first=0;int count=0;
+        for(int i=0;i<imports_all.n;i++){NativeImport *p=imports_all.v[i];if(same(p->library,dlls.v[d])){if(!count)first=p->slot;count++;u64(&imports,0);}}u64(&imports,0);
+        int index=0;
+        for(int i=0;i<imports_all.n;i++){
+            NativeImport *p=imports_all.v[i];if(!same(p->library,dlls.v[d]))continue;
+            if(imports.n%2)u8(&imports,0);size_t name=imports.n;u8(&imports,0);u8(&imports,0);bytes(&imports,p->symbol,strlen(p->symbol)+1);
+            patch64(imports.v,p->slot,imports_rva+name);patch64(imports.v,ilt+(size_t)index++*8,imports_rva+name);
+            if(p->label>=0)import_slot(p->label,p->slot);
+        }
+        size_t dll=imports.n;bytes(&imports,dlls.v[d],strlen(dlls.v[d])+1);
+        patch32(imports.v,(size_t)d*20,(uint32_t)(imports_rva+ilt));patch32(imports.v,(size_t)d*20+12,(uint32_t)(imports_rva+dll));patch32(imports.v,(size_t)d*20+16,(uint32_t)(imports_rva+first));
+    }
+    if(callback_state_label>=0){while(imports.n%8)u8(&imports,0);import_slot(callback_state_label,imports.n);u64(&imports,0);}
+    native_import_rva=imports_rva;
     for(size_t p=0;p<sizeof(windows_import_patches)/sizeof(windows_import_patches[0]);p++){
-        size_t offset=windows_import_patches[p].offset;int api=-1;
-        for(int i=0;i<API_COUNT;i++)if(same(apis[i],windows_import_patches[p].name)){api=i;break;}
-        if(api<0)fatal("import Windows desconhecido: %s",windows_import_patches[p].name);
-        size_t index=(size_t)api+(api>=KERNEL_COUNT?1:0);
-        int64_t delta=(int64_t)(imports_rva+iat+index*8)-(int64_t)(text_rva+offset+4);
+        size_t offset=windows_import_patches[p].offset;NativeImport *api=NULL;
+        for(int i=0;i<API_COUNT;i++){NativeImport *candidate=imports_all.v[i];if(same(candidate->symbol,windows_import_patches[p].name)){api=candidate;break;}}
+        if(!api)fatal("import Windows desconhecido: %s",windows_import_patches[p].name);
+        int64_t delta=(int64_t)(imports_rva+api->slot)-(int64_t)(text_rva+offset+4);
         if(delta<INT32_MIN||delta>INT32_MAX)fatal("import Windows fora do alcance");patch32(code.v,offset,(uint32_t)(int32_t)delta);
     }
     apply_fixes(base,text_rva,data_rva);
@@ -70,9 +81,9 @@ static void write_pe(const char *path){
     patch32(header,op+32,4096);patch32(header,op+36,512);patch16(header,op+40,6);patch16(header,op+44,2);patch16(header,op+46,1);patch16(header,op+48,6);
     patch32(header,op+56,(uint32_t)align_page(resource_rva+resources.n));patch32(header,op+60,sizeof(header));patch16(header,op+68,3);patch16(header,op+70,0x160);
     patch64(header,op+72,UINT64_C(0x100000));patch64(header,op+80,4096);patch64(header,op+88,UINT64_C(0x100000));patch64(header,op+96,4096);patch32(header,op+108,16);
-    patch32(header,op+112+8,(uint32_t)imports_rva);patch32(header,op+112+12,60);
+    patch32(header,op+112+8,(uint32_t)imports_rva);patch32(header,op+112+12,(uint32_t)descriptor_size);
     patch32(header,op+112+5*8,(uint32_t)reloc_rva);patch32(header,op+112+5*8+4,(uint32_t)relocs.n);
-    patch32(header,op+112+12*8,(uint32_t)(imports_rva+iat));patch32(header,op+112+12*8+4,(API_COUNT+2)*8);
+    patch32(header,op+112+12*8,(uint32_t)(imports_rva+iat));patch32(header,op+112+12*8+4,(uint32_t)iat_size);
     patch32(header,op+112+2*8,(uint32_t)resource_rva);patch32(header,op+112+2*8+4,(uint32_t)resources.n);
     size_t sh=op+240;
     pe_section(header,sh,".text",&code,text_rva,text_raw,0x60000020);

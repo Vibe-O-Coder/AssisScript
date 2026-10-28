@@ -1,12 +1,12 @@
-assis assis_assis(): AssIs {
-    Assis AssisAssis: AssIs = 0b1010;
-    Assis AssisFodase: AssIs = 0b1100;
-    FODASE("AND:", AssisAssis & AssisFodase);
-    FODASE("OR:", AssisAssis | AssisFodase);
-    FODASE("XOR:", AssisAssis ^ AssisFodase);
-    FODASE("Shift:", AssisAssis << 2);
-    FODASE("Overflow definido:", 0x7fff_ffff_ffff_ffff + 1);
-    FODASE("Byte com truncamento:", AssiS(300));
-    FODASE("Verdade:", aSsIs, "Mentira:", fOdAsE);
-    Fodase 0;
+fn main(): int {
+    let AssisAssis: int = 0b1010;
+    let AssisFodase: int = 0b1100;
+    print("AND:", AssisAssis & AssisFodase);
+    print("OR:", AssisAssis | AssisFodase);
+    print("XOR:", AssisAssis ^ AssisFodase);
+    print("Shift:", AssisAssis << 2);
+    print("Overflow definido:", 0x7fff_ffff_ffff_ffff + 1);
+    print("Byte com truncamento:", byte(300));
+    print("Verdade:", true, "Mentira:", false);
+    return 0;
 }

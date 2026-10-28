@@ -1,0 +1,176 @@
+namespace http;
+
+/// Bounded HTTP(S) response. Transport errors: -1 input, -2 body limit,
+/// -3 timeout, -4 transport, -5 TLS, -6 initialization/options. HTTP status
+/// is separate from transport errors. Redirects and implicit proxies disabled.
+public final class Response {
+    private own storage:*byte;
+    private let count:int;
+    private let status:int;
+    private let failure:int;
+    private let native:int;
+    fn init(borrow mut self,own data:*byte,count:int,status:int,failure:int,native:int):void {
+        self.storage=move(data);self.count=count;self.status=status;self.failure=failure;self.native=native;
+    }
+    fn body(borrow self):borrow(self) slice<byte>{return slice_of(self.storage,24,self.count);}
+    fn size(borrow self):int{return self.count;}
+    fn status_code(borrow self):int{return self.status;}
+    fn error(borrow self):int{return self.failure;}
+    fn native_error(borrow self):int{return self.native;}
+}
+
+safe fn failure(code:int):own Response{return new Response(alloc<byte>(24),0,0,code,0);}
+safe fn c_string(borrow data:*byte):bool {
+    if(len(data)<1||len(data)>8192||data[len(data)-1]!=byte(0)){return false;}
+    for(let i:int=0;i<len(data)-1;i+=1){if(data[i]<byte(33)||data[i]>byte(126)){return false;}}
+    return true;
+}
+
+platform("linux-x64") {
+    extern("libcurl.so.4","unused.dll","curl_global_init") fn global_init(flags:int):i32;
+    extern("libcurl.so.4","unused.dll","curl_global_cleanup") fn global_cleanup():void;
+    extern("libcurl.so.4","unused.dll","curl_easy_init") fn easy_init():u64;
+    extern("libcurl.so.4","unused.dll","curl_easy_cleanup") fn easy_cleanup(handle:u64):void;
+    extern("libcurl.so.4","unused.dll","curl_easy_reset") fn easy_reset(handle:u64):void;
+    extern("libcurl.so.4","unused.dll","curl_easy_setopt") fn option_int(handle:u64,option:i32,value:int):i32;
+    extern("libcurl.so.4","unused.dll","curl_easy_setopt") fn option_bytes(handle:u64,option:i32,borrow value:*byte):i32;
+    extern("libcurl.so.4","unused.dll","curl_easy_setopt") fn option_context(handle:u64,option:i32,borrow mut value:*byte):i32;
+    extern("libcurl.so.4","unused.dll","curl_easy_setopt") fn option_callback(handle:u64,option:i32,value:u64):i32;
+    extern("libcurl.so.4","unused.dll","curl_easy_perform") fn perform(handle:u64):i32;
+    extern("libcurl.so.4","unused.dll","curl_easy_getinfo") fn info(handle:u64,option:i32,borrow mut value:*int):i32;
+
+    final class Native {
+        let handle:u64;let ready:bool;
+        fn init(borrow mut self):void{unsafe{self.ready=global_init(3)==i32(0);if(self.ready){self.handle=easy_init();}}}
+        fn drop(borrow mut self):void{unsafe{if(self.handle!=u64(0)){easy_cleanup(self.handle);}if(self.ready){global_cleanup();}}}
+    }
+    // Synchronous C callback; userdata is a live buffer retained by get().
+    // [length:u64,capacity:u64,overflow:byte,padding:7,body:capacity bytes].
+    fn receive(data:*byte,size:u64,count:u64,context:*byte):u64 {
+        if(size!=u64(1)||count>u64(16777216)){return u64(0);}
+        let used:int=0;let capacity:int=0;
+        for(let i:int=0;i<8;i+=1){used|=int(context[i])<<(i*8);capacity|=int(context[8+i])<<(i*8);}
+        let amount:int=int(count);if(amount>capacity-used){context[16]=byte(1);return u64(0);}
+        for(let i:int=0;i<amount;i+=1){context[24+used+i]=data[i];}
+        used+=amount;for(let i:int=0;i<8;i+=1){context[i]=byte(used>>(i*8));}
+        return count;
+    }
+    safe fn create_session():own Native{return new Native();}
+    safe fn fetch_with(borrow mut request:Native,borrow url:*byte,timeout:int,limit:int):own Response {
+        own data:*byte=alloc<byte>(limit+24);for(let i:int=0;i<8;i+=1){data[8+i]=byte(limit>>(i*8));}
+        if(request.handle==u64(0)){return failure(-6);}
+        own status:*int=alloc<int>(1);own empty:*byte=alloc<byte>(1);let result:int=0;let setup:int=0;
+        unsafe {
+            easy_reset(request.handle);
+            // C varargs specialized to integer/pointer arguments, no float varargs.
+            setup|=int(option_bytes(request.handle,i32(10002),url));
+            setup|=int(option_bytes(request.handle,i32(10004),empty));
+            setup|=int(option_int(request.handle,i32(181),3));
+            setup|=int(option_int(request.handle,i32(182),3));
+            setup|=int(option_int(request.handle,i32(52),0));
+            setup|=int(option_int(request.handle,i32(155),timeout));
+            setup|=int(option_int(request.handle,i32(156),timeout));
+            setup|=int(option_int(request.handle,i32(99),1));
+            setup|=int(option_int(request.handle,i32(64),1));
+            setup|=int(option_int(request.handle,i32(81),2));
+            setup|=int(option_int(request.handle,i32(45),0));
+            setup|=int(option_callback(request.handle,i32(20011),c_callback(receive)));
+            setup|=int(option_context(request.handle,i32(10001),data));
+            if(setup!=0){easy_reset(request.handle);return failure(-6);}
+            result=int(perform(request.handle));
+            let queried:i32=info(request.handle,i32(2097154),status);
+            if(queried!=i32(0)&&result==0){result=int(queried);}
+            easy_reset(request.handle);
+        }
+        let used:int=0;for(let i:int=0;i<8;i+=1){used|=int(data[i])<<(i*8);}
+        let code:int=0;if(result!=0){code=-4;if(result==28){code=-3;}if(result==60||result==51||result==35){code=-5;}if(data[16]!=byte(0)){code=-2;}}
+        return new Response(move(data),used,status[0],code,result);
+    }
+}
+
+platform("windows-x64") {
+    extern("unused.so","WINHTTP.dll","WinHttpOpen") fn session(borrow agent:*u16,access:u32,proxy:u64,bypass:u64,flags:u32):u64;
+    extern("unused.so","WINHTTP.dll","WinHttpCloseHandle") fn close_handle(handle:u64):i32;
+    extern("unused.so","WINHTTP.dll","WinHttpSetTimeouts") fn timeouts(handle:u64,resolve:i32,connect:i32,send:i32,receive:i32):i32;
+    extern("unused.so","WINHTTP.dll","WinHttpConnect") fn connect(handle:u64,borrow host:*u16,port:u16,reserved:u32):u64;
+    extern("unused.so","WINHTTP.dll","WinHttpOpenRequest") fn request(handle:u64,borrow verb:*u16,borrow path:*u16,version:u64,referrer:u64,accept:u64,flags:u32):u64;
+    extern("unused.so","WINHTTP.dll","WinHttpSetOption") fn option(handle:u64,option:u32,borrow value:*u32,size:u32):i32;
+    extern("unused.so","WINHTTP.dll","WinHttpSendRequest") fn send(handle:u64,headers:u64,length:u32,data:u64,size:u32,total:u32,context:u64):i32;
+    extern("unused.so","WINHTTP.dll","WinHttpReceiveResponse") fn receive(handle:u64,reserved:u64):i32;
+    extern("unused.so","WINHTTP.dll","WinHttpQueryHeaders") fn headers(handle:u64,kind:u32,name:u64,borrow mut value:*u32,borrow mut size:*u32,index:u64):i32;
+    extern("unused.so","WINHTTP.dll","WinHttpReadData") fn read(handle:u64,borrow mut data:*byte,size:u32,borrow mut count:*u32):i32;
+    extern("unused.so","KERNEL32.dll","GetLastError") fn last_error():u32;
+    final class Native {
+        let handle:u64;
+        fn init(borrow mut self,value:u64):void{self.handle=value;}
+        fn drop(borrow mut self):void{unsafe{
+            if(self.handle!=u64(0)){let result:i32=close_handle(self.handle);}
+        }}
+    }
+    safe fn create_session():own Native {
+        own agent:*u16=alloc<u16>(1);unsafe{return new Native(session(agent,u32(1),u64(0),u64(0),u32(0)));}
+    }
+    safe fn fetch_with(borrow mut s:Native,borrow url:*byte,timeout:int,limit:int):own Response {
+        if(s.handle==u64(0)){return failure(-6);}
+        val begun:int=monotonic_ms();
+        let start:int=7;let secure:bool=false;
+        if(len(url)>8&&url[4]==byte(115)){start=8;secure=true;}
+        let end:int=start;while(end<len(url)-1&&url[end]!=byte(47)&&url[end]!=byte(63)&&url[end]!=byte(35)){end+=1;}
+        let host_end:int=end;let port:int=80;if(secure){port=443;}
+        for(let i:int=start;i<end;i+=1){if(url[i]==byte(58)){host_end=i;port=0;for(let j:int=i+1;j<end;j+=1){if(url[j]<byte(48)||url[j]>byte(57)){return failure(-1);}port=port*10+int(url[j])-48;if(port>65535){return failure(-1);}}break;}}
+        if(host_end==start||host_end-start>253||port<1){return failure(-1);}
+        own host:*u16=alloc<u16>(host_end-start+1);for(let i:int=start;i<host_end;i+=1){let c:int=int(url[i]);if(!((c>=48&&c<=57)||(c>=65&&c<=90)||(c>=97&&c<=122)||c==45||c==46)){return failure(-1);}host[i-start]=u16(c);}
+        own path:*u16=alloc<u16>(len(url)-end+2);let length:int=0;
+        if(end==len(url)-1||url[end]!=byte(47)){path[0]=u16(47);length=1;}
+        for(let i:int=end;i<len(url)-1&&url[i]!=byte(35);i+=1){path[length]=u16(url[i]);length+=1;}
+        own verb:*u16=alloc<u16>(4);verb[0]=u16(71);verb[1]=u16(69);verb[2]=u16(84);
+        own data:*byte=alloc<byte>(limit+24);own chunk:*byte=alloc<byte>(4096);own count:*u32=alloc<u32>(1);own status:*u32=alloc<u32>(1);own size:*u32=alloc<u32>(1);size[0]=u32(4);
+        own disabled:*u32=alloc<u32>(1);disabled[0]=u32(7);
+        let used:int=0;let native:int=0;let code:int=0;let status_code:int=0;
+        unsafe {
+            if(timeouts(s.handle,i32(timeout),i32(timeout),i32(timeout),i32(timeout))==i32(0)){return failure(-6);}
+            own c:Native=new Native(connect(s.handle,host,u16(port),u32(0)));if(c.handle==u64(0)){return failure(-4);}
+            let flags:u32=u32(0);if(secure){flags=u32(8388608);}
+            own r:Native=new Native(request(c.handle,verb,path,u64(0),u64(0),u64(0),flags));if(r.handle==u64(0)){return failure(-4);}
+            if(option(r.handle,u32(63),disabled,u32(4))==i32(0)){return failure(-6);}
+            if(send(r.handle,u64(0),u32(0),u64(0),u32(0),u32(0),u64(0))==i32(0)||receive(r.handle,u64(0))==i32(0)){native=int(last_error());code=-4;}
+            else {
+                if(headers(r.handle,u32(536870931),u64(0),status,size,u64(0))==i32(0)){native=int(last_error());code=-4;}
+                else {status_code=int(status[0]);while(true){
+                    if(read(r.handle,chunk,u32(4096),count)==i32(0)){native=int(last_error());code=-4;break;}
+                    let amount:int=int(count[0]);if(amount==0){break;}if(amount>limit-used){code=-2;break;}
+                    for(let i:int=0;i<amount;i+=1){data[24+used+i]=chunk[i];}used+=amount;
+                }}
+            }
+        }
+        if(native==12002||(code==0&&monotonic_ms()-begun>=timeout)){code=-3;}if(native==12175){code=-5;}
+        return new Response(move(data),used,status_code,code,native);
+    }
+}
+
+/// HTTP/HTTPS GET with ASCII URL, finite timeout and at most 16 MiB body.
+/// The URL buffer must have exactly one trailing NUL. No redirects, cookies,
+/// implicit proxy, credentials, decompression or TLS verification bypass.
+safe fn valid_request(borrow url:*byte,timeout_ms:int,max_bytes:int):bool {
+    if(timeout_ms<1||timeout_ms>60000||max_bytes<0||max_bytes>16777216||!c_string(url)){return false;}
+    if(len(url)<9||url[0]!=byte(104)||url[1]!=byte(116)||url[2]!=byte(116)||url[3]!=byte(112)){return false;}
+    let start:int=7;if(url[4]==byte(115)){start=8;}
+    if(len(url)<=start+1||url[start-3]!=byte(58)||url[start-2]!=byte(47)||url[start-1]!=byte(47)){return false;}
+    for(let i:int=start;i<len(url)-1&&url[i]!=byte(47);i+=1){if(url[i]==byte(64)){return false;}}return true;
+}
+
+/// Reuse one session in long-lived programs; ownership closes it exactly once.
+public final class Client {
+    private own native:Native;
+    fn init(borrow mut self):void{self.native=create_session();}
+    fn get(borrow mut self,borrow url:*byte,timeout_ms:int,max_bytes:int):own Response {
+        if(!valid_request(url,timeout_ms,max_bytes)){return failure(-1);}
+        return fetch_with(self.native,url,timeout_ms,max_bytes);
+    }
+}
+
+/// Convenience for a single request. Prefer Client for repeated requests.
+public safe fn get(borrow url:*byte,timeout_ms:int,max_bytes:int):own Response {
+    if(!valid_request(url,timeout_ms,max_bytes)){return failure(-1);}
+    own client:Client=new Client();return client.get(url,timeout_ms,max_bytes);
+}

@@ -21,3 +21,15 @@ public pure fn reduce<A>(intervalo: Range, inicial: A, transformar: pure fn(int)
         }
     }
 }
+
+/// Pipeline com ambientes capturados emprestados. A é Copy; efeitos são explícitos.
+/// Nenhuma alocação intermediária: as closures pertencem ao chamador.
+public safe fn reduce_with<A>(intervalo: Range, inicial: A, borrow transformar: closure(int): int, borrow aceitar: closure(int): bool, borrow combinar: closure(A, int): A): A {
+    let it: Range = intervalo;let acumulado: A = inicial;
+    while (true) {
+        match (next(it)) {
+            End { return acumulado; }
+            Item(value, seguinte) { val novo: int = transformar(value);if (aceitar(novo)) { acumulado = combinar(acumulado, novo); }it = seguinte; }
+        }
+    }
+}

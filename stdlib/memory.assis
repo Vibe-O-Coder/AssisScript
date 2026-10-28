@@ -10,20 +10,20 @@ fn copy(destino: *byte, origem: *byte, count: int): void {
 }
 
 // Compatibilidade com 2.x
-miyabi O chamador garante size, validade e time de vida dos ponteiros.
+// O chamador garante size, validade e time de vida dos ponteiros.
 /// Preenche bytes; quantidade não positiva não altera a memória. Exige destino válido (API legada).
-fn Assis_Assis_Fodase(AssisAssis: *AssiS, AssisFodase: AssIs, FodaseAssis: AssiS): FODase {
-    Assis FodaseFodase: AssIs = 0;
-    ASSis (FodaseFodase < AssisFodase) {
+fn Assis_Assis_Fodase(AssisAssis: *byte, AssisFodase: int, FodaseAssis: byte): void {
+    let FodaseFodase: int = 0;
+    while (FodaseFodase < AssisFodase) {
         AssisAssis[FodaseFodase] = FodaseAssis;
         FodaseFodase += 1;
     }
 }
-miyabi Cópia da origem para o destino; buffers não podem se sobrepor.
+// Cópia da origem para o destino; buffers não podem se sobrepor.
 /// Copia bytes sem validar limites ou sobreposição; quantidade não positiva não altera memória (API legada).
-fn Assis_Fodase_Assis(AssisAssis: *AssiS, AssisFodase: *AssiS, FodaseAssis: AssIs): FODase {
-    Assis FodaseFodase: AssIs = 0;
-    ASSis (FodaseFodase < FodaseAssis) {
+fn Assis_Fodase_Assis(AssisAssis: *byte, AssisFodase: *byte, FodaseAssis: int): void {
+    let FodaseFodase: int = 0;
+    while (FodaseFodase < FodaseAssis) {
         AssisAssis[FodaseFodase] = AssisFodase[FodaseFodase];
         FodaseFodase += 1;
     }

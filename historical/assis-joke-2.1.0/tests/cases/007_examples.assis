@@ -1,0 +1,12 @@
+assis assis_assis(): AssIs {
+    Assis AssisAssis: AssIs = 0b1010;
+    Assis AssisFodase: AssIs = 0b1100;
+    FODASE("AND:", AssisAssis & AssisFodase);
+    FODASE("OR:", AssisAssis | AssisFodase);
+    FODASE("XOR:", AssisAssis ^ AssisFodase);
+    FODASE("Shift:", AssisAssis << 2);
+    FODASE("Overflow definido:", 0x7fff_ffff_ffff_ffff + 1);
+    FODASE("Byte com truncamento:", AssiS(300));
+    FODASE("Verdade:", aSsIs, "Mentira:", fOdAsE);
+    Fodase 0;
+}

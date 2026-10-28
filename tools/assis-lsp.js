@@ -43,7 +43,8 @@ async function diagnostics(uri) {
     try {
         const context=project(uri), useEntry=context.entry!==fileURLToPath(uri)&&fs.existsSync(path.join(path.dirname(context.entry),'assis.pkg'));
         const args = ['check', useEntry?context.entry:fileURLToPath(uri), '--diagnostics=json'];
-        if (!useEntry&&!language.analyze(doc.text, fileURLToPath(uri)).symbols.some(s => s.kind === 'function' && s.name === 'assis_assis')) args.push('--library');
+        if (options.legacyMode === true) args.push('--legacy');
+        if (!useEntry&&!language.analyze(doc.text, fileURLToPath(uri)).symbols.some(s => s.kind === 'function' && s.name === 'main')) args.push('--library');
         for (const include of options.includePaths || []) args.push('-I', include);
         let i = 0; for (const [u, d] of documents) { const snapshot = path.join(folder, `${i++}.assis`); await fsp.writeFile(snapshot, d.text, 'utf8'); args.push('--overlay', fileURLToPath(u), snapshot); }
         const result = await execute(args, controller.signal);

@@ -1,10 +1,10 @@
-miyabi Bibliotecas podem conter funções e classes e não precisam de entrada.
-ASSIS Assis_Fodase {
-    Assis AssisAssis: AssIs;
-    assis assis_fodase(AssisFodase: AssIs): FODase {
-        aSSIS.AssisAssis = AssisFodase;
+// Bibliotecas podem conter funções e classes e não precisam de entrada.
+class Assis_Fodase {
+    let AssisAssis: int;
+    fn init(AssisFodase: int): void {
+        self.AssisAssis = AssisFodase;
     }
-    assis AssisFodase(): AssIs {
-        Fodase aSSIS.AssisAssis * 2;
+    fn AssisFodase(): int {
+        return self.AssisAssis * 2;
     }
 }

@@ -2,7 +2,7 @@
   "name": "assisscript",
   "displayName": "AssisScript",
   "description": "IntelliSense, diagnósticos do compilador nativo e tarefas para AssisScript.",
-  "version": "3.3.0-alpha.10",
+  "version": "3.3.0-alpha.15",
   "publisher": "assisscript-local",
   "engines": {
     "vscode": "^1.85.0"
@@ -163,6 +163,11 @@
           "minimum": 0.01,
           "description": "Limite de execução em segundos.",
           "scope": "resource"
+        },
+        "assisscript.legacyMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Explicitly use --legacy for projects that have not migrated to a safe entry point."
         }
       }
     },

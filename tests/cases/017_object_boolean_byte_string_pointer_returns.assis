@@ -1,21 +1,21 @@
 
-            ASSIS AssisAssis {
-                assis Assis_Fodase(): AssisAssis { Fodase aSSIS; }
-                assis FodaseFodase(): FoDaSe { Fodase "Assis"; }
-                assis AssisAssisAssis(): AssiS { Fodase AssiS(42); }
-                assis FodaseAssis(): FodAsE { Fodase aSsIs; }
-                assis FodaseAssisAssis(AssisFodase: *AssiS): *AssiS { Fodase AssisFodase; }
+            class AssisAssis {
+                fn Assis_Fodase(): AssisAssis { return self; }
+                fn FodaseFodase(): text { return "Assis"; }
+                fn AssisAssisAssis(): byte { return byte(42); }
+                fn FodaseAssis(): bool { return true; }
+                fn FodaseAssisAssis(AssisFodase: *byte): *byte { return AssisFodase; }
             }
         
-assis assis_assis(): AssIs {
+fn main(): int {
 
-            Assis AssisFodase: AssisAssis = fodase AssisAssis();
-            Assis FodaseAssis: *AssiS = ASSIS_fodase(1);
-            *FodaseAssis = AssiS(12);
-            FODASE(AssisFodase.Assis_Fodase() == AssisFodase, AssisFodase.FodaseFodase(),
+            let AssisFodase: AssisAssis = new AssisAssis();
+            let FodaseAssis: *byte = alloc<byte>(1);
+            *FodaseAssis = byte(12);
+            print(AssisFodase.Assis_Fodase() == AssisFodase, AssisFodase.FodaseFodase(),
                 AssisFodase.AssisAssisAssis(), AssisFodase.FodaseAssis(),
                 *AssisFodase.FodaseAssisAssis(FodaseAssis));
-            foDASE(FodaseAssis); foDASE(AssisFodase);
+            free(FodaseAssis); free(AssisFodase);
         
-Fodase 0;
+return 0;
 }

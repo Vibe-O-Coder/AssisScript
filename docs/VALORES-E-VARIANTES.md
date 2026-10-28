@@ -1,15 +1,17 @@
 # Valores e variantes — 3.3.0-alpha.7
 
-`value struct` acrescenta registros imutáveis Copy com armazenamento por valor. `struct` e `ASSIS` existentes conservam suas referências ao heap. `value` é contextual: nomes de parâmetros como `value` continuam válidos.
+**Atualização alpha.13:** closures e variantes Move próprias usam o [novo contrato](CAPTURAS-E-VARIANTES-MOVE.md). As limitações históricas abaixo sobre sua ausência foram superadas; demais limites permanecem.
+
+`value struct` acrescenta registros imutáveis Copy com armazenamento por valor. `struct` e `class` existentes conservam suas referências ao heap. `value` é contextual: nomes de parâmetros como `value` continuam válidos.
 
 ```assis
 value struct Ponto { let x: int; let y: int; }
-pure assis deslocar(p: Ponto): Ponto { return new Ponto(p.x + 1, p.y); }
+pure fn deslocar(p: Ponto): Ponto { return new Ponto(p.x + 1, p.y); }
 
 enum Option<T> { None; Some(T); }
 enum Result<T, E> { Ok(T); Err(E); }
 
-pure assis ler(o: Option<Ponto>): int {
+pure fn ler(o: Option<Ponto>): int {
     match (o) {
         None { return 0; }
         Some(p) { return p.x + p.y; }
@@ -47,7 +49,7 @@ Igualdade de valores compara a representação canônica, inclusive tag e preenc
 
 Recursão direta em posição de cauda em funções pure é eliminada no modo otimizado: argumentos são avaliados da esquerda para a direita antes de substituir os parâmetros, reutilizando o frame. Inclui parâmetros e retornos compostos. Sem otimização há chamadas normais e o diagnóstico de estouro de pilha. Não há otimização de recursão mútua, chamadas indiretas ou funções com recursos/efeitos.
 
-Exemplo: [20_valores_e_resultados.assis](../exemplos/20_valores_e_resultados.assis). Evidência: `tests/test-values.py` e [validação](VALIDACAO-3.3-ALPHA.7.md). Closures/capturas, variantes Move, compartilhamento persistente e propagação permanecem pendentes; F2 completo/F3 não são declarados concluídos.
+Exemplo: [20_valores_e_resultados.assis](../exemplos/20_valores_e_resultados.assis). Evidência: `tests/test-values.py` e [validação](VALIDACAO-3.3-ALPHA.7.md). Closures/capturas explícitas e variantes Move chegaram na alpha.13. Compartilhamento persistente e propagação geral continuam pendentes.
 
 ## Continuação alpha.8
 

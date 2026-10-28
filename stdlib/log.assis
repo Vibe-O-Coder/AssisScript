@@ -1,5 +1,5 @@
-#yuri <std/cli.assis>
-#yuri <std/convert.assis>
+import "std/cli.assis";
+import "std/convert.assis";
 namespace log;
 
 /// Log binário delimitado por linha em stderr, nível 0..5 e filtro mínimo.

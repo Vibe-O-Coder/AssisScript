@@ -2,7 +2,7 @@
 
 Na alpha.6, as alternativas `safe map_own<T,U>(borrow entrada: Array<T>, callback pure): own Array<U>`, `filter_own<T>` e `fold_borrow<T,A>` integram ownership. Preservam entrada/ordem e os limites escalares dos callbacks. Saídas own são limpas pelo chamador; não usar free/defer manual para duplicar essa limpeza. [Contratos e exemplo](OWNERSHIP-FUNCOES.md).
 
-Biblioteca opcional. Incluída na instalação completa; selecione `--with algorithms` para instalação com apenas esta opção. Importe `#yuri <std/algorithms.assis>`.
+Biblioteca opcional. Incluída na instalação completa; selecione `--with algorithms` para instalação com apenas esta opção. Importe `import "std/algorithms.assis";`.
 
 | API | Comportamento e custo |
 | --- | --- |
@@ -17,8 +17,8 @@ Biblioteca opcional. Incluída na instalação completa; selecione `--with algor
 Vazios, duplicatas e extremos int64 são aceitos. As operações não assumem posse do array. `sift_down` é auxiliar interno; aplicações devem usar ordenar_inteiros.
 
 ```assis
-#yuri <std/algorithms.assis>
-assis assis_assis(): int {
+import "std/algorithms.assis";
+fn main(): int {
     let precos: Array<int> = [300, 100, 300, 250];
     sort_ints(precos); unique_sorted(precos);
     print(binary_search(precos, 250));
@@ -29,3 +29,10 @@ assis assis_assis(): int {
 Uso: índices ordenados, deduplicação de IDs, relatórios e pesquisas em dados em memória. [Catálogo](BIBLIOTECAS.md).
 
 Na alpha.3, map/filter/fold aceitam elementos/acumuladores escalares e funções pure; os tipos dos callbacks são verificados pelo compilador. Map/filter não alteram a entrada e devolvem nova alocação, que exige free/defer free; fold não aloca um array. São APIs de Array legado, sem empréstimos de own/borrow nas assinaturas. Contratos completos e exemplo em [funções e efeitos](FUNCOES-E-EFEITOS.md).
+
+## Ordenação no perfil safe (alpha.14)
+
+sort(borrow mut values:Array<int>):void ordena no próprio array, com heapsort
+O(n log n) e O(1) auxiliar. Aceita vazio, duplicatas e extremos int64. Use com
+um contêiner own; ele permanece vivo após a chamada. sort_ints conserva a
+assinatura manual anterior. O novo nome sort não exige entrar em unsafe.

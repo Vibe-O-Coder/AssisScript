@@ -41,15 +41,15 @@ def program(count, generic):
         body.append(f'let c{i}:{name}=new {name}();')
         if not generic:
             declarations.append(f'ASSIS Caixa{i}{{let value:Tag{i};'
-                                f'assis ler(v:Tag{i}):Tag{i}{{return v;}}'
-                                'assis calcular(v:int):int{return v*3+7;}}')
+                                f'fn ler(v:Tag{i}):Tag{i}{{return v;}}'
+                                'fn calcular(v:int):int{return v*3+7;}}')
     if generic:
-        declarations.append('ASSIS Caixa<T>{let value:T;assis ler(v:T):T{return v;}'
-                            'assis calcular(v:int):int{return v*3+7;}}')
+        declarations.append('class Caixa<T>{let value:T;fn ler(v:T):T{return v;}'
+                            'fn calcular(v:int):int{return v*3+7;}}')
     body.append('let total:int=0;'
                 f'for(let i:int=0;i<{iterations};i+=1){{total+=c0.calcular(i);}}print(total);')
     body.extend(f'free(c{i});' for i in range(count))
-    return 'assis assis_assis():int{' + ''.join(body) + 'return 0;}\n' + '\n'.join(declarations)
+    return 'fn main():int{' + ''.join(body) + 'return 0;}\n' + '\n'.join(declarations)
 
 
 report = dict(platform=platform.platform(), cpu=platform.processor(), samples=args.samples,

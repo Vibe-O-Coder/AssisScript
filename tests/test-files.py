@@ -46,8 +46,8 @@ class Files(base.Evolution):
     def test_composite_drop_returns_and_all_control_exits(self):
         path = self.literal(self.temp / 'scope.bin')
         code = 'struct Pack{own file:File;own b:*byte;}'
-        code += f'safe assis abrir():own File{{return file_open({path},1);}}'
-        code += 'safe assis f(own p:Pack,b:bool):int{if(b){return 1;}return 2;}'
+        code += f'safe fn abrir():own File{{return file_open({path},1);}}'
+        code += 'safe fn f(own p:Pack,b:bool):int{if(b){return 1;}return 2;}'
         self.accepted(code + base.main('for(let i:int=0;i<500;i+=1){own p:Pack=new Pack(abrir(),alloc<byte>(8));'
                       'if(i%3==0){continue;}if(i>490){break;}f(move(p),i%2==0);}print(42);'), '42\n')
 
@@ -64,10 +64,10 @@ class Files(base.Evolution):
 
     def test_generics_callbacks_and_borrowed_file_returns(self):
         path = self.literal(self.temp / 'generic.bin')
-        code = 'struct Caixa<T>{own value:T;}safe assis caixa<T>(own v:T):own Caixa<T>{return new Caixa<T>(move(v));}'
-        code += 'safe assis passar(own f:File):own File{return move(f);}'
-        code += 'safe assis observar(borrow mut f:File):borrow mut(f) File{return f;}'
-        self.accepted(code + base.main(f'val transferir:safe assis(own File):own File=passar;'
+        code = 'struct Caixa<T>{own value:T;}safe fn caixa<T>(own v:T):own Caixa<T>{return new Caixa<T>(move(v));}'
+        code += 'safe fn passar(own f:File):own File{return move(f);}'
+        code += 'safe fn observar(borrow mut f:File):borrow mut(f) File{return f;}'
+        self.accepted(code + base.main(f'val transferir:safe fn(own File):own File=passar;'
                       f'own c:Caixa<File>=caixa::<File>(transferir(file_open({path},1)));'
                       'print(file_close(observar(c.value)));'), '0\n')
 
@@ -75,13 +75,13 @@ class Files(base.Evolution):
         existing = self.literal(self.temp / 'exists.bin')
         missing = self.literal(self.temp / 'missing' / 'data.bin')
         code = 'struct C{own f:File;}'
-        code += f'safe assis falhar(own anterior:File):own File{{return file_open({missing},0);}}'
+        code += f'safe fn falhar(own anterior:File):own File{{return file_open({missing},0);}}'
         self.accepted(code + base.main(f'own f:File=falhar(file_open({existing},1));assert(f==null);assert(io_error()>0);'
                       f'own c:C=new C(file_open({existing},1));c.f=file_open({missing},0);'
                       'assert(c.f==null);assert(io_error()>0);print(42);'), '42\n')
 
     def test_argument_list_utf8_quotes_empty_and_backslashes(self):
-        code = 'assis assis_assis():int{print(arg_count());for(let i:int=1;i<arg_count();i+=1){'
+        code = 'fn main():int{print(arg_count());for(let i:int=1;i<arg_count();i+=1){'
         code += 'let n:int=arg_size(i);let b:*byte=alloc<byte>(n+1);defer free(b);'
         code += 'print(arg_copy(i,b,n+1),text(b));}return 0;}'
         args = ['á 日本 😀', '', 'com espaço', 'a"b', 'a\\b\\', '\\"teste']
@@ -91,7 +91,7 @@ class Files(base.Evolution):
             self.assertEqual((result.returncode, result.stdout, result.stderr), (0, expected, ''))
 
     def test_argument_bounds_preserve_buffer_and_error(self):
-        code = 'safe assis assis_assis():int{own b:*byte=alloc<byte>(4);b[0]=byte(42);'
+        code = 'safe fn main():int{own b:*byte=alloc<byte>(4);b[0]=byte(42);'
         code += 'print(arg_copy(1,b,1),b[0]);print(arg_size(-1),arg_size(999));return 0;}'
         result = self.native(code, ['abc'], ['--safe', '--debug'])
         self.assertEqual((result.returncode, result.stdout, result.stderr), (0, '-1 42\n-1 -1\n', ''))
@@ -107,7 +107,7 @@ class Files(base.Evolution):
 
     def test_mutable_buffer_loan_is_required(self):
         self.rejected(base.main('own f:File=file_open("x",0);own b:*byte=alloc<byte>(8);borrow r:*byte=b;file_read(f,r,8);'), 'buffer mutável')
-        self.rejected('pure assis f():int{return arg_count();}' + base.main(''), 'pure')
+        self.rejected('pure fn f():int{return arg_count();}' + base.main(''), 'pure')
 
 
 if __name__ == '__main__':

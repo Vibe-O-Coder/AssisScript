@@ -1,0 +1,18 @@
+// Application B: bounded native HTTP(S) client. URL output-file
+import "std/http.assis";
+import "std/cli.assis";
+safe fn output_file():own File {
+    unsafe {let path:*byte=alloc<byte>(16385);defer free(path);if(arg_copy(2,path,16385)<0){return file_open("",9);}return file_open(text(path),1);}
+}
+safe fn main():int {
+    if(arg_count()!=3){print("Usage: http-client URL output-file");return 64;}
+    own url:cli::Argument=cli::argument(1);if(!url.ok){return 64;}
+    own response:http::Response=http::get(url.data,10000,1048576);
+    if(response.error()!=0){print("Transport error",response.error(),response.native_error());return 1;}
+    if(response.status_code()<200||response.status_code()>=300){print("HTTP status",response.status_code());return 2;}
+    own output:File=output_file();if(output==null){print("Output error",io_error());return 3;}
+    borrow body:slice<byte>=response.body();own chunk:*byte=alloc<byte>(4096);let offset:int=0;
+    while(offset<len(body)){let size:int=len(body)-offset;if(size>4096){size=4096;}for(let i:int=0;i<size;i+=1){chunk[i]=body[offset+i];}if(cli::write_all(output,chunk,size)!=size){return 3;}offset+=size;}
+    if(file_sync(output)!=0||file_close(output)!=0){return 3;}
+    print("Downloaded",response.size(),"bytes");return 0;
+}

@@ -23,7 +23,7 @@ static const wchar_t *files[]={
 };
 #include "install_optional.inc"
 static unsigned optional_mask=(1u<<OPTIONAL_COUNT)-1;
-static void die(const wchar_t *message){fwprintf(stderr,L"FODASE: %ls (Windows %lu).\n",message,(unsigned long)GetLastError());exit(1);}
+static void die(const wchar_t *message){fwprintf(stderr,L"assis: %ls (Windows %lu).\n",message,(unsigned long)GetLastError());exit(1);}
 static void join(wchar_t *out,const wchar_t *base,const wchar_t *part){
     if(wcslen(base)+wcslen(part)+2>=CAP)die(L"Caminho grande demais");wcscpy(out,base);wcscat(out,L"\\");wcscat(out,part);
 }

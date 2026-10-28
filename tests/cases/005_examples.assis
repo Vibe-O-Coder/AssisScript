@@ -1,33 +1,33 @@
 // Uma referência da base chama a implementação da classe real.
-ASSIS AssisAssis {
-    Assis Assis_assis: AssIs;
+class AssisAssis {
+    let Assis_assis: int;
 
-    assis assis_fodase(AssisFodase: AssIs): FODase {
-        aSSIS.Assis_assis = AssisFodase;
+    fn init(AssisFodase: int): void {
+        self.Assis_assis = AssisFodase;
     }
 
-    assis FodaseFodase(): AssIs {
-        Fodase aSSIS.Assis_assis;
-    }
-}
-
-ASSIS AssisAssisAssis ASSIS_FODASE AssisAssis {
-    assis FodaseFodase(): AssIs {
-        Fodase aSSIS.Assis_assis * 3;
+    fn FodaseFodase(): int {
+        return self.Assis_assis;
     }
 }
 
-assis Assis_Fodase(AssisFodase: AssisAssis): AssIs {
-    Fodase AssisFodase.FodaseFodase();
+class AssisAssisAssis extends AssisAssis {
+    fn FodaseFodase(): int {
+        return self.Assis_assis * 3;
+    }
 }
 
-assis assis_assis(): AssIs {
-    Assis FodaseAssis: AssisAssis = fodase AssisAssis(14);
+fn Assis_Fodase(AssisFodase: AssisAssis): int {
+    return AssisFodase.FodaseFodase();
+}
+
+fn main(): int {
+    let FodaseAssis: AssisAssis = new AssisAssis(14);
     // Conversão implícita da derivada para a base; construtor herdado.
-    Assis FodaseAssisAssis: AssisAssis = fodase AssisAssisAssis(14);
-    FODASE("Base:", Assis_Fodase(FodaseAssis));
-    FODASE("Derivada via base:", Assis_Fodase(FodaseAssisAssis));
-    foDASE(FodaseAssis);
-    foDASE(FodaseAssisAssis);
-    Fodase 0;
+    let FodaseAssisAssis: AssisAssis = new AssisAssisAssis(14);
+    print("Base:", Assis_Fodase(FodaseAssis));
+    print("Derivada via base:", Assis_Fodase(FodaseAssisAssis));
+    free(FodaseAssis);
+    free(FodaseAssisAssis);
+    return 0;
 }

@@ -77,7 +77,7 @@ with tempfile.TemporaryDirectory(prefix='assis-native-') as folder:
         elif name=='collatz': assis=assis.replace('for(let i:int=1;i<200001;i+=1){','let i:int=1;while(i<200001){').replace('total+=1;}}','total+=1;}i+=1;}')
         elif name=='alocacao': assis=assis.replace('for(let i:int=0;i<1000000;i+=1){','let i:int=0;while(i<1000000){').replace('free(p);}', 'free(p);i+=1;}')
         elif name=='strings-indice': assis=assis.replace('for(let i:int=0;i<len(s);i+=1){','let i:int=0;while(i<len(s)){').replace('total+=s[i];}', 'total+=s[i];i+=1;}')
-        source=folder/(name+'.assis');source.write_text('struct P {let x:int;}\nassis assis_assis():int{'+assis+'return 0;}')
+        source=folder/(name+'.assis');source.write_text('struct P {let x:int;}\nfn main():int{'+assis+'return 0;}')
         c_source=folder/(name+'.c'); c_source.write_text(c_header+c+'return 0;}')
         py_source=folder/(name+'.py'); py_source.write_text(python)
         suffix='.exe' if os.name=='nt' else ''

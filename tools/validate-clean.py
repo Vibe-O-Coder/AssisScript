@@ -17,6 +17,8 @@ ROOT = Path(__file__).resolve().parent.parent
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--cc', default='gcc')
 parser.add_argument('--binutils-dir')
+suites=['evolution','generics','functions','generic-classes','collections-ast','ownership-functions','values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy','ffi','http','process','applications-bc','safe-default','net','move-enums','closures','usability','backend-evolution']
+parser.add_argument('--suite',action='append',choices=suites,help='Limit validation to named suites; default runs the complete matrix')
 args = parser.parse_args()
 cc = shutil.which(args.cc)
 if not cc:
@@ -34,7 +36,7 @@ with tempfile.TemporaryDirectory(prefix='assis-clean-') as temp:
     shutil.copytree(ROOT / 'exemplos', folder / 'exemplos')
     shutil.copy2(ROOT / 'tools/embed-runtime.py', folder / 'tools/embed-runtime.py')
     # Remove only these generated files from the temporary copy to require their regeneration.
-    for name in ['runtime_blob.h', 'runtime_win_blob.h']:
+    for name in ['runtime_blob.h', 'runtime_win_blob.h','runtime_macos_blob.h']:
         (folder / 'src' / name).unlink()
     subprocess.run([sys.executable, folder / 'tools/embed-runtime.py'], cwd=folder, env=environment, check=True)
     binary = folder / 'bin' / ('assis.exe' if os.name == 'nt' else 'assis')
@@ -43,13 +45,7 @@ with tempfile.TemporaryDirectory(prefix='assis-clean-') as temp:
         flags += ['-municode', '-static-libgcc', '-Wl,--no-insert-timestamp']
     subprocess.run([cc, *flags, folder / 'src/assisc.c', '-o', binary], cwd=folder, env=environment, check=True)
     environment['ASSIS_BIN'] = str(binary)
-    subprocess.run([sys.executable, ROOT / 'tests/test-evolution.py'], env=environment, check=True)
-    subprocess.run([sys.executable, ROOT / 'tests/test-generics.py'], env=environment, check=True)
-    subprocess.run([sys.executable, ROOT / 'tests/test-functions.py'], env=environment, check=True)
-    subprocess.run([sys.executable, ROOT / 'tests/test-generic-classes.py'], env=environment, check=True)
-    subprocess.run([sys.executable, ROOT / 'tests/test-collections-ast.py'], env=environment, check=True)
-    subprocess.run([sys.executable, ROOT / 'tests/test-ownership-functions.py'], env=environment, check=True)
-    for suite in ['values', 'files', 'text-bytes', 'cli', 'numbers', 'packages', 'json', 'system', 'tooling', 'slices', 'managed-classes', 'backend-alpha9', 'optimization', 'english-api', 'release-policy']:
+    for suite in args.suite or suites:
         subprocess.run([sys.executable, ROOT / ('tests/test-' + suite + '.py')], env=environment, check=True)
     installed = ROOT / 'bin' / binary.name
     record = dict(platform=sys.platform, compiler=cc,
@@ -64,6 +60,6 @@ with tempfile.TemporaryDirectory(prefix='assis-clean-') as temp:
         diagnostic = ROOT / 'build' / ('clean-diff-' + sys.platform)
         diagnostic.mkdir(exist_ok=True)
         shutil.copy2(binary, diagnostic / binary.name)
-        for name in ['runtime_blob.h', 'runtime_win_blob.h']:
+        for name in ['runtime_blob.h', 'runtime_win_blob.h','runtime_macos_blob.h']:
             shutil.copy2(folder / 'src' / name, diagnostic / name)
         raise AssertionError('A reconstrução limpa não reproduziu o binário do workspace')

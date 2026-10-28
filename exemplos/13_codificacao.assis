@@ -1,10 +1,12 @@
-#yuri <std/encoding.assis>
-
-assis assis_assis(): int {
+import "std/encoding.assis";
+safe fn main(): int {
+    unsafe {
     let pacote: Array<byte> = [byte(0), byte(1), byte(254), byte(255)];
     let transporte: String = base64_encode(pacote); print("Base64:", transporte.view());
     let recebido: BytesResult = base64_decode(transporte.view()); let status: int = 0;
     if (!recebido.ok) { print("Pacote invalido no byte", recebido.position); status = 1; }
     else { let hex: String = hex_encode(recebido.data); print("Hex:", hex.view()); hex.dispose(); free(hex); }
     recebido.dispose(); free(recebido); transporte.dispose(); free(transporte); free(pacote); return status;
+
+    }
 }

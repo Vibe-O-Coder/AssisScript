@@ -15,13 +15,13 @@ class Optimization(base.Evolution):
             ('for(let i:int=0;i<len(a);i+=1){a[i]=i;}',1),
             ('for(let i:int=-1;i<len(a);i+=1){a[i]=i;}',0),
             ('for(let i:int=0;i<len(a);i+=1){i+=1;a[i]=i;}',0),
-            ('for(let i:int=0;i<len(a);i+=1){print(id(i));a[i]=i;}',0),
+            ('for(let i:int=0;i<len(a);i+=1){print(id(i));a[i]=i;}',1),
             ('for(let i:int=0;i<len(a);i+=1){unsafe{a[i]=i;}}',0),
         ]
         for body,expected in cases:
-            source=self.source('pure assis id(n:int):int{return n;}'+main('own a:*int=alloc<int>(3);'+body))
+            source=self.source('pure fn id(n:int):int{return n;}'+main('own a:*int=alloc<int>(3);'+body))
             result=self.invoke('ir',source);self.assertEqual(result.returncode,0,result.stderr)
-            function=next(f for f in json.loads(result.stdout)['functions'] if f['name']=='assis_assis')
+            function=next(f for f in json.loads(result.stdout)['functions'] if f['name']=='main')
             self.assertEqual(function['provenBounds'],expected,body)
         self.accepted(main('own a:*int=alloc<int>(16);for(let i:int=0;i<len(a);i+=1){a[i]=i;}assert(a[15]==15);'))
         self.accepted(main('own a:Array<int>=[0,0,0];for(let i:int=0;i<len(a);i+=1){a[i]=i;}assert(a[2]==2);'))
@@ -54,15 +54,15 @@ class Optimization(base.Evolution):
             for c in [-2**31-1,-2**31,-1,0,3,5,9,2**31-1,2**31]:
                 literal=lambda v:hex(v) if v>=0 else '-'+hex(-v)
                 body+=f'{{let x:int={literal(n)};assert(add(x,{literal(c)})=={literal(wrap(n+c))});assert(mul(x,{literal(c)})=={literal(wrap(n*c))});assert((x<{literal(c)})=='+('true' if n<c else 'false')+');}'
-        helpers='pure assis add(x:int,y:int):int{return x+y;}pure assis mul(x:int,y:int):int{return x*y;}'
+        helpers='pure fn add(x:int,y:int):int{return x+y;}pure fn mul(x:int,y:int):int{return x*y;}'
         self.accepted(helpers+main(body))
         for ty in ['byte','i16','i32','int']:
             self.accepted(main(f'own p:*{ty}=alloc<{ty}>(5);for(let i:int=0;i<5;i+=1){{p[i]={ty}(i+1);}}assert(int(p[4])==5);'))
 
     def test_inline_preserves_effects_and_argument_order(self):
-        self.accepted('pure assis swap(a:int,b:int):int{return b-a+a;}assis effect(n:int):int{print(n);return n;}'+main('print(swap(effect(1),effect(2)));'),'1\n2\n2\n')
-        self.accepted('pure assis duplicate(a:int):int{return a+a;}'+main('let a:int=21;print(duplicate(a));'),'42\n')
-        self.accepted('pure assis choose(a:bool,b:bool):bool{return a&&b;}'+main('assert(choose(true,true));assert(!choose(true,false));'))
+        self.accepted('pure fn swap(a:int,b:int):int{return b-a+a;}fn effect(n:int):int{print(n);return n;}'+main('print(swap(effect(1),effect(2)));'),'1\n2\n2\n')
+        self.accepted('pure fn duplicate(a:int):int{return a+a;}'+main('let a:int=21;print(duplicate(a));'),'42\n')
+        self.accepted('pure fn choose(a:bool,b:bool):bool{return a&&b;}'+main('assert(choose(true,true));assert(!choose(true,false));'))
 
     def test_optimized_bounds_and_traps_are_retained(self):
         source=self.source(main('own p:*int=alloc<int>(1);print(p[1]);'))

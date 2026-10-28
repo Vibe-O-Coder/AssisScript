@@ -1,0 +1,131 @@
+{
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "compilerSha256": "99ebbcbf457aabf855fcf2afe8d262a019715b49abbdfbca0ac2dcbc530251d6",
+  "applicationSha256": {
+    "29_http_polling.assis.exe": "d3e9f04e0eec3327cbe7fc24dac8214b7c1e3011684a7ec1b19ef0cba8890bf9",
+    "28_persistent_service.assis.exe": "1bc929fe5d31b3ae7d8a41e6971754290b0d5a7aff860975e2177b11f329396c"
+  },
+  "sourceHashes": {
+    "src/assisc.c": "cc9d02b8993d00aae14c05f72ebcf051bf1a17d14b4ecdb3c2c5960017362eb1",
+    "src/collections.h": "a6b72b7bba08190b31b2b0797cdfdb0744e9160d75787666308ca7b434883b3f",
+    "src/debug_info.h": "6d3ffe95d8bac0a2adeba6e13ab7e2d522058eb32d4c104641d2f6deeaf9ea14",
+    "src/devtools.h": "083540331c9b61456f992117be2f2996de28a2cfcaa70efef631cadf593ecaf3",
+    "src/elf_format.h": "8aa29e334756432f62b458f411bd16dd29d86da6f2746814c3309b1d2c910322",
+    "src/ffi_elf.h": "ecceba924c5e56baf3fea995bdfdc33235b45fb8476ca21dc6c91cbcd71b593b",
+    "src/ffi_emit.h": "010053ca3165871397b5004ac50ca99c869ddd2d2a811d699d8fa1823dc187a8",
+    "src/frontend.h": "e685f49448c8b5f7f96abee1020aab451dc4b8aec84903925aad2816458b3a48",
+    "src/generics.h": "8fce0184f8fbcbc44b28140ebbfa0bf639bef3845ec413f46873161ed44b43c7",
+    "src/icon_blob.h": "74646ad2eee260df4579744e9789f405573e8124b61e8a265b61ae3d937be37a",
+    "src/install_files.inc": "9c6814e27639a8ac9ab0f3a8319fb04e4d349f1d9a099b77e662cee0f0232eeb",
+    "src/install_optional.inc": "e90d79247d866d93e66928a491048ee72c43136bfd3cd631b80c0bfa65671ad5",
+    "src/ir.h": "7ba440414104d59dba82dc1aecbf12602ae540434035036b2c982c87668f31da",
+    "src/lexer.h": "e48a0d48cfb6668d21bf6515d0e541346c6824e0352658cf51f9e7e4707177f2",
+    "src/modules.h": "e6e90ed3c21dcb53eb46c4e03ee36e3e592d8fef43debb5dd91a47751214067d",
+    "src/namespaces.h": "57c66eced27401b6b9ec732f1ec1850f6edbbc1492ab45228889de9b63b5a798",
+    "src/numeric.h": "a6264e101ddeff3ff503cb8e601365988c5df0cbc44baa85cc85464fa65f4feb",
+    "src/numeric_emit.h": "90d9991939841fbadb2048a3f913b5d654c6c65f720d6a72a8847a05550594ba",
+    "src/ownership.h": "8e13d56706eaccf6ec21a585ed06b70ef45b97806d2c68a2a76d2cc53fa1e079",
+    "src/packages.h": "e372900c7befe0ee8d812c17a5f05cfb56e63a78589facd626f928abc488eb32",
+    "src/pe_writer.h": "1426b3a2104dc2555ed05a3ae1ce8b1a875cc2d5b49c3d70c60b2e0d92f2463e",
+    "src/ranges.h": "147342adfcbc841038665ea88adc5a5c4e39fe830716c89af9daee4f87601992",
+    "src/runtime.S": "ae4e749f7fe29b7555f4808a6971f4fe293b21696837fa8d488950433926c28d",
+    "src/runtime_blob.h": "ba634d6a6e1578a204d3dcbdb49da2c80247c39bd34c970178117eda155e5856",
+    "src/runtime_files.inc": "dd052a0e13320a35995cd5d380d036fb2caa82c27b0b7be0100161d6a9bd268c",
+    "src/runtime_io.inc": "012bba759ce7516082c3da327c03e0db9cd31d3b61d37123b7b4dfa7b9afeaa9",
+    "src/runtime_memory.inc": "278347cf100addca26a18614c1377a84eb297207168e711035cd85a13e06be89",
+    "src/runtime_numeric.inc": "f17f1bcc70b1634cb8714882ee648bd0f904262041fc4bd383f105cf84606cb2",
+    "src/runtime_system.inc": "254389a232be341125fd55ab0023c5499fbbdbfb191ea8e6ba1c4b32c59b97e5",
+    "src/runtime_win.S": "e1d7b95572585e2fe490e683876f589be836535d278330457a5ba4fef4030989",
+    "src/runtime_win_blob.h": "e9e67519fde0f2a4b65b3922aa66de1694e3b5788a5523de9897614e0f308503",
+    "src/safety.h": "79450b0f47a753979e1940fcb415cf1adc393e7fccac8c6ab7fa2de3f08acfbd",
+    "src/sha256.h": "db32be4734bdc0d90a82ca8f0654fbf9b16159baa1538da416558f941614230b",
+    "src/version.h": "2f7029be0726406a3dd0a70913b841596cea8553fa2372cc9be8b67253960b7e",
+    "src/windows_setup.c": "a389b568597e275333d1e3e8d460baa0c3b42c09a700814e28e306014851ea26",
+    "stdlib/algorithms.assis": "8ba151d4d00c0460658f69e3c9fd466ae4b0f40e497e7087853ecd58f480adb8",
+    "stdlib/catalogo.json": "aa3bc523ac97ec08cc222f881c47fd1ad98df6dabbd106867d3eb4a14db93740",
+    "stdlib/catalogo.sh": "2c5b9b2f58b8ab1027fe033b604b86e52170b61337a6b065e94a6fc62e23f572",
+    "stdlib/cli.assis": "c53e31addeed7d63d8f71dd014156dc7eed9a30565770f3ec43b631f8200c0d6",
+    "stdlib/convert.assis": "32c0153a1bcca0615f26a4fc14c7152f1704b86dc3db0625463a26d9425596b6",
+    "stdlib/csv.assis": "331c096519cd4134fc32177b1aa2cb2bfa772ba82daf0d445fb9caba5ed70d9d",
+    "stdlib/encoding.assis": "1c317707d610df231aca142a9559db56132c496076282cf77a43361260da6faa",
+    "stdlib/errors.assis": "ad9c4f1703d7cead9af736deca8de5ef9082b11a4b03aa503c29ede907f35e2e",
+    "stdlib/events.assis": "c463c7a13395f98448394639cbab4238662b25340dd106400b447a6bf7488225",
+    "stdlib/http.assis": "40c0f18df299e52a21c04fe3ccaf776e17a5947ec31d8c5e3fa08de01805c82f",
+    "stdlib/iterators.assis": "57e7c46d1194ee22172a82da3c9339cca6c7de98f967eb6eac9f7a33ffff401f",
+    "stdlib/json.assis": "0699dbbc6cbb4d5a716587ad0290b7c9f345be9a1f1a1c60fc9ac9d8cf6a3088",
+    "stdlib/log.assis": "b28332ec1e9b55ee32a0bc82e1c41974ab615aee8de77f2c36c6a41d1d5167dd",
+    "stdlib/math.assis": "356314d536557898e883fc2b4013fb861a305841bc1d28492746a45b601c4350",
+    "stdlib/memory.assis": "607dc3d66259e7aaa1fe4f6602914305415ebc753934ad38b38eb09fb0801971",
+    "stdlib/net.assis": "376ec5e6992d50520001b8689bf2f225deccd1df113f2f8a5d2a05d01ebbc2e0",
+    "stdlib/owned.assis": "cd8220f248a475071a2e01003ea9ebe373518e5b1b73109d272495b81d7f6edb",
+    "stdlib/process.assis": "9b6a74ef9a54beefa08eacd20b36dc2f2f7f861283dbc5b762862343745bd464",
+    "stdlib/strings.assis": "ae03236b819465a05e3387ba502301161e42541c4dd273c59f2b62c7afaf03fb",
+    "stdlib/time.assis": "0a4fa74239155d2521b107c1f304885e3b0a3fe2e93b9542f9cdd09d28dfa062",
+    "stdlib/unicode.assis": "a2636b1b8baa34cd914bf6ca04e4d9b28ade400b41e66c21cfebaab72a49433f"
+  },
+  "requestedSeconds": 120.0,
+  "elapsedSeconds": 120.525092838,
+  "workers": 4,
+  "passed": true,
+  "error": null,
+  "qualifies24Hours": false,
+  "results": [
+    {
+      "worker": 0,
+      "rounds": 2232,
+      "initial": {
+        "rssBytes": 1347584,
+        "handles": 4
+      },
+      "final": {
+        "rssBytes": 1347584,
+        "handles": 4
+      },
+      "peakRssBytes": 1347584,
+      "peakHandles": 4
+    },
+    {
+      "worker": 1,
+      "rounds": 2229,
+      "initial": {
+        "rssBytes": 1347584,
+        "handles": 4
+      },
+      "final": {
+        "rssBytes": 1347584,
+        "handles": 4
+      },
+      "peakRssBytes": 1347584,
+      "peakHandles": 4
+    },
+    {
+      "worker": 2,
+      "rounds": 2229,
+      "initial": {
+        "rssBytes": 1347584,
+        "handles": 4
+      },
+      "final": {
+        "rssBytes": 1347584,
+        "handles": 4
+      },
+      "peakRssBytes": 1347584,
+      "peakHandles": 4
+    },
+    {
+      "worker": 3,
+      "rounds": 2214,
+      "initial": {
+        "rssBytes": 1347584,
+        "handles": 4
+      },
+      "final": {
+        "rssBytes": 1347584,
+        "handles": 4
+      },
+      "peakRssBytes": 1347584,
+      "peakHandles": 4
+    }
+  ],
+  "networkMode": "polling"
+}

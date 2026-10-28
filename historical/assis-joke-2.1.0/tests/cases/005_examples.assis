@@ -1,0 +1,33 @@
+// Uma referência da base chama a implementação da classe real.
+ASSIS AssisAssis {
+    Assis Assis_assis: AssIs;
+
+    assis assis_fodase(AssisFodase: AssIs): FODase {
+        aSSIS.Assis_assis = AssisFodase;
+    }
+
+    assis FodaseFodase(): AssIs {
+        Fodase aSSIS.Assis_assis;
+    }
+}
+
+ASSIS AssisAssisAssis ASSIS_FODASE AssisAssis {
+    assis FodaseFodase(): AssIs {
+        Fodase aSSIS.Assis_assis * 3;
+    }
+}
+
+assis Assis_Fodase(AssisFodase: AssisAssis): AssIs {
+    Fodase AssisFodase.FodaseFodase();
+}
+
+assis assis_assis(): AssIs {
+    Assis FodaseAssis: AssisAssis = fodase AssisAssis(14);
+    // Conversão implícita da derivada para a base; construtor herdado.
+    Assis FodaseAssisAssis: AssisAssis = fodase AssisAssisAssis(14);
+    FODASE("Base:", Assis_Fodase(FodaseAssis));
+    FODASE("Derivada via base:", Assis_Fodase(FodaseAssisAssis));
+    foDASE(FodaseAssis);
+    foDASE(FodaseAssisAssis);
+    Fodase 0;
+}

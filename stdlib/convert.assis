@@ -1,6 +1,5 @@
-#yuri <std/errors.assis>
-#yuri <std/strings.assis>
-
+import "std/errors.assis";
+import "std/strings.assis";
 /// Converte decimal estrito, com sinal opcional, sem espaços ou separadores. Detecta overflow e aceita INT64_MIN. Erro aponta o primeiro byte inválido (offset zero). Libere o IntResult com free.
 fn parse_int(entrada: text): IntResult {
     let n: int = len(entrada);

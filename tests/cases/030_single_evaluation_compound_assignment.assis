@@ -1,18 +1,18 @@
 
-            assis Assis_Fodase(AssisAssis: *AssIs): AssIs {
-                *AssisAssis += 1; Fodase 0;
+            fn Assis_Fodase(AssisAssis: *int): int {
+                *AssisAssis += 1; return 0;
             }
-            assis FodaseFodase(AssisAssis: *AssiS): AssIs {
-                *AssisAssis = AssiS(100); Fodase 2;
+            fn FodaseFodase(AssisAssis: *byte): int {
+                *AssisAssis = byte(100); return 2;
             }
         
-assis assis_assis(): AssIs {
+fn main(): int {
 
-            Assis AssisAssis: *AssiS = ASSIS_fodase(1);
-            Assis FodaseAssis: AssIs = 0;
-            AssisAssis[0] = AssiS(5);
+            let AssisAssis: *byte = alloc<byte>(1);
+            let FodaseAssis: int = 0;
+            AssisAssis[0] = byte(5);
             AssisAssis[Assis_Fodase(&FodaseAssis)] += FodaseFodase(AssisAssis);
-            FODASE(AssisAssis[0], FodaseAssis); foDASE(AssisAssis);
+            print(AssisAssis[0], FodaseAssis); free(AssisAssis);
         
-Fodase 0;
+return 0;
 }

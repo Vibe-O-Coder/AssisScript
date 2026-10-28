@@ -10,14 +10,14 @@ const compiler = process.env.ASSIS_BIN || path.join(root, 'bin', process.platfor
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'assis-v3-'));
 after(() => { assert(path.dirname(temp) === path.resolve(os.tmpdir()) && path.basename(temp).startsWith('assis-v3-')); fs.rmSync(temp, { recursive: true, force: true }); });
 function write(name, source) { const file = path.join(temp, name); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, source); return file; }
-function run(args, options = {}) { const r = spawnSync(compiler, args, { encoding: 'utf8', timeout: 20000, windowsHide: true, ...options }); assert.ifError(r.error); return r; }
+function run(args, options = {}) { if (["build","run","check","doc","test","lock","ir"].includes(args[0]) && !args.includes("--safe") && !args.includes("--legacy")) args = [...args, "--legacy"]; const r = spawnSync(compiler, args, { encoding: 'utf8', timeout: 20000, windowsHide: true, ...options }); assert.ifError(r.error); return r; }
 function execute(source, expected) { const r = run(['run', write('main.assis', source)]); assert.equal(r.status, 0, r.stderr); if (expected !== undefined) assert.equal(r.stdout, expected); }
 function reject(source, message) { const r = run(['check', write('invalid.assis', source), '--diagnostics=json']); assert.equal(r.status, 1, r.stderr); assert.match(JSON.parse(r.stderr).message, message); }
-const main = body => `assis assis_assis(): int { ${body} return 0; }`;
+const main = body => `fn main(): int { ${body} return 0; }`;
 
 test('nomes livres, palavras legíveis e métodos preservam herança virtual', () => {
-    execute(`ASSIS Pessoa { let idade: int; assis assis_fodase(value: int): void { self.idade = value; } assis ler(): int { return self.idade; } }
-ASSIS Especial extends Pessoa { assis ler(): int { return self.idade * 2; } }
+    execute(`class Pessoa { let idade: int; fn init(value: int): void { self.idade = value; } fn ler(): int { return self.idade; } }
+class Especial extends Pessoa { fn ler(): int { return self.idade * 2; } }
 ${main('let pessoa_42: Pessoa = new Especial(21); print(pessoa_42.ler()); free(pessoa_42);')}`, '42\n');
 });
 test('array cresce, insere, remove, inverte e preserva tipo e tamanho', () => {
@@ -28,9 +28,9 @@ a[2] *= 3; a.set(3, 90); a.reverse(); assert(a.get(996) == 90); assert(a[997] ==
 assert(a.contains(90)); assert(!a.contains(-100)); print(len(a), a[0], a[999]);
 a.clear(); assert(len(a) == 0); a.reserve(2000); a.push(42); a.dispose(); a.dispose(); a.push(7); print(a[0]); free(a);`), '1000 999 0\n7\n');
 });
-test('literais e argumentos aninhados, ponteiros, byte, bool e text', () => {
-    execute(`assis soma(a: Array<int>): int { let v: int = a[0] + a[1]; free(a); return v; }
-assis create(): Array<int> { return [8, 9]; }
+test('literais e arg_count aninhados, ponteiros, byte, bool e text', () => {
+    execute(`fn soma(a: Array<int>): int { let v: int = a[0] + a[1]; free(a); return v; }
+fn create(): Array<int> { return [8, 9]; }
 ${main(`let m: Array<Array<int>> = [[1, 2], [], [3]]; m[1].push(4); assert(m[1][0] == 4);
 let b: Array<byte> = [byte(255)]; b[0] += 2; assert(b[0] == byte(1));
 let flags: Array<bool> = [true, false]; flags[1] = true; assert(flags[0] && flags[1]);
@@ -68,8 +68,8 @@ let q: Pessoa = new Pessoa("Miyabi", 24, [true]); let alias: Pessoa = q; alias.i
     reject('struct A { let x: int; } struct B { let x: int; } ' + main('let a: A = new B(1);'), /não é possível/);
     reject('struct A { let x: int; } ' + main('let a: A = new A(true);'), /não é possível/);
     reject('struct A extends B {}', /não admite herança/);
-    reject('struct A { assis metodo(): void {} }', /somente campos/);
-    reject('struct A {} ASSIS B extends A {}', /não pode ser classe base/);
+    reject('struct A { fn metodo(): void {} }', /somente campos/);
+    reject('struct A {} class B extends A {}', /não pode ser classe base/);
 });
 test('errors de tipos e especializações são rejeitados antes de gerar binário', () => {
     const cases = [
@@ -100,40 +100,34 @@ test('falhas de execução têm status 70: limites, mapa ausente, pop e overflow
         'let p: *int = alloc<int>(0x2000000000000000);',
         'assert(false);'
     ]) {
-        const r = run(['run', write('runtime.assis', main(body))]); assert.equal(r.status, 70, r.stderr); assert.match(r.stderr, /FODASE R001/);
+        const r = run(['run', write('runtime.assis', main(body))]); assert.equal(r.status, 70, r.stderr); assert.match(r.stderr, /assis: erro R001/);
     }
 });
-test('ordem de avaliação em indexação composta e argumentos de coleção', () => {
-    execute(`ASSIS Contador { let n: int; assis tick(): int { self.n += 1; return self.n - 1; } }
+test('ordem de avaliação em indexação composta e arg_count de coleção', () => {
+    execute(`class Contador { let n: int; fn tick(): int { self.n += 1; return self.n - 1; } }
 ${main(`let c: Contador = new Contador(); let a: Array<int> = [10, 20]; a[c.tick()] += c.tick(); assert(c.n == 2); assert(a[0] == 11); free(a); free(c);`)}`);
 });
-test('#yuri e #body resolvem fontes transitivos e pacotes pontuados', () => {
-    write('pkg/lib/calculos.assis', '/// Retorna o dobro.\nassis dobro(valor: int): int { return valor * 2; }');
-    write('pkg/meu/pacote.pillow', '#yuri <../lib/calculos.assis>\n');
-    write('pkg/src.pillow', '#body meu.pacote.pillow\n#yuri <lib/calculos.assis>\n');
-    const file = write('pkg/main.assis', '#body src.pillow\n#yuri <lib/calculos.assis>\n' + main('print(dobro(21));'));
+test('#yuri e import "resolvem"; fontes transitivos e pacotes pontuados', () => {
+    write('pkg/lib/calculos.assis', '/// Retorna o dobro.\nfn dobro(valor: int): int { return valor * 2; }');
+    write('pkg/meu/pacote.pillow', 'import "../lib/calculos.assis";\n');
+    write('pkg/src.pillow', 'import "meu/pacote.pillow";\nimport "lib/calculos.assis";\n');
+    const file = write('pkg/main.assis', 'import "src.pillow";\nimport "lib/calculos.assis";\n' + main('print(dobro(21));'));
     const r = run(['run', file], { cwd: os.tmpdir() }); assert.equal(r.status, 0, r.stderr); assert.equal(r.stdout, '42\n');
     assert.equal(run(['check', path.join(temp, 'pkg/src.pillow'), '--library']).status, 0);
     const original = fs.readFileSync(path.join(temp, 'pkg/src.pillow'));
     const protectedOutput = run(['build', file, '-o', path.join(temp, 'pkg/src.pillow')]); assert.equal(protectedOutput.status, 2); assert.deepEqual(fs.readFileSync(path.join(temp, 'pkg/src.pillow')), original);
 });
-test('diretivas malformadas, pacotes com código e ciclos são diagnosticados', () => {
-    for (const [source, message] of [
-        ['#yuri <std/strings>', /extensão .assis/], ['#yuri "std/strings.assis"', /exige </],
-        ['#yuri <std/strings.assis', /fechamento/], ['#body src.txt', /extensão .pillow/],
-        ['#body', /extensão .pillow/], ['#outra', /desconhecida/],
-        ['#yuri <std/strings.assis> assis f(): int { return 0; }', /linha própria/]
-    ]) reject(source, message);
-    const code = write('bad.pillow', 'assis algo(): int { return 0; }'); const bad = run(['check', code, '--library']); assert.equal(bad.status, 1); assert.match(bad.stderr, /somente #yuri e #body/);
-    const a = write('a.pillow', '#body b.pillow\n'); write('b.pillow', '#body a.pillow\n');
-    const r = run(['check', a, '--library']); assert.equal(r.status, 1); assert.match(r.stderr, /ciclo de importação/);
+test('imports malformados, dialeto retirado e ciclos são diagnosticados', () => {
+    for (const [source,message] of [['import 42;',/caminho entre aspas/],['import "missing.assis";',/módulo não encontrado/],['#yuri <std/strings.assis>',/caractere inesperado/],['#body src.pillow',/caractere inesperado/]]) reject(source,message);
+    const a=write('a.pillow','import "b.pillow";\n');write('b.pillow','import "a.pillow";\n');
+    const r=run(['check',a,'--library']);assert.equal(r.status,1);assert.match(r.stderr,/ciclo de importação/);
 });
 test('bibliotecas legíveis e projeto novo são executáveis sem ferramentas externas', () => {
-    execute('#yuri <std/math.assis>\n#yuri <std/strings.assis>\n#yuri <std/memory.assis>\n' + main(`assert(min(2, 3) == 2); assert(max(2, 3) == 3); assert(clamp(99, 0, 10) == 10); assert(abs(-42) == 42);
+    execute('import "std/math.assis";\nimport "std/strings.assis";\nimport "std/memory.assis";\n' + main(`assert(min(2, 3) == 2); assert(max(2, 3) == 3); assert(clamp(99, 0, 10) == 10); assert(abs(-42) == 42);
 assert(starts_with("ação", "aç")); assert(ends_with("ação", "ão")); assert(contains("ação", "çã")); assert(!contains("ação", "xyz"));
 let a: *byte = alloc<byte>(4); let b: *byte = alloc<byte>(4); fill(a, 4, byte(255)); copy(b, a, 4); assert(b[3] == 255); free(a); free(b);`));
     const folder = path.join(temp, 'novo-projeto'); assert.equal(run(['new', folder]).status, 0);
-    const r = run(['run'], { cwd: folder, env: { ...process.env, PATH: '' } }); assert.equal(r.status, 0, r.stderr); assert.equal(r.stdout, 'Assis, mundo. Fodase. 42\n');
+    const r = run(['run'], { cwd: folder, env: { ...process.env, PATH: '' } }); assert.equal(r.status, 0, r.stderr); assert.equal(r.stdout, 'Hello, world! 42\n');
     assert(fs.existsSync(path.join(folder, 'src.pillow')));
 });
 test('PE contém grupo de ícone e imagens válidas da segunda imagem', () => {

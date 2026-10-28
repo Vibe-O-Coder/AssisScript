@@ -1,2 +1,2 @@
-#yuri <pkg/medidas/api.assis>
-safe assis assis_assis(): int { print(medidas::dobro(21));return 0; }
+import "pkg/medidas/api.assis";
+safe fn main(): int { print(medidas::dobro(21));return 0; }

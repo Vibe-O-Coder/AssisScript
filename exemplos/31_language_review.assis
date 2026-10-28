@@ -1,0 +1,42 @@
+import "std/unicode.assis";
+import "std/owned.assis";
+import "std/random.assis";
+
+const MAX_HP: int = 54;
+const WALL: byte = '#';
+
+class Actor {
+    private let hp: int;
+    fn init(borrow mut self, hp: int): void { self.hp = hp; }
+    fn health(borrow self): int { return self.hp; }
+}
+class Hero extends Actor {
+    let turns: int;
+    fn init(borrow mut self, hp: int, turns: int): void {
+        super.init(hp);
+        self.turns = turns;
+    }
+    fn set_turns(borrow mut self, turns: int): void { self.turns = turns; }
+}
+
+safe fn main(): int {
+    own actors: owned::OwnedArray<Actor> = new owned::OwnedArray<Actor>();
+    actors.push(new Hero(MAX_HP, 0));
+    {
+        borrow actor: Actor = actors.get(0);
+        if (actor is Hero) {
+            write("Turno de Assis (Clérigo) - HP ", actor.health(), "/", MAX_HP, "\n");
+        }
+    }
+    own hero: Hero = new Hero(MAX_HP, 0);
+    hero.set_turns(hero.turns + 1);
+    own output: unicode::String = new unicode::String();
+    assert(output.append("Decimal: "));
+    assert(output.append_decimal(0.1 + 0.2, 2));
+    print(output);
+    own rng: random::Random = new random::Random(u64(42));
+    val roll: int = rng.range(1, 7);
+    assert(roll >= 1 && roll <= 6);
+    assert(WALL == byte(35));
+    return 0;
+}

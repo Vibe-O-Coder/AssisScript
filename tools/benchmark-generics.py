@@ -45,7 +45,7 @@ with tempfile.TemporaryDirectory(prefix='assis-generics-bench-') as temp:
     for name, generic, flags in variants:
         call = 'calcular::<int>(i)' if generic else 'calcular(i)'
         declaration = 'calcular<T>(n:T)' if generic else 'calcular(n:int)'
-        text = ('assis assis_assis():int{let total:int=0;'
+        text = ('fn main():int{let total:int=0;'
                 f'for(let i:int=0;i<{count};i+=1){{total+={call};}}'
                 'print(total);return 0;}\n'
                 f'pure assis {declaration}:int{{return int(n)*3+7;}}\n')

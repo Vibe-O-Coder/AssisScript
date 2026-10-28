@@ -1,26 +1,25 @@
-#yuri <std/algorithms.assis>
-
+import "std/algorithms.assis";
 struct Relatorio {
     own valores: Array<int>;
     let total: int;
 }
 
-pure assis dobro(n: int): int { return n * 2; }
-pure assis par(n: int): bool { return n % 2 == 0; }
-pure assis somar(a: int, b: int): int { return a + b; }
+pure fn dobro(n: int): int { return n * 2; }
+pure fn par(n: int): bool { return n % 2 == 0; }
+pure fn somar(a: int, b: int): int { return a + b; }
 
-safe assis resumir(borrow entrada: Array<int>): own Relatorio {
+safe fn resumir(borrow entrada: Array<int>): own Relatorio {
     own filtrados: Array<int> = filter_own::<int>(entrada, par);
     own valores: Array<int> = map_own::<int, int>(filtrados, dobro);
     val total: int = fold_borrow::<int, int>(valores, 0, somar);
     return new Relatorio(move(valores), total);
 }
 
-safe assis ver_valores(borrow r: Relatorio): borrow(r) Array<int> {
+safe fn ver_valores(borrow r: Relatorio): borrow(r) Array<int> {
     return r.valores;
 }
 
-safe assis assis_assis(): int {
+safe fn main(): int {
     own entrada: Array<int> = [1, 2, 3, 4, 5, 6];
     own relatorio: Relatorio = resumir(entrada);
     {

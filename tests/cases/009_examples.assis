@@ -1,48 +1,48 @@
 // Arena de treino: dois objetos, ataque virtual, vida e memória manual.
-ASSIS AssisAssis {
-    Assis Assis_assis: AssIs;
-    Assis Fodase_assis: AssIs;
+class AssisAssis {
+    let Assis_assis: int;
+    let Fodase_assis: int;
 
-    assis assis_fodase(AssisFodase: AssIs, FodaseAssis: AssIs): FODase {
-        aSSIS.Assis_assis = AssisFodase;
-        aSSIS.Fodase_assis = FodaseAssis;
+    fn init(AssisFodase: int, FodaseAssis: int): void {
+        self.Assis_assis = AssisFodase;
+        self.Fodase_assis = FodaseAssis;
     }
 
-    assis FodaseFodase(): AssIs {
-        Fodase aSSIS.Fodase_assis;
+    fn FodaseFodase(): int {
+        return self.Fodase_assis;
     }
 
-    assis Assis_Fodase(AssisFodase: AssisAssis): FODase {
-        Assis FodaseAssis: AssIs = aSSIS.FodaseFodase();
+    fn Assis_Fodase(AssisFodase: AssisAssis): void {
+        let FodaseAssis: int = self.FodaseFodase();
         AssisFodase.Assis_assis -= FodaseAssis;
-        FODASE("Dano:", FodaseAssis, "| Vida remaining:", AssisFodase.Assis_assis);
+        print("Dano:", FodaseAssis, "| Vida remaining:", AssisFodase.Assis_assis);
     }
 }
 
-ASSIS AssisAssisAssis ASSIS_FODASE AssisAssis {
-    assis FodaseFodase(): AssIs {
-        Fodase aSSIS.Fodase_assis * 2;
+class AssisAssisAssis extends AssisAssis {
+    fn FodaseFodase(): int {
+        return self.Fodase_assis * 2;
     }
 }
 
-assis assis_assis(): AssIs {
-    Assis AssisFodase: AssisAssis = fodase AssisAssis(100, 12);
-    Assis FodaseAssis: AssisAssis = fodase AssisAssisAssis(100, 12);
-    FODASE("ASSIS ARENA: ataque comum contra ataque especializado.");
-    Assis AssisFodaseAssis: AssIs = 1;
-    ASSis (AssisFodase.Assis_assis > 0 && FodaseAssis.Assis_assis > 0) {
-        FODASE("Turno", AssisFodaseAssis);
+fn main(): int {
+    let AssisFodase: AssisAssis = new AssisAssis(100, 12);
+    let FodaseAssis: AssisAssis = new AssisAssisAssis(100, 12);
+    print("ASSIS ARENA: ataque comum contra ataque especializado.");
+    let AssisFodaseAssis: int = 1;
+    while (AssisFodase.Assis_assis > 0 && FodaseAssis.Assis_assis > 0) {
+        print("Turno", AssisFodaseAssis);
         AssisFodase.Assis_Fodase(FodaseAssis);
-        assIS (FodaseAssis.Assis_assis <= 0) { FODasE; }
+        if (FodaseAssis.Assis_assis <= 0) { break; }
         FodaseAssis.Assis_Fodase(AssisFodase);
         AssisFodaseAssis += 1;
     }
-    assIS (AssisFodase.Assis_assis <= 0) {
-        FODASE("A classe derivada venceu. Fodase.");
-    } fodASE {
-        FODASE("A classe base venceu. Assis.");
+    if (AssisFodase.Assis_assis <= 0) {
+        print("A classe derivada venceu. Fodase.");
+    } else {
+        print("A classe base venceu. Assis.");
     }
-    foDASE(AssisFodase);
-    foDASE(FodaseAssis);
-    Fodase 0;
+    free(AssisFodase);
+    free(FodaseAssis);
+    return 0;
 }

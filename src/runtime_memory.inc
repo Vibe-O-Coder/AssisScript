@@ -216,6 +216,9 @@ asrt_finish:
     jz .Lfinish_done
     mov esi, 2
     call .Lprint_int
+    mov edi, 10
+    mov esi, 2
+    call .Lprint_char
     mov edi, 13
     xor esi, esi
     jmp .Lerror

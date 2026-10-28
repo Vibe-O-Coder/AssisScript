@@ -1,6 +1,6 @@
-#yuri <std/math.assis>
-
-assis assis_assis(): int {
+import "std/math.assis";
+safe fn main(): int {
+    unsafe {
     let numeros: Array<int> = [10, 20, 30];
     numeros.push(40);
     numeros.insert(1, 15);
@@ -31,4 +31,6 @@ assis assis_assis(): int {
     free(pontos);
     free(numeros);
     return 0;
+
+    }
 }

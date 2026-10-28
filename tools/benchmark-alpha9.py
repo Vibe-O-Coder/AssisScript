@@ -28,9 +28,9 @@ with tempfile.TemporaryDirectory(prefix='assis-alpha9-bench-') as temp:
     compiler=context['compiler'];run=context['run'];peak=context['peak_memory'];n=args.iterations
     rounds=max(10,n//1024)
     workloads=[
-        ('slice',f'safe assis assis_assis():int{{own b:*int=alloc<int>({n});for(let i:int=0;i<{n};i+=1){{b[i]=i;}}borrow s:slice<int>=slice_of(b,0,{n});let total:int=0;for(let i:int=0;i<len(s);i+=1){{total+=s[i];}}print(total);return 0;}}',str(n*(n-1)//2)+'\n'),
-        ('unicode','#yuri <std/unicode.assis>\nsafe assis assis_assis():int{own b:*byte=alloc<byte>(1024);for(let i:int=0;i<1024;i+=1){b[i]=byte(65);}own t:unicode::String=new unicode::String();let total:int=0;for(let i:int=0;i<'+str(rounds)+';i+=1){assert(t.load(slice_of(b,0,1024)));total+=t.size();}print(total);return 0;}',str(rounds*1024)+'\n'),
-        ('owned','#yuri <std/owned.assis>\nstruct R{own b:*byte;}safe assis assis_assis():int{let total:int=0;for(let i:int=0;i<'+str(rounds)+';i+=1){own l:owned::OwnedList<R>=new owned::OwnedList<R>();for(let j:int=0;j<128;j+=1){l.push_front(new R(alloc<byte>(16)));}total+=l.size();}print(total);return 0;}',str(rounds*128)+'\n')
+        ('slice',f'safe fn main():int{{own b:*int=alloc<int>({n});for(let i:int=0;i<{n};i+=1){{b[i]=i;}}borrow s:slice<int>=slice_of(b,0,{n});let total:int=0;for(let i:int=0;i<len(s);i+=1){{total+=s[i];}}print(total);return 0;}}',str(n*(n-1)//2)+'\n'),
+        ('unicode','import "std/unicode.assis";\nsafe fn main():int{own b:*byte=alloc<byte>(1024);for(let i:int=0;i<1024;i+=1){b[i]=byte(65);}own t:unicode::String=new unicode::String();let total:int=0;for(let i:int=0;i<'+str(rounds)+';i+=1){assert(t.load(slice_of(b,0,1024)));total+=t.size();}print(total);return 0;}',str(rounds*1024)+'\n'),
+        ('owned','import "std/owned.assis";\nstruct R{own b:*byte;}safe fn main():int{let total:int=0;for(let i:int=0;i<'+str(rounds)+';i+=1){own l:owned::OwnedList<R>=new owned::OwnedList<R>();for(let j:int=0;j<128;j+=1){l.push_front(new R(alloc<byte>(16)));}total+=l.size();}print(total);return 0;}',str(rounds*128)+'\n')
     ]
     records=[]
     for name,source,expected in workloads:

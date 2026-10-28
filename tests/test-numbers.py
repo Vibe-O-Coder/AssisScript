@@ -18,12 +18,12 @@ class Numbers(base.Evolution):
             'print(f32(4611686293305294849),f32(u64(9223372586610589697)));'
             'val a:P=new P(0.0);val b:P=new P(-0.0);val c:P=new P(0.0/0.0);'
             'print(a==b,c==c,new E.A(a)==new E.A(b),new E.A(a)!=new E.B(f32(0.0)));'),
-            '0x1.0000020000000p+62 0x1.0000020000000p+63\naSsIs fOdAsE aSsIs aSsIs\n')
+            '0x1.0000020000000p+62 0x1.0000020000000p+63\ntrue false true true\n')
 
     def test_mixed_virtual_abi_and_float_tail_recursion(self):
-        code='ASSIS A{let v:f64;assis assis_fodase(v:f64):void{self.v=v;}assis f(a:i16,b:f32,c:u64):f64{return self.v+f64(a)+f64(b)+f64(c);}}'
-        code+='ASSIS B extends A{assis f(a:i16,b:f32,c:u64):f64{return self.v+f64(a)+f64(b)+f64(c)+1.0;}}'
-        code+='pure assis sum(n:int,a:f64):f64{if(n==0){return a;}return sum(n-1,a+0.5);}'
+        code='class A{let v:f64;fn init(v:f64):void{self.v=v;}fn f(a:i16,b:f32,c:u64):f64{return self.v+f64(a)+f64(b)+f64(c);}}'
+        code+='class B extends A{fn f(a:i16,b:f32,c:u64):f64{return self.v+f64(a)+f64(b)+f64(c)+1.0;}}'
+        code+='pure fn sum(n:int,a:f64):f64{if(n==0){return a;}return sum(n-1,a+0.5);}'
         self.accepted(code+main('let b:B=new B(20.0);let a:A=b;print(a.f(i16(10),f32(10.0),u64(1)),sum(84,0.0));free(b);'),
                       '0x1.5000000000000p+5 0x1.5000000000000p+5\n')
         result=self.invoke('run',self.source(code+main('print(sum(1000000,0.0));')),'--debug')
@@ -45,7 +45,7 @@ class Numbers(base.Evolution):
                 norm = lambda n: (n + (1 << (bits-1))) % (1 << bits) - (1 << (bits-1)) if signed else n % (1 << bits)
                 av, bv = norm(a), norm(b)
                 body.append(f'{{let a:{ty}={ty}(0x{a:x});let b:{ty}={ty}(0x{b:x});print(a+b,a-b,a*b,a<b,a>=b);}}')
-                expected.append(f'{norm(av+bv)} {norm(av-bv)} {norm(av*bv)} '+('aSsIs' if av<bv else 'fOdAsE')+' '+('aSsIs' if av>=bv else 'fOdAsE')+'\n')
+                expected.append(f'{norm(av+bv)} {norm(av-bv)} {norm(av*bv)} '+('true' if av<bv else 'false')+' '+('true' if av>=bv else 'false')+'\n')
         self.accepted(main(''.join(body)), ''.join(expected))
 
     def test_unsigned_division_shifts_and_wrap(self):
@@ -68,7 +68,7 @@ class Numbers(base.Evolution):
                            'print(nan==nan,nan!=nan,nan<z,nan<=z,nan>z,nan>=z);'
                            'print(inf>1.0,-inf<z,z==-z,bool(-z),bool(nan));'
                            'if(nan<z){print(9);}else{print(42);}print(z,-z,inf,-inf);'),
-                      'fOdAsE aSsIs fOdAsE fOdAsE fOdAsE fOdAsE\naSsIs aSsIs aSsIs fOdAsE aSsIs\n42\n'
+                      'false true false false false false\ntrue true true false true\n42\n'
                       '0x0.0000000000000p+0 -0x0.0000000000000p+0 inf -inf\n')
 
     def test_saturating_float_conversions_and_unsigned_64(self):
@@ -79,10 +79,10 @@ class Numbers(base.Evolution):
                       '18446744073709551615 9223372036854775808 0 0x1.0000000000000p+64\n42 -42 255\n')
 
     def test_buffers_records_callbacks_generics_and_abi(self):
-        code='value struct P{let x:f32;let y:i16;}pure assis id<T>(x:T):T{return x;}pure assis f(x:f64):f64{return x*2.0;}'
+        code='value struct P{let x:f32;let y:i16;}pure fn id<T>(x:T):T{return x;}pure fn f(x:f64):f64{return x*2.0;}'
         self.accepted(code+main('own a:*i16=alloc<i16>(2);a[0]=i16(-42);a[1]=i16(42);'
                                'own b:*f32=alloc<f32>(2);b[1]=f32(1.5);print(a[0],a[1],len(a),b[1]);'
-                               'val cb:pure assis(f64):f64=f;print(cb(id::<f64>(21.0)));'
+                               'val cb:pure fn(f64):f64=f;print(cb(id::<f64>(21.0)));'
                                'val p:P=id::<P>(new P(f32(1.5),i16(-42)));print(p.x,p.y);'
                                'own v:Array<f64>=[1.5,2.0];v.push(3.0);print(v[0]+v.pop());'),
                       '-42 42 2 0x1.8000000000000p+0\n0x1.5000000000000p+5\n0x1.8000000000000p+0 -42\n0x1.2000000000000p+2\n')

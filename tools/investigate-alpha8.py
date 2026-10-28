@@ -33,7 +33,7 @@ def instructions(binary,header):
     return result
 report=dict(compilerSha256=hashlib.sha256(compiler.read_bytes()).hexdigest(),baselineSha256=hashlib.sha256(baseline.read_bytes()).hexdigest(),iterations=count,samples=samples,heap=[],compilerStartup=[])
 with tempfile.TemporaryDirectory(prefix='assis-investigation-') as temp:
-    folder=Path(temp);file=folder/'heap.assis';file.write_text('struct Par{let x:int;let y:int;}assis item(n:int):own Par{return new Par(n,n+1);}assis assis_assis():int{let total:int=0;for(let i:int=0;i<'+str(count)+';i+=1){own p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}',encoding='utf-8')
+    folder=Path(temp);file=folder/'heap.assis';file.write_text('struct Par{let x:int;let y:int;}fn item(n:int):own Par{return new Par(n,n+1);}fn main():int{let total:int=0;for(let i:int=0;i<'+str(count)+';i+=1){own p:Par=item(i);total+=p.x+p.y;}print(total);return 0;}',encoding='utf-8')
     variants=[('alpha7',baseline),('current',compiler)]
     paths=[]
     for name,cc in variants:

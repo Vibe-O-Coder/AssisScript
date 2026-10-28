@@ -63,7 +63,8 @@ for record in data['history']:
     assert set(record['overrides']) == set(identities), 'Cada histórico deve congelar os 35 estados'
     old, _ = score(record['overrides'])
     note = 'Reconstrução retrospectiva; não era um número publicado na entrega' if record['retrospective'] else 'Avaliação desta entrega'
-    text += f'| {record["version"]} | {rounded(old)}% ({str(old).replace(".", ",")} pontos) | {note} |\n'
+    label = record['version'] + (' — ' + record['milestone'] if record.get('milestone') else '')
+    text += f'| {label} | {rounded(old)}% ({str(old).replace(".", ",")} pontos) | {note} |\n'
 text += '\nCada registro histórico congela seus 35 estados; atualizações futuras não alteram retroativamente esses estados.\n\n## Evidência por critério\n'
 for phase in data['phases']:
     text += f'\n### Fase {phase["id"]} — {phase["name"]}\n\n| Critério | Estado | Evidência e limites |\n| --- | --- | --- |\n'
@@ -73,8 +74,8 @@ for phase in data['phases']:
         text += f'| {item["id"]} — {item["name"]} | {labels[item["status"]]} | [Documento]({item["evidence"]}){note} |\n'
 text += ('\nA evidência vinculada também descreve limites, inclusive para critérios pendentes. '
          'A base de bibliotecas, distribuição, vidas explícitas, recursos compostos, fatias/texto gerenciado, valores Copy/variantes e a aplicação A delimitada já existe; '
-         'variantes Move/capturas, aplicações B/C, integração externa, conclusão da HIR e novos alvos concentram o restante. '
-         'A licença foi escolhida pelo responsável; direitos de imagens e auditoria completa de componentes permanecem abertos.\n\n'
+         'a conclusão da IR e os novos alvos concentram o restante técnico. As 24 horas reais Windows/Linux da alpha.15 estão registradas no handoff e na validação JSON. Variantes Move/capturas verificadas e pipelines com ambientes foram acrescentados na alpha.13. As aplicações B/C delimitadas e a ABI C escalar foram acrescentadas na alpha.11; a alpha.12 torna safe padrão, acrescenta rede cooperativa e inventário por ligação real. '
+         'A licença foi escolhida pelo responsável; direitos de imagens e revisão de distribuição permanecem abertos; o inventário técnico dos binários está documentado.\n\n'
          'Fonte auditável: [PROGRESSO.json](PROGRESSO.json). Gerar com `python tools/report-progress.py`; '
          'verificar com `python tools/report-progress.py --check`. Relatórios históricos de versões anteriores '
          'permanecem preservados; a porcentagem começa a ser publicada na alpha.5.\n')

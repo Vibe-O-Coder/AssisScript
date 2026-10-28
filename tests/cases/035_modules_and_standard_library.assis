@@ -1,17 +1,17 @@
-importa "../../exemplos/bibliotecas/operacoes";
-importa "../../exemplos/bibliotecas/operacoes.assis";
-importa "std/math";
-importa "std/strings";
-importa "std/memory";
-assis assis_assis(): AssIs {
-    Assis AssisAssis: Assis_Fodase = fodase Assis_Fodase(21);
-    FODASE(AssisAssis.AssisFodase());
-    FODASE(Assis_fodase_fodase(99, 0, 10));
-    FODASE(Fodase_assis_fodase("ação", "aç"), Fodase_fodase_assis("ação", "ão"));
-    Assis AssisFodase: *AssiS = ASSIS_fodase(2);
-    Assis_Assis_Fodase(AssisFodase, 2, AssiS(255));
-    FODASE(AssisFodase[1]);
-    foDASE(AssisFodase);
-    foDASE(AssisAssis);
-    Fodase 0;
+import "../../exemplos/bibliotecas/operacoes";
+import "../../exemplos/bibliotecas/operacoes.assis";
+import "std/math";
+import "std/strings";
+import "std/memory";
+fn main(): int {
+    let AssisAssis: Assis_Fodase = new Assis_Fodase(21);
+    print(AssisAssis.AssisFodase());
+    print(Assis_fodase_fodase(99, 0, 10));
+    print(Fodase_assis_fodase("ação", "aç"), Fodase_fodase_assis("ação", "ão"));
+    let AssisFodase: *byte = alloc<byte>(2);
+    Assis_Assis_Fodase(AssisFodase, 2, byte(255));
+    print(AssisFodase[1]);
+    free(AssisFodase);
+    free(AssisAssis);
+    return 0;
 }

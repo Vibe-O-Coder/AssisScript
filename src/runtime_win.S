@@ -138,6 +138,7 @@ asrt_print_int:
 
 .global asrt_print_char
 asrt_print_char:
+.Lprint_char:
     sub rsp, 8
     mov byte ptr [rsp], dil
     mov rdi, rsi
@@ -155,8 +156,8 @@ asrt_print_bool:
     lea rdi, [rip+.Ltrue]
 .Lbool_out:
     jmp .Lprint_str
-.Ltrue: .asciz "aSsIs"
-.Lfalse: .asciz "fOdAsE"
+.Ltrue: .asciz "true"
+.Lfalse: .asciz "false"
 
 .global asrt_print_ptr
 asrt_print_ptr:
@@ -315,7 +316,7 @@ asrt_error:
     call .Lprint_str
     mov edi, 70
     jmp .Lexit
-.Lerror_head: .asciz "FODASE R001, linha "
+.Lerror_head: .asciz "assis: erro R001, linha "
 .Lerror_colon: .asciz ": "
 .Lerror_null: .asciz "acesso a ponteiro/objeto nulo\n"
 .Lerror_div: .asciz "divisão por zero\n"

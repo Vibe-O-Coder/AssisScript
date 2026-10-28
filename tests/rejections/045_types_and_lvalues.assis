@@ -1,5 +1,5 @@
 
-assis assis_assis(): AssIs {
-Assis AssisAssis: FodAsE = 1;
-Fodase 0;
+fn main(): int {
+let AssisAssis: bool = 1;
+return 0;
 }

@@ -1,10 +1,10 @@
-/* First high-level typed CFG. Expression operands still refer to checked ASTs;
- * this is deliberately not SSA or a new machine-code backend. Only proven
- * unreachable statements affect emission, after all semantic checks ran. */
+/* Typed CFG plus independent scalar values. Statements/resources retain their
+ * checked ASTs during incremental backend migration; this is not SSA. */
 enum { IR_READ=1,IR_WRITE=2,IR_ALLOC=4,IR_IO=8,IR_CALL=16,IR_TRAP=32,IR_UNSAFE=64,IR_DROP=128 };
-typedef struct {Node *node;Type type;unsigned effects;} IROperation;
+#include "expression_ir.h"
+typedef struct {Node *node;Type type;unsigned effects;IRExpr *value;} IROperation;
 typedef struct {int id;Vec operations,successors;const char *terminator;Node *condition;} IRBlock;
-typedef struct {Function *source;Vec blocks;} IRFunction;
+typedef struct {Function *source;Vec blocks;IRExpr *single_return;int register_variables,register_reuses;bool liveness;} IRFunction;
 static Vec ir_functions;
 static IRBlock *ir_block(IRFunction *f){
     if(f->blocks.n>=65536)error(f->source->t,"IR excede 65536 blocos por função");
@@ -36,7 +36,7 @@ static unsigned ir_effects(Node *n){
     e|=ir_effects(n->a)|ir_effects(n->b)|ir_effects(n->c)|ir_effects(n->step);
     for(int i=0;i<n->items.n;i++)e|=ir_effects(n->items.v[i]);return e;
 }
-static void ir_operation(IRBlock *b,Node *n){IROperation *op=mem(sizeof(*op));op->node=n;op->type=n->kind==N_LET?n->decl:n->kind==N_RETURN&&n->a?n->a->ty:type_void;op->effects=ir_effects(n);push(&b->operations,op);}
+static void ir_operation(IRBlock *b,Node *n){IROperation *op=mem(sizeof(*op));op->node=n;op->type=n->kind==N_LET?n->decl:n->kind==N_RETURN&&n->a?n->a->ty:type_void;op->effects=ir_effects(n);if(n->kind==N_LET||n->kind==N_RETURN||n->kind==N_EXPR)op->value=n->a?n->a->ir:NULL;else if(n->kind==N_ASSIGN)op->value=n->b->ir;push(&b->operations,op);}
 static IRBlock *ir_lower(IRFunction *f,Node *n,IRBlock *b,IRBlock *again,IRBlock *end){
     if(!n)return b;
     if(!b){n->unreachable=true;return NULL;}
@@ -56,7 +56,7 @@ static IRBlock *ir_lower(IRFunction *f,Node *n,IRBlock *b,IRBlock *again,IRBlock
     }
     if(n->kind==N_MATCH){
         b->terminator="match";b->condition=n->a;IRBlock *join=ir_block(f);bool live=false;
-        for(int i=0;i<n->items.n;i++){Node *arm=n->items.v[i];IRBlock *entry=ir_block(f);ir_edge(b,entry);IRBlock *tail=ir_lower(f,arm->a,entry,again,end);if(tail){live=true;ir_jump(tail,join);}}
+        for(int i=0;i<n->items.n;i++){Node *arm=n->items.v[i];IRBlock *entry=ir_block(f);ir_edge(b,entry);for(int j=0;j<arm->items.n;j++)ir_operation(entry,arm->items.v[j]);IRBlock *tail=ir_lower(f,arm->a,entry,again,end);if(tail){live=true;ir_jump(tail,join);}}
         return live?join:NULL;
     }
     ir_operation(b,n);
@@ -66,20 +66,22 @@ static IRBlock *ir_lower(IRFunction *f,Node *n,IRBlock *b,IRBlock *again,IRBlock
 }
 static void prepare_ir(void){
     for(int i=0;i<all_functions.n;i++){
-        Function *source=all_functions.v[i];IRFunction *f=mem(sizeof(*f));f->source=source;IRBlock *entry=ir_block(f),*last=ir_lower(f,source->body,entry,NULL,NULL);
-        if(last)last->terminator=isvoid(source->result)?"return":"trap";
+        Function *source=all_functions.v[i];ir_expressions(source->body);IRFunction *f=mem(sizeof(*f));f->source=source;IRBlock *entry=ir_block(f),*last=ir_lower(f,source->body,entry,NULL,NULL);
+        if(source->body&&source->body->kind==N_BLOCK&&source->body->items.n==1){Node *ret=source->body->items.v[0];if(ret->kind==N_RETURN&&ret->a)f->single_return=ret->a->ir;}
+        if(last)last->terminator=source->foreign?"external":isvoid(source->result)?"return":"trap";
         for(int j=0;j<f->blocks.n;j++){IRBlock *b=f->blocks.v[j];if(!b->terminator)b->terminator="unreachable";for(int k=0;k<b->successors.n;k++){int id=(int)(intptr_t)b->successors.v[k]-1;if(id<0||id>=f->blocks.n)fatal("IR contém sucessor inválido");}}
         push(&ir_functions,f);
     }
 }
+#include "registers.h"
 static void print_ir(void){
     fputs("{\"format\":\"AssisScript-HIR-v1\",\"functions\":[",stdout);
     for(int i=0;i<ir_functions.n;i++){
-        IRFunction *f=ir_functions.v[i];if(i)fputc(',',stdout);fputs("{\"name\":",stdout);json_string(stdout,f->source->t->text);fputs(",\"result\":",stdout);json_string(stdout,type_name(f->source->result));fprintf(stdout,",\"provenBounds\":%d,\"blocks\":[",range_count(f->source->body));
+        IRFunction *f=ir_functions.v[i];if(i)fputc(',',stdout);fputs("{\"name\":",stdout);json_string(stdout,f->source->t->text);fputs(",\"result\":",stdout);json_string(stdout,type_name(f->source->result));fprintf(stdout,",\"provenBounds\":%d,\"registerVariables\":%d,\"registerReuses\":%d,\"liveness\":%s,\"blocks\":[",range_count(f->source->body),f->register_variables,f->register_reuses,f->liveness?"true":"false");
         for(int j=0;j<f->blocks.n;j++){
-            IRBlock *b=f->blocks.v[j];if(j)fputc(',',stdout);fprintf(stdout,"{\"id\":%d,\"terminator\":",b->id);json_string(stdout,b->terminator);fprintf(stdout,",\"conditionEffects\":%u,\"successors\":[",ir_effects(b->condition));
+            IRBlock *b=f->blocks.v[j];if(j)fputc(',',stdout);fprintf(stdout,"{\"id\":%d,\"terminator\":",b->id);json_string(stdout,b->terminator);fprintf(stdout,",\"conditionEffects\":%u,\"conditionValue\":%d,\"successors\":[",ir_effects(b->condition),b->condition&&b->condition->ir?b->condition->ir->id:-1);
             for(int k=0;k<b->successors.n;k++){if(k)fputc(',',stdout);fprintf(stdout,"%d",(int)(intptr_t)b->successors.v[k]-1);}fputs("],\"operations\":[",stdout);
-            for(int k=0;k<b->operations.n;k++){IROperation *op=b->operations.v[k];if(k)fputc(',',stdout);fprintf(stdout,"{\"kind\":%d,\"line\":%d,\"effects\":%u,\"type\":",op->node->kind,op->node->t->line,op->effects);json_string(stdout,type_name(op->type));fputc('}',stdout);}fputs("]}",stdout);
+            for(int k=0;k<b->operations.n;k++){IROperation *op=b->operations.v[k];if(k)fputc(',',stdout);fprintf(stdout,"{\"kind\":%d,\"line\":%d,\"effects\":%u,\"value\":%d,\"type\":",op->node->kind,op->node->t->line,op->effects,op->value?op->value->id:-1);json_string(stdout,type_name(op->type));fputc('}',stdout);}fputs("]}",stdout);
         }fputs("]}",stdout);
-    }fputs("]}\n",stdout);
+    }fputc(']',stdout);ir_print_values();fputs("}\n",stdout);
 }

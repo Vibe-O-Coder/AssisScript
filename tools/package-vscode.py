@@ -71,7 +71,7 @@ with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
     for file in sorted((root / 'benchmarks/resultados').glob('evolucao-alpha9-*')):
         if file.suffix in {'.md', '.json'}:
             archive.write(file, 'extension/benchmarks/resultados/' + file.name)
-    for pattern in ['evolucao-alpha10-*', 'optimization-alpha10-*']:
+    for pattern in ['evolucao-alpha10-*', 'optimization-alpha10-*', 'evolucao-alpha11-*', 'optimization-alpha11-*', 'soak-alpha11-*', 'optimization-alpha12-*', 'soak-alpha12-*', 'evolucao-alpha12-*', 'optimization-alpha13-*', 'soak-alpha13-*', 'evolucao-alpha13-*', 'backend-alpha15-*', 'optimization-alpha15-*', 'soak-alpha15-*']:
         for file in sorted((root/'benchmarks/resultados').glob(pattern)):
             if file.suffix in {'.md', '.json'}:
                 archive.write(file, 'extension/benchmarks/resultados/'+file.name)

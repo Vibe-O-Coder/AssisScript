@@ -21,6 +21,23 @@ fn sort_ints(valores: Array<int>): void {
     while (end > 1) { end -= 1; let troca: int = valores[0]; valores[0] = valores[end]; valores[end] = troca; sift_down(valores, 0, end); }
 }
 
+safe fn sift_owned(borrow mut values:Array<int>,root:int,size:int):void {
+    while(root<size/2){
+        let child:int=root*2+1;
+        if(child+1<size && values[child]<values[child+1]){child+=1;}
+        if(values[root]>=values[child]){return;}
+        val previous:int=values[root];values[root]=values[child];values[child]=previous;root=child;
+    }
+}
+
+/// In-place integer heapsort for managed arrays: O(n log n), O(1) extra space.
+safe fn sort(borrow mut values:Array<int>):void {
+    val size:int=len(values);let root:int=size/2;
+    while(root>0){root-=1;sift_owned(values,root,size);}
+    let end:int=size;
+    while(end>1){end-=1;val first:int=values[0];values[0]=values[end];values[end]=first;sift_owned(values,0,end);}
+}
+
 /// Primeiro índice cujo valor é >= procurado, ou len se todos forem menores. Exige array crescente. O(log n).
 fn lower_bound(valores: Array<int>, procurado: int): int {
     let start: int = 0; let end: int = len(valores);

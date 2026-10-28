@@ -17,10 +17,10 @@ class Slices(base.Evolution):
             'borrow z:slice<int>=slice_of(b,4,0);print(len(z),b[1]);'), '1 42\n0 42\n')
 
     def test_returned_generic_and_indirect_borrow(self):
-        prefix = 'safe assis sub<T>(borrow b:slice<T>):borrow(b) slice<T>{return slice_of(b,1,len(b)-1);}'
-        prefix += 'safe assis view(borrow b:*int):borrow(b) slice<int>{return slice_of(b,0,len(b));}'
+        prefix = 'safe fn sub<T>(borrow b:slice<T>):borrow(b) slice<T>{return slice_of(b,1,len(b)-1);}'
+        prefix += 'safe fn view(borrow b:*int):borrow(b) slice<int>{return slice_of(b,0,len(b));}'
         self.accepted(prefix + 'safe ' + main('own b:*int=alloc<int>(3);b[2]=42;'
-            'val f:safe assis(borrow *int):borrow(0) slice<int>=view;'
+            'val f:safe fn(borrow *int):borrow(0) slice<int>=view;'
             'borrow a:slice<int>=f(b);borrow c:slice<int>=sub::<int>(a);print(len(c),c[1]);'), '2 42\n')
 
     def test_copy_elements_and_narrow_widths(self):
@@ -40,9 +40,9 @@ class Slices(base.Evolution):
             ('own b:*int=alloc<int>(2);borrow s:slice<int>=slice_of(b,0,1);print(s==s);', 'comparação'),
         ]:
             with self.subTest(body=body): self.rejected(main(body), message)
-        self.rejected('assis bad(borrow b:*int):borrow(b) slice<int>{own local:*int=alloc<int>(1);return slice_of(local,0,1);}' + main(''), 'não pode escapar')
+        self.rejected('fn bad(borrow b:*int):borrow(b) slice<int>{own local:*int=alloc<int>(1);return slice_of(local,0,1);}' + main(''), 'não pode escapar')
         self.rejected('struct Bad{let s:slice<int>;}' + main(''), 'contrato de vida')
-        self.rejected('assis bad(s:slice<int>):int{return len(s);}' + main(''), 'parâmetro borrow')
+        self.rejected('fn bad(s:slice<int>):int{return len(s);}' + main(''), 'parâmetro borrow')
 
     def test_bounds_at_creation_and_index(self):
         for operation in ['slice_of(b,-1,0)', 'slice_of(b,0,-1)', 'slice_of(b,3,0)', 'slice_of(b,1,2)', 'slice_of(b,0,9223372036854775807)']:

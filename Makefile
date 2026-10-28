@@ -1,6 +1,10 @@
 CC ?= cc
 CFLAGS ?= -O2 -std=c11 -Wall -Wextra -Wpedantic -Wno-misleading-indentation
+ifeq ($(shell uname -s),Darwin)
+LDFLAGS ?=
+else
 LDFLAGS ?= -static -s
+endif
 
 .PHONY: all windows test test-pe test-dev test-evolution test-generics test-functions test-generic-classes test-collections-ast test-ownership-functions test-values test-files test-text-bytes test-cli test-alpha8 bench clean runtime
 all: bin/assis
@@ -86,9 +90,34 @@ test-alpha10: bin/assis
 	python3 tests/test-english-api.py
 	python3 tests/test-release-policy.py
 
+.PHONY: test-alpha11
+test-alpha11: bin/assis
+	python3 tests/test-ffi.py
+	python3 tests/test-http.py
+	python3 tests/test-process.py
+	python3 tests/test-applications-bc.py
+
 bench:
 	node tools/benchmark.js
 
 clean:
 	rm -f bin/assis bin/assis.exe bin/assis-setup.exe
 	rm -rf build
+
+.PHONY: test-alpha12
+test-alpha12: bin/assis
+	python3 tests/test-safe-default.py
+	python3 tests/test-net.py
+
+.PHONY: test-alpha13
+test-alpha13: bin/assis
+	python3 tests/test-move-enums.py
+	python3 tests/test-closures.py
+
+.PHONY: test-usability
+test-usability: bin/assis
+	python3 tests/test-usability.py
+
+.PHONY: test-alpha15
+test-alpha15: bin/assis
+	python3 tests/test-backend-evolution.py

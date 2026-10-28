@@ -2,16 +2,16 @@
 
 **Alpha.7:** value struct e enums são especializados pela mesma infraestrutura; retornos compostos e callbacks Copy conservam identidade e efeitos. [Contratos](VALORES-E-VARIANTES.md). Structs sem value e classes conservam as representações anteriores.
 
-Continuação da alpha.2: [tipos de função, valores especializados e callbacks](FUNCOES-E-EFEITOS.md). `identidade::<int>` também pode ser um valor; tipos como `pure assis(int): int` podem ser argumentos de tipo e são substituídos estruturalmente. O efeito participa da identidade canônica.
+Continuação da alpha.2: [tipos de função, valores especializados e callbacks](FUNCOES-E-EFEITOS.md). `identidade::<int>` também pode ser um valor; tipos como `pure fn(int): int` podem ser argumentos de tipo e são substituídos estruturalmente. O efeito participa da identidade canônica.
 
 Esta alpha continua a fase 1. Funções globais, structs e classes podem declarar até 16 parâmetros de tipo. O compilador guarda a árvore sintática e emite uma instância nativa por definição e combinação concreta de tipos utilizada. Não há interpretação, boxing ou despacho dinâmico acrescentado pela especialização de funções. Classes conservam o despacho virtual de métodos já existente.
 
 ```assis
-pure assis identidade<T>(value: T): T { return value; }
+pure fn identidade<T>(value: T): T { return value; }
 struct Caixa<T> { let value: T; }
 struct Par<A, B> { let primeiro: A; let segundo: B; }
 
-assis assis_assis(): int {
+fn main(): int {
     own caixa: Caixa<int> = new Caixa<int>(identidade::<int>(42));
     print(caixa.value, identidade::<bool>(true));
     return 0;
@@ -22,7 +22,7 @@ Saída: `42 aSsIs`. [Exemplo distribuído](../exemplos/16_generics.assis).
 
 ## Regras de uso
 
-Chamadas genéricas exigem `nome::<Tipo, OutroTipo>(arg_count)`. A sintaxe explícita evita confundir argumentos de tipo com comparações `<` e `>`. Não existe inferência dos argumentos de tipo. Todos os argumentos devem ser fornecidos; `void` não é um argumento válido. A entrada `assis_assis` não pode ser genérica.
+Chamadas genéricas exigem `nome::<Tipo, OutroTipo>(arg_count)`. A sintaxe explícita evita confundir argumentos de tipo com comparações `<` e `>`. Não existe inferência dos argumentos de tipo. Todos os argumentos devem ser fornecidos; `void` não é um argumento válido. A entrada `main` não pode ser genérica.
 
 `Caixa<int>` e `Caixa<byte>` são tipos nominais distintos. `OutraCaixa<int>` também é distinto, mesmo com campos idênticos. Parâmetros chamados `T` em definições diferentes têm identidades diferentes. Os módulos continuam compartilhando um único espaço global; não há sobrecarga ou namespaces novos.
 
@@ -43,12 +43,12 @@ Há limites determinísticos de 256 instâncias de funções/structs/classes do 
 ## Classes e herança na alpha.4
 
 ```assis
-ASSIS Caixa<T> {
+class Caixa<T> {
     private let value: T;
-    assis assis_fodase(value: T): void { self.value = value; }
-    assis ler(): T { return self.value; }
+    fn init(value: T): void { self.value = value; }
+    fn ler(): T { return self.value; }
 }
-ASSIS Filha<U> extends Caixa<U> {}
+class Filha<U> extends Caixa<U> {}
 ```
 
 Campos, parâmetros, retornos, tipos de callback, variáveis locais, alocações e chamadas genéricas no corpo dos métodos recebem substituição estrutural. Métodos usam os parâmetros de tipo da classe; declarar parâmetros próprios, como `assis metodo<U>`, continua rejeitado. Não há métodos pure nem valores de método vinculados a um objeto nesta entrega.

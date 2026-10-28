@@ -44,11 +44,11 @@ with tempfile.TemporaryDirectory(prefix='assis-functions-bench-') as temp:
     folder = Path(temp)
     source = folder / 'mesmo.assis'
     for name, call, flags in variants:
-        text = ('assis assis_assis():int{val f:pure assis(int):int=calcular;let total:int=0;'
+        text = ('fn main():int{val f:pure fn(int):int=calcular;let total:int=0;'
                 f'for(let i:int=0;i<{count};i+=1){{total+={call};}}'
                 'print(total);return 0;}\n'
-                'pure assis calcular(n:int):int{return n*3+7;}\n'
-                'pure assis aplicar<T>(f:pure assis(T):T,v:T):T{return f(v);}\n')
+                'pure fn calcular(n:int):int{return n*3+7;}\n'
+                'pure fn aplicar<T>(f:pure fn(T):T,v:T):T{return f(v);}\n')
         report['results'].append(dict(variant=name, source=text, compileSamplesMs=[], samplesMs=[]))
     for sample in range(args.samples + 1):
         for index in [(sample + j) % len(variants) for j in range(len(variants))]:

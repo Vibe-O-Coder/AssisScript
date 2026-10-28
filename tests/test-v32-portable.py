@@ -17,6 +17,7 @@ for file in fixtures:
     case=json.loads(file.read_text(encoding='utf-8'))
     source=file.with_suffix('.assis')
     args=case['args']
+    if '--safe' not in args and '--legacy' not in args:args=[*args,'--legacy']
     result=subprocess.run([compiler,args[0],source,*args[1:]],input=base64.b64decode(case['input']),capture_output=True,timeout=30)
     assert result.returncode==case['status'], (file.name,result.returncode,result.stderr)
     assert result.stdout.decode('utf-8')==case['stdout'], (file.name,'stdout')

@@ -2,17 +2,21 @@
 
 [English](README.md) · [Español](README.es.md)
 
-AssisScript é uma linguagem nativa experimental e a base de um projeto de **novo ecossistema Web**. Compila diretamente para Linux x86_64 e Windows x64. Navegador, HTDL, estilos e motor de busca são projetos futuros.
+AssisScript é uma linguagem nativa experimental e a base de um projeto de **novo ecossistema Web**. Compila diretamente para Linux x86_64, Windows x64 e macOS x86_64 experimental. Navegador, HTDL, estilos e motor de busca são projetos futuros.
 
 A implementação é desenvolvida com assistência de IA (**GPT-6.1 Sol, raciocínio Extra Alto**). Toda a ideia, direção e estrutura do projeto foram concebidas por humanos, com assistência de IAs em sugestões. A revisão e as decisões permanecem sob direção humana.
 
-Versão atual: **3.3.0-alpha.10**, experimental. Consulte [handoff](docs/HANDOFF-3.3-ALPHA.10.md), [validação](docs/VALIDACAO-3.3-ALPHA.10.md) e [progresso auditável](docs/PROGRESSO.md).
+Versão atual: **3.3.0-alpha.15**, experimental. Consulte [handoff](docs/HANDOFF-3.3-ALPHA.15.md), [validação](docs/VALIDACAO-ALPHA15.json) e [progresso auditável](docs/PROGRESSO.md).
+
+Versão para testes: consulte o [guia Windows/Linux](docs/TESTES-GITHUB.md) para baixar a branch `testing/alpha15` e registrar resultados. A publicação mantém o estado experimental e as pendências documentadas.
+
+[Closures, variantes Move e resultados proprietários](docs/CAPTURAS-E-VARIANTES-MOVE.md).
 
 ## Linguagem e stdlib em inglês
 
 As palavras canônicas da linguagem e os nomes públicos de módulos, tipos, funções e membros da biblioteca padrão devem ser **em inglês**. A documentação pode ter traduções; os nomes das APIs nos exemplos continuam em inglês. Use `fn`, `class`, `main`, `init`, `import`, `File`, `file_open`, `slice_of` e `monotonic_ms`.
 
-As grafias históricas da sintaxe continuam como aliases do compilador. Os nomes portugueses da stdlib foram substituídos na alpha.10: atualize imports e chamadas conforme o [guia](docs/ENGLISH-API.md) e o [mapa completo](docs/API-MIGRATION.json). Projetos com manifesto precisam executar `assis lock` novamente.
+Historical spellings and word comments were removed in alpha.14. The joke edition is isolated in [historical](docs/HISTORICAL.md). Use [the current language guide](docs/LINGUAGEM.md) and regenerate package lockfiles with `assis lock`.
 
 ```assis
 pure fn double(value: int): int { return value * 2; }
@@ -24,6 +28,8 @@ safe fn main(): int {
     return 0;
 }
 ```
+
+Alpha.11: ABI C escalar, callbacks, HTTP(S), processos/pipes e serviço persistente B/C delimitados. [Contratos e limites](docs/HANDOFF-3.3-ALPHA.11.md). Progresso estimado: 85%; 24 horas reais, capturas/variantes Move e cancelamento assíncrono seguem pendentes.
 
 ## Começar
 
@@ -39,9 +45,11 @@ Os programas compilados executam sem Python, Node, GCC ou assembler externo. Par
 
 Há funções puras, generics, funções como valores, registros Copy, enums/matching, Option/Result, ownership, empréstimos e vidas explícitas, classes gerenciadas, fatias, UTF-8, números nativos, coleções, arquivos, argumentos, JSON limitado, eventos cooperativos e pacotes offline. Editor/LSP, ferramentas e depuração Linux acompanham a distribuição.
 
-Módulos: `math`, `strings`, `memory`, `errors`, `convert`, `algorithms`, `csv`, `encoding`, `cli`, `json`, `time`, `log`, `iterators`, `events`, `unicode` e `owned`. Consulte [catálogo](stdlib/catalogo.json) e [contratos](docs/BIBLIOTECAS.md).
+Módulos: `math`, `strings`, `memory`, `errors`, `convert`, `algorithms`, `csv`, `encoding`, `cli`, `json`, `time`, `log`, `iterators`, `events`, `unicode`, `owned`, `http` e `process`. Consulte [catálogo](stdlib/catalogo.json) e [contratos](docs/BIBLIOTECAS.md).
 
-Continuam abertos capturas/closures, variantes Move, FFI C, rede/DNS/HTTP/TLS, aplicações B/C completas, validação real de 24 horas, backend integral por IR, ARM64/macOS e aceite independente. `--safe` é um perfil explícito. O percentual do plano não significa prontidão para produção.
+Alpha.14 focuses on language usability: text output/building, global constants, byte characters, constructor chaining, two-phase receiver borrows, checked downcasts, indexed owned collections and random numbers. Closures already existed in alpha.13. Linux and Windows are tested natively; [macOS x86_64 is experimental](docs/MACOS.md). This review does not advance the internal roadmap percentage or claim browser readiness.
+
+A alpha.15 retoma o plano: expressões escalares em IR tipada, reutilização global de registradores e provas de limites para laços diretos/reversos. Os ensaios de 24 horas Windows/Linux foram aprovados. Progresso: **94% estimados (94/100)**; consulte os [resultados](docs/HANDOFF-3.3-ALPHA.15.md) e [contratos e limites](docs/BACKEND-ALPHA15.md).
 
 ## Uso, bibliotecas e versões alternativas
 

@@ -32,10 +32,10 @@ with tempfile.TemporaryDirectory(prefix='assis-alpha8-bench-') as temp:
     json_n=max(1000,n//100)
     payload=''.join(f'b[{i}]=byte({c});' for i,c in enumerate(document))
     workloads=[
-        ('f64',f'safe assis assis_assis():int{{let total:f64=0.0;for(let i:int=0;i<{n};i+=1){{total+=f64(i)*0.5;}}print(total);return 0;}}',float(n*(n-1)/4).hex().encode()+b'\n'),
-        ('u32',f'safe assis assis_assis():int{{let total:u32=u32(0);for(let i:int=0;i<{n};i+=1){{total+=u32(i);}}print(total);return 0;}}',str((n*(n-1)//2)%(1<<32)).encode()+b'\n'),
-        ('json','#yuri <std/json.assis>\nsafe assis assis_assis():int{own b:*byte=alloc<byte>('+str(len(document))+');'+payload+f'for(let i:int=0;i<{json_n};i+=1){{assert(json::validate(b,{len(document)},64,4096).valid);}}print({json_n});return 0;}}',str(json_n).encode()+b'\n'),
-        ('events','#yuri <std/events.assis>\nsafe assis acao(borrow mut l:events::Loop,n:int):void{if(n<'+str(json_n)+'){assert(events::schedule(l,0,n+1,acao)>0);}}safe assis assis_assis():int{own l:events::Loop=events::create(1);assert(events::schedule(l,0,1,acao)>0);print(events::run(l,'+str(json_n)+'));return 0;}',str(json_n).encode()+b'\n')
+        ('f64',f'safe fn main():int{{let total:f64=0.0;for(let i:int=0;i<{n};i+=1){{total+=f64(i)*0.5;}}print(total);return 0;}}',float(n*(n-1)/4).hex().encode()+b'\n'),
+        ('u32',f'safe fn main():int{{let total:u32=u32(0);for(let i:int=0;i<{n};i+=1){{total+=u32(i);}}print(total);return 0;}}',str((n*(n-1)//2)%(1<<32)).encode()+b'\n'),
+        ('json','import "std/json.assis";\nsafe fn main():int{own b:*byte=alloc<byte>('+str(len(document))+');'+payload+f'for(let i:int=0;i<{json_n};i+=1){{assert(json::validate(b,{len(document)},64,4096).valid);}}print({json_n});return 0;}}',str(json_n).encode()+b'\n'),
+        ('events','import "std/events.assis";\nsafe fn acao(borrow mut l:events::Loop,n:int):void{if(n<'+str(json_n)+'){assert(events::schedule(l,0,n+1,acao)>0);}}safe fn main():int{own l:events::Loop=events::create(1);assert(events::schedule(l,0,1,acao)>0);print(events::run(l,'+str(json_n)+'));return 0;}',str(json_n).encode()+b'\n')
     ]
     records=[]
     for name,source,expected in workloads:

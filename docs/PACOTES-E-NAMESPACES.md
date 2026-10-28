@@ -5,11 +5,11 @@ Um arquivo pode começar com `namespace medidas;`. Seus tipos e funções ficam 
 ```assis
 namespace medidas;
 public value struct Ponto<T> { let x: T; let y: T; }
-pure assis interno(n: int): int { return n * 2; }
-public pure assis dobro(n: int): int { return interno(n); }
+pure fn interno(n: int): int { return n * 2; }
+public pure fn dobro(n: int): int { return interno(n); }
 ```
 
-O consumidor importa o arquivo e usa `medidas::dobro(21)` ou `new medidas::Ponto<int>(20,22)`. Especialização explícita: `medidas::identidade::<int>(42)`. Nomes locais continuam ocultando funções; resolver namespaces não é substituição textual de código. Identidades, efeitos, vidas e privacidade continuam sendo verificados após a especialização AST. A entrada `assis_assis` permanece no arquivo sem namespace.
+O consumidor importa o arquivo e usa `medidas::dobro(21)` ou `new medidas::Ponto<int>(20,22)`. Especialização explícita: `medidas::identidade::<int>(42)`. Nomes locais continuam ocultando funções; resolver namespaces não é substituição textual de código. Identidades, efeitos, vidas e privacidade continuam sendo verificados após a especialização AST. A entrada `main` permanece no arquivo sem namespace.
 
 ## Manifesto e lockfile
 
@@ -22,7 +22,7 @@ dep medidas 2.0.0 "vendor/medidas locais"
 
 Cada dependência tem seu próprio `assis.pkg` com nome e versão `X.Y.Z` exata, e pode declarar outras dependências locais. Não há intervalos de versão, registro, downloads ou scripts de instalação. Fontes são vendorizados dentro da árvore do projeto; symlinks/junctions são resolvidos antes de verificar esse limite. IDs de alias são locais ao manifesto importador.
 
-`#yuri <pkg/medidas/api.assis>` resolve somente o alias declarado. Dependências transitivas usam seus próprios aliases. Dependências não podem importar código externo por escapes relativos ou pesquisa ambiente; devem declarar `pkg/alias/...`. `std/` refere-se às bibliotecas do compilador e também tem conteúdo registrado no lockfile. Projetos com manifesto não aceitam módulos externos não vendorizados via `-I`.
+`import "pkg/medidas/api.assis";` resolve somente o alias declarado. Dependências transitivas usam seus próprios aliases. Dependências não podem importar código externo por escapes relativos ou pesquisa ambiente; devem declarar `pkg/alias/...`. `std/` refere-se às bibliotecas do compilador e também tem conteúdo registrado no lockfile. Projetos com manifesto não aceitam módulos externos não vendorizados via `-I`.
 
 Após revisar as dependências, execute `assis lock entrada.assis`. O compilador carrega e verifica o projeto antes de substituir `assis.lock` atomicamente. O arquivo registra a versão do compilador, hashes SHA-256 dos manifestos transitivos, dos fontes de dependências efetivamente importados e das bibliotecas padrão usadas. A comparação é exata e ordenada, sem datas ou caminhos absolutos do host. Os hashes representam os mesmos bytes carregados para compilação, inclusive BOM; alterações por overlays também são verificadas.
 

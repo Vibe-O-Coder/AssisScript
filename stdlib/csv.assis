@@ -1,5 +1,4 @@
-#yuri <std/strings.assis>
-
+import "std/strings.assis";
 /// CSV proprietário. linhas contém visualizações dos textos em _campos. ok=false informa erro em posicao (byte zero-based); nenhuma exceção encerra o programa por CSV inválido. Libere com dispose(); free().
 class CsvDocument {
     let ok: bool;
@@ -8,7 +7,8 @@ class CsvDocument {
     private let _campos: Array<String>;
 
     /// Inicializa documento vazio. Use read_csv para analisar dados.
-    fn init(): void { self.ok = true; self.position = -1; self.rows = new Array<Array<text>>(); self._campos = new Array<String>(); }
+    fn init(): void { self._reset(); }
+    private fn _reset(): void { self.ok = true; self.position = -1; self.rows = new Array<Array<text>>(); self._campos = new Array<String>(); }
 
     /// Libera linhas e todos os textos próprios, inclusive de uma análise que falhou. Repetição é segura.
     fn dispose(): void {
@@ -21,7 +21,7 @@ class CsvDocument {
         let n: int = len(entrada); let data: *byte = alloc<byte>(n); defer free(data);
         let origem: *byte = bytes(entrada); let copia: int = 0;
         while (copia < n) { data[copia] = origem[copia]; copia += 1; }
-        self.dispose(); self.init();
+        self.dispose(); self._reset();
         let documento: CsvDocument = self;
         if (separador == 0 || separador >= 128 || separador == 34 || separador == 10 || separador == 13) { documento.ok = false; documento.position = 0; return documento; }
         if (n == 0) { return documento; }

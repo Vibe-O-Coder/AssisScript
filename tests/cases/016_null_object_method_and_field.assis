@@ -1,5 +1,5 @@
-ASSIS AssisAssis { Assis Assis_assis: AssIs; assis FodaseFodase(): AssIs { Fodase 1; } }
-assis assis_assis(): AssIs {
-Assis AssisFodase: AssisAssis = fOdase; FODASE(AssisFodase.FodaseFodase());
-Fodase 0;
+class AssisAssis { let Assis_assis: int; fn FodaseFodase(): int { return 1; } }
+fn main(): int {
+let AssisFodase: AssisAssis = null; print(AssisFodase.FodaseFodase());
+return 0;
 }

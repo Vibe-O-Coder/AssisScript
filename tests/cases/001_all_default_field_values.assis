@@ -1,17 +1,17 @@
 
-            ASSIS AssisAssis {
-                Assis Assis_assis: AssIs; Assis Assis_fodase: AssiS;
-                Assis Fodase_assis: FodAsE; Assis Fodase_fodase: FoDaSe;
-                Assis Assis_Fodase: *AssiS; Assis Fodase_Assis: AssisAssis;
+            class AssisAssis {
+                let Assis_assis: int; let Assis_fodase: byte;
+                let Fodase_assis: bool; let Fodase_fodase: text;
+                let Assis_Fodase: *byte; let Fodase_Assis: AssisAssis;
             }
         
-assis assis_assis(): AssIs {
+fn main(): int {
 
-            Assis AssisFodase: AssisAssis = fodase AssisAssis();
-            FODASE(AssisFodase.Assis_assis, AssisFodase.Assis_fodase,
+            let AssisFodase: AssisAssis = new AssisAssis();
+            print(AssisFodase.Assis_assis, AssisFodase.Assis_fodase,
                 AssisFodase.Fodase_assis, AssisFodase.Fodase_fodase == "",
-                AssisFodase.Assis_Fodase == fOdase, AssisFodase.Fodase_Assis == fOdase);
-            foDASE(AssisFodase);
+                AssisFodase.Assis_Fodase == null, AssisFodase.Fodase_Assis == null);
+            free(AssisFodase);
         
-Fodase 0;
+return 0;
 }

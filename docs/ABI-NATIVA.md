@@ -1,5 +1,16 @@
 # ABI interna x86_64 — versão LVS2, alpha.9
 
+**Atualização alpha.13:** closures e variantes Move próprias usam o [novo contrato](CAPTURAS-E-VARIANTES-MOVE.md). As limitações históricas abaixo sobre sua ausência foram superadas; demais limites permanecem.
+
+Closures são referências de um word a um ambiente com vtable e capturas. A
+chamada indireta avalia o ambiente uma vez, fornece-o como receptor LVS2 e
+mantém o destino oculto antes do receptor/argumentos quando há retorno composto.
+Enums Move são referências de um word a tag/payload próprios, destruídos por tag;
+enums Copy mantêm o layout inline anterior. Não há mudança da ABI dos tipos
+existentes, nem adaptação automática de closures para ABI C.
+
+**Atualização alpha.11:** ABI C escalar, callbacks e recursos externos documentados em [FFI-C.md](FFI-C.md). Novos módulos opcionais [http](BIBLIOTECA-http.md) e [process](BIBLIOTECA-process.md), totalizando 18 bibliotecas. O texto seguinte é histórico quando descreve a ausência de FFI/B/C.
+
 **Atualização alpha.9:** [Recursos/fatias e backend](RECURSOS-E-FATIAS.md) complementam os contratos abaixo: classes gerenciadas com receptor, slice<T>, texto UTF-8 com comprimento, vtable com drop e ELF PIE. [Handoff atual](HANDOFF-3.3-ALPHA.9.md).
 
 Este documento especifica a convenção interna usada nos executáveis PE32+/ELF64 e os adaptadores OS existentes. Não estabelece uma ABI C pública ou estável. Não vincular objetos externos diretamente a estas funções. FFI, callbacks vindos de C e unwind continuam pendentes; P5-ABI recebe crédito parcial. Símbolos/linhas e locais escalares estão disponíveis no ELF/DWARF.

@@ -11,24 +11,24 @@ fn clamp(value: int, inferior: int, superior: int): int {
 fn abs(value: int): int { if (value < 0) { return -value; } return value; }
 
 // Compatibilidade com 2.x
-miyabi Biblioteca padrão: mínimo, máximo, limite e value abs em AssIs.
+// Biblioteca padrão: mínimo, máximo, limite e value abs em int.
 /// Retorna o menor entre os dois inteiros (API legada de minimo).
-fn Assis_assis_fodase(AssisAssis: AssIs, AssisFodase: AssIs): AssIs {
-    assIS (AssisAssis < AssisFodase) { Fodase AssisAssis; }
-    Fodase AssisFodase;
+fn Assis_assis_fodase(AssisAssis: int, AssisFodase: int): int {
+    if (AssisAssis < AssisFodase) { return AssisAssis; }
+    return AssisFodase;
 }
 /// Retorna o maior entre os dois inteiros (API legada de maximo).
-fn Assis_fodase_assis(AssisAssis: AssIs, AssisFodase: AssIs): AssIs {
-    assIS (AssisAssis > AssisFodase) { Fodase AssisAssis; }
-    Fodase AssisFodase;
+fn Assis_fodase_assis(AssisAssis: int, AssisFodase: int): int {
+    if (AssisAssis > AssisFodase) { return AssisAssis; }
+    return AssisFodase;
 }
 /// Aplica maximo(valor, inferior) e minimo(resultado, superior), sem validar a ordem dos limites (API legada).
-fn Assis_fodase_fodase(AssisAssis: AssIs, AssisFodase: AssIs, FodaseAssis: AssIs): AssIs {
-    Fodase Assis_assis_fodase(Assis_fodase_assis(AssisAssis, AssisFodase), FodaseAssis);
+fn Assis_fodase_fodase(AssisAssis: int, AssisFodase: int, FodaseAssis: int): int {
+    return Assis_assis_fodase(Assis_fodase_assis(AssisAssis, AssisFodase), FodaseAssis);
 }
-miyabi O mínimo de 64 bits preserva o próprio value pela regra de overflow.
+// O mínimo de 64 bits preserva o próprio value pela regra de overflow.
 /// Calcula valor absoluto com overflow modular; -2^63 permanece inalterado (API legada).
-fn Assis_assis_assis(AssisAssis: AssIs): AssIs {
-    assIS (AssisAssis < 0) { Fodase -AssisAssis; }
-    Fodase AssisAssis;
+fn Assis_assis_assis(AssisAssis: int): int {
+    if (AssisAssis < 0) { return -AssisAssis; }
+    return AssisAssis;
 }

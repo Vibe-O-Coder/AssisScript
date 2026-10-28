@@ -1,9 +1,9 @@
 
-            ASSIS AssisAssis {
-                assis Assis_Fodase(): FODase { FODASE("método"); Fodase; }
+            class AssisAssis {
+                fn Assis_Fodase(): void { print("método"); return; }
             }
-            assis assis_assis(): FODase {
-                Assis AssisFodase: AssisAssis = fodase AssisAssis();
-                AssisFodase.Assis_Fodase(); foDASE(AssisFodase); Fodase;
+            fn main(): void {
+                let AssisFodase: AssisAssis = new AssisAssis();
+                AssisFodase.Assis_Fodase(); free(AssisFodase); return;
             }
         

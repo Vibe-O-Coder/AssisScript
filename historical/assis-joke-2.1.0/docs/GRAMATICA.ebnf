@@ -1,0 +1,60 @@
+(* AssisScript 1.0. A linguagem distingue maiúsculas/minúsculas. *)
+
+programa      = { classe | funcao } ;
+classe        = "ASSIS", nome, [ "ASSIS_FODASE", nome ],
+                "{", { campo | funcao }, "}" ;
+campo         = "Assis", nome, ":", tipo, ";" ;
+funcao        = "assis", nome, "(", [ parametros ], ")", ":", tipo, bloco ;
+parametros    = parametro, { ",", parametro } ;
+parametro     = nome, ":", tipo ;
+tipo          = { "*" }, ( "AssIs" | "AssiS" | "FodAsE" | "FoDaSe" | "FODase" | nome ) ;
+bloco         = "{", { instrucao }, "}" ;
+
+instrucao     = bloco | variavel | condicional | laco | retorno | saida
+              | liberacao | interrupcao | continuacao | atribuicao | chamada_simples ;
+variavel      = "Assis", nome, ":", tipo, "=", expressao, ";" ;
+condicional   = "assIS", "(", expressao, ")", bloco,
+                [ "fodASE", ( bloco | condicional ) ] ;
+laco          = "ASSis", "(", expressao, ")", bloco ;
+retorno       = "Fodase", [ expressao ], ";" ;
+saida         = "FODASE", argumentos, ";" ;
+liberacao     = "foDASE", "(", expressao, ")", ";" ;
+interrupcao   = "FODasE", ";" ;
+continuacao   = "FodASE", ";" ;
+atribuicao    = expressao, operador_atribuicao, expressao, ";" ;
+chamada_simples = expressao, ";" ;
+operador_atribuicao = "=" | "+=" | "-=" | "*=" | "/=" | "%="
+                   | "&=" | "|=" | "^=" | "<<=" | ">>=" ;
+argumentos    = "(", [ expressao, { ",", expressao } ], ")" ;
+
+(* Precedência, da menor para a maior. Todos os binários associam à esquerda. *)
+expressao     = ou_logico ;
+ou_logico     = e_logico, { "||", e_logico } ;
+e_logico      = ou_bits, { "&&", ou_bits } ;
+ou_bits       = xor_bits, { "|", xor_bits } ;
+xor_bits      = e_bits, { "^", e_bits } ;
+e_bits        = igualdade, { "&", igualdade } ;
+igualdade     = comparacao, { ( "==" | "!=" ), comparacao } ;
+comparacao    = shift, { ( "<" | "<=" | ">" | ">=" ), shift } ;
+shift         = soma, { ( "<<" | ">>" ), soma } ;
+soma          = produto, { ( "+" | "-" ), produto } ;
+produto       = prefixo, { ( "*" | "/" | "%" ), prefixo } ;
+prefixo       = ( "+" | "-" | "!" | "~" | "*" | "&" ), prefixo | posfixo ;
+posfixo       = primario, { argumentos | ".", nome | "[", expressao, "]" } ;
+primario      = inteiro | texto | nome | "aSSIS" | "aSsIs" | "fOdAsE" | "fOdase"
+              | "(", expressao, ")"
+              | "fodase", nome, argumentos
+              | ( "ASSIS_fodase" | "FODASE_fodase" | "AssIs" | "AssiS" | "FodAsE" ), argumentos ;
+
+(* Léxico: inteiro decimal, 0x hexadecimal ou 0b binário.
+   Sublinhados separam grupos de dígitos. Faixa de 64 bits.
+   texto: aspas duplas; escapes documentados no README.
+   nome: /(?:assis|fodase)(?:_?(?:assis|fodase))*/i, somente ASCII;
+   nomes não podem ser palavras-chave. Capitalização preservada.
+   Comentários: // até fim da linha; /* ... */ com aninhamento.
+
+   Restrições de tipos e de retorno são verificadas após o parser.
+   Atribuição exige posição gravável. A gramática aceita expressões
+   amplas no lado esquerdo, mas a análise semântica rejeita valores temporários.
+   Os parâmetros de funções/métodos não aceitam FODase.
+   assis_assis é obrigatório e assis_fodase é o inicializador opcional. *)

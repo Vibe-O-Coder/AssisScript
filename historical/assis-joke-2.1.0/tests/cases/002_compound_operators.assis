@@ -1,0 +1,12 @@
+
+assis assis_assis(): AssIs {
+
+            Assis AssisAssis: AssIs = 20;
+            AssisAssis += 2; AssisAssis -= 1; AssisAssis *= 2;
+            AssisAssis /= 2; AssisAssis %= 10; AssisAssis <<= 3;
+            AssisAssis >>= 1; AssisAssis |= 2; AssisAssis &= 7; AssisAssis ^= 1;
+            Assis AssisFodase: AssiS = AssiS(255); AssisFodase += 2;
+            FODASE(AssisAssis, AssisFodase);
+        
+Fodase 0;
+}

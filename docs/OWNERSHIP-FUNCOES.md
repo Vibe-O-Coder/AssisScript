@@ -10,11 +10,11 @@ O modelo gerenciado passa a cobrir parâmetros, retornos, chamadas indiretas e c
 
 ```assis
 struct Ponto { let x: int; }
-safe assis create(n: int): own Ponto { return new Ponto(n); }
-safe assis ler(borrow p: Ponto): int { return p.x; }
-safe assis alterar(borrow mut p: Ponto, n: int): void { p.x = n; }
-safe assis transferir(own p: Ponto): own Ponto { return move(p); }
-safe assis observar(borrow p: Ponto): borrow(p) Ponto { return p; }
+safe fn create(n: int): own Ponto { return new Ponto(n); }
+safe fn ler(borrow p: Ponto): int { return p.x; }
+safe fn alterar(borrow mut p: Ponto, n: int): void { p.x = n; }
+safe fn transferir(own p: Ponto): own Ponto { return move(p); }
+safe fn observar(borrow p: Ponto): borrow(p) Ponto { return p; }
 ```
 
 | Contrato | Regra |
@@ -31,9 +31,9 @@ Um retorno declara uma única origem. Não há inferência, união de vidas ou v
 ## Funções como valores
 
 ```assis
-val leitor: safe assis(borrow Ponto): int = ler;
-val observar_fn: safe assis(borrow Ponto): borrow(0) Ponto = observar;
-val transferir_fn: safe assis(own Ponto): own Ponto = transferir;
+val leitor: safe fn(borrow Ponto): int = ler;
+val observar_fn: safe fn(borrow Ponto): borrow(0) Ponto = observar;
+val transferir_fn: safe fn(own Ponto): own Ponto = transferir;
 ```
 
 O índice de origem nos tipos de função começa em zero. Parâmetros e retorno têm contratos invariantes: trocar own por borrow, compartilhado por exclusivo ou a origem da vida muda o tipo. Pure pode entrar num contrato com efeitos; safe pode entrar num contrato legado, mas o caminho inverso exige uma função comprovadamente safe. Apagar safe impede chamá-la em safe sem uma fronteira unsafe. Não há adaptação implícita de ownership.
@@ -53,11 +53,11 @@ Nos condicionais, estados de consumo são unidos apenas nos caminhos que continu
 ```assis
 struct Pacote { own itens: Array<int>; own buffer: *byte; let id: int; }
 
-safe assis montar(): own Pacote {
+safe fn montar(): own Pacote {
     return new Pacote([1, 2], alloc<byte>(16), 42);
 }
 
-safe assis assis_assis(): int {
+safe fn main(): int {
     own p: Pacote = montar();
     own itens: Array<int> = move(p.itens);
     p.itens = [3, 4];
@@ -74,11 +74,11 @@ Os tipos own suportados são Arquivo, buffers primitivos/Copy, Array/HashMap de 
 
 ## Perfil safe e fronteira unsafe
 
-`safe assis` verifica um subconjunto gerenciado. `--safe` exige que a entrada seja safe (ou pure); funções legadas chamadas por ela precisam estar dentro de `unsafe { ... }`. Funções safe concretas são verificadas mesmo sem chamada. Templates seguem a validação por instância; `check --library` não certifica combinações não utilizadas.
+`safe fn` verifica um subconjunto gerenciado. `--safe` exige que a entrada seja safe (ou pure); funções legadas chamadas por ela precisam estar dentro de `unsafe { ... }`. Funções safe concretas são verificadas mesmo sem chamada. Templates seguem a validação por instância; `check --library` não certifica combinações não utilizadas.
 
 ```assis
-assis legado(n: int): int { return n + 1; }
-safe assis assis_assis(): int {
+fn legado(n: int): int { return n + 1; }
+safe fn main(): int {
     own a: Array<int> = [42];
     print(a[0]);
     unsafe { print(legado(1)); }

@@ -1,6 +1,6 @@
 # std/codificacao.assis
 
-Biblioteca opcional; selecione `--with encoding` ou instalação completa. Importe `#yuri <std/encoding.assis>`.
+Biblioteca opcional; selecione `--with encoding` ou instalação completa. Importe `import "std/encoding.assis";`.
 
 | API | Resultado |
 | --- | --- |
@@ -14,8 +14,8 @@ Todas são O(n), aceitam entrada vazia e suportam dados binários com byte zero.
 `BytesResult` contém `ok`, `position` e `data: Array<byte>`. Erro de formato é recuperável; dados pode conter prefixo parcial, que não deve ser consumido como resultado válido. Posição conta bytes a partir de zero. Libere o resultado com `dispose(); free()`, inclusive em erro. O Texto codificado exige a mesma dupla liberação.
 
 ```assis
-#yuri <std/encoding.assis>
-assis assis_assis(): int {
+import "std/encoding.assis";
+fn main(): int {
     let data: Array<byte> = [byte(0), byte(255)];
     let base64: String = base64_encode(data);
     print(base64.view());

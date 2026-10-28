@@ -76,26 +76,26 @@ class CollectionsAST(unittest.TestCase):
             'm.set(false,byte(42));print(m.get(false));free(m);'), '42\n')
 
     def test_callbacks_and_nested_user_types_do_not_roundtrip_through_text(self):
-        self.accepted('pure assis dobro(v:int):int{return v*2;}'
+        self.accepted('pure fn dobro(v:int):int{return v*2;}'
             'struct Registro<T>{let v:T;}'
-            'ASSIS Caixa<T>{let v:T;assis ler():T{return self.v;}}' + main(
-            'let m:HashMap<text,pure assis(int):int>=new HashMap<text,pure assis(int):int>();'
-            'm.set("f",dobro);let vs:Array<pure assis(int):int>=m.values();print(vs[0](21));'
+            'class Caixa<T>{let v:T;fn ler():T{return self.v;}}' + main(
+            'let m:HashMap<text,pure fn(int):int>=new HashMap<text,pure fn(int):int>();'
+            'm.set("f",dobro);let vs:Array<pure fn(int):int>=m.values();print(vs[0](21));'
             'let c:Caixa<Registro<int>>=new Caixa<Registro<int>>();c.v=new Registro<int>(7);'
             'let a:Array<Caixa<Registro<int>>>=[c];print(a[0].ler().v);'
             'free(a);free(c.v);free(c);free(vs);free(m);'), '42\n7\n')
-        ty = 'pure assis(' + ','.join(['int'] * 1000) + '):int'
+        ty = 'pure fn(' + ','.join(['int'] * 1000) + '):int'
         self.accepted(main(f'own a:Array<{ty}>=new Array<{ty}>();print(len(a));'), '0\n')
 
     def test_canonical_types_and_effects_remain_distinct(self):
         self.rejected(main('let a:Array<int>=[];let b:Array<byte>=a;'), 'não é possível usar')
-        self.rejected(main('let a:Array<assis(int):int>=[];let b:Array<pure assis(int):int>=a;'), 'não é possível usar')
+        self.rejected(main('let a:Array<fn(int):int>=[];let b:Array<pure fn(int):int>=a;'), 'não é possível usar')
         self.rejected(main('let m:HashMap<*int,int>=null;'), 'chave de HashMap')
         self.rejected(main('let a:Array<void>=null;'), 'não aceitam void')
 
     def test_separate_budgets_and_repeated_collection_cache(self):
         types = ''.join(f'struct Tipo{i}{{}}' for i in range(257))
-        self.accepted(types + 'assis marca<T>():int{return 1;}' + main(
+        self.accepted(types + 'fn marca<T>():int{return 1;}' + main(
             'let a:Array<int>=[];' + ''.join(f'marca::<Tipo{i}>();' for i in range(256)) +
             'a.push(42);print(a[0]);free(a);'), '42\n')
         self.accepted(main('{let a:Array<int>=[];free(a);}' * 258))
@@ -103,11 +103,11 @@ class CollectionsAST(unittest.TestCase):
         self.rejected(types + main(body), 'limite de 256 especializações de coleções')
 
     def test_private_templates_never_grant_user_authority(self):
-        self.rejected('assis espia<T>(a:Array<T>):int{return a._length;}' + main(
+        self.rejected('fn espia<T>(a:Array<T>):int{return a._length;}' + main(
             'let a:Array<int>=[1];print(espia::<int>(a));'), 'campo privado')
         self.rejected(main('let m:HashMap<int,int>=new HashMap<int,int>();print(m._hash(1));'), 'método privado')
-        for source in ['ASSIS __assis_Array<T>{}', 'ASSIS __assis_Map<K,V>{}',
-                       'assis __assis_falso():int{return 0;}']:
+        for source in ['class __assis_Array<T>{}', 'class __assis_Map<K,V>{}',
+                       'fn __assis_falso():int{return 0;}']:
             result = self.invoke('check', '<colecoes>.assis', '--stdin', '--diagnostics=json', input=source + main(''))
             self.assertEqual(result.returncode, 1, result.stderr)
             self.assertIn('reservado', json.loads(result.stderr)['message'])
@@ -116,11 +116,11 @@ class CollectionsAST(unittest.TestCase):
         self.accepted(main('own m:HashMap<int,int>=new HashMap<int,int>();m.set(1,42);'
             '{borrow b:HashMap<int,int>=m;assert(b.get(1)==42);}'
             '{borrow mut b:HashMap<int,int>=m;b.set(2,7);}print(m.get(2));'), '7\n')
-        self.rejected('assis receber(a:Array<int>):int{return len(a);}' + main(
+        self.rejected('fn receber(a:Array<int>):int{return len(a);}' + main(
             'own a:Array<int>=[1];print(receber(a));'), 'não pode escapar')
         self.rejected(main('own a:Array<int>=[1];{borrow b:Array<int>=a;b.push(2);}'), 'acesso exclusivo')
-        self.accepted('#yuri <std/algorithms.assis>\n'
-            'pure assis dobro(v:int):int{return v*2;}pure assis somar(a:int,b:int):int{return a+b;}' + main(
+        self.accepted('import "std/algorithms.assis";\n'
+            'pure fn dobro(v:int):int{return v*2;}pure fn somar(a:int,b:int):int{return a+b;}' + main(
             'let a:Array<int>=[1,2,3];let b:Array<int>=map::<int,int>(a,dobro);'
             'print(fold::<int,int>(b,0,somar),a[1]);free(b);free(a);'), '12 2\n')
 

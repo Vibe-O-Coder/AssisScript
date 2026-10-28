@@ -41,6 +41,25 @@ enum Option<T> { None; Some(T); }
 /// ValidationResult recuperável Copy, sem alocação. T e E precisam ter layout por valor.
 enum Result<T, E> { Ok(T); Err(E); }
 
+/// Opcional Move: uma alocação própria; Some assume um recurso own T.
+enum OwnedOption<T> { None; Some(own T); }
+
+/// Resultado Move: sucesso own T e erro Copy E; liberação pela variante ativa.
+enum OwnedResult<T, E> { Ok(own T); Err(E); }
+
+/// Consulta sem consumir o opcional nem prolongar a vida do recurso.
+safe fn owned_option_is_some<T>(borrow opcao: OwnedOption<T>): bool {
+    match (opcao) { None { return false; } Some(value) { return true; } }
+}
+
+/// Consome o resultado, transforma Ok e preserva Err. O callback é emprestado.
+safe fn owned_result_map<T, U, E>(own resultado: OwnedResult<T, E>, borrow transformar: closure(own T): own U): own OwnedResult<U, E> {
+    match (move(resultado)) {
+        Ok(value) { return new OwnedResult<U, E>.Ok(transformar(move(value))); }
+        Err(error) { return new OwnedResult<U, E>.Err(error); }
+    }
+}
+
 /// Extrai o valor ou devolve a alternativa, preservando ambos os argumentos.
 pure fn option_or<T>(opcao: Option<T>, alternativa: T): T {
     match (opcao) { None { return alternativa; } Some(value) { return value; } }

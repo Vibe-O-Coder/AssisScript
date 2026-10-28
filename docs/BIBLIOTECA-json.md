@@ -1,6 +1,6 @@
 # json — UTF-8 com limites
 
-Opcional, depende do texto obrigatório. Importe `#yuri <std/json.assis>`; namespace `json`.
+Opcional, depende do texto obrigatório. Importe `import "std/json.assis";`; namespace `json`.
 
 `validate(borrow data,size,profundidade,max_tokens): ValidationResult` verifica exatamente um documento. Resultado Copy contém `valid`, `position` em bytes e contagem de tokens. Profundidade de contêineres 1..64; orçamento explícito inclui pontuação. Strings exigem UTF-8 estrito, escapes conhecidos e pares de surrogates corretos. NUL não escapado é inválido; `\u0000` é válido. BOM é rejeitado. Números seguem a gramática JSON e não têm conversão ou overflow numérico nesta fase. Chaves duplicadas são aceitas e preservadas pelo lexer.
 

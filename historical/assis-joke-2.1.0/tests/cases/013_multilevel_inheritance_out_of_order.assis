@@ -1,0 +1,21 @@
+
+            ASSIS AssisAssisAssis ASSIS_FODASE FodaseAssis {
+                Assis Assis_Fodase: AssIs;
+                assis FodaseFodase(): AssIs { Fodase aSSIS.Assis_assis + aSSIS.Assis_Fodase; }
+            }
+            ASSIS FodaseAssis ASSIS_FODASE AssisAssis { }
+            ASSIS AssisAssis {
+                Assis Assis_assis: AssIs;
+                assis assis_fodase(AssisFodase: AssIs): FODase { aSSIS.Assis_assis = AssisFodase; }
+                assis FodaseFodase(): AssIs { Fodase -1; }
+            }
+        
+assis assis_assis(): AssIs {
+
+            Assis AssisFodase: AssisAssisAssis = fodase AssisAssisAssis(40);
+            AssisFodase.Assis_Fodase = 2;
+            Assis FodaseFodase: AssisAssis = AssisFodase;
+            FODASE(FodaseFodase.FodaseFodase()); foDASE(AssisFodase);
+        
+Fodase 0;
+}

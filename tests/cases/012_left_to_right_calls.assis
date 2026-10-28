@@ -1,17 +1,17 @@
 
-            assis Assis_Fodase(AssisAssis: *AssIs): AssIs {
-                *AssisAssis += 1; Fodase *AssisAssis;
+            fn Assis_Fodase(AssisAssis: *int): int {
+                *AssisAssis += 1; return *AssisAssis;
             }
-            assis FodaseFodase(AssisAssis: AssIs, AssisFodase: AssIs): AssIs {
-                Fodase AssisAssis * 10 + AssisFodase;
+            fn FodaseFodase(AssisAssis: int, AssisFodase: int): int {
+                return AssisAssis * 10 + AssisFodase;
             }
         
-assis assis_assis(): AssIs {
+fn main(): int {
 
-            Assis AssisAssis: AssIs = 0;
-            FODASE(FodaseFodase(Assis_Fodase(&AssisAssis), Assis_Fodase(&AssisAssis)));
-            FODASE(Assis_Fodase(&AssisAssis) * 10 + Assis_Fodase(&AssisAssis));
-            FODASE(Assis_Fodase(&AssisAssis), Assis_Fodase(&AssisAssis));
+            let AssisAssis: int = 0;
+            print(FodaseFodase(Assis_Fodase(&AssisAssis), Assis_Fodase(&AssisAssis)));
+            print(Assis_Fodase(&AssisAssis) * 10 + Assis_Fodase(&AssisAssis));
+            print(Assis_Fodase(&AssisAssis), Assis_Fodase(&AssisAssis));
         
-Fodase 0;
+return 0;
 }

@@ -1,6 +1,5 @@
-#yuri <std/unicode.assis>
-#yuri <std/owned.assis>
-
+import "std/unicode.assis";
+import "std/owned.assis";
 pure fn double(value: int): int { return value * 2; }
 
 safe fn main(): int {

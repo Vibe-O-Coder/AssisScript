@@ -2,7 +2,7 @@
 
 **Atualização 3.3.0-alpha.7:** Alpha.7 adiciona Option<T>/Result<T,E> Copy, option_or, option_map e result_map sem alocação. Tipos precisam admitir layout Copy. [Contratos e matching](VALORES-E-VARIANTES.md). ResultadoInt legado é preservado.
 
-Biblioteca obrigatória. Importe `#yuri <std/errors.assis>`.
+Biblioteca obrigatória. Importe `import "std/errors.assis";`.
 
 `IntResult` contém `ok: bool`, `value: int`, `code: int` e `position: int`. Leia valor apenas se ok. Cada resultado é um registro alocado; libere com `free(resultado)` inclusive em erro.
 
@@ -20,8 +20,8 @@ Biblioteca obrigatória. Importe `#yuri <std/errors.assis>`.
 `checked_add(a, b)` detecta overflow antes da operação. `checked_div(a, b)` detecta zero e INT64_MIN/-1. Ambos retornam ResultadoInt sem encerrar o programa.
 
 ```assis
-#yuri <std/errors.assis>
-assis assis_assis(): int {
+import "std/errors.assis";
+fn main(): int {
     let resultado: IntResult = checked_div(100, 0);
     if (!resultado.ok) { print(error_message(resultado.code)); }
     else { print(resultado.value); }

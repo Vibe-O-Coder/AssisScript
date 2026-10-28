@@ -20,13 +20,13 @@ parser.add_argument('--output',type=Path,required=True)
 parser.add_argument('--check',action='store_true',help='Require strided workloads to stay within 5x sequential keys')
 args=parser.parse_args()
 if args.samples<3 or args.entries<1000:parser.error('Use at least 3 samples and 1000 entries')
-def main(body):return 'assis assis_assis():int{'+body+'return 0;}'
+def main(body):return 'fn main():int{'+body+'return 0;}'
 programs={}
 for stride in [1,64,4096,65536]:
     programs[f'hash_stride_{stride}']=(main(f'own m:HashMap<int,int>=new HashMap<int,int>();for(let i:int=0;i<{args.entries};i+=1){{m.set(i*{stride},i);}}let total:int=0;for(let r:int=0;r<5;r+=1){{for(let i:int=0;i<{args.entries};i+=1){{total+=m.get(i*{stride});}}}}print(total);'),str(5*args.entries*(args.entries-1)//2)+'\n')
 programs['large_zero_allocations']=(main('let total:int=0;for(let i:int=0;i<300;i+=1){own p:*byte=alloc<byte>(8388608);assert(p[0]==0&&p[8388607]==0);p[0]=byte(1);p[8388607]=byte(255);total+=len(p);}print(total);'),str(300*8388608)+'\n')
-programs['scalar_leaf_calls']=('pure assis step(n:int):int{return n*3+1;}'+main('let total:int=0;for(let i:int=0;i<10000000;i+=1){total+=step(i);}print(total);'),str(3*10000000*9999999//2+10000000)+'\n')
-programs['fib35']=('pure assis fib(n:int):int{if(n<2){return n;}return fib(n-1)+fib(n-2);}'+main('print(fib(35));'),'9227465\n')
+programs['scalar_leaf_calls']=('pure fn step(n:int):int{return n*3+1;}'+main('let total:int=0;for(let i:int=0;i<10000000;i+=1){total+=step(i);}print(total);'),str(3*10000000*9999999//2+10000000)+'\n')
+programs['fib35']=('pure fn fib(n:int):int{if(n<2){return n;}return fib(n-1)+fib(n-2);}'+main('print(fib(35));'),'9227465\n')
 compilers={'candidate':args.compiler.resolve()}
 if args.baseline:compilers['baseline']=args.baseline.resolve()
 record={'format':'AssisScript-optimization-v1','platform':os.name,'host':{'system':platform.platform(),'machine':platform.machine(),'processor':platform.processor(),'logical_cpus':os.cpu_count()},'samples':args.samples,'entries':args.entries,'compilers':{},'workloads':{}}
@@ -39,8 +39,8 @@ with tempfile.TemporaryDirectory(prefix='assis-perf-') as temp:
         binaries={};metrics={}
         for label,compiler in compilers.items():
             binary=folder/(label+('.exe' if os.name=='nt' else ''))
-            start=time.perf_counter_ns();subprocess.run([compiler,'build',path,'-o',binary],check=True,capture_output=True)
-            metrics[label]={'compile_ms':(time.perf_counter_ns()-start)/1e6,'bytes':binary.stat().st_size,'run_ms':[]}
+            start=time.perf_counter_ns();subprocess.run([compiler,'build',path,*(['--legacy'] if '--legacy' in subprocess.check_output([compiler,'help'],text=True) else []),'-o',binary],check=True,capture_output=True)
+            metrics[label]={'compile_ms':(time.perf_counter_ns()-start)/1e6,'bytes':binary.stat().st_size,'binarySha256':hashlib.sha256(binary.read_bytes()).hexdigest(),'run_ms':[]}
             # Distinct files survive interleaved measurements.
             target=folder/(name+'-'+label+binary.suffix);binary.rename(target);binaries[label]=target
             result=subprocess.run([target],capture_output=True,text=True,timeout=60)

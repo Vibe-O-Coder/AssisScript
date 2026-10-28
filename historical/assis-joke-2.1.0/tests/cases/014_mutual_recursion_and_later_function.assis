@@ -1,0 +1,14 @@
+
+            assis Assis_Fodase(AssisAssis: AssIs): FodAsE {
+                assIS (AssisAssis == 0) { Fodase aSsIs; }
+                Fodase FodaseFodase(AssisAssis - 1);
+            }
+            assis FodaseFodase(AssisAssis: AssIs): FodAsE {
+                assIS (AssisAssis == 0) { Fodase fOdAsE; }
+                Fodase Assis_Fodase(AssisAssis - 1);
+            }
+        
+assis assis_assis(): AssIs {
+FODASE(Assis_Fodase(10), FodaseFodase(10));
+Fodase 0;
+}

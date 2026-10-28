@@ -1,5 +1,5 @@
 
-assis assis_assis(): AssIs {
-FODASE("\"); system(\"injetado\"); // %s %n ??/");
-Fodase 0;
+fn main(): int {
+print("\"); system(\"injetado\"); // %s %n ??/");
+return 0;
 }

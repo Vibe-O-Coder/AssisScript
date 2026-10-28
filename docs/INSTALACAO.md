@@ -1,8 +1,8 @@
-# Instalação e verificação da alpha.10
+# Instalação e verificação da alpha.15
 
 Extraia a distribuição completa. No Windows, execute `instalar-windows.cmd`; a ferramenta nativa também aceita `bin/assis-setup.exe install --prefix CAMINHO --no-path --no-associations`. No Linux, execute `sh instalar.sh --prefix CAMINHO --no-path`. Consulte `--help` para seleção de módulos e demais opções. Uma instalação de avaliação deve usar uma pasta nova.
 
-Após instalar, abra outro terminal ou use o caminho completo para o compilador. Execute `assis version` e confira `3.3.0-alpha.10`. Salve o exemplo do README em `hello.assis` e execute:
+Após instalar, abra outro terminal ou use o caminho completo para o compilador. Execute `assis version` e confira `3.3.0-alpha.15`. Salve o exemplo do README em `hello.assis` e execute:
 
 ```sh
 assis check hello.assis --safe

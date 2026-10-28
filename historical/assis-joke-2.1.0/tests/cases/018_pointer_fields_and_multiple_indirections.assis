@@ -1,0 +1,22 @@
+
+            ASSIS AssisAssis {
+                Assis Assis_assis: *AssiS;
+                Assis Fodase_assis: FoDaSe;
+                Assis Assis_Fodase: AssisAssis;
+            }
+        
+assis assis_assis(): AssIs {
+
+            Assis AssisFodase: AssisAssis = fodase AssisAssis();
+            AssisFodase.Assis_assis = ASSIS_fodase(2);
+            Assis FodaseAssis: **AssiS = &AssisFodase.Assis_assis;
+            (*FodaseAssis)[0] = AssiS(42);
+            Assis FodaseFodase: *FoDaSe = &AssisFodase.Fodase_assis;
+            *FodaseFodase = "texto";
+            Assis FodaseAssisAssis: *AssisAssis = &AssisFodase.Assis_Fodase;
+            *FodaseAssisAssis = AssisFodase;
+            FODASE(AssisFodase.Assis_assis[0], *FodaseFodase, AssisFodase.Assis_Fodase == AssisFodase);
+            foDASE(*FodaseAssis); foDASE(AssisFodase);
+        
+Fodase 0;
+}

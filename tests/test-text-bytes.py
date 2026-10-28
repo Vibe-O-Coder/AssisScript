@@ -26,18 +26,18 @@ class TextBytes(base.Evolution):
             blocks.append('{own b:*byte=alloc<byte>(%d);%sprint(utf8_count(b,%d));}' %
                           (len(data), ''.join(f'b[{i}]=byte({b});' for i, b in enumerate(data)), len(data)))
             expected.append(str(count))
-        self.accepted('#yuri <std/strings.assis>\n' + base.main(''.join(blocks)), '\n'.join(expected) + '\n')
+        self.accepted('import "std/strings.assis";\n' + base.main(''.join(blocks)), '\n'.join(expected) + '\n')
 
     def test_length_is_element_count_through_fields_and_borrowed_returns(self):
         code = 'value struct P{let x:int;let y:int;}struct C{own b:*P;}'
-        code += 'safe assis ver(borrow c:C):borrow(c) *P{return c.b;}'
+        code += 'safe fn ver(borrow c:C):borrow(c) *P{return c.b;}'
         self.accepted(code + base.main('own c:C=new C(alloc<P>(7));print(len(c.b),len(ver(c)));own z:*int=alloc<int>(0);print(len(z));'), '7 7\n0\n')
         self.rejected(base.main('let p:*byte=alloc<byte>(3);print(len(p));free(p);'), 'exige own/borrow')
 
     def test_explicit_length_failure_and_nul_codepoint(self):
-        self.accepted('#yuri <std/strings.assis>\n' + base.main('own b:*byte=alloc<byte>(1);b[0]=byte(0);'
+        self.accepted('import "std/strings.assis";\n' + base.main('own b:*byte=alloc<byte>(1);b[0]=byte(0);'
                       'val p:Utf8Step=utf8_next(b,1,0);print(p.valid,p.codepoint,p.next,utf8_count(b,2),utf8_count(b,-1));'),
-                      'aSsIs 0 1 -1 -1\n')
+                      'true 0 1 -1 -1\n')
 
     def test_decimal_buffer_matches_python_including_int64_min(self):
         numbers = [0, 1, -1, 9223372036854775807, -9223372036854775808, 123456789, -123456789]
@@ -46,7 +46,7 @@ class TextBytes(base.Evolution):
             digits = str(n)
             checks = ''.join(f'assert(b[{i}]=={ord(char)});' for i, char in enumerate(digits))
             blocks.append(f'{{own b:*byte=alloc<byte>(20);assert(format_int_buffer({n},b)=={len(digits)});{checks}}}')
-        self.accepted('#yuri <std/convert.assis>\n' + base.main(''.join(blocks) + 'own curto:*byte=alloc<byte>(19);print(format_int_buffer(0,curto));'), '-1\n')
+        self.accepted('import "std/convert.assis";\n' + base.main(''.join(blocks) + 'own curto:*byte=alloc<byte>(19);print(format_int_buffer(0,curto));'), '-1\n')
 
 
 if __name__ == '__main__':

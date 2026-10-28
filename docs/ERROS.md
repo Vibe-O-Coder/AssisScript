@@ -7,8 +7,8 @@ Falhas de programação em execução mantêm status 70: índice fora do limite,
 Para dados externos, use resultados explícitos:
 
 ```assis
-#yuri <std/convert.assis>
-assis assis_assis(): int {
+import "std/convert.assis";
+fn main(): int {
     let count: IntResult = parse_int("12x");
     if (!count.ok) {
         print("Quantidade invalida:", error_message(count.code), count.position);

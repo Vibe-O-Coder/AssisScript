@@ -1,196 +1,178 @@
-# Novidades experimentais 3.3.0-alpha.6
+# AssisScript — linguagem atual (3.3.0-alpha.15)
 
-**Atualização alpha.10:** sintaxe e APIs canônicas em inglês; imports e nomes antigos da stdlib exigem migração. Veja [ENGLISH-API.md](ENGLISH-API.md) e o [handoff atual](HANDOFF-3.3-ALPHA.10.md). As grafias históricas da sintaxe continuam aliases.
+A linguagem compila programas tipados para executáveis nativos x86_64. O perfil
+seguro é o padrão. Comece por funções, valores e controle de fluxo; depois
+aprenda propriedade, empréstimos, classes e closures. Código bruto e FFI são
+fronteiras explícitas com `unsafe`.
 
-**Atualização 3.3.0-alpha.8:** Alpha.7 acrescenta [valores Copy e variantes](VALORES-E-VARIANTES.md), [IO e aplicação A](IO-E-APLICACAO-A.md). Pure aceita valores Copy; Option/Result e matching exaustivo estão implementados. [Progresso atual: 56%](PROGRESSO.md). As descrições das alphas anteriores abaixo são históricas.
-
-Alpha.6: parâmetros/retornos own/borrow, vidas declaradas, campos own de structs, safe assis e unsafe { ... } estão documentados em [Ownership entre funções](OWNERSHIP-FUNCOES.md). A gramática completa acompanha essa extensão. As regras das seções históricas devem ser lidas com essa atualização.
-
-A linguagem adota a direção funcional. Há funções como valores, tipos `pure assis(int): int`/`assis(int): int`, callbacks, composição e funções/structs/classes genéricas. `val` aceita também funções; `pure assis` admite escalares e funções puras em suas assinaturas. Veja [funções e efeitos](FUNCOES-E-EFEITOS.md), [generics](GENERICS.md), [programação funcional](PROGRAMACAO-FUNCIONAL.md) e [contratos de segurança](CONTRATOS-E-SEGURANCA.md). A gramática está em [GRAMATICA.ebnf](GRAMATICA.ebnf); as seções abaixo preservam o núcleo histórico. Classes genéricas admitem herança especializada desde a alpha.4; Array/HashMap usam especialização AST comum desde a alpha.5. A alpha.6 acrescenta vidas explícitas nas assinaturas. Métodos com parâmetros de tipo próprios e closures continuam pendentes. A [estimativa de conclusão do plano é 45%](PROGRESSO.md).
-
-# Novidades da versão 3.2
-
-A linguagem acrescenta `own`, `borrow`, `borrow mut`, `move`, `div { ... }`, `for`, `defer free`, `read_bytes` e `monotonic_ms`. Veja [memória e escopos](MEMORIA-OWNERSHIP.md) e [contratos e limites da versão](MELHORIAS-3.2.md). As palavras novas são reservadas. O manual abaixo preserva a descrição do núcleo anterior.
-
-# Linguagem AssisScript 3.1
-
-Novidades: [bibliotecas nativas e seus manuais](BIBLIOTECAS.md), [resultados recuperáveis e diagnósticos](ERROS.md), [otimizações e benchmarks](DESEMPENHO.md). `assert` admite uma mensagem text opcional, avaliada apenas na falha. `bytes(text)` e `text(*byte)` fornecem visões emprestadas para bibliotecas; consulte os contratos de memória em [texto](BIBLIOTECA-texto.md).
-
-AssisScript tem tipagem estática, compilação nativa e gerenciamento manual de memória. Palavras distinguem maiúsculas de minúsculas. Os identificadores seguem `[A-Za-z_][A-Za-z_0-9]*`; palavras-chave, `Array`, `HashMap` e o prefixo `__assis_` são reservados. Os nomes já não precisam ser variações de Assis/Fodase.
-
-## Programa e funções
+## Programa, valores e controle de fluxo
 
 ```assis
-/// Soma dois inteiros em aritmética modular de 64 bits.
-assis somar(a: int, b: int): int {
-    return a + b;
-}
-
-assis assis_assis(): int {
-    let total: int = somar(20, 22);
-    print("Total:", total);
+const ANSWER: int = 40 + 2;
+const MARKER: byte = '#';
+pure fn double(value: int): int { return value * 2; }
+safe fn main(): int {
+    own values: Array<int> = [1, 2, 3];
+    for (let i: int = 0; i < len(values); i += 1) {
+        print(double(values[i]));
+    }
+    assert(ANSWER == 42 && MARKER == byte(35));
     return 0;
 }
 ```
 
-A entrada é `assis_assis`, sem parâmetros, com retorno `int` ou `void`. Funções e métodos usam `assis`. Retornos não void precisam de valor em todos os caminhos. São permitidas recursão, chamadas antecipadas e recursão mútua. Variáveis locais precisam de inicialização e não podem ser declaradas duas vezes no mesmo escopo; escopos internos podem ocultar nomes externos.
+`let` cria vínculo mutável; `val`, vínculo local imutável; `const`, constante
+global numérica, bool ou texto estático. Constantes podem referir outras
+constantes declaradas depois; ciclos e expressões com efeitos são rejeitados.
+`public const` exporta constantes de um namespace.
 
-## Tipos
+Tipos: `int`/`i64`, `byte`/`u8`, `i8`, `i16`, `i32`, `u16`, `u32`, `u64`, `f32`,
+`f64`, `bool`, `text`, `void`, `File`, classes, registros, enums e slices.
+Conversões numéricas são explícitas. Inteiros têm overflow modular; divisão
+trunca em direção a zero. Condições exigem bool.
 
-| Tipo | Semântica |
-| --- | --- |
-| `int` | Inteiro com sinal de 64 bits |
-| `byte` | Inteiro sem sinal de 8 bits |
-| `bool` | `true` ou `false` |
-| `text` | Referência a texto UTF-8 imutável |
-| `void` | Somente retorno sem valor |
-| `*T` | Ponteiro bruto para T |
-| Nome de classe/struct | Referência nominal a instância no heap |
-| `Array<T>` | Referência a sequência dinâmica homogênea |
-| `HashMap<K, V>` | Referência a tabela hash tipada |
+Literais de caractere são bytes: `'a'`, `'#'`, `'\n'`, `'\0'`, `'\xFF'`.
+Caracteres com vários bytes UTF-8 usam texto, como `"é"`. Identificadores são
+ASCII e distinguem maiúsculas. `if`/`else`, `while`, `for`, `break`, `continue`
+e `return` compõem o controle de fluxo; blocos usam chaves.
 
-`byte` converte implicitamente para `int`. Redução para byte exige `byte(value)` e preserva os oito bits inferiores. `int(value)` e `bool(value)` aceitam inteiros e booleanos; zero vira falso. `null` é atribuível a ponteiros, classes, structs e coleções, mas não a text. `void` não pode ser variável, campo, parâmetro nem elemento de coleção.
+Comentários são `//` e `/* ... */`, com aninhamento nos blocos. `te`, `to` e
+`miyabi` podem ser nomes comuns.
 
-Campos começam em zero, falso, texto vazio ou referência nula. Uma variável de classe, struct ou coleção guarda uma referência; atribuí-la não cria cópia independente. Textos são imutáveis.
-
-## Controle de fluxo
+## Texto e saída
 
 ```assis
-let contador: int = 0;
-while (contador < 10) {
-    contador += 1;
-    if (contador == 3) { continue; }
-    else if (contador == 8) { break; }
-    else { print(contador); }
+import "std/unicode.assis";
+safe fn main(): int {
+    write("HP ", 54, "/", 54, "\n");
+    own output: unicode::String = new unicode::String();
+    assert(output.append("Resultado: "));
+    assert(output.append_decimal(0.1 + 0.2, 2));
+    print(output);
+    return 0;
 }
 ```
 
-Condições exigem bool; corpos exigem chaves. Atribuição é instrução e não expressão. `break` e `continue` atuam no while mais interno. Não há `for`, `++`, `--`, exceções ou funções anônimas nesta versão.
+`print` separa argumentos por espaço e termina a linha. `write` escreve
+consecutivamente, sem separador ou quebra. Aceitam escalares, texto estático,
+`slice<byte>` e objetos com `as_slice(borrow self):borrow(self) slice<byte>`.
+Slices preservam NUL. Objetos arbitrários não viram endereços silenciosamente
+em safe. Booleanos imprimem `true`/`false`.
 
-## Classes e métodos
+`utf8("literal")` cria um slice estático sem alocação. Literais também se
+convertem automaticamente em argumentos que esperam `slice<byte>`.
+`write_bytes(canal, slice, quantidade)` verifica o limite. Canais: 1=stdout,
+2=stderr. A origem de uma visão emprestada precisa continuar viva.
+
+`unicode::String` oferece `load`, `append`, `append_int`, `append_decimal`,
+`reserve`, `clear`, `size`, `as_slice` e `slice_range`, sem dispose/free manual.
+`append_decimal` aceita 0..9 casas, arredonda metades para longe de zero e
+rejeita valores não finitos ou magnitude escalada acima de 9e18. É formatação
+de apresentação, sujeita à representação binária de f64.
+`print(f64)` conserva o hexadecimal exato; para decimal use o formatador.
+Interpolação como expressão ainda não existe.
+
+`text` externo é uma referência C terminada em zero; a classe global `String`
+também pertence à API manual. Novos programas safe devem preferir Unicode e slices.
+
+## Propriedade e classes
+
+`own` possui um recurso. Ao sair do bloco, a linguagem libera os campos own e
+o recurso, inclusive em return, break e continue. `move` transfere a posse e
+invalida a origem. `borrow` permite leitura compartilhada; `borrow mut`, mutação
+exclusiva. Uma visão bloqueia mutação/liberação de sua origem. Não há GC.
 
 ```assis
-ASSIS Contador {
-    let value: int;
-
-    assis assis_fodase(inicial: int): void { self.value = inicial; }
-    assis next(): int { self.value += 1; return self.value; }
+class Actor {
+    let hp: int;
+    fn init(borrow mut self, hp: int): void { self.hp = hp; }
+    fn health(borrow self): int { return self.hp; }
 }
-
-ASSIS ContadorDuplo extends Contador {
-    assis next(): int { self.value += 2; return self.value; }
+class Hero extends Actor {
+    fn init(borrow mut self, hp: int, bonus: int): void { super.init(hp + bonus); }
+    fn health(borrow self): int { return super.health(); }
+}
+safe fn main(): int {
+    own actor: Actor = new Hero(40, 14);
+    if (actor is Hero) {
+        borrow hero: Hero = actor as Hero;
+        print(hero.health());
+    }
+    return 0;
 }
 ```
 
-`new Contador(10)` e `fodase Contador(10)` alocam e inicializam. O construtor se chama `assis_fodase` e retorna void. Todos os membros são públicos. Há herança simples e despacho virtual: uma referência à base pode receber uma derivada e chamar sua implementação real. Sobrescritas mantêm exatamente a assinatura. O inicializador é herdado; quando sobrescrito, a base não é chamada automaticamente. Não há `super`.
+Cada classe pode ter sua assinatura de init. `super.init(...)` chama a base
+diretamente e deve ser a primeira instrução, uma única vez. Se a base tiver
+init sem argumentos e a derivada omitir a chamada, o compilador a insere.
+Se a classe não declarar init, herda o existente. `super.metodo(...)` chama a
+implementação da base. Métodos comuns continuam virtuais e preservam assinatura
+e receptor na sobrescrita.
 
-`free(objeto)` libera a instância, sem liberar automaticamente objetos guardados em seus campos. Não use referências após a liberação.
+Métodos de classes own declaram `borrow self` ou `borrow mut self`; campos de
+recurso são own. `private` restringe acesso à classe declaradora. `final class`
+impede herança. `drop(borrow mut self):void` é um gancho de final class, seguido
+pela destruição dos campos own.
 
-## Structs
+`is` consulta o tipo dinâmico, incluindo bases; null resulta false. `as`
+produz uma referência do tipo pedido ou null, sem alocar nem transferir posse.
+Em safe, vincule o resultado com borrow. O proprietário deve permanecer vivo. Retornos own precisam de vínculo local,
+transferência para outro own ou free explícito; não se descartam implicitamente
+por indexação, len ou chamada de método.
 
-```assis
-struct Pessoa {
-    let nome: text;
-    let idade: int;
-}
+Receptores mutáveis usam reserva em duas fases: `obj.set(obj.campo)` e
+`obj.set(obj.read())` são permitidas. Empréstimos persistentes, argumentos que
+aliasam o receptor e mutações aninhadas conflitantes continuam rejeitados.
 
-// Dentro de uma função:
-let pessoa: Pessoa = new Pessoa("Miyabi", 24);
-let outra: Pessoa = pessoa;
-outra.idade += 1; // pessoa.idade também passa a 25
-free(pessoa);    // outra também fica inválida
+## Coleções, valores e funções
+
+`Array<T>` e `HashMap<K,V>` armazenam valores escalares/Copy. A propriedade do
+contêiner libera seus buffers. `owned::OwnedArray<T>` armazena recursos Move:
+`push` consome, `get` empresta e `pop` transfere. Sua implementação inicial é uma
+árvore indexada: operações O(log capacidade), destruição O(n) com pilha
+logarítmica. Não é um buffer contíguo `Array<own T>`. `OwnedList` conserva seu
+contrato anterior, inclusive o limite de 1024 nós.
+
+`struct` cria registros no heap. `value struct` e enums sem campos own são
+Copy inline. Enums com payload own são Move. `match` exige todas as variantes;
+`match(move(valor))` transfere payloads.
+
+`pure fn` não permite IO nem recursos; `safe fn` usa contratos verificados.
+Funções sem esses modificadores têm efeito manual e são chamadas por safe
+através de `unsafe`. Tipos de função preservam efeitos. Generics de funções e
+classes usam especialização; métodos com parâmetros de tipo próprios ainda
+não são aceitos.
+
+Closures já existem com capturas explícitas val/own/borrow:
+`closure[val factor:int=2](n:int):int{return factor*n;}`. O ambiente tem
+propriedade determinística; capturas emprestadas não escapam.
+[Contrato](CAPTURAS-E-VARIANTES-MOVE.md).
+
+## Bibliotecas e ferramentas
+
+`import "std/unicode.assis";` importa módulos. Namespaces qualificam nomes.
+`random::Random` fornece sorteio reproduzível. `algorithms.assis` fornece
+`sort(borrow mut Array<int>)` por heapsort. [Catálogo](../stdlib/catalogo.json).
+
+```sh
+assis new hello
+assis check hello/assis.assis
+assis run hello/assis.assis --debug
+assis build hello/assis.assis --target linux-x64 -o hello-linux
+assis build hello/assis.assis --target windows-x64 -o hello-windows
+assis build hello/assis.assis --target macos-x64 -o hello-macos
 ```
 
-Struct cria um tipo nominal de registro, com campos públicos e sem métodos ou herança. Nesta versão, **struct usa semântica de referência**, como as classes, e não layout de struct C. A construção aceita zero argumentos (campos padrão) ou um valor por campo em ordem de declaração. Para copiar, construa explicitamente outro registro com os campos desejados.
+Linux usa ELF, Windows usa PE e macOS usa Mach-O experimental, todos x86_64.
+`run` exige o alvo local. [Suporte e limites macOS](MACOS.md).
 
-## Coleções
+`--legacy` seleciona memória manual em sintaxe canônica. Não reativa o antigo
+dialeto. A edição de brincadeira fica em [historical](HISTORICAL.md).
+`tools/migrate-syntax.py` migra fontes antigas; revise o resultado.
+Aliases Assis/Fodase, #yuri/#body e comentários por palavras foram removidos.
 
-```assis
-let numeros: Array<int> = [10, 20, 30];
-numeros.push(40);
-numeros[0] += 1;
-print(len(numeros), numeros.pop());
+O alvo nativo serve a ferramentas e motores do ecossistema; não oferece
+isolamento para scripts de páginas. Navegador, DOM, execução isolada,
+assincronia geral, interfaces e concorrência ficam fora desta revisão.
 
-let pontos: HashMap<text, int> = new HashMap<text, int>();
-pontos.set("Yuri", 42);
-print(pontos.get("Yuri"), pontos.get_or("ausente", 0));
-free(pontos);
-free(numeros);
-```
-
-Literais `[...]` exigem contexto `Array<T>`: declaração, argumento, atribuição, campo de construtor ou retorno tipado. `[]` cria array vazio. Coleções podem ser aninhadas: `Array<Array<int>>`, `HashMap<text, Array<Pessoa>>`. Não há generics definidos pelo usuário.
-
-`Array` verifica limites em leitura e escrita. `HashMap` aceita chaves text, int, byte ou bool. `free` libera também os buffers da própria coleção, mas **não os objetos e coleções armazenados**. Veja a API completa em [COLECOES.md](COLECOES.md).
-
-## Ponteiros e alocação
-
-```assis
-let data: *int = alloc<int>(4);
-data[0] = 42;
-let endereco: *int = &data[0];
-print(*endereco);
-free(data);
-```
-
-`alloc<T>(count)` aloca elementos zerados e retorna *T, validando quantidade negativa e overflow na multiplicação pelo tamanho. `&` obtém endereço e `*` dereferencia. Ponteiros brutos não verificam limites. Não há conversão de inteiro para ponteiro nem entre ponteiros incompatíveis. Ponteiro + n e ponteiro - n avançam em elementos do tipo apontado.
-
-Buffers de text e de referências começam nulos; inicialize os elementos antes de ler. A garantia de texto vazio vale para campos de instância, não para buffers brutos. `free` recebe null, uma alocação original ou uma instância válida. Nunca libere endereço local, endereço interno ou uma alocação já liberada. Não há coletor de lixo.
-
-## Números, operadores e avaliação
-
-Literais: `42`, `1_000`, `0xff`, `0b1010`. Os bits são interpretados como int com sinal de 64 bits. Literais acima de 2^63 - 1 até 2^64 - 1 representam o valor negativo correspondente. Adição, subtração, multiplicação, negação e deslocamento à esquerda têm overflow modular. Divisão trunca para zero; -2^63 / -1 retorna -2^63 e o resto é zero.
-
-| Categoria | Operadores |
-| --- | --- |
-| Aritmética | `+ - * / %` |
-| Comparação | `== != < <= > >=` |
-| Lógica | `&&` e `||` com curto-circuito; `!` |
-| Bits | `&` `|` `^` `~` `<<` `>>` |
-| Atribuição | `= += -= *= /= %= &= |= ^= <<= >>=` |
-| Acesso | `value.campo`, `value.metodo(...)`, `value[indice]` |
-| Memória | `&value`, `*ponteiro` |
-
-Expressões e argumentos são avaliados da esquerda para a direita. Operações numéricas retornam int, inclusive entre bytes; atribuição composta a byte guarda os oito bits inferiores. Deslocamentos exigem 0 a 63; o deslocamento à direita preserva o sinal. Textos usam igualdade de conteúdo; objetos e coleções usam identidade de referência.
-
-## Textos e funções embutidas
-
-Textos aceitam escapes `\n`, `\r`, `\t`, `\0`, `\"`, `\\`, `\xNN` e `\uNNNN`, com codificação UTF-8. Surrogates isolados são rejeitados. Byte zero encerra operações de texto. `len("ação")` é 6; indexação retorna byte e verifica limites. Não há concatenação ou texto mutável nesta versão.
-
-`print(valores...)` separa os valores por espaço e termina a linha; `print()` só quebra a linha. Objetos e ponteiros são mostrados como endereços hexadecimais. Booleanos preservam a saída histórica `aSsIs`/`fOdAsE`.
-
-`len(value)` aceita text, Array e HashMap. `assert(condicao)` exige bool e encerra com status 70 se falso. Falhas de execução incluem divisão por zero, ponteiro nulo, deslocamento inválido, alocação inválida, índice fora do limite e precondição violada.
-
-## Comentários e documentação
-
-`//` e `miyabi` comentam até o fim da linha; `/* ... */` e `te ... to` aceitam aninhamento. `te` e `to` isolados continuam reservados para comentários. Documente funções com linhas `///`, `miyabi` ou bloco `/** ... */` imediatamente acima da declaração. O VS Code mostra o texto e a assinatura, inclusive entre bibliotecas e pacotes.
-
-```assis
-/// Retorna o quadrado em aritmética modular de 64 bits.
-/// @param value ParsedInt a multiplicar por ele mesmo.
-/// @return ValidationResult da multiplicação.
-assis quadrado(value: int): int { return value * value; }
-```
-
-## Importação e pacotes
-
-Use `#yuri <biblioteca.assis>` e `#body src.pillow`, em linhas próprias. Pacotes .pillow contêm apenas essas diretivas e comentários. `importa "caminho";` permanece como sintaxe legada. Detalhes em [BIBLIOTECAS.md](BIBLIOTECAS.md).
-
-## Vocabulário histórico
-
-| Preferido | Alias histórico |
-| --- | --- |
-| `let` | `Assis` |
-| `int`, `byte`, `bool`, `text`, `void` | `AssIs`, `AssiS`, `FodAsE`, `FoDaSe`, `FODase` |
-| `if`, `else`, `while`, `return` | `assIS`, `fodASE`, `ASSis`, `Fodase` |
-| `print`, `new`, `free`, `self` | `FODASE`, `fodase`, `foDASE`, `aSSIS` |
-| `true`, `false`, `null` | `aSsIs`, `fOdAsE`, `fOdase` |
-| `break`, `continue`, `extends` | `FODasE`, `FodASE`, `ASSIS_FODASE` |
-| `len(strings)` | `FODASE_fodase(strings)` |
-
-`ASSIS_fodase(bytes)` continua alocando *byte. `assis`, `ASSIS`, `assis_assis` e `assis_fodase` preservam sua grafia original.
-
-## Continuação alpha.8
-
-Inteiros de largura fixa e f32/f64 têm [contrato numérico](NUMEROS.md). Módulos `namespace`/`public` e resolução offline com `assis.pkg`/`assis.lock` estão em [pacotes](PACOTES-E-NAMESPACES.md). `cli`, `json`, `time`, `log`, `iterators` e `events` são bibliotecas opcionais novas, com empréstimos explícitos e limites documentados.
-
-Comandos `fmt`, `test`, `doc`, LSP independente e símbolos/DWARF: [ferramentas](FERRAMENTAS-ALPHA.8.md). Relógio civil, espera, saída binária, cancelamento e persistência: [contratos](EVENTOS-E-PERSISTENCIA.md). Classes/Texto gerenciados gerais, variantes Move, capturas e slices gerais permanecem abertos; os caminhos C continuam com a fronteira legada documentada.
+O backend da alpha.15 acrescenta [IR escalar e liveness global](BACKEND-ALPHA15.md), sem alterar a sintaxe ou os contratos de ownership.

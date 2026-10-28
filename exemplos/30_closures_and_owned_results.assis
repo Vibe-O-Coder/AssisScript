@@ -1,0 +1,26 @@
+import "std/errors.assis";
+import "std/iterators.assis";
+safe fn make_buffer(): own OwnedResult<*int, int> {
+    own data: *int = alloc<int>(1);
+    data[0] = 40;
+    return new OwnedResult<*int, int>.Ok(move(data));
+}
+
+safe fn main(): int {
+    val offset: int = 2;
+    own transform: closure(own *int): own *int = closure [val offset: int = offset](own data: *int): own *int {
+        data[0] += offset;
+        return move(data);
+    };
+    own result: OwnedResult<*int, int> = owned_result_map::<*int, *int, int>(make_buffer(), transform);
+    match (move(result)) {
+        Ok(data) { print(data[0]); }
+        Err(code) { print(code); return 1; }
+    }
+
+    own map: closure(int): int = closure [val offset: int = offset](x: int): int { return x + offset; };
+    own filter: closure(int): bool = closure [val limit: int = 4](x: int): bool { return x < limit; };
+    own fold: closure(int, int): int = closure [](sum: int, x: int): int { return sum + x; };
+    print(iterators::reduce_with::<int>(new iterators::Range(0, 3, 1), 0, map, filter, fold));
+    return 0;
+}

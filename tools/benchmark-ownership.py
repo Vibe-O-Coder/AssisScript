@@ -36,15 +36,15 @@ def run(command):
     return p.stdout
 
 manual = '''struct Caixa{let data:Array<int>;}
-assis calcular(n:int):int{let r:Caixa=new Caixa([n,n+1]);
+fn calcular(n:int):int{let r:Caixa=new Caixa([n,n+1]);
 let total:int=r.data[0]+r.data[1];free(r.data);free(r);return total;}
 '''
 managed = '''struct Caixa{own data:Array<int>;}
-safe assis create(n:int):own Caixa{return new Caixa([n,n+1]);}
-safe assis ler(borrow r:Caixa):int{return r.data[0]+r.data[1];}
-safe assis calcular(n:int):int{own r:Caixa=create(n);return ler(r);}
+safe fn create(n:int):own Caixa{return new Caixa([n,n+1]);}
+safe fn ler(borrow r:Caixa):int{return r.data[0]+r.data[1];}
+safe fn calcular(n:int):int{own r:Caixa=create(n);return ler(r);}
 '''
-entry = f'''assis assis_assis():int{{let total:int=0;
+entry = f'''fn main():int{{let total:int=0;
 for(let i:int=0;i<{count};i+=1){{total+=calcular(i);}}print(total);return 0;}}
 '''
 implementations = [('alpha5-manual', baseline, manual), ('alpha6-manual', compiler, manual), ('alpha6-own', compiler, managed)] if args.baseline else [('current-manual', compiler, manual), ('current-own', compiler, managed)]

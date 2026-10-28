@@ -1,1 +1,1 @@
-assis AssisAssis(): AssIs { Fodase 1; }
+fn AssisAssis(): int { return 1; }

@@ -2,7 +2,7 @@
 
 **Atualização 3.3.0-alpha.7:** Alpha.7 adiciona Utf8Passo, utf8_proximo/contar/valido sobre buffers gerenciados e comprimento explícito, incluindo NUL. [Contratos](IO-E-APLICACAO-A.md). As APIs Texto anteriores continuam legadas.
 
-Biblioteca obrigatória. Importe `#yuri <std/strings.assis>`. Compilada diretamente para código nativo; não depende de serviço externo.
+Biblioteca obrigatória. Importe `import "std/strings.assis";`. Compilada diretamente para código nativo; não depende de serviço externo.
 
 | API | Contrato |
 | --- | --- |
@@ -21,8 +21,8 @@ Biblioteca obrigatória. Importe `#yuri <std/strings.assis>`. Compilada diretame
 `String` possui buffer próprio e crescimento geométrico. `append(text)` aceita inclusive a própria visualização. `append_byte(byte)` exige byte diferente de zero. `size()` é O(1), `reserve(n)` garante capacidade incluindo terminador, `clear()` preserva capacidade e `dispose()` libera o buffer. Os campos com `_` são internos.
 
 ```assis
-#yuri <std/strings.assis>
-assis assis_assis(): int {
+import "std/strings.assis";
+fn main(): int {
     let mensagem: String = new String();
     mensagem.append("Pedido: "); mensagem.append("ação");
     print(mensagem.view());

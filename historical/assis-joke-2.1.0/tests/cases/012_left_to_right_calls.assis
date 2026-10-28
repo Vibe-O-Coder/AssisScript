@@ -1,0 +1,17 @@
+
+            assis Assis_Fodase(AssisAssis: *AssIs): AssIs {
+                *AssisAssis += 1; Fodase *AssisAssis;
+            }
+            assis FodaseFodase(AssisAssis: AssIs, AssisFodase: AssIs): AssIs {
+                Fodase AssisAssis * 10 + AssisFodase;
+            }
+        
+assis assis_assis(): AssIs {
+
+            Assis AssisAssis: AssIs = 0;
+            FODASE(FodaseFodase(Assis_Fodase(&AssisAssis), Assis_Fodase(&AssisAssis)));
+            FODASE(Assis_Fodase(&AssisAssis) * 10 + Assis_Fodase(&AssisAssis));
+            FODASE(Assis_Fodase(&AssisAssis), Assis_Fodase(&AssisAssis));
+        
+Fodase 0;
+}

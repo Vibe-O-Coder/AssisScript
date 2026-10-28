@@ -7,7 +7,7 @@ trap 'rm -rf "$tmp"' EXIT HUP INT TERM
 count=0
 for fixture in "$root/tests/cases/"*.assis; do
     name=${fixture%.assis}
-    "$root/bin/assis" build "$fixture" --target windows-x64 -o "$tmp/programa.exe" > "$tmp/build"
+    "$root/bin/assis" build --legacy "$fixture" --target windows-x64 -o "$tmp/programa.exe" > "$tmp/build"
     set +e
     "$root/build/pe_probe" "$tmp/programa.exe" > "$tmp/out" 2> "$tmp/err"
     actual=$?

@@ -3,6 +3,7 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $assis = Join-Path $root 'bin\assis.exe'
 $setup = Join-Path $root 'bin\assis-setup.exe'
+$releaseVersion = [regex]::Match((Get-Content -Raw (Join-Path $root 'src/version.h')), '#define ASSIS_VERSION "([^"]+)"').Groups[1].Value
 $utf8 = [System.Text.UTF8Encoding]::new($false)
 $isolatedRoot = Join-Path ([IO.Path]::GetTempPath()) ('assisscript-test-' + [Guid]::NewGuid().ToString('N'))
 [void][IO.Directory]::CreateDirectory($isolatedRoot)
@@ -15,6 +16,7 @@ function Quote-WindowsArgument([string]$Value) {
 }
 function Run-Process {
     param([string]$File, [string[]]$Arguments = @(), [string]$Directory = $root, [bool]$NoTools = $false)
+    if ([IO.Path]::GetFileName($File) -eq 'assis.exe' -and $Arguments.Count -gt 0 -and $Arguments[0] -in @('build','run','check','doc','test','lock','ir') -and '--safe' -notin $Arguments -and '--legacy' -notin $Arguments) { $Arguments += '--legacy' }
     $info = New-Object Diagnostics.ProcessStartInfo
     $info.FileName = $File
     $info.Arguments = (($Arguments | ForEach-Object { Quote-WindowsArgument $_ }) -join ' ')
@@ -66,7 +68,7 @@ try {
     }
     $result = Run-Process -File $assis -Arguments @('version')
     Assert-Code $result 0 'version'
-    Assert-True ($result.Out.Contains('3.3.0-alpha.10') -and $result.Out.Contains('Windows x64')) 'versao Windows'
+    Assert-True ($result.Out.Contains($releaseVersion) -and $result.Out.Contains('Windows x64')) 'versao Windows'
     Assert-Code (Run-Process -File $assis -Arguments @('doctor')) 0 'doctor'
     Assert-Code (Run-Process -File $assis -Arguments @('help')) 0 'help'
     Assert-Code (Run-Process -File $assis -Arguments @('comando-inexistente')) 2 'comando invalido'
@@ -77,7 +79,7 @@ try {
     Assert-Code (Run-Process -File $assis -Arguments @('new', $folder)) 0 'new Unicode'
     $result = Run-Process -File $assis -Arguments @('run') -Directory $folder -NoTools $true
     Assert-Code $result 0 'run sem ferramentas'
-    Assert-True ($result.Out.Contains('Assis, mundo. Fodase. 42')) 'saida do projeto'
+    Assert-True ($result.Out.Contains('Hello, world! 42')) 'saida do projeto'
     Assert-Code (Run-Process -File $assis -Arguments @('new', $folder)) 2 'new preserva pasta existente'
     $sourcePath = Join-Path $folder 'assis.assis'
     $backup = [IO.File]::ReadAllText($sourcePath, $utf8)
@@ -89,7 +91,7 @@ try {
     Assert-True ([IO.File]::Exists($output + '.exe')) 'extensao exe automatica'
     Assert-Code (Run-Process -File ($output + '.exe') -NoTools $true) 0 'executavel independente'
     $loopFile = Join-Path $isolatedRoot 'laco.assis'
-    [IO.File]::WriteAllText($loopFile, 'assis assis_assis(): FODase { ASSis (aSsIs) {} }', $utf8)
+    [IO.File]::WriteAllText($loopFile, 'fn main(): void { while (true) {} }', $utf8)
     Assert-Code (Run-Process -File $assis -Arguments @('run', $loopFile, '--timeout', '0.02')) 124 'timeout'
     Assert-Code (Run-Process -File $assis -Arguments @('run', $loopFile, '--timeout', 'nan')) 2 'timeout invalido'
     Assert-Code (Run-Process -File $assis -Arguments @('run', $sourcePath, '--target', 'linux-x64')) 2 'run exige destino nativo'

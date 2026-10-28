@@ -1,0 +1,875 @@
+{
+  "version": "3.3.0-alpha.14",
+  "date": "2026-10-26",
+  "status": "passed",
+  "scope": "Windows/Linux native execution and Mach-O structural validation",
+  "native": {
+    "windows": {
+      "platform": "win32",
+      "compilerSha256": "8bd9fd3fcf975c8ce8bf8d2ce26b30ae8d6b23b846da95b203bb47672b62b925",
+      "passed": true,
+      "suites": [
+        {
+          "suite": "evolution",
+          "returnCode": 0,
+          "tests": 12,
+          "seconds": 10.389999999999418,
+          "log": "windows-release-evolution.log"
+        },
+        {
+          "suite": "generics",
+          "returnCode": 0,
+          "tests": 13,
+          "seconds": 9.688000000000102,
+          "log": "windows-release-generics.log"
+        },
+        {
+          "suite": "functions",
+          "returnCode": 0,
+          "tests": 19,
+          "seconds": 11.561999999999898,
+          "log": "windows-release-functions.log"
+        },
+        {
+          "suite": "generic-classes",
+          "returnCode": 0,
+          "tests": 17,
+          "seconds": 13.84400000000096,
+          "log": "windows-release-generic-classes.log"
+        },
+        {
+          "suite": "collections-ast",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 9.484000000000378,
+          "log": "windows-release-collections-ast.log"
+        },
+        {
+          "suite": "ownership-functions",
+          "returnCode": 0,
+          "tests": 26,
+          "seconds": 17.39099999999962,
+          "log": "windows-release-ownership-functions.log"
+        },
+        {
+          "suite": "values",
+          "returnCode": 0,
+          "tests": 21,
+          "seconds": 12.343999999999141,
+          "log": "windows-release-values.log"
+        },
+        {
+          "suite": "files",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 5.703000000001339,
+          "log": "windows-release-files.log"
+        },
+        {
+          "suite": "text-bytes",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 2.5,
+          "log": "windows-release-text-bytes.log"
+        },
+        {
+          "suite": "cli",
+          "returnCode": 0,
+          "tests": 1,
+          "seconds": 2.45299999999952,
+          "log": "windows-release-cli.log"
+        },
+        {
+          "suite": "numbers",
+          "returnCode": 0,
+          "tests": 11,
+          "seconds": 5.95299999999952,
+          "log": "windows-release-numbers.log"
+        },
+        {
+          "suite": "packages",
+          "returnCode": 0,
+          "tests": 13,
+          "seconds": 4.84400000000096,
+          "log": "windows-release-packages.log"
+        },
+        {
+          "suite": "json",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 5.983999999998559,
+          "log": "windows-release-json.log"
+        },
+        {
+          "suite": "system",
+          "returnCode": 0,
+          "tests": 8,
+          "seconds": 3.860000000000582,
+          "log": "windows-release-system.log"
+        },
+        {
+          "suite": "tooling",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 1.625,
+          "log": "windows-release-tooling.log"
+        },
+        {
+          "suite": "slices",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 4.514999999999418,
+          "log": "windows-release-slices.log"
+        },
+        {
+          "suite": "managed-classes",
+          "returnCode": 0,
+          "tests": 9,
+          "seconds": 5.09400000000096,
+          "log": "windows-release-managed-classes.log"
+        },
+        {
+          "suite": "backend-alpha9",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 1.0159999999996217,
+          "log": "windows-release-backend-alpha9.log"
+        },
+        {
+          "suite": "optimization",
+          "returnCode": 0,
+          "tests": 6,
+          "seconds": 18.03100000000086,
+          "log": "windows-release-optimization.log"
+        },
+        {
+          "suite": "english-api",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 3.264999999999418,
+          "log": "windows-release-english-api.log"
+        },
+        {
+          "suite": "release-policy",
+          "returnCode": 0,
+          "tests": 2,
+          "seconds": 2.0319999999992433,
+          "log": "windows-release-release-policy.log"
+        },
+        {
+          "suite": "ffi",
+          "returnCode": 0,
+          "tests": 9,
+          "seconds": 7.25,
+          "log": "windows-release-ffi.log"
+        },
+        {
+          "suite": "http",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 16.718000000000757,
+          "log": "windows-release-http.log"
+        },
+        {
+          "suite": "process",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 7.156999999999243,
+          "log": "windows-release-process.log"
+        },
+        {
+          "suite": "applications-bc",
+          "returnCode": 0,
+          "tests": 3,
+          "seconds": 1.3280000000013388,
+          "log": "windows-release-applications-bc.log"
+        },
+        {
+          "suite": "safe-default",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 2.57799999999952,
+          "log": "windows-release-safe-default.log"
+        },
+        {
+          "suite": "net",
+          "returnCode": 0,
+          "tests": 8,
+          "seconds": 13.53099999999904,
+          "log": "windows-release-net.log"
+        },
+        {
+          "suite": "move-enums",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 3.688000000000102,
+          "log": "windows-release-move-enums.log"
+        },
+        {
+          "suite": "closures",
+          "returnCode": 0,
+          "tests": 15,
+          "seconds": 6.92200000000048,
+          "log": "windows-release-closures.log"
+        },
+        {
+          "suite": "usability",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 6.375,
+          "log": "windows-release-usability.log"
+        }
+      ],
+      "testCount": 273
+    },
+    "linux": {
+      "platform": "linux",
+      "compilerSha256": "31da97cec9aa9c017fc4d41898f7b08203c118c3cb6fa3c923430960fc7e59a5",
+      "passed": true,
+      "suites": [
+        {
+          "suite": "evolution",
+          "returnCode": 0,
+          "tests": 12,
+          "seconds": 11.174691952,
+          "log": "linux-release-evolution.log"
+        },
+        {
+          "suite": "generics",
+          "returnCode": 0,
+          "tests": 13,
+          "seconds": 7.250802109999999,
+          "log": "linux-release-generics.log"
+        },
+        {
+          "suite": "functions",
+          "returnCode": 0,
+          "tests": 19,
+          "seconds": 8.475672168,
+          "log": "linux-release-functions.log"
+        },
+        {
+          "suite": "generic-classes",
+          "returnCode": 0,
+          "tests": 17,
+          "seconds": 10.79250502,
+          "log": "linux-release-generic-classes.log"
+        },
+        {
+          "suite": "collections-ast",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 5.982121568000004,
+          "log": "linux-release-collections-ast.log"
+        },
+        {
+          "suite": "ownership-functions",
+          "returnCode": 0,
+          "tests": 26,
+          "seconds": 12.139115799999999,
+          "log": "linux-release-ownership-functions.log"
+        },
+        {
+          "suite": "values",
+          "returnCode": 0,
+          "tests": 21,
+          "seconds": 7.525347502999992,
+          "log": "linux-release-values.log"
+        },
+        {
+          "suite": "files",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 2.521935362999997,
+          "log": "linux-release-files.log"
+        },
+        {
+          "suite": "text-bytes",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 1.5709952240000007,
+          "log": "linux-release-text-bytes.log"
+        },
+        {
+          "suite": "cli",
+          "returnCode": 0,
+          "tests": 1,
+          "seconds": 0.7373701900000071,
+          "log": "linux-release-cli.log"
+        },
+        {
+          "suite": "numbers",
+          "returnCode": 0,
+          "tests": 11,
+          "seconds": 2.7047516190000067,
+          "log": "linux-release-numbers.log"
+        },
+        {
+          "suite": "packages",
+          "returnCode": 0,
+          "tests": 13,
+          "seconds": 2.1517017359999926,
+          "log": "linux-release-packages.log"
+        },
+        {
+          "suite": "json",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 1.7186291740000001,
+          "log": "linux-release-json.log"
+        },
+        {
+          "suite": "system",
+          "returnCode": 0,
+          "tests": 8,
+          "seconds": 2.2928511579999906,
+          "log": "linux-release-system.log"
+        },
+        {
+          "suite": "tooling",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 0.7303494650000033,
+          "log": "linux-release-tooling.log"
+        },
+        {
+          "suite": "slices",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 2.387605467,
+          "log": "linux-release-slices.log"
+        },
+        {
+          "suite": "managed-classes",
+          "returnCode": 0,
+          "tests": 9,
+          "seconds": 3.9469791469999933,
+          "log": "linux-release-managed-classes.log"
+        },
+        {
+          "suite": "backend-alpha9",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 1.0804520570000022,
+          "log": "linux-release-backend-alpha9.log"
+        },
+        {
+          "suite": "optimization",
+          "returnCode": 0,
+          "tests": 6,
+          "seconds": 4.021139756000011,
+          "log": "linux-release-optimization.log"
+        },
+        {
+          "suite": "english-api",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 2.409891948000009,
+          "log": "linux-release-english-api.log"
+        },
+        {
+          "suite": "release-policy",
+          "returnCode": 0,
+          "tests": 2,
+          "seconds": 1.1281700189999952,
+          "log": "linux-release-release-policy.log"
+        },
+        {
+          "suite": "ffi",
+          "returnCode": 0,
+          "tests": 9,
+          "seconds": 6.030596770999992,
+          "log": "linux-release-ffi.log"
+        },
+        {
+          "suite": "http",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 6.006844834999995,
+          "log": "linux-release-http.log"
+        },
+        {
+          "suite": "process",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 2.1887099500000033,
+          "log": "linux-release-process.log"
+        },
+        {
+          "suite": "applications-bc",
+          "returnCode": 0,
+          "tests": 3,
+          "seconds": 1.0507126099999908,
+          "log": "linux-release-applications-bc.log"
+        },
+        {
+          "suite": "safe-default",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 3.101384495000005,
+          "log": "linux-release-safe-default.log"
+        },
+        {
+          "suite": "net",
+          "returnCode": 0,
+          "tests": 8,
+          "seconds": 10.941478844999992,
+          "log": "linux-release-net.log"
+        },
+        {
+          "suite": "move-enums",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 3.1895810219999987,
+          "log": "linux-release-move-enums.log"
+        },
+        {
+          "suite": "closures",
+          "returnCode": 0,
+          "tests": 15,
+          "seconds": 5.341392716999991,
+          "log": "linux-release-closures.log"
+        },
+        {
+          "suite": "usability",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 5.2703924239999935,
+          "log": "linux-release-usability.log"
+        }
+      ],
+      "testCount": 273
+    }
+  },
+  "cleanBuilds": {
+    "windows": {
+      "platform": "win32",
+      "compiler": "C:/msys64/ucrt64/bin\\gcc.exe",
+      "cleanBinarySha256": "8bd9fd3fcf975c8ce8bf8d2ce26b30ae8d6b23b846da95b203bb47672b62b925",
+      "workspaceBinarySha256": "8bd9fd3fcf975c8ce8bf8d2ce26b30ae8d6b23b846da95b203bb47672b62b925",
+      "identicalToWorkspaceBinary": true
+    },
+    "linux": {
+      "platform": "linux",
+      "compiler": "/usr/bin/gcc",
+      "cleanBinarySha256": "31da97cec9aa9c017fc4d41898f7b08203c118c3cb6fa3c923430960fc7e59a5",
+      "workspaceBinarySha256": "31da97cec9aa9c017fc4d41898f7b08203c118c3cb6fa3c923430960fc7e59a5",
+      "identicalToWorkspaceBinary": true
+    }
+  },
+  "examples": {
+    "windows": {
+      "compilerSha256": "8bd9fd3fcf975c8ce8bf8d2ce26b30ae8d6b23b846da95b203bb47672b62b925",
+      "passed": true,
+      "examples": [
+        {
+          "file": "01_ola.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "02_objetos.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "03_polimorfismo.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "04_memoria.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "05_bits.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "06_fibonacci.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "07_arena.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "08_modulos.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "09_colecoes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "10_structs.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "11_pacotes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "12_relatorio_vendas.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "13_codificacao.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "14_ownership.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "15_funcional.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "16_generics.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "17_funcoes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "18_classes_genericas.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "19_ownership_funcoes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "20_valores_e_resultados.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "21_relatorio_csv_stream.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "22_numeros.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "23_eventos.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "24_config_json.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "25_recursos_e_unicode.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "26_english_api.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "27_http_client.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "28_persistent_service.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "29_http_polling.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "30_closures_and_owned_results.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "31_language_review.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "rpg.assis",
+          "passed": true,
+          "error": ""
+        }
+      ],
+      "rpg": [
+        {
+          "seed": 1,
+          "ending": "victory",
+          "returnCode": 0,
+          "stderr": "",
+          "outputBytes": 12915
+        },
+        {
+          "seed": 5,
+          "ending": "defeat",
+          "returnCode": 0,
+          "stderr": "",
+          "outputBytes": 13754
+        }
+      ]
+    },
+    "linux": {
+      "compilerSha256": "31da97cec9aa9c017fc4d41898f7b08203c118c3cb6fa3c923430960fc7e59a5",
+      "passed": true,
+      "examples": [
+        {
+          "file": "01_ola.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "02_objetos.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "03_polimorfismo.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "04_memoria.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "05_bits.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "06_fibonacci.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "07_arena.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "08_modulos.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "09_colecoes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "10_structs.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "11_pacotes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "12_relatorio_vendas.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "13_codificacao.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "14_ownership.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "15_funcional.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "16_generics.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "17_funcoes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "18_classes_genericas.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "19_ownership_funcoes.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "20_valores_e_resultados.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "21_relatorio_csv_stream.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "22_numeros.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "23_eventos.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "24_config_json.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "25_recursos_e_unicode.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "26_english_api.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "27_http_client.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "28_persistent_service.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "29_http_polling.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "30_closures_and_owned_results.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "31_language_review.assis",
+          "passed": true,
+          "error": ""
+        },
+        {
+          "file": "rpg.assis",
+          "passed": true,
+          "error": ""
+        }
+      ],
+      "rpg": [
+        {
+          "seed": 1,
+          "ending": "victory",
+          "returnCode": 0,
+          "stderr": "",
+          "outputBytes": 12915
+        },
+        {
+          "seed": 5,
+          "ending": "defeat",
+          "returnCode": 0,
+          "stderr": "",
+          "outputBytes": 13754
+        }
+      ]
+    }
+  },
+  "macos": {
+    "status": "experimental; native execution pending",
+    "validated": "Mach-O structure, segments, bindings and entry; PE/ELF cross-generation"
+  },
+  "notes": [
+    "Manual-memory teaching examples use explicit unsafe blocks.",
+    "The internal roadmap credit was not increased.",
+    "This is a local working-tree revision, not a published clean tag."
+  ],
+  "sourceHashes": {
+    "src/assisc.c": "155a5208bd55c6ab2eb9f7b5a8862fab7aa3d0e61a60bd13a493e9fd4c2264e8",
+    "src/collections.h": "905c4242cba5c3ba08e066f89574f5c0391f4226d8ab58539587c07025f2d1cf",
+    "src/debug_info.h": "6d3ffe95d8bac0a2adeba6e13ab7e2d522058eb32d4c104641d2f6deeaf9ea14",
+    "src/devtools.h": "503cf4cbaf3a302227404e1eabeab606e456825ebe14b1dc30e5d32bf8e9c6c2",
+    "src/elf_format.h": "8aa29e334756432f62b458f411bd16dd29d86da6f2746814c3309b1d2c910322",
+    "src/ffi_elf.h": "ecceba924c5e56baf3fea995bdfdc33235b45fb8476ca21dc6c91cbcd71b593b",
+    "src/ffi_emit.h": "010053ca3165871397b5004ac50ca99c869ddd2d2a811d699d8fa1823dc187a8",
+    "src/frontend.h": "0850a5c18db5de8d6e29d27977c0c57faddabab3205ff439c582ed128877c728",
+    "src/generics.h": "101a6d09e61bd0b240918bb906252498348f00e9b252f77207a7ebeffdd84069",
+    "src/icon_blob.h": "74646ad2eee260df4579744e9789f405573e8124b61e8a265b61ae3d937be37a",
+    "src/install_files.inc": "cce934a1d08e61215abce292541ac7b6393336cfb16361ac86129779fbcd6352",
+    "src/install_optional.inc": "390a94ceef3e6fe123e6481d2d132f1f4dd819a0d5cb11945ddebc33b7bd29e8",
+    "src/ir.h": "7ba440414104d59dba82dc1aecbf12602ae540434035036b2c982c87668f31da",
+    "src/lexer.h": "9b502b5ebfaaf130e3ca3e94e19a57ea46031a17d229a91bd26de53a1faf6d96",
+    "src/macho_writer.h": "da81962dee5592f2a6006f1b6ffb853d07728414116342b2f1333c2a8753c8e8",
+    "src/modules.h": "84662a3c9d41125ceedd2e0c665df48f935667c76903e0df491cb6e723f56a4e",
+    "src/namespaces.h": "c2362c7fe6802c50f84abab6c7767de3ac85515d36b38e7ccdfee162a838c386",
+    "src/numeric.h": "a6264e101ddeff3ff503cb8e601365988c5df0cbc44baa85cc85464fa65f4feb",
+    "src/numeric_emit.h": "90d9991939841fbadb2048a3f913b5d654c6c65f720d6a72a8847a05550594ba",
+    "src/ownership.h": "4a3148f4fba02cdecc74a750399f0bd1947dcdcf0b64830f62e88836c145e1b1",
+    "src/packages.h": "e372900c7befe0ee8d812c17a5f05cfb56e63a78589facd626f928abc488eb32",
+    "src/pe_writer.h": "1426b3a2104dc2555ed05a3ae1ce8b1a875cc2d5b49c3d70c60b2e0d92f2463e",
+    "src/ranges.h": "147342adfcbc841038665ea88adc5a5c4e39fe830716c89af9daee4f87601992",
+    "src/runtime.S": "9cb1371662938ad7acfdacf2029d438d9ae580c437b26f2a9c5c5b0fa4ce2f70",
+    "src/runtime_blob.h": "e398ba9c1a4cce091b4f350ed4c10005dc3aa6091d19aab461bdbb0f61092bda",
+    "src/runtime_files.inc": "64a20a5ec8db2ffd3fe0e3d0414574c2ffd4d71d507acd7422d3b0b618943e43",
+    "src/runtime_io.inc": "012bba759ce7516082c3da327c03e0db9cd31d3b61d37123b7b4dfa7b9afeaa9",
+    "src/runtime_macos.S": "1ebf175ebcd4ca4f3eca42bf74e09fc739c4ae5ade2275f3588c9b955418470b",
+    "src/runtime_macos_blob.h": "5a3e41af86d491aad8fe79e2de89dee06d58b00f89f8a8bfa880bd509ed15474",
+    "src/runtime_memory.inc": "3ea9ff21a662e587f05a499ff82f9be5d8b8efb6763f6b5d92bd9704e6af067a",
+    "src/runtime_numeric.inc": "f17f1bcc70b1634cb8714882ee648bd0f904262041fc4bd383f105cf84606cb2",
+    "src/runtime_system.inc": "254389a232be341125fd55ab0023c5499fbbdbfb191ea8e6ba1c4b32c59b97e5",
+    "src/runtime_win.S": "7b5cfdb4c0019a050534a4cb2da4a92f09a39b93444e4eb24fcb4e09c8e3f861",
+    "src/runtime_win_blob.h": "59de03b24d1dea77f0aa6d1277d4519f849536b33f1d6354edc9743b32eefb10",
+    "src/safety.h": "8edc1b728efa0a31340f231e1f6117d13edcea42fdfee1a536ae2354bcf22b22",
+    "src/sha256.h": "db32be4734bdc0d90a82ca8f0654fbf9b16159baa1538da416558f941614230b",
+    "src/version.h": "6c68886a2d7e6caa53161403f5b148b674e7a782fa44eec1b3c45fa1df4bdba0",
+    "src/windows_setup.c": "7f72e0a53467d2e528cef728860f7cde759c8d296a79e2ac66fc062a8be181c9"
+  }
+}

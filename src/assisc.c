@@ -3,8 +3,8 @@
  */
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
-#if (!defined(__linux__) && !defined(_WIN32)) || !defined(__x86_64__)
-#error "Esta versão do compilador é destinada a Linux/Windows x86_64."
+#if (!defined(__linux__) && !defined(_WIN32) && !defined(__APPLE__)) || !defined(__x86_64__)
+#error "Esta versão do compilador é destinada a Linux/Windows/macOS x86_64."
 #endif
 #include <stdint.h>
 #include <stdbool.h>
@@ -37,10 +37,18 @@ static bool target_windows=true;
 #define HOST_NAME "Linux x86_64"
 static bool target_windows=false;
 #endif
+#ifdef __APPLE__
+#include <mach-o/dyld.h>
+#undef HOST_NAME
+#define HOST_NAME "macOS x86_64"
+static bool target_macos=true;
+#else
+static bool target_macos=false;
+#endif
 
 #include "version.h"
 #define VERSION ASSIS_VERSION
-#define ENTRY "assis_assis"
+#define ENTRY "main"
 #define CTOR "init"
 #define MAX_SOURCE (16 * 1024 * 1024)
 #define MAX_NEST 512
@@ -55,7 +63,7 @@ typedef struct { char *path,*snapshot; } SourceOverlay;
 static Vec source_overlays;
 static SourceFile *current_source;
 static bool json_diagnostics,library_check,stdin_source;
-static bool optimize=true,debug_memory,safe_entry,debug_symbols;
+static bool optimize=true,debug_memory,safe_entry=true,debug_symbols;
 static char *compiler_directory;
 static void json_string(FILE *out,const char *s){
     fputc('"',out);for(const unsigned char *p=(const unsigned char*)s;*p;p++){
@@ -66,7 +74,7 @@ static void json_string(FILE *out,const char *s){
 static void fatal(const char *fmt, ...) {
     char message[4096];va_list ap;va_start(ap,fmt);vsnprintf(message,sizeof(message),fmt,ap);va_end(ap);
     if(json_diagnostics){fputs("{\"code\":\"A002\",\"message\":",stderr);json_string(stderr,message);fputs("}\n",stderr);}
-    else fprintf(stderr,"FODASE: %s\n",message);exit(2);
+    else fprintf(stderr,"assis: %s\n",message);exit(2);
 }
 static void *mem(size_t n) { void *p=calloc(1,n?n:1); if(!p) fatal("memória insuficiente"); return p; }
 static char *copy(const char *s, size_t n) { char *p=mem(n+1); memcpy(p,s,n); return p; }
@@ -127,8 +135,13 @@ static void protect_output(const char *path){
 
 #include "runtime_blob.h"
 #include "runtime_win_blob.h"
+#include "runtime_macos_blob.h"
 typedef struct { unsigned char *v;size_t n,cap; } Buffer;
 static Buffer code,data;
+static size_t native_import_rva;
+typedef struct {char *library,*symbol;int label;size_t slot;} NativeImport;
+static Vec native_imports;
+static int callback_state_label=-1;
 typedef struct {size_t offset;Token *token;} DebugSite;
 static Vec debug_sites;
 static void bytes(Buffer *b,const void *p,size_t n){
@@ -160,6 +173,16 @@ static void rt_call(size_t offset){
         MAP_RT(alloc);MAP_RT(free);MAP_RT(len);MAP_RT(streq);MAP_RT(strbyte);MAP_RT(error);MAP_RT(finish);MAP_RT(read);MAP_RT(now);
         MAP_RT(args_init);MAP_RT(argc);MAP_RT(arg_len);MAP_RT(arg_copy);MAP_RT(io_error);MAP_RT(file_open);MAP_RT(file_close);MAP_RT(file_drop);MAP_RT(file_read);MAP_RT(file_write);
         default:fatal("rotina Windows desconhecida");
+        }
+#undef MAP_RT
+    }
+    else if(target_macos){
+#define MAP_RT(name) case RT_##name: offset=MRT_##name;break
+        switch(offset){
+        MAP_RT(stdout_write);MAP_RT(sleep);MAP_RT(civil);MAP_RT(file_sync);MAP_RT(file_replace);MAP_RT(file_remove);MAP_RT(print_float);MAP_RT(print_uint);MAP_RT(write);MAP_RT(print_str);MAP_RT(print_int);MAP_RT(print_char);MAP_RT(print_bool);MAP_RT(print_ptr);
+        MAP_RT(alloc);MAP_RT(free);MAP_RT(len);MAP_RT(streq);MAP_RT(strbyte);MAP_RT(error);MAP_RT(finish);MAP_RT(read);MAP_RT(now);
+        MAP_RT(args_init);MAP_RT(argc);MAP_RT(arg_len);MAP_RT(arg_copy);MAP_RT(io_error);MAP_RT(file_open);MAP_RT(file_close);MAP_RT(file_drop);MAP_RT(file_read);MAP_RT(file_write);
+        default:fatal("rotina macOS desconhecida");
         }
 #undef MAP_RT
     }
@@ -282,7 +305,7 @@ static void gen_address(Node *n){
         if(!value_type(n->a->ty))nonnull(n->t);INS(0x48,0x05);u32(&code,(uint32_t)n->field->offset);
     }
     else if(n->kind==N_INDEX){
-        if(optimize&&n->bounds_proven){gen_expr(n->a);load_local(RCX,n->b->var);if(slice_type(n->a->ty)){INS(0x48,0x8b,0x00);}else if(collection_of(n->a->ty)){INS(0x48,0x8b,0x40,0x18);}}
+        if(optimize&&n->bounds_proven){gen_expr(n->a);if(!operand_rcx(n->b)){INS(0x50);gen_expr(n->b);movreg(RCX,RAX);INS(0x58);}if(slice_type(n->a->ty)){INS(0x48,0x8b,0x00);}else if(collection_of(n->a->ty)){INS(0x48,0x8b,0x40,0x18);}}
         else{
         gen_expr(n->a);INS(0x50);gen_expr(n->b);movreg(RCX,RAX);INS(0x58);nonnull(n->t);
         if(slice_type(n->a->ty)){
@@ -306,6 +329,7 @@ static void gen_address(Node *n){
     else fatal("posição gravável inválida no backend");
 }
 #include "numeric_emit.h"
+#include "ffi_emit.h"
 static void gen_operation(int op,Type left,Type right,Token *t){
     if(floating(left)){gen_float_operation(op,left);return;}
     if(left.depth&&(op=='+'||op=='-')){
@@ -344,8 +368,8 @@ static void gen_operation(int op,Type left,Type right,Token *t){
 }
 /* Signed division truncates toward zero. The bias preserves that contract for
  * negative operands, including INT64_MIN, without a hardware idiv. */
-static bool constant_operation(int op,Node *right){
-    uint64_t value;if(!optimize||!constant(right,&value))return false;
+static bool immediate_operation(int op,uint64_t value){
+    if(!optimize)return false;
     if((op==T_SHL||op==T_SHR)&&value<64){INS(0x48,0xc1);u8(&code,op==T_SHL?0xe0:0xf8);u8(&code,(unsigned)value);return true;}
     if((int64_t)value>=INT32_MIN&&(int64_t)value<=INT32_MAX){
         unsigned opcode=op=='+'?0:op=='-'?5:op=='&'?4:op=='|'?1:op=='^'?6:8;
@@ -366,6 +390,8 @@ static bool constant_operation(int op,Node *right){
     /* Nonzero literals other than -1 cannot trigger either division trap. */
     immediate(RCX,value);INS(0x48,0x99,0x48,0xf7,0xf9);if(op=='%')movreg(RAX,RDX);return true;
 }
+static bool constant_operation(int op,Node *right){uint64_t value;return constant(right,&value)&&immediate_operation(op,value);}
+#include "expression_emit.h"
 /* Inline only bounded, nontrapping scalar expression leaves. Arguments are
  * names/literals, so substitution cannot reorder effects, traps or mutation.
  * Semantic/ownership passes already validated the original call. */
@@ -391,6 +417,12 @@ static bool inline_call(Node *n){
 static void gen_expr_inner(Node *n){
     uint64_t folded;if(optimize&&constant(n,&folded)){immediate(RAX,folded);return;}
     switch(n->kind){
+    case N_IS:case N_CAST:{
+        gen_expr(n->a);INS(0x50,0x48,0x85,0xc0);int yes=new_label(),no=new_label(),done=new_label();branch_if(0x84,no);INS(0x48,0x8b,0x08);
+        Class *target=find_class(n->decl.name);
+        for(int i=0;i<classes.n;i++){Class *c=classes.v[i];if(c->record)continue;bool matches=false;for(Class *base=c;base;base=base->base)if(base==target)matches=true;if(matches){load_label(c->label);INS(0x48,0x39,0xc1);branch_if(0x84,yes);}}
+        mark(no,&code);clean_stack(1);INS(0x31,0xc0);branch(done);mark(yes,&code);INS(0x58);if(n->kind==N_IS)immediate(RAX,1);mark(done,&code);break;
+    }
     case N_ARRAY:{
         Node create={0};create.kind=N_NEW;create.t=n->t;create.cls=n->cls;gen_expr(&create);INS(0x50);
         for(int i=0;i<n->items.n;i++){gen_expr(n->items.v[i]);INS(0x50);call_label(n->fn->label);clean_stack(1);}INS(0x58);break;
@@ -428,6 +460,8 @@ static void gen_expr_inner(Node *n){
             else gen_operation(n->op,n->a->ty,n->b->ty,n->t);
         }break;
     case N_BUILTIN:
+        if(n->op==T_UTF8){Node *literal=n->items.v[0];load_label(string_label(literal->t->str,literal->t->len));local_address(RDX,n->temp);INS(0x48,0x89,0x02);immediate(RAX,literal->t->len);INS(0x48,0x89,0x42,0x08);movreg(RAX,RDX);break;}
+        if(n->op==T_C_CALLBACK){load_label(n->fn->callback_label);break;}
         if(n->op==T_SLICE_MAKE){
             Node *input=n->items.v[0];gen_expr(input);nonnull(n->t);
             if(slice_type(input->ty)){INS(0x48,0x8b,0x48,0x08,0x48,0x8b,0x00);}
@@ -447,7 +481,9 @@ static void gen_expr_inner(Node *n){
         if(n->op==T_FILE_READ||n->op==T_FILE_WRITE||n->op==T_ARG_COPY||n->op==T_WRITE_BYTES){
             for(int i=0;i<3;i++){gen_expr(n->items.v[i]);INS(0x50);}
             INS(0x5a,0x5e,0x5f);
-            if(((Node*)n->items.v[1])->ownership){int valid=new_label();INS(0x48,0x3b,0x56,0xf0);branch_if(0x86,valid);panic_at(4,n->t);mark(valid,&code);}
+            if(slice_type(((Node*)n->items.v[1])->ty)){
+                int valid=new_label();INS(0x48,0x3b,0x56,0x08);branch_if(0x86,valid);panic_at(4,n->t);mark(valid,&code);INS(0x48,0x8b,0x36);
+            }else if(((Node*)n->items.v[1])->ownership){int valid=new_label();INS(0x48,0x3b,0x56,0xf0);branch_if(0x86,valid);panic_at(4,n->t);mark(valid,&code);}
             rt_call(n->op==T_FILE_READ?RT_file_read:n->op==T_FILE_WRITE?RT_file_write:n->op==T_WRITE_BYTES?RT_stdout_write:RT_arg_copy);break;
         }
         if(n->op==T_NOW){rt_call(RT_now);break;}
@@ -482,6 +518,12 @@ static void gen_expr_inner(Node *n){
     case N_CALL:
         if(inline_call(n))break;
         if(!n->fn){
+            if(closure_type(n->a->ty)){
+                gen_expr(n->a);
+                if(n->temp){INS(0x50);local_address(RAX,n->temp);INS(0x50);load_stack(RAX,8);}
+                INS(0x50);for(int i=0;i<n->items.n;i++){gen_expr(n->items.v[i]);INS(0x50);}
+                load_stack(RAX,n->items.n*8);nonnull(n->t);call_virtual(0);clean_stack(n->items.n+1+(n->temp?2:0));break;
+            }
             /* Evaluate the callee once, before arguments. The saved address is
              * below the argument area and does not change the native ABI. */
             gen_expr(n->a);INS(0x50);
@@ -494,7 +536,7 @@ static void gen_expr_inner(Node *n){
         if(n->fn->owner){gen_expr(n->a->a);INS(0x50);}
         for(int i=0;i<n->items.n;i++){gen_expr(n->items.v[i]);INS(0x50);}
         if(n->fn->owner){
-            load_stack(RAX,n->items.n*8);nonnull(n->t);call_virtual(n->slot);
+            load_stack(RAX,n->items.n*8);nonnull(n->t);if(n->op==T_SUPER)call_label(n->fn->label);else call_virtual(n->slot);
         }else call_label(n->fn->label);
         clean_stack(n->items.n+(n->fn->owner?1:0)+(n->temp?1:0));break;
     case N_NEW:{
@@ -506,6 +548,11 @@ static void gen_expr_inner(Node *n){
             local_address(RAX,n->temp);break;
         }
         immediate(RDI,(uint64_t)n->cls->size);site(RSI,n->t);rt_call(RT_alloc);INS(0x50);
+        if(n->variant){
+            INS(0x48,0xc7,0x00);u32(&code,(uint32_t)n->variant->tag);
+            for(int i=0;i<n->items.n;i++){gen_expr(n->items.v[i]);load_stack(RDX,0);INS(0x48,0x81,0xc2);u32(&code,(uint32_t)((Field*)n->variant->fields.v[i])->offset);store_value(((Field*)n->variant->fields.v[i])->ty);}
+            INS(0x58);break;
+        }
         load_label(n->cls->label);load_stack(RDX,0);INS(0x48,0x89,0x02);
         for(int i=0;i<n->cls->fields.n;i++){
             Field *f=n->cls->fields.v[i];if(equal_type(f->ty,type_str)){
@@ -513,11 +560,11 @@ static void gen_expr_inner(Node *n){
             }
         }
         for(int i=0;i<n->items.n;i++){gen_expr(n->items.v[i]);INS(0x50);}
-        if(n->cls->record){
+        if(n->cls->record||n->cls->closure){
             for(int i=0;i<n->items.n;i++){Field *f=n->cls->fields.v[i];load_stack(RAX,(n->items.n-1-i)*8);load_stack(RDX,n->items.n*8);INS(0x48,0x81,0xc2);u32(&code,(uint32_t)f->offset);store_value(f->ty);}clean_stack(n->items.n);
         }
         if(n->fn){
-            load_stack(RAX,n->items.n*8);call_virtual(n->slot);clean_stack(n->items.n);
+            load_stack(RAX,n->items.n*8);call_label(n->fn->label);clean_stack(n->items.n);
         }
         INS(0x58);break;
     }
@@ -525,6 +572,7 @@ static void gen_expr_inner(Node *n){
     }
 }
 static void gen_expr(Node *n){
+    if(optimize&&n->ir){ir_emit_expr(n->ir);return;}
     gen_expr_inner(n);if(!n->ty.depth&&n->ty.kind>=TY_I8)normalize_numeric(n->ty);if(n->temp&&n->kind!=N_NEW&&n->kind!=N_CALL){local_address(RDX,n->temp);store_value(n->ty);}
 }
 static int return_label,loop_count,loop_start[MAX_NEST],loop_end[MAX_NEST],loop_cleanup[MAX_NEST];
@@ -540,6 +588,7 @@ static void store_local(Var *v){
     }else{INS(0x48,0x89,0x85);u32(&code,(uint32_t)(-8*(v->slot+1)));}
 }
 static void gen_release(Type ty){
+    if(closure_type(ty)){int done=new_label();INS(0x48,0x85,0xc0);branch_if(0x84,done);INS(0x50);call_virtual(-1);clean_stack(1);mark(done,&code);return;}
     if(equal_type(ty,type_file)){movreg(RDI,RAX);rt_call(RT_file_drop);return;}
     Class *cls=object(ty)?find_class(ty.name):NULL;
     if(cls&&!cls->record&&!collection_of(ty)){
@@ -581,13 +630,15 @@ static void gen_stmt(Node *n){
     if(debug_symbols&&n->kind!=N_BLOCK&&n->kind!=N_UNSAFE){DebugSite *site=mem(sizeof(*site));site->offset=code.n;site->token=n->t;push(&debug_sites,site);}
     switch(n->kind){
     case N_MATCH:{
-        gen_expr(n->a);store_local(n->var);int done=new_label();
+        gen_expr(n->a);if(!n->cls->value)nonnull(n->t);store_local(n->var);int done=new_label(),outer=cleanups.n;
+        if(n->ownership==1)push(&cleanups,n->var);int arm_base=cleanups.n;
         for(int i=0;i<n->items.n;i++){
             Node *arm=n->items.v[i];int next=new_label();load_local(RAX,n->var);INS(0x48,0x81,0x38);u32(&code,(uint32_t)arm->variant->tag);branch_if(0x85,next);
-            for(int j=0;j<arm->items.n;j++){Node *binding=arm->items.v[j];Field *field=arm->variant->fields.v[j];load_local(RAX,n->var);INS(0x48,0x05);u32(&code,(uint32_t)field->offset);load_value(field->ty);store_local(binding->var);}
-            gen_stmt(arm->a);branch(done);mark(next,&code);
+            for(int j=0;j<arm->items.n;j++){Node *binding=arm->items.v[j];Field *field=arm->variant->fields.v[j];load_local(RAX,n->var);INS(0x48,0x05);u32(&code,(uint32_t)field->offset);
+                if(binding->var->ownership==1){movreg(RDX,RAX);load_value(field->ty);INS(0x48,0xc7,0x02);u32(&code,0);push(&cleanups,binding->var);}else load_value(field->ty);store_local(binding->var);}
+            gen_stmt(arm->a);gen_cleanup(arm_base);cleanups.n=arm_base;branch(done);mark(next,&code);
         }
-        panic_at(10,n->t);mark(done,&code);break;
+        panic_at(10,n->t);mark(done,&code);gen_cleanup(outer);cleanups.n=outer;break;
     }
     case N_BLOCK:{int old=cleanups.n;for(int i=0;i<n->items.n;i++)gen_stmt(n->items.v[i]);gen_cleanup(old);cleanups.n=old;break;}
     case N_UNSAFE:gen_stmt(n->a);break;
@@ -634,47 +685,34 @@ static void gen_stmt(Node *n){
     case N_PRINT:
         for(int i=0;i<n->items.n;i++){gen_expr(n->items.v[i]);INS(0x50);}
         for(int i=0;i<n->items.n;i++){
-            if(i){immediate(RDI,32);immediate(RSI,1);rt_call(RT_print_char);}
+            if(i&&n->op!=T_WRITE){immediate(RDI,32);immediate(RSI,1);rt_call(RT_print_char);}
             Node *a=n->items.v[i];load_stack(RDI,(n->items.n-1-i)*8);if(a->ty.kind==TY_F32&&!a->ty.depth){movreg(RAX,RDI);gen_numeric_cast(a->ty,(Type){TY_F64,0,NULL,NULL});movreg(RDI,RAX);}immediate(RSI,1);
-            rt_call(floating(a->ty)?RT_print_float:unsigned_integer(a->ty)&&a->ty.kind!=TY_U8?RT_print_uint:numeric(a->ty)?RT_print_int:equal_type(a->ty,type_bool)?RT_print_bool:equal_type(a->ty,type_str)?RT_print_str:RT_print_ptr);
+            if(slice_type(a->ty)){INS(0x48,0x8b,0x57,0x08,0x48,0x8b,0x37);immediate(RDI,1);rt_call(RT_write);}
+            else rt_call(floating(a->ty)?RT_print_float:unsigned_integer(a->ty)&&a->ty.kind!=TY_U8?RT_print_uint:numeric(a->ty)?RT_print_int:equal_type(a->ty,type_bool)?RT_print_bool:equal_type(a->ty,type_str)?RT_print_str:RT_print_ptr);
         }
-        clean_stack(n->items.n);immediate(RDI,10);immediate(RSI,1);rt_call(RT_print_char);break;
+        clean_stack(n->items.n);if(n->op!=T_WRITE){immediate(RDI,10);immediate(RSI,1);rt_call(RT_print_char);}break;
     default:fatal("instrução inválida no backend");
     }
     n->code_end=code.n;
 }
 static size_t entry_offset;
-static void count_uses(Node *n,int depth){
-    if(!n)return;
-    /* Saturation bounds compile-time work and avoids signed score overflow.
-     * A use in an inner loop should outrank one-time setup references. */
-    int weight=1<<(depth>4?12:depth*3);
-    if(n->kind==N_NAME&&n->var){int *uses=&n->var->uses;*uses=*uses>INT_MAX-weight?INT_MAX:*uses+weight;}
-    int nested=n->kind==N_WHILE?depth+1:depth;
-    count_uses(n->a,nested);count_uses(n->b,nested);count_uses(n->c,depth);count_uses(n->step,nested);
-    for(int i=0;i<n->items.n;i++)count_uses(n->items.v[i],depth);
-}
-static void allocate_registers(Function *f){
-    if(!optimize)return;count_uses(f->body,0);const int registers[]={3,12,13,14};
-    for(int r=0;r<4;r++){
-        Var *best=NULL;
-        for(int i=0;i<f->vars.n;i++){Var *v=f->vars.v[i];if(v->reg<0&&!v->address_taken&&(numeric(v->ty)||equal_type(v->ty,type_bool))&&v->uses&&(!best||v->uses>best->uses))best=v;}
-        if(best)best->reg=registers[r];
-    }
-}
 static void generate(void){
-    if(target_windows)bytes(&code,runtime_win_blob,sizeof(runtime_win_blob));else bytes(&code,runtime_blob,sizeof(runtime_blob));
-    for(int i=0;i<all_functions.n;i++)((Function*)all_functions.v[i])->label=new_label();
+    if(target_windows)bytes(&code,runtime_win_blob,sizeof(runtime_win_blob));else if(target_macos)bytes(&code,runtime_macos_blob,sizeof(runtime_macos_blob));else bytes(&code,runtime_blob,sizeof(runtime_blob));
+    for(int i=0;i<all_functions.n;i++){Function *f=all_functions.v[i];f->label=new_label();if(f->callback){f->callback_label=new_label();if(callback_state_label<0)callback_state_label=new_label();}if(f->foreign)f->import_label=native_import(f->foreign_library[target_windows?1:0],f->foreign_symbol);}
     for(int i=0;i<classes.n;i++){Class *c=classes.v[i];c->label=new_label();if(has_owned_fields(c)||!c->record)c->drop_label=new_label();}
-    entry_offset=code.n;INS(0x31,0xed,0x54);rt_call_raw(target_windows?WRT_init:RT_init);INS(0x5f);rt_call(RT_args_init);
+    entry_offset=code.n;
+    if(target_macos){INS(0x31,0xed,0x56,0x57);rt_call_raw(MRT_init);INS(0x5f,0x5e);}
+    else{INS(0x31,0xed,0x54);rt_call_raw(target_windows?WRT_init:RT_init);INS(0x5f);}
+    rt_call(RT_args_init);
+    if(callback_state_label>=0){INS(0x4c,0x89,0x3d);fix(&code,callback_state_label,true);}
     /* R15 is reserved for runtime state and preserved by all runtime routines. */
     INS(0x49,0xc7,0x87);u32(&code,88);u32(&code,debug_memory?1:0);call_label(main_function->label);
     INS(0x50);rt_call(RT_finish);INS(0x58);
     if(isvoid(main_function->result)){INS(0x31,0xff);}else{movreg(RDI,RAX);INS(0x81,0xe7,0xff,0x00,0x00,0x00);}
-    if(target_windows)rt_call_raw(WRT_exit);else{immediate(RAX,60);INS(0x0f,0x05,0x0f,0x0b);}
+    if(target_windows)rt_call_raw(WRT_exit);else if(target_macos)rt_call_raw(MRT_exit);else{immediate(RAX,60);INS(0x0f,0x05,0x0f,0x0b);}
     for(int i=0;i<all_functions.n;i++){
         Function *f=all_functions.v[i];generating=f;mark(f->label,&code);return_label=new_label();loop_count=0;cleanups.n=0;
-        allocate_registers(f);
+        if(f->foreign){emit_c_import(f);f->code_end=code.n;continue;}
         INS(0x55,0x48,0x89,0xe5);
         unsigned saved[4],saved_count=0;
         const unsigned candidates[]={3,12,13,14};
@@ -709,6 +747,7 @@ static void generate(void){
         for(unsigned r=0;r<saved_count;r++){u8(&code,saved[r]>=8?0x4c:0x48);u8(&code,0x8b);u8(&code,0x85+((saved[r]&7)*8));u32(&code,(uint32_t)(-8*(slots+r+1)));}
         INS(0xc9,0xc3);f->code_end=code.n;
     }
+    for(int i=0;i<all_functions.n;i++){Function *f=all_functions.v[i];if(f->callback)emit_c_callback(f);}
     /* One drop function per concrete record. Calls keep recursive types finite
      * in the compiler and share the same runtime stack guard as user code. */
     for(int i=0;i<classes.n;i++){
@@ -717,8 +756,13 @@ static void generate(void){
         movreg(RAX,RSP);INS(0x48,0x83,0xe8,0x10,0x49,0x3b,0x47,0x68);
         int ok=new_label(),done=new_label();branch_if(0x83,ok);panic_at(11,c->t);mark(ok,&code);
         INS(0x48,0x83,0xec,0x10,0x48,0x8b,0x45,0x10,0x48,0x89,0x45,0xf8,0x48,0x85,0xc0);branch_if(0x84,done);
-        for(int j=c->fields.n-1;j>=0;j--){Field *f=c->fields.v[j];if(!f->owned)continue;
-            INS(0x48,0x8b,0x45,0xf8,0x48,0x8b,0x80);u32(&code,(uint32_t)f->offset);gen_release(f->ty);
+        Function *destructor=find_method(c,"drop",NULL);if(destructor){INS(0xff,0x75,0xf8);call_label(destructor->label);clean_stack(1);}
+        for(int k=0;k<(c->tagged?c->variants.n:1);k++){
+            Vec fields=c->tagged?((Variant*)c->variants.v[k])->fields:c->fields;int next=new_label();
+            if(c->tagged){INS(0x48,0x8b,0x45,0xf8,0x48,0x81,0x38);u32(&code,(uint32_t)((Variant*)c->variants.v[k])->tag);branch_if(0x85,next);}
+            for(int j=fields.n-1;j>=0;j--){Field *f=fields.v[j];if(!f->owned)continue;
+                INS(0x48,0x8b,0x45,0xf8,0x48,0x8b,0x80);u32(&code,(uint32_t)f->offset);gen_release(f->ty);
+            }mark(next,&code);
         }
         INS(0x48,0x8b,0x7d,0xf8);rt_call(RT_free);mark(done,&code);INS(0xc9,0xc3);
     }
@@ -736,7 +780,7 @@ static size_t align_page(size_t size){return (size+4095)&~(size_t)4095;}
 static void apply_fixes(uint64_t base,size_t text_rva,size_t data_rva){
     for(int i=0;i<fixes.n;i++){
         Fix *f=fixes.v[i];Label *l=labels.v[f->label];if(!l->defined)fatal("rótulo não definido");
-        uint64_t address=base+(l->section?data_rva:text_rva)+l->position;
+        uint64_t address=base+(l->section==2?native_import_rva:l->section?data_rva:text_rva)+l->position;
         if(f->relative){
             int64_t diff=(int64_t)address-(int64_t)(base+text_rva+f->position+4);
             if(diff<INT32_MIN||diff>INT32_MAX)fatal("salto fora do alcance");
@@ -747,29 +791,46 @@ static void apply_fixes(uint64_t base,size_t text_rva,size_t data_rva){
         }
     }
 }
+#include "ffi_elf.h"
 static void write_elf(const char *path){
     for(int i=0;i<fixes.n;i++){Fix *f=fixes.v[i];if(f->buffer==&code&&!f->relative)fatal("ELF PIE exige endereços de código relativos a RIP");}
-    size_t data_offset=align_page(4096+code.n);apply_fixes(ELF_BASE,4096,data_offset);
+    size_t data_offset=align_page(4096+code.n);bool dynamic=native_imports.n!=0||callback_state_label>=0;
+    if(dynamic){native_import_rva=align_page(data_offset+data.n);build_elf_imports(native_import_rva);}
+    apply_fixes(ELF_BASE,4096,data_offset);
     Elf64_Ehdr eh={0};memcpy(eh.e_ident,ELFMAG,SELFMAG);eh.e_ident[EI_CLASS]=ELFCLASS64;eh.e_ident[EI_DATA]=ELFDATA2LSB;eh.e_ident[EI_VERSION]=EV_CURRENT;
     eh.e_type=ET_DYN;eh.e_machine=EM_X86_64;eh.e_version=EV_CURRENT;eh.e_entry=ELF_BASE+4096+entry_offset;
     eh.e_phoff=sizeof(eh);eh.e_ehsize=sizeof(eh);eh.e_phentsize=sizeof(Elf64_Phdr);eh.e_phnum=4;
-    Elf64_Phdr ph[4]={0};
+    Elf64_Phdr ph[9]={0};
     ph[0]=(Elf64_Phdr){.p_type=PT_LOAD,.p_flags=PF_R,.p_offset=0,.p_vaddr=ELF_BASE,.p_paddr=ELF_BASE,.p_filesz=4096,.p_memsz=4096,.p_align=4096};
     ph[1]=(Elf64_Phdr){.p_type=PT_LOAD,.p_flags=PF_R|PF_X,.p_offset=4096,.p_vaddr=ELF_BASE+4096,.p_paddr=ELF_BASE+4096,.p_filesz=code.n,.p_memsz=code.n,.p_align=4096};
     ph[2]=(Elf64_Phdr){.p_type=PT_LOAD,.p_flags=PF_R,.p_offset=data_offset,.p_vaddr=ELF_BASE+data_offset,.p_paddr=ELF_BASE+data_offset,.p_filesz=data.n,.p_memsz=data.n,.p_align=4096};
     ph[3]=(Elf64_Phdr){.p_type=PT_GNU_STACK,.p_flags=PF_R|PF_W,.p_align=16};
-    if(debug_symbols)append_debug_elf(&eh,data_offset+data.n);
+    const char interpreter[]="/lib64/ld-linux-x86-64.so.2";
+    if(dynamic){
+        eh.e_phnum=9;
+        ph[4]=(Elf64_Phdr){.p_type=6,.p_flags=PF_R,.p_offset=sizeof(eh),.p_vaddr=sizeof(eh),.p_paddr=sizeof(eh),.p_filesz=sizeof(ph),.p_memsz=sizeof(ph),.p_align=8};
+        ph[5]=(Elf64_Phdr){.p_type=3,.p_flags=PF_R,.p_offset=1024,.p_vaddr=1024,.p_paddr=1024,.p_filesz=sizeof(interpreter),.p_memsz=sizeof(interpreter),.p_align=1};
+        ph[6]=(Elf64_Phdr){.p_type=PT_LOAD,.p_flags=PF_R|PF_W,.p_offset=native_import_rva,.p_vaddr=native_import_rva,.p_paddr=native_import_rva,.p_filesz=elf_imports.n,.p_memsz=align_page(elf_imports.n),.p_align=4096};
+        ph[7]=(Elf64_Phdr){.p_type=2,.p_flags=PF_R|PF_W,.p_offset=native_import_rva+elf_dynamic_offset,.p_vaddr=native_import_rva+elf_dynamic_offset,.p_paddr=native_import_rva+elf_dynamic_offset,.p_filesz=elf_dynamic_size,.p_memsz=elf_dynamic_size,.p_align=8};
+        ph[8]=(Elf64_Phdr){.p_type=0x6474e552,.p_flags=PF_R,.p_offset=native_import_rva,.p_vaddr=native_import_rva,.p_paddr=native_import_rva,.p_filesz=elf_imports.n<elf_relro_size?elf_imports.n:elf_relro_size,.p_memsz=elf_relro_size,.p_align=1};
+        /* PT_PHDR must precede LOAD entries for the dynamic loader. */
+        Elf64_Phdr first=ph[4],interp=ph[5],stack=ph[3];ph[4]=ph[2];ph[3]=ph[1];ph[2]=ph[0];ph[0]=first;ph[1]=interp;ph[5]=stack;
+    }
+    if(debug_symbols)append_debug_elf(&eh,dynamic?native_import_rva+elf_imports.n:data_offset+data.n);
     protect_output(path);
     FILE *fp=fopen(path,"wb");if(!fp)fatal("não foi possível criar %s: %s",path,strerror(errno));
-    unsigned char header[4096]={0};memcpy(header,&eh,sizeof(eh));memcpy(header+sizeof(eh),ph,sizeof(ph));
+    unsigned char header[4096]={0};memcpy(header,&eh,sizeof(eh));memcpy(header+sizeof(eh),ph,(size_t)eh.e_phnum*sizeof(Elf64_Phdr));if(dynamic)memcpy(header+1024,interpreter,sizeof(interpreter));
     bool ok=fwrite(header,1,sizeof(header),fp)==sizeof(header)&&fwrite(code.v,1,code.n,fp)==code.n;
     size_t pad=data_offset-4096-code.n;unsigned char zero[4096]={0};if(ok&&pad)ok=fwrite(zero,1,pad,fp)==pad;
-    if(ok)ok=fwrite(data.v,1,data.n,fp)==data.n;if(ok&&debug_symbols)ok=fwrite(debug_tail.v,1,debug_tail.n,fp)==debug_tail.n;if(fclose(fp))ok=false;
+    if(ok)ok=fwrite(data.v,1,data.n,fp)==data.n;
+    if(ok&&dynamic){size_t gap=native_import_rva-data_offset-data.n;if(gap)ok=fwrite(zero,1,gap,fp)==gap;if(ok)ok=fwrite(elf_imports.v,1,elf_imports.n,fp)==elf_imports.n;}
+    if(ok&&debug_symbols)ok=fwrite(debug_tail.v,1,debug_tail.n,fp)==debug_tail.n;if(fclose(fp))ok=false;
     if(!ok){unlink(path);fatal("erro ao gravar %s",path);}if(chmod(path,0755))fatal("não foi possível marcar %s como executável: %s",path,strerror(errno));
 }
 
 #include "pe_writer.h"
-static void write_executable(const char *path){if(target_windows)write_pe(path);else write_elf(path);}
+#include "macho_writer.h"
+static void write_executable(const char *path){if(target_windows)write_pe(path);else if(target_macos)write_macho(path);else write_elf(path);}
 static void help(void){
     puts("AssisScript " VERSION " | compilador nativo " HOST_NAME "\n"
          "\nUso: assis <comando> [arquivo.assis] [opções]\n"
@@ -788,14 +849,15 @@ static void help(void){
          "      --no-opt                     desativa otimizações para comparação\n"
          "      --debug                      acusa vazamentos e preenche memória liberada\n"
          "      --symbols                    build com mapa JSON e DWARF/símbolos em ELF\n"
-         "      --safe                       exige entrada safe e fronteiras unsafe explícitas\n"
+         "      --safe                       perfil padrão: entrada safe e fronteiras unsafe\n"
+         "      --legacy                     compatibilidade explícita com entrada legada\n"
          "  -I <pasta>                       pesquisa módulos nessa pasta\n"
          "  assis tokens [fonte]              mostra tokens e posições\n"
          "  assis doctor                      mostra informações da instalação\n"
          "  assis version                     mostra a versão\n"
          "  assis help                        mostra esta ajuda\n"
          "\nSem fonte, procura assis.assis no diretório atual.\n"
-         "build aceita --target windows-x64 ou --target linux-x64.\n"
+         "build aceita --target windows-x64, linux-x64 ou macos-x64 (experimental).\n"
          "Aliases: criar, compilar, executar, verificar.\n"
          "O compilador não chama Python, GCC, Clang, assembler ou linker.");
 }
@@ -804,13 +866,13 @@ static void create_project(const char *folder){
     if(mkdir(folder,0755))fatal("não foi possível criar %s: %s",folder,strerror(errno));
     size_t size=strlen(folder)+32;char *path=mem(size);snprintf(path,size,"%s/assis.assis",folder);
     FILE *f=fopen(path,"w");if(!f)fatal("não foi possível criar %s",path);
-    const char *sample="#body src.pillow\n\n"
-        "assis assis_assis(): int {\n    let numeros: Array<int> = [21];\n"
-        "    print(\"Assis, mundo. Fodase.\", dobro(numeros[0]));\n    free(numeros);\n    return 0;\n}\n";
+    const char *sample="import \"src.pillow\";\n\n"
+        "safe fn main(): int {\n    own numeros: Array<int> = [21];\n"
+        "    print(\"Hello, world!\", dobro(numeros[0]));\n    return 0;\n}\n";
     bool ok=fputs(sample,f)>=0;if(fclose(f))ok=false;if(!ok)fatal("erro ao criar projeto");
     snprintf(path,size,"%s/src",folder);if(mkdir(path,0755))fatal("não foi possível criar src");
     const char *names[]={"src.pillow","src/calculos.assis"};
-    const char *contents[]={"#yuri <src/calculos.assis>\n","/// Retorna o dobro de valor em aritmética modular de 64 bits.\nassis dobro(valor: int): int { return valor * 2; }\n"};
+    const char *contents[]={"import \"src/calculos.assis\";\n","/// Retorna o dobro de valor em aritmética modular de 64 bits.\npure fn dobro(valor: int): int { return valor * 2; }\n"};
     for(int i=0;i<2;i++){snprintf(path,size,"%s/%s",folder,names[i]);f=fopen(path,"w");if(!f)fatal("não foi possível criar %s",path);ok=fputs(contents[i],f)>=0;if(fclose(f))ok=false;if(!ok)fatal("erro ao criar %s",path);}
     printf("ASSIS: projeto criado em %s\nEntre na pasta e execute: assis run\n",folder);
 }
@@ -820,7 +882,7 @@ static int run_program(double timeout){
     char directory[]="/tmp/assisscript-XXXXXX";if(!mkdtemp(directory))fatal("não foi possível criar diretório temporário: %s",strerror(errno));
     char path[128];snprintf(path,sizeof(path),"%s/programa",directory);write_executable(path);fflush(NULL);
     pid_t child=fork();if(child<0){unlink(path);rmdir(directory);fatal("fork falhou: %s",strerror(errno));}
-    if(!child){execl(path,path,(char*)NULL);fprintf(stderr,"FODASE: não foi possível executar %s: %s\n",path,strerror(errno));_exit(126);}
+    if(!child){execl(path,path,(char*)NULL);fprintf(stderr,"assis: não foi possível executar %s: %s\n",path,strerror(errno));_exit(126);}
     int status=0;double start=now_seconds();bool timed_out=false;
     for(;;){
         pid_t result=waitpid(child,&status,timeout>0?WNOHANG:0);
@@ -829,9 +891,9 @@ static int run_program(double timeout){
         struct timespec nap={0,10000000};nanosleep(&nap,NULL);
     }
     unlink(path);rmdir(directory);
-    if(timed_out){fputs("FODASE: o programa excedeu o tempo de execução definido.\n",stderr);return 124;}
+    if(timed_out){fputs("assis: o programa excedeu o tempo de execução definido.\n",stderr);return 124;}
     if(WIFEXITED(status))return WEXITSTATUS(status);
-    if(WIFSIGNALED(status)){fprintf(stderr,"FODASE: programa encerrado pelo sinal %d.\n",WTERMSIG(status));return 128+WTERMSIG(status);}return 1;
+    if(WIFSIGNALED(status)){fprintf(stderr,"assis: programa encerrado pelo sinal %d.\n",WTERMSIG(status));return 128+WTERMSIG(status);}return 1;
 }
 #else
 static int run_program(double timeout){
@@ -861,7 +923,7 @@ static int run_program(double timeout){
     else if(result==WAIT_OBJECT_0){if(!GetExitCodeProcess(pi.hProcess,&status))status=2;}
     else {TerminateProcess(pi.hProcess,2);WaitForSingleObject(pi.hProcess,INFINITE);status=2;}
     CloseHandle(pi.hThread);CloseHandle(pi.hProcess);DeleteFileW(path);RemoveDirectoryW(directory);
-    if(timed_out)fputs("FODASE: o programa excedeu o tempo de execução definido.\n",stderr);
+    if(timed_out)fputs("assis: o programa excedeu o tempo de execução definido.\n",stderr);
     return (int)status;
 }
 #endif
@@ -886,7 +948,7 @@ static int compiler_main(int argc,char **argv){
     bool validate=same(cmd,"check")||same(cmd,"verificar")||locking||documenting||inspecting_ir,show_tokens=same(cmd,"tokens");
     if(documenting)library_check=true;
     if(!build&&!run&&!validate&&!show_tokens)fatal("comando desconhecido: %s. Use assis help.",cmd);
-    const char *input=NULL,*output=NULL;double timeout=0;
+    const char *input=NULL,*output=NULL;double timeout=0;int safety_option=0;
     for(int i=2;i<argc;i++){
         if(same(argv[i],"-o")||same(argv[i],"--output")){if((!build&&!documenting)||i+1>=argc)fatal("-o exige um destino em build/doc");output=argv[++i];}
         else if(same(argv[i],"--timeout")){
@@ -894,13 +956,15 @@ static int compiler_main(int argc,char **argv){
             if(errno||!end||*end||!isfinite(timeout)||timeout<=0)fatal("--timeout deve ser um número positivo");
         }else if(same(argv[i],"--target")){
             if((!build&&!run)||i+1>=argc)fatal("--target exige linux-x64 ou windows-x64 em build/run");const char *target=argv[++i];
-            if(same(target,"windows-x64"))target_windows=true;else if(same(target,"linux-x64"))target_windows=false;else fatal("destino desconhecido: %s",target);
+            if(!same(target,"windows-x64")&&!same(target,"linux-x64")&&!same(target,"macos-x64"))fatal("destino desconhecido: %s",target);
+            target_windows=same(target,"windows-x64");target_macos=same(target,"macos-x64");
         }else if(same(argv[i],"-I")){if(i+1>=argc)fatal("-I exige uma pasta");push(&include_dirs,argv[++i]);}
         else if(same(argv[i],"--diagnostics=json")){}
         else if(same(argv[i],"--no-opt")){optimize=false;}
         else if(same(argv[i],"--debug")){debug_memory=true;}
         else if(same(argv[i],"--symbols")){if(!build)fatal("--symbols exige build");debug_symbols=true;}
-        else if(same(argv[i],"--safe")){safe_entry=true;}
+        else if(same(argv[i],"--safe")){if(safety_option<0)fatal("--safe e --legacy são incompatíveis");safety_option=1;safe_entry=true;}
+        else if(same(argv[i],"--legacy")){if(safety_option>0)fatal("--safe e --legacy são incompatíveis");safety_option=-1;safe_entry=false;}
         else if(same(argv[i],"--library")){if(!validate)fatal("--library só pode ser usado em check");library_check=true;}
         else if(same(argv[i],"--stdin")){if(!validate)fatal("--stdin só pode ser usado em check");stdin_source=true;}
         else if(same(argv[i],"--overlay")){
@@ -913,15 +977,18 @@ static int compiler_main(int argc,char **argv){
     }
     if(run){
 #ifdef _WIN32
-        if(!target_windows)fatal("run no Windows exige destino windows-x64; use build para gerar Linux");
+        if(!target_windows)fatal("run no Windows exige destino windows-x64; use build para outro sistema");
+#elif defined(__APPLE__)
+        if(!target_macos)fatal("run no macOS exige destino macos-x64; use build para outro sistema");
 #else
-        if(target_windows)fatal("run no Linux exige destino linux-x64; use build para gerar Windows");
+        if(target_windows||target_macos)fatal("run no Linux exige destino linux-x64; use build para outro sistema");
 #endif
     }
+    if(target_macos&&debug_symbols)fatal("--symbols ainda não está disponível no destino macos-x64");
     if(!input)input="assis.assis";module_search_paths();initialize_packages(input);Vec expanded={0};load_module(input,NULL,stdin_source,&expanded,0);tokens=expanded;
     if(!locking)package_lock(false);
     if(show_tokens){for(int i=0;i<tokens.n;i++){Token *t=tokens.v[i];printf("%4d:%-3d %-18s %s\n",t->line,t->col,token_name(t),t->text);}return 0;}
-    scan_namespaces();parse();if(testing)prepare_tests();bind_namespaces();check();check_ownership();check_safety();prepare_ir();prepare_ranges();if(inspecting_ir){print_ir();return 0;}if(locking){package_lock(true);return 0;}if(documenting){document_api(output);return 0;}if(validate){if(json_diagnostics)puts("{\"ok\":true}");else printf("ASSIS: %s passou na análise de sintaxe e tipos.\n",input);return 0;}
+    scan_platforms();scan_namespaces();parse();if(testing)prepare_tests();bind_namespaces();check();check_ownership();check_safety();prepare_ir();prepare_ranges();prepare_registers();if(inspecting_ir){print_ir();return 0;}if(locking){package_lock(true);return 0;}if(documenting){document_api(output);return 0;}if(validate){if(json_diagnostics)puts("{\"ok\":true}");else printf("ASSIS: %s passou na análise de sintaxe e tipos.\n",input);return 0;}
     generate();if(run)return run_program(timeout);
     if(!output){
         size_t len=strlen(input);char *name=copy(input,len);char *slash=strrchr(name,'/'),*dot=strrchr(name,'.');

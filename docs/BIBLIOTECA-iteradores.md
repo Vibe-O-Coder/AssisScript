@@ -1,6 +1,6 @@
 # iteradores — pipelines imutáveis
 
-Opcional. `#yuri <std/iterators.assis>`, namespace `iterators`.
+Opcional. `import "std/iterators.assis";`, namespace `iterators`.
 
 `Range(current,end,step)` é Copy; fim é exclusivo, passo pode ser negativo. `next(it): Step` retorna `End` ou `Item(value,seguinte)` por valor. Passo zero e overflow do próximo estado terminam; o último valor válido não é perdido.
 

@@ -13,7 +13,7 @@ def run(tool, *args):
     executable = str(Path(prefix) / tool) if prefix else tool
     return subprocess.check_output([executable, *map(str, args)], text=True)
 
-for source, macro, blob in [('runtime', 'RT', 'runtime_blob'), ('runtime_win', 'WRT', 'runtime_win_blob')]:
+for source, macro, blob in [('runtime', 'RT', 'runtime_blob'), ('runtime_win', 'WRT', 'runtime_win_blob'), ('runtime_macos', 'MRT', 'runtime_macos_blob')]:
     obj, binary = build / f'{source}.o', build / f'{source}.bin'
     assembly = root / 'src' / f'{source}.S'
     lines = assembly.read_text(encoding='utf-8').splitlines()
@@ -46,9 +46,10 @@ for source, macro, blob in [('runtime', 'RT', 'runtime_blob'), ('runtime_win', '
     lines += [','.join(map(str, data[i:i+24])) + ',' for i in range(0, len(data), 24)]
     lines += ['};']
     lines += [f'#define {macro}_{name} 0x{offset:x}' for offset, name in symbols if not name.startswith('import_')]
-    if source == 'runtime_win':
-        lines += ['static const struct { size_t offset; const char *name; } windows_import_patches[] = {']
+    if source in ('runtime_win','runtime_macos'):
+        platform = 'windows' if source == 'runtime_win' else 'macos'
+        lines += [f'static const struct {{ size_t offset; const char *name; }} {platform}_import_patches[] = {{']
         lines += [f'{{0x{offset:x}, "{re.sub(r"_[0-9]+$", "", name[7:])}"}},' for offset, name in symbols if name.startswith('import_')]
         lines += ['};']
     (root / 'src' / f'{blob}.h').write_text('\n'.join(lines) + '\n', encoding='utf-8', newline='\n')
-print('Runtimes Linux e Windows incorporados.')
+print('Runtimes Linux, Windows e macOS incorporados.')

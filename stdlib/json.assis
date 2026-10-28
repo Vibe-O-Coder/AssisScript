@@ -1,4 +1,4 @@
-#yuri <std/strings.assis>
+import "std/strings.assis";
 namespace json;
 
 /// Tokens: 0 EOF, 1 string, 2 number, 3 true, 4 false, 5 null; pontuação ASCII.

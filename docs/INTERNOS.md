@@ -1,6 +1,6 @@
 # Implementação 3.3.0-alpha.6
 
-**Atualização alpha.10:** sintaxe e APIs canônicas em inglês; imports e nomes antigos da stdlib exigem migração. Veja [ENGLISH-API.md](ENGLISH-API.md) e o [handoff atual](HANDOFF-3.3-ALPHA.10.md). As grafias históricas da sintaxe continuam aliases.
+**Atualização alpha.10:** sintaxe e APIs canônicas em inglês; imports e nomes antigos da stdlib exigem migração. Veja [ENGLISH-API.md](ENGLISH-API.md) e o [handoff atual](HANDOFF-3.3-ALPHA.10.md). A alpha.14 removeu as grafias históricas; consulte o manual atual.
 
 **Atualização alpha.9:** [Recursos/fatias e backend](RECURSOS-E-FATIAS.md) complementam os contratos abaixo: classes gerenciadas com receptor, slice<T>, texto UTF-8 com comprimento, vtable com drop e ELF PIE. [Handoff atual](HANDOFF-3.3-ALPHA.9.md).
 
@@ -44,7 +44,7 @@ HashMap usa máscara nas sondagens porque suas capacidades são potências de do
 
 Os diagnósticos acrescentam hint, severity e endColumn. assert aceita mensagem avaliada apenas no caminho de falha. As bibliotecas são fontes que passam pelo mesmo verificador e emissor nativo, com contratos de propriedade documentados. O catálogo de instalação e documentação fica em stdlib/catalogo.json.
 
-A análise léxica aceita identificadores ASCII livres e aliases legíveis. #yuri e #body são tokens de diretiva e são expandidos pelo carregador de módulos antes da análise sintática. Manifestos .pillow aceitam somente diretivas e comentários, com proteção contra ciclos e repetição.
+A análise léxica aceita a sintaxe canônica e identificadores ASCII. import é expandido pelo carregador de módulos antes da análise sintática, com proteção contra ciclos e repetição. Agregadores .pillow também usam import. Aliases e diretivas históricas foram removidos na alpha.14.
 
 Array e HashMap são monomorfizados por combinação de tipos. src/collections.h gera classes internas no módulo virtual <colecoes>; elas passam pelo mesmo parser, verificador de tipos e backend x64. Não há interpretador. O prefixo __assis_ é reservado.
 
@@ -85,7 +85,7 @@ A análise de tipos resolve variáveis em escopos lexicais, calcula posições d
 | Dados constantes | Leitura | Textos e tabelas de métodos |
 | Pilha GNU | Leitura e escrita | Declara a pilha não executável |
 
-No Linux, o ponto de entrada chama `assis_assis` e encerra o processo com a syscall `exit`. A imagem não tem interpretador dinâmico, dependências compartilhadas ou tabela de seções obrigatória para execução. Esta versão usa endereço base fixo `0x400000` e não produz PIE.
+No Linux, o ponto de entrada chama `main` e encerra o processo com a syscall `exit`. A imagem não tem interpretador dinâmico, dependências compartilhadas ou tabela de seções obrigatória para execução. Esta versão usa endereço base fixo `0x400000` e não produz PIE.
 
 ## Saída Windows PE32+
 
@@ -99,9 +99,9 @@ O compilador Windows e o instalador usam apenas DLLs padrão do sistema. A liga�
 
 ## Convenção de chamadas
 
-As funções do usuário usam uma convenção interna, com argumentos de oito bytes passados na pilha. Os argumentos são avaliados e empilhados da esquerda para a direita. O último argumento fica mais próximo do endereço de retorno. Métodos recebem a referência `aSSIS` antes dos argumentos explícitos.
+As funções do usuário usam uma convenção interna, com argumentos de oito bytes passados na pilha. Os argumentos são avaliados e empilhados da esquerda para a direita. O último argumento fica mais próximo do endereço de retorno. Métodos recebem a referência `self` antes dos argumentos explícitos.
 
-Cada função cria um frame com `rbp`, copia os parâmetros para slots locais e reserva oito bytes por variável. Resultados são devolvidos em `rax`. O acesso a um valor `AssiS` ou `FodAsE` usa um byte; inteiros, referências e ponteiros usam oito. Atribuições compostas calculam o endereço e leem o valor antigo antes de avaliar o lado direito.
+Cada função cria um frame com `rbp`, copia os parâmetros para slots locais e reserva oito bytes por variável. Resultados são devolvidos em `rax`. O acesso a um valor `byte` ou `bool` usa um byte; inteiros, referências e ponteiros usam oito. Atribuições compostas calculam o endereço e leem o valor antigo antes de avaliar o lado direito.
 
 O runtime recebe argumentos em registradores (`rdi`, `rsi` e, quando necessário, `rdx`), conforme cada rotina. Essa interface é interna; não existe FFI nem promessa de compatibilidade com chamadas C. Os adaptadores do runtime Windows alinham a pilha e reservam os 32 bytes de shadow space antes de chamar APIs Win32.
 
@@ -152,3 +152,7 @@ A extensão em `vscode-assisscript/src` usa a API de linguagem do VSCode. `langu
 - [CreateProcessW](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw).
 - [VirtualAlloc](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc).
 - [WriteFile](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile).
+
+## Continuação alpha.15
+
+[ScalarIR e registradores](BACKEND-ALPHA15.md): expression_ir.h/expression_emit.h separam valores escalares da AST; registers.h calcula liveness no CFG e reutiliza registradores preservados. Recursos e emissão de instruções ainda estão em migração.

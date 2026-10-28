@@ -44,7 +44,7 @@ def program(count):
                 f'let total:int=0;for(let i:int=0;i<{iterations};i+=1){{total+=a[i]+m.get(i);}}print(total);')
     body.extend(f'free(a{i});free(m{i});' for i in range(count))
     body.append('free(a);free(m);return 0;')
-    return 'assis assis_assis():int{' + ''.join(body) + '}\n' + '\n'.join(declarations)
+    return 'fn main():int{' + ''.join(body) + '}\n' + '\n'.join(declarations)
 
 
 report = dict(platform=platform.platform(), cpu=platform.processor(), samples=args.samples,

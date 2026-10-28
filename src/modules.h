@@ -27,6 +27,8 @@ static char *executable_directory(void){
     wchar_t path[32768];DWORD n=GetModuleFileNameW(NULL,path,32768);
     if(!n||n>=32768)fatal("não foi possível localizar o compilador");
     char *utf8=utf8_path(path),*dir=path_directory(utf8);free(utf8);return dir;
+#elif defined(__APPLE__)
+    char path[PATH_MAX];uint32_t size=sizeof(path);if(_NSGetExecutablePath(path,&size))fatal("caminho do compilador excedido");char *full=absolute_path(path),*dir=path_directory(full);free(full);return dir;
 #else
     char path[PATH_MAX];ssize_t n=readlink("/proc/self/exe",path,sizeof(path)-1);
     if(n<0||(size_t)n>=sizeof(path)-1)fatal("não foi possível localizar o compilador");path[n]=0;return path_directory(path);
@@ -113,18 +115,14 @@ static void load_module(const char *path,Token *where,bool from_stdin,Vec *out,i
     SourceFile *file=mem(sizeof(*file));file->path=absolute;file->text=read_module_text(absolute,from_stdin);file->digest=last_source_digest;file->state=1;push(&source_files,file);
     Vec previous=tokens;SourceFile *previous_file=current_source;
     current_source=file;filename=file->path;source=file->text;tokens=(Vec){0};lex();Vec raw=tokens;tokens=previous;
-    int braces=0;size_t pathlen=strlen(path);bool package=pathlen>=7&&same(path+pathlen-7,".pillow");
+    int braces=0;
     for(int i=0;i<raw.n-1;i++){
         Token *t=raw.v[i];
-        if((t->kind==T_YURI||t->kind==T_BODY)&&braces==0){
-            char *resolved=resolve_module(t);load_module(resolved,t,false,out,depth+1);free(resolved);
-            if(((Token*)raw.v[i+1])->kind==';')i++;
-            Token *next=raw.v[i+1];if(next->kind!=T_EOF&&next->line==t->line)error(next,"diretiva deve ocupar uma linha própria");
-        }else if(t->kind==T_IMPORT&&braces==0&&!package){
-            Token *name=raw.v[++i];if(name->kind!=T_STR)error(name,"importa exige um caminho entre aspas");
-            Token *end=raw.v[++i];if(end->kind!=';')error(end,"esperado ; após importa");
+        if(t->kind==T_IMPORT&&braces==0){
+            Token *name=raw.v[++i];if(name->kind!=T_STR)error(name,"import exige um caminho entre aspas");
+            Token *end=raw.v[++i];if(end->kind!=';')error(end,"esperado ; após import");
             char *resolved=resolve_module(name);load_module(resolved,name,false,out,depth+1);free(resolved);
-        }else{if(package)error(t,"pacote .pillow aceita somente #yuri e #body");push(out,t);if(t->kind=='{')braces++;else if(t->kind=='}')braces--;}
+        }else{push(out,t);if(t->kind=='{')braces++;else if(t->kind=='}')braces--;}
     }
     Token *end=raw.v[raw.n-1];if(depth)end->kind=T_FILE_END;push(out,end);free(raw.v);file->state=2;
     current_source=previous_file?previous_file:file;filename=current_source->path;source=current_source->text;

@@ -8,3 +8,5 @@ The project's selected CC BY-NC-SA 4.0 license applies to its original licensed 
 - The project images were supplied with the working tree. Their original authorship and permission have not been independently verified. No third-party image rights are asserted by these notices.
 
 See the [provenance inventory](docs/PROCEDENCIA.md) for the remaining audit. The included notices are evidence of reviewed toolchain files, not a claim that every possible redistribution obligation has been closed.
+
+The alpha.12 [actual link inventories](docs/PROCEDENCIA.md) identify the static GNU C Library/startup inputs of the Linux compiler; the [LGPL 2.1 text](docs/third-party/LGPL-2.1.txt) is included from the build environment. The optional net module uses an externally installed libcurl provider on each platform; no libcurl binary is redistributed. Technical inventory does not settle the remaining image rights or redistribution review.

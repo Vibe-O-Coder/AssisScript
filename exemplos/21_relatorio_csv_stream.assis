@@ -1,12 +1,11 @@
 // Aplicação A: CSV com uma coluna chamada valor, inteiros int64, aspas opcionais.
 // Uso: relatorio entrada.csv saida.csv. Buffers fixos; nenhuma linha cresce em memória.
-#yuri <std/errors.assis>
-#yuri <std/convert.assis>
-
+import "std/errors.assis";
+import "std/convert.assis";
 value struct ResumoCsv { let registros: int; let total: int; }
 
 // A conversão da representação C dos argumentos fica nesta fronteira explícita.
-safe assis abrir_argumento(indice: int, modo: int): own File {
+safe fn abrir_argumento(indice: int, modo: int): own File {
     unsafe {
         let size: int = arg_size(indice);
         if (size < 0 || size > 16384) { return file_open("", 9); }
@@ -16,7 +15,7 @@ safe assis abrir_argumento(indice: int, modo: int): own File {
     }
 }
 
-safe assis numero_csv(borrow linha: *byte, size: int): Result<int, int> {
+safe fn numero_csv(borrow linha: *byte, size: int): Result<int, int> {
     if (size <= 0 || size > len(linha)) { return new Result<int, int>.Err(2); }
     let start: int = 0; let end: int = size;
     if (linha[0] == 34) {
@@ -38,7 +37,7 @@ safe assis numero_csv(borrow linha: *byte, size: int): Result<int, int> {
     return new Result<int, int>.Ok(value);
 }
 
-pure assis somar_csv(resumo: ResumoCsv, value: int): Result<ResumoCsv, int> {
+pure fn somar_csv(resumo: ResumoCsv, value: int): Result<ResumoCsv, int> {
     if ((value > 0 && resumo.total > 9223372036854775807 - value) ||
         (value < 0 && resumo.total < -9223372036854775808 - value) || resumo.registros == 9223372036854775807) {
         return new Result<ResumoCsv, int>.Err(3);
@@ -46,14 +45,14 @@ pure assis somar_csv(resumo: ResumoCsv, value: int): Result<ResumoCsv, int> {
     return new Result<ResumoCsv, int>.Ok(new ResumoCsv(resumo.registros + 1, resumo.total + value));
 }
 
-safe assis processar_linha(borrow linha: *byte, size: int, resumo: ResumoCsv): Result<ResumoCsv, int> {
+safe fn processar_linha(borrow linha: *byte, size: int, resumo: ResumoCsv): Result<ResumoCsv, int> {
     match (numero_csv(linha, size)) {
         Err(code) { return new Result<ResumoCsv, int>.Err(code); }
         Ok(value) { return somar_csv(resumo, value); }
     }
 }
 
-safe assis assis_assis(): int {
+safe fn main(): int {
     if (arg_count() != 3) { print("Uso: relatorio entrada.csv saida.csv"); return 64; }
     own entrada: File = abrir_argumento(1, 0);
     if (entrada == null) { print("Erro ao abrir entrada", io_error()); return 1; }

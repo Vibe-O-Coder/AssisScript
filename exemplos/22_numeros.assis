@@ -1,6 +1,6 @@
 value struct Medida { let metros: f64; let amostras: u32; }
-pure assis escalar(m: Medida, fator: f64): Medida { return new Medida(m.metros * fator, m.amostras); }
-safe assis assis_assis(): int {
+pure fn escalar(m: Medida, fator: f64): Medida { return new Medida(m.metros * fator, m.amostras); }
+safe fn main(): int {
     val medida: Medida = escalar(new Medida(1.5, u32(42)), 2.0);
     print(medida.metros, medida.amostras);
     let contador: u16 = u16(65535);contador += u16(1);print(contador);

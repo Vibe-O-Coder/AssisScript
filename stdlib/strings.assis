@@ -179,28 +179,28 @@ fn read_line(): String {
 }
 
 // Compatibilidade com 2.x
-miyabi Predicados de strings em bytes UTF-8; respeitam o primeiro byte nulo.
+// Predicados de strings em bytes UTF-8; respeitam o primeiro byte nulo.
 /// Testa prefixo por comparação de bytes UTF-8 (API legada de starts_with).
-fn Fodase_assis_fodase(AssisAssis: FoDaSe, AssisFodase: FoDaSe): FodAsE {
-    Assis FodaseAssis: AssIs = FODASE_fodase(AssisFodase);
-    assIS (FodaseAssis > FODASE_fodase(AssisAssis)) { Fodase fOdAsE; }
-    Assis FodaseFodase: AssIs = 0;
-    ASSis (FodaseFodase < FodaseAssis) {
-        assIS (AssisAssis[FodaseFodase] != AssisFodase[FodaseFodase]) { Fodase fOdAsE; }
+fn Fodase_assis_fodase(AssisAssis: text, AssisFodase: text): bool {
+    let FodaseAssis: int = len(AssisFodase);
+    if (FodaseAssis > len(AssisAssis)) { return false; }
+    let FodaseFodase: int = 0;
+    while (FodaseFodase < FodaseAssis) {
+        if (AssisAssis[FodaseFodase] != AssisFodase[FodaseFodase]) { return false; }
         FodaseFodase += 1;
     }
-    Fodase aSsIs;
+    return true;
 }
 /// Testa sufixo por comparação de bytes UTF-8 (API legada de ends_with).
-fn Fodase_fodase_assis(AssisAssis: FoDaSe, AssisFodase: FoDaSe): FodAsE {
-    Assis FodaseAssis: AssIs = FODASE_fodase(AssisAssis) - FODASE_fodase(AssisFodase);
-    assIS (FodaseAssis < 0) { Fodase fOdAsE; }
-    Assis FodaseFodase: AssIs = 0;
-    ASSis (FodaseFodase < FODASE_fodase(AssisFodase)) {
-        assIS (AssisAssis[FodaseAssis + FodaseFodase] != AssisFodase[FodaseFodase]) { Fodase fOdAsE; }
+fn Fodase_fodase_assis(AssisAssis: text, AssisFodase: text): bool {
+    let FodaseAssis: int = len(AssisAssis) - len(AssisFodase);
+    if (FodaseAssis < 0) { return false; }
+    let FodaseFodase: int = 0;
+    while (FodaseFodase < len(AssisFodase)) {
+        if (AssisAssis[FodaseAssis + FodaseFodase] != AssisFodase[FodaseFodase]) { return false; }
         FodaseFodase += 1;
     }
-    Fodase aSsIs;
+    return true;
 }
 /// Step UTF-8 estrito: proximo é um offset de bytes; ponto pode ser U+0000.
 value struct Utf8Step { let valid: bool; let codepoint: int; let next: int; }

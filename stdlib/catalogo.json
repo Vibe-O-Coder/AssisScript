@@ -1,5 +1,5 @@
 {
-  "version": "3.3.0-alpha.10",
+  "version": "3.3.0-alpha.15",
   "libraries": [
     {
       "name": "math",
@@ -114,6 +114,60 @@
       "doc": "BIBLIOTECA-proprios.md",
       "description": "Lista limitada de proprietários com transferência e empréstimos.",
       "dependencies": []
+    },
+    {
+      "name": "http",
+      "required": false,
+      "doc": "BIBLIOTECA-http.md",
+      "description": "HTTP(S) limitado com TLS nativo, timeout e respostas binárias.",
+      "dependencies": [],
+      "externalDependencies": {
+        "linux-x64": [
+          "glibc x86_64",
+          "libcurl.so.4 (HTTP/HTTPS with TLS)"
+        ],
+        "windows-x64": [
+          "Windows WinHTTP"
+        ]
+      }
+    },
+    {
+      "name": "process",
+      "required": false,
+      "doc": "BIBLIOTECA-process.md",
+      "description": "Processos isolados, pipes limitados, timeout e locks liberados ao encerrar.",
+      "dependencies": [],
+      "externalDependencies": {
+        "linux-x64": [
+          "glibc x86_64"
+        ],
+        "windows-x64": [
+          "Windows KERNEL32"
+        ]
+      }
+    },
+    {
+      "name": "net",
+      "required": false,
+      "doc": "BIBLIOTECA-net.md",
+      "description": "HTTP(S) cooperativo com polling, cancelamento e confiança TLS explícita.",
+      "dependencies": [],
+      "externalDependencies": {
+        "linux-x64": [
+          "glibc x86_64",
+          "libcurl.so.4 >= 7.66 with asynchronous DNS and TLS"
+        ],
+        "windows-x64": [
+          "libcurl-4.dll >= 7.66 with asynchronous DNS and TLS (and its provider dependencies)"
+        ]
+      }
+    },
+    {
+      "name": "random",
+      "required": false,
+      "description": "Deterministic random generator for simulations and games",
+      "dependencies": [],
+      "doc": "BIBLIOTECA-random.md"
     }
   ]
 }

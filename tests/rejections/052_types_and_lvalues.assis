@@ -1,5 +1,5 @@
 
-assis assis_assis(): AssIs {
-"a"[0] = AssiS(1);
-Fodase 0;
+fn main(): int {
+"a"[0] = byte(1);
+return 0;
 }

@@ -3,11 +3,12 @@
 static Vec memory_scope,memory_places,memory_temps;
 static int memory_loop,owned_shape_depth;
 static bool resource_type(Type t){return pointer_like(t)||slice_type(t)||equal_type(t,type_str);}
-static bool plain_type(Type t){return numeric(t)||floating(t)||equal_type(t,type_bool)||equal_type(t,type_str)||function_value(t)||value_type(t);}
-static bool has_owned_fields(Class *c){for(int i=0;i<c->fields.n;i++)if(((Field*)c->fields.v[i])->owned)return true;return false;}
+static bool plain_type(Type t){return numeric(t)||floating(t)||equal_type(t,type_bool)||equal_type(t,type_str)||(function_value(t)&&!closure_type(t))||value_type(t);}
+static bool has_owned_fields(Class *c){if(c->tagged&&!c->value)return true;for(int i=0;i<c->fields.n;i++)if(((Field*)c->fields.v[i])->owned)return true;return false;}
 static void owned_type(Type t,Token *where){
     if(slice_type(t))return; /* Borrowed inline descriptor, never an owner. */
     if(value_type(t))error(where,"valor Copy não aceita own; use let ou val");
+    if(closure_type(t))return;
     if(equal_type(t,type_file))return;
     if(t.depth){if(t.depth!=1||!plain_type(pointed(t))||equal_type(pointed(t),type_str)||function_value(pointed(t)))error(where,"own buffer aceita elementos int, byte ou bool");return;}
     Collection *c=collection_of(t);
@@ -16,7 +17,8 @@ static void owned_type(Type t,Token *where){
     if(!cls)error(where,"own aceita buffers, coleções escalares e structs; classes exigem contrato de destruição");
     if(!cls->record)for(int i=0;i<cls->methods.n;i++){Function *f=cls->methods.v[i];if(!f->receiver_mode)error(where,"classes own exigem contrato de receptor em todos os métodos");}
     if(cls->owned_state)return;if(++owned_shape_depth>256)error(where,"limite de 256 níveis de recursos compostos excedido");cls->owned_state=1;
-    for(int i=0;i<cls->fields.n;i++){Field *f=cls->fields.v[i];if(f->owned)owned_type(f->ty,f->t);else if(!plain_type(f->ty))error(where,"own struct exige campos escalares ou campos own explícitos");}
+    for(int i=0;i<cls->variants.n;i++){Variant *v=cls->variants.v[i];for(int j=0;j<v->fields.n;j++){Field *f=v->fields.v[j];if(f->owned)owned_type(f->ty,f->t);}}
+    for(int i=0;i<cls->fields.n;i++){Field *f=cls->fields.v[i];if(f->owned)owned_type(f->ty,f->t);else if(cls->closure&&f->borrowed){if(!resource_type(f->ty))error(f->t,"captura borrow exige referência gerenciada");}else if(cls->closure?!pure_value(f->ty):!plain_type(f->ty))error(where,"own struct exige campos escalares ou campos own explícitos; captura val exige Copy");}
     cls->owned_state=2;owned_shape_depth--;
 }
 static TypeRef *call_contract(Node *n){return n->fn?function_type(n->fn).ref:n->a->ty.ref;}
@@ -35,8 +37,9 @@ static Var *memory_place(Node *n){
     return NULL;
 }
 static Var *managed_origin(Node *n){
+    if(n&&n->kind==N_BUILTIN&&n->op==T_UTF8)return n->place;
     if(!n)return NULL;Var *v=memory_place(n);if(v)return v;
-    if(n->kind==N_CALL){TypeRef *r=call_contract(n);return r->result_mode>=2?managed_origin(r->result_from==-1?n->a->a:n->items.v[r->result_from]):NULL;}
+    if(n->kind==N_CALL){TypeRef *r=call_contract(n);return r->result_mode>=2?managed_origin(r->result_from==-1?(r->closure?n->a:n->a->a):n->items.v[r->result_from]):NULL;}
     if(n->kind==N_NEW||n->kind==N_ARRAY)return NULL;
     v=managed_origin(n->a);if(v)return v;v=managed_origin(n->b);if(v)return v;
     for(int i=0;i<n->items.n;i++){v=managed_origin(n->items.v[i]);if(v)return v;}return NULL;
@@ -82,6 +85,7 @@ static Var *memory_reference(Node *n,bool write,bool whole){
     if(n->kind==N_NAME){Var *v=memory_place(n);memory_access(v,n->t,write,whole);n->ownership=v?memory_handle(v)->ownership:0;return v;}
     if(n->kind==N_MEMBER){
         (void)memory_reference(n->a,false,false);Var *v=managed_origin(n);memory_access(v,n->t,write,whole);n->ownership=n->a->ownership==2?2:v?memory_handle(v)->ownership:0;
+        if(n->field&&n->field->borrowed)n->ownership=2;
         if(write&&n->ownership==2)error(n->t,"mutação exige acesso exclusivo");return v;
     }
     memory_expr(n);Var *v=managed_origin(n);memory_access(v,n->t,write,whole);return v;
@@ -93,12 +97,15 @@ static Var *borrow_reference(Node *n,int mode){
     return v;
 }
 static void memory_consume(Var *v,Token *t,bool whole){
+    if(v&&whole&&v->capture_roots.n)error(t,"closure com captura borrow não pode escapar por move ou retorno; passe borrow");
     if(!v||v->ownership!=1||(memory_handle(v)->ownership!=1&&!(v->parent&&memory_handle(v)->ownership==3))||v->root)error(t,"somente own pode ser movido ou liberado");
+    for(Var *parent=v->parent;parent;parent=parent->parent){Class *c=object(parent->ty)?find_class(parent->ty.name):NULL;if(c&&(c->closure||find_method(c,"drop",NULL))&&!(checking->owner==c&&same(checking->t->text,"drop")))error(t,"campo de classe com drop ou captura de closure não pode ser consumido parcialmente");}
     memory_alive(v,t,whole);Var *h=memory_handle(v);
     if(h->shared||h->exclusive)error(t,"não é possível mover/liberar proprietário com borrow ativo");
     if(h->loop<memory_loop)error(t,"não é possível consumir proprietário externo dentro de laço");
     v->moved=true;
 }
+static Node *borrow_capture_initializer;
 static void memory_take(Node *n){
     if(slice_type(n->ty))error(n->t,"slice não possui os dados; use borrow com origem viva");
     owned_type(n->ty,n->t);
@@ -109,7 +116,9 @@ static void memory_take(Node *n){
         if(a->kind==N_MEMBER)(void)memory_reference(a->a,false,false);
         memory_consume(v,n->t,true);n->var=v;n->ownership=1;return;
     }
+    if(n->kind==N_CALL&&call_contract(n)->result_mode==1)n->ownership=1;
     memory_expr(n);
+    if(n->capture_roots.n&&n!=borrow_capture_initializer)error(n->t,"closure com captura borrow exige vínculo own local; passe borrow");
     if(n->kind!=N_NEW&&n->kind!=N_ARRAY&&!(n->kind==N_BUILTIN&&(n->op==T_BUFFER||n->op==T_ALLOC))&&!(n->kind==N_CALL&&call_contract(n)->result_mode==1))error(n->t,"own exige alocação nova, retorno own ou move(proprietario)");
     n->ownership=1;
 }
@@ -122,6 +131,13 @@ static void memory_arguments(Node *n,TypeRef *r){
     }
 }
 static void memory_expr(Node *n){
+    if(n&&n->kind==N_CAST){memory_expr(n->a);n->ownership=n->a->ownership;return;}
+    if(n&&n->kind==N_BUILTIN&&n->op==T_UTF8){n->ownership=2;return;}
+    if(n&&n->kind==N_BUILTIN&&n->op==T_LEN){
+        int old=memory_temps.n;Node *input=n->items.v[0];memory_expr(input);
+        if(input->ty.depth&&!input->ownership)error(n->t,"len de buffer exige own/borrow gerenciado");
+        loans_end(old);return;
+    }
     if(n&&n->kind==N_BUILTIN&&n->op==T_SLICE_MAKE){
         int old=memory_temps.n;Node *input=n->items.v[0];Var *v=memory_reference(input,false,true);
         if(!v||!input->ownership)error(n->t,"fatia exige buffer ou slice gerenciado");
@@ -142,23 +158,38 @@ static void memory_expr(Node *n){
     if(origin&&!origin->deferred&&((n->kind==N_UNARY&&(n->op=='&'||n->op=='*'))||(n->kind==N_BINARY&&n->ty.depth)||(n->kind==N_BUILTIN&&(n->op==T_TEXT||n->op==T_BYTES))))error(n->t,"ponteiro gerenciado exige indexação verificada; extração de ponteiro bruto não é permitida");
     if(n->kind==N_CALL){
         int old=memory_temps.n;
-        if(!n->fn)memory_expr(n->a);
+        Var *reserved=NULL;int reservation=-1;
+        if(!n->fn){if(closure_type(n->a->ty)){Var *v=borrow_reference(n->a,n->a->ty.ref->receiver_mode);loan_add(v,n->a->ty.ref->receiver_mode,n->t,true);}else memory_expr(n->a);}
         if(n->fn&&n->fn->owner){
             Var *v=memory_reference(n->a->a,false,true);
+            if(!v&&n->a->a->ownership==1)error(n->t,"resultado own temporário exige vínculo own local antes de chamar métodos");
             if(v&&!v->deferred){
                 Collection *c=collection_of(n->a->a->ty);const char *name=n->a->t->text;
                 if((!c&&!n->fn->receiver_mode)||(c&&(name[0]=='_'||same(name,"dispose"))))error(n->t,"método não permitido em referência gerenciada");
                 bool read=c?(same(name,"get")||same(name,"get_or")||same(name,"contains")||same(name,"has")):n->fn->receiver_mode==2;
-                if(!read){if(n->a->a->ownership==2)error(n->t,"mutação exige acesso exclusivo");memory_access(v,n->t,true,true);}loan_add(v,read?2:3,n->t,true);
+                if(!read){if(n->a->a->ownership==2)error(n->t,"mutação exige acesso exclusivo");memory_access(v,n->t,true,true);reserved=memory_handle(v);reservation=memory_temps.n;}
+                loan_add(v,2,n->t,true);
             }
         }
-        TypeRef *r=call_contract(n);memory_arguments(n,r);loans_end(old);n->ownership=r->result_mode;return;
+        TypeRef *r=call_contract(n);memory_arguments(n,r);
+        if(reserved){
+            reserved->shared--;memmove(memory_temps.v+reservation,memory_temps.v+reservation+2,(size_t)(memory_temps.n-reservation-2)*sizeof(void*));memory_temps.n-=2;
+            loan_add(reserved,3,n->t,true);
+        }
+        loans_end(old);
+        if(r->result_mode==1&&n->ownership!=1)error(n->t,"referência gerenciada não pode escapar: resultado own exige vínculo own local, transferência ou free explícito");
+        n->ownership=r->result_mode;return;
     }
     if(n->kind==N_NEW){
         int old=memory_temps.n;
-        if(n->cls->value){for(int i=0;i<n->items.n;i++)memory_expr(n->items.v[i]);}
+        if(n->cls->closure){
+            for(int i=0;i<n->items.n;i++){Field *f=n->cls->fields.v[i];Node *a=n->items.v[i];
+                if(f->owned)memory_take(a);else if(f->borrowed){Var *v=borrow_reference(a,2);loan_add(v,2,a->t,true);push(&n->capture_roots,memory_handle(v));}else{memory_expr(a);no_escape(a);}}
+            n->ownership=1;
+        }else if(n->cls->value){for(int i=0;i<n->items.n;i++)memory_expr(n->items.v[i]);}
         else if(n->cls->record){
-            for(int i=0;i<n->items.n;i++){Node *a=n->items.v[i];Field *f=n->cls->fields.v[i];if(f->owned)memory_take(a);else{memory_expr(a);no_escape(a);}}
+            Vec fields=n->variant?n->variant->fields:n->cls->fields;
+            for(int i=0;i<n->items.n;i++){Node *a=n->items.v[i];Field *f=fields.v[i];if(f->owned)memory_take(a);else{memory_expr(a);no_escape(a);}}
             if(has_owned_fields(n->cls))n->ownership=1;
         }else if(n->fn)memory_arguments(n,function_type(n->fn).ref);
         loans_end(old);return;
@@ -189,13 +220,16 @@ static int memory_stmt(Node *n){
             bool *dead=(flow&FLOW_NORMAL)?NULL:memory_snapshot();int f=memory_stmt(n->items.v[i]);
             if(dead){memory_restore(dead);free(dead);}else flow=(flow&~FLOW_NORMAL)|f;
         }
-        for(int i=memory_scope.n-1;i>=old;i--){Var *v=memory_scope.v[i];if(v->root){if(v->ownership==2)v->root->shared--;if(v->ownership==3)v->root->exclusive=false;}}
+        for(int i=memory_scope.n-1;i>=old;i--){Var *v=memory_scope.v[i];if(v->root){if(v->ownership==2)v->root->shared--;if(v->ownership==3)v->root->exclusive=false;}for(int j=0;j<v->capture_roots.n;j++)((Var*)v->capture_roots.v[j])->shared--;}
         memory_scope.n=old;break;
     }
     case N_LET:{
         Var *v=n->var;v->loop=memory_loop;v->moved=false;
         if(slice_type(v->ty)&&v->ownership<2)error(n->t,"slice exige vínculo borrow");
-        if(v->ownership==1)memory_take(n->a);
+        if(v->ownership==1){
+            Node *previous=borrow_capture_initializer;borrow_capture_initializer=n->a;memory_take(n->a);borrow_capture_initializer=previous;
+            v->capture_roots=n->a->capture_roots;for(int i=0;i<v->capture_roots.n;i++)loan_add(v->capture_roots.v[i],2,n->t,false);
+        }
         else if(v->ownership>=2){
             Var *source=borrow_reference(n->a,v->ownership);loans_end(0);
             if(!source||!resource_type(v->ty))error(n->t,"borrow exige o nome de um own ou borrow gerenciado");
@@ -224,6 +258,7 @@ static int memory_stmt(Node *n){
         Var *v=managed_origin(n->a);
         if(n->kind==N_DEFER){memory_expr(n->a);if(n->a->kind!=N_NAME||v)error(n->t,"defer free exige variável let ainda não gerenciada");n->a->var->deferred=true;n->var=n->a->var;}
         else if(v){if(v->deferred||!memory_place(n->a))error(n->t,"free exige proprietário original sem defer");memory_consume(v,n->t,false);n->var=v;}
+        else if(n->a->kind==N_CALL&&call_contract(n->a)->result_mode==1)memory_take(n->a);
         else memory_expr(n->a);break;
     }
     case N_IF:{
@@ -233,12 +268,19 @@ static int memory_stmt(Node *n){
         free(before);free(after);flow=yes|no;break;
     }
     case N_MATCH:{
-        memory_expr(n->a);loans_end(0);bool *before=memory_snapshot(),*joined=mem((size_t)memory_places.n);flow=0;bool live=false;
+        Var *source=NULL;
+        if(n->ownership==1)memory_take(n->a);
+        else if(n->ownership==2){source=borrow_reference(n->a,2);if(!source)error(n->t,"match emprestado exige own/borrow vivo; use match(move(dono)) para consumir");}
+        else memory_expr(n->a);
+        loans_end(0);if(source)loan_add(source,2,n->t,false);
+        bool *before=memory_snapshot(),*joined=mem((size_t)memory_places.n);flow=0;bool live=false;
         for(int i=0;i<n->items.n;i++){
-            memory_restore(before);Node *arm=n->items.v[i];int f=memory_stmt(arm->a);flow|=f;
+            memory_restore(before);Node *arm=n->items.v[i];
+            for(int j=0;j<arm->items.n;j++){Var *v=((Node*)arm->items.v[j])->var;v->loop=memory_loop;if(v->ownership==2)v->root=memory_handle(source);}
+            int f=memory_stmt(arm->a);flow|=f;
             if(f&FLOW_NORMAL){live=true;for(int j=0;j<memory_places.n;j++)joined[j]|=((Var*)memory_places.v[j])->moved;}
         }
-        memory_restore(live?joined:before);free(before);free(joined);break;
+        memory_restore(live?joined:before);if(source)memory_handle(source)->shared--;free(before);free(joined);break;
     }
     case N_WHILE:{
         memory_loop++;memory_expr(n->a);loans_end(0);int body=memory_stmt(n->b);if(n->step)memory_stmt(n->step);memory_loop--;
@@ -260,6 +302,7 @@ static int memory_stmt(Node *n){
     loans_end(0);return flow;
 }
 static void check_ownership(void){
+    for(int i=0;i<classes.n;i++){Class *c=classes.v[i];if(c->closure||(c->tagged&&!c->value))owned_type(class_type(c),c->t);}
     for(int i=0;i<classes.n;i++){Class *c=classes.v[i];instantiation_site=c->site;instantiation_name=c->generic?c->generic->t->text:NULL;for(int j=0;j<c->fields.n;j++){Field *f=c->fields.v[j];if(f->owned)owned_type(f->ty,f->t);}}instantiation_site=NULL;
     for(int i=0;i<all_functions.n;i++){
         checking=all_functions.v[i];memory_scope.n=0;memory_places.n=0;memory_temps.n=0;memory_loop=0;

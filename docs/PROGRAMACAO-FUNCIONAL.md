@@ -7,14 +7,14 @@ Na alpha.6, pipelines de coleções escalares podem usar empréstimos e saídas 
 A direção da linguagem é funcional. Vínculos imutáveis e pureza escalar chegaram na alpha.1; funções/structs genéricas na alpha.2. A alpha.3 acrescenta [funções como valores e efeitos em tipos](FUNCOES-E-EFEITOS.md), callbacks, composição e map/filter/fold genéricos com arrays legados. Registros Copy, variantes e pattern matching chegaram na alpha.7. Lambdas/closures e dados persistentes continuam pendentes. A trilha F0–F4 no [plano](PLANO-EVOLUCAO-E-HANDOFF.md) define sua continuação.
 
 ```assis
-pure assis dobro(n: int): int { return n * 2; }
+pure fn dobro(n: int): int { return n * 2; }
 
-pure assis calcular(n: int): int {
+pure fn calcular(n: int): int {
     val parcial: int = dobro(n);
     return parcial + 1;
 }
 
-assis assis_assis(): int {
+fn main(): int {
     val resultado: int = calcular(20);
     print(resultado);
     return 0;
@@ -29,9 +29,9 @@ Saída: `41`. O cálculo não depende do terminal; a função de entrada concent
 
 `val` de text fixa o vínculo; **não comprova a vida nem congela a memória de um buffer externo**. `text(buffer)` e `bytes(strings)` conservam o contrato legado documentado. Por isso text ainda não entra nas assinaturas puras. Objetos, coleções e ponteiros não são aceitos em `val` nesta etapa; estender a palavra a referências mutáveis sem constância profunda produziria uma garantia enganosa.
 
-`let`/`Assis` continuam mutáveis para compatibilidade. Prefira `val` em cálculos novos quando não precisar atualizar o vínculo. `for(val i: int=0; i<3; i+=1)` é rejeitado, porque seu incremento tenta reatribuir i.
+`let`/`let` continuam mutáveis para compatibilidade. Prefira `val` em cálculos novos quando não precisar atualizar o vínculo. `for(val i: int=0; i<3; i+=1)` é rejeitado, porque seu incremento tenta reatribuir i.
 
-## Funções `pure assis`
+## Funções `pure fn`
 
 Disponível para funções globais com parâmetros e retorno int, byte, bool, valores Copy ou funções puras que obedecem ao mesmo contrato recursivamente. Parâmetros são imutáveis, sem extração de endereço. O verificador analisa os corpos e os contratos das chamadas diretas/indiretas; a grafia do nome ou o arquivo não concedem pureza. Recursão, recursão mútua e chamadas a declarações posteriores funcionam.
 
@@ -47,7 +47,7 @@ Pureza **não** garante que a função termine ou que operações inválidas nã
 
 `private`, `val` e `pure` passam a ser palavras reservadas; renomeie identificadores antigos que usem esses nomes. Nenhuma alteração silenciosa transforma `let` em imutável. O compilador não anuncia um modo funcional completo ou segurança geral de memória nesta entrega.
 
-DefId/TypeId, AST parametrizada e monomorfização de funções/structs começaram na alpha.2. `pure assis identidade<T>(v:T):T{return v;}` admite `int`, `byte`, `bool` e, desde a alpha.3, funções pure e, na alpha.7, valores Copy; `identidade::<text>("a")` é rejeitada quando a função é pure. Templates pure rejeitam operações proibidas e chamadas com efeitos mesmo sem instanciação; a verificação dependente do tipo ocorre em cada instância.
+DefId/TypeId, AST parametrizada e monomorfização de funções/structs começaram na alpha.2. `pure fn identidade<T>(v:T):T{return v;}` admite `int`, `byte`, `bool` e, desde a alpha.3, funções pure e, na alpha.7, valores Copy; `identidade::<text>("a")` é rejeitada quando a função é pure. Templates pure rejeitam operações proibidas e chamadas com efeitos mesmo sem instanciação; a verificação dependente do tipo ocorre em cada instância.
 
 Tipos de função com efeitos, valores de função, callbacks e composição foram implementados na alpha.3. O compilador rejeita funções com efeitos num callback puro, inclusive por aliases e em templates puros nunca instanciados. Classes genéricas chegaram na alpha.4 com semântica de referência mutável legada; não ampliam o subconjunto pure. A migração dos corpos das coleções para AST foi concluída na alpha.5. Empréstimos nas assinaturas e APIs map_own/filter_own/fold_borrow chegaram na alpha.6; leia [ownership entre funções](OWNERSHIP-FUNCOES.md). Não ampliar pure a text/objetos antes de resolver as vidas e mutabilidade desses valores.
 

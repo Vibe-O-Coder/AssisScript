@@ -10,7 +10,7 @@ const compiler = process.env.ASSIS_BIN || path.join(root, 'bin', process.platfor
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'assis-v32-'));
 after(() => {assert(path.dirname(temp) === path.resolve(os.tmpdir()) && path.basename(temp).startsWith('assis-v32-')); fs.rmSync(temp, {recursive:true, force:true});});
 function invoke(args, options={}) {
-    const r = spawnSync(compiler, args, {encoding:'utf8', windowsHide:true, timeout:30000,...options}); assert.ifError(r.error);
+    if (["build","run","check","doc","test","lock","ir"].includes(args[0]) && !args.includes("--safe") && !args.includes("--legacy")) args = [...args, "--legacy"]; const r = spawnSync(compiler, args, {encoding:'utf8', windowsHide:true, timeout:30000,...options}); assert.ifError(r.error);
     if(process.env.ASSIS_V32_FIXTURE_DIR){
         const directory=path.resolve(process.env.ASSIS_V32_FIXTURE_DIR);fs.mkdirSync(directory,{recursive:true});
         const name=String(invoke.fixture=(invoke.fixture||0)+1).padStart(3,'0');
@@ -27,18 +27,18 @@ function execute(text, expected='', options=['--debug']) {
     for(const flags of [[], ['--no-opt']]) {const r=invoke(['run',file,...options,...flags]); assert.equal(r.status,0,r.stderr); assert.equal(r.stdout,expected); assert.equal(r.stderr,'');}
 }
 const record='struct P { let x: int; }\n';
-const main=body=>`assis assis_assis(): int { ${body} return 0; }`;
+const main=body=>`fn main(): int { ${body} return 0; }`;
 test('own, borrow, borrow mut, move e div liberam recursos sem GC',()=>{
     execute(record+main(`own p: P = new P(42);
-div { borrow a: P = p; borrow b: P = p; print(a.x, b.x); }
-div { borrow mut a: P = p; a.x += 1; }
+{ borrow a: P = p; borrow b: P = p; print(a.x, b.x); }
+{ borrow mut a: P = p; a.x += 1; }
 own outro: P = move(p); print(outro.x);
-div { own a: Array<int> = [1,2]; div { borrow mut b: Array<int> = a; b.push(3); } print(a[2]); }
+{ own a: Array<int> = [1,2]; { borrow mut b: Array<int> = a; b.push(3); } print(a[2]); }
 own m: HashMap<int,int> = new HashMap<int,int>(); m.set(1,7);
-div { borrow r: HashMap<int,int> = m; print(r.get(1)); }`),'42 42\n43\n3\n7\n');
+{ borrow r: HashMap<int,int> = m; print(r.get(1)); }`),'42 42\n43\n3\n7\n');
 });
 test('limpeza funciona em return, break, continue e for aninhado',()=>{
-    execute(record+`assis value(): int {
+    execute(record+`fn value(): int {
 own p: P = new P(91);
 for(let i:int=0; i<8; i+=1) {
  own a:Array<int>=[i];
@@ -52,8 +52,8 @@ test('free consome own e zera o slot, inclusive em ramos distintos',()=>{
     execute(record+main('own p:P=new P(1); if(p.x==1){free(p);} else {own q:P=move(p); print(q.x);}'));
 });
 test('defer free captura uma variável estável e libera no retorno',()=>{
-    execute(`assis value(): int { let p:*int=alloc<int>(2); defer free(p); p[0]=72; return p[0]; }`+main('print(value());'),'72\n');
-    execute('#yuri <std/strings.assis>\n'+main('let t:String=new String();defer free(t);t.append("oi");print(t.view());t.dispose();let p:*int=alloc<int>(1);defer free(p);*p=12;print(*p);'),'oi\n12\n');
+    execute(`fn value(): int { let p:*int=alloc<int>(2); defer free(p); p[0]=72; return p[0]; }`+main('print(value());'),'72\n');
+    execute('import "std/strings.assis";\n'+main('let t:String=new String();defer free(t);t.append("oi");print(t.view());t.dispose();let p:*int=alloc<int>(1);defer free(p);*p=12;print(*p);'),'oi\n12\n');
 });
 test('ownership rejeita alias, fuga, free duplo e conflitos de empréstimo',()=>{
     const cases=[
@@ -86,14 +86,14 @@ test('ownership rejeita alias, fuga, free duplo e conflitos de empréstimo',()=>
         ['own p:P=new P(); move(p);',/move só/]
     ];
     for(const [body,message] of cases){
-        const file=source(record+'assis consumir(p:P):void {}\n'+main(body));
+        const file=source(record+'fn consumir(p:P):void {}\n'+main(body));
         const r=invoke(['check',file,'--diagnostics=json']); assert.equal(r.status,1,body+'\n'+r.stderr);
         const diagnostic=JSON.parse(r.stderr); assert.match(diagnostic.message,message,body); assert.equal(diagnostic.code,'A001');
     }
-    const escaping=invoke(['check',source(record+'assis fuga():P {own p:P=new P();return p;}'+main(''))]);assert.equal(escaping.status,1);assert.match(escaping.stderr,/escapar/);
+    const escaping=invoke(['check',source(record+'fn fuga():P {own p:P=new P();return p;}'+main(''))]);assert.equal(escaping.status,1);assert.match(escaping.stderr,/escapar/);
 });
 test('buffers gerenciados verificam limites inclusive zero e negativos',()=>{
-    execute(main('own p:*int=alloc<int>(2); div {borrow mut q:*int=p; q[1]=63;} print(p[0],p[1]);'),'0 63\n');
+    execute(main('own p:*int=alloc<int>(2); {borrow mut q:*int=p; q[1]=63;} print(p[0],p[1]);'),'0 63\n');
     for(const [count,index] of [[0,0],[2,-1],[2,2]])for(const flags of [[],['--no-opt']]){
         const r=invoke(['run',source(main(`own p:*int=alloc<int>(${count}); print(p[${index}]);`)),...flags]);assert.equal(r.status,70,r.stderr);assert.match(r.stderr,/limite/);
     }
@@ -111,7 +111,7 @@ test('debug detecta vazamentos e free duplo pequeno/grande',()=>{
 });
 test('recursão extrema termina com diagnóstico em vez de falha do sistema',()=>{
     for(const flags of [[],['--no-opt']]){
-        const r=invoke(['run',source('assis rec(n:int):int {if(n==0){return 0;}return rec(n-1); }'+main('print(rec(10000000));')),...flags]);assert.equal(r.status,70,r.stderr);assert.match(r.stderr,/pilha/);
+        const r=invoke(['run',source('fn rec(n:int):int {if(n==0){return 0;}return rec(n-1); }'+main('print(rec(10000000));')),...flags]);assert.equal(r.status,70,r.stderr);assert.match(r.stderr,/pilha/);
     }
 });
 test('divisão/resto constantes coincidem com BigInt em todos os sinais e larguras',()=>{
@@ -125,7 +125,7 @@ test('divisão/resto constantes coincidem com BigInt em todos os sinais e largur
     execute(main(body),expected);
 });
 test('comparações fundidas preservam curto-circuito e ordem de avaliação',()=>{
-    execute(`assis efeito(p:*int):int{*p+=1;return *p;}`+main(`let n:int=0;let a:int=0;
+    execute(`fn efeito(p:*int):int{*p+=1;return *p;}`+main(`let n:int=0;let a:int=0;
 for(let i:int=-3;i<4;i+=1){if(i<0){a+=1;}if(i<=0){a+=2;}if(i>0){a+=4;}if(i>=0){a+=8;}if(i!=0){a+=16;}if(i==0){a+=32;}}
 if(efeito(&n)<efeito(&n)){print(n,a);}if(false && efeito(&n)==3){print(0);}print(n);`),'2 183\n2\n');
 });
@@ -140,14 +140,14 @@ test('teste de resto zero por máscara funciona para negativos e INT64_MIN',()=>
 });
 test('text local/param usa comprimento estável e ponteiro para slot invalida cache',()=>{
     const value='a'.repeat(30000);
-    execute(`assis soma(s:text):int {let n:int=0;for(let i:int=0;i<len(s);i+=1){n+=s[i];}return n;}`+main(`let s:text="${value}";print(soma(s));s="ação";print(len(s),s[1]);let p:*text=&s;*p="abcdef";print(len(s),s[5]);`),'2910000\n6 195\n6 102\n');
+    execute(`fn soma(s:text):int {let n:int=0;for(let i:int=0;i<len(s);i+=1){n+=s[i];}return n;}`+main(`let s:text="${value}";print(soma(s));s="ação";print(len(s),s[1]);let p:*text=&s;*p="abcdef";print(len(s),s[5]);`),'2910000\n6 195\n6 102\n');
     for(const index of [-1,3]){const r=invoke(['run',source(main(`let s:text="abc";print(s[${index}]);`))]);assert.equal(r.status,70);assert.match(r.stderr,/texto fora do limite/);}
 });
 test('registradores preservam valores em chamadas, recursão e alias de locais',()=>{
-    execute('assis fib(n:int):int {if(n<2){return n;}return fib(n-1)+fib(n-2);}\n'+main('let a:int=11;let b:int=13;let c:int=17;let d:int=19;let p:*int=&a;*p=23;let v:byte=byte(255);v+=1;print(a,b,c,d,fib(20),v);'),'23 13 17 19 6765 0\n');
+    execute('fn fib(n:int):int {if(n<2){return n;}return fib(n-1)+fib(n-2);}\n'+main('let a:int=11;let b:int=13;let c:int=17;let d:int=19;let p:*int=&a;*p=23;let v:byte=byte(255);v+=1;print(a,b,c,d,fib(20),v);'),'23 13 17 19 6765 0\n');
 });
 test('texto concatena, divide, junta e substitui preservando UTF-8 e partes vazias',()=>{
-    execute('#yuri <std/strings.assis>\n'+main(`
+    execute('import "std/strings.assis";\n'+main(`
 let c:String=concat("ação", "! "); print(c.view()); c.dispose();free(c);
 let a:Array<text>=["a", "", "ç"];let j:String=join(a,"|");print(j.view());j.dispose();free(j);free(a);
 let partes:Array<String>=split("::ação::::x::", "::");print(len(partes));
@@ -164,6 +164,6 @@ test('read_bytes lê entrada binária, EOF e respeita capacity de own',()=>{
     const shared=invoke(['check',source(main('own b:*byte=alloc<byte>(8);borrow r:*byte=b;read_bytes(r,8);'))]);assert.equal(shared.status,1);assert.match(shared.stderr,/exclusivo/);
 });
 test('read_line preserva rows sucessivas e monotonic_ms é monotônico em milissegundos',()=>{
-    const file=source('#yuri <std/strings.assis>\n'+main('let start:int=monotonic_ms();for(let i:int=0;i<4;i+=1){let linha:String=read_line();print(linha.view());linha.dispose();free(linha);}assert(start>=0 && monotonic_ms()>=start);'));
+    const file=source('import "std/strings.assis";\n'+main('let start:int=monotonic_ms();for(let i:int=0;i<4;i+=1){let linha:String=read_line();print(linha.view());linha.dispose();free(linha);}assert(start>=0 && monotonic_ms()>=start);'));
     for(const flags of [[],['--no-opt']]){const r=invoke(['run',file,'--debug',...flags],{input:'ação\r\n\nultima'});assert.equal(r.status,0,r.stderr);assert.equal(r.stdout,'ação\n\nultima\n\n');}
 });

@@ -5,3 +5,5 @@ bin/assis -text
 *.ico -text
 *.zip -text
 *.vsix -text
+# Preserve imported historical snapshots byte-for-byte.
+historical/** -text

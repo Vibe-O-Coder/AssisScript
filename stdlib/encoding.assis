@@ -1,5 +1,4 @@
-#yuri <std/strings.assis>
-
+import "std/strings.assis";
 /// ValidationResult proprietário de decodificação binária. ok=false indica formato inválido em posicao (offset de bytes). Libere com dispose(); free(). dados pode conter um prefixo parcial no erro.
 class BytesResult {
     let ok: bool;

@@ -1,6 +1,6 @@
 # log — stderr com níveis
 
-Opcional, inclui `cli` automaticamente no instalador. `#yuri <std/log.assis>`, namespace `log`.
+Opcional, inclui `cli` automaticamente no instalador. `import "std/log.assis";`, namespace `log`.
 
 `write(nivel,min,borrow mensagem,size): int` retorna 0 se filtrado, 1 se escrito e -1 em erro. Níveis 0..5, mínimo 0..6; mínimo 6 desativa tudo. Prefixo `[epoch_ms nivel] `, mensagem em bytes e LF final. Limite: 1 MiB por mensagem. Sem estado global, alocação de mensagem inteira ou arquivo oculto.
 

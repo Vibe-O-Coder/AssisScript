@@ -80,6 +80,7 @@ asrt_print_int:
 
 .global asrt_print_char
 asrt_print_char:
+.Lprint_char:
     sub rsp, 8
     mov byte ptr [rsp], dil
     mov rdi, rsi
@@ -97,8 +98,8 @@ asrt_print_bool:
     lea rdi, [rip+.Ltrue]
 .Lbool_out:
     jmp .Lprint_str
-.Ltrue: .asciz "aSsIs"
-.Lfalse: .asciz "fOdAsE"
+.Ltrue: .asciz "true"
+.Lfalse: .asciz "false"
 
 .global asrt_print_ptr
 asrt_print_ptr:
@@ -258,7 +259,7 @@ asrt_error:
     mov eax, 60
     syscall
     ud2
-.Lerror_head: .asciz "FODASE R001, linha "
+.Lerror_head: .asciz "assis: erro R001, linha "
 .Lerror_colon: .asciz ": "
 .Lerror_null: .asciz "acesso a ponteiro/objeto nulo\n"
 .Lerror_div: .asciz "divisão por zero\n"
@@ -277,4 +278,6 @@ asrt_error:
 .Lerror_array: .asciz "indice de Array fora do limite\n"
 .Lerror_assert: .asciz "falha de assert: precondicao da operacao nao satisfeita\n"
 
+.ifndef AS_MACOS
 .section .note.GNU-stack,"",@progbits
+.endif

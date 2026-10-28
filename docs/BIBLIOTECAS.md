@@ -1,6 +1,18 @@
-# Bibliotecas e pacotes 3.1
+# Bibliotecas — alpha.14
 
-**Atualização alpha.10:** sintaxe e APIs canônicas em inglês; imports e nomes antigos da stdlib exigem migração. Veja [ENGLISH-API.md](ENGLISH-API.md) e o [handoff atual](HANDOFF-3.3-ALPHA.10.md). As grafias históricas da sintaxe continuam aliases.
+São 20 módulos. O caminho recomendado para novos programas é unicode, own/borrow
+e slices. A revisão acrescenta random, o builder Unicode, sort safe e
+owned::OwnedArray de recursos Move. Consulte [o manual atual](LINGUAGEM.md).
+As atualizações abaixo preservam a história dos contratos anteriores.
+
+
+**Atualização alpha.13:** closures e variantes Move próprias usam o [novo contrato](CAPTURAS-E-VARIANTES-MOVE.md). As limitações históricas abaixo sobre sua ausência foram superadas; demais limites permanecem.
+
+**Atualização alpha.12:** 19 bibliotecas. [net](BIBLIOTECA-net.md) acrescenta HTTP(S) com polling/cancelamento; [safe é o padrão](SAFE-DEFAULT.md). As atualizações abaixo são históricas.
+
+**Atualização alpha.11:** ABI C escalar, callbacks e recursos externos documentados em [FFI-C.md](FFI-C.md). Novos módulos opcionais [http](BIBLIOTECA-http.md) e [process](BIBLIOTECA-process.md), totalizando 18 bibliotecas. O texto seguinte é histórico quando descreve a ausência de FFI/B/C.
+
+**Atualização alpha.10:** sintaxe e APIs canônicas em inglês; imports e nomes antigos da stdlib exigem migração. Veja [ENGLISH-API.md](ENGLISH-API.md) e o [handoff atual](HANDOFF-3.3-ALPHA.10.md). A alpha.14 removeu as grafias históricas; consulte o manual atual.
 
 **Atualização alpha.9:** [Recursos/fatias e backend](RECURSOS-E-FATIAS.md) complementam os contratos abaixo: classes gerenciadas com receptor, slice<T>, texto UTF-8 com comprimento, vtable com drop e ELF PIE. [Handoff atual](HANDOFF-3.3-ALPHA.9.md).
 
@@ -11,8 +23,8 @@ Alpha.6: algoritmos acrescenta map_own/filter_own/fold_borrow com contratos gere
 ## Inclusão de fontes
 
 ```assis
-#yuri <std/math.assis>
-#yuri <bibliotecas/geometria.assis>
+import "std/math.assis";
+import "bibliotecas/geometria.assis";
 ```
 
 `#yuri` exige `<...>` e extensão .assis. Cada diretiva ocupa uma linha própria; um ponto e vírgula final é opcional. A busca começa na pasta do arquivo importador, depois usa `-I`, `ASSIS_PATH` e os caminhos padrão de `std/`. Bibliotecas são fontes compilados e incorporados ao executável; não são carregadas em tempo de execução.
@@ -21,15 +33,15 @@ Alpha.6: algoritmos acrescenta map_own/filter_own/fold_borrow com contratos gere
 
 ```assis
 // assis.assis
-#body src.pillow
+import "src.pillow";
 ```
 
 O arquivo src.pillow pode conter:
 
 ```assis
-#yuri <src/modelos.assis>
-#yuri <src/calculos.assis>
-#body dependencias.pillow
+import "src/modelos.assis";
+import "src/calculos.assis";
+import "dependencias.pillow";
 ```
 
 O sufixo .pillow é obrigatório. O manifesto aceita somente #yuri, #body e comentários. Caminhos dentro dele são relativos ao próprio manifesto. Um caminho pontuado como `#body meu.pacote.pillow` tenta primeiro o arquivo literal e depois `meu/pacote.pillow`. Não há download, resolução de versões ou namespaces; todos os símbolos públicos compartilham o mesmo espaço global.
@@ -74,7 +86,7 @@ Array<T> e HashMap<K, V> são intrínsecos e não exigem importação. As funç�
 /// Retorna x*x + y*y sem extrair raiz, com overflow modular de 64 bits.
 /// @param codepoint Referência válida a Ponto.
 /// @return Quadrado da distância à origem.
-assis distancia_quadrada(codepoint: Ponto): int {
+fn distancia_quadrada(codepoint: Ponto): int {
     return codepoint.x * codepoint.x + codepoint.y * codepoint.y;
 }
 ```

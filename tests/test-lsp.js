@@ -9,8 +9,8 @@ const { pathToFileURL } = require('node:url');
 const language = require('../vscode-assisscript/src/language');
 
 test('namespaces no editor conservam privacidade, tipos e navegação', () => {
-    const a = language.analyze('namespace a;public value struct P<T>{let x:T;}pure assis hidden(n:int):int{return n;}public pure assis f(n:int):int{return hidden(n);}', '/a.assis');
-    const b = language.analyze('assis assis_assis():int{val p:a::P<int>=new a::P<int>(42);return a::f(p.x);}', '/b.assis');
+    const a = language.analyze('namespace a;public value struct P<T>{let x:T;}pure fn hidden(n:int):int{return n;}public pure fn f(n:int):int{return hidden(n);}', '/a.assis');
+    const b = language.analyze('fn main():int{val p:a::P<int>=new a::P<int>(42);return a::f(p.x);}', '/b.assis');
     const resolved = language.resolveSymbol(b, b.text.indexOf('a::f'), [a,b]); assert.equal(resolved?.name,'a::f');
     assert.equal(language.members([a,b], 'a::P<int>')[0].type, 'int');
     assert.ok(!language.visibleSymbols(b,b.text.length-1,[a,b]).some(s => s.name.includes('hidden')));
@@ -20,7 +20,7 @@ test('namespaces no editor conservam privacidade, tipos e navegação', () => {
 test('LSP independente: framing, UTF-16, overlays, navegação e correção de errors', async () => {
     const folder = fs.mkdtempSync(path.join(os.tmpdir(),'assis-lsp-test-'));
     const file = path.join(folder,'assis.assis'), uri=pathToFileURL(file).href;
-    const original = 'pure assis dobro(x:int):int{return x*2;}\nassis assis_assis():int{print("😀");return dobro(21);}\n';fs.writeFileSync(file,original);
+    const original = 'pure fn dobro(x:int):int{return x*2;}\nsafe fn main():int{print("😀");return dobro(21);}\n';fs.writeFileSync(file,original);
     const child = spawn(process.execPath,[path.resolve(__dirname,'../tools/assis-lsp.js')],{stdio:['pipe','pipe','pipe'],windowsHide:true});
     let buffer=Buffer.alloc(0),id=0,stderr='',closed=false;const waiting=new Map(),notifications=[],events=[];
     child.stderr.on('data',b=>stderr+=b);
@@ -37,7 +37,7 @@ test('LSP independente: framing, UTF-16, overlays, navegação e correção de e
         const completion=await request('textDocument/completion',{textDocument:{uri},position:{line:1,character:50}});assert.ok(completion.some(s=>s.label==='dobro'));
         const symbols=await request('textDocument/documentSymbol',{textDocument:{uri}});assert.equal(symbols.filter(s=>s.kind===12).length,2);
         const broken=original.replace('dobro(21)','ausente(21)');send({method:'textDocument/didChange',params:{textDocument:{uri,version:2},contentChanges:[{text:broken}]}});
-        const error=await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.version===2&&m.params.diagnostics.length);assert.match(error.params.diagnostics[0].message,/ausente/);assert.ok(error.params.diagnostics[0].range.start.character>40);
+        const error=await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.version===2&&m.params.diagnostics.length);assert.match(error.params.diagnostics[0].message,/ausente/);assert.equal(error.params.diagnostics[0].range.start.character,broken.split('\n')[1].indexOf('ausente'));
         send({method:'textDocument/didChange',params:{textDocument:{uri,version:3},contentChanges:[{text:original}]}});
         await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.version===3&&m.params.diagnostics.length===0);
         assert.equal(fs.readFileSync(file,'utf8'),original);
@@ -46,9 +46,9 @@ test('LSP independente: framing, UTF-16, overlays, navegação e correção de e
         const util=path.join(folder,'vendor/util'),core=path.join(folder,'vendor/core');fs.mkdirSync(util,{recursive:true});fs.mkdirSync(core,{recursive:true});
         fs.writeFileSync(path.join(folder,'assis.pkg'),'package app 1.0.0\ndep util 1.0.0 vendor/util\n');
         fs.writeFileSync(path.join(util,'assis.pkg'),'package util 1.0.0\ndep core 1.0.0 ../core\n');fs.writeFileSync(path.join(core,'assis.pkg'),'package core 1.0.0\n');
-        fs.writeFileSync(path.join(core,'api.assis'),'namespace core;public pure assis answer():int{return 42;}');
-        const utilText='#yuri <pkg/core/api.assis>\nnamespace util;public pure assis answer():int{return core::answer();}';fs.writeFileSync(path.join(util,'api.assis'),utilText);
-        fs.writeFileSync(file,'#yuri <pkg/util/api.assis>\nassis assis_assis():int{print(util::answer());return 0;}');
+        fs.writeFileSync(path.join(core,'api.assis'),'namespace core;public pure fn answer():int{return 42;}');
+        const utilText='import "pkg/core/api.assis";\nnamespace util;public pure fn answer():int{return core::answer();}';fs.writeFileSync(path.join(util,'api.assis'),utilText);
+        fs.writeFileSync(file,'import "pkg/util/api.assis";\nsafe fn main():int{print(util::answer());return 0;}');
         const locked=spawnSync(path.resolve(__dirname,'../bin',process.platform==='win32'?'assis.exe':'assis'),['lock',file],{encoding:'utf8',windowsHide:true});assert.equal(locked.status,0,locked.stderr);
         const utilUri=pathToFileURL(path.join(util,'api.assis')).href;send({method:'textDocument/didOpen',params:{textDocument:{uri:utilUri,languageId:'assisscript',version:1,text:utilText}}});
         await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===utilUri&&m.params.version===1&&m.params.diagnostics.length===0);

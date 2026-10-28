@@ -1,0 +1,249 @@
+{
+  "format": "AssisScript-optimization-v1",
+  "platform": "posix",
+  "host": {
+    "system": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "logical_cpus": 8
+  },
+  "samples": 7,
+  "entries": 20000,
+  "compilers": {
+    "candidate": {
+      "sha256": "451eafb71f3f30ec91f5df5d0d43d8d4c0609f4df27ca421d61743c7fe634b4e",
+      "version": "AssisScript 3.3.0-alpha.12 (nativo, Linux x86_64)"
+    },
+    "baseline": {
+      "sha256": "b37bb37cc6c709340d684337bc46a33d7a07c57985dc8d696ed351a833d4ae69",
+      "version": "AssisScript 3.3.0-alpha.11 (nativo, Linux x86_64)"
+    }
+  },
+  "workloads": {
+    "hash_stride_1": {
+      "candidate": {
+        "compile_ms": 75.55374,
+        "bytes": 25440,
+        "binarySha256": "bc65508a0ae382dcfdf6a0ec3af1e7c0e068fad7087785ca7c465908b7687c88",
+        "run_ms": [
+          19.086986,
+          15.619019,
+          15.755331,
+          42.996721,
+          22.15785,
+          13.961577,
+          13.963428
+        ],
+        "median_ms": 15.755331
+      },
+      "baseline": {
+        "compile_ms": 79.125715,
+        "bytes": 25440,
+        "binarySha256": "bc65508a0ae382dcfdf6a0ec3af1e7c0e068fad7087785ca7c465908b7687c88",
+        "run_ms": [
+          28.938647,
+          17.240456,
+          22.092112,
+          39.083093,
+          22.876751,
+          20.532401,
+          22.681294
+        ],
+        "median_ms": 22.681294
+      }
+    },
+    "hash_stride_64": {
+      "candidate": {
+        "compile_ms": 52.465916,
+        "bytes": 25440,
+        "binarySha256": "4eee837c8ed1f08388af33a2bc329bdd16594edb52817c9c7cd761b39e39c430",
+        "run_ms": [
+          17.94067,
+          14.397992,
+          13.988847,
+          13.434845,
+          13.302086,
+          28.668555,
+          18.125098
+        ],
+        "median_ms": 14.397992
+      },
+      "baseline": {
+        "compile_ms": 43.438786,
+        "bytes": 25440,
+        "binarySha256": "4eee837c8ed1f08388af33a2bc329bdd16594edb52817c9c7cd761b39e39c430",
+        "run_ms": [
+          16.047285,
+          15.57786,
+          13.534594,
+          13.963217,
+          11.761769,
+          11.522187,
+          17.402251
+        ],
+        "median_ms": 13.963217
+      }
+    },
+    "hash_stride_4096": {
+      "candidate": {
+        "compile_ms": 64.749701,
+        "bytes": 25440,
+        "binarySha256": "51beff0df3a01efdb619d15e5c99caa64fe2945fa5579ab9bdeb77701bf2e711",
+        "run_ms": [
+          18.132069,
+          16.793198,
+          16.928212,
+          17.062407,
+          19.510511,
+          16.651314,
+          16.390203
+        ],
+        "median_ms": 16.928212
+      },
+      "baseline": {
+        "compile_ms": 73.273062,
+        "bytes": 25440,
+        "binarySha256": "51beff0df3a01efdb619d15e5c99caa64fe2945fa5579ab9bdeb77701bf2e711",
+        "run_ms": [
+          18.155443,
+          17.084448,
+          17.257702,
+          27.626265,
+          17.608002,
+          17.539726,
+          17.231151
+        ],
+        "median_ms": 17.539726
+      }
+    },
+    "hash_stride_65536": {
+      "candidate": {
+        "compile_ms": 76.063163,
+        "bytes": 25440,
+        "binarySha256": "ff7520dec5ed8a66337c6673242a41539fd1ba1b4ae13f93b8e9e6b931d86d01",
+        "run_ms": [
+          16.425872,
+          11.632157,
+          12.131211,
+          11.822459,
+          12.265096,
+          20.883921,
+          14.404293
+        ],
+        "median_ms": 12.265096
+      },
+      "baseline": {
+        "compile_ms": 77.644692,
+        "bytes": 25440,
+        "binarySha256": "ff7520dec5ed8a66337c6673242a41539fd1ba1b4ae13f93b8e9e6b931d86d01",
+        "run_ms": [
+          13.548042,
+          11.414058,
+          11.565521,
+          11.887765,
+          22.396617,
+          27.288839,
+          13.250327
+        ],
+        "median_ms": 13.250327
+      }
+    },
+    "large_zero_allocations": {
+      "candidate": {
+        "compile_ms": 40.708412,
+        "bytes": 8193,
+        "binarySha256": "176bc80400d73b933c5e8c39f535b1934dcf28d8b68e0fe2a5738887c6845f5f",
+        "run_ms": [
+          7.116041,
+          7.682243,
+          6.973469,
+          6.156055,
+          6.419124,
+          5.826248,
+          6.98001
+        ],
+        "median_ms": 6.973469
+      },
+      "baseline": {
+        "compile_ms": 40.612035,
+        "bytes": 8193,
+        "binarySha256": "176bc80400d73b933c5e8c39f535b1934dcf28d8b68e0fe2a5738887c6845f5f",
+        "run_ms": [
+          7.645755,
+          7.60743,
+          6.74801,
+          7.736,
+          7.188299,
+          6.936778,
+          5.977609
+        ],
+        "median_ms": 7.188299
+      }
+    },
+    "scalar_leaf_calls": {
+      "candidate": {
+        "compile_ms": 45.984914,
+        "bytes": 8193,
+        "binarySha256": "965ea31d7b19c0969aaf3730ae8086057e7954c622c72564f317d6a092f42f63",
+        "run_ms": [
+          19.236112,
+          18.555036,
+          19.305406,
+          18.311181,
+          17.412619,
+          19.47731,
+          19.214344
+        ],
+        "median_ms": 19.214344
+      },
+      "baseline": {
+        "compile_ms": 44.371445,
+        "bytes": 8193,
+        "binarySha256": "965ea31d7b19c0969aaf3730ae8086057e7954c622c72564f317d6a092f42f63",
+        "run_ms": [
+          18.814528,
+          19.585644,
+          18.438219,
+          18.407047,
+          17.740995,
+          18.951786,
+          19.089351
+        ],
+        "median_ms": 18.814528
+      }
+    },
+    "fib35": {
+      "candidate": {
+        "compile_ms": 49.085323,
+        "bytes": 8193,
+        "binarySha256": "1830f52eee4106b0a31fc821b37906a9313367d4040961efd8a8e34a0c165d13",
+        "run_ms": [
+          103.956299,
+          116.58567,
+          126.512752,
+          126.781388,
+          115.101304,
+          109.580356,
+          108.206779
+        ],
+        "median_ms": 115.101304
+      },
+      "baseline": {
+        "compile_ms": 43.643663,
+        "bytes": 8193,
+        "binarySha256": "1830f52eee4106b0a31fc821b37906a9313367d4040961efd8a8e34a0c165d13",
+        "run_ms": [
+          113.751895,
+          116.157882,
+          147.732533,
+          108.051829,
+          113.618923,
+          114.269917,
+          112.796791
+        ],
+        "median_ms": 113.751895
+      }
+    }
+  },
+  "max_stride_ratio": 1.0744434375894736
+}

@@ -36,8 +36,8 @@ function textKernel(legacy) {
     const declaration = legacy ? '' : 'let a: *byte = bytes(strings); let b: *byte = bytes(prefixo);';
     const compare = legacy ? 'strings[i] != prefixo[i]' : 'a[i] != b[i]';
     const value = 'a'.repeat(2000);
-    return `assis prefixo(strings: text, prefixo: text): bool { let n: int = len(prefixo); if (n > len(strings)) { return false; } ${declaration} let i: int = 0; while(i < n) { if (${compare}) { return false; } i += 1; } return true; }
-assis assis_assis(): int { let strings: text = "${value}"; let i: int = 0; let total: int = 0; while (i < 80) { if (prefixo(strings, strings)) { total += 1; } i += 1; } print(total); return 0; }`;
+    return `fn prefixo(strings: text, prefixo: text): bool { let n: int = len(prefixo); if (n > len(strings)) { return false; } ${declaration} let i: int = 0; while(i < n) { if (${compare}) { return false; } i += 1; } return true; }
+fn main(): int { let strings: text = "${value}"; let i: int = 0; let total: int = 0; while (i < 80) { if (prefixo(strings, strings)) { total += 1; } i += 1; } print(total); return 0; }`;
 }
 try {
     for (const entry of cases) for (const variant of variants) {

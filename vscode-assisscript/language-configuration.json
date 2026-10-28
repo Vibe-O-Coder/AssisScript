@@ -1,8 +1,68 @@
 {
-  "comments": { "lineComment": "miyabi", "blockComment": ["te", "to"] },
-  "brackets": [["{", "}"], ["[", "]"], ["(", ")"]],
-  "autoClosingPairs": [{ "open": "{", "close": "}" }, { "open": "[", "close": "]" }, { "open": "(", "close": ")" }, { "open": "\"", "close": "\"", "notIn": ["string", "comment"] }],
-  "surroundingPairs": [["{", "}"], ["[", "]"], ["(", ")"], ["\"", "\""]],
+  "comments": {
+    "lineComment": "//",
+    "blockComment": [
+      "/*",
+      "*/"
+    ]
+  },
+  "brackets": [
+    [
+      "{",
+      "}"
+    ],
+    [
+      "[",
+      "]"
+    ],
+    [
+      "(",
+      ")"
+    ]
+  ],
+  "autoClosingPairs": [
+    {
+      "open": "{",
+      "close": "}"
+    },
+    {
+      "open": "[",
+      "close": "]"
+    },
+    {
+      "open": "(",
+      "close": ")"
+    },
+    {
+      "open": "\"",
+      "close": "\"",
+      "notIn": [
+        "string",
+        "comment"
+      ]
+    }
+  ],
+  "surroundingPairs": [
+    [
+      "{",
+      "}"
+    ],
+    [
+      "[",
+      "]"
+    ],
+    [
+      "(",
+      ")"
+    ],
+    [
+      "\"",
+      "\""
+    ]
+  ],
   "wordPattern": "[A-Za-z_][A-Za-z_0-9]*",
-  "indentationRules": { "increaseIndentPattern": "^.*\\{[^}]*$", "decreaseIndentPattern": "^\\s*\\}" }
+  "indentationRules": {
+    "increaseIndentPattern": "^.*\\{[^}]*$",
+    "decreaseIndentPattern": "^\\s*\\}"
+  }
 }

@@ -8,17 +8,17 @@ async function run() {
     const root = path.resolve(__dirname, '../..'), folder = path.join(root, 'build', 'editor-fixture');
     fs.mkdirSync(folder, { recursive: true });
     const file = path.join(folder, 'assis.assis'), library = path.join(folder, 'biblioteca.assis');
-    const source = `importa "biblioteca";
-importa "std/math";
-assis assis_assis(): AssIs {
-    Assis AssisAssis: FodaseAssis = fodase FodaseAssis();
-    FODASE(AssisAssis.AssisFodase());
-    FODASE(Assis_fodase_fodase(99, 0, 10));
-    Assis AssisFodase: AssIs = Assis_Assis(); FODASE(AssisFodase);
-    foDASE(AssisAssis);
-    Fodase 0;
+    const source = `import "biblioteca";
+import "std/math";
+fn main(): int {
+    let AssisAssis: FodaseAssis = new FodaseAssis();
+    print(AssisAssis.AssisFodase());
+    print(Assis_fodase_fodase(99, 0, 10));
+    let AssisFodase: int = Assis_Assis(); print(AssisFodase);
+    free(AssisAssis);
+    return 0;
 }`;
-    const libSource = 'ASSIS AssisAssis { assis AssisFodase(): AssIs { Fodase 42; } } ASSIS FodaseAssis ASSIS_FODASE AssisAssis {}\nassis Assis_Assis(): AssIs { Fodase 21; }';
+    const libSource = 'class AssisAssis { fn AssisFodase(): int { return 42; } } class FodaseAssis extends AssisAssis {}\nfn Assis_Assis(): int { return 21; }';
     fs.writeFileSync(file, source); fs.writeFileSync(library, libSource);
     const checks = [];
     const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -37,26 +37,26 @@ assis assis_assis(): AssIs {
         const hover = await vscode.commands.executeCommand('vscode.executeHoverProvider', document.uri, document.positionAt(source.indexOf('Assis_fodase_fodase') + 2)); assert(hover.length); checks.push('hover');
         const signature = await vscode.commands.executeCommand('vscode.executeSignatureHelpProvider', document.uri, document.positionAt(source.indexOf('99, 0') + 5), ',', undefined);
         assert(signature?.signatures.length); assert.equal(signature.activeParameter, 1); checks.push('assinatura');
-        const symbols = await vscode.commands.executeCommand('vscode.executeDocumentSymbolProvider', document.uri); assert(symbols.some(s => s.name === 'assis_assis')); checks.push('estrutura');
+        const symbols = await vscode.commands.executeCommand('vscode.executeDocumentSymbolProvider', document.uri); assert(symbols.some(s => s.name === 'main')); checks.push('estrutura');
         await vscode.commands.executeCommand('assisscript.check');
         assert.equal(vscode.languages.getDiagnostics(document.uri).filter(d => d.severity === vscode.DiagnosticSeverity.Error).length, 0); checks.push('check válido');
-        await replace(document, source.replace('Fodase 0;', 'Fodase aSsIs;'));
+        await replace(document, source.replace('return 0;', 'return true;'));
         const errors = await until(() => vscode.languages.getDiagnostics(document.uri).find(d => d.code === 'A001'), 'Diagnóstico não apareceu');
         assert.match(errors.message, /Ajuda:/);
         assert.equal(errors.range.start.line, 8); checks.push('erro não salvo');
         await replace(document, source); await until(() => vscode.languages.getDiagnostics(document.uri).length === 0, 'Diagnóstico antigo não foi removido'); checks.push('remoção de erro');
         dependency = await vscode.workspace.openTextDocument(library);
-        await replace(dependency, libSource.replace('assis Assis_Assis(): AssIs { Fodase 21; }', 'assis Assis_Assis(): FoDaSe { Fodase "strings"; }'));
+        await replace(dependency, libSource.replace('fn Assis_Assis(): int { return 21; }', 'fn Assis_Assis(): text { return "strings"; }'));
         await vscode.window.showTextDocument(document); await vscode.commands.executeCommand('assisscript.check');
         assert(vscode.languages.getDiagnostics(document.uri).some(d => d.code === 'A001'), 'Snapshot de dependência não salva'); checks.push('overlay de dependência');
         await replace(dependency, libSource); await replace(document, source); await document.save(); await dependency.save();
         const tasks = await vscode.tasks.fetchTasks({ type: 'assisscript' }); assert(tasks.length >= 3); checks.push('tarefas');
         const packageFile = path.join(folder, 'src.pillow'), modernLib = path.join(folder, 'moderna.assis');
-        fs.writeFileSync(packageFile, '#yuri <moderna.assis>\n');
-        fs.writeFileSync(modernLib, '/// Retorna o dobro com overflow modular.\nassis dobro(valor: int): int { return valor * 2; }\nstruct Pessoa { let nome: text; }\n');
-        const modern = `#body src.pillow
-#yuri <std/math.assis>
-assis assis_assis(): int {
+        fs.writeFileSync(packageFile, 'import "moderna.assis";\n');
+        fs.writeFileSync(modernLib, '/// Retorna o dobro com overflow modular.\nfn dobro(valor: int): int { return valor * 2; }\nstruct Pessoa { let nome: text; }\n');
+        const modern = `import "src.pillow";
+import "std/math.assis";
+fn main(): int {
     let numeros: Array<int> = [10, 20];
     numeros.push(max(30, 40));
     let mapa: HashMap<text, int> = new HashMap<text, int>();
@@ -84,7 +84,7 @@ assis assis_assis(): int {
         await vscode.commands.executeCommand('assisscript.documentation'); checks.push('manual offline abre no editor');
         assert(commands.includes('assisscript.libraries'));
         await vscode.commands.executeCommand('assisscript.libraries', 'csv'); checks.push('manual individual CSV abre offline');
-        const v31 = '#yuri <std/convert.assis>\nassis assis_assis(): int { let value: IntResult = parse_int("42"); let a: Array<int> = [42]; let saida: int = 0; a.try_get(0, &saida); free(a); free(value); return 0; }';
+        const v31 = 'import "std/convert.assis";\nfn main(): int { let value: IntResult = parse_int("42"); let a: Array<int> = [42]; let saida: int = 0; a.try_get(0, &saida); free(a); free(value); return 0; }';
         await replace(document, v31); await document.save();
         const converted = await vscode.commands.executeCommand('vscode.executeHoverProvider', document.uri, document.positionAt(v31.indexOf('parse_int') + 2));
         assert.match(hoverText(converted), /overflow/); checks.push('hover da conversão segura transitiva');

@@ -1,0 +1,1225 @@
+// ============================================================================
+//  CRÔNICAS DO ASSIS — um RPG de turnos escrito em AssisScript 3.3.0-alpha.6
+//
+//  Recursos usados:
+//    • OOP: herança em 3 níveis, métodos virtuais (polimorfismo), campos private
+//    • Estatísticas: HP, MP, FOR, DEF, MAG, VEL, nível e XP, com evolução por classe
+//    • Inimigos: cada um com sua própria IA (método virtual `agir`)
+//    • Itens: Poção, Elixir, Antídoto e Bomba, num inventário compartilhado
+//    • Habilidades: físicas, mágicas, cura, veneno e drenar vida
+//    • Turnos: a ordem de cada rodada é decidida pela velocidade (VEL)
+//
+//  Como jogar:   assis run rpg.assis
+//  Assistir:     assis run rpg.assis < /dev/null     (sem entrada = modo automático)
+//  Vazamentos:   assis run rpg.assis --debug         (verifica a memória ao sair)
+// ============================================================================
+
+#yuri <std/texto.assis>
+#yuri <std/conversoes.assis>
+
+// ----------------------------------------------------------------------------
+//  UTILIDADES DE TEXTO
+// ----------------------------------------------------------------------------
+
+/// Conta caracteres visíveis (ignora bytes de continuação do UTF-8).
+assis compr(s: text): int {
+    let n: int = 0;
+    for (let i: int = 0; i < len(s); i += 1) {
+        let b: int = s[i];
+        if ((b & 192) != 128) { n += 1; }
+    }
+    return n;
+}
+
+assis adicionarNumero(t: Texto, v: int): void {
+    let n: Texto = texto_de_inteiro(v);
+    t.adicionar(n.visualizacao());
+    n.dispose();
+    free(n);
+}
+
+assis adicionarEspacos(t: Texto, quantidade: int): void {
+    for (let i: int = 0; i < quantidade; i += 1) { t.adicionar_byte(byte(32)); }
+}
+
+assis adicionarBarra(t: Texto, atual: int, total: int, largura: int): void {
+    let cheio: int = 0;
+    if (total > 0) { cheio = atual * largura / total; }
+    if (atual > 0 && cheio == 0) { cheio = 1; }
+    t.adicionar("[");
+    for (let i: int = 0; i < largura; i += 1) {
+        if (i < cheio) { t.adicionar_byte(byte(35)); }
+        else { t.adicionar_byte(byte(46)); }
+    }
+    t.adicionar("]");
+}
+
+assis linha(): void {
+    print("------------------------------------------------------------------");
+}
+
+/// Imprime "    N) nome - detalhe" (sem o " - " quando o detalhe é vazio).
+assis imprimirOpcao(n: int, nome: text, detalhe: text): void {
+    let t: Texto = new Texto();
+    t.adicionar("    ");
+    adicionarNumero(t, n);
+    t.adicionar(") ");
+    t.adicionar(nome);
+    if (len(detalhe) > 0) {
+        t.adicionar(" - ");
+        t.adicionar(detalhe);
+    }
+    print(t.visualizacao());
+    t.dispose();
+    free(t);
+}
+
+/// Acrescenta "atual/maximo" ao texto.
+assis adicionarFracao(t: Texto, atual: int, maximo: int): void {
+    adicionarNumero(t, atual);
+    t.adicionar("/");
+    adicionarNumero(t, maximo);
+}
+
+// ----------------------------------------------------------------------------
+//  ALEATORIEDADE: gerador congruencial linear de 64 bits (determinístico)
+// ----------------------------------------------------------------------------
+
+ASSIS Aleatorio {
+    private let estado: int;
+
+    assis assis_fodase(semente: int): void {
+        self.estado = semente * 2654435761 + 88172645463325252;
+    }
+
+    assis proximo(): int {
+        self.estado = self.estado * 6364136223846793005 + 1442695040888963407;
+        return (self.estado >> 33) & 0x7fffffff;
+    }
+
+    /// Inteiro uniforme em [de, ate].
+    assis faixa(de: int, ate: int): int {
+        return de + self.proximo() % (ate - de + 1);
+    }
+
+    assis chance(porcento: int): bool {
+        return self.faixa(1, 100) <= porcento;
+    }
+}
+
+// ----------------------------------------------------------------------------
+//  ENTRADA PADRÃO: lê um número por linha; detecta o fim da entrada (EOF)
+// ----------------------------------------------------------------------------
+
+ASSIS Entrada {
+    let buffer: *byte;
+    let fim: bool;
+    let modoAuto: bool;
+
+    assis assis_fodase(): void {
+        self.buffer = alloc<byte>(1);
+        self.fim = false;
+        self.modoAuto = false;
+    }
+
+    /// Devolve o número digitado, -1 se a linha não tiver número, -2 no EOF.
+    assis lerNumero(): int {
+        let valor: int = 0;
+        let achou: bool = false;
+        let lendo: bool = true;
+        while (lendo) {
+            let n: int = ler_bytes(self.buffer, 1);
+            if (n <= 0) {
+                self.fim = true;
+                lendo = false;
+            } else {
+                let c: int = self.buffer[0];
+                if (c == 10) { lendo = false; }
+                else if (c >= 48 && c <= 57) {
+                    valor = valor * 10 + (c - 48);
+                    achou = true;
+                }
+            }
+        }
+        if (!achou) {
+            if (self.fim) { return -2; }
+            return -1;
+        }
+        return valor;
+    }
+
+    /// Verdadeiro quando os heróis devem agir sozinhos.
+    assis automatico(): bool { return self.modoAuto || self.fim; }
+
+    assis liberar(): void { free(self.buffer); }
+}
+
+// ----------------------------------------------------------------------------
+//  HABILIDADES — classe base + 5 especializações (polimorfismo em `usar`)
+// ----------------------------------------------------------------------------
+
+ASSIS Habilidade {
+    let nome: text;
+    let custo: int;
+    let poder: int;
+    let descricao: text;
+
+    assis assis_fodase(nome: text, custo: int, poder: int, descricao: text): void {
+        self.nome = nome;
+        self.custo = custo;
+        self.poder = poder;
+        self.descricao = descricao;
+    }
+
+    /// Verdadeiro quando o alvo é um aliado (cura, por exemplo).
+    assis aliada(): bool { return false; }
+
+    assis usar(usuario: Combatente, alvo: Combatente, rng: Aleatorio): void {
+        usuario.ataqueBasico(alvo, rng);
+    }
+}
+
+/// Dano físico: escala com FOR e é reduzido pela DEF do alvo.
+ASSIS AtaqueFisico extends Habilidade {
+    assis usar(usuario: Combatente, alvo: Combatente, rng: Aleatorio): void {
+        let bruto: int = usuario.forca * self.poder / 10 + rng.faixa(0, 3);
+        let dano: int = alvo.receberDano(bruto, false);
+        print(usuario.nome, "usa", self.nome, "em", alvo.nome, "e causa", dano, "de dano!");
+        usuario.avisarSeCaiu(alvo);
+    }
+}
+
+/// Dano mágico: escala com MAG e ignora a DEF do alvo.
+ASSIS DanoMagico extends Habilidade {
+    assis usar(usuario: Combatente, alvo: Combatente, rng: Aleatorio): void {
+        let bruto: int = usuario.magia * self.poder / 10 + rng.faixa(0, 4);
+        let dano: int = alvo.receberDano(bruto, true);
+        print(usuario.nome, "conjura", self.nome, "em", alvo.nome, "e causa", dano, "de dano mágico!");
+        usuario.avisarSeCaiu(alvo);
+    }
+}
+
+/// Cura um aliado: escala com MAG.
+ASSIS Cura extends Habilidade {
+    assis aliada(): bool { return true; }
+
+    assis usar(usuario: Combatente, alvo: Combatente, rng: Aleatorio): void {
+        let valor: int = usuario.magia * self.poder / 10 + 6 + rng.faixa(0, 3);
+        let real: int = alvo.curar(valor);
+        print(usuario.nome, "usa", self.nome, "em", alvo.nome, "e restaura", real, "de HP.");
+    }
+}
+
+/// Dano pequeno + veneno (dano por turno, ignora DEF).
+ASSIS Veneno extends Habilidade {
+    assis usar(usuario: Combatente, alvo: Combatente, rng: Aleatorio): void {
+        let bruto: int = (usuario.forca + usuario.magia) / 3 + rng.faixa(0, 2);
+        let dano: int = alvo.receberDano(bruto, false);
+        alvo.veneno = 4;
+        print(usuario.nome, "usa", self.nome, "em", alvo.nome, "- causa", dano, "de dano e o ENVENENA!");
+        usuario.avisarSeCaiu(alvo);
+    }
+}
+
+/// Dano mágico que devolve metade do dano causado ao usuário.
+ASSIS Drenar extends Habilidade {
+    assis usar(usuario: Combatente, alvo: Combatente, rng: Aleatorio): void {
+        let bruto: int = usuario.magia * self.poder / 10 + rng.faixa(0, 3);
+        let dano: int = alvo.receberDano(bruto, true);
+        let cura: int = usuario.curar(dano / 2);
+        print(usuario.nome, "usa", self.nome, "em", alvo.nome, "- causa", dano, "de dano e recupera", cura, "de HP!");
+        usuario.avisarSeCaiu(alvo);
+    }
+}
+
+// ----------------------------------------------------------------------------
+//  COMBATENTE — base de heróis e inimigos
+// ----------------------------------------------------------------------------
+
+ASSIS Combatente {
+    let nome: text;
+    let nivel: int;
+    let hp: int;
+    let hpMax: int;
+    let mp: int;
+    let mpMax: int;
+    let forca: int;
+    let defesa: int;
+    let magia: int;
+    let velocidade: int;
+    let guardando: bool;
+    let veneno: int;
+    let xp: int;
+    let xpProximo: int;
+    let habilidades: Array<Habilidade>;
+
+    assis assis_fodase(nome: text, hpMax: int, mpMax: int, forca: int, defesa: int, magia: int, velocidade: int): void {
+        self.nome = nome;
+        self.nivel = 1;
+        self.hpMax = hpMax;
+        self.hp = hpMax;
+        self.mpMax = mpMax;
+        self.mp = mpMax;
+        self.forca = forca;
+        self.defesa = defesa;
+        self.magia = magia;
+        self.velocidade = velocidade;
+        self.guardando = false;
+        self.veneno = 0;
+        self.xp = 0;
+        self.xpProximo = 30;
+        self.habilidades = new Array<Habilidade>();
+    }
+
+    // ---- métodos virtuais (sobrescritos pelas subclasses) ----
+    assis classe(): text { return "Criatura"; }
+    assis controlavel(): bool { return false; }
+    assis xpRecompensa(): int { return 0; }
+    assis ganharXp(quantidade: int): void { }
+
+    /// Ataque comum: FOR + sorte, com 10% de crítico (dobra o dano).
+    assis ataqueBasico(alvo: Combatente, rng: Aleatorio): void {
+        let bruto: int = self.forca + rng.faixa(0, 3);
+        let critico: bool = rng.chance(10);
+        if (critico) { bruto = bruto * 2; }
+        let dano: int = alvo.receberDano(bruto, false);
+        if (critico) {
+            print(self.nome, "acerta um golpe CRÍTICO em", alvo.nome, "e causa", dano, "de dano!");
+        } else {
+            print(self.nome, "ataca", alvo.nome, "e causa", dano, "de dano.");
+        }
+        self.avisarSeCaiu(alvo);
+    }
+
+    /// Turno de um combatente não controlado pelo jogador.
+    assis agir(aliados: Array<Combatente>, oponentes: Array<Combatente>, rng: Aleatorio): void {
+        let alvo: Combatente = alvoAleatorio(oponentes, rng);
+        if (alvo != null) { self.ataqueBasico(alvo, rng); }
+    }
+
+    // ---- métodos comuns ----
+    assis vivo(): bool { return self.hp > 0; }
+
+    /// Aplica dano e devolve o dano realmente sofrido.
+    assis receberDano(bruto: int, perfurante: bool): int {
+        let d: int = bruto;
+        if (!perfurante) { d = d - self.defesa / 2; }
+        if (self.guardando) { d = d / 2; }
+        if (d < 1) { d = 1; }
+        if (d > self.hp) { d = self.hp; }
+        self.hp -= d;
+        return d;
+    }
+
+    assis curar(quantidade: int): int {
+        let antes: int = self.hp;
+        self.hp += quantidade;
+        if (self.hp > self.hpMax) { self.hp = self.hpMax; }
+        return self.hp - antes;
+    }
+
+    assis restaurarMp(quantidade: int): int {
+        let antes: int = self.mp;
+        self.mp += quantidade;
+        if (self.mp > self.mpMax) { self.mp = self.mpMax; }
+        return self.mp - antes;
+    }
+
+    assis avisarSeCaiu(alvo: Combatente): void {
+        if (!alvo.vivo()) { print("  >>", alvo.nome, "foi derrotado!"); }
+    }
+
+    /// Início do turno: encerra a defesa anterior e aplica o veneno.
+    assis iniciarTurno(): void {
+        self.guardando = false;
+        if (self.veneno > 0) {
+            let dano: int = 3 + self.nivel;
+            if (dano > self.hp) { dano = self.hp; }
+            self.hp -= dano;
+            self.veneno -= 1;
+            print("  *", self.nome, "sofre", dano, "de dano do veneno.");
+            if (!self.vivo()) { print("  >>", self.nome, "sucumbiu ao veneno!"); }
+        }
+    }
+
+    /// Usa uma habilidade, gastando MP. Devolve false se faltar MP.
+    assis usarHabilidade(habilidade: Habilidade, alvo: Combatente, rng: Aleatorio): bool {
+        if (self.mp < habilidade.custo) {
+            print("  MP insuficiente para", habilidade.nome);
+            return false;
+        }
+        self.mp -= habilidade.custo;
+        habilidade.usar(self, alvo, rng);
+        return true;
+    }
+
+    /// Recuperação entre batalhas (também reergue quem caiu).
+    assis descansar(): void {
+        if (!self.vivo()) { self.hp = self.hpMax / 4; }
+        else { self.curar(self.hpMax * 4 / 10); }
+        self.restaurarMp(self.mpMax / 2);
+        self.veneno = 0;
+        self.guardando = false;
+    }
+
+    assis ficha(): void {
+        let t: Texto = new Texto();
+        t.adicionar("  ");
+        t.adicionar(self.nome);
+        adicionarEspacos(t, 14 - compr(self.nome));
+        t.adicionar(self.classe());
+        adicionarEspacos(t, 10 - compr(self.classe()));
+        t.adicionar("Nv ");
+        adicionarNumero(t, self.nivel);
+        t.adicionar(" | HP ");
+        adicionarNumero(t, self.hpMax);
+        t.adicionar(" MP ");
+        adicionarNumero(t, self.mpMax);
+        t.adicionar(" | FOR ");
+        adicionarNumero(t, self.forca);
+        t.adicionar(" DEF ");
+        adicionarNumero(t, self.defesa);
+        t.adicionar(" MAG ");
+        adicionarNumero(t, self.magia);
+        t.adicionar(" VEL ");
+        adicionarNumero(t, self.velocidade);
+        print(t.visualizacao());
+        t.dispose();
+        free(t);
+    }
+
+    assis linhaStatus(): void {
+        let t: Texto = new Texto();
+        t.adicionar("  ");
+        t.adicionar(self.nome);
+        adicionarEspacos(t, 14 - compr(self.nome));
+        t.adicionar(self.classe());
+        adicionarEspacos(t, 10 - compr(self.classe()));
+        t.adicionar("Nv ");
+        adicionarNumero(t, self.nivel);
+        t.adicionar("  HP ");
+        adicionarBarra(t, self.hp, self.hpMax, 12);
+        t.adicionar(" ");
+        adicionarNumero(t, self.hp);
+        t.adicionar("/");
+        adicionarNumero(t, self.hpMax);
+        if (self.mpMax > 0) {
+            t.adicionar("  MP ");
+            adicionarNumero(t, self.mp);
+            t.adicionar("/");
+            adicionarNumero(t, self.mpMax);
+        }
+        if (self.veneno > 0) { t.adicionar("  [VENENO]"); }
+        if (self.guardando) { t.adicionar("  [DEFESA]"); }
+        if (!self.vivo()) { t.adicionar("  [K.O.]"); }
+        print(t.visualizacao());
+        t.dispose();
+        free(t);
+    }
+
+    /// Libera as habilidades e o próprio combatente.
+    assis liberar(): void {
+        for (let i: int = 0; i < len(self.habilidades); i += 1) { free(self.habilidades[i]); }
+        free(self.habilidades);
+        free(self);
+    }
+}
+
+// ----------------------------------------------------------------------------
+//  HERÓIS: Combatente -> Heroi -> Guerreiro / Mago / Clerigo
+// ----------------------------------------------------------------------------
+
+ASSIS Heroi extends Combatente {
+    assis classe(): text { return "Herói"; }
+    assis controlavel(): bool { return true; }
+
+    /// Soma XP e sobe de nível quantas vezes for preciso.
+    assis ganharXp(quantidade: int): void {
+        self.xp += quantidade;
+        let m: Texto = new Texto();
+        m.adicionar("  ");
+        m.adicionar(self.nome);
+        m.adicionar(" ganha ");
+        adicionarNumero(m, quantidade);
+        m.adicionar(" de XP (");
+        adicionarFracao(m, self.xp, self.xpProximo);
+        m.adicionar(")");
+        print(m.visualizacao());
+        m.dispose();
+        free(m);
+        while (self.xp >= self.xpProximo) {
+            self.xp -= self.xpProximo;
+            self.xpProximo = self.xpProximo * 3 / 2 + 10;
+            self.nivel += 1;
+            let n: Texto = new Texto();
+            n.adicionar("  *** ");
+            n.adicionar(self.nome);
+            n.adicionar(" subiu para o nível ");
+            adicionarNumero(n, self.nivel);
+            n.adicionar("! ***");
+            print(n.visualizacao());
+            n.dispose();
+            free(n);
+            self.subirNivel();
+        }
+    }
+
+    /// Crescimento genérico. Cada classe sobrescreve com seus próprios ganhos.
+    assis subirNivel(): void { self.aplicarCrescimento(8, 2, 2, 1, 2, 1); }
+
+    assis aplicarCrescimento(dhp: int, dmp: int, dfor: int, ddef: int, dmag: int, dvel: int): void {
+        self.hpMax += dhp;
+        self.mpMax += dmp;
+        self.forca += dfor;
+        self.defesa += ddef;
+        self.magia += dmag;
+        self.velocidade += dvel;
+        self.curar(dhp + self.hpMax / 4);
+        self.restaurarMp(dmp + self.mpMax / 4);
+        let g: Texto = new Texto();
+        g.adicionar("     +");
+        adicionarNumero(g, dhp);
+        g.adicionar(" HP  +");
+        adicionarNumero(g, dmp);
+        g.adicionar(" MP  +");
+        adicionarNumero(g, dfor);
+        g.adicionar(" FOR  +");
+        adicionarNumero(g, ddef);
+        g.adicionar(" DEF  +");
+        adicionarNumero(g, dmag);
+        g.adicionar(" MAG  +");
+        adicionarNumero(g, dvel);
+        g.adicionar(" VEL");
+        print(g.visualizacao());
+        g.dispose();
+        free(g);
+    }
+}
+
+ASSIS Guerreiro extends Heroi {
+    assis classe(): text { return "Guerreira"; }
+    assis subirNivel(): void { self.aplicarCrescimento(13, 2, 3, 2, 0, 1); }
+}
+
+ASSIS Mago extends Heroi {
+    assis classe(): text { return "Maga"; }
+    assis subirNivel(): void { self.aplicarCrescimento(6, 7, 1, 1, 4, 1); }
+
+    /// O cajado usa um pouco da magia: o ataque comum do mago é diferente.
+    assis ataqueBasico(alvo: Combatente, rng: Aleatorio): void {
+        let bruto: int = self.forca + self.magia / 3 + rng.faixa(0, 3);
+        let dano: int = alvo.receberDano(bruto, false);
+        print(self.nome, "golpeia", alvo.nome, "com o cajado e causa", dano, "de dano.");
+        self.avisarSeCaiu(alvo);
+    }
+}
+
+ASSIS Clerigo extends Heroi {
+    assis classe(): text { return "Clérigo"; }
+    assis subirNivel(): void { self.aplicarCrescimento(9, 5, 1, 2, 3, 1); }
+}
+
+// ----------------------------------------------------------------------------
+//  INIMIGOS: Combatente -> Inimigo -> Slime / Goblin / Lobo / Dragao
+// ----------------------------------------------------------------------------
+
+ASSIS Inimigo extends Combatente {
+    let recompensa: int;
+    assis classe(): text { return "Monstro"; }
+    assis xpRecompensa(): int { return self.recompensa; }
+}
+
+ASSIS Slime extends Inimigo {
+    assis classe(): text { return "Slime"; }
+
+    /// 25% de chance de se contrair (defesa); senão ataca.
+    assis agir(aliados: Array<Combatente>, oponentes: Array<Combatente>, rng: Aleatorio): void {
+        if (rng.chance(25)) {
+            self.guardando = true;
+            print(self.nome, "se contrai e endurece o corpo gelatinoso.");
+        } else {
+            let alvo: Combatente = alvoAleatorio(oponentes, rng);
+            if (alvo != null) { self.ataqueBasico(alvo, rng); }
+        }
+    }
+}
+
+ASSIS Goblin extends Inimigo {
+    assis classe(): text { return "Goblin"; }
+
+    /// 35% de chance de usar sua habilidade (Machadada) em vez do ataque comum.
+    assis agir(aliados: Array<Combatente>, oponentes: Array<Combatente>, rng: Aleatorio): void {
+        let alvo: Combatente = alvoAleatorio(oponentes, rng);
+        if (alvo != null) {
+            if (rng.chance(35) && len(self.habilidades) > 0) {
+                self.habilidades[0].usar(self, alvo, rng);
+            } else {
+                self.ataqueBasico(alvo, rng);
+            }
+        }
+    }
+}
+
+ASSIS Lobo extends Inimigo {
+    assis classe(): text { return "Fera"; }
+
+    /// Mordida dupla: dois ataques por turno, cada um num alvo aleatório.
+    assis agir(aliados: Array<Combatente>, oponentes: Array<Combatente>, rng: Aleatorio): void {
+        for (let i: int = 0; i < 2; i += 1) {
+            let alvo: Combatente = alvoAleatorio(oponentes, rng);
+            if (alvo != null) { self.ataqueBasico(alvo, rng); }
+        }
+    }
+}
+
+ASSIS Dragao extends Inimigo {
+    let turnos: int;
+    assis classe(): text { return "Chefe"; }
+
+    /// A cada 3 turnos, sopra fogo em todo o grupo; às vezes envenena com a cauda.
+    assis agir(aliados: Array<Combatente>, oponentes: Array<Combatente>, rng: Aleatorio): void {
+        self.turnos += 1;
+        if (self.turnos % 3 == 0) {
+            print(self.nome, "inspira fundo e SOPRA FOGO em todo o grupo!");
+            for (let i: int = 0; i < len(oponentes); i += 1) {
+                let alvo: Combatente = oponentes[i];
+                if (alvo.vivo()) {
+                    let dano: int = alvo.receberDano(self.magia + rng.faixa(0, 4), true);
+                    print("    ", alvo.nome, "sofre", dano, "de dano de fogo.");
+                    self.avisarSeCaiu(alvo);
+                }
+            }
+        } else {
+            let alvo: Combatente = alvoAleatorio(oponentes, rng);
+            if (alvo != null) {
+                if (rng.chance(30) && len(self.habilidades) > 0) {
+                    self.habilidades[0].usar(self, alvo, rng);
+                } else {
+                    self.ataqueBasico(alvo, rng);
+                }
+            }
+        }
+    }
+}
+
+// ----------------------------------------------------------------------------
+//  ITENS — classe base + 4 especializações, e o inventário
+// ----------------------------------------------------------------------------
+
+ASSIS Item {
+    let nome: text;
+    let descricao: text;
+    let quantidade: int;
+
+    assis assis_fodase(nome: text, descricao: text, quantidade: int): void {
+        self.nome = nome;
+        self.descricao = descricao;
+        self.quantidade = quantidade;
+    }
+
+    /// Verdadeiro quando o alvo do item é um aliado.
+    assis aliado(): bool { return true; }
+
+    /// Verdadeiro se usar o item no alvo teria algum efeito.
+    assis util(alvo: Combatente): bool { return false; }
+
+    /// Aplica o efeito. Devolve true se o item foi consumido.
+    assis usar(usuario: Combatente, alvo: Combatente): bool { return false; }
+}
+
+ASSIS Pocao extends Item {
+    assis util(alvo: Combatente): bool { return alvo.hp < alvo.hpMax; }
+
+    assis usar(usuario: Combatente, alvo: Combatente): bool {
+        if (!self.util(alvo)) { print("  Não faria efeito em", alvo.nome); return false; }
+        let real: int = alvo.curar(45);
+        print(usuario.nome, "usa", self.nome, "em", alvo.nome, "e restaura", real, "de HP.");
+        return true;
+    }
+}
+
+ASSIS Elixir extends Item {
+    assis util(alvo: Combatente): bool { return alvo.mpMax > 0 && alvo.mp < alvo.mpMax; }
+
+    assis usar(usuario: Combatente, alvo: Combatente): bool {
+        if (!self.util(alvo)) { print("  Não faria efeito em", alvo.nome); return false; }
+        let real: int = alvo.restaurarMp(25);
+        print(usuario.nome, "usa", self.nome, "em", alvo.nome, "e restaura", real, "de MP.");
+        return true;
+    }
+}
+
+ASSIS Antidoto extends Item {
+    assis util(alvo: Combatente): bool { return alvo.veneno > 0; }
+
+    assis usar(usuario: Combatente, alvo: Combatente): bool {
+        if (!self.util(alvo)) { print("  Não faria efeito em", alvo.nome); return false; }
+        alvo.veneno = 0;
+        print(usuario.nome, "usa", self.nome, "em", alvo.nome, "- o veneno some!");
+        return true;
+    }
+}
+
+ASSIS Bomba extends Item {
+    assis aliado(): bool { return false; }
+    assis util(alvo: Combatente): bool { return alvo.vivo(); }
+
+    assis usar(usuario: Combatente, alvo: Combatente): bool {
+        let dano: int = alvo.receberDano(35, true);
+        print(usuario.nome, "arremessa", self.nome, "em", alvo.nome, "e causa", dano, "de dano explosivo!");
+        usuario.avisarSeCaiu(alvo);
+        return true;
+    }
+}
+
+ASSIS Inventario {
+    private let itens: Array<Item>;
+
+    assis assis_fodase(): void { self.itens = new Array<Item>(); }
+
+    assis tipos(): int { return len(self.itens); }
+    assis obter(indice: int): Item { return self.itens[indice]; }
+
+    /// Soma ao estoque se o item já existir; senão guarda o novo objeto.
+    assis adicionar(novo: Item): void {
+        let achou: bool = false;
+        for (let i: int = 0; i < len(self.itens); i += 1) {
+            if (!achou && self.itens[i].nome == novo.nome) {
+                self.itens[i].quantidade += novo.quantidade;
+                achou = true;
+            }
+        }
+        if (achou) { free(novo); }
+        else { self.itens.push(novo); }
+    }
+
+    /// Gasta uma unidade; remove o item do inventário se acabar.
+    assis consumir(indice: int): void {
+        let it: Item = self.itens[indice];
+        it.quantidade -= 1;
+        if (it.quantidade <= 0) {
+            self.itens.remove(indice);
+            free(it);
+        }
+    }
+
+    assis liberar(): void {
+        for (let i: int = 0; i < len(self.itens); i += 1) { free(self.itens[i]); }
+        free(self.itens);
+    }
+}
+
+// ----------------------------------------------------------------------------
+//  FÁBRICAS DE PERSONAGENS E INIMIGOS
+// ----------------------------------------------------------------------------
+
+assis novoGuerreiro(nome: text): Combatente {
+    let h: Guerreiro = new Guerreiro(nome, 72, 14, 14, 10, 3, 8);
+    h.habilidades.push(new AtaqueFisico("Golpe Poderoso", 5, 20, "Dano físico pesado"));
+    h.habilidades.push(new AtaqueFisico("Investida", 3, 14, "Ataque rápido e barato"));
+    return h;
+}
+
+assis novoMago(nome: text): Combatente {
+    let h: Mago = new Mago(nome, 44, 40, 5, 5, 16, 9);
+    h.habilidades.push(new DanoMagico("Bola de Fogo", 6, 20, "Dano mágico (ignora DEF)"));
+    h.habilidades.push(new Veneno("Nuvem Tóxica", 5, 10, "Dano leve + veneno por 4 turnos"));
+    return h;
+}
+
+assis novoClerigo(nome: text): Combatente {
+    let h: Clerigo = new Clerigo(nome, 54, 32, 8, 8, 12, 11);
+    h.habilidades.push(new Cura("Cura", 6, 14, "Restaura HP de um aliado"));
+    h.habilidades.push(new Drenar("Drenar Vida", 7, 14, "Dano mágico e cura metade em si"));
+    return h;
+}
+
+assis novoSlime(nome: text): Combatente {
+    let e: Slime = new Slime(nome, 34, 0, 9, 3, 0, 5);
+    e.recompensa = 12;
+    return e;
+}
+
+assis novoGoblin(nome: text): Combatente {
+    let e: Goblin = new Goblin(nome, 54, 0, 15, 6, 0, 10);
+    e.recompensa = 30;
+    e.habilidades.push(new AtaqueFisico("Machadada", 0, 18, "Golpe selvagem"));
+    return e;
+}
+
+assis novoLobo(nome: text): Combatente {
+    let e: Lobo = new Lobo(nome, 46, 0, 13, 4, 0, 15);
+    e.recompensa = 30;
+    return e;
+}
+
+assis novoDragao(nome: text): Combatente {
+    let e: Dragao = new Dragao(nome, 430, 0, 24, 10, 22, 12);
+    e.recompensa = 120;
+    e.turnos = 0;
+    e.habilidades.push(new Veneno("Cauda Venenosa", 0, 10, "Chicoteia e envenena"));
+    return e;
+}
+
+/// Monta o grupo de inimigos de cada fase.
+assis montarEncontro(fase: int): Array<Combatente> {
+    let grupo: Array<Combatente> = new Array<Combatente>();
+    if (fase == 1) {
+        grupo.push(novoSlime("Slime Verde"));
+        grupo.push(novoSlime("Slime Azul"));
+    } else if (fase == 2) {
+        grupo.push(novoGoblin("Goblin"));
+        grupo.push(novoLobo("Lobo Sombrio"));
+    } else {
+        grupo.push(novoDragao("Dragão Ancião"));
+    }
+    return grupo;
+}
+
+// ----------------------------------------------------------------------------
+//  FUNÇÕES AUXILIARES DE GRUPOS
+// ----------------------------------------------------------------------------
+
+assis contarVivos(grupo: Array<Combatente>): int {
+    let n: int = 0;
+    for (let i: int = 0; i < len(grupo); i += 1) {
+        if (grupo[i].vivo()) { n += 1; }
+    }
+    return n;
+}
+
+assis alvoAleatorio(grupo: Array<Combatente>, rng: Aleatorio): Combatente {
+    let vivos: int = contarVivos(grupo);
+    if (vivos == 0) { return null; }
+    let sorteado: int = rng.faixa(0, vivos - 1);
+    let resultado: Combatente = null;
+    let contador: int = 0;
+    for (let i: int = 0; i < len(grupo); i += 1) {
+        if (grupo[i].vivo()) {
+            if (contador == sorteado) { resultado = grupo[i]; }
+            contador += 1;
+        }
+    }
+    return resultado;
+}
+
+/// Aliado vivo com a menor proporção de HP.
+assis maisFerido(grupo: Array<Combatente>): Combatente {
+    let pior: Combatente = null;
+    for (let i: int = 0; i < len(grupo); i += 1) {
+        let c: Combatente = grupo[i];
+        if (c.vivo()) {
+            if (pior == null) { pior = c; }
+            else if (c.hp * 100 / c.hpMax < pior.hp * 100 / pior.hpMax) { pior = c; }
+        }
+    }
+    return pior;
+}
+
+/// Inimigo vivo com menos HP absoluto.
+assis maisFraco(grupo: Array<Combatente>): Combatente {
+    let menor: Combatente = null;
+    for (let i: int = 0; i < len(grupo); i += 1) {
+        let c: Combatente = grupo[i];
+        if (c.vivo()) {
+            if (menor == null) { menor = c; }
+            else if (c.hp < menor.hp) { menor = c; }
+        }
+    }
+    return menor;
+}
+
+// ----------------------------------------------------------------------------
+//  BATALHA — controla rodadas, ordem por velocidade, menus e recompensas
+// ----------------------------------------------------------------------------
+
+ASSIS Batalha {
+    let herois: Array<Combatente>;
+    let inimigos: Array<Combatente>;
+    let inv: Inventario;
+    let rng: Aleatorio;
+    let entrada: Entrada;
+
+    assis assis_fodase(herois: Array<Combatente>, inimigos: Array<Combatente>, inv: Inventario, rng: Aleatorio, entrada: Entrada): void {
+        self.herois = herois;
+        self.inimigos = inimigos;
+        self.inv = inv;
+        self.rng = rng;
+        self.entrada = entrada;
+    }
+
+    assis terminou(): bool {
+        return contarVivos(self.herois) == 0 || contarVivos(self.inimigos) == 0;
+    }
+
+    /// Todos os vivos, do mais veloz ao mais lento (ordenação por inserção).
+    assis montarOrdem(): Array<Combatente> {
+        let ordem: Array<Combatente> = new Array<Combatente>();
+        for (let i: int = 0; i < len(self.herois); i += 1) {
+            if (self.herois[i].vivo()) { ordem.push(self.herois[i]); }
+        }
+        for (let i: int = 0; i < len(self.inimigos); i += 1) {
+            if (self.inimigos[i].vivo()) { ordem.push(self.inimigos[i]); }
+        }
+        for (let i: int = 1; i < len(ordem); i += 1) {
+            let chave: Combatente = ordem[i];
+            let j: int = i - 1;
+            while (j >= 0 && ordem[j].velocidade < chave.velocidade) {
+                ordem[j + 1] = ordem[j];
+                j -= 1;
+            }
+            ordem[j + 1] = chave;
+        }
+        return ordem;
+    }
+
+    assis mostrarCampo(): void {
+        linha();
+        print("  HERÓIS");
+        for (let i: int = 0; i < len(self.herois); i += 1) { self.herois[i].linhaStatus(); }
+        print("  INIMIGOS");
+        for (let i: int = 0; i < len(self.inimigos); i += 1) { self.inimigos[i].linhaStatus(); }
+        linha();
+    }
+
+    /// Lê um número entre `de` e `ate`. Devolve -2 se a entrada acabar.
+    assis escolher(de: int, ate: int): int {
+        let resultado: int = -3;
+        while (resultado == -3) {
+            let n: int = self.entrada.lerNumero();
+            if (n == -2) { resultado = -2; }
+            else if (n >= de && n <= ate) { resultado = n; }
+            else {
+                let aviso: Texto = new Texto();
+                aviso.adicionar("  Opção inválida. Digite um número de ");
+                adicionarNumero(aviso, de);
+                aviso.adicionar(" a ");
+                adicionarNumero(aviso, ate);
+                aviso.adicionar(".");
+                print(aviso.visualizacao());
+                aviso.dispose();
+                free(aviso);
+            }
+        }
+        return resultado;
+    }
+
+    /// Menu de alvos. Devolve null se o jogador voltar (ou a entrada acabar).
+    assis escolherAlvo(grupo: Array<Combatente>, titulo: text): Combatente {
+        let indices: Array<int> = new Array<int>();
+        for (let i: int = 0; i < len(grupo); i += 1) {
+            if (grupo[i].vivo()) { indices.push(i); }
+        }
+        let resultado: Combatente = null;
+        if (len(indices) == 1) {
+            resultado = grupo[indices[0]];
+        } else if (len(indices) > 1) {
+            print(titulo);
+            for (let k: int = 0; k < len(indices); k += 1) {
+                let c: Combatente = grupo[indices[k]];
+                let d: Texto = new Texto();
+                d.adicionar("HP ");
+                adicionarFracao(d, c.hp, c.hpMax);
+                imprimirOpcao(k + 1, c.nome, d.visualizacao());
+                d.dispose();
+                free(d);
+            }
+            print("    0) Voltar");
+            let op: int = self.escolher(0, len(indices));
+            if (op >= 1) { resultado = grupo[indices[op - 1]]; }
+        }
+        free(indices);
+        return resultado;
+    }
+
+    // ---------------- turno controlado pelo jogador ----------------
+
+    assis turnoHeroi(c: Combatente): void {
+        let feito: bool = false;
+        while (!feito) {
+            if (self.entrada.automatico()) {
+                self.turnoAutomatico(c);
+                feito = true;
+            } else {
+                print("");
+                let cab: Texto = new Texto();
+                cab.adicionar("Turno de ");
+                cab.adicionar(c.nome);
+                cab.adicionar(" (");
+                cab.adicionar(c.classe());
+                cab.adicionar(") - HP ");
+                adicionarFracao(cab, c.hp, c.hpMax);
+                cab.adicionar(" | MP ");
+                adicionarFracao(cab, c.mp, c.mpMax);
+                print(cab.visualizacao());
+                cab.dispose();
+                free(cab);
+                print("  1) Atacar   2) Habilidade   3) Item   4) Defender");
+                let op: int = self.escolher(1, 4);
+                if (op == 1) {
+                    let alvo: Combatente = self.escolherAlvo(self.inimigos, "  Atacar quem?");
+                    if (alvo != null) { c.ataqueBasico(alvo, self.rng); feito = true; }
+                } else if (op == 2) {
+                    feito = self.menuHabilidade(c);
+                } else if (op == 3) {
+                    feito = self.menuItem(c);
+                } else if (op == 4) {
+                    c.guardando = true;
+                    print(c.nome, "assume postura defensiva (dano pela metade até o próximo turno).");
+                    feito = true;
+                }
+            }
+        }
+    }
+
+    assis menuHabilidade(c: Combatente): bool {
+        print("  Habilidades:");
+        for (let i: int = 0; i < len(c.habilidades); i += 1) {
+            let h: Habilidade = c.habilidades[i];
+            let d: Texto = new Texto();
+            d.adicionar("MP ");
+            adicionarNumero(d, h.custo);
+            d.adicionar(" - ");
+            d.adicionar(h.descricao);
+            imprimirOpcao(i + 1, h.nome, d.visualizacao());
+            d.dispose();
+            free(d);
+        }
+        print("    0) Voltar");
+        let op: int = self.escolher(0, len(c.habilidades));
+        if (op < 1) { return false; }
+        let h: Habilidade = c.habilidades[op - 1];
+        if (c.mp < h.custo) { print("  MP insuficiente!"); return false; }
+        let alvo: Combatente = null;
+        if (h.aliada()) { alvo = self.escolherAlvo(self.herois, "  Em quem?"); }
+        else { alvo = self.escolherAlvo(self.inimigos, "  Em quem?"); }
+        if (alvo == null) { return false; }
+        return c.usarHabilidade(h, alvo, self.rng);
+    }
+
+    assis menuItem(c: Combatente): bool {
+        if (self.inv.tipos() == 0) { print("  O inventário está vazio."); return false; }
+        print("  Itens:");
+        for (let i: int = 0; i < self.inv.tipos(); i += 1) {
+            let it: Item = self.inv.obter(i);
+            let d: Texto = new Texto();
+            d.adicionar("[x");
+            adicionarNumero(d, it.quantidade);
+            d.adicionar("] ");
+            d.adicionar(it.descricao);
+            imprimirOpcao(i + 1, it.nome, d.visualizacao());
+            d.dispose();
+            free(d);
+        }
+        print("    0) Voltar");
+        let op: int = self.escolher(0, self.inv.tipos());
+        if (op < 1) { return false; }
+        let it: Item = self.inv.obter(op - 1);
+        let alvo: Combatente = null;
+        if (it.aliado()) { alvo = self.escolherAlvo(self.herois, "  Em quem?"); }
+        else { alvo = self.escolherAlvo(self.inimigos, "  Em quem?"); }
+        if (alvo == null) { return false; }
+        if (it.usar(c, alvo)) {
+            self.inv.consumir(op - 1);
+            return true;
+        }
+        return false;
+    }
+
+    // ---------------- piloto automático dos heróis ----------------
+
+    /// Tenta usar um item aliado útil no alvo. Devolve true se usou.
+    assis itemAutomatico(c: Combatente, alvo: Combatente): bool {
+        for (let i: int = 0; i < self.inv.tipos(); i += 1) {
+            let it: Item = self.inv.obter(i);
+            if (it.aliado() && it.util(alvo)) {
+                if (it.usar(c, alvo)) {
+                    self.inv.consumir(i);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    assis turnoAutomatico(c: Combatente): void {
+        let feito: bool = false;
+        let ferido: Combatente = maisFerido(self.herois);
+
+        // 1) Curar quem está abaixo de 40% de HP (habilidade primeiro, depois item).
+        if (ferido != null && ferido.hp * 100 / ferido.hpMax < 40) {
+            for (let i: int = 0; i < len(c.habilidades); i += 1) {
+                let h: Habilidade = c.habilidades[i];
+                if (!feito && h.aliada() && c.mp >= h.custo) {
+                    feito = c.usarHabilidade(h, ferido, self.rng);
+                }
+            }
+            if (!feito) { feito = self.itemAutomatico(c, ferido); }
+        }
+
+        // 2) Atacar com a melhor habilidade que o MP permitir (65%) ou golpe comum.
+        if (!feito) {
+            let alvo: Combatente = maisFraco(self.inimigos);
+            if (alvo != null) {
+                let melhor: Habilidade = null;
+                for (let i: int = 0; i < len(c.habilidades); i += 1) {
+                    let h: Habilidade = c.habilidades[i];
+                    if (!h.aliada() && c.mp >= h.custo) {
+                        if (melhor == null) { melhor = h; }
+                        else if (h.poder > melhor.poder) { melhor = h; }
+                    }
+                }
+                if (melhor != null && self.rng.chance(65)) {
+                    c.usarHabilidade(melhor, alvo, self.rng);
+                } else {
+                    c.ataqueBasico(alvo, self.rng);
+                }
+            }
+        }
+    }
+
+    // ---------------- laço principal da batalha ----------------
+
+    assis rodada(numero: int): void {
+        print("");
+        print("=== RODADA", numero, "===");
+        self.mostrarCampo();
+        let ordem: Array<Combatente> = self.montarOrdem();
+        for (let i: int = 0; i < len(ordem); i += 1) {
+            let c: Combatente = ordem[i];
+            if (c.vivo() && !self.terminou()) {
+                c.iniciarTurno();
+                if (c.vivo()) {
+                    if (c.controlavel()) {
+                        self.turnoHeroi(c);
+                    } else {
+                        c.agir(self.inimigos, self.herois, self.rng);
+                    }
+                }
+            }
+        }
+        free(ordem);
+    }
+
+    /// Executa a batalha. Devolve true se os heróis venceram.
+    assis executar(): bool {
+        let numero: int = 1;
+        while (!self.terminou()) {
+            self.rodada(numero);
+            numero += 1;
+        }
+        let venceu: bool = contarVivos(self.herois) > 0;
+        print("");
+        if (venceu) {
+            print("*** VITÓRIA! ***");
+            let total: int = 0;
+            for (let i: int = 0; i < len(self.inimigos); i += 1) { total += self.inimigos[i].xpRecompensa(); }
+            for (let i: int = 0; i < len(self.herois); i += 1) {
+                if (self.herois[i].vivo()) { self.herois[i].ganharXp(total); }
+            }
+        } else {
+            print("*** DERROTA... o grupo caiu. ***");
+        }
+        return venceu;
+    }
+
+    /// Libera os inimigos (a batalha é dona deles).
+    assis liberar(): void {
+        for (let i: int = 0; i < len(self.inimigos); i += 1) { self.inimigos[i].liberar(); }
+        free(self.inimigos);
+    }
+}
+
+// ----------------------------------------------------------------------------
+//  PROGRAMA PRINCIPAL
+// ----------------------------------------------------------------------------
+
+assis assis_assis(): int {
+    let entrada: Entrada = new Entrada();
+
+    linha();
+    print("   CRÔNICAS DO ASSIS - um RPG de turnos em AssisScript");
+    linha();
+    print("Três heróis descem à Caverna do Dragão Ancião. Vença 3 batalhas!");
+    print("");
+    print("  1) Jogar     2) Assistir (modo automático)");
+    let modo: int = entrada.lerNumero();
+    if (modo == 2) { entrada.modoAuto = true; }
+    if (modo == -2) { print("(sem entrada: modo automático)"); }
+
+    let semente: int = 0;
+    if (!entrada.fim) {
+        print("Semente do sorteio (um número; 0 ou vazio = aleatória):");
+        semente = entrada.lerNumero();
+    }
+    if (semente <= 0) { semente = agora(); }
+    if (semente <= 0) { semente = 12345; }
+    print("Semente:", semente);
+    let rng: Aleatorio = new Aleatorio(semente);
+
+    let herois: Array<Combatente> = new Array<Combatente>();
+    herois.push(novoGuerreiro("Miyabi"));
+    herois.push(novoMago("Yuri"));
+    herois.push(novoClerigo("Assis"));
+
+    let inv: Inventario = new Inventario();
+    inv.adicionar(new Pocao("Poção", "Restaura 45 de HP", 3));
+    inv.adicionar(new Elixir("Elixir", "Restaura 25 de MP", 1));
+    inv.adicionar(new Antidoto("Antídoto", "Cura veneno", 1));
+    inv.adicionar(new Bomba("Bomba", "35 de dano em um inimigo", 2));
+
+    print("");
+    print("O GRUPO:");
+    for (let i: int = 0; i < len(herois); i += 1) { herois[i].ficha(); }
+
+    let fase: int = 1;
+    let vivo: bool = true;
+    while (vivo && fase <= 3) {
+        print("");
+        linha();
+        if (fase == 1) { print("  BATALHA 1/3 - A entrada da caverna"); }
+        else if (fase == 2) { print("  BATALHA 2/3 - O covil das feras"); }
+        else { print("  BATALHA 3/3 - O salão do Dragão Ancião!"); }
+        linha();
+
+        let inimigos: Array<Combatente> = montarEncontro(fase);
+        print("Inimigos à frente:");
+        for (let i: int = 0; i < len(inimigos); i += 1) { inimigos[i].ficha(); }
+
+        let batalha: Batalha = new Batalha(herois, inimigos, inv, rng, entrada);
+        vivo = batalha.executar();
+        batalha.liberar();
+        free(batalha);
+
+        if (vivo && fase < 3) {
+            print("");
+            print("O grupo descansa um pouco e encontra suprimentos na caverna.");
+            for (let i: int = 0; i < len(herois); i += 1) { herois[i].descansar(); }
+            inv.adicionar(new Pocao("Poção", "Restaura 45 de HP", 1));
+            if (fase == 1) { inv.adicionar(new Antidoto("Antídoto", "Cura veneno", 1)); }
+            if (fase == 2) { inv.adicionar(new Elixir("Elixir", "Restaura 25 de MP", 1)); }
+            print("  (+1 Poção)");
+        }
+        fase += 1;
+    }
+
+    print("");
+    linha();
+    if (vivo) {
+        print("  O Dragão Ancião tombou! A caverna é de vocês. FIM - GLÓRIA AO GRUPO!");
+    } else {
+        print("  FIM DE JOGO. Os heróis serão lembrados... talvez.");
+    }
+    linha();
+    print("Estado final do grupo:");
+    for (let i: int = 0; i < len(herois); i += 1) { herois[i].ficha(); }
+
+    for (let i: int = 0; i < len(herois); i += 1) { herois[i].liberar(); }
+    free(herois);
+    inv.liberar();
+    free(inv);
+    free(rng);
+    entrada.liberar();
+    free(entrada);
+    return 0;
+}

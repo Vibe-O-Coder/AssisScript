@@ -1,10 +1,9 @@
 // Valida configuração JSON de até 1 MiB e substitui uma cópia persistente.
 // Uso: config entrada.json destino.json temporario.json
 // O temporário deve ser novo e estar no mesmo filesystem do destino.
-#yuri <std/json.assis>
-#yuri <std/cli.assis>
-
-safe assis abrir(indice: int, modo: int): own File {
+import "std/json.assis";
+import "std/cli.assis";
+safe fn abrir(indice: int, modo: int): own File {
     unsafe {
         val n: int = arg_size(indice);
         if (n < 0 || n > 16384) { return file_open("", 9); }
@@ -13,7 +12,7 @@ safe assis abrir(indice: int, modo: int): own File {
         return file_open(text(p), modo);
     }
 }
-safe assis concluir(remover: bool): int {
+safe fn concluir(remover: bool): int {
     unsafe {
         val a: int = arg_size(3);val b: int = arg_size(2);
         if (a < 0 || b < 0 || a > 16384 || b > 16384) { return -1; }
@@ -24,7 +23,7 @@ safe assis concluir(remover: bool): int {
         return file_replace(text(origem), text(destino));
     }
 }
-safe assis assis_assis(): int {
+safe fn main(): int {
     if (arg_count() != 4) { print("Uso: config entrada destino temporario-novo");return 64; }
     own entrada: File = abrir(1, 0);
     if (entrada == null) { print("Erro de abertura", io_error());return 1; }

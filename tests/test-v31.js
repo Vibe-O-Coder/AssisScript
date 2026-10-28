@@ -9,10 +9,10 @@ const root = path.resolve(__dirname, '..');
 const compiler = process.env.ASSIS_BIN || path.join(root, 'bin', process.platform === 'win32' ? 'assis.exe' : 'assis');
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'assis-v31-'));
 after(() => { assert(path.dirname(temp) === path.resolve(os.tmpdir()) && path.basename(temp).startsWith('assis-v31-')); fs.rmSync(temp, { recursive: true, force: true }); });
-function run(args) { const r = spawnSync(compiler, args, { encoding: 'utf8', timeout: 30000, windowsHide: true }); assert.ifError(r.error); return r; }
+function run(args) { if (["build","run","check","doc","test","lock","ir"].includes(args[0]) && !args.includes("--safe") && !args.includes("--legacy")) args = [...args, "--legacy"]; const r = spawnSync(compiler, args, { encoding: 'utf8', timeout: 30000, windowsHide: true }); assert.ifError(r.error); return r; }
 function source(text) { const file = path.join(temp, 'main.assis'); fs.writeFileSync(file, text); return file; }
 function execute(imports, body, expected = '') {
-    const file = source(imports.map(lib => `#yuri <std/${lib}.assis>`).join('\n') + `\nassis assis_assis(): int { ${body}\nreturn 0; }`);
+    const file = source(imports.map(lib => `import "std/${lib}.assis";`).join('\n') + `\nfn main(): int { ${body}\nreturn 0; }`);
     if (process.env.ASSIS_FIXTURE_DIR) {
         const directory = path.resolve(process.env.ASSIS_FIXTURE_DIR); fs.mkdirSync(directory, {recursive:true});
         const name = String(execute.fixture = (execute.fixture || 0) + 1).padStart(3, '0');
@@ -87,22 +87,22 @@ test('otimizador: aritmética int64 confrontada com BigInt e ordem dos efeitos',
     }
     body += 'let n: int = 0; let p: *int = &n; n += 3; *p *= 8; assert(n == 24); let b: byte = byte(255); b += 2; assert(b == 1); assert((-0x8000_0000_0000_0000 / -1) == -0x8000_0000_0000_0000);';
     execute([], body);
-    const file = source('assis alterar(p: *int): int { *p = 10; return 2; } assis assis_assis(): int { let n: int = 3; n += alterar(&n); assert(n == 5); return 0; }');
+    const file = source('fn alterar(p: *int): int { *p = 10; return 2; } fn main(): int { let n: int = 3; n += alterar(&n); assert(n == 5); return 0; }');
     for (const flags of [[], ['--no-opt']]) assert.equal(run(['run', file, ...flags]).status, 0);
 });
 test('diagnósticos incluem ajuda e intervalo UTF-16; ponteiros de strings exigem tipos corretos', () => {
-    const r = run(['check', source('assis assis_assis(): int { let errado: int = true; return 0; }'), '--diagnostics=json']);
+    const r = run(['check', source('fn main(): int { let errado: int = true; return 0; }'), '--diagnostics=json']);
     assert.equal(r.status, 1); const d = JSON.parse(r.stderr); assert.equal(d.code, 'A001'); assert(d.endColumn > d.column); assert.match(d.hint, /tipos/); assert.equal(d.severity, 'error');
-    for (const expr of ['text(1)', 'bytes(12)']) assert.equal(run(['check', source(`assis assis_assis(): int { ${expr}; return 0; }`)]).status, 1);
+    for (const expr of ['text(1)', 'bytes(12)']) assert.equal(run(['check', source(`fn main(): int { ${expr}; return 0; }`)]).status, 1);
 });
 test('funções com quadro grande podem chamar antes de inicializar variáveis locais', () => {
     const declarations = Array.from({length: 6000}, (_, i) => `let local_${i}: int = ${i};`).join('\n');
     execute([], `print("pilha valida"); ${declarations} assert(local_5999 == 5999);`, 'pilha valida\n');
 });
 test('assert aceita mensagem e só a avalia na falha', () => {
-    const file = source('assis mensagem(): text { print("efeito indevido"); return "contexto"; } assis assis_assis(): int { assert(true, mensagem()); return 0; }');
+    const file = source('fn mensagem(): text { print("efeito indevido"); return "contexto"; } fn main(): int { assert(true, mensagem()); return 0; }');
     const success = run(['run', file]); assert.equal(success.status, 0, success.stderr); assert.equal(success.stdout, '');
-    const r = run(['run', source('assis assis_assis(): int { assert(false, "estoque insuficiente"); return 0; }')]);
+    const r = run(['run', source('fn main(): int { assert(false, "estoque insuficiente"); return 0; }')]);
     assert.equal(r.status, 70); assert.match(r.stderr, /estoque insuficiente/); assert.match(r.stderr, /assert/);
 });
 test('exemplos de aplicação produzem relatório e transporte binário corretos', () => {
@@ -120,8 +120,8 @@ test('instalação: núcleo obrigatório, seleção de opcionais e remoção iso
             assert.equal(fs.existsSync(path.join(prefix, 'stdlib', lib.name + '.assis')), lib.required || optional.includes(lib.name), lib.name);
             assert(fs.existsSync(path.join(prefix, 'docs', lib.doc)));
         }
-        const app = source('#yuri <std/convert.assis>\nassis assis_assis(): int { let r: IntResult = parse_int("42"); assert(r.ok && r.value == 42); free(r); return 0; }');
-        const checked = spawnSync(path.join(prefix, 'bin/assis.exe'), ['run', app], {encoding:'utf8', timeout:20000, windowsHide:true}); assert.ifError(checked.error); assert.equal(checked.status, 0, checked.stderr);
+        const app = source('import "std/convert.assis";\nfn main(): int { let r: IntResult = parse_int("42"); assert(r.ok && r.value == 42); free(r); return 0; }');
+        const checked = spawnSync(path.join(prefix, 'bin/assis.exe'), ['run', app, '--legacy'], {encoding:'utf8', timeout:20000, windowsHide:true}); assert.ifError(checked.error); assert.equal(checked.status, 0, checked.stderr);
         fs.writeFileSync(path.join(prefix, 'pessoal.txt'), 'preservar');
         assert.equal(setupRun(['uninstall', '--prefix', prefix, '--no-path', '--no-associations']).status, 0);
         assert(fs.existsSync(path.join(prefix, 'pessoal.txt'))); assert(!fs.existsSync(path.join(prefix, 'stdlib')));

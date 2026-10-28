@@ -1,6 +1,6 @@
 {
-  "version": "3.3.0-alpha.10",
-  "date": "26/10/2026",
+  "version": "3.3.0-alpha.15",
+  "date": "28/10/2026",
   "scope": "Conclusão do plano de evolução das fases 0–6, incluindo a trilha funcional e as aplicações A/B/C. Não inclui construir o navegador, HTDL, estilos ou motor de busca.",
   "phases": [
     {
@@ -12,8 +12,8 @@
           "id": "P0-BASE",
           "name": "Baseline, hashes e reconstrução local comparável",
           "status": "complete",
-          "evidence": "VALIDACAO-3.3-ALPHA.10.md",
-          "notes": "Estado alpha.9 preservado em commit Git antes das mudanças; reconstrução limpa da entrega atual."
+          "evidence": "HANDOFF-3.3-ALPHA.15.md",
+          "notes": "Baseline alpha.14 e patch rastreado preservados; três runtimes regenerados em árvores limpas; compiladores Windows/Linux idênticos aos testados na alpha.15."
         },
         {
           "id": "P0-PRIV",
@@ -24,9 +24,9 @@
         {
           "id": "P0-SAFE",
           "name": "Fronteira safe/unsafe obrigatória e garantias para text externo",
-          "status": "partial",
-          "evidence": "OWNERSHIP-FUNCOES.md",
-          "notes": "Perfil safe exige fronteira unsafe; migração global e text externo permanecem abertos."
+          "status": "complete",
+          "evidence": "SAFE-DEFAULT.md",
+          "notes": "Entrada safe por padrão; --legacy explícito. Chamadas legadas/text C externo exigem unsafe; assinaturas/recursos safe recusam text sem vida. Reentrada em inicializadores gerenciados rejeitada."
         },
         {
           "id": "P0-FLOW",
@@ -38,9 +38,9 @@
         {
           "id": "P0-CI",
           "name": "Matriz adversa contínua Windows/Linux e inventário técnico",
-          "status": "partial",
+          "status": "complete",
           "evidence": "PROCEDENCIA.md",
-          "notes": "Matriz acionada no GitHub e falhas iniciais de ambiente corrigidas; inventário completo dos componentes dos binários ainda parcial."
+          "notes": "29 suítes nativas locais Windows/Linux e inventário real dos três binários atualizados; CI remota alpha.13 não executada nesta sessão. Direitos de imagens ficam em P6-POLICY."
         }
       ]
     },
@@ -112,14 +112,14 @@
           "name": "Layout por valor, contratos Copy/Move e dados imutáveis",
           "status": "complete",
           "evidence": "VALORES-E-VARIANTES.md",
-          "notes": "Layout Copy inline imutável, cópias em chamadas/retornos/coleções e contrato separado Move para recursos own. Campos Move inline são rejeitados."
+          "notes": "Copy inline imutável e Move explícito para recursos. Enums com payload own usam invólucro no heap e destruição por tag; registros Move inline não são suportados."
         },
         {
           "id": "P2-ADT",
           "name": "Variantes, Result/Option, matching e capturas verificadas",
-          "status": "partial",
-          "evidence": "VALORES-E-VARIANTES.md",
-          "notes": "Enums genéricos Copy, matching exaustivo, Option/Result; capturas/closures e variantes Move continuam pendentes."
+          "status": "complete",
+          "evidence": "CAPTURAS-E-VARIANTES-MOVE.md",
+          "notes": "Enums Copy inline e Move próprios, matching exaustivo emprestado/consumidor; closures safe val/own/borrow com vidas lexicais e reduce_with. Sem Move inline, closures pure, captura borrow mut ou adaptação para ABI C."
         }
       ]
     },
@@ -173,8 +173,9 @@
         {
           "id": "P4-FFI",
           "name": "ABI C/FFI com recursos e callbacks externos",
-          "status": "pending",
-          "evidence": "PLANO-EVOLUCAO-E-HANDOFF.md"
+          "status": "complete",
+          "evidence": "FFI-C.md",
+          "notes": "ABI C escalar em Windows/Linux, callbacks síncronos, dependências explícitas e handles com drop. Agregados C por valor e callbacks em threads externas não são suportados."
         },
         {
           "id": "P4-EVENT",
@@ -186,21 +187,23 @@
         {
           "id": "P4-NET",
           "name": "Rede, DNS e HTTP/TLS com limites e aplicação B",
-          "status": "pending",
-          "evidence": "PLANO-EVOLUCAO-E-HANDOFF.md"
+          "status": "complete",
+          "evidence": "BIBLIOTECA-net.md",
+          "notes": "HTTP(S)/DNS assíncrono pelo cliente net, polling/cancelamento cooperativos, múltiplas requisições, limites e TLS com confiança isolada/certificado não confiado/hostname divergente. Aplicação B com cancelamento; dependência opcional libcurl nos dois sistemas, sem servidor HTTP ou resolvedor público."
         },
         {
           "id": "P4-STORE",
           "name": "Persistência, processos e IPC com aplicação C",
-          "status": "partial",
-          "evidence": "EVENTOS-E-PERSISTENCIA.md",
-          "notes": "Persistência nativa, criação exclusiva, sync/substituição e configuração reaberta após reinício. Processos/IPC, serviço C completo e durabilidade por queda de energia pendentes."
+          "status": "complete",
+          "evidence": "BIBLIOTECA-process.md",
+          "notes": "Persistência, processos/pipes, supervisão de grupo/job, locks liberados pelo OS e serviço C com reinício/corrupção/erro de commit. Sem durabilidade por queda de energia."
         },
         {
           "id": "P4-SOAK",
           "name": "Concorrência definida e validação prolongada de 24 horas",
-          "status": "pending",
-          "evidence": "PLANO-EVOLUCAO-E-HANDOFF.md"
+          "status": "complete",
+          "evidence": "HANDOFF-3.3-ALPHA.15.md",
+          "notes": "24 horas reais aprovadas em Windows e Linux/WSL2: quatro serviços por sistema, polling e intervalo de 1s; 342519/345056 rodadas, falhas HTTP e cancelamentos esperados, memória/handles controlados e recuperação dos oito contadores. Compiladores e fontes conferidos; carga declarada, sem alegação de throughput máximo."
         }
       ]
     },
@@ -213,22 +216,22 @@
           "id": "P5-IR",
           "name": "Frontend separado e IR tipada com fluxo/efeitos",
           "status": "partial",
-          "evidence": "RECURSOS-E-FATIAS.md",
-          "notes": "Lexer/frontend separados da emissão; HIR tipada com blocos, efeitos, sucessores e DCE conservadora. Expressões ainda AST; sem SSA/backend por IR completo."
+          "evidence": "BACKEND-ALPHA15.md",
+          "notes": "CFG tipada e ScalarIR independente de AST para expressões escalares, casts e chamadas globais; emissão nativa e referência AST --no-opt. Instruções, recursos, endereços e condições otimizadas ainda usam AST; migração integral permanece aberta."
         },
         {
           "id": "P5-OPT",
           "name": "Otimizações comprovadas, TCO, intervalos e alocação de registradores",
-          "status": "partial",
-          "evidence": "OPTIMIZATION-ALPHA.10.md",
-          "notes": "Hash inteiro/alocação corrigidos; salvamento seletivo, ponderação por laço, imediatos/LEA, inlining escalar e prova conservadora de bounds. Alocação global, métodos e otimização ampla continuam abertos."
+          "status": "complete",
+          "evidence": "BACKEND-ALPHA15.md",
+          "notes": "Liveness global com ponto fixo/coloração e reutilização dos quatro registradores preservados, exclusão de locais endereçados, fallback limitado; intervalos em laços diretos/reversos com offsets e chamadas pure. Equivalência/adversos Windows/Linux e comparação com alpha.14; sem alegação de otimalidade do alocador."
         },
         {
           "id": "P5-ABI",
           "name": "ABI documentada e validada para interfaces e retornos compostos",
-          "status": "partial",
-          "evidence": "ABI-NATIVA.md",
-          "notes": "ABI interna LVS1, cópia/retornos compostos e adaptadores OS documentados e validados. ABI C pública, FFI e callbacks externos pendentes."
+          "status": "complete",
+          "evidence": "FFI-C.md",
+          "notes": "LVS2 preservada e ABI C escalar pública delimitada, registradores mistos/pilha/retornos/callbacks validados contra biblioteca C independente; agregados C por valor são rejeitados."
         },
         {
           "id": "P5-DEBUG",
@@ -254,8 +257,8 @@
           "id": "P6-INSTALL",
           "name": "Instalação, atualização e remoção offline preservam dados",
           "status": "complete",
-          "evidence": "VALIDACAO-3.3-ALPHA.10.md",
-          "notes": "Catálogo/instaladores sincronizados com 16 bibliotecas e preservação de dados."
+          "evidence": "HANDOFF-3.3-ALPHA.15.md",
+          "notes": "Catálogo com 20 bibliotecas, 259 caminhos obrigatórios, instaladores/versão e lockfile sincronizados; perfis mínimo/completo e preservação de dados exercitados pelos harnesses."
         },
         {
           "id": "P6-TOOLS",
@@ -268,21 +271,22 @@
           "id": "P6-RELEASE",
           "name": "Pacotes coerentes e reconstrução local limpa reproduzível",
           "status": "complete",
-          "evidence": "VALIDACAO-3.3-ALPHA.10.md",
-          "notes": "Pacotes e reconstrução da entrega atual."
+          "evidence": "HANDOFF-3.3-ALPHA.15.md",
+          "notes": "Reconstruções limpas com binários idênticos Windows/Linux; ZIP/VSIX e compiladores extraídos verificados na alpha.15. Entrega local, sem tag ou publicação remota."
         },
         {
           "id": "P6-POLICY",
           "name": "Licença/procedência resolvidas e política de suporte/compatibilidade",
           "status": "partial",
           "evidence": "PROCEDENCIA.md",
-          "notes": "Licença CC BY-NC-SA escolhida pelo responsável, suporte/compatibilidade e avisos Windows publicados; direitos de imagens e auditoria completa de componentes ainda abertos."
+          "notes": "Licença escolhida pelo responsável e avisos publicados; inventário técnico de ligação concluído na alpha.12. Direitos de imagens e revisão dos termos/fontes de redistribuição continuam abertos."
         },
         {
           "id": "P6-ACCEPT",
           "name": "Terceiro instala, depura e distribui aplicações A/B/C pelo manual",
           "status": "pending",
-          "evidence": "PLANO-EVOLUCAO-E-HANDOFF.md"
+          "evidence": "ACEITE-RELATO-USUARIO-2026-10-28.md",
+          "notes": "Relato recebido em 28/10/2026: responsável compilou e executou programas próprios (Hello World, dobrar, arrays own/borrow e funções pure) em outros computadores Windows/Linux, aproximadamente na alpha.6 segundo sua lembrança. Versão exata/pacote não informados; evidência histórica do núcleo, sem aceite da distribuição atual ou de depuração/distribuição A/B/C por terceiro. Pontuação e estados históricos preservados."
         }
       ]
     }
@@ -581,6 +585,257 @@
         "P6-ACCEPT": "pending"
       },
       "retrospective": false
+    },
+    {
+      "version": "3.3.0-alpha.11",
+      "note": "FFI/callbacks/destrutores, HTTP B e processos/IPC/persistência C. Rede e ensaio prolongado permanecem parciais, sem substituir 24 horas por teste curto.",
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "partial",
+        "P0-FLOW": "complete",
+        "P0-CI": "partial",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "complete",
+        "P2-VALUE": "complete",
+        "P2-ADT": "partial",
+        "P3-TEXT": "complete",
+        "P3-NUM": "complete",
+        "P3-IO": "complete",
+        "P3-LIB": "complete",
+        "P3-PKG": "complete",
+        "P4-FFI": "complete",
+        "P4-EVENT": "complete",
+        "P4-NET": "partial",
+        "P4-STORE": "complete",
+        "P4-SOAK": "partial",
+        "P5-IR": "partial",
+        "P5-OPT": "partial",
+        "P5-ABI": "complete",
+        "P5-DEBUG": "complete",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "complete",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "partial",
+        "P6-ACCEPT": "pending"
+      },
+      "retrospective": false
+    },
+    {
+      "version": "3.3.0-alpha.12",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "complete",
+        "P0-FLOW": "complete",
+        "P0-CI": "complete",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "complete",
+        "P2-VALUE": "complete",
+        "P2-ADT": "partial",
+        "P3-TEXT": "complete",
+        "P3-NUM": "complete",
+        "P3-IO": "complete",
+        "P3-LIB": "complete",
+        "P3-PKG": "complete",
+        "P4-FFI": "complete",
+        "P4-EVENT": "complete",
+        "P4-NET": "complete",
+        "P4-STORE": "complete",
+        "P4-SOAK": "partial",
+        "P5-IR": "partial",
+        "P5-OPT": "partial",
+        "P5-ABI": "complete",
+        "P5-DEBUG": "complete",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "complete",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "partial",
+        "P6-ACCEPT": "pending"
+      }
+    },
+    {
+      "version": "3.3.0-alpha.13",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "complete",
+        "P0-FLOW": "complete",
+        "P0-CI": "complete",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "complete",
+        "P2-VALUE": "complete",
+        "P2-ADT": "complete",
+        "P3-TEXT": "complete",
+        "P3-NUM": "complete",
+        "P3-IO": "complete",
+        "P3-LIB": "complete",
+        "P3-PKG": "complete",
+        "P4-FFI": "complete",
+        "P4-EVENT": "complete",
+        "P4-NET": "complete",
+        "P4-STORE": "complete",
+        "P4-SOAK": "partial",
+        "P5-IR": "partial",
+        "P5-OPT": "partial",
+        "P5-ABI": "complete",
+        "P5-DEBUG": "complete",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "complete",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "partial",
+        "P6-ACCEPT": "pending"
+      }
+    },
+    {
+      "version": "3.3.0-alpha.14",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "complete",
+        "P0-FLOW": "complete",
+        "P0-CI": "complete",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "complete",
+        "P2-VALUE": "complete",
+        "P2-ADT": "complete",
+        "P3-TEXT": "complete",
+        "P3-NUM": "complete",
+        "P3-IO": "complete",
+        "P3-LIB": "complete",
+        "P3-PKG": "complete",
+        "P4-FFI": "complete",
+        "P4-EVENT": "complete",
+        "P4-NET": "complete",
+        "P4-STORE": "complete",
+        "P4-SOAK": "partial",
+        "P5-IR": "partial",
+        "P5-OPT": "partial",
+        "P5-ABI": "complete",
+        "P5-DEBUG": "complete",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "complete",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "partial",
+        "P6-ACCEPT": "pending"
+      },
+      "note": "Language usability review; unchanged roadmap credit."
+    },
+    {
+      "version": "3.3.0-alpha.15",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "complete",
+        "P0-FLOW": "complete",
+        "P0-CI": "complete",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "complete",
+        "P2-VALUE": "complete",
+        "P2-ADT": "complete",
+        "P3-TEXT": "complete",
+        "P3-NUM": "complete",
+        "P3-IO": "complete",
+        "P3-LIB": "complete",
+        "P3-PKG": "complete",
+        "P4-FFI": "complete",
+        "P4-EVENT": "complete",
+        "P4-NET": "complete",
+        "P4-STORE": "complete",
+        "P4-SOAK": "partial",
+        "P5-IR": "partial",
+        "P5-OPT": "complete",
+        "P5-ABI": "complete",
+        "P5-DEBUG": "complete",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "complete",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "partial",
+        "P6-ACCEPT": "pending"
+      },
+      "note": "Retomada do plano: ScalarIR parcial; P5-OPT concluído no contrato delimitado, +1 ponto. Ensaio de 24 horas e aceite independente não presumidos."
+    },
+    {
+      "version": "3.3.0-alpha.15",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "complete",
+        "P0-FLOW": "complete",
+        "P0-CI": "complete",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "complete",
+        "P2-VALUE": "complete",
+        "P2-ADT": "complete",
+        "P3-TEXT": "complete",
+        "P3-NUM": "complete",
+        "P3-IO": "complete",
+        "P3-LIB": "complete",
+        "P3-PKG": "complete",
+        "P4-FFI": "complete",
+        "P4-EVENT": "complete",
+        "P4-NET": "complete",
+        "P4-STORE": "complete",
+        "P4-SOAK": "complete",
+        "P5-IR": "partial",
+        "P5-OPT": "complete",
+        "P5-ABI": "complete",
+        "P5-DEBUG": "complete",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "complete",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "partial",
+        "P6-ACCEPT": "pending"
+      },
+      "note": "P4-SOAK +1,5 ponto após os dois ensaios reais de 86400 segundos qualificados e conferidos. Demais estados e pesos preservados.",
+      "milestone": "24 horas aprovadas, 28/10/2026"
     }
   ]
 }

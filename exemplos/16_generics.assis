@@ -1,13 +1,16 @@
 /// Identidade escalar pura, especializada por tipo concreto.
-pure assis identidade<T>(value: T): T { return value; }
+pure fn identidade<T>(value: T): T { return value; }
 
 struct Caixa<T> { let value: T; }
 struct Par<A, B> { let primeiro: A; let segundo: B; }
 
-assis assis_assis(): int {
+safe fn main(): int {
+    unsafe {
     own numero: Caixa<int> = new Caixa<int>(identidade::<int>(42));
     own mensagem: Caixa<text> = new Caixa<text>("Assis");
     own par: Par<byte, bool> = new Par<byte, bool>(identidade::<byte>(byte(7)), true);
     print(numero.value, mensagem.value, par.primeiro, par.segundo);
     return 0;
+
+    }
 }

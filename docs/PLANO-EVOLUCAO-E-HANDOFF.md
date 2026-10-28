@@ -1,4 +1,24 @@
+> Continuação atual — alpha.16: a revisão retomada em 28/10/2026 auditou a
+> alpha.15 e preservou as alterações locais. O bloqueio de acesso às pastas
+> temporárias foi resolvido na revalidação com acesso normal: os 10 testes de
+> backend passaram, sem alteração do compilador ou pontos novos. Há um
+> [guia para a publicação experimental de testes](TESTES-GITHUB.md). A alpha.15 continua em
+> 94/100 até que IR integral, novos alvos, política de distribuição e aceite
+> independente tenham evidência válida. [Handoff](HANDOFF-3.3-ALPHA.16.md).
+
+> Continuação anterior — alpha.15: o usuário solicitou retomar a evolução até o
+> máximo verificável do plano. A revisão alpha.14 foi preservada como base.
+> [Handoff atual](HANDOFF-3.3-ALPHA.15.md) · [backend e análise](BACKEND-ALPHA15.md).
+
 # AssisScript — plano de evolução e passagem para a próxima instância
+
+**Continuação atual — 3.3.0-alpha.15: 94% (94/100 pontos), 28/10/2026.** IR escalar independente de AST, reutilização global de registradores e intervalos diretos/reversos com offsets. P5-OPT +1 ponto e P4-SOAK +1,5 após aprovação das 24 horas Windows/Linux; IR integral e os gates externos continuam abertos. [Handoff e resultado das 24 horas](HANDOFF-3.3-ALPHA.15.md), [validação](VALIDACAO-ALPHA15.json), [restante](RESTANTE-PARA-100.md).
+
+**Histórico — 3.3.0-alpha.13: 92% (91,5/100 pontos).** Closures safe com capturas val/own/borrow, ambientes gerenciados, variantes Move, resultados próprios e pipelines com capturas. [Handoff](HANDOFF-3.3-ALPHA.13.md), [validação](VALIDACAO-3.3-ALPHA.13.md), [restante para 100%](RESTANTE-PARA-100.md). Entradas seguintes são históricas.
+
+**Continuação atual — 3.3.0-alpha.12: 90% (89,5/100 pontos, arredondamento original).** Safe padrão/compatibilidade explícita, rede HTTP(S) cooperativa/cancelável, inventário de ligação reproduzível e testes adversos. 100% permanece aberto: capturas/variantes Move, 24 horas, backend/novos alvos, direitos de imagens e aceite independente. [Handoff](HANDOFF-3.3-ALPHA.12.md), [validação](VALIDACAO-3.3-ALPHA.12.md), [progresso](PROGRESSO.md). Entradas seguintes são históricas.
+
+**Continuação atual — 3.3.0-alpha.11: 85% (85/100 pontos).** FFI C/callbacks/destrutores, HTTP(S) limitado, processos/IPC e aplicações B/C. Rede e ensaio prolongado permanecem parciais; alvo de 90–100% ainda aberto. [Handoff](HANDOFF-3.3-ALPHA.11.md), [validação](VALIDACAO-3.3-ALPHA.11.md), [progresso](PROGRESSO.md). Entradas seguintes são históricas.
 
 **Continuação atual — 3.3.0-alpha.10: 77% (76,5/100 pontos).** Otimizações medidas, prova conservadora de bounds, sintaxe/APIs canônicas em inglês, READMEs em três idiomas, licença selecionada e política de suporte. P6-POLICY avança somente a parcial; recursos maiores e a meta de 90–100% permanecem abertos. [Handoff](HANDOFF-3.3-ALPHA.10.md), [validação](VALIDACAO-3.3-ALPHA.10.md), [migração](ENGLISH-API.md), [progresso](PROGRESSO.md). Entradas seguintes são históricas.
 
@@ -12,7 +32,7 @@
 
 Data: 24/10/2026. Base examinada: AssisScript 3.2.0, Windows/Linux x86_64.
 
-**Atualização de execução, 24/10/2026:** implementação iniciada a pedido do usuário. A direção adotada é **programação funcional**, com compatibilidade transitória para o núcleo imperativo existente. A versão experimental 3.3.0-alpha.1 corrige B01 e acrescenta `private`, `val` e funções escalares `pure assis`. O [relatório da alpha.1](HANDOFF-3.3-ALPHA.md) preserva o escopo e a validação daquela entrega. As fases abaixo continuam sendo o plano completo; não estão todas concluídas.
+**Atualização de execução, 24/10/2026:** implementação iniciada a pedido do usuário. A direção adotada é **programação funcional**, com compatibilidade transitória para o núcleo imperativo existente. A versão experimental 3.3.0-alpha.1 corrige B01 e acrescenta `private`, `val` e funções escalares `pure fn`. O [relatório da alpha.1](HANDOFF-3.3-ALPHA.md) preserva o escopo e a validação daquela entrega. As fases abaixo continuam sendo o plano completo; não estão todas concluídas.
 
 **Continuação, 24/10/2026 — 3.3.0-alpha.2:** primeiro incremento da fase 1 implementado: identidades DefId/TypeId, aplicações de tipo estruturadas, templates AST de funções/structs, cache/fila de especialização transitiva, limites de expansão e verificação concreta de tipos/pureza/ownership. Contratos em [GENERICS.md](GENERICS.md); estado e operação em [HANDOFF-3.3-ALPHA.2.md](HANDOFF-3.3-ALPHA.2.md). A fase 1 completa e F1 continuam abertas: faltam classes genéricas, tipos de função com efeitos, funções como valores e migração integral dos corpos das coleções. Não avançar a classificação de prontidão geral por esta entrega.
 
@@ -62,7 +82,7 @@ As suítes completas **não foram repetidas neste turno de planejamento**. O reg
 Estes trechos foram submetidos apenas a `check --stdin`; ambos foram aceitos:
 
 ```assis
-assis assis_assis(): int {
+fn main(): int {
     own a: Array<int> = [1];
     a._length = 999999;
     return 0;
@@ -70,7 +90,7 @@ assis assis_assis(): int {
 ```
 
 ```assis
-assis assis_assis(): int {
+fn main(): int {
     own a: Array<int> = [1];
     print(a._data[999999]);
     return 0;
@@ -108,7 +128,7 @@ Pontos de inspeção: `src/assisc.c`, funções `find_field`, `check_expr`/`N_ME
 | Formatador, LSP, ARM e macOS | Pendente | Incrementos separados, após contratos fundamentais |
 | Organização e distribuição | Parcial | Há headers separados e exclusão de build no pacote; frontend segue concentrado em assisc.c |
 
-`div { ... }` permanece um bloco lexical e uma referência cultural ao Assis. Sua existência não implica implementação de HTML ou HTDL.
+`{ ... }` permanece um bloco lexical e uma referência cultural ao Assis. Sua existência não implica implementação de HTML ou HTDL.
 
 ## 4. Bibliotecas atuais: avaliação
 
@@ -152,11 +172,11 @@ Não iniciar todas as frentes ao mesmo tempo. As fases são ordenadas por depend
 
 | Etapa | Dependências | Entrega e aceitação | Estado |
 | --- | --- | --- | --- |
-| F0 — vínculos e pureza escalar | Encapsulamento da fase 0 | `val`, parâmetros puros imutáveis, `pure assis`, proibição transitiva de IO/ponteiros/alocação; composição e recursão em Windows/Linux | Implementada na alpha; ver limites no manual funcional |
+| F0 — vínculos e pureza escalar | Encapsulamento da fase 0 | `val`, parâmetros puros imutáveis, `pure fn`, proibição transitiva de IO/ponteiros/alocação; composição e recursão em Windows/Linux | Implementada na alpha; ver limites no manual funcional |
 | F1 — tipos e funções de ordem superior | Representação estruturada e especialização da fase 1 | Tipo de função com efeitos na assinatura; passar, retornar e compor funções; map/filter/fold tipados; callbacks puros não aceitam função com efeitos | Núcleo na alpha.3; mecanismos da fase 1 na alpha.5; APIs gerenciadas map_own/filter_own/fold_borrow integram F1 na alpha.6; alpha.7 amplia a valores Copy |
-| F2 — dados algébricos e valores imutáveis | Ownership e layout da fase 2 | Enums/variantes, matching exaustivo, Result/Option e registros por valor; construir novo valor sem modificar o original; cópia/move explícitos | Núcleo Copy por valor, variantes e matching na alpha.7; variantes Move e recursos gerais pendentes |
-| F3 — capturas e coleções funcionais | F1/F2 e análise de vidas | Closures com captura por valor/move/borrow verificada; iteradores e pipelines, compartilhamento imutável ou estruturas persistentes com custo medido | Pendente |
-| F4 — efeitos e otimização | Aplicações A/B/C e backend | Fronteira explícita para IO/FFI/rede; composição preserva ordem dos efeitos; eliminação de recursão de cauda e fusão somente com provas e comparação | Parcial: IO e TCO direto pure na alpha.7; FFI/rede, fusão e aplicações B/C pendentes |
+| F2 — dados algébricos e valores imutáveis | Ownership e layout da fase 2 | Enums/variantes, matching exaustivo, Result/Option e registros por valor; construir novo valor sem modificar o original; cópia/move explícitos | Copy na alpha.7; variantes Move próprias com matching emprestado/consumidor na alpha.13 |
+| F3 — capturas e coleções funcionais | F1/F2 e análise de vidas | Closures com captura por valor/move/borrow verificada; iteradores e pipelines, compartilhamento imutável ou estruturas persistentes com custo medido | Alpha.13: capturas explícitas, borrow lexical compartilhado, reduce_with sem intermediários e custo medido; sem estruturas persistentes novas |
+| F4 — efeitos e otimização | Aplicações A/B/C e backend | Fronteira explícita para IO/FFI/rede; composição preserva ordem dos efeitos; eliminação de recursão de cauda e fusão somente com provas e comparação | Parcial: IO/TCO, FFI/rede e aplicações B/C entregues; backend/otimização amplos e 24 horas continuam abertos |
 
 Não usar `pure` como simples dica ao otimizador: um corpo com efeitos deve ser rejeitado mesmo quando não é chamado ou o efeito está num ramo inalcançável. Pureza não garante término, ausência de divisão por zero ou de estouro de pilha. A alpha.1 restringiu funções puras a int/byte/bool; a alpha.3 acrescenta funções pure sem captura com contrato recursivo. Text emprestado e objetos mutáveis continuam excluídos antes de resolver suas vidas. A mutação de acumuladores escalares locais é permitida e não escapa da função; o estilo novo recomenda `val` sempre que não houver atualização.
 
@@ -177,7 +197,7 @@ Implementar funções e structs/classes genéricas do usuário por **monomorfiza
 **Sintaxe implementada para funções e structs na alpha.2, ainda não suportada na 3.2:**
 
 ```assis
-assis identidade<T>(valor: T): T { return valor; }
+fn identidade<T>(valor: T): T { return valor; }
 struct Caixa<T> { let valor: T; }
 
 // Chamada explícita, para não confundir com comparações < e >:

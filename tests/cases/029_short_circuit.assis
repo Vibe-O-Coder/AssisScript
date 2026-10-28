@@ -1,13 +1,13 @@
 
-            assis Assis_Fodase(AssisAssis: *AssIs): FodAsE {
-                *AssisAssis += 1; Fodase aSsIs;
+            fn Assis_Fodase(AssisAssis: *int): bool {
+                *AssisAssis += 1; return true;
             }
         
-assis assis_assis(): AssIs {
+fn main(): int {
 
-            Assis AssisAssis: AssIs = 0;
-            FODASE(fOdAsE && Assis_Fodase(&AssisAssis), aSsIs || Assis_Fodase(&AssisAssis), AssisAssis);
-            FODASE(aSsIs && Assis_Fodase(&AssisAssis), fOdAsE || Assis_Fodase(&AssisAssis), AssisAssis);
+            let AssisAssis: int = 0;
+            print(false && Assis_Fodase(&AssisAssis), true || Assis_Fodase(&AssisAssis), AssisAssis);
+            print(true && Assis_Fodase(&AssisAssis), false || Assis_Fodase(&AssisAssis), AssisAssis);
         
-Fodase 0;
+return 0;
 }

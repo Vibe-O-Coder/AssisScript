@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">AssisScript — arquivo-fonte, proposta 1</title>
+  <desc id="desc">Chaves de código em verde e barra laranja sobre um quadrado escuro arredondado.</desc>
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="#101e2e" stroke="#31465c" stroke-width="2"/>
+  <polyline points="100,78 86,78 78,86 78,110 62,128 78,146 78,170 86,178 100,178" fill="none" stroke="#75e8bc" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+  <polyline points="156,78 170,78 178,86 178,110 194,128 178,146 178,170 170,178 156,178" fill="none" stroke="#75e8bc" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+  <line x1="140" y1="105" x2="116" y2="151" stroke="#ffbb70" stroke-width="12" stroke-linecap="round"/>
+</svg>

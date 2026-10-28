@@ -1,6 +1,27 @@
 /* Module names bind AST identities before generic specialization. */
 typedef struct {Token *token;char *local,*qualified;bool exported,type;} ModuleSymbol;
 static Vec module_symbols;
+/* Platform branches contain declarations, without nested platform/namespace. */
+static void scan_platforms(void){
+    Vec out={0};int depth=0;
+    for(int i=0;i<tokens.n;i++){
+        Token *t=tokens.v[i];
+        if(t->kind==T_PLATFORM){
+            if(depth)error(t,"platform só aceita declarações no nível do módulo");
+            if(i+4>=tokens.n||((Token*)tokens.v[i+1])->kind!='('||((Token*)tokens.v[i+2])->kind!=T_STR||((Token*)tokens.v[i+3])->kind!=')'||((Token*)tokens.v[i+4])->kind!='{')error(t,"use platform(\"linux-x64\") { declarações }");
+            Token *name=tokens.v[i+2];if(strlen(name->str)!=name->len||(!same(name->str,"linux-x64")&&!same(name->str,"windows-x64")&&!same(name->str,"macos-x64")))error(name,"plataforma desconhecida");
+            bool enabled=same(name->str,target_windows?"windows-x64":target_macos?"macos-x64":"linux-x64");int level=1,j=i+5;
+            for(;j<tokens.n;j++){
+                Token *p=tokens.v[j];if(p->kind==T_FILE_END||p->kind==T_EOF||p->file!=t->file)error(t,"platform exige bloco fechado no mesmo arquivo");
+                if(p->kind==T_PLATFORM||p->kind==T_NAMESPACE)error(p,"platform não aceita platform/namespace aninhado");
+                if(p->kind=='{')level++;if(p->kind=='}'){level--;if(!level)break;}
+                if(enabled)push(&out,p);
+            }
+            if(level)error(t,"platform exige }");i=j;continue;
+        }
+        if(t->kind=='{')depth++;if(t->kind=='}')depth--;push(&out,t);
+    }tokens=out;
+}
 static char *qualified_name(const char *space,const char *name){size_t size=strlen(space)+strlen(name)+3;char *out=mem(size);snprintf(out,size,"%s::%s",space,name);return out;}
 static Token *qualified_token(Token *t){
     Token *out=t;
@@ -22,7 +43,7 @@ static void scan_namespaces(void){
         }
         if(!depth&&!header&&t->kind==T_PUBLIC){if(exported)error(t,"public duplicado");exported=true;continue;}
         bool type=t->kind==T_CLASS||t->kind==T_STRUCT||t->kind==T_ENUM;
-        if(!depth&&!parens&&!header&&(type||t->kind==T_FN)){
+        if(!depth&&!parens&&!header&&(type||t->kind==T_FN||t->kind==T_CONST)){
             Token *name=tokens.v[i+1];if(name->kind!=T_ID)error(name,"declaração exige nome");
             if(exported&&!name->file->space)error(name,"public exige namespace no módulo");
             ModuleSymbol *symbol=mem(sizeof(*symbol));symbol->token=name;symbol->local=name->text;symbol->type=type;
@@ -31,7 +52,7 @@ static void scan_namespaces(void){
             name->text=symbol->qualified;push(&module_symbols,symbol);exported=false;header=true;
         }
         if(t->kind==T_FILE_END||t->kind==T_EOF){if(exported)error(t,"public sem declaração");}
-        push(&filtered,t);if(t->kind=='{'){depth++;header=false;}if(t->kind=='}')depth--;if(t->kind=='(')parens++;if(t->kind==')')parens--;
+        push(&filtered,t);if(t->kind=='{'){depth++;header=false;}if(t->kind=='}')depth--;if(t->kind=='(')parens++;if(t->kind==')')parens--;if(!depth&&t->kind==';')header=false;
     }
     tokens=filtered;
 }
@@ -65,13 +86,14 @@ static void module_node(Node *n){
         bool local=false;for(int i=module_bindings.n-1;i>=0;i--)if(same(module_bindings.v[i],n->t->text)){local=true;break;}
         if(!local){Token *t=mem(sizeof(*t));*t=*n->t;t->text=module_name(t->text,t,false);n->t=t;}
     }
-    if(n->kind==N_LET||n->kind==N_NEW||(n->kind==N_BUILTIN&&n->op==T_BUFFER))n->decl=module_type(n->decl,n->t);
+    if(n->kind==N_LET||n->kind==N_NEW||n->kind==N_IS||n->kind==N_CAST||(n->kind==N_BUILTIN&&n->op==T_BUFFER))n->decl=module_type(n->decl,n->t);
     for(int i=0;i<n->type_args.n;i++)*(Type*)n->type_args.v[i]=module_type(*(Type*)n->type_args.v[i],n->t);
     module_node(n->a);module_node(n->b);module_node(n->c);module_node(n->step);
     for(int i=0;i<n->items.n;i++)module_node(n->items.v[i]);
     if(n->kind==N_LET)push(&module_bindings,n->t->text);
 }
 static void bind_namespaces(void){
+    for(int i=0;i<global_constants.n;i++){GlobalConstant *g=global_constants.v[i];module_bindings.n=0;g->ty=module_type(g->ty,g->t);module_node(g->value);}
     Vec class_groups[]={classes,generic_classes},function_groups[]={functions,generic_functions};
     for(int g=0;g<2;g++)for(int i=0;i<class_groups[g].n;i++){
         Class *c=class_groups[g].v[i];if(c->base_name)c->base_type=module_type(c->base_type,c->base_name);

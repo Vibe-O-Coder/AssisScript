@@ -24,8 +24,8 @@ if not 3 <= args.samples <= 30:
 compiler = ROOT / 'bin' / ('assis.exe' if os.name == 'nt' else 'assis')
 count = 10_000_000
 expected = str(3 * count * (count - 1) // 2 + 7 * count) + '\n'
-legacy = ('assis calcular(n:int):int{let v:int=n*3+7;return v;}\n'
-          'assis assis_assis():int{let total:int=0;'
+legacy = ('fn calcular(n:int):int{let v:int=n*3+7;return v;}\n'
+          'fn main():int{let total:int=0;'
           f'for(let i:int=0;i<{count};i+=1){{total+=calcular(i);}}'
           'print(total);return 0;}\n')
 functional = legacy.replace('assis calcular', 'pure assis calcular').replace('let v:int', 'val v:int')

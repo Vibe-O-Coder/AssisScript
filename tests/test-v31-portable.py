@@ -18,12 +18,12 @@ assert len(sources) >= 7, 'Gere o corpus com ASSIS_FIXTURE_DIR antes de run'
 count = 0
 for source in sources:
     for options in [[], ['--no-opt']]:
-        result = subprocess.run([compiler, 'run', source, *options], capture_output=True, timeout=30)
+        result = subprocess.run([compiler, 'run', '--legacy', source, *options], capture_output=True, timeout=30)
         assert result.returncode == 0, result.stderr.decode()
         assert result.stdout == source.with_suffix('.stdout').read_bytes(), source.name
         count += 1
 for name in ['12_relatorio_vendas', '13_codificacao']:
-    result = subprocess.run([compiler, 'run', root / 'exemplos' / (name + '.assis')], capture_output=True, timeout=30)
+    result = subprocess.run([compiler, 'run', '--legacy', root / 'exemplos' / (name + '.assis')], capture_output=True, timeout=30)
     assert result.returncode == 0, result.stderr.decode()
     count += 1
 if sys.platform == 'linux':
@@ -36,7 +36,7 @@ if sys.platform == 'linux':
             for library in catalog['libraries']:
                 assert (prefix / 'share/assisscript/stdlib' / (library['name'] + '.assis')).exists() == (library['required'] or library['name'] in optional)
                 assert (prefix / 'share/assisscript/docs' / library['doc']).exists()
-            result = subprocess.run([prefix / 'bin/assis', 'run', sources[0]], capture_output=True, timeout=30)
+            result = subprocess.run([prefix / 'bin/assis', 'run', '--legacy', sources[0]], capture_output=True, timeout=30)
             assert result.returncode == 0, result.stderr.decode()
             subprocess.run(['sh', root / 'desinstalar.sh', '--prefix', prefix], check=True, capture_output=True)
             assert not (prefix / 'share/assisscript').exists()

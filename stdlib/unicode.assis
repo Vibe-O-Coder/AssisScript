@@ -30,6 +30,7 @@ public safe fn next(borrow data:slice<byte>,indice:int):int {
 public final class String {
     private own data:*byte;
     private let count:int;
+    private let capacity:int;
 
     fn init(borrow mut self):void{self.data=alloc<byte>(0);}
     fn size(borrow self):int{return self.count;}
@@ -39,7 +40,60 @@ public final class String {
         if(error(entrada)>=0){return false;}
         own novos:*byte=alloc<byte>(len(entrada));
         for(let i:int=0;i<len(entrada);i+=1){novos[i]=entrada[i];}
-        self.data=move(novos);self.count=len(entrada);return true;
+        self.data=move(novos);self.count=len(entrada);self.capacity=len(entrada);return true;
+    }
+
+    /// Grow geometrically; existing borrowed views must end before mutation.
+    fn reserve(borrow mut self,capacity:int):void {
+        assert(capacity>=0 && capacity<=0x3fff_ffff_ffff_ffff);
+        if(capacity<=self.capacity){return;}
+        let next:int=self.capacity;if(next<32){next=32;}
+        while(next<capacity){if(next>0x1fff_ffff_ffff_ffff){next=capacity;}else{next*=2;}}
+        own data:*byte=alloc<byte>(next);
+        for(let i:int=0;i<self.count;i+=1){data[i]=self.data[i];}
+        self.data=move(data);self.capacity=next;
+    }
+
+    /// Append validated UTF-8, including embedded NUL, with amortized growth.
+    /// Literal arguments are converted to a static slice automatically.
+    fn append(borrow mut self,borrow data:slice<byte>):bool {
+        if(error(data)>=0){return false;}
+        assert(len(data)<=0x3fff_ffff_ffff_ffff-self.count);
+        self.reserve(self.count+len(data));
+        for(let i:int=0;i<len(data);i+=1){self.data[self.count+i]=data[i];}
+        self.count+=len(data);return true;
+    }
+
+    fn clear(borrow mut self):void{self.count=0;}
+
+    /// Decimal formatting of the full signed int range, including INT64_MIN.
+    fn append_int(borrow mut self,value:int):void {
+        own digits:*byte=alloc<byte>(20);let count:int=0;let n:int=value;
+        if(n>0){n=-n;}
+        while(true){digits[count]=byte(48-(n%10));count+=1;n/=10;if(n==0){break;}}
+        if(value<0){digits[count]='-';count+=1;}
+        for(let i:int=0;i<count/2;i+=1){val c:byte=digits[i];digits[i]=digits[count-i-1];digits[count-i-1]=c;}
+        assert(self.append(slice_of(digits,0,count)));
+    }
+
+    /// Fixed decimal formatting, 0..9 fractional places, rounding half away
+    /// from zero. Reject NaN, infinity or a scaled magnitude above 9e18.
+    /// This is a display formatter, not an exact decimal arithmetic type.
+    fn append_decimal(borrow mut self,value:f64,places:int):bool {
+        if(places<0 || places>9 || value!=value){return false;}
+        let scale:int=1;for(let i:int=0;i<places;i+=1){scale*=10;}
+        let magnitude:f64=value;if(magnitude<0.0){magnitude=-magnitude;}
+        val scaled:f64=magnitude*f64(scale)+0.5;
+        if(scaled>9000000000000000000.0){return false;}
+        val rounded:int=int(scaled);
+        if(value<0.0){assert(self.append("-"));}
+        self.append_int(rounded/scale);
+        if(places>0){
+            assert(self.append("."));own digits:*byte=alloc<byte>(places);let fraction:int=rounded%scale;
+            for(let i:int=places-1;i>=0;i-=1){digits[i]=byte(48+fraction%10);fraction/=10;}
+            assert(self.append(slice_of(digits,0,places)));
+        }
+        return true;
     }
 
     fn as_slice(borrow self):borrow(self) slice<byte>{return slice_of(self.data,0,self.count);}

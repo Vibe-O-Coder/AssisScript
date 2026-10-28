@@ -6,17 +6,6 @@
       "include": "#comments"
     },
     {
-      "name": "meta.preprocessor.assis",
-      "begin": "^\\s*#(?:yuri|body)\\b",
-      "end": "$",
-      "patterns": [
-        {
-          "name": "string.quoted.other.assis",
-          "match": "<[^>]*>|[\\w./\\\\-]+\\.pillow"
-        }
-      ]
-    },
-    {
       "name": "string.quoted.double.assis",
       "begin": "\"",
       "end": "\"",
@@ -28,20 +17,24 @@
       ]
     },
     {
+      "name": "constant.character.assis",
+      "match": "'(?:[^'\\\\\\r\\n]|\\\\(?:[nrt0'\\\\]|x[0-9a-fA-F]{2}))'"
+    },
+    {
       "name": "keyword.control.assis",
-      "match": "\\b(?:import|importa|ASSIS_FODASE|assIS|fodASE|ASSis|Fodase|FODasE|FodASE|if|else|while|return|break|continue|extends|for|div|defer|match)\\b"
+      "match": "\\b(?:extern|is|as|platform|c_callback|import|if|else|while|return|break|continue|extends|for|defer|match)\\b"
     },
     {
       "name": "storage.type.assis",
-      "match": "\\b(?:class|ASSIS|fn|assis|Assis|AssIs|AssiS|FodAsE|FoDaSe|FODase|let|val|pure|safe|unsafe|private|final|namespace|public|i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|int|byte|bool|text|void|struct|value(?=\\s+struct\\b)|enum|File|slice|Array|HashMap|own|borrow|mut)\\b"
+      "match": "\\b(?:closure|const|class|fn|let|val|pure|safe|unsafe|private|final|namespace|public|i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|int|byte|bool|text|void|struct|value(?=\\s+struct\\b)|enum|File|slice|Array|HashMap|own|borrow|mut)\\b"
     },
     {
       "name": "support.function.assis",
-      "match": "\\b(?:FODASE_fodase|ASSIS_fodase|FODASE|fodase|foDASE|new|free|print|len|slice_of|alloc|assert|bytes|move|read_bytes|monotonic_ms|sleep_ms|civil_ms|write_bytes|file_sync|file_replace|file_remove|file_open|file_read|file_write|file_close|io_error|arg_count|arg_size|arg_copy)\\b"
+      "match": "\\b(?:new|write|utf8|free|print|len|slice_of|alloc|assert|bytes|move|read_bytes|monotonic_ms|sleep_ms|civil_ms|write_bytes|file_sync|file_replace|file_remove|file_open|file_read|file_write|file_close|io_error|arg_count|arg_size|arg_copy)\\b"
     },
     {
       "name": "constant.language.assis",
-      "match": "\\b(?:aSsIs|fOdAsE|fOdase|aSSIS|true|false|null|self)\\b"
+      "match": "\\b(?:aSsIs|super|true|false|null|self)\\b"
     },
     {
       "name": "constant.numeric.assis",
@@ -61,48 +54,21 @@
       "patterns": [
         {
           "name": "comment.line.assis",
-          "begin": "\\bmiyabi\\b|//",
+          "begin": "//",
           "end": "$"
         },
         {
-          "name": "comment.block.assis",
-          "begin": "\\bte\\b",
-          "end": "\\bto\\b",
-          "patterns": [
-            {
-              "include": "#wordComment"
-            }
-          ]
-        },
-        {
-          "name": "comment.block.assis",
-          "begin": "/\\*",
-          "end": "\\*/",
-          "patterns": [
-            {
-              "include": "#legacyComment"
-            }
-          ]
+          "include": "#blockComment"
         }
       ]
     },
-    "wordComment": {
-      "name": "comment.block.assis",
-      "begin": "\\bte\\b",
-      "end": "\\bto\\b",
-      "patterns": [
-        {
-          "include": "#wordComment"
-        }
-      ]
-    },
-    "legacyComment": {
+    "blockComment": {
       "name": "comment.block.assis",
       "begin": "/\\*",
       "end": "\\*/",
       "patterns": [
         {
-          "include": "#legacyComment"
+          "include": "#blockComment"
         }
       ]
     }

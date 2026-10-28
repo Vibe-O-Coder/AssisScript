@@ -53,7 +53,7 @@ static void append_debug_elf(Elf64_Ehdr *eh,size_t start){
         Function *f=all_functions.v[i];Label *label=labels.v[f->label];uint64_t low=ELF_BASE+4096+label->position,size=f->code_end-label->position;
         u8(&info,2);bytes(&info,f->t->text,strlen(f->t->text)+1);u64(&info,low);u64(&info,size);u32(&info,debug_file(f->t->file));u32(&info,(uint32_t)f->t->line);
         u8(&info,1);u8(&info,0x56); /* DW_AT_frame_base = DW_OP_reg6 (rbp). */
-        for(int j=0;j<f->params.n;j++)debug_variable(&info,f->params.v[j],true);debug_scope(&info,f->body);u8(&info,0);
+        if(!f->foreign)for(int j=0;j<f->params.n;j++)debug_variable(&info,f->params.v[j],true);debug_scope(&info,f->body);u8(&info,0);
         const char *name=f->t->text;char *method=NULL;if(f->owner){method=qualified_name(f->owner->display?f->owner->display:f->owner->t->text,name);name=method;}
         DebugSymbol symbol={(uint32_t)str.n,0x12,0,1,low,size};bytes(&str,name,strlen(name)+1);bytes(&sym,&symbol,sizeof(symbol));free(method);
     }u8(&info,0);debug_patch32(&info,0,(uint32_t)(info.n-4));

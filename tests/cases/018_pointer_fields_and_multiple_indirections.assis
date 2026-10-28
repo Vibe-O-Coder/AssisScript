@@ -1,22 +1,22 @@
 
-            ASSIS AssisAssis {
-                Assis Assis_assis: *AssiS;
-                Assis Fodase_assis: FoDaSe;
-                Assis Assis_Fodase: AssisAssis;
+            class AssisAssis {
+                let Assis_assis: *byte;
+                let Fodase_assis: text;
+                let Assis_Fodase: AssisAssis;
             }
         
-assis assis_assis(): AssIs {
+fn main(): int {
 
-            Assis AssisFodase: AssisAssis = fodase AssisAssis();
-            AssisFodase.Assis_assis = ASSIS_fodase(2);
-            Assis FodaseAssis: **AssiS = &AssisFodase.Assis_assis;
-            (*FodaseAssis)[0] = AssiS(42);
-            Assis FodaseFodase: *FoDaSe = &AssisFodase.Fodase_assis;
+            let AssisFodase: AssisAssis = new AssisAssis();
+            AssisFodase.Assis_assis = alloc<byte>(2);
+            let FodaseAssis: **byte = &AssisFodase.Assis_assis;
+            (*FodaseAssis)[0] = byte(42);
+            let FodaseFodase: *text = &AssisFodase.Fodase_assis;
             *FodaseFodase = "strings";
-            Assis FodaseAssisAssis: *AssisAssis = &AssisFodase.Assis_Fodase;
+            let FodaseAssisAssis: *AssisAssis = &AssisFodase.Assis_Fodase;
             *FodaseAssisAssis = AssisFodase;
-            FODASE(AssisFodase.Assis_assis[0], *FodaseFodase, AssisFodase.Assis_Fodase == AssisFodase);
-            foDASE(*FodaseAssis); foDASE(AssisFodase);
+            print(AssisFodase.Assis_assis[0], *FodaseFodase, AssisFodase.Assis_Fodase == AssisFodase);
+            free(*FodaseAssis); free(AssisFodase);
         
-Fodase 0;
+return 0;
 }

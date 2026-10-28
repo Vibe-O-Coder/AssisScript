@@ -66,14 +66,14 @@ function harness(documents, settings = {}) {
     return { commands, providers, diagnostics, calls, dispose() { for (const item of context.subscriptions) item.dispose(); } };
 }
 test('comando check inclui pacotes e bibliotecas não salvos e publica o diagnóstico', async () => {
-    const entry = doc(path.join(temp, 'assis.assis'), '#body src.pillow\nassis assis_assis(): int { return 0; }');
-    const packageDoc = doc(path.join(temp, 'src.pillow'), '#yuri <lib.assis>\n', 'assisscript-package', true);
-    const lib = doc(path.join(temp, 'lib.assis'), 'assis dobro(value: int): int { return value * 2; }', 'assisscript', true);
+    const entry = doc(path.join(temp, 'assis.assis'), 'import "src.pillow";\nfn main(): int { return 0; }');
+    const packageDoc = doc(path.join(temp, 'src.pillow'), 'import "lib.assis";\n', 'assisscript-package', true);
+    const lib = doc(path.join(temp, 'lib.assis'), 'fn dobro(value: int): int { return value * 2; }', 'assisscript', true);
     const h = harness([entry, packageDoc, lib]);
     try {
         await h.commands.get('assisscript.check')();
         const runs = h.calls.filter(c => c.bin); assert.equal(runs.length, 1);
-        assert.equal(runs[0].overlays.length, 2); assert(runs[0].overlays.some(o => o.file.endsWith('.pillow') && o.content.includes('#yuri')));
+        assert.equal(runs[0].overlays.length, 2); assert(runs[0].overlays.some(o => o.file.endsWith('.pillow') && o.content.includes('import')));
         assert.equal(h.diagnostics.get(entry.uri.fsPath)[0].code, 'A001');
         assert.match(h.diagnostics.get(entry.uri.fsPath)[0].message, /Ajuda: Confira os tipos/);
         assert.equal(h.diagnostics.get(entry.uri.fsPath)[0].range.values[3], 5);
@@ -81,7 +81,7 @@ test('comando check inclui pacotes e bibliotecas não salvos e publica o diagnó
 });
 
 test('catálogo abre manual individual offline de cada biblioteca', async () => {
-    const entry = doc(path.join(temp, 'assis.assis'), 'assis assis_assis(): int { return 0; }');
+    const entry = doc(path.join(temp, 'assis.assis'), 'fn main(): int { return 0; }');
     const h = harness([entry]);
     try {
         const catalog = JSON.parse(fs.readFileSync(path.resolve(extensionPath, '../stdlib/catalogo.json'), 'utf8'));
@@ -94,20 +94,20 @@ test('catálogo abre manual individual offline de cada biblioteca', async () => 
 
 test('diagnóstico de dependência usa entrada e lockfile do projeto', async () => {
     const entry=path.join(temp,'assis.assis'),manifest=path.join(temp,'assis.pkg'),vendor=path.join(temp,'vendor-editor');fs.mkdirSync(vendor,{recursive:true});
-    const library=path.join(vendor,'api.assis'),text='namespace dep;public pure assis f():int{return 42;}';
-    fs.writeFileSync(manifest,'package app 1.0.0\ndep dep 1.0.0 vendor-editor\n');fs.writeFileSync(path.join(vendor,'assis.pkg'),'package dep 1.0.0\n');fs.writeFileSync(library,text);fs.writeFileSync(entry,'#yuri <pkg/dep/api.assis>\nassis assis_assis():int{return 0;}');
+    const library=path.join(vendor,'api.assis'),text='namespace dep;public pure fn f():int{return 42;}';
+    fs.writeFileSync(manifest,'package app 1.0.0\ndep dep 1.0.0 vendor-editor\n');fs.writeFileSync(path.join(vendor,'assis.pkg'),'package dep 1.0.0\n');fs.writeFileSync(library,text);fs.writeFileSync(entry,'import "pkg/dep/api.assis";\nfn main():int{return 0;}');
     const h=harness([doc(library,text,'assisscript',true)]);
     try{await h.commands.get('assisscript.check')();const run=h.calls.find(c=>c.bin);assert.equal(run.args[1],entry);assert(!run.args.includes('--stdin'));assert(!run.args.includes('--library'));assert(run.overlays.some(o=>o.file===library&&o.content===text));}
     finally{h.dispose();fs.unlinkSync(manifest);}
 });
 test('verificação manual repete quando uma edição real interrompe o processo', async () => {
-    const entry = doc(path.join(temp, 'assis.assis'), 'assis assis_assis(): int { return 0; }');
+    const entry = doc(path.join(temp, 'assis.assis'), 'fn main(): int { return 0; }');
     const h = harness([entry], { interruptOnce: true });
     try { await h.commands.get('assisscript.check')(); assert.equal(h.calls.filter(c => c.bin).length, 2); assert.equal(h.diagnostics.get(entry.uri.fsPath)[0].code, 'A001'); }
     finally { h.dispose(); }
 });
 test('provedor de hover mostra assinatura concreta e abre o manual offline', async () => {
-    const source = 'assis assis_assis(): int { let a: Array<int> = []; a.push(42); free(a); return 0; }';
+    const source = 'fn main(): int { let a: Array<int> = []; a.push(42); free(a); return 0; }';
     const entry = doc(path.join(temp, 'assis.assis'), source), h = harness([entry]);
     try {
         const hover = h.providers.Hover.provideHover(entry, source.indexOf('.push') + 2);

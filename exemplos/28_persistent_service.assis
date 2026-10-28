@@ -1,0 +1,44 @@
+// Application C: serialized stdin service with crash-released OS lock.
+// Usage: persistent-service state-file new-temporary-file lock-file
+// Protocol: inc\n, get\n, quit\n. One response per complete request.
+import "std/cli.assis";
+import "std/process.assis";
+safe fn open_argument(index:int,mode:int):own File {
+    unsafe {let path:*byte=alloc<byte>(16385);defer free(path);if(arg_copy(index,path,16385)<0){return file_open("",9);}return file_open(text(path),mode);}
+}
+safe fn finish_temporary(remove:bool):int {
+    unsafe {let source:*byte=alloc<byte>(16385);defer free(source);let target:*byte=alloc<byte>(16385);defer free(target);if(arg_copy(2,source,16385)<0||arg_copy(1,target,16385)<0){return -1;}if(remove){return file_remove(text(source));}return file_replace(text(source),text(target));}
+}
+safe fn checksum(borrow buffer:*byte):int{let result:int=0;for(let i:int=0;i<12;i+=1){result=(result*257+int(buffer[i]))&4294967295;}return result;}
+safe fn commit(value:int):bool {
+    own buffer:*byte=alloc<byte>(16);buffer[0]=byte(65);buffer[1]=byte(83);buffer[2]=byte(67);buffer[3]=byte(49);
+    for(let i:int=0;i<8;i+=1){buffer[4+i]=byte(value>>(i*8));}val sum:int=checksum(buffer);for(let i:int=0;i<4;i+=1){buffer[12+i]=byte(sum>>(i*8));}
+    own file:File=open_argument(2,3);if(file==null){return false;}
+    if(cli::write_all(file,buffer,16)!=16||file_sync(file)!=0){file_close(file);finish_temporary(true);return false;}
+    if(file_close(file)!=0){finish_temporary(true);return false;}
+    if(finish_temporary(false)!=0){finish_temporary(true);return false;}return true;
+}
+safe fn main():int {
+    if(arg_count()!=4){print("Usage: persistent-service state temporary lock");return 64;}
+    own lock_path:cli::Argument=cli::argument(3);if(!lock_path.ok){return 64;}
+    own guard:process::Lock=process::lock(lock_path.data);if(!guard.acquired()){print("ERR locked");return 73;}
+    let value:int=0;
+    {own file:File=open_argument(1,0);if(file==null){if(io_error()!=2){print("ERR open");return 74;}}
+    else {own buffer:*byte=alloc<byte>(16);if(cli::read_bounded(file,buffer)!=16||buffer[0]!=byte(65)||buffer[1]!=byte(83)||buffer[2]!=byte(67)||buffer[3]!=byte(49)){print("ERR corrupt");return 65;}
+        let stored:int=0;for(let i:int=0;i<4;i+=1){stored|=int(buffer[12+i])<<(i*8);}if(stored!=checksum(buffer)||buffer[11]>byte(127)){print("ERR corrupt");return 65;}
+        for(let i:int=0;i<8;i+=1){value|=int(buffer[4+i])<<(i*8);}
+    }}
+    own line:*byte=alloc<byte>(64);own next:*byte=alloc<byte>(1);let size:int=0;let overflow:bool=false;
+    while(true){val n:int=read_bytes(next,1);if(n<0){print("ERR input");return 74;}if(n==0){return 0;}
+        if(next[0]!=byte(10)){if(size<64){line[size]=next[0];size+=1;}else{overflow=true;}continue;}
+        if(overflow){print("ERR command");}
+        else if(size==3&&line[0]==byte(103)&&line[1]==byte(101)&&line[2]==byte(116)){print(value);}
+        else if(size==3&&line[0]==byte(105)&&line[1]==byte(110)&&line[2]==byte(99)){
+            if(value==9223372036854775807){print("ERR overflow");}
+            else if(commit(value+1)){value+=1;print(value);}else{print("ERR store");}
+        }
+        else if(size==4&&line[0]==byte(113)&&line[1]==byte(117)&&line[2]==byte(105)&&line[3]==byte(116)){return 0;}
+        else {print("ERR command");}size=0;overflow=false;
+    }
+    return 0;
+}
