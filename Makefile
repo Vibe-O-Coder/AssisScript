@@ -126,7 +126,10 @@ test-alpha13: bin/assis
 test-usability: bin/assis
 	python3 tests/test-usability.py
 
-.PHONY: test-alpha15 test-increment test-owned-mutation
+.PHONY: test-alpha15 test-increment test-owned-mutation test-htdl-readiness
+test-htdl-readiness: bin/assis
+	python3 tests/test-htdl-readiness.py
+
 test-owned-mutation: bin/assis
 	python3 tests/test-owned-mutation.py
 
@@ -138,3 +141,4 @@ test-alpha15: bin/assis
 	python3 tests/test-complete-ir.py
 	python3 tests/test-increment.py
 	python3 tests/test-owned-mutation.py
+	python3 tests/test-htdl-readiness.py
