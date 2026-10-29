@@ -2,6 +2,8 @@
 import importlib.util
 import json
 import random
+import subprocess
+import sys
 from pathlib import Path
 import unittest
 
@@ -111,12 +113,32 @@ class CompleteIR(base.Evolution):
                   'safe fn main():int{own f:closure():E=make(40);match(f()){None{print(0);}Some(p){print(p.x+p.y);}}return 0;}')
         self.inspect(source)
         self.accepted(source, '42\n')
-        binary = self.temp / 'with-symbols.exe'
-        result = self.invoke('build', self.source(source), '--symbols', '-o', binary)
-        self.assertEqual(result.returncode, 0, result.stderr)
-        # Execution and heap validation also exercise aggregate hidden results.
-        result = self.invoke('run', self.source(source), '--debug')
-        self.assertEqual((result.returncode, result.stdout, result.stderr), (0, '42\n', ''))
+        file = self.source(source)
+        native_target = {'win32':'windows-x64', 'darwin':'macos-x64'}.get(sys.platform, 'linux-x64')
+        # Symbol support is a property of the output format, not the host.
+        # macOS still exercises native Mach-O execution above, with heap checks.
+        for target, magic in [('windows-x64', b'MZ'), ('linux-x64', b'\x7fELF')]:
+            binary = self.temp / ('with-symbols-'+target+'.exe')
+            result = self.invoke('build', file, '--symbols', '--debug', '--target', target, '-o', binary)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertTrue(binary.read_bytes().startswith(magic))
+            mapping = json.loads(Path(str(binary)+'.map.json').read_text(encoding='utf-8'))
+            self.assertEqual(mapping['format'], 'AssisScript-map-v1')
+            self.assertTrue(any(function['name'] == 'make' and function['size'] > 0 for function in mapping['functions']))
+            if target == native_target:
+                result = subprocess.run([str(binary)], capture_output=True, text=True, encoding='utf-8', timeout=30)
+                self.assertEqual((result.returncode, result.stdout, result.stderr), (0, '42\n', ''))
+        unsupported = self.temp / 'macos-symbols'
+        unsupported.write_bytes(b'preservar')
+        result = self.invoke('build', file, '--symbols', '--target', 'macos-x64',
+                             '--diagnostics=json', '-o', unsupported)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        diagnostic = json.loads(result.stderr)
+        self.assertEqual(diagnostic['code'], 'A002')
+        self.assertIn('symbols', diagnostic['message'])
+        self.assertIn('macos-x64', diagnostic['message'])
+        self.assertEqual(unsupported.read_bytes(), b'preservar')
+        self.assertFalse(Path(str(unsupported)+'.map.json').exists())
 
 
 if __name__ == '__main__':

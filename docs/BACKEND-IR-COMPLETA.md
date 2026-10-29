@@ -67,3 +67,17 @@ Os resultados exatos, hashes e caminhos de evidência estão em
 [VALIDACAO-P5-IR.json](VALIDACAO-P5-IR.json). CI do incremento anterior está
 aprovada; resultados remotos do P5-IR devem ser conferidos na revisão que o
 publicar. P5-IR passa a concluído dentro deste contrato, +1 ponto.
+
+## Correção do teste de símbolos por destino
+
+Na execução remota `40806135931`, Linux, Windows e os dois hosts ARM64 passaram.
+O caso de closures/retornos compostos também executou nativamente no macOS,
+mas a etapa seguinte do teste pediu `--symbols` para o destino padrão Mach-O.
+Esse destino ainda recusa símbolos, conforme o contrato de macOS/P5-TARGET.
+
+O teste agora constrói explicitamente PE/ELF com símbolos em todos os hosts,
+confere seus mapas e executa o binário com símbolos quando seu destino coincide
+com o host. Mantém a execução Mach-O com/sem otimização e verificação de heap,
+e testa que `--symbols --target macos-x64` retorna diagnóstico A002 preservando
+um arquivo de saída existente. A correção fica no teste; os compiladores e o
+suporte de símbolos Mach-O permanecem com o contrato já documentado.
