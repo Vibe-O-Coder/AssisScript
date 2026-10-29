@@ -83,7 +83,9 @@ class HTTP(base.Evolution):
         context=ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER);fixtures=Path(__file__).parent/'fixtures/tls'
         context.load_cert_chain(fixtures/'test-cert.pem',fixtures/'test-key.pem')
         self.server.socket=context.wrap_socket(self.server.socket,server_side=True)
-        self.accepted(self.source_url(f'https://localhost:{self.port}/ok','print(response.error());'),'-5\n')
+        timeout=int(os.environ.get('ASSIS_TLS_TEST_TIMEOUT_MS','5000'))
+        self.assertTrue(5000<=timeout<=60000)
+        self.accepted(self.source_url(f'https://localhost:{self.port}/ok','print(response.error());',timeout=timeout),'-5\n')
 
 if __name__=='__main__':
     for name in list(vars(base.Evolution)):

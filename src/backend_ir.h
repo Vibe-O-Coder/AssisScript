@@ -181,7 +181,7 @@ static BackendBlock *backend_statement(BackendLowering *s,Node *n,BackendBlock *
     }
     if(n->kind==N_BREAK||n->kind==N_CONTINUE){backend_cleanup(s,b,s->loop_base);backend_jump(b,n->kind==N_BREAK?s->end:s->again);return NULL;}
     if(n->kind==N_RETURN){
-        if(s->function->source->pure&&n->a&&n->a->kind==N_CALL&&n->a->fn==s->function->source){b->terminator=BT_TAIL;for(int i=0;i<n->a->items.n;i++)push(&b->arguments,backend_value(n->a->items.v[i]));return NULL;}
+        if(optimize&&s->function->source->pure&&n->a&&n->a->kind==N_CALL&&n->a->fn==s->function->source){b->terminator=BT_TAIL;for(int i=0;i<n->a->items.n;i++)push(&b->arguments,backend_value(n->a->items.v[i]));return NULL;}
         BackendInstruction *op=backend_instruction(b,BI_SAVE_RETURN,n->t);op->type=s->function->source->result;op->value=n->a?backend_value(n->a):NULL;op->preserve=b->return_saved=s->cleanups.n>0;backend_cleanup(s,b,0);b->terminator=BT_RETURN;return NULL;
     }
     BackendInstruction *op;

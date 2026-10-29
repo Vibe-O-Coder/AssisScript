@@ -2,6 +2,8 @@
 import importlib.util
 import json
 import os
+import sys
+import platform
 import shutil
 import subprocess
 import unittest
@@ -35,10 +37,10 @@ class Tooling(base.Evolution):
 
     def test_debug_maps_and_elf_sections_match_sources(self):
         source=self.source('pure fn dobro(x:int):int {\nreturn x*2;\n}\nfn main():int {\nprint(dobro(21));\nreturn 0;\n}\n')
-        for target in ['windows-x64','linux-x64']:
+        for target in ['windows-x64','linux-x64','linux-arm64','macos-x64','macos-arm64']:
             binary=self.temp/(target+'.exe');r=self.invoke('build',source,'--symbols','--target',target,'-o',binary);self.assertEqual(r.returncode,0,r.stderr)
             mapping=json.loads(Path(str(binary)+'.map.json').read_text(encoding='utf-8'));self.assertEqual(mapping['format'],'AssisScript-map-v1');self.assertTrue(any(f['name']=='dobro' and f['size']>0 for f in mapping['functions']));self.assertTrue(any(s['line']==5 for s in mapping['lines']));self.assertTrue(all(s['file']==str(source) for s in mapping['lines']))
-            if target=='linux-x64' and os.name!='nt':
+            if sys.platform=='linux' and target==('linux-arm64' if platform.machine().lower() in ('arm64','aarch64') else 'linux-x64'):
                 r=subprocess.run(['readelf','--debug-dump=decodedline','--debug-dump=info',binary],capture_output=True,text=True,timeout=15);self.assertEqual(r.returncode,0,r.stderr);self.assertEqual(r.stderr,'');self.assertIn('DW_TAG_subprogram',r.stdout)
                 self.assertIsNotNone(shutil.which('gdb'),'GDB é necessário para validate o gate de depuração')
                 r=subprocess.run(['gdb','-nx','-nh','-batch','-ex','break '+str(source)+':2','-ex','run','-ex','bt','-ex','info line',binary],capture_output=True,text=True,timeout=20)

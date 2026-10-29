@@ -4,16 +4,16 @@ permissions:
   contents: read
 jobs:
   linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
       - name: Native debug test dependency
-        run: sudo apt-get update && sudo apt-get install -y gdb binutils libcurl4
+        run: sudo apt-get update && sudo apt-get install -y gdb binutils libcurl4 clang-18 lld-18 binutils-aarch64-linux-gnu python3-cairosvg python3-pil
       - name: Rebuild runtimes and compiler from source
-        run: python3 tools/embed-runtime.py && make -B all
+        run: python3 tools/embed-runtime.py && python3 tools/embed-arm64.py && python3 tools/build-icons.py && make -B all
       - run: |
           mkdir -p build/review-tests
           set -o pipefail
@@ -25,6 +25,8 @@ jobs:
       - run: python3 tools/benchmark-optimization.py --samples 3 --output benchmarks/resultados/optimization-alpha15-linux.json --check
       - run: python3 tools/benchmark-backend.py --samples 3 --output benchmarks/resultados/backend-alpha15-linux.json
       - run: python3 tools/soak-native.py --duration 120 --workers 4 --polling --output benchmarks/resultados/soak-alpha15-short-linux.json --status-output build/review-tests/soak-short-linux.status.json
+      - run: python3 tools/test-new-targets.py --debugger --output build/review-tests/new-targets-linux-x64.json
+      - run: python3 tools/test-native-installer.py
       - run: python3 tools/report-progress.py --check
       - run: python3 tools/generate-install-manifest.py --check
       - run: python3 tools/audit-build.py --output docs/build-audit-linux.json
@@ -38,6 +40,8 @@ jobs:
             build/review-tests/examples-linux.json
             build/review-tests/native-linux.log
             build/review-tests/ports-linux-x64.json
+            build/review-tests/new-targets-linux-x64.json
+            build/review-tests/installer-linux-x86_64.json
             build/clean-linux.json
       - uses: actions/upload-artifact@v4
         with:
@@ -159,6 +163,13 @@ jobs:
         with:
           python-version: '3.12'
       - run: make -B all CC=clang
+      - run: python3 tools/test-new-targets.py --debugger --output build/review-tests/new-targets-macos-x64.json
+      - run: python3 tools/test-native-installer.py
+      - run: cp bin/assis bin/assis-macos-x64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-x64-binary
+          path: bin/assis-macos-x64
       - name: Execute safe language regressions on macOS
         run: python3 tests/test-usability.py
       - run: python3 tests/test-files.py
@@ -174,46 +185,64 @@ jobs:
         if: always()
         with:
           name: macos-x64-validation
-          path: build/review-tests/ports-macos-x64.json
+          path: build/review-tests/*.json
   arm-hosts:
-    name: ${{ matrix.name }} compiler host / x86_64 output
+    name: ${{ matrix.name }} / native ARM64 output
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: Linux ARM64 (QEMU)
+          - name: Linux ARM64
             runner: ubuntu-24.04-arm
-            execution: qemu
             artifact: linux-arm64-host
+            binary: assis-linux-arm64
             cc: gcc
-          - name: macOS ARM64 (Rosetta)
+          - name: macOS ARM64
             runner: macos-15
-            execution: rosetta
             artifact: macos-arm64-host
+            binary: assis-macos-arm64
             cc: clang
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install explicit x86_64 output emulator on Linux ARM64
+      - name: Native Linux runtime and debugger providers
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y qemu-user
-      - name: Check Rosetta execution on Apple Silicon
+        run: sudo apt-get update && sudo apt-get install -y gdb binutils libcurl4
+      - run: make -B all CC=${{ matrix.cc }}
+      - name: Execute ARM64 and verify all output architectures
+        run: python3 tools/test-portability.py --expect-host arm64 --output build/review-tests/${{ matrix.artifact }}.json
+      - name: Native ARM64 debugger, macOS signature and format gates
+        run: python3 tools/test-new-targets.py --debugger --output build/review-tests/new-targets-${{ matrix.artifact }}.json
+      - name: Complete native Linux ARM64 semantic matrix
+        if: runner.os == 'Linux'
+        run: python3 tools/test-native.py --output build/review-tests/linux-arm64-release.json
+      - name: Native macOS ARM64 runtime and ABI regressions
         if: runner.os == 'macOS'
-        run: /usr/bin/arch -x86_64 /usr/bin/true
-      - name: Build the compiler for the native ARM64 host
-        # Embedded runtimes are x86_64 byte arrays. The x64 jobs regenerate them.
-        run: make -B all CC=${{ matrix.cc }}
-      - name: Validate native frontend, cross compilation and emulated outputs
-        run: python3 tools/test-portability.py --expect-host arm64 --execution ${{ matrix.execution }} --output build/review-tests/${{ matrix.artifact }}.json
+        run: |
+          python3 tests/test-files.py
+          python3 tests/test-system.py
+          python3 tests/test-numbers.py
+          python3 tests/test-slices.py
+          python3 tests/test-closures.py
+          python3 tests/test-ffi.py
+          python3 tests/test-backend-evolution.py
+          python3 tests/test-complete-ir.py
+      - name: Offline install and uninstall of the native compiler
+        run: python3 tools/test-native-installer.py
+      - run: cp bin/assis bin/${{ matrix.binary }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}-binary
+          path: bin/${{ matrix.binary }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ matrix.artifact }}-validation
-          path: build/review-tests/${{ matrix.artifact }}.json
+          path: build/review-tests/*.json
   package:
     needs: [linux, windows, macos, arm-hosts]
     runs-on: ubuntu-latest
@@ -226,6 +255,18 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: windows-binaries
+          path: bin
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-arm64-host-binary
+          path: bin
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-arm64-host-binary
+          path: bin
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-x64-binary
           path: bin
       - run: chmod +x bin/assis
       - uses: actions/download-artifact@v4
@@ -265,7 +306,7 @@ jobs:
           name: macos-arm64-host-validation
           path: build/review-tests
       - run: python3 tools/write-validation.py
-      - run: python3 tools/package-vscode.py && python3 tools/package-release.py && python3 tools/verify-release.py
+      - run: python3 tools/package-vscode.py && python3 tools/package-release.py && python3 tools/verify-release.py && python3 tools/verify-v1-policy.py
       - uses: actions/upload-artifact@v4
         with:
           name: experimental-packages

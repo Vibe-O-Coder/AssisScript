@@ -102,3 +102,15 @@ em check/build/run, com e sem otimizações, antes de executar código.
 
 Referências: [Microsoft x64](https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention),
 [System V AMD64 ABI](https://gitlab.com/x86-psABIs/x86-64-ABI).
+
+
+## AArch64 e macOS nesta continuação
+
+Linux ARM64 e macOS ARM64 usam AAPCS64 para a ABI C escalar, com bancos inteiros
+e SIMD independentes e argumentos excedentes na pilha. Darwin respeita o
+empacotamento natural dos escalares de pilha; callbacks preservam x27. A suíte
+C independente foi estendida para ocupar x27 no host ARM64. `platform` aceita
+os cinco destinos, além das famílias `linux` e `macos` para código comum de OS.
+Extern macOS usa a primeira biblioteca declarada, que deve apontar para uma
+dylib compatível. Não há varargs de usuário ou agregados C por valor.
+Detalhes e evidência: [ARM64-NATIVO.md](ARM64-NATIVO.md).

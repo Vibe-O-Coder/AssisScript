@@ -9,8 +9,8 @@ static void scan_platforms(void){
         if(t->kind==T_PLATFORM){
             if(depth)error(t,"platform só aceita declarações no nível do módulo");
             if(i+4>=tokens.n||((Token*)tokens.v[i+1])->kind!='('||((Token*)tokens.v[i+2])->kind!=T_STR||((Token*)tokens.v[i+3])->kind!=')'||((Token*)tokens.v[i+4])->kind!='{')error(t,"use platform(\"linux-x64\") { declarações }");
-            Token *name=tokens.v[i+2];if(strlen(name->str)!=name->len||(!same(name->str,"linux-x64")&&!same(name->str,"windows-x64")&&!same(name->str,"macos-x64")))error(name,"plataforma desconhecida");
-            bool enabled=same(name->str,target_windows?"windows-x64":target_macos?"macos-x64":"linux-x64");int level=1,j=i+5;
+            Token *name=tokens.v[i+2];if(strlen(name->str)!=name->len||(!same(name->str,"linux-x64")&&!same(name->str,"windows-x64")&&!same(name->str,"macos-x64")&&!same(name->str,"linux-arm64")&&!same(name->str,"macos-arm64")&&!same(name->str,"linux")&&!same(name->str,"macos")))error(name,"plataforma desconhecida");
+            bool enabled=same(name->str,target_windows?"windows-x64":target_macos?(target_arm64?"macos-arm64":"macos-x64"):(target_arm64?"linux-arm64":"linux-x64"))||(!target_windows&&same(name->str,target_macos?"macos":"linux"));int level=1,j=i+5;
             for(;j<tokens.n;j++){
                 Token *p=tokens.v[j];if(p->kind==T_FILE_END||p->kind==T_EOF||p->file!=t->file)error(t,"platform exige bloco fechado no mesmo arquivo");
                 if(p->kind==T_PLATFORM||p->kind==T_NAMESPACE)error(p,"platform não aceita platform/namespace aninhado");

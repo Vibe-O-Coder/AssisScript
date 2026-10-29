@@ -29,8 +29,5 @@ with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
     for file in files + [root / "SHA256SUMS"]:
         archive.write(file, "AssisScript/" + file.relative_to(root).as_posix())
 print(output)
-historical = root/'historical'
-if historical.is_dir():
-    with zipfile.ZipFile(dist/'AssisScript-historical.zip','w',zipfile.ZIP_DEFLATED) as archive:
-        for file in sorted(historical.rglob('*')):
-            if file.is_file():archive.write(file,'AssisScript-historical/'+file.relative_to(historical).as_posix())
+# Historical binaries and retired image derivatives stay local. They are not
+# independently repackaged into dist/ alongside the reviewed current release.

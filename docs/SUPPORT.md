@@ -2,7 +2,7 @@
 
 ## Current scope
 
-AssisScript 3.3.0-alpha.15 is an experimental Windows x64 / Linux x86_64 toolchain, with experimental macOS x86_64 output. It has no production SLA, guaranteed response time or promise of binary/source compatibility between alphas. The repository's issues are the public channel for defects and proposals. Security-sensitive reports should omit exploit secrets and personal information; do not publish credentials in test cases.
+AssisScript 3.3.0-alpha.15 is an experimental Windows x64 / Linux x64 and ARM64 toolchain, with experimental macOS x64/ARM64 output. It has no production SLA, guaranteed response time or promise of binary/source compatibility between alphas. The repository's issues are the public channel for defects and proposals. Security-sensitive reports should omit exploit secrets and personal information; do not publish credentials in test cases.
 
 Supported validation covers the versioned compiler, runtime, standard library, editor and examples shipped together. Mixing versions is unsupported. Recompile all modules after an ABI/runtime change; package lockfiles bind inputs to a compiler version.
 
@@ -24,4 +24,4 @@ Removal must preserve files outside the installer's recorded distribution. Files
 
 Contributors retain the rights they actually hold and submit original project contributions under its CC BY-NC-SA 4.0 terms. Identify third-party material and its notices before inclusion; the project license does not override upstream licenses. Independent AssisScript libraries are permitted. Forks should credit the upstream project, describe modifications and identify themselves as unofficial.
 
-The human owner has selected a project license. Image provenance and the final redistribution review still need confirmation; actual link inventories for Windows/Linux are recorded separately, and [PROCEDENCIA.md](PROCEDENCIA.md) tracks these open items. This document does not claim those rights are resolved.
+The human owner selected the v1 identity. The applied original SVGs, resource propagation, actual link inventories and redistribution review for this candidate are documented in [PROCEDENCIA-V1.md](PROCEDENCIA-V1.md). New dependencies require a new inventory. The Linux compiler uses compatible system glibc (current binary built on Ubuntu 24.04); build from source for older or different C library environments. Generated programs without extern dependencies remain freestanding. macOS optional Linux/Windows network/process providers require explicit platform adapters; see [MACOS.md](MACOS.md).

@@ -58,3 +58,14 @@ El responsable eligió **CC BY-NC-SA 4.0** para los materiales originales. Consu
 3. Los forks/adaptaciones redistribuidos deben acreditar a **Vibe-O-Coder / AssisScript**, enlazar al [original](https://github.com/Vibe-O-Coder/AssisScript), conservar avisos, identificar cambios y cumplir ShareAlike. Distinga versiones no oficiales y no sugiera aprobación.
 4. Estas notas no añaden restricciones ni cambian licencias de terceros. Compilar código independiente no lo relicencia automáticamente; el material copiado o incorporado, incluido el runtime, conserva sus términos.
 5. No hay garantía. Informe defectos en [issues](https://github.com/Vibe-O-Coder/AssisScript/issues). Consulte la [política de soporte](docs/SUPPORT.md).
+
+
+## Native ARM64 / v1 candidate
+
+This revision adds `linux-arm64` and `macos-arm64`, a native ARM64 runtime,
+Mach-O DWARF symbols, ad hoc ARM64 signatures and `--app` macOS bundles with
+the selected v1 icons. See [the target contract](docs/ARM64-NATIVO.md) and
+[the applied identity/provenance review](docs/PROCEDENCIA-V1.md).
+Native macOS/ARM64 acceptance of this candidate is pending its Actions run.
+The Linux compiler now uses compatible system glibc; generated programs
+without extern dependencies retain the freestanding project runtime.

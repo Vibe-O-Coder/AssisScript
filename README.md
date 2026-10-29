@@ -2,7 +2,7 @@
 
 [Português (Brasil)](README.pt-BR.md) · [Español](README.es.md)
 
-AssisScript is an experimental native language and the foundation of a proposed **new Web ecosystem**. It compiles directly to Linux x86_64 ELF, Windows x64 PE and experimental macOS x86_64 Mach-O executables. The browser, HTDL, style system and search engine are future ecosystem projects.
+AssisScript is an experimental native language and the foundation of a proposed **new Web ecosystem**. It compiles directly to Linux x64/ARM64 ELF, Windows x64 PE and experimental macOS x64/ARM64 Mach-O executables. The browser, HTDL, style system and search engine are future ecosystem projects.
 
 Development uses AI assistance (**GPT-6.1 Sol, Extra High reasoning / Extra Alto**). The concept, direction and structure were designed by humans, with AI assistance for suggestions. Humans remain responsible for reviewing and directing the implementation.
 
@@ -67,3 +67,14 @@ The maintainer selected **CC BY-NC-SA 4.0** for the project's original licensed 
 ## Validation
 
 The Makefile and CI cover Windows/Linux native execution, semantic rejections, editor/LSP, clean reconstruction, packaging and strided-key performance. New tests: `make test-alpha15`. Contributions should preserve contracts, use English public APIs and include relevant validation. Record evidence before changing roadmap credit.
+
+
+## Native ARM64 / v1 candidate
+
+This revision adds `linux-arm64` and `macos-arm64`, a native ARM64 runtime,
+Mach-O DWARF symbols, ad hoc ARM64 signatures and `--app` macOS bundles with
+the selected v1 icons. See [the target contract](docs/ARM64-NATIVO.md) and
+[the applied identity/provenance review](docs/PROCEDENCIA-V1.md).
+Native macOS/ARM64 acceptance of this candidate is pending its Actions run.
+The Linux compiler now uses compatible system glibc; generated programs
+without extern dependencies retain the freestanding project runtime.

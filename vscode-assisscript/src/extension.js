@@ -18,7 +18,8 @@ function activate(context) {
         const configured = config(uri).get('compilerPath');
         if (configured) return path.isAbsolute(configured) || !/[\\/]/.test(configured) ? configured : path.resolve(workspace(uri), configured);
         const name = process.platform === 'win32' ? 'assis.exe' : 'assis';
-        for (const candidate of [path.join(context.extensionPath, 'bin', name), path.join(context.extensionPath, '..', 'bin', name)]) if (fs.existsSync(candidate)) return candidate;
+        const native = process.platform === 'win32' ? name : `assis-${process.platform === 'darwin' ? 'macos' : 'linux'}-${process.arch === 'arm64' ? 'arm64' : 'x64'}`;
+        for (const candidate of [path.join(context.extensionPath, 'bin', native), path.join(context.extensionPath, 'bin', name), path.join(context.extensionPath, '..', 'bin', name)]) if (fs.existsSync(candidate)) return candidate;
         return name;
     }
     function options(document) {

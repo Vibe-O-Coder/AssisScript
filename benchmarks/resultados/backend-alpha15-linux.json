@@ -6,224 +6,186 @@
     "processor": "x86_64",
     "logicalCpus": 8
   },
-  "samples": 7,
-  "iterations": 4000000,
+  "samples": 3,
+  "iterations": 2000000,
   "reference": "Python integer formulas; both compilers checked before and during measurement",
   "compilers": {
     "candidate": {
-      "sha256": "dbab5395ac9f9abfdbd2ec92c5569ad4bf03abff5dfe56c03da71e649cf60a28",
-      "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)"
+      "sha256": "e28808b4baa1608daf4e674e2948e1d10821c3bde27051af251e1be2aa92aa84",
+      "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)",
+      "mode": "optimized"
     },
     "baseline": {
-      "sha256": "31da97cec9aa9c017fc4d41898f7b08203c118c3cb6fa3c923430960fc7e59a5",
-      "version": "AssisScript 3.3.0-alpha.14 (nativo, Linux x86_64)"
+      "sha256": "e28808b4baa1608daf4e674e2948e1d10821c3bde27051af251e1be2aa92aa84",
+      "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)",
+      "mode": "--no-opt"
     }
   },
   "workloads": {
     "disjoint_loops": {
-      "expected": 96000240000000,
-      "sourceSha256": "9373ce2808af84ffaeea295f4c5e15c86737a8608f0a0824727a95ce55831270",
+      "expected": 24000120000000,
+      "sourceSha256": "04e24e19247a1a13c8390dc43c7a8e8d9fed00ae4536d69fc5879349511b41a9",
       "measurements": {
         "candidate": {
-          "compileMs": 21.362157,
+          "compileMs": 21.796833,
           "bytes": 12289,
-          "binarySha256": "8c8a9846fab235191accf6fd1161bfa5207088ee1e39fde7a954e63633d654e3",
+          "binarySha256": "a7cd32a5d2c7d213d006ddf9d43bd1e533af54be02f4bece258d7d875c64ae04",
           "runMs": [
-            91.659452,
-            97.874673,
-            94.394144,
-            94.124359,
-            90.463374,
-            100.145052,
-            98.938952
+            92.626459,
+            95.310179,
+            87.926648
           ],
-          "medianMs": 94.394144,
-          "minMs": 90.463374,
-          "maxMs": 100.145052
+          "medianMs": 92.626459,
+          "minMs": 87.926648,
+          "maxMs": 95.310179
         },
         "baseline": {
-          "compileMs": 25.588268,
+          "compileMs": 22.31349,
           "bytes": 12289,
-          "binarySha256": "8e7784b3969f04bebfd13bda03b6305011532a43f6ebc97ec7f25543bd12eb9e",
+          "binarySha256": "55f6a53b91f0bcbc24e100f0aeb9af4c045a462fc781e1c5910c4dc566279a16",
           "runMs": [
-            171.753927,
-            161.836907,
-            165.138118,
-            166.070875,
-            165.438798,
-            166.797403,
-            165.169119
+            224.425804,
+            238.937431,
+            198.030879
           ],
-          "medianMs": 165.438798,
-          "minMs": 161.836907,
-          "maxMs": 171.753927
+          "medianMs": 224.425804,
+          "minMs": 198.030879,
+          "maxMs": 238.937431
         }
       },
-      "speedup": 1.7526383628204731
+      "speedup": 2.4229124855134536
     },
     "stencil_offsets": {
-      "expected": 393046855110,
-      "sourceSha256": "ed6009f951467ff3740fe919658f0a8b7a543dd89169b76bcb582087ce0c5966",
+      "expected": 196523427555,
+      "sourceSha256": "82f68949969500056cef65b0cd4581b6176580cb7d66f2b306500f92bc5fef76",
       "measurements": {
         "candidate": {
-          "compileMs": 25.164018,
+          "compileMs": 18.577101,
           "bytes": 8193,
-          "binarySha256": "f5879f5e603387cfc86edbe6889bbd5c31a37f11177c3322181e0f147fb77e30",
+          "binarySha256": "ebae9e407df69e8de93bfbac8e9875f7eab6af655232591f6303a8769a0b5cd4",
           "runMs": [
-            422.086561,
-            419.920395,
-            398.22432,
-            385.259564,
-            390.56213,
-            385.990545,
-            385.14431
+            340.54812,
+            361.437062,
+            353.885006
           ],
-          "medianMs": 390.56213,
-          "minMs": 385.14431,
-          "maxMs": 422.086561
+          "medianMs": 353.885006,
+          "minMs": 340.54812,
+          "maxMs": 361.437062
         },
         "baseline": {
-          "compileMs": 26.122036,
-          "bytes": 8193,
-          "binarySha256": "34b881cf1ef0d240bceab2edb7e7a5c4028ae2c9232585ff6fc7da36d72d6cc4",
+          "compileMs": 16.228915,
+          "bytes": 12289,
+          "binarySha256": "c3034ea5077c1ce0221e520bf8fd0f3ac25690a155fdf6df06703ee5a6bcbd35",
           "runMs": [
-            530.181572,
-            502.379863,
-            468.262926,
-            471.3128,
-            465.271855,
-            465.551235,
-            464.17164
+            1267.57852,
+            1336.453283,
+            1253.122519
           ],
-          "medianMs": 468.262926,
-          "minMs": 464.17164,
-          "maxMs": 530.181572
+          "medianMs": 1267.57852,
+          "minMs": 1253.122519,
+          "maxMs": 1336.453283
         }
       },
-      "speedup": 1.198946057570917
+      "speedup": 3.5818938313537934
     },
     "reverse_traversal": {
-      "expected": 131047612416,
-      "sourceSha256": "bd26cd463e7f9fb92dc05ae42fd9fc7ea70dca6c70241f4f6fa7c5e7c551dbf7",
+      "expected": 65523806208,
+      "sourceSha256": "c2f4223f1468211cd5cbdd55de8d71ad002540e6b4985fabcb4f6ea22228c949",
       "measurements": {
         "candidate": {
-          "compileMs": 25.384044,
+          "compileMs": 22.095473,
           "bytes": 16912,
-          "binarySha256": "473285b3bc866330f3c32e1305c18236d84b3dd41e65bd965d7dd96e6fa0c5cb",
+          "binarySha256": "6d8555127df171cac723cf65356e29d936662c59657099b0dbba6d47c8c3c154",
           "runMs": [
-            75.920042,
-            75.39503,
-            76.116409,
-            74.908447,
-            76.341409,
-            76.235056,
-            75.264488
+            81.334498,
+            74.51526,
+            78.964995
           ],
-          "medianMs": 75.920042,
-          "minMs": 74.908447,
-          "maxMs": 76.341409
+          "medianMs": 78.964995,
+          "minMs": 74.51526,
+          "maxMs": 81.334498
         },
         "baseline": {
-          "compileMs": 27.68775,
+          "compileMs": 47.240579,
           "bytes": 16912,
-          "binarySha256": "1774a5d9360e88c5b887b4c4223a53799ee425af9e0a6f5b2d1db9f6aec0e3ab",
+          "binarySha256": "36168ca6955702b45d20dea86b8b3543d234041707d6cda73415638e41923cc4",
           "runMs": [
-            76.57224,
-            76.234656,
-            75.649117,
-            76.947838,
-            74.551906,
-            77.488498,
-            77.139653
+            147.59217,
+            149.630597,
+            158.740518
           ],
-          "medianMs": 76.57224,
-          "minMs": 74.551906,
-          "maxMs": 77.488498
+          "medianMs": 149.630597,
+          "minMs": 147.59217,
+          "maxMs": 158.740518
         }
       },
-      "speedup": 1.0085905906111063
+      "speedup": 1.8948978214967276
     },
     "scalar_leaf": {
-      "expected": 1535999984000000,
-      "sourceSha256": "3740e73b9e7d94be8d110a4ed6239fc1e69e7a273f0f1ad78e1f6e4116d6dac5",
+      "expected": 383999992000000,
+      "sourceSha256": "4419cb5dcb53e5bee8abfe609360ee9d5a41ee85763edb3f229304f4b8498ef8",
       "measurements": {
         "candidate": {
-          "compileMs": 31.070466,
+          "compileMs": 23.713761,
           "bytes": 8193,
-          "binarySha256": "b1c8e544d84c10248ba958801fad430fb3cc20a601ec826ac38a8b1d43fa900a",
+          "binarySha256": "9dd949fafeefd86881ac7e1049325b95a20ff74d9bea31f8f85f47c38395a6b7",
           "runMs": [
-            53.990664,
-            57.939515,
-            53.837327,
-            55.726939,
-            55.463149,
-            54.967456,
-            55.002641
+            53.266547,
+            60.70679,
+            58.568155
           ],
-          "medianMs": 55.002641,
-          "minMs": 53.837327,
-          "maxMs": 57.939515
+          "medianMs": 58.568155,
+          "minMs": 53.266547,
+          "maxMs": 60.70679
         },
         "baseline": {
-          "compileMs": 28.05479,
+          "compileMs": 32.404075,
           "bytes": 8193,
-          "binarySha256": "b1c8e544d84c10248ba958801fad430fb3cc20a601ec826ac38a8b1d43fa900a",
+          "binarySha256": "b13d248282c8ae797b45d04f4a3002f0a6c19e399ee7f159aaee278113054ff2",
           "runMs": [
-            53.462784,
-            53.471081,
-            54.330522,
-            54.33362,
-            53.750164,
-            55.311212,
-            53.921293
+            237.046747,
+            246.465354,
+            249.215556
           ],
-          "medianMs": 53.921293,
-          "minMs": 53.462784,
-          "maxMs": 55.311212
+          "medianMs": 246.465354,
+          "minMs": 237.046747,
+          "maxMs": 249.215556
         }
       },
-      "speedup": 0.9803400713067578
+      "speedup": 4.208180264514052
     },
     "float_values": {
-      "expected": 16000000,
-      "sourceSha256": "2c2db83849aecae23c3d0ee4f0b7c067fb9529e4ec222a59db0a8b971f8ed5e6",
+      "expected": 8000000,
+      "sourceSha256": "62e1381effb27732869ace2065131439bf0111f32b95fc099313c8d509d269f1",
       "measurements": {
         "candidate": {
-          "compileMs": 35.14413,
+          "compileMs": 22.646172,
           "bytes": 8193,
-          "binarySha256": "379e90553559823c41cb1ec226b701390eaf18f3e74164bbff2ab6a7aa2fc53a",
+          "binarySha256": "5ccde64defc8403c425b1d45545a074f30d47de67b00b4e40577a78071e725d3",
           "runMs": [
-            123.527761,
-            122.047341,
-            121.97397,
-            123.116935,
-            122.769762,
-            125.013239,
-            124.616415
+            64.621769,
+            63.695791,
+            65.14232
           ],
-          "medianMs": 123.116935,
-          "minMs": 121.97397,
-          "maxMs": 125.013239
+          "medianMs": 64.621769,
+          "minMs": 63.695791,
+          "maxMs": 65.14232
         },
         "baseline": {
-          "compileMs": 30.344825,
+          "compileMs": 16.875425,
           "bytes": 8193,
-          "binarySha256": "d5c8b022f4ad5aac813c70a62712ca319b6ccd29150d748fd1ec70a851810bf5",
+          "binarySha256": "635820b6439274c5032ba85759782d741d3432da001938202c5fd1f17ee79042",
           "runMs": [
-            167.109208,
-            163.541803,
-            164.460978,
-            165.503885,
-            165.739999,
-            167.251744,
-            166.973875
+            126.543316,
+            131.899666,
+            124.807068
           ],
-          "medianMs": 165.739999,
-          "minMs": 163.541803,
-          "maxMs": 167.251744
+          "medianMs": 126.543316,
+          "minMs": 124.807068,
+          "maxMs": 131.899666
         }
       },
-      "speedup": 1.3461998465117737
+      "speedup": 1.9582149786088339
     }
   }
 }

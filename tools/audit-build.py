@@ -24,11 +24,15 @@ digest=lambda path:hashlib.sha256(path.read_bytes()).hexdigest()
 def source_hashes():
     return {p.relative_to(ROOT).as_posix():digest(p) for p in sorted((ROOT/'src').iterdir()) if p.is_file()}
 
+def asset_hashes():
+    return {p.relative_to(ROOT).as_posix():digest(p) for p in sorted((ROOT/'assets').glob('*')) if p.is_file()}
+
 if args.check:
     report=json.loads(args.output.read_text(encoding='utf-8'))
     assert report['format']=='AssisScript-link-audit-v1'
     assert report['auditToolSha256']==digest(Path(__file__)),'Inventory tool changed; regenerate the report'
     assert report['sourceHashes']==source_hashes(),'Source inventory is stale'
+    assert report['assetHashes']==asset_hashes(),'Asset inventory is stale'
     for binary in report['binaries']:
         assert binary['sha256']==digest(ROOT/binary['path']),binary['path']
         assert binary['identicalToRelease'] and binary['inputs']
@@ -51,7 +55,7 @@ def group(path):
         if name in ('crt2.o','crt2u.o','dllcrt2.o','default-manifest.o','libmingw32.a','libmingwex.a','libmoldname.a','libmsvcrt.a','libucrt.a','libucrtbase.a','libadvapi32.a','libkernel32.a','libshell32.a','libuser32.a'):
             return 'MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices'
         return 'unclassified'
-    if name.startswith(('libc','libm','libpthread','librt','libdl','crt','Scrt','rcrt')):return 'GNU C Library / LGPL-2.1-or-later and component notices'
+    if name.startswith(('ld-linux','libc','libm','libpthread','librt','libdl','crt','Scrt','rcrt')):return 'GNU C Library / LGPL-2.1-or-later and component notices'
     return 'unclassified'
 
 def package(path):
@@ -62,9 +66,9 @@ def package(path):
         return run(['dpkg-query','-S',path]).split(': /')[0]
     except (subprocess.CalledProcessError,ValueError):return 'unresolved; exact file hash recorded'
 
-flags=['-O2','-std=c11','-Wall','-Wextra','-Wpedantic','-Wno-misleading-indentation','-static','-s']
-if os.name=='nt':flags+=['-municode','-static-libgcc','-Wl,--no-insert-timestamp']
-report=dict(format='AssisScript-link-audit-v1',platform=os.name,auditToolSha256=digest(Path(__file__)),compiler={'version':run([cc,'--version']).splitlines()[0],'target':run([cc,'-dumpmachine']),'sha256':digest(cc)},sourceHashes=source_hashes(),binaries=[])
+flags=['-O2','-std=c11','-Wall','-Wextra','-Wpedantic','-Wno-misleading-indentation','-s']
+if os.name=='nt':flags+=['-static','-municode','-static-libgcc','-Wl,--no-insert-timestamp']
+report=dict(format='AssisScript-link-audit-v1',platform=os.name,auditToolSha256=digest(Path(__file__)),compiler={'version':run([cc,'--version']).splitlines()[0],'target':run([cc,'-dumpmachine']),'sha256':digest(cc)},sourceHashes=source_hashes(),assetHashes=asset_hashes(),binaries=[])
 with tempfile.TemporaryDirectory(prefix='assis-link-audit-') as temp:
     folder=Path(temp)
     sources=[('src/assisc.c','bin/assis.exe' if os.name=='nt' else 'bin/assis',[])]
@@ -72,14 +76,19 @@ with tempfile.TemporaryDirectory(prefix='assis-link-audit-') as temp:
     for source,destination,libs in sources:
         obj=folder/'source.o';output=folder/Path(destination).name;linkmap=folder/'link.map'
         run([cc,*flags,'-c',ROOT/source,'-o',obj])
-        run([cc,*flags,obj,*libs,'-Wl,-Map,'+str(linkmap),'-Wl,--cref','-o',output])
+        resources=[]
+        if os.name=='nt':
+            resource=folder/'icon.o'
+            rc=ROOT/'assets'/('compiler.rc' if 'assisc.c' in source else 'installer.rc')
+            run([cc.with_name('windres.exe'),rc,'-I',ROOT,'-O','coff','-o',resource]);resources=[resource]
+        run([cc,*flags,obj,*resources,*libs,'-Wl,-Map,'+str(linkmap),'-Wl,--cref','-o',output])
         text=linkmap.read_text(encoding='utf-8',errors='replace')
         inputs={};synthetic=[]
         for line in text.splitlines():
             if line.startswith('LOAD '):
                 name=line[5:].strip()
                 if name=='dll stuff':synthetic.append('GNU ld generated PE import tables')
-                elif name!=str(obj):inputs.setdefault(name,set())
+                elif name!=str(obj) and name not in map(str,resources):inputs.setdefault(name,set())
         for archive,member in re.findall(r'([^\s()]+\.a)\(([^)]+)\)',text):inputs.setdefault(archive,set()).add(member)
         entries=[]
         for name,members in sorted(inputs.items()):
@@ -90,7 +99,7 @@ with tempfile.TemporaryDirectory(prefix='assis-link-audit-') as temp:
         objdump=cc.with_name('objdump.exe' if os.name=='nt' else 'objdump')
         if not objdump.is_file():objdump=shutil.which('objdump')
         imports=re.findall(r'DLL Name:\s*(\S+)',run([objdump,'-p',output])) if os.name=='nt' else re.findall(r'NEEDED\s+(\S+)',run([objdump,'-p',output]))
-        record=dict(path=destination,source=source,sourceObjectSha256=digest(obj),sha256=digest(output),identicalToRelease=digest(output)==digest(ROOT/destination),flags=flags,linkLibraries=libs,systemImports=sorted(imports),inputs=entries,syntheticInputs=synthetic)
+        record=dict(path=destination,source=source,sourceObjectSha256=digest(obj),sha256=digest(output),identicalToRelease=digest(output)==digest(ROOT/destination),flags=flags,projectResourceObjects=[{'sha256':digest(p),'origin':'assets/*.rc and v1 ICO sources'} for p in resources],linkLibraries=libs,systemImports=sorted(imports),inputs=entries,syntheticInputs=synthetic)
         assert entries and record['identicalToRelease'],('Audited build differs from distributed binary',destination)
         assert all(e['licenseGroup']!='unclassified' for e in entries),entries
         report['binaries'].append(record)

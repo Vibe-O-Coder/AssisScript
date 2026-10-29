@@ -62,3 +62,14 @@ A licença escolhida pelo responsável para os materiais originais é **CC BY-NC
 5. Não há garantia. Relate problemas nas [issues](https://github.com/Vibe-O-Coder/AssisScript/issues). A [política de suporte](docs/SUPPORT.md) explica compatibilidade, atualizações e limitações.
 
 O Makefile e a CI incluem testes nativos, editor/LSP, reconstrução limpa, pacotes e regressão de desempenho. As novas suítes são reunidas em `make test-alpha10`.
+
+
+## Native ARM64 / v1 candidate
+
+This revision adds `linux-arm64` and `macos-arm64`, a native ARM64 runtime,
+Mach-O DWARF symbols, ad hoc ARM64 signatures and `--app` macOS bundles with
+the selected v1 icons. See [the target contract](docs/ARM64-NATIVO.md) and
+[the applied identity/provenance review](docs/PROCEDENCIA-V1.md).
+Native macOS/ARM64 acceptance of this candidate is pending its Actions run.
+The Linux compiler now uses compatible system glibc; generated programs
+without extern dependencies retain the freestanding project runtime.

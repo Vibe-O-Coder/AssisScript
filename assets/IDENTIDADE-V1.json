@@ -1,0 +1,21 @@
+{
+  "selected": "v1",
+  "origin": "Project-owned geometric SVG sources selected by the owner on 2026-10-29; no tracing or incorporation of the retired stickers.",
+  "files": {
+    "tools/build-icons.py": "f3277a4ef2de0eb0d83ac1df243b8b94b1e5d5431b4d3e259614deee51371eee",
+    "src/icon_blob.h": "4c52392780110640152fa702b9447f8403e9bfa4e40b468b4cbe2ca5711a90c5",
+    "src/icon_icns.h": "ba42070a47ae1c6034769bd82cfbdce1c2353a466efe7c51fc52f98aed2fe636",
+    "assets/compiler.rc": "a27ace3ae3b1815022838fd8175d713504de0047095e8a4bcf50c00c16647332",
+    "assets/installer.rc": "21d4bd80721da2e16e96f10f76a6def446f91f54eebd9e7cb8cf4cb0bb6f4299",
+    "assets/propostas/source-v1.svg": "3ab6b1d1e7ae68310c4213f4dde38642f82d02d41ffe768a7906d2200b3f8da7",
+    "assets/propostas/compiled-v1.svg": "9ac7ecbb9030a816cf3b87c8bd22f6fd8f9a64f4b78b16aa507270677a75d1a7",
+    "assets/source.png": "73837cedaa62d6beeef626b5b68af18dcd294ede5e09858b5ada48bc7d474a55",
+    "assets/source.ico": "9e03cb1e04c8e1d3ad4331483ded3a538b25d59635bc671376802c7b720fd329",
+    "assets/source.icns": "69eda356ccb6929a6f745d0fe3499a6da1dc1eb8849d6c6d2a8c96a1aadc63c8",
+    "assets/compiled.png": "f380b436fa56fc3cfdb6de0c3822e56c84d1ec8bd4287e8e1c87a3653e351747",
+    "assets/compiled.ico": "45211afc931a7912f202e671d764ba35932051194aa6a5712062286cbf7a6fdc",
+    "assets/compiled.icns": "cc97eddf3e01f4f81e0e6220e7cb2b7d0456c04048f5f34943830af200037864",
+    "vscode-assisscript/icons/source.png": "73837cedaa62d6beeef626b5b68af18dcd294ede5e09858b5ada48bc7d474a55",
+    "vscode-assisscript/icons/compiled.png": "f380b436fa56fc3cfdb6de0c3822e56c84d1ec8bd4287e8e1c87a3653e351747"
+  }
+}

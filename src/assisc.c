@@ -8,7 +8,7 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
 #if (!defined(__linux__) && !defined(_WIN32) && !defined(__APPLE__)) || (!defined(__x86_64__) && !((defined(__aarch64__) || defined(__arm64__)) && !defined(_WIN32)))
-#error "Hosts suportados: Linux/macOS x86_64 ou ARM64, Windows x86_64. Destinos: x86_64."
+#error "Hosts suportados: Linux/macOS x86_64 ou ARM64, Windows x86_64. Destinos: x86_64 e ARM64 Linux/macOS."
 #endif
 #if defined(__aarch64__) || defined(__arm64__)
 #define HOST_ARCH "ARM64"
@@ -56,6 +56,7 @@ static bool target_macos=true;
 #else
 static bool target_macos=false;
 #endif
+static bool target_arm64=!HOST_RUN_X64;
 
 #include "version.h"
 #define VERSION ASSIS_VERSION
@@ -74,7 +75,7 @@ typedef struct { char *path,*snapshot; } SourceOverlay;
 static Vec source_overlays;
 static SourceFile *current_source;
 static bool json_diagnostics,library_check,stdin_source;
-static bool optimize=true,debug_memory,safe_entry=true,debug_symbols;
+static bool optimize=true,debug_memory,safe_entry=true,debug_symbols,bundle_app;
 static char *compiler_directory;
 static void json_string(FILE *out,const char *s){
     fputc('"',out);for(const unsigned char *p=(const unsigned char*)s;*p;p++){
@@ -711,7 +712,9 @@ static void gen_stmt(Node *n){
 }
 #include "backend_emit.h"
 static size_t entry_offset;
+#include "arm64_emit.h"
 static void generate(void){
+    if(target_arm64){generate_arm64();return;}
     if(target_windows)bytes(&code,runtime_win_blob,sizeof(runtime_win_blob));else if(target_macos)bytes(&code,runtime_macos_blob,sizeof(runtime_macos_blob));else bytes(&code,runtime_blob,sizeof(runtime_blob));
     for(int i=0;i<all_functions.n;i++){Function *f=all_functions.v[i];f->label=new_label();if(f->callback){f->callback_label=new_label();if(callback_state_label<0)callback_state_label=new_label();}if(f->foreign)f->import_label=native_import(f->foreign_library[target_windows?1:0],f->foreign_symbol);}
     for(int i=0;i<classes.n;i++){Class *c=classes.v[i];c->label=new_label();if(has_owned_fields(c)||!c->record)c->drop_label=new_label();}
@@ -789,10 +792,11 @@ static void generate(void){
     }
     if(!data.n)u8(&data,0);
 }
-static size_t align_page(size_t size){return (size+4095)&~(size_t)4095;}
+static size_t align_page(size_t size){size_t page=target_macos&&target_arm64?16384:4096;return (size+page-1)&~(page-1);}
 #define ELF_BASE UINT64_C(0)
 #include "debug_info.h"
 static void apply_fixes(uint64_t base,size_t text_rva,size_t data_rva){
+    if(target_arm64)apply_arm_fixes(base,text_rva,data_rva);
     for(int i=0;i<fixes.n;i++){
         Fix *f=fixes.v[i];Label *l=labels.v[f->label];if(!l->defined)fatal("rótulo não definido");
         uint64_t address=base+(l->section==2?native_import_rva:l->section?data_rva:text_rva)+l->position;
@@ -813,18 +817,18 @@ static void write_elf(const char *path){
     if(dynamic){native_import_rva=align_page(data_offset+data.n);build_elf_imports(native_import_rva);}
     apply_fixes(ELF_BASE,4096,data_offset);
     Elf64_Ehdr eh={0};memcpy(eh.e_ident,ELFMAG,SELFMAG);eh.e_ident[EI_CLASS]=ELFCLASS64;eh.e_ident[EI_DATA]=ELFDATA2LSB;eh.e_ident[EI_VERSION]=EV_CURRENT;
-    eh.e_type=ET_DYN;eh.e_machine=EM_X86_64;eh.e_version=EV_CURRENT;eh.e_entry=ELF_BASE+4096+entry_offset;
+    eh.e_type=ET_DYN;eh.e_machine=target_arm64?183:EM_X86_64;eh.e_version=EV_CURRENT;eh.e_entry=ELF_BASE+4096+entry_offset;
     eh.e_phoff=sizeof(eh);eh.e_ehsize=sizeof(eh);eh.e_phentsize=sizeof(Elf64_Phdr);eh.e_phnum=4;
     Elf64_Phdr ph[9]={0};
     ph[0]=(Elf64_Phdr){.p_type=PT_LOAD,.p_flags=PF_R,.p_offset=0,.p_vaddr=ELF_BASE,.p_paddr=ELF_BASE,.p_filesz=4096,.p_memsz=4096,.p_align=4096};
     ph[1]=(Elf64_Phdr){.p_type=PT_LOAD,.p_flags=PF_R|PF_X,.p_offset=4096,.p_vaddr=ELF_BASE+4096,.p_paddr=ELF_BASE+4096,.p_filesz=code.n,.p_memsz=code.n,.p_align=4096};
     ph[2]=(Elf64_Phdr){.p_type=PT_LOAD,.p_flags=PF_R,.p_offset=data_offset,.p_vaddr=ELF_BASE+data_offset,.p_paddr=ELF_BASE+data_offset,.p_filesz=data.n,.p_memsz=data.n,.p_align=4096};
     ph[3]=(Elf64_Phdr){.p_type=PT_GNU_STACK,.p_flags=PF_R|PF_W,.p_align=16};
-    const char interpreter[]="/lib64/ld-linux-x86-64.so.2";
+    const char *interpreter=target_arm64?"/lib/ld-linux-aarch64.so.1":"/lib64/ld-linux-x86-64.so.2";size_t interpreter_size=strlen(interpreter)+1;
     if(dynamic){
         eh.e_phnum=9;
         ph[4]=(Elf64_Phdr){.p_type=6,.p_flags=PF_R,.p_offset=sizeof(eh),.p_vaddr=sizeof(eh),.p_paddr=sizeof(eh),.p_filesz=sizeof(ph),.p_memsz=sizeof(ph),.p_align=8};
-        ph[5]=(Elf64_Phdr){.p_type=3,.p_flags=PF_R,.p_offset=1024,.p_vaddr=1024,.p_paddr=1024,.p_filesz=sizeof(interpreter),.p_memsz=sizeof(interpreter),.p_align=1};
+        ph[5]=(Elf64_Phdr){.p_type=3,.p_flags=PF_R,.p_offset=1024,.p_vaddr=1024,.p_paddr=1024,.p_filesz=interpreter_size,.p_memsz=interpreter_size,.p_align=1};
         ph[6]=(Elf64_Phdr){.p_type=PT_LOAD,.p_flags=PF_R|PF_W,.p_offset=native_import_rva,.p_vaddr=native_import_rva,.p_paddr=native_import_rva,.p_filesz=elf_imports.n,.p_memsz=align_page(elf_imports.n),.p_align=4096};
         ph[7]=(Elf64_Phdr){.p_type=2,.p_flags=PF_R|PF_W,.p_offset=native_import_rva+elf_dynamic_offset,.p_vaddr=native_import_rva+elf_dynamic_offset,.p_paddr=native_import_rva+elf_dynamic_offset,.p_filesz=elf_dynamic_size,.p_memsz=elf_dynamic_size,.p_align=8};
         ph[8]=(Elf64_Phdr){.p_type=0x6474e552,.p_flags=PF_R,.p_offset=native_import_rva,.p_vaddr=native_import_rva,.p_paddr=native_import_rva,.p_filesz=elf_imports.n<elf_relro_size?elf_imports.n:elf_relro_size,.p_memsz=elf_relro_size,.p_align=1};
@@ -834,7 +838,7 @@ static void write_elf(const char *path){
     if(debug_symbols)append_debug_elf(&eh,dynamic?native_import_rva+elf_imports.n:data_offset+data.n);
     protect_output(path);
     FILE *fp=fopen(path,"wb");if(!fp)fatal("não foi possível criar %s: %s",path,strerror(errno));
-    unsigned char header[4096]={0};memcpy(header,&eh,sizeof(eh));memcpy(header+sizeof(eh),ph,(size_t)eh.e_phnum*sizeof(Elf64_Phdr));if(dynamic)memcpy(header+1024,interpreter,sizeof(interpreter));
+    unsigned char header[4096]={0};memcpy(header,&eh,sizeof(eh));memcpy(header+sizeof(eh),ph,(size_t)eh.e_phnum*sizeof(Elf64_Phdr));if(dynamic)memcpy(header+1024,interpreter,interpreter_size);
     bool ok=fwrite(header,1,sizeof(header),fp)==sizeof(header)&&fwrite(code.v,1,code.n,fp)==code.n;
     size_t pad=data_offset-4096-code.n;unsigned char zero[4096]={0};if(ok&&pad)ok=fwrite(zero,1,pad,fp)==pad;
     if(ok)ok=fwrite(data.v,1,data.n,fp)==data.n;
@@ -845,7 +849,19 @@ static void write_elf(const char *path){
 
 #include "pe_writer.h"
 #include "macho_writer.h"
-static void write_executable(const char *path){if(target_windows)write_pe(path);else if(target_macos)write_macho(path);else write_elf(path);}
+#include "icon_icns.h"
+static void bundle_file(const char*path,const void*contents,size_t size){protect_output(path);FILE*f=fopen(path,"wb");if(!f)fatal("não foi possível criar %s",path);bool ok=fwrite(contents,1,size,f)==size;if(fclose(f))ok=false;if(!ok)fatal("erro ao gravar %s",path);}
+static void write_executable(const char *path){
+    if(bundle_app){
+        if(mkdir(path,0755))fatal("--app exige uma pasta de saída nova: %s",path);
+        char*contents=path_join(path,"Contents"),*macos=path_join(contents,"MacOS"),*resources=path_join(contents,"Resources");
+        if(mkdir(contents,0755)||mkdir(macos,0755)||mkdir(resources,0755))fatal("erro ao criar bundle macOS");
+        char*exe=path_join(macos,"program"),*icon=path_join(resources,"compiled.icns"),*info=path_join(contents,"Info.plist");
+        const char*plist="<?xml version=\"1.0\" encoding=\"UTF-8\"?><plist version=\"1.0\"><dict><key>CFBundleExecutable</key><string>program</string><key>CFBundleIdentifier</key><string>org.assisscript.program</string><key>CFBundlePackageType</key><string>APPL</string><key>CFBundleName</key><string>AssisScript</string><key>CFBundleIconFile</key><string>compiled.icns</string></dict></plist>\n";
+        write_macho(exe);bundle_file(icon,compiled_icns,sizeof(compiled_icns));bundle_file(info,plist,strlen(plist));if(debug_symbols)write_debug_map(exe);free(contents);free(macos);free(resources);free(exe);free(icon);free(info);return;
+    }
+    if(target_windows)write_pe(path);else if(target_macos)write_macho(path);else write_elf(path);
+}
 static void help(void){
     puts("AssisScript " VERSION " | compilador nativo " HOST_NAME "\n"
          "\nUso: assis <comando> [arquivo.assis] [opções]\n"
@@ -863,7 +879,8 @@ static void help(void){
          "      --diagnostics=json           emite erros estruturados (UTF-16)\n"
          "      --no-opt                     desativa otimizações para comparação\n"
          "      --debug                      acusa vazamentos e preenche memória liberada\n"
-         "      --symbols                    build com mapa JSON e DWARF/símbolos em ELF\n"
+         "      --symbols                    build com mapa JSON e símbolos ELF/PE/Mach-O\n"
+         "      --app                        bundle macOS com ícone v1 (saída nova)\n"
          "      --safe                       perfil padrão: entrada safe e fronteiras unsafe\n"
          "      --legacy                     compatibilidade explícita com entrada legada\n"
          "  -I <pasta>                       pesquisa módulos nessa pasta\n"
@@ -872,7 +889,7 @@ static void help(void){
          "  assis version                     mostra a versão\n"
          "  assis help                        mostra esta ajuda\n"
          "\nSem fonte, procura assis.assis no diretório atual.\n"
-         "build aceita --target windows-x64, linux-x64 ou macos-x64 (experimental).\n"
+         "build: --target windows-x64, linux-x64, macos-x64, linux-arm64, macos-arm64 (experimental).\n"
          "Aliases: criar, compilar, executar, verificar.\n"
          "O compilador não chama Python, GCC, Clang, assembler ou linker.");
 }
@@ -952,8 +969,8 @@ static int compiler_main(int argc,char **argv){
     if(same(cmd,"--help")||same(cmd,"help")||same(cmd,"--ajuda")){help();return 0;}
     if(same(cmd,"--version")||same(cmd,"version")){puts("AssisScript " VERSION " (nativo, " HOST_NAME ")");return 0;}
     if(same(cmd,"doctor")){
-        puts("AssisScript " VERSION "\nHost: " HOST_NAME "\nBackends: ELF64 Linux / PE32+ Windows / Mach-O macOS (experimental), todos x86_64\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis");
-        if(!HOST_RUN_X64)puts("Host ARM64: check/ir/build disponíveis; run/test aguardam backend ARM64. Saídas x86_64 podem ser executadas externamente com emulação.");return 0;
+        puts("AssisScript " VERSION "\nHost: " HOST_NAME "\nBackends: ELF64 Linux x64/ARM64 / PE32+ Windows x64 / Mach-O macOS x64/ARM64 (experimental)\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis");
+        if(!HOST_RUN_X64)puts("Host ARM64: check/ir/build/run/test nativos disponíveis.");return 0;
     }
     if(same(cmd,"new")||same(cmd,"init")||same(cmd,"create")){if(argc!=3)fatal("use: assis new <pasta>");create_project(argv[2]);return 0;}
     if(same(cmd,"fmt"))return format_command(argc,argv);
@@ -971,13 +988,14 @@ static int compiler_main(int argc,char **argv){
             if(!run||i+1>=argc)fatal("--timeout exige segundos e só pode ser usado em run");char *end=NULL;errno=0;timeout=strtod(argv[++i],&end);
             if(errno||!end||*end||!isfinite(timeout)||timeout<=0)fatal("--timeout deve ser um número positivo");
         }else if(same(argv[i],"--target")){
-            if((!build&&!run)||i+1>=argc)fatal("--target exige linux-x64 ou windows-x64 em build/run");const char *target=argv[++i];
-            if(!same(target,"windows-x64")&&!same(target,"linux-x64")&&!same(target,"macos-x64"))fatal("destino desconhecido: %s",target);
-            target_windows=same(target,"windows-x64");target_macos=same(target,"macos-x64");
+            if((!build&&!run)||i+1>=argc)fatal("--target exige um destino em build/run");const char *target=argv[++i];
+            if(!same(target,"windows-x64")&&!same(target,"linux-x64")&&!same(target,"macos-x64")&&!same(target,"linux-arm64")&&!same(target,"macos-arm64"))fatal("destino desconhecido: %s",target);
+            target_windows=same(target,"windows-x64");target_macos=same(target,"macos-x64")||same(target,"macos-arm64");target_arm64=same(target,"linux-arm64")||same(target,"macos-arm64");
         }else if(same(argv[i],"-I")){if(i+1>=argc)fatal("-I exige uma pasta");push(&include_dirs,argv[++i]);}
         else if(same(argv[i],"--diagnostics=json")){}
         else if(same(argv[i],"--no-opt")){optimize=false;}
         else if(same(argv[i],"--debug")){debug_memory=true;}
+        else if(same(argv[i],"--app")){if(!build)fatal("--app exige build");bundle_app=true;}
         else if(same(argv[i],"--symbols")){if(!build)fatal("--symbols exige build");debug_symbols=true;}
         else if(same(argv[i],"--safe")){if(safety_option<0)fatal("--safe e --legacy são incompatíveis");safety_option=1;safe_entry=true;}
         else if(same(argv[i],"--legacy")){if(safety_option>0)fatal("--safe e --legacy são incompatíveis");safety_option=-1;safe_entry=false;}
@@ -992,21 +1010,21 @@ static int compiler_main(int argc,char **argv){
         else if(!input)input=argv[i];else fatal("informe apenas um arquivo fonte");
     }
     if(run){
-        if(!HOST_RUN_X64)fatal("run/test indisponível em host ARM64: os destinos atuais são x86_64; use check, ir ou build e execute a saída externamente com emulação");
+        if(target_arm64==!!HOST_RUN_X64)fatal("run/test exige a arquitetura nativa do host; use build para compilar para outra arquitetura");
 #ifdef _WIN32
         if(!target_windows)fatal("run no Windows exige destino windows-x64; use build para outro sistema");
 #elif defined(__APPLE__)
-        if(!target_macos)fatal("run no macOS exige destino macos-x64; use build para outro sistema");
+        if(!target_macos)fatal("run no macOS exige destino macOS nativo; use build para outro sistema");
 #else
-        if(target_windows||target_macos)fatal("run no Linux exige destino linux-x64; use build para outro sistema");
+        if(target_windows||target_macos)fatal("run no Linux exige destino Linux nativo; use build para outro sistema");
 #endif
     }
-    if(target_macos&&debug_symbols)fatal("--symbols ainda não está disponível no destino macos-x64");
+    if(bundle_app&&!target_macos)fatal("--app exige destino macOS");
     if(!input)input="assis.assis";module_search_paths();initialize_packages(input);Vec expanded={0};load_module(input,NULL,stdin_source,&expanded,0);tokens=expanded;
     if(!locking)package_lock(false);
     if(show_tokens){for(int i=0;i<tokens.n;i++){Token *t=tokens.v[i];printf("%4d:%-3d %-18s %s\n",t->line,t->col,token_name(t),t->text);}return 0;}
     scan_platforms();scan_namespaces();parse();if(testing)prepare_tests();bind_namespaces();check();check_ownership();check_safety();prepare_ir();prepare_ranges();prepare_registers();if(inspecting_ir){prepare_backend_ir();print_ir();return 0;}if(locking){package_lock(true);return 0;}if(documenting){document_api(output);return 0;}if(validate){if(json_diagnostics)puts("{\"ok\":true}");else printf("ASSIS: %s passou na análise de sintaxe e tipos.\n",input);return 0;}
-    if(optimize){prepare_backend_ir();discard_frontend_ast();}generate();if(run)return run_program(timeout);
+    if(optimize||target_arm64){prepare_backend_ir();if(optimize)discard_frontend_ast();}generate();if(run)return run_program(timeout);
     if(!output){
         size_t len=strlen(input);char *name=copy(input,len);char *slash=strrchr(name,'/'),*dot=strrchr(name,'.');
 #ifdef _WIN32
@@ -1022,7 +1040,7 @@ static int compiler_main(int argc,char **argv){
         if(!exe){char *name=mem(len+5);snprintf(name,len+5,"%s.exe",output);output=name;}
     }
     protect_output(output);
-    write_executable(output);if(debug_symbols)write_debug_map(output);printf("ASSIS: executável nativo gerado em %s\n",output);return 0;
+    write_executable(output);if(debug_symbols&&!bundle_app)write_debug_map(output);printf("ASSIS: executável nativo gerado em %s\n",output);return 0;
 }
 #ifdef _WIN32
 int wmain(int argc,wchar_t **wide_argv){

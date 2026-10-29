@@ -774,7 +774,6 @@ static void check(void){
     for(int i=0;i<classes.n;i++){Class *c=classes.v[i];for(int j=0;j<i;j++)if(same(c->t->text,((Class*)classes.v[j])->t->text))error(c->t,"classe declarada duas vezes");}
     for(int i=0;i<functions.n;i++){
         Function *f=functions.v[i];if(find_class(f->t->text))error(f->t,"nome principal declarado duas vezes");
-        if(target_macos&&f->foreign)error(f->t,"macos-x64 ainda não aceita extern; use platform para separar declarações específicas");
         if(f->foreign&&!target_windows)for(int j=0;j<i;j++){Function *other=functions.v[j];if(other->foreign&&same(f->foreign_symbol,other->foreign_symbol)&&!same(f->foreign_library[0],other->foreign_library[0]))error(f->t,"símbolo C ambíguo em bibliotecas diferentes");}
         for(int j=0;j<i;j++)if(same(f->t->text,((Function*)functions.v[j])->t->text))error(f->t,"função declarada duas vezes");signature(f);
     }

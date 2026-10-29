@@ -75,7 +75,7 @@ for phase in data['phases']:
 text += ('\nA evidência vinculada também descreve limites, inclusive para critérios pendentes. '
          'A base de bibliotecas, distribuição, vidas explícitas, recursos compostos, fatias/texto gerenciado, valores Copy/variantes e a aplicação A delimitada já existe; '
          'a emissão integral por IR e o aceite independente foram concluídos nesta continuação; os novos alvos concentram o restante técnico. As 24 horas reais Windows/Linux da alpha.15 estão registradas no handoff e na validação JSON. Variantes Move/capturas verificadas e pipelines com ambientes foram acrescentados na alpha.13. As aplicações B/C delimitadas e a ABI C escalar foram acrescentadas na alpha.11; a alpha.12 torna safe padrão, acrescenta rede cooperativa e inventário por ligação real. '
-         'A licença foi escolhida pelo responsável; direitos de imagens e revisão de distribuição permanecem abertos; o inventário técnico dos binários está documentado.\n\n'
+         'A licença foi escolhida pelo responsável; os ícones v1 foram aplicados e a revisão de distribuição desta entrega está registrada. P5-TARGET aguarda a aprovação nativa remota do candidato ARM64.\n\n'
          'Fonte auditável: [PROGRESSO.json](PROGRESSO.json). Gerar com `python tools/report-progress.py`; '
          'verificar com `python tools/report-progress.py --check`. Relatórios históricos de versões anteriores '
          'permanecem preservados; a porcentagem começa a ser publicada na alpha.5.\n')
