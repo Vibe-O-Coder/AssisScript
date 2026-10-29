@@ -1,6 +1,7 @@
-/* Typed CFG plus independent scalar values. Statements/resources retain their
- * checked ASTs during incremental backend migration; this is not SSA. */
+/* Analysis CFG and the compatible HIR view. Checked Nodes are used only during
+ * frontend analysis/lowering; backend_ir.h owns complete AST-free emission. */
 enum { IR_READ=1,IR_WRITE=2,IR_ALLOC=4,IR_IO=8,IR_CALL=16,IR_TRAP=32,IR_UNSAFE=64,IR_DROP=128 };
+static void print_backend_ir(void);
 #include "expression_ir.h"
 enum { IO_AST,IO_STORE_LOCAL,IO_EVAL };
 /* node remains for diagnostics, liveness and the explicit resource fallback.
@@ -100,5 +101,5 @@ static void print_ir(void){
             for(int k=0;k<b->successors.n;k++){if(k)fputc(',',stdout);fprintf(stdout,"%d",(int)(intptr_t)b->successors.v[k]-1);}fputs("],\"operations\":[",stdout);
             for(int k=0;k<b->operations.n;k++){IROperation *op=b->operations.v[k];if(k)fputc(',',stdout);fprintf(stdout,"{\"kind\":%d,\"opcode\":\"%s\",\"line\":%d,\"effects\":%u,\"value\":%d,\"type\":",op->node->kind,op->kind==IO_STORE_LOCAL?"store-local":op->kind==IO_EVAL?"eval":"ast",op->node->t->line,op->effects,op->value?op->value->id:-1);json_string(stdout,type_name(op->type));if(op->local){fputs(",\"local\":",stdout);json_string(stdout,op->local->t->text);}fputc('}',stdout);}fputs("]}",stdout);
         }fputs("]}",stdout);
-    }fputc(']',stdout);ir_print_values();fputs("}\n",stdout);
+    }fputc(']',stdout);ir_print_values();print_backend_ir();fputs("}\n",stdout);
 }

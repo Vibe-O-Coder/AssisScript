@@ -1,6 +1,6 @@
 # Estimativa de conclusão — 3.3.0-alpha.15
 
-Data: 28/10/2026. **Conclusão estimada: 94%** (94,0 pontos de 100).
+Data: 28/10/2026. **Conclusão estimada: 97%** (97,0 pontos de 100).
 
 Escopo: Conclusão do plano de evolução das fases 0–6, incluindo a trilha funcional e as aplicações A/B/C. Não inclui construir o navegador, HTDL, estilos ou motor de busca.
 
@@ -19,9 +19,9 @@ As etapas F0–F4 estão incorporadas aos critérios: efeitos/ordem superior na 
 | 2 — Ownership e dados funcionais | 20 | 100% | 20 |
 | 3 — Texto, números e aplicação CLI | 15 | 100% | 15 |
 | 4 — Integração, rede e serviços | 15 | 100% | 15 |
-| 5 — Backend e depuração | 10 | 70% | 7,0 |
-| 6 — Ferramentas e oferta delimitada | 10 | 70% | 7,0 |
-| **Total** | **100** | **94% estimados** | **94,0** |
+| 5 — Backend e depuração | 10 | 80% | 8,0 |
+| 6 — Ferramentas e oferta delimitada | 10 | 90% | 9,0 |
+| **Total** | **100** | **97% estimados** | **97,0** |
 
 ## Histórico pela mesma régua
 
@@ -40,6 +40,7 @@ As etapas F0–F4 estão incorporadas aos critérios: efeitos/ordem superior na 
 | 3.3.0-alpha.14 | 92% (91,5 pontos) | Avaliação desta entrega |
 | 3.3.0-alpha.15 | 93% (92,5 pontos) | Avaliação desta entrega |
 | 3.3.0-alpha.15 — 24 horas aprovadas, 28/10/2026 | 94% (94,0 pontos) | Avaliação desta entrega |
+| 3.3.0-alpha.15 — IR integral e aceite independente confirmados | 97% (97,0 pontos) | Avaliação desta entrega |
 
 Cada registro histórico congela seus 35 estados; atualizações futuras não alteram retroativamente esses estados.
 
@@ -99,11 +100,11 @@ Cada registro histórico congela seus 35 estados; atualizações futuras não al
 
 | Critério | Estado | Evidência e limites |
 | --- | --- | --- |
-| P5-IR — Frontend separado e IR tipada com fluxo/efeitos | Parcial (50%) | [Documento](BACKEND-IR-CONTROL.md) — CFG tipada e ScalarIR independente de AST para valores, escritas locais e condições escalares elegíveis; referência AST --no-opt. Recursos/endereços, retornos, cleanups e controle estruturado ainda têm caminhos AST; migração integral permanece aberta. |
+| P5-IR — Frontend separado e IR tipada com fluxo/efeitos | Concluído no escopo do critério | [Documento](BACKEND-IR-COMPLETA.md) — Emissão integral por valores e CFG tipados: endereços, memória, despacho, recursos, cleanup, retornos, TCO e escopos de depuração. AST descartada e emissores AST bloqueados antes de toda geração otimizada, inclusive --symbols. Referência --no-opt e 32 suítes Windows/Linux, GDB e reconstruções idênticas; sem SSA ou backend ARM64. |
 | P5-OPT — Otimizações comprovadas, TCO, intervalos e alocação de registradores | Concluído no escopo do critério | [Documento](BACKEND-ALPHA15.md) — Liveness global com ponto fixo/coloração e reutilização dos quatro registradores preservados, exclusão de locais endereçados, fallback limitado; intervalos em laços diretos/reversos com offsets e chamadas pure. Equivalência/adversos Windows/Linux e comparação com alpha.14; sem alegação de otimalidade do alocador. |
 | P5-ABI — ABI documentada e validada para interfaces e retornos compostos | Concluído no escopo do critério | [Documento](FFI-C.md) — LVS2 preservada e ABI C escalar pública delimitada, registradores mistos/pilha/retornos/callbacks validados contra biblioteca C independente; agregados C por valor são rejeitados. |
 | P5-DEBUG — ELF PIE, símbolos/linhas e depuração nativa | Concluído no escopo do critério | [Documento](RECURSOS-E-FATIAS.md) — ELF ET_DYN/PIE, RIP/vtables relativos, símbolos/DWARF e GDB com parâmetros/locais escalares e escopos. Windows conserva mapas; sem PDB ou descrição de compostos. |
-| P5-TARGET — Backend extensível e novos alvos ARM64/macOS validados | Pendente | [Documento](BACKEND-IR-CONTROL.md) — Hosts Linux/macOS ARM64 preparados para frontend e geração cruzada x86_64, com CI QEMU/Rosetta explicitamente emulado. Geração/runtime ARM64, instaladores e depuração dos novos destinos permanecem abertos. Resultado remoto deve ser verificado por commit. |
+| P5-TARGET — Backend extensível e novos alvos ARM64/macOS validados | Pendente | [Documento](BACKEND-IR-CONTROL.md) — CI b7f9212 aprovada em macOS Intel e hosts Linux/macOS ARM64 com saídas x86_64 por QEMU/Rosetta. Geração/runtime ARM64 nativos e instalador/depuração dos novos destinos continuam abertos. |
 
 ### Fase 6 — Ferramentas e oferta delimitada
 
@@ -113,8 +114,8 @@ Cada registro histórico congela seus 35 estados; atualizações futuras não al
 | P6-TOOLS — Editor, documentação, fmt/test/doc e LSP independente | Concluído no escopo do critério | [Documento](FERRAMENTAS-ALPHA.8.md) — fmt/test/doc nativos, editor com namespaces/pacotes e LSP independente por stdio, sem dependências npm. Formatter cobre indentação, LF e espaços finais. |
 | P6-RELEASE — Pacotes coerentes e reconstrução local limpa reproduzível | Concluído no escopo do critério | [Documento](HANDOFF-3.3-ALPHA.15.md) — Reconstruções limpas com binários idênticos Windows/Linux; ZIP/VSIX e compiladores extraídos verificados na alpha.15. Entrega local, sem tag ou publicação remota. |
 | P6-POLICY — Licença/procedência resolvidas e política de suporte/compatibilidade | Parcial (50%) | [Documento](PROCEDENCIA.md) — Licença escolhida pelo responsável e avisos publicados; inventário técnico de ligação concluído na alpha.12. Direitos de imagens e revisão dos termos/fontes de redistribuição continuam abertos. |
-| P6-ACCEPT — Terceiro instala, depura e distribui aplicações A/B/C pelo manual | Pendente | [Documento](ACEITE-RELATO-USUARIO-2026-10-28.md) — Relato recebido em 28/10/2026: responsável compilou e executou programas próprios (Hello World, dobrar, arrays own/borrow e funções pure) em outros computadores Windows/Linux, aproximadamente na alpha.6 segundo sua lembrança. Versão exata/pacote não informados; evidência histórica do núcleo, sem aceite da distribuição atual ou de depuração/distribuição A/B/C por terceiro. Pontuação e estados históricos preservados. |
+| P6-ACCEPT — Terceiro instala, depura e distribui aplicações A/B/C pelo manual | Concluído no escopo do critério | [Documento](ACEITE-RELATO-USUARIO-2026-10-28.md) — Confirmação humana encaminhada pelo responsável: pessoa distinta usou a versão mais recente disponível, seguiu o manual, testou comandos/exemplos, escreveu programa com IntelliSense e confirmou depuração/distribuição de A/B/C. Sistema e hash exato não informados. Aceite da distribuição disponível na ocasião, separado da validação automatizada do novo candidato P5-IR. |
 
-A evidência vinculada também descreve limites, inclusive para critérios pendentes. A base de bibliotecas, distribuição, vidas explícitas, recursos compostos, fatias/texto gerenciado, valores Copy/variantes e a aplicação A delimitada já existe; a conclusão da IR e os novos alvos concentram o restante técnico. As 24 horas reais Windows/Linux da alpha.15 estão registradas no handoff e na validação JSON. Variantes Move/capturas verificadas e pipelines com ambientes foram acrescentados na alpha.13. As aplicações B/C delimitadas e a ABI C escalar foram acrescentadas na alpha.11; a alpha.12 torna safe padrão, acrescenta rede cooperativa e inventário por ligação real. A licença foi escolhida pelo responsável; direitos de imagens e revisão de distribuição permanecem abertos; o inventário técnico dos binários está documentado.
+A evidência vinculada também descreve limites, inclusive para critérios pendentes. A base de bibliotecas, distribuição, vidas explícitas, recursos compostos, fatias/texto gerenciado, valores Copy/variantes e a aplicação A delimitada já existe; a emissão integral por IR e o aceite independente foram concluídos nesta continuação; os novos alvos concentram o restante técnico. As 24 horas reais Windows/Linux da alpha.15 estão registradas no handoff e na validação JSON. Variantes Move/capturas verificadas e pipelines com ambientes foram acrescentados na alpha.13. As aplicações B/C delimitadas e a ABI C escalar foram acrescentadas na alpha.11; a alpha.12 torna safe padrão, acrescenta rede cooperativa e inventário por ligação real. A licença foi escolhida pelo responsável; direitos de imagens e revisão de distribuição permanecem abertos; o inventário técnico dos binários está documentado.
 
 Fonte auditável: [PROGRESSO.json](PROGRESSO.json). Gerar com `python tools/report-progress.py`; verificar com `python tools/report-progress.py --check`. Relatórios históricos de versões anteriores permanecem preservados; a porcentagem começa a ser publicada na alpha.5.

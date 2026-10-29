@@ -1,10 +1,9 @@
-> Continuação atual — alpha.16: a revisão retomada em 28/10/2026 auditou a
-> alpha.15 e preservou as alterações locais. O bloqueio de acesso às pastas
-> temporárias foi resolvido na revalidação com acesso normal: os 10 testes de
-> backend passaram, sem alteração do compilador ou pontos novos. Há um
-> [guia para a publicação experimental de testes](TESTES-GITHUB.md). A alpha.15 continua em
-> 94/100 até que IR integral, novos alvos, política de distribuição e aceite
-> independente tenham evidência válida. [Handoff](HANDOFF-3.3-ALPHA.16.md).
+> Continuação atual — P5-IR integral: **97/100**, em 28/10/2026. A emissão
+> otimizada consome IR tipada após descarte da AST, com 32 suítes Windows/Linux
+> e reconstruções limpas. O responsável confirmou o aceite por pessoa distinta
+> seguindo o manual e testando A/B/C. Restam novos destinos e política de
+> distribuição. [Backend](BACKEND-IR-COMPLETA.md), [progresso](PROGRESSO.md),
+> [handoff](HANDOFF-3.3-ALPHA.16.md).
 
 > Continuação anterior — alpha.15: o usuário solicitou retomar a evolução até o
 > máximo verificável do plano. A revisão alpha.14 foi preservada como base.
@@ -12,7 +11,9 @@
 
 # AssisScript — plano de evolução e passagem para a próxima instância
 
-**Continuação atual — 3.3.0-alpha.15: 94% (94/100 pontos), 28/10/2026.** IR escalar independente de AST, reutilização global de registradores e intervalos diretos/reversos com offsets. P5-OPT +1 ponto e P4-SOAK +1,5 após aprovação das 24 horas Windows/Linux; IR integral e os gates externos continuam abertos. [Handoff e resultado das 24 horas](HANDOFF-3.3-ALPHA.15.md), [validação](VALIDACAO-ALPHA15.json), [restante](RESTANTE-PARA-100.md).
+**Continuação atual — 3.3.0-alpha.15, P5-IR: 97% (97/100 pontos), 28/10/2026.** IR integral +1 ponto e confirmação do aceite independente +2 pontos. Novos alvos e política de distribuição continuam abertos. [Implementação e evidência](BACKEND-IR-COMPLETA.md), [validação](VALIDACAO-P5-IR.json), [restante](RESTANTE-PARA-100.md).
+
+**Marco anterior — alpha.15: 94/100.** IR escalar, reutilização global de registradores e provas de intervalos; P5-OPT e P4-SOAK concluídos. Os [resultados das 24 horas](HANDOFF-3.3-ALPHA.15.md) continuam vinculados aos seus binários originais.
 
 **Histórico — 3.3.0-alpha.13: 92% (91,5/100 pontos).** Closures safe com capturas val/own/borrow, ambientes gerenciados, variantes Move, resultados próprios e pipelines com capturas. [Handoff](HANDOFF-3.3-ALPHA.13.md), [validação](VALIDACAO-3.3-ALPHA.13.md), [restante para 100%](RESTANTE-PARA-100.md). Entradas seguintes são históricas.
 

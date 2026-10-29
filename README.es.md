@@ -47,7 +47,7 @@ Alpha.14 focuses on language usability: text output/building, global constants, 
 
 Alpha.11: ABI C escalar, callbacks, HTTP(S), procesos/pipes y servicio persistente B/C delimitados. [Contratos y límites](docs/HANDOFF-3.3-ALPHA.11.md). Progreso estimado: 85%; 24 horas reales, capturas/variantes Move y cancelación asíncrona siguen pendientes.
 
-Alpha.15 continúa el plan: IR escalar tipado, reutilización global de registros y pruebas de límites en recorridos directos/inversos. Las pruebas de 24 horas Windows/Linux fueron aprobadas. Progreso: **94% estimado (94/100)**; consulte los [resultados](docs/HANDOFF-3.3-ALPHA.15.md) y [contratos y límites](docs/BACKEND-ALPHA15.md).
+La continuación de desarrollo de alpha.15 completa la emisión mediante IR tipada, incluyendo memoria, recursos, control y ámbitos de depuración. El responsable confirmó la aceptación independiente. Progreso: **97% estimado (97/100)**; consulte la [implementación y validación](docs/BACKEND-IR-COMPLETA.md) y el [trabajo restante](docs/RESTANTE-PARA-100.md). La generación nativa ARM64 y la política de distribución siguen abiertas.
 
 ## Uso, bibliotecas y forks
 

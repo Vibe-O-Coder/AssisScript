@@ -14,7 +14,7 @@ parser.add_argument('--linux',type=Path,default=ROOT/'build/review-tests/linux-r
 args=parser.parse_args()
 def read(path):return json.loads(path.read_text(encoding='utf-8'))
 version=read(ROOT/'vscode-assisscript/package.json')['version']
-record=dict(version=version,date=date.today().isoformat(),status='passed',scope='Windows/Linux native execution, scalar IR/liveness and Mach-O structural validation',native={},cleanBuilds={},examples={},macos=dict(status='experimental; native execution pending',validated='Mach-O structure, segments, bindings and entry; PE/ELF cross-generation'),notes=['Manual-memory teaching examples use explicit unsafe blocks.','Roadmap credit and outstanding gates are recorded in PROGRESSO.json.','This is a local working-tree revision, not a published clean tag.'])
+record=dict(version=version,date=date.today().isoformat(),status='passed',scope='Windows/Linux native execution, complete typed IR emission with explicit memory/cleanup/CFG and Mach-O structural validation',native={},cleanBuilds={},examples={},macos=dict(status='experimental; native execution pending',validated='Mach-O structure, segments, bindings and entry; PE/ELF cross-generation'),notes=['Manual-memory teaching examples use explicit unsafe blocks.','Roadmap credit and outstanding gates are recorded in PROGRESSO.json.','This is a development revision, not a published clean tag.'])
 for platform,path,binary in [('windows',args.windows,'assis.exe'),('linux',args.linux,'assis')]:
     result=read(path);expected=hashlib.sha256((ROOT/'bin'/binary).read_bytes()).hexdigest()
     assert result['passed'] and result['compilerSha256']==expected,(platform,'stale or failed native results')
@@ -87,7 +87,12 @@ for platform,binary in [('windows','assis.exe'),('linux','assis')]:
     record['longSoak'][platform]=dict(originalPath=path.relative_to(ROOT).as_posix(),sha256=report_hash,compilerSha256=proof['compilerSha256'],matchesCurrentSourcesAndCompiler=current,elapsedSeconds=proof['elapsedSeconds'],workers=proof['workers'],rounds=sum(r['rounds'] for r in proof['results']),intervalSeconds=proof['intervalSeconds'],qualifies24Hours=True,report=proof)
 qualified=len(record['longSoak'])==2 and all(r['matchesCurrentSourcesAndCompiler'] for r in record['longSoak'].values())
 record['remainingGates']=[] if qualified else ['24 hours of actual qualified execution on current binaries and sources']
-record['remainingGates']+=['complete IR statement/resource emission','native ARM64 output and macOS installer/debugging validation','asset rights and redistribution review','independent human acceptance']
+roadmap=read(ROOT/'docs/PROGRESSO.json')
+criteria={item['id']:item for phase in roadmap['phases'] for item in phase['items']}
+gates={'P5-IR':'complete IR statement/resource emission','P5-TARGET':'native ARM64 output and macOS installer/debugging validation','P6-POLICY':'asset rights and redistribution review','P6-ACCEPT':'independent human acceptance'}
+record['remainingGates']+=[name for identity,name in gates.items() if criteria[identity]['status']!='complete']
+record['roadmapStatus']={identity:criteria[identity]['status'] for identity in gates}
+record['humanAcceptance']=dict(status=criteria['P6-ACCEPT']['status'],record='docs/'+criteria['P6-ACCEPT']['evidence'],scope='Human confirmation forwarded by the project owner for the distribution available to the tester; not a claim of human execution of this exact compiler hash.')
 if qualified:record['scope']+='; qualified 24-hour Windows/Linux polling and persistence endurance'
 (ROOT/f'docs/VALIDACAO-ALPHA{version.split("alpha.")[1]}.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 print('Validation evidence recorded:',{p:r['testCount'] for p,r in record['native'].items()})

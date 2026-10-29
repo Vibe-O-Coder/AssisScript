@@ -87,3 +87,23 @@ O novo relato reforça o sucesso informado, sem inventar arquitetura, versão ou
 passos de teste não especificados. P5-IR permanece parcial, P5-TARGET pendente e
 o total preserva 94/100. Próximo incremento: endereços, efeitos de memória e
 cleanups explícitos antes de migrar integralmente o controle e o backend ARM64.
+
+## P5-IR concluído e aceite independente confirmado
+
+Esta continuação conclui a emissão por IR tipada, com AST descartada antes da
+geração otimizada, incluindo memória/endereços, recursos, cleanups, chamadas,
+CFG, retornos/TCO e escopos de depuração. O emissor AST permanece separado em
+`--no-opt`. A implementação e os limites estão em
+[BACKEND-IR-COMPLETA.md](BACKEND-IR-COMPLETA.md), com evidência em
+[VALIDACAO-P5-IR.json](VALIDACAO-P5-IR.json).
+
+As 32 suítes nativas passaram em Windows e Linux; a validação Linux inclui GDB.
+As reconstruções limpas regeneraram os runtimes e reproduziram os candidatos.
+O responsável também confirmou o teste por outra pessoa usando o manual,
+incluindo depuração e distribuição de A/B/C. P5-IR soma 1 ponto e P6-ACCEPT soma
+2 pontos; o total passa a **97/100**, com pesos e estados históricos preservados.
+
+Próximo trabalho técnico: backend/runtime ARM64 e acabamento dos novos destinos.
+P6-POLICY continua parcial: duas propostas vetoriais com direção Miyabi/raposa
+foram acrescentadas, enquanto o conjunto visual ativo ainda aguarda substituição
+e a revisão dos demais termos de distribuição permanece aberta.

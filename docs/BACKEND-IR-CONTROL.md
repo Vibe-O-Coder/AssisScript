@@ -1,5 +1,9 @@
 # Continuação do backend: instruções escalares, condições e hosts ARM64
 
+Registro histórico do incremento até `b7f9212`. A continuação atual conclui
+[a emissão integral por IR](BACKEND-IR-COMPLETA.md) e está em 97/100; os estados
+parciais e os 94 pontos descritos abaixo se referem ao incremento anterior.
+
 Data: 28/10/2026. Base: `aa96b83`, branch experimental `testing/alpha15`.
 É uma revisão de desenvolvimento da alpha.15; a identidade de distribuição
 permanece a mesma até uma preparação de versão separada. Não há novo release/tag.

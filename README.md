@@ -52,7 +52,7 @@ Standard modules: `math`, `strings`, `memory`, `errors`, `convert`, `algorithms`
 
 Alpha.14 focuses on language usability: text output/building, global constants, byte characters, constructor chaining, two-phase receiver borrows, checked downcasts, indexed owned collections and random numbers. Closures already existed in alpha.13. Linux and Windows are tested natively; [macOS x86_64 is experimental](docs/MACOS.md). This review does not advance the internal roadmap percentage or claim browser readiness.
 
-Alpha.15 resumes the roadmap: typed scalar IR, global register reuse and bounds proofs for forward/reverse loops. The 24-hour Windows/Linux endurance runs passed. Estimated progress: **94% (94/100)**; see [results](docs/HANDOFF-3.3-ALPHA.15.md) and [contracts and limits](docs/BACKEND-ALPHA15.md).
+The alpha.15 development continuation completes typed IR emission, including memory, resources, control flow and debugging scopes. Independent acceptance was confirmed by the project owner. Estimated progress: **97% (97/100)**; see [implementation and validation](docs/BACKEND-IR-COMPLETA.md) and [remaining work](docs/RESTANTE-PARA-100.md). Native ARM64 output and distribution policy remain open.
 
 ## Use, libraries and forks
 

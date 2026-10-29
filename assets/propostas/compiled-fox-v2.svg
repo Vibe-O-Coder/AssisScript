@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">AssisScript — compilado, proposta raposa 2</title>
+  <desc id="desc">Processador com execução em azul-gelo, duas orelhas geométricas e um detalhe vermelho sobre fundo grafite.</desc>
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="#141927"/>
+  <path d="M70 100 72 52 109 77 M147 77 184 52 186 100" fill="none" stroke="#8bc7e8" stroke-width="11" stroke-linejoin="round"/>
+  <path d="M98 66V80 M128 66V80 M158 66V80 M98 180V199 M128 180V199 M158 180V199 M54 104H75 M54 132H75 M54 160H75 M181 104H202 M181 132H202 M181 160H202" stroke="#edf3f7" stroke-width="8" stroke-linecap="round"/>
+  <rect x="75" y="80" width="106" height="100" rx="23" fill="#141927" stroke="#edf3f7" stroke-width="10"/>
+  <polygon points="114,105 151,130 114,155" fill="#8bc7e8"/>
+  <circle cx="169" cy="91" r="8" fill="#d84e63"/>
+</svg>

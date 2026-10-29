@@ -215,9 +215,9 @@
         {
           "id": "P5-IR",
           "name": "Frontend separado e IR tipada com fluxo/efeitos",
-          "status": "partial",
-          "evidence": "BACKEND-IR-CONTROL.md",
-          "notes": "CFG tipada e ScalarIR independente de AST para valores, escritas locais e condições escalares elegíveis; referência AST --no-opt. Recursos/endereços, retornos, cleanups e controle estruturado ainda têm caminhos AST; migração integral permanece aberta."
+          "status": "complete",
+          "evidence": "BACKEND-IR-COMPLETA.md",
+          "notes": "Emissão integral por valores e CFG tipados: endereços, memória, despacho, recursos, cleanup, retornos, TCO e escopos de depuração. AST descartada e emissores AST bloqueados antes de toda geração otimizada, inclusive --symbols. Referência --no-opt e 32 suítes Windows/Linux, GDB e reconstruções idênticas; sem SSA ou backend ARM64."
         },
         {
           "id": "P5-OPT",
@@ -245,7 +245,7 @@
           "name": "Backend extensível e novos alvos ARM64/macOS validados",
           "status": "pending",
           "evidence": "BACKEND-IR-CONTROL.md",
-          "notes": "Hosts Linux/macOS ARM64 preparados para frontend e geração cruzada x86_64, com CI QEMU/Rosetta explicitamente emulado. Geração/runtime ARM64, instaladores e depuração dos novos destinos permanecem abertos. Resultado remoto deve ser verificado por commit."
+          "notes": "CI b7f9212 aprovada em macOS Intel e hosts Linux/macOS ARM64 com saídas x86_64 por QEMU/Rosetta. Geração/runtime ARM64 nativos e instalador/depuração dos novos destinos continuam abertos."
         }
       ]
     },
@@ -285,9 +285,9 @@
         {
           "id": "P6-ACCEPT",
           "name": "Terceiro instala, depura e distribui aplicações A/B/C pelo manual",
-          "status": "pending",
+          "status": "complete",
           "evidence": "ACEITE-RELATO-USUARIO-2026-10-28.md",
-          "notes": "Relato recebido em 28/10/2026: responsável compilou e executou programas próprios (Hello World, dobrar, arrays own/borrow e funções pure) em outros computadores Windows/Linux, aproximadamente na alpha.6 segundo sua lembrança. Versão exata/pacote não informados; evidência histórica do núcleo, sem aceite da distribuição atual ou de depuração/distribuição A/B/C por terceiro. Pontuação e estados históricos preservados."
+          "notes": "Confirmação humana encaminhada pelo responsável: pessoa distinta usou a versão mais recente disponível, seguiu o manual, testou comandos/exemplos, escreveu programa com IntelliSense e confirmou depuração/distribuição de A/B/C. Sistema e hash exato não informados. Aceite da distribuição disponível na ocasião, separado da validação automatizada do novo candidato P5-IR."
         }
       ]
     }
@@ -837,6 +837,50 @@
       },
       "note": "P4-SOAK +1,5 ponto após os dois ensaios reais de 86400 segundos qualificados e conferidos. Demais estados e pesos preservados.",
       "milestone": "24 horas aprovadas, 28/10/2026"
+    },
+    {
+      "version": "3.3.0-alpha.15",
+      "date": "28/10/2026",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "complete",
+        "P0-FLOW": "complete",
+        "P0-CI": "complete",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "complete",
+        "P2-VALUE": "complete",
+        "P2-ADT": "complete",
+        "P3-TEXT": "complete",
+        "P3-NUM": "complete",
+        "P3-IO": "complete",
+        "P3-LIB": "complete",
+        "P3-PKG": "complete",
+        "P4-FFI": "complete",
+        "P4-EVENT": "complete",
+        "P4-NET": "complete",
+        "P4-STORE": "complete",
+        "P4-SOAK": "complete",
+        "P5-IR": "complete",
+        "P5-OPT": "complete",
+        "P5-ABI": "complete",
+        "P5-DEBUG": "complete",
+        "P5-TARGET": "pending",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "complete",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "partial",
+        "P6-ACCEPT": "complete"
+      },
+      "note": "P5-IR +1 ponto com emissão integral e equivalência Windows/Linux; P6-ACCEPT +2 pontos por confirmação do teste independente seguindo o manual. Pesos e estados históricos preservados.",
+      "milestone": "IR integral e aceite independente confirmados"
     }
   ]
 }

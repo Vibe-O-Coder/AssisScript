@@ -1,0 +1,1972 @@
+{
+  "format": "AssisScript-P5IR-validation-v1",
+  "version": "3.3.0-alpha.15",
+  "date": "2026-10-28",
+  "status": "passed-local",
+  "baselineCommit": "b7f9212a31baff3d8128af1208a41aca34ffa5b3",
+  "scope": "Complete typed IR emission after AST discard; Windows/Linux native equivalence, memory/resource/CFG cleanup, independent Python references and ELF/GDB scopes",
+  "native": {
+    "windows": {
+      "platform": "win32",
+      "compilerSha256": "71a1230ef2720a610703a904e51b1b8a10e56ce53308c9d2c8aa82fb0b84771a",
+      "passed": true,
+      "suites": [
+        {
+          "suite": "evolution",
+          "returnCode": 0,
+          "tests": 12,
+          "seconds": 9.424706500001776,
+          "log": "p5-ir-final-native-windows-evolution.log"
+        },
+        {
+          "suite": "generics",
+          "returnCode": 0,
+          "tests": 13,
+          "seconds": 6.939088199997059,
+          "log": "p5-ir-final-native-windows-generics.log"
+        },
+        {
+          "suite": "functions",
+          "returnCode": 0,
+          "tests": 19,
+          "seconds": 8.591872199998761,
+          "log": "p5-ir-final-native-windows-functions.log"
+        },
+        {
+          "suite": "generic-classes",
+          "returnCode": 0,
+          "tests": 17,
+          "seconds": 11.797474700000748,
+          "log": "p5-ir-final-native-windows-generic-classes.log"
+        },
+        {
+          "suite": "collections-ast",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 9.290430500001094,
+          "log": "p5-ir-final-native-windows-collections-ast.log"
+        },
+        {
+          "suite": "ownership-functions",
+          "returnCode": 0,
+          "tests": 26,
+          "seconds": 14.935390499998903,
+          "log": "p5-ir-final-native-windows-ownership-functions.log"
+        },
+        {
+          "suite": "values",
+          "returnCode": 0,
+          "tests": 21,
+          "seconds": 9.15130340000178,
+          "log": "p5-ir-final-native-windows-values.log"
+        },
+        {
+          "suite": "files",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 4.048852500000066,
+          "log": "p5-ir-final-native-windows-files.log"
+        },
+        {
+          "suite": "text-bytes",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 1.9123959000025934,
+          "log": "p5-ir-final-native-windows-text-bytes.log"
+        },
+        {
+          "suite": "cli",
+          "returnCode": 0,
+          "tests": 1,
+          "seconds": 1.6594065999997838,
+          "log": "p5-ir-final-native-windows-cli.log"
+        },
+        {
+          "suite": "numbers",
+          "returnCode": 0,
+          "tests": 11,
+          "seconds": 4.049927799998841,
+          "log": "p5-ir-final-native-windows-numbers.log"
+        },
+        {
+          "suite": "packages",
+          "returnCode": 0,
+          "tests": 13,
+          "seconds": 3.4456949999985227,
+          "log": "p5-ir-final-native-windows-packages.log"
+        },
+        {
+          "suite": "json",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 4.867570099999284,
+          "log": "p5-ir-final-native-windows-json.log"
+        },
+        {
+          "suite": "system",
+          "returnCode": 0,
+          "tests": 8,
+          "seconds": 2.812290900001244,
+          "log": "p5-ir-final-native-windows-system.log"
+        },
+        {
+          "suite": "tooling",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 1.0696949000011955,
+          "log": "p5-ir-final-native-windows-tooling.log"
+        },
+        {
+          "suite": "slices",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 3.4381338999992295,
+          "log": "p5-ir-final-native-windows-slices.log"
+        },
+        {
+          "suite": "managed-classes",
+          "returnCode": 0,
+          "tests": 9,
+          "seconds": 4.083642600002349,
+          "log": "p5-ir-final-native-windows-managed-classes.log"
+        },
+        {
+          "suite": "backend-alpha9",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 0.8647915000001376,
+          "log": "p5-ir-final-native-windows-backend-alpha9.log"
+        },
+        {
+          "suite": "optimization",
+          "returnCode": 0,
+          "tests": 6,
+          "seconds": 14.62049670000124,
+          "log": "p5-ir-final-native-windows-optimization.log"
+        },
+        {
+          "suite": "english-api",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 2.561907900002552,
+          "log": "p5-ir-final-native-windows-english-api.log"
+        },
+        {
+          "suite": "release-policy",
+          "returnCode": 0,
+          "tests": 2,
+          "seconds": 2.113039800002298,
+          "log": "p5-ir-final-native-windows-release-policy.log"
+        },
+        {
+          "suite": "ffi",
+          "returnCode": 0,
+          "tests": 9,
+          "seconds": 6.273480399999244,
+          "log": "p5-ir-final-native-windows-ffi.log"
+        },
+        {
+          "suite": "http",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 17.94525799999974,
+          "log": "p5-ir-final-native-windows-http.log"
+        },
+        {
+          "suite": "process",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 6.980373399997916,
+          "log": "p5-ir-final-native-windows-process.log"
+        },
+        {
+          "suite": "applications-bc",
+          "returnCode": 0,
+          "tests": 3,
+          "seconds": 1.399827400000504,
+          "log": "p5-ir-final-native-windows-applications-bc.log"
+        },
+        {
+          "suite": "safe-default",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 2.5717889000006835,
+          "log": "p5-ir-final-native-windows-safe-default.log"
+        },
+        {
+          "suite": "net",
+          "returnCode": 0,
+          "tests": 8,
+          "seconds": 12.319584599998052,
+          "log": "p5-ir-final-native-windows-net.log"
+        },
+        {
+          "suite": "move-enums",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 3.3961068999997224,
+          "log": "p5-ir-final-native-windows-move-enums.log"
+        },
+        {
+          "suite": "closures",
+          "returnCode": 0,
+          "tests": 15,
+          "seconds": 5.583022400001937,
+          "log": "p5-ir-final-native-windows-closures.log"
+        },
+        {
+          "suite": "usability",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 5.410437299997284,
+          "log": "p5-ir-final-native-windows-usability.log"
+        },
+        {
+          "suite": "backend-evolution",
+          "returnCode": 0,
+          "tests": 16,
+          "seconds": 7.9897527000030095,
+          "log": "p5-ir-final-native-windows-backend-evolution.log"
+        },
+        {
+          "suite": "complete-ir",
+          "returnCode": 0,
+          "tests": 7,
+          "seconds": 2.1789108000011765,
+          "log": "p5-ir-final-native-windows-complete-ir.log"
+        }
+      ],
+      "testCasesReported": 296
+    },
+    "linux": {
+      "platform": "linux",
+      "compilerSha256": "794d1bcec969b0c2c6836199068a5a04f37007867ced0e9ddb97e8ef1e9b17c4",
+      "passed": true,
+      "suites": [
+        {
+          "suite": "evolution",
+          "returnCode": 0,
+          "tests": 12,
+          "seconds": 10.03018797499999,
+          "log": "p5-ir-final-native-linux-evolution.log"
+        },
+        {
+          "suite": "generics",
+          "returnCode": 0,
+          "tests": 13,
+          "seconds": 7.430442094,
+          "log": "p5-ir-final-native-linux-generics.log"
+        },
+        {
+          "suite": "functions",
+          "returnCode": 0,
+          "tests": 19,
+          "seconds": 8.86061001500002,
+          "log": "p5-ir-final-native-linux-functions.log"
+        },
+        {
+          "suite": "generic-classes",
+          "returnCode": 0,
+          "tests": 17,
+          "seconds": 12.240721751000024,
+          "log": "p5-ir-final-native-linux-generic-classes.log"
+        },
+        {
+          "suite": "collections-ast",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 6.539355646999979,
+          "log": "p5-ir-final-native-linux-collections-ast.log"
+        },
+        {
+          "suite": "ownership-functions",
+          "returnCode": 0,
+          "tests": 26,
+          "seconds": 11.129016712999999,
+          "log": "p5-ir-final-native-linux-ownership-functions.log"
+        },
+        {
+          "suite": "values",
+          "returnCode": 0,
+          "tests": 21,
+          "seconds": 6.54304055099999,
+          "log": "p5-ir-final-native-linux-values.log"
+        },
+        {
+          "suite": "files",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 2.0358397900000114,
+          "log": "p5-ir-final-native-linux-files.log"
+        },
+        {
+          "suite": "text-bytes",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 1.333615558999952,
+          "log": "p5-ir-final-native-linux-text-bytes.log"
+        },
+        {
+          "suite": "cli",
+          "returnCode": 0,
+          "tests": 1,
+          "seconds": 0.6430810130000282,
+          "log": "p5-ir-final-native-linux-cli.log"
+        },
+        {
+          "suite": "numbers",
+          "returnCode": 0,
+          "tests": 11,
+          "seconds": 2.379820488000007,
+          "log": "p5-ir-final-native-linux-numbers.log"
+        },
+        {
+          "suite": "packages",
+          "returnCode": 0,
+          "tests": 13,
+          "seconds": 1.8724250110000185,
+          "log": "p5-ir-final-native-linux-packages.log"
+        },
+        {
+          "suite": "json",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 1.3688362610000127,
+          "log": "p5-ir-final-native-linux-json.log"
+        },
+        {
+          "suite": "system",
+          "returnCode": 0,
+          "tests": 8,
+          "seconds": 1.9910203960000104,
+          "log": "p5-ir-final-native-linux-system.log"
+        },
+        {
+          "suite": "tooling",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 0.6934307530000297,
+          "log": "p5-ir-final-native-linux-tooling.log"
+        },
+        {
+          "suite": "slices",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 2.438963709999996,
+          "log": "p5-ir-final-native-linux-slices.log"
+        },
+        {
+          "suite": "managed-classes",
+          "returnCode": 0,
+          "tests": 9,
+          "seconds": 3.748290150999992,
+          "log": "p5-ir-final-native-linux-managed-classes.log"
+        },
+        {
+          "suite": "backend-alpha9",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 1.07782825299995,
+          "log": "p5-ir-final-native-linux-backend-alpha9.log"
+        },
+        {
+          "suite": "optimization",
+          "returnCode": 0,
+          "tests": 6,
+          "seconds": 3.4450361680000015,
+          "log": "p5-ir-final-native-linux-optimization.log"
+        },
+        {
+          "suite": "english-api",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 2.2062198609999655,
+          "log": "p5-ir-final-native-linux-english-api.log"
+        },
+        {
+          "suite": "release-policy",
+          "returnCode": 0,
+          "tests": 2,
+          "seconds": 0.9107672630000252,
+          "log": "p5-ir-final-native-linux-release-policy.log"
+        },
+        {
+          "suite": "ffi",
+          "returnCode": 0,
+          "tests": 9,
+          "seconds": 6.31069388100002,
+          "log": "p5-ir-final-native-linux-ffi.log"
+        },
+        {
+          "suite": "http",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 5.30371171500002,
+          "log": "p5-ir-final-native-linux-http.log"
+        },
+        {
+          "suite": "process",
+          "returnCode": 0,
+          "tests": 4,
+          "seconds": 2.9443999530000156,
+          "log": "p5-ir-final-native-linux-process.log"
+        },
+        {
+          "suite": "applications-bc",
+          "returnCode": 0,
+          "tests": 3,
+          "seconds": 1.5228738879999923,
+          "log": "p5-ir-final-native-linux-applications-bc.log"
+        },
+        {
+          "suite": "safe-default",
+          "returnCode": 0,
+          "tests": 5,
+          "seconds": 2.399514975000045,
+          "log": "p5-ir-final-native-linux-safe-default.log"
+        },
+        {
+          "suite": "net",
+          "returnCode": 0,
+          "tests": 8,
+          "seconds": 10.740138659000024,
+          "log": "p5-ir-final-native-linux-net.log"
+        },
+        {
+          "suite": "move-enums",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 2.8641309600000113,
+          "log": "p5-ir-final-native-linux-move-enums.log"
+        },
+        {
+          "suite": "closures",
+          "returnCode": 0,
+          "tests": 15,
+          "seconds": 4.660166563000018,
+          "log": "p5-ir-final-native-linux-closures.log"
+        },
+        {
+          "suite": "usability",
+          "returnCode": 0,
+          "tests": 10,
+          "seconds": 5.222872129999985,
+          "log": "p5-ir-final-native-linux-usability.log"
+        },
+        {
+          "suite": "backend-evolution",
+          "returnCode": 0,
+          "tests": 16,
+          "seconds": 4.117165039000042,
+          "log": "p5-ir-final-native-linux-backend-evolution.log"
+        },
+        {
+          "suite": "complete-ir",
+          "returnCode": 0,
+          "tests": 7,
+          "seconds": 1.2356447950000415,
+          "log": "p5-ir-final-native-linux-complete-ir.log"
+        }
+      ],
+      "testCasesReported": 296
+    }
+  },
+  "cleanBuilds": {
+    "windows": {
+      "platform": "win32",
+      "compiler": "C:/msys64/ucrt64/bin\\gcc.exe",
+      "cleanBinarySha256": "71a1230ef2720a610703a904e51b1b8a10e56ce53308c9d2c8aa82fb0b84771a",
+      "workspaceBinarySha256": "71a1230ef2720a610703a904e51b1b8a10e56ce53308c9d2c8aa82fb0b84771a",
+      "identicalToWorkspaceBinary": true
+    },
+    "linux": {
+      "platform": "linux",
+      "compiler": "/usr/bin/gcc",
+      "cleanBinarySha256": "794d1bcec969b0c2c6836199068a5a04f37007867ced0e9ddb97e8ef1e9b17c4",
+      "workspaceBinarySha256": "794d1bcec969b0c2c6836199068a5a04f37007867ced0e9ddb97e8ef1e9b17c4",
+      "identicalToWorkspaceBinary": true
+    }
+  },
+  "portability": {
+    "windows": {
+      "path": "build/review-tests/p5-ir-final-ports-windows.json",
+      "sha256": "b7ebad5ab54854b75f75a6b33ed21ded2e24c040089b04391f6990226ed30fbc",
+      "report": {
+        "platform": "win32",
+        "hostArchitecture": "x86_64",
+        "execution": "native",
+        "outputArchitecture": "x86_64",
+        "nativeArm64Execution": false,
+        "passed": true,
+        "cases": [
+          {
+            "name": "branches",
+            "optimized": true,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "9892eb900a590f746d76ac19e2a513da3a9bbf0cf347564037e5bb2121e76720",
+              "windows-x64": "33176e47ccfa55b1eac2b0d3cbc3554f39b63d139d6f53c531f0d73b3b4e893d",
+              "macos-x64": "d7fb0370f89cbe76fbe4ab4d6d03d10e9c4c603c7238099512a94c2fb32197ff"
+            }
+          },
+          {
+            "name": "branches",
+            "optimized": false,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "05a7fe62af289169fefdf6557bc63d0957fb53142d217ca22080996df1184065",
+              "windows-x64": "ce5f4362bd634f4b4aafc210e38851e4f142298da1839555331d5958393d6110",
+              "macos-x64": "f716547de4f7af020dd2ca4124ceee7fe1dacee017da400d3d65e5bfbf07a82a"
+            }
+          },
+          {
+            "name": "widths",
+            "optimized": true,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "f1c77510f6aa7645d458a960ae935c1d2b51042a4be20f351a30d702668f87be",
+              "windows-x64": "c7207cebf1a13d92f825e1f0bd2122b04a5b2967171d03dd00a70f7006fefa34",
+              "macos-x64": "077aab5eab38986b4b2065d71a02ada0451a1ceb9c8c882b996e52fd137f6ea4"
+            }
+          },
+          {
+            "name": "widths",
+            "optimized": false,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "616cf032e1ddda191ae153559069d7256defdae1958920fdc5e0350b4cc0139b",
+              "windows-x64": "c740a17a374ff861c53265d0e2cdb4395fe1bce02a0dd8845e4a41c707f081bf",
+              "macos-x64": "a30dc809cc1d49e3a4654e4c78783e5260d2e3551e7d5b6b00eaf40bbe24f43f"
+            }
+          },
+          {
+            "name": "ieee",
+            "optimized": true,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "368ef0804d464da2c884ed1e90d731940ada1ccd02832e5e28b04ee18fa4ccce",
+              "windows-x64": "ff05f90cbc547c5a04ca791eaa352ca44d8fc01846cacf726d57e17d49403d5f",
+              "macos-x64": "af5147fd1cea34bc28259a1f390d4fa60767388f7d39c0c06d863591093bea24"
+            }
+          },
+          {
+            "name": "ieee",
+            "optimized": false,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "e1963174b63eabcb13c260cd65b2649875f10e4f43c0f9ba4c08fd851af61fb5",
+              "windows-x64": "0dd622af2bade5bd2f27584b923f5f879b736bed34083e53dc7cb352bc6e8ac2",
+              "macos-x64": "c8bc2d9a368920752172a97fda157e8b2cccd46c565d064a8a6b274bcad0cef5"
+            }
+          },
+          {
+            "name": "ownership",
+            "optimized": true,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "62d343c8fafb335f753a76a003a007b2db4f0f16a3054f46cc5a4c179b032042",
+              "windows-x64": "325a08801e474890e4ea8f69fd30a7a08bc50faa11701ba76dfba367a3d70780",
+              "macos-x64": "c0fb679bb20f9bcbc9b4124397fc7f82185d28d8a0b8d00a3d181412777e11b2"
+            }
+          },
+          {
+            "name": "ownership",
+            "optimized": false,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "d568a48a9afd37a95640422992e60c3ca8b3d9df51bf8acb31773ec018b7e62b",
+              "windows-x64": "19bd88f866eab629af3d1689f99fac0c5e394ccb6cd1392393056b021014e6e9",
+              "macos-x64": "371edcf389f6dcbd0b536ef40121ec310d5d689219b9898b40e192e4df55cef2"
+            }
+          },
+          {
+            "name": "lazy",
+            "optimized": true,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "ce8169e45b74d5b615c570f4d6dede54de11d7cbd9e902b80ed196c1579c6aa0",
+              "windows-x64": "d4a4c1e36a15ae6ffa1ba7aee9a62b94e0336ac3f52d35b15ae458727dc0d9ab",
+              "macos-x64": "a2d1feb4e31d01dc7ce9a861ec54414913f42380d2dca4cefa78452e43b29d63"
+            }
+          },
+          {
+            "name": "lazy",
+            "optimized": false,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "12d56883367452c4d4cefe0f1e81256f1148408d72af583ac984b72b6cd643dd",
+              "windows-x64": "cafb6cc91e1f35ce1d171941f66a554a1b7c2c19f304a096436c2afc62e777ce",
+              "macos-x64": "c17c971242488908b62ad05e3c47a7cda4978915151e40baacb9e25b6cab4846"
+            }
+          },
+          {
+            "name": "utf8",
+            "optimized": true,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "a964be85689721c53c3478476dbe58b00563b5a88bd34defb732183d9c9d053f",
+              "windows-x64": "f9a7a66971be97417b95410c70ad768e48f570166e2f8cbd7654b9f6fef57a23",
+              "macos-x64": "898c1557e50a9b423131388e80ac4a3ffcedb8c2db25b2910747ec79eddc0f1e"
+            }
+          },
+          {
+            "name": "utf8",
+            "optimized": false,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "bf1f67e1d952c03e5e9ddcc2602e81212f62484ca0caf7b9c41eed1a4acc92aa",
+              "windows-x64": "f8dc9b62546fe67cb9a5df7348e803620a0c8a19448f9c2940fcca9996fc5183",
+              "macos-x64": "d623bb9c06053b7f566957378bb111273e24a0eac35a6e3eaecd5b6d5b3ad4b9"
+            }
+          },
+          {
+            "name": "trap",
+            "optimized": true,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 70,
+            "binaries": {
+              "linux-x64": "216fac541c206967367e5572e3422d276f893f7c4b33455832ba25ed010fd7b7",
+              "windows-x64": "ec80a161d24a38fbc026cd0daf7c325765ddd6470c2d1914c09f5d27d141565f",
+              "macos-x64": "e7f2ff352eedde112b3f428584a9701482b3f2e397291d4e142b545cd062d03e"
+            }
+          },
+          {
+            "name": "trap",
+            "optimized": false,
+            "passed": true,
+            "target": "windows-x64",
+            "returnCode": 70,
+            "binaries": {
+              "linux-x64": "99335ca5f8e37374deb453fbdf9b0e5926affd8e06f04173d3680949def0c16c",
+              "windows-x64": "ae7daca8d1991a135b039d642ed710939406bcc360c882c5d60f40c6b3458702",
+              "macos-x64": "8be34d34682d0997ded89558dab7f05dd6c2d8dc1ac1fd8264ead5e90ae16002"
+            }
+          }
+        ],
+        "compilerSha256": "71a1230ef2720a610703a904e51b1b8a10e56ce53308c9d2c8aa82fb0b84771a",
+        "version": "AssisScript 3.3.0-alpha.15 (nativo, Windows x64)",
+        "doctor": "AssisScript 3.3.0-alpha.15\nHost: Windows x64\nBackends: ELF64 Linux / PE32+ Windows / Mach-O macOS (experimental), todos x86_64\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis\n",
+        "backendFormat": "AssisScript-TypedIR-v1",
+        "rejectedInvalidSource": true
+      }
+    },
+    "linux": {
+      "path": "build/review-tests/p5-ir-final-ports-linux.json",
+      "sha256": "dd96b5e0d46248faa3cb0d56fc85980e51d5ee60ca34fc371e04dd720fb5649a",
+      "report": {
+        "platform": "linux",
+        "hostArchitecture": "x86_64",
+        "execution": "native",
+        "outputArchitecture": "x86_64",
+        "nativeArm64Execution": false,
+        "passed": true,
+        "cases": [
+          {
+            "name": "branches",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "9892eb900a590f746d76ac19e2a513da3a9bbf0cf347564037e5bb2121e76720",
+              "windows-x64": "33176e47ccfa55b1eac2b0d3cbc3554f39b63d139d6f53c531f0d73b3b4e893d",
+              "macos-x64": "d7fb0370f89cbe76fbe4ab4d6d03d10e9c4c603c7238099512a94c2fb32197ff"
+            }
+          },
+          {
+            "name": "branches",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "05a7fe62af289169fefdf6557bc63d0957fb53142d217ca22080996df1184065",
+              "windows-x64": "ce5f4362bd634f4b4aafc210e38851e4f142298da1839555331d5958393d6110",
+              "macos-x64": "f716547de4f7af020dd2ca4124ceee7fe1dacee017da400d3d65e5bfbf07a82a"
+            }
+          },
+          {
+            "name": "widths",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "f1c77510f6aa7645d458a960ae935c1d2b51042a4be20f351a30d702668f87be",
+              "windows-x64": "c7207cebf1a13d92f825e1f0bd2122b04a5b2967171d03dd00a70f7006fefa34",
+              "macos-x64": "077aab5eab38986b4b2065d71a02ada0451a1ceb9c8c882b996e52fd137f6ea4"
+            }
+          },
+          {
+            "name": "widths",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "616cf032e1ddda191ae153559069d7256defdae1958920fdc5e0350b4cc0139b",
+              "windows-x64": "c740a17a374ff861c53265d0e2cdb4395fe1bce02a0dd8845e4a41c707f081bf",
+              "macos-x64": "a30dc809cc1d49e3a4654e4c78783e5260d2e3551e7d5b6b00eaf40bbe24f43f"
+            }
+          },
+          {
+            "name": "ieee",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "368ef0804d464da2c884ed1e90d731940ada1ccd02832e5e28b04ee18fa4ccce",
+              "windows-x64": "ff05f90cbc547c5a04ca791eaa352ca44d8fc01846cacf726d57e17d49403d5f",
+              "macos-x64": "af5147fd1cea34bc28259a1f390d4fa60767388f7d39c0c06d863591093bea24"
+            }
+          },
+          {
+            "name": "ieee",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "e1963174b63eabcb13c260cd65b2649875f10e4f43c0f9ba4c08fd851af61fb5",
+              "windows-x64": "0dd622af2bade5bd2f27584b923f5f879b736bed34083e53dc7cb352bc6e8ac2",
+              "macos-x64": "c8bc2d9a368920752172a97fda157e8b2cccd46c565d064a8a6b274bcad0cef5"
+            }
+          },
+          {
+            "name": "ownership",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "62d343c8fafb335f753a76a003a007b2db4f0f16a3054f46cc5a4c179b032042",
+              "windows-x64": "325a08801e474890e4ea8f69fd30a7a08bc50faa11701ba76dfba367a3d70780",
+              "macos-x64": "c0fb679bb20f9bcbc9b4124397fc7f82185d28d8a0b8d00a3d181412777e11b2"
+            }
+          },
+          {
+            "name": "ownership",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "d568a48a9afd37a95640422992e60c3ca8b3d9df51bf8acb31773ec018b7e62b",
+              "windows-x64": "19bd88f866eab629af3d1689f99fac0c5e394ccb6cd1392393056b021014e6e9",
+              "macos-x64": "371edcf389f6dcbd0b536ef40121ec310d5d689219b9898b40e192e4df55cef2"
+            }
+          },
+          {
+            "name": "lazy",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "ce8169e45b74d5b615c570f4d6dede54de11d7cbd9e902b80ed196c1579c6aa0",
+              "windows-x64": "d4a4c1e36a15ae6ffa1ba7aee9a62b94e0336ac3f52d35b15ae458727dc0d9ab",
+              "macos-x64": "a2d1feb4e31d01dc7ce9a861ec54414913f42380d2dca4cefa78452e43b29d63"
+            }
+          },
+          {
+            "name": "lazy",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "12d56883367452c4d4cefe0f1e81256f1148408d72af583ac984b72b6cd643dd",
+              "windows-x64": "cafb6cc91e1f35ce1d171941f66a554a1b7c2c19f304a096436c2afc62e777ce",
+              "macos-x64": "c17c971242488908b62ad05e3c47a7cda4978915151e40baacb9e25b6cab4846"
+            }
+          },
+          {
+            "name": "utf8",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "a964be85689721c53c3478476dbe58b00563b5a88bd34defb732183d9c9d053f",
+              "windows-x64": "f9a7a66971be97417b95410c70ad768e48f570166e2f8cbd7654b9f6fef57a23",
+              "macos-x64": "898c1557e50a9b423131388e80ac4a3ffcedb8c2db25b2910747ec79eddc0f1e"
+            }
+          },
+          {
+            "name": "utf8",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "bf1f67e1d952c03e5e9ddcc2602e81212f62484ca0caf7b9c41eed1a4acc92aa",
+              "windows-x64": "f8dc9b62546fe67cb9a5df7348e803620a0c8a19448f9c2940fcca9996fc5183",
+              "macos-x64": "d623bb9c06053b7f566957378bb111273e24a0eac35a6e3eaecd5b6d5b3ad4b9"
+            }
+          },
+          {
+            "name": "trap",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 70,
+            "binaries": {
+              "linux-x64": "216fac541c206967367e5572e3422d276f893f7c4b33455832ba25ed010fd7b7",
+              "windows-x64": "ec80a161d24a38fbc026cd0daf7c325765ddd6470c2d1914c09f5d27d141565f",
+              "macos-x64": "e7f2ff352eedde112b3f428584a9701482b3f2e397291d4e142b545cd062d03e"
+            }
+          },
+          {
+            "name": "trap",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-x64",
+            "returnCode": 70,
+            "binaries": {
+              "linux-x64": "99335ca5f8e37374deb453fbdf9b0e5926affd8e06f04173d3680949def0c16c",
+              "windows-x64": "ae7daca8d1991a135b039d642ed710939406bcc360c882c5d60f40c6b3458702",
+              "macos-x64": "8be34d34682d0997ded89558dab7f05dd6c2d8dc1ac1fd8264ead5e90ae16002"
+            }
+          }
+        ],
+        "compilerSha256": "794d1bcec969b0c2c6836199068a5a04f37007867ced0e9ddb97e8ef1e9b17c4",
+        "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)",
+        "doctor": "AssisScript 3.3.0-alpha.15\nHost: Linux x86_64\nBackends: ELF64 Linux / PE32+ Windows / Mach-O macOS (experimental), todos x86_64\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis\n",
+        "backendFormat": "AssisScript-TypedIR-v1",
+        "rejectedInvalidSource": true
+      }
+    }
+  },
+  "examples": {
+    "windows": {
+      "path": "build/review-tests/p5-ir-examples-windows.json",
+      "sha256": "c17dcec69151c5f9634601ab6701f01746a566db7fdbba13118eed2cbc8d65ec",
+      "report": {
+        "compilerSha256": "71a1230ef2720a610703a904e51b1b8a10e56ce53308c9d2c8aa82fb0b84771a",
+        "passed": true,
+        "examples": [
+          {
+            "file": "01_ola.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "02_objetos.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "03_polimorfismo.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "04_memoria.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "05_bits.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "06_fibonacci.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "07_arena.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "08_modulos.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "09_colecoes.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "10_structs.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "11_pacotes.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "12_relatorio_vendas.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "13_codificacao.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "14_ownership.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "15_funcional.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "16_generics.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "17_funcoes.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "18_classes_genericas.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "19_ownership_funcoes.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "20_valores_e_resultados.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "21_relatorio_csv_stream.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "22_numeros.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "23_eventos.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "24_config_json.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "25_recursos_e_unicode.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "26_english_api.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "27_http_client.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "28_persistent_service.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "29_http_polling.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "30_closures_and_owned_results.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "31_language_review.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "32_backend_evolution.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "rpg.assis",
+            "passed": true,
+            "error": ""
+          }
+        ],
+        "rpg": [
+          {
+            "seed": 1,
+            "ending": "victory",
+            "returnCode": 0,
+            "stderr": "",
+            "outputBytes": 12915
+          },
+          {
+            "seed": 5,
+            "ending": "defeat",
+            "returnCode": 0,
+            "stderr": "",
+            "outputBytes": 13754
+          }
+        ]
+      }
+    },
+    "linux": {
+      "path": "build/review-tests/p5-ir-examples-linux.json",
+      "sha256": "a8fb5af1a3564e25dc7152cbc69cfa57e9fb95e0155d813e2fcbb78f8db7d817",
+      "report": {
+        "compilerSha256": "794d1bcec969b0c2c6836199068a5a04f37007867ced0e9ddb97e8ef1e9b17c4",
+        "passed": true,
+        "examples": [
+          {
+            "file": "01_ola.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "02_objetos.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "03_polimorfismo.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "04_memoria.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "05_bits.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "06_fibonacci.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "07_arena.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "08_modulos.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "09_colecoes.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "10_structs.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "11_pacotes.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "12_relatorio_vendas.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "13_codificacao.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "14_ownership.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "15_funcional.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "16_generics.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "17_funcoes.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "18_classes_genericas.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "19_ownership_funcoes.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "20_valores_e_resultados.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "21_relatorio_csv_stream.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "22_numeros.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "23_eventos.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "24_config_json.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "25_recursos_e_unicode.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "26_english_api.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "27_http_client.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "28_persistent_service.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "29_http_polling.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "30_closures_and_owned_results.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "31_language_review.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "32_backend_evolution.assis",
+            "passed": true,
+            "error": ""
+          },
+          {
+            "file": "rpg.assis",
+            "passed": true,
+            "error": ""
+          }
+        ],
+        "rpg": [
+          {
+            "seed": 1,
+            "ending": "victory",
+            "returnCode": 0,
+            "stderr": "",
+            "outputBytes": 12915
+          },
+          {
+            "seed": 5,
+            "ending": "defeat",
+            "returnCode": 0,
+            "stderr": "",
+            "outputBytes": 13754
+          }
+        ]
+      }
+    }
+  },
+  "measurements": {
+    "windows": {
+      "backend": {
+        "path": "build/review-tests/p5-ir-backend-windows.json",
+        "sha256": "130e6135a610bb370df46785879ae2fee387c652188b47c244ecb9da3458225a",
+        "report": {
+          "format": "AssisScript-backend-v1",
+          "host": {
+            "system": "Windows-10-10.0.19045-SP0",
+            "machine": "AMD64",
+            "processor": "Intel64 Family 6 Model 94 Stepping 3, GenuineIntel",
+            "logicalCpus": 8
+          },
+          "samples": 3,
+          "iterations": 2000000,
+          "reference": "Python integer formulas; both compilers checked before and during measurement",
+          "compilers": {
+            "candidate": {
+              "sha256": "71a1230ef2720a610703a904e51b1b8a10e56ce53308c9d2c8aa82fb0b84771a",
+              "version": "AssisScript 3.3.0-alpha.15 (nativo, Windows x64)",
+              "mode": "optimized"
+            },
+            "baseline": {
+              "sha256": "29c866b18ab13c7e13179655a1e2c4b6665443f797b17f05fdcfb5517fd5c837",
+              "version": "AssisScript 3.3.0-alpha.15 (nativo, Windows x64)",
+              "mode": "optimized"
+            }
+          },
+          "workloads": {
+            "disjoint_loops": {
+              "expected": 24000120000000,
+              "sourceSha256": "04e24e19247a1a13c8390dc43c7a8e8d9fed00ae4536d69fc5879349511b41a9",
+              "measurements": {
+                "candidate": {
+                  "compileMs": 25.7649,
+                  "bytes": 102912,
+                  "binarySha256": "3819dc00fb276cd35875f43abbd9a92c0e6fe0e02d00982acee8a0d8737360c9",
+                  "runMs": [
+                    58.4759,
+                    57.6996,
+                    58.2822
+                  ],
+                  "medianMs": 58.2822,
+                  "minMs": 57.6996,
+                  "maxMs": 58.4759
+                },
+                "baseline": {
+                  "compileMs": 15.6814,
+                  "bytes": 102912,
+                  "binarySha256": "3a48295dda295230399e65ec71bed36ae1ca1499e03f8f6dba6d7228c3c1413b",
+                  "runMs": [
+                    58.3715,
+                    59.4897,
+                    58.7806
+                  ],
+                  "medianMs": 58.7806,
+                  "minMs": 58.3715,
+                  "maxMs": 59.4897
+                }
+              },
+              "speedup": 1.0085514959970625
+            },
+            "stencil_offsets": {
+              "expected": 196523427555,
+              "sourceSha256": "82f68949969500056cef65b0cd4581b6176580cb7d66f2b306500f92bc5fef76",
+              "measurements": {
+                "candidate": {
+                  "compileMs": 28.0661,
+                  "bytes": 102400,
+                  "binarySha256": "2db886e72b6e2b69aa36465e14633fbd080cbede050102f2e65d68e4d6a53a57",
+                  "runMs": [
+                    217.3627,
+                    221.325,
+                    235.2002
+                  ],
+                  "medianMs": 221.325,
+                  "minMs": 217.3627,
+                  "maxMs": 235.2002
+                },
+                "baseline": {
+                  "compileMs": 15.774,
+                  "bytes": 102400,
+                  "binarySha256": "010d2d620f22fa02b3d06fd546f96eaf9c078b34ac207a672d5a382c1f748487",
+                  "runMs": [
+                    202.1738,
+                    203.6518,
+                    197.7166
+                  ],
+                  "medianMs": 202.1738,
+                  "minMs": 197.7166,
+                  "maxMs": 203.6518
+                }
+              },
+              "speedup": 0.9134702360781657
+            },
+            "reverse_traversal": {
+              "expected": 65523806208,
+              "sourceSha256": "c2f4223f1468211cd5cbdd55de8d71ad002540e6b4985fabcb4f6ea22228c949",
+              "measurements": {
+                "candidate": {
+                  "compileMs": 17.9023,
+                  "bytes": 109056,
+                  "binarySha256": "874861c7c22304efc0f14af7dfc36ffd533efe401799619f6e2183db80c7a284",
+                  "runMs": [
+                    45.9132,
+                    46.463,
+                    46.777
+                  ],
+                  "medianMs": 46.463,
+                  "minMs": 45.9132,
+                  "maxMs": 46.777
+                },
+                "baseline": {
+                  "compileMs": 16.8834,
+                  "bytes": 109056,
+                  "binarySha256": "330e7fd462cdd5c8391e61740106f6ecdf542f053abaefed8db40a373bcb1b6d",
+                  "runMs": [
+                    45.4854,
+                    46.8265,
+                    46.0151
+                  ],
+                  "medianMs": 46.0151,
+                  "minMs": 45.4854,
+                  "maxMs": 46.8265
+                }
+              },
+              "speedup": 0.9903600714547058
+            },
+            "scalar_leaf": {
+              "expected": 383999992000000,
+              "sourceSha256": "4419cb5dcb53e5bee8abfe609360ee9d5a41ee85763edb3f229304f4b8498ef8",
+              "measurements": {
+                "candidate": {
+                  "compileMs": 15.5216,
+                  "bytes": 102400,
+                  "binarySha256": "baf4ae53764870bd28e4b56a46f191b2497c93f05f9b19e8508a4008af56819a",
+                  "runMs": [
+                    49.9979,
+                    46.5128,
+                    46.2709
+                  ],
+                  "medianMs": 46.5128,
+                  "minMs": 46.2709,
+                  "maxMs": 49.9979
+                },
+                "baseline": {
+                  "compileMs": 14.4817,
+                  "bytes": 102400,
+                  "binarySha256": "1d73deba429ee36287e336ca554507b7ab59b569507e6e1e9407466dceb85ae3",
+                  "runMs": [
+                    42.1994,
+                    40.9373,
+                    40.9331
+                  ],
+                  "medianMs": 40.9373,
+                  "minMs": 40.9331,
+                  "maxMs": 42.1994
+                }
+              },
+              "speedup": 0.8801297707297776
+            },
+            "float_values": {
+              "expected": 8000000,
+              "sourceSha256": "62e1381effb27732869ace2065131439bf0111f32b95fc099313c8d509d269f1",
+              "measurements": {
+                "candidate": {
+                  "compileMs": 25.8492,
+                  "bytes": 102400,
+                  "binarySha256": "43549ba0dcafa68d66d15bb921165946e473f733c8a44e1692ff386b4e790e13",
+                  "runMs": [
+                    61.6718,
+                    60.4452,
+                    60.979
+                  ],
+                  "medianMs": 60.979,
+                  "minMs": 60.4452,
+                  "maxMs": 61.6718
+                },
+                "baseline": {
+                  "compileMs": 15.6421,
+                  "bytes": 102400,
+                  "binarySha256": "66611186c49a8d6e3b7286f35074867f222dc3c3e1d97823cdb05fcc052b1f3e",
+                  "runMs": [
+                    64.463,
+                    60.1267,
+                    60.8629
+                  ],
+                  "medianMs": 60.8629,
+                  "minMs": 60.1267,
+                  "maxMs": 64.463
+                }
+              },
+              "speedup": 0.9980960658587383
+            }
+          }
+        }
+      },
+      "optimization": {
+        "path": "build/review-tests/p5-ir-optimization-windows.json",
+        "sha256": "01682194f7ffc508ac8b2c8c98235afd116eaa767b73065835c03a640104c96d",
+        "report": {
+          "format": "AssisScript-optimization-v1",
+          "platform": "nt",
+          "host": {
+            "system": "Windows-10-10.0.19045-SP0",
+            "machine": "AMD64",
+            "processor": "Intel64 Family 6 Model 94 Stepping 3, GenuineIntel",
+            "logical_cpus": 8
+          },
+          "samples": 3,
+          "entries": 20000,
+          "compilers": {
+            "candidate": {
+              "sha256": "71a1230ef2720a610703a904e51b1b8a10e56ce53308c9d2c8aa82fb0b84771a",
+              "version": "AssisScript 3.3.0-alpha.15 (nativo, Windows x64)"
+            }
+          },
+          "workloads": {
+            "hash_stride_1": {
+              "candidate": {
+                "compile_ms": 41.6355,
+                "bytes": 118272,
+                "binarySha256": "6a23128cc3487749d9ecfee8358fb49eebc98e6fb8545b793a5f7f442f572223",
+                "run_ms": [
+                  25.1847,
+                  26.9421,
+                  30.6118
+                ],
+                "median_ms": 26.9421
+              }
+            },
+            "hash_stride_64": {
+              "candidate": {
+                "compile_ms": 49.5663,
+                "bytes": 118272,
+                "binarySha256": "3bd98680981e4b810ebcb745e6a8757a7d8002dfdb883b23be362be60cc19e30",
+                "run_ms": [
+                  23.4643,
+                  22.8048,
+                  22.1395
+                ],
+                "median_ms": 22.8048
+              }
+            },
+            "hash_stride_4096": {
+              "candidate": {
+                "compile_ms": 38.0049,
+                "bytes": 118272,
+                "binarySha256": "8c5e06f35cd1375c1709e06a5a5cc8bc3721c42803127be280b0e2e6a9d649cb",
+                "run_ms": [
+                  23.7274,
+                  26.0217,
+                  23.2539
+                ],
+                "median_ms": 23.7274
+              }
+            },
+            "hash_stride_65536": {
+              "candidate": {
+                "compile_ms": 36.7362,
+                "bytes": 118272,
+                "binarySha256": "71e45be1b0b62bf7b8405f5baa0db5d52e56deae382c336da64a9d8d45b8a6c7",
+                "run_ms": [
+                  23.7471,
+                  22.4213,
+                  22.7878
+                ],
+                "median_ms": 22.7878
+              }
+            },
+            "large_zero_allocations": {
+              "candidate": {
+                "compile_ms": 32.912,
+                "bytes": 102400,
+                "binarySha256": "4444722211bbf0b519f7245bc78829d6aacf0a66fc19bcc1ca9df4f491e9d841",
+                "run_ms": [
+                  21.9307,
+                  19.064,
+                  19.8067
+                ],
+                "median_ms": 19.8067
+              }
+            },
+            "scalar_leaf_calls": {
+              "candidate": {
+                "compile_ms": 40.6691,
+                "bytes": 102400,
+                "binarySha256": "306c6f832d2593302f84296eb73461b8dfe3e64eb81457143f0ea06896df09a2",
+                "run_ms": [
+                  39.0538,
+                  40.8616,
+                  40.4037
+                ],
+                "median_ms": 40.4037
+              }
+            },
+            "fib35": {
+              "candidate": {
+                "compile_ms": 32.6916,
+                "bytes": 102400,
+                "binarySha256": "bf3c4138e58e98a36bf004bc758a4f64f5fba90e7b0b448b5cc12e79731a7998",
+                "run_ms": [
+                  129.0156,
+                  154.1758,
+                  203.4177
+                ],
+                "median_ms": 154.1758
+              }
+            }
+          },
+          "max_stride_ratio": 0.8806811644229663
+        }
+      }
+    },
+    "linux": {
+      "backend": {
+        "path": "build/review-tests/p5-ir-backend-linux.json",
+        "sha256": "6962d9007761563a40374a8f0e6dd523ac667a0c977c430155e95e2b2775713f",
+        "report": {
+          "format": "AssisScript-backend-v1",
+          "host": {
+            "system": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+            "machine": "x86_64",
+            "processor": "x86_64",
+            "logicalCpus": 8
+          },
+          "samples": 3,
+          "iterations": 2000000,
+          "reference": "Python integer formulas; both compilers checked before and during measurement",
+          "compilers": {
+            "candidate": {
+              "sha256": "794d1bcec969b0c2c6836199068a5a04f37007867ced0e9ddb97e8ef1e9b17c4",
+              "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)",
+              "mode": "optimized"
+            },
+            "baseline": {
+              "sha256": "05c1718df5e2d59a0d3439acd0e77baedbcf8f1b3be398d5853d476a9850d014",
+              "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)",
+              "mode": "optimized"
+            }
+          },
+          "workloads": {
+            "disjoint_loops": {
+              "expected": 24000120000000,
+              "sourceSha256": "04e24e19247a1a13c8390dc43c7a8e8d9fed00ae4536d69fc5879349511b41a9",
+              "measurements": {
+                "candidate": {
+                  "compileMs": 21.691823,
+                  "bytes": 12289,
+                  "binarySha256": "a7cd32a5d2c7d213d006ddf9d43bd1e533af54be02f4bece258d7d875c64ae04",
+                  "runMs": [
+                    44.907999,
+                    42.899343,
+                    44.145091
+                  ],
+                  "medianMs": 44.145091,
+                  "minMs": 42.899343,
+                  "maxMs": 44.907999
+                },
+                "baseline": {
+                  "compileMs": 17.738249,
+                  "bytes": 12289,
+                  "binarySha256": "1450d7919ca9e566e9637efc3869a767d395539b36f43c763e1e1d0135c6ef18",
+                  "runMs": [
+                    46.77838,
+                    45.301326,
+                    49.545058
+                  ],
+                  "medianMs": 46.77838,
+                  "minMs": 45.301326,
+                  "maxMs": 49.545058
+                }
+              },
+              "speedup": 1.059650777478293
+            },
+            "stencil_offsets": {
+              "expected": 196523427555,
+              "sourceSha256": "82f68949969500056cef65b0cd4581b6176580cb7d66f2b306500f92bc5fef76",
+              "measurements": {
+                "candidate": {
+                  "compileMs": 29.738077,
+                  "bytes": 8193,
+                  "binarySha256": "ebae9e407df69e8de93bfbac8e9875f7eab6af655232591f6303a8769a0b5cd4",
+                  "runMs": [
+                    214.681992,
+                    216.694602,
+                    210.646755
+                  ],
+                  "medianMs": 214.681992,
+                  "minMs": 210.646755,
+                  "maxMs": 216.694602
+                },
+                "baseline": {
+                  "compileMs": 25.087532,
+                  "bytes": 8193,
+                  "binarySha256": "2b37505eecd74bdc37678ab05b48d8bee19980b1cb6d8c16f5571ec8e738e5df",
+                  "runMs": [
+                    213.111807,
+                    214.159973,
+                    214.98005
+                  ],
+                  "medianMs": 214.159973,
+                  "minMs": 213.111807,
+                  "maxMs": 214.98005
+                }
+              },
+              "speedup": 0.9975684080665694
+            },
+            "reverse_traversal": {
+              "expected": 65523806208,
+              "sourceSha256": "c2f4223f1468211cd5cbdd55de8d71ad002540e6b4985fabcb4f6ea22228c949",
+              "measurements": {
+                "candidate": {
+                  "compileMs": 29.530297,
+                  "bytes": 16912,
+                  "binarySha256": "6d8555127df171cac723cf65356e29d936662c59657099b0dbba6d47c8c3c154",
+                  "runMs": [
+                    41.193089,
+                    44.352582,
+                    47.148629
+                  ],
+                  "medianMs": 44.352582,
+                  "minMs": 41.193089,
+                  "maxMs": 47.148629
+                },
+                "baseline": {
+                  "compileMs": 30.148716,
+                  "bytes": 16912,
+                  "binarySha256": "3b7df17310c90f1e435e119168ddc0d878b6cf96b78aa47b629680ea2b03d304",
+                  "runMs": [
+                    41.946902,
+                    41.84963,
+                    43.99061
+                  ],
+                  "medianMs": 41.946902,
+                  "minMs": 41.84963,
+                  "maxMs": 43.99061
+                }
+              },
+              "speedup": 0.9457600912614288
+            },
+            "scalar_leaf": {
+              "expected": 383999992000000,
+              "sourceSha256": "4419cb5dcb53e5bee8abfe609360ee9d5a41ee85763edb3f229304f4b8498ef8",
+              "measurements": {
+                "candidate": {
+                  "compileMs": 28.031906,
+                  "bytes": 8193,
+                  "binarySha256": "9dd949fafeefd86881ac7e1049325b95a20ff74d9bea31f8f85f47c38395a6b7",
+                  "runMs": [
+                    35.2121,
+                    31.267351,
+                    27.978062
+                  ],
+                  "medianMs": 31.267351,
+                  "minMs": 27.978062,
+                  "maxMs": 35.2121
+                },
+                "baseline": {
+                  "compileMs": 23.117281,
+                  "bytes": 8193,
+                  "binarySha256": "65e32068a7e3a5171e594ba1c781d28ea58c8123c9a3a7c977e916c80b8d4174",
+                  "runMs": [
+                    33.200619,
+                    31.883214,
+                    29.038924
+                  ],
+                  "medianMs": 31.883214,
+                  "minMs": 29.038924,
+                  "maxMs": 33.200619
+                }
+              },
+              "speedup": 1.0196966797730962
+            },
+            "float_values": {
+              "expected": 8000000,
+              "sourceSha256": "62e1381effb27732869ace2065131439bf0111f32b95fc099313c8d509d269f1",
+              "measurements": {
+                "candidate": {
+                  "compileMs": 27.855341,
+                  "bytes": 8193,
+                  "binarySha256": "5ccde64defc8403c425b1d45545a074f30d47de67b00b4e40577a78071e725d3",
+                  "runMs": [
+                    48.736924,
+                    49.353526,
+                    50.52073
+                  ],
+                  "medianMs": 49.353526,
+                  "minMs": 48.736924,
+                  "maxMs": 50.52073
+                },
+                "baseline": {
+                  "compileMs": 26.292986,
+                  "bytes": 8193,
+                  "binarySha256": "581ad0f4ab731e927842ebe76fa290d807fc5ea9ec4e0e38bbc00b9660dc74e4",
+                  "runMs": [
+                    49.769796,
+                    49.047471,
+                    48.578936
+                  ],
+                  "medianMs": 49.047471,
+                  "minMs": 48.578936,
+                  "maxMs": 49.769796
+                }
+              },
+              "speedup": 0.9937987206830977
+            }
+          }
+        }
+      },
+      "optimization": {
+        "path": "build/review-tests/p5-ir-optimization-linux.json",
+        "sha256": "beb08e64aabf146fcce31af89dcde1269204938c9f912b4805fb354f6a716068",
+        "report": {
+          "format": "AssisScript-optimization-v1",
+          "platform": "posix",
+          "host": {
+            "system": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+            "machine": "x86_64",
+            "processor": "x86_64",
+            "logical_cpus": 8
+          },
+          "samples": 3,
+          "entries": 20000,
+          "compilers": {
+            "candidate": {
+              "sha256": "794d1bcec969b0c2c6836199068a5a04f37007867ced0e9ddb97e8ef1e9b17c4",
+              "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)"
+            }
+          },
+          "workloads": {
+            "hash_stride_1": {
+              "candidate": {
+                "compile_ms": 43.434009,
+                "bytes": 25440,
+                "binarySha256": "00f02bd5b240354ea5ebcf838515cd0ad80d8d67b0f5e361620f02d81d34c55c",
+                "run_ms": [
+                  15.3946,
+                  15.105292,
+                  14.2662
+                ],
+                "median_ms": 15.105292
+              }
+            },
+            "hash_stride_64": {
+              "candidate": {
+                "compile_ms": 44.247813,
+                "bytes": 25440,
+                "binarySha256": "5e01d32b00fc3e24f7c2673638932bf5e5f6116b0693f43d4e91776a8ea680e0",
+                "run_ms": [
+                  15.736814,
+                  15.514763,
+                  15.568809
+                ],
+                "median_ms": 15.568809
+              }
+            },
+            "hash_stride_4096": {
+              "candidate": {
+                "compile_ms": 42.314268,
+                "bytes": 25440,
+                "binarySha256": "d6b216dc5041e50baa81b4b25d1741668bd2a752ffa7592aff556d0ff4d6cef2",
+                "run_ms": [
+                  12.682728,
+                  15.726161,
+                  11.590161
+                ],
+                "median_ms": 12.682728
+              }
+            },
+            "hash_stride_65536": {
+              "candidate": {
+                "compile_ms": 35.223187,
+                "bytes": 25440,
+                "binarySha256": "242234aaba9faadc9db0a2b6595476b43a54fb97eea1a7017e80693ce34616eb",
+                "run_ms": [
+                  11.606385,
+                  9.748855,
+                  10.803209
+                ],
+                "median_ms": 10.803209
+              }
+            },
+            "large_zero_allocations": {
+              "candidate": {
+                "compile_ms": 34.777325,
+                "bytes": 8193,
+                "binarySha256": "2763a3981793eae1e651fa6cbc1d3fd2953fef8769ffc954cb3c34f81e3bdee4",
+                "run_ms": [
+                  6.103676,
+                  7.851841,
+                  8.473135
+                ],
+                "median_ms": 7.851841
+              }
+            },
+            "scalar_leaf_calls": {
+              "candidate": {
+                "compile_ms": 35.363044,
+                "bytes": 8193,
+                "binarySha256": "230d7d4ca93c4355be515e1919a2ef465cc169f6eed3e9396cbc44ceff5c13ee",
+                "run_ms": [
+                  17.218166,
+                  16.939135,
+                  19.385707
+                ],
+                "median_ms": 17.218166
+              }
+            },
+            "fib35": {
+              "candidate": {
+                "compile_ms": 34.80254,
+                "bytes": 8193,
+                "binarySha256": "2564a68d0c847f9b3611b620fd75277402e453bc110fd635f188e0e392ead991",
+                "run_ms": [
+                  100.05475,
+                  129.015054,
+                  118.073454
+                ],
+                "median_ms": 118.073454
+              }
+            }
+          },
+          "max_stride_ratio": 1.0306857358335078
+        }
+      }
+    }
+  },
+  "gdb": {
+    "status": "passed",
+    "log": "build/review-tests/p5-ir-final-native-linux-backend-alpha9.log",
+    "sha256": "532291b6fd6cfc4f5fd07dc891728042419e90226bd43f5be71123dc1321b1f9"
+  },
+  "editor": {
+    "tests": 85,
+    "passed": true,
+    "log": "build/review-tests/p5-ir-node-windows.log",
+    "sha256": "681ec1670dbc706e270c9661ed2b6e22e246c2dd81f5b4fe9c082c778b3fb7d2"
+  },
+  "windowsInstallerHarness": {
+    "tests": 130,
+    "passed": true,
+    "log": "build/review-tests/p5-ir-native-harness-windows.log",
+    "sha256": "a8341381b16d7992300a6f36f90e51d050d37303c240f7c10de3e4b06dde1931"
+  },
+  "sourceHashes": {
+    "src/assisc.c": "ce5e0019ffac3a1a2ed7cba19f3c218357ec250885daf81f1c4875d04940c556",
+    "src/backend_emit.h": "7bc608866fec74e5e42d32348d9ad1da22afd25c1cab1f09693faf78834af4b9",
+    "src/backend_ir.h": "c29b0fc5b66ba88f0dde87b4ee51830bd76bc5b282022a5544ca1e1f052dfc9e",
+    "src/collections.h": "905c4242cba5c3ba08e066f89574f5c0391f4226d8ab58539587c07025f2d1cf",
+    "src/debug_info.h": "9338f45822e6b4ea1c59df160c945e3455a654a3e16faac56ae1144e5b942ecf",
+    "src/devtools.h": "503cf4cbaf3a302227404e1eabeab606e456825ebe14b1dc30e5d32bf8e9c6c2",
+    "src/elf_format.h": "8aa29e334756432f62b458f411bd16dd29d86da6f2746814c3309b1d2c910322",
+    "src/expression_emit.h": "acf8fc3e2aa9583667db3d2c67a6dfbd3d5c3c81f63062e09968f33c64eaf830",
+    "src/expression_ir.h": "6bdc26bfd75bc61fd621f33ac3831c4ac87bddba2095d94d8976be43d9f46cd4",
+    "src/ffi_elf.h": "ecceba924c5e56baf3fea995bdfdc33235b45fb8476ca21dc6c91cbcd71b593b",
+    "src/ffi_emit.h": "010053ca3165871397b5004ac50ca99c869ddd2d2a811d699d8fa1823dc187a8",
+    "src/frontend.h": "04282e4788dce2b1dd34085014d2946504adf909ad370a0757e9f60d2e544b8e",
+    "src/generics.h": "101a6d09e61bd0b240918bb906252498348f00e9b252f77207a7ebeffdd84069",
+    "src/icon_blob.h": "74646ad2eee260df4579744e9789f405573e8124b61e8a265b61ae3d937be37a",
+    "src/install_files.inc": "86b8d9475efc1eca744221bc2ad2149ee25b440d7e1397071d97703754dff93b",
+    "src/install_optional.inc": "390a94ceef3e6fe123e6481d2d132f1f4dd819a0d5cb11945ddebc33b7bd29e8",
+    "src/ir.h": "d9414d74afa95620f5f703dd908bfc8ceca6a59f8eb7f41b7e551c12f9fc03c0",
+    "src/lexer.h": "9b502b5ebfaaf130e3ca3e94e19a57ea46031a17d229a91bd26de53a1faf6d96",
+    "src/macho_writer.h": "da81962dee5592f2a6006f1b6ffb853d07728414116342b2f1333c2a8753c8e8",
+    "src/modules.h": "84662a3c9d41125ceedd2e0c665df48f935667c76903e0df491cb6e723f56a4e",
+    "src/namespaces.h": "c2362c7fe6802c50f84abab6c7767de3ac85515d36b38e7ccdfee162a838c386",
+    "src/numeric.h": "a6264e101ddeff3ff503cb8e601365988c5df0cbc44baa85cc85464fa65f4feb",
+    "src/numeric_emit.h": "90d9991939841fbadb2048a3f913b5d654c6c65f720d6a72a8847a05550594ba",
+    "src/ownership.h": "4a3148f4fba02cdecc74a750399f0bd1947dcdcf0b64830f62e88836c145e1b1",
+    "src/packages.h": "e372900c7befe0ee8d812c17a5f05cfb56e63a78589facd626f928abc488eb32",
+    "src/pe_writer.h": "1426b3a2104dc2555ed05a3ae1ce8b1a875cc2d5b49c3d70c60b2e0d92f2463e",
+    "src/ranges.h": "b3291ef9ad5c641fbf46f443cf270759842f5d823c329438d5fbd013da5b42ca",
+    "src/registers.h": "be284d42de984addf242ec0f45cde57f638d5c94dd509749d33458530502e678",
+    "src/runtime.S": "9cb1371662938ad7acfdacf2029d438d9ae580c437b26f2a9c5c5b0fa4ce2f70",
+    "src/runtime_blob.h": "e398ba9c1a4cce091b4f350ed4c10005dc3aa6091d19aab461bdbb0f61092bda",
+    "src/runtime_files.inc": "64a20a5ec8db2ffd3fe0e3d0414574c2ffd4d71d507acd7422d3b0b618943e43",
+    "src/runtime_io.inc": "012bba759ce7516082c3da327c03e0db9cd31d3b61d37123b7b4dfa7b9afeaa9",
+    "src/runtime_macos.S": "1ebf175ebcd4ca4f3eca42bf74e09fc739c4ae5ade2275f3588c9b955418470b",
+    "src/runtime_macos_blob.h": "5a3e41af86d491aad8fe79e2de89dee06d58b00f89f8a8bfa880bd509ed15474",
+    "src/runtime_memory.inc": "3ea9ff21a662e587f05a499ff82f9be5d8b8efb6763f6b5d92bd9704e6af067a",
+    "src/runtime_numeric.inc": "f17f1bcc70b1634cb8714882ee648bd0f904262041fc4bd383f105cf84606cb2",
+    "src/runtime_system.inc": "254389a232be341125fd55ab0023c5499fbbdbfb191ea8e6ba1c4b32c59b97e5",
+    "src/runtime_win.S": "7b5cfdb4c0019a050534a4cb2da4a92f09a39b93444e4eb24fcb4e09c8e3f861",
+    "src/runtime_win_blob.h": "59de03b24d1dea77f0aa6d1277d4519f849536b33f1d6354edc9743b32eefb10",
+    "src/safety.h": "8edc1b728efa0a31340f231e1f6117d13edcea42fdfee1a536ae2354bcf22b22",
+    "src/sha256.h": "db32be4734bdc0d90a82ca8f0654fbf9b16159baa1538da416558f941614230b",
+    "src/version.h": "7000caab95cfacf0fe3f728266c324291370e3f9532b7b8ef62db8dcb20a166f",
+    "src/windows_setup.c": "7f72e0a53467d2e528cef728860f7cde759c8d296a79e2ac66fc062a8be181c9"
+  },
+  "astEmission": {
+    "backendFormat": "AssisScript-TypedIR-v1",
+    "optimizedAstDiscardedBeforeGeneration": true,
+    "astEmitterEntrypointsRejectOptimizedMode": true,
+    "fallbackCount": 0,
+    "reference": "--no-opt retains the independent AST emitter"
+  },
+  "roadmap": {
+    "P5-IR": "complete",
+    "P6-ACCEPT": "complete",
+    "points": 97,
+    "remaining": [
+      "P5-TARGET",
+      "P6-POLICY"
+    ]
+  },
+  "independentAcceptance": {
+    "record": "docs/ACEITE-RELATO-USUARIO-2026-10-28.md",
+    "evidence": "Human confirmation forwarded by the project owner; latest distribution available to the tester, including the public manual and A/B/C debugging/distribution. Exact OS/package hash not supplied; separate from automated P5-IR candidate validation."
+  },
+  "remoteCI": {
+    "status": "not-yet-run-for-P5-IR",
+    "previousSuccessfulRun": "https://github.com/Vibe-O-Coder/AssisScript/actions/runs/40796601634",
+    "previousRunScope": "b7f9212 before P5-IR; not asserted as remote success of this candidate"
+  },
+  "limits": [
+    "Expression graph/typed CFG is not SSA; effects preserve evaluation order.",
+    "Native output remains x86_64.",
+    "Benchmarks use three interleaved samples and do not establish general performance gains.",
+    "Platform-specific unittest skips remain explicit in original logs.",
+    "The accepted independent distribution and historical 24-hour runs are not relabelled as tests of this exact new compiler hash."
+  ]
+}

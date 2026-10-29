@@ -1,6 +1,7 @@
 /* Typed scalar values, independent of AST ownership and layout. Each operand
  * precedes its consumer; &&/|| retain lazy evaluation at the emission boundary.
- * Resource expressions continue through the checked AST backend explicitly. */
+ * Resource expressions are lowered by backend_ir.h; --no-opt is the separate
+ * checked AST reference backend. */
 enum { IV_CONSTANT,IV_LOCAL,IV_UNARY,IV_BINARY,IV_CAST,IV_CALL };
 struct IRExpr {int id,kind,op;Type type;Token *site;unsigned effects;uint64_t value;Var *local;Function *callee;IRExpr *a,*b;Vec arguments;};
 static Vec ir_values;

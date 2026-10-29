@@ -82,6 +82,8 @@ def main():
                 checked(compiler, 'check', source)
                 ir = json.loads(checked(compiler, 'ir', source).stdout)
                 assert ir['valueFormat'] == 'AssisScript-ScalarIR-v1'
+                assert ir['backendFormat'] == 'AssisScript-TypedIR-v1' and ir['astFallbacks'] == 0
+                report['backendFormat'] = ir['backendFormat']
                 if arch == 'arm64':
                     for command in ['run', 'test']:
                         result = invoke(compiler, command, source, '--diagnostics=json')
