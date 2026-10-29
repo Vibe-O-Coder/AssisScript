@@ -130,6 +130,10 @@ test-usability: bin/assis
 test-arena: bin/assis
 	python3 tests/test-arena.py
 
+.PHONY: test-platform-window
+test-platform-window:
+	python3 tools/validate-platform.py --output build/platform-validation/host.json
+
 test-htdl-readiness: bin/assis
 	python3 tests/test-htdl-readiness.py
 

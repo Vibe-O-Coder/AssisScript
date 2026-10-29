@@ -25,6 +25,8 @@ jobs:
           make test test-pe test-dev test-evolution test-generics test-functions test-generic-classes test-collections-ast test-ownership-functions test-values test-files test-text-bytes test-cli test-alpha8 test-alpha9 test-alpha10 test-alpha11 test-alpha12 test-alpha13 test-usability test-alpha15 2>&1 | tee build/review-tests/native-linux.log
       - name: Record current native and example validation
         run: python3 tools/test-native.py --output build/review-tests/linux-release.json && python3 tools/validate-examples.py --output build/review-tests/examples-linux.json
+      - name: Check explicit unavailable window provider on Linux
+        run: python3 tools/validate-window-fallback.py --output build/review-tests/window-fallback-linux.json
       - name: Validate host and all x86_64 output formats
         run: python3 tools/test-portability.py --expect-host x86_64 --output build/review-tests/ports-linux-x64.json
       - run: python3 tools/benchmark-optimization.py --samples 3 --output benchmarks/resultados/optimization-alpha15-linux.json --check
@@ -116,6 +118,8 @@ jobs:
           }
           python tools/test-native.py --output build/review-tests/windows-release.json
           if ($LASTEXITCODE -ne 0) { throw 'Native validation failed' }
+          python tools/validate-platform.py --output build/review-tests/platform-windows.json
+          if ($LASTEXITCODE -ne 0) { throw 'Windows platform validation failed' }
           python tools/validate-examples.py --output build/review-tests/examples-windows.json
           if ($LASTEXITCODE -ne 0) { throw 'Example validation failed' }
           python tools/test-portability.py --expect-host x86_64 --output build/review-tests/ports-windows-x64.json
@@ -159,6 +163,11 @@ jobs:
             build/review-tests/node-windows.log
             build/review-tests/ports-windows-x64.json
             build/clean-win32.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-platform-validation
+          path: build/review-tests/platform-windows*
   macos:
     runs-on: macos-15-intel
     timeout-minutes: 20

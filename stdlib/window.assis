@@ -1,0 +1,96 @@
+namespace window;
+
+platform("windows-x64") {
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_abi_version") fn abi():int;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_open") fn native_open(instance:int,width:i32,height:i32,borrow title:*byte,length:int,borrow mut out:*int):i32;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_poll") fn native_poll(handle:int,timeout:i32,borrow mut words:*int,capacity:int):i32;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_clear") fn native_clear(handle:int,rgba:u32):i32;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_text_utf8") fn native_text(handle:int,x:i32,y:i32,borrow data:*byte,length:int,rgba:u32):i32;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_present") fn native_present(handle:int):i32;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_close") fn native_close(handle:int):i32;
+}
+// Other native targets compile an explicit unavailable provider, with no DLL import.
+platform("linux") {
+pure fn abi():int{return -3;}
+safe fn native_open(instance:int,width:i32,height:i32,borrow title:*byte,length:int,borrow mut out:*int):i32{return i32(-3);}
+safe fn native_poll(handle:int,timeout:i32,borrow mut words:*int,capacity:int):i32{return i32(-3);}
+pure fn native_clear(handle:int,rgba:u32):i32{return i32(-3);}
+safe fn native_text(handle:int,x:i32,y:i32,borrow data:*byte,length:int,rgba:u32):i32{return i32(-3);}
+pure fn native_present(handle:int):i32{return i32(-3);}
+pure fn native_close(handle:int):i32{return i32(-3);}
+}
+platform("macos") {
+pure fn abi():int{return -3;}
+safe fn native_open(instance:int,width:i32,height:i32,borrow title:*byte,length:int,borrow mut out:*int):i32{return i32(-3);}
+safe fn native_poll(handle:int,timeout:i32,borrow mut words:*int,capacity:int):i32{return i32(-3);}
+pure fn native_clear(handle:int,rgba:u32):i32{return i32(-3);}
+safe fn native_text(handle:int,x:i32,y:i32,borrow data:*byte,length:int,rgba:u32):i32{return i32(-3);}
+pure fn native_present(handle:int):i32{return i32(-3);}
+pure fn native_close(handle:int):i32{return i32(-3);}
+}
+
+public value struct Event {
+    let status:int;let kind:int;let instance:int;let generation:int;
+    let arg0:int;let arg1:int;let request_id:int;
+}
+safe fn copy(borrow data:slice<byte>):own *byte {
+    own out:*byte=alloc<byte>(len(data));
+    for(let i:int=0;i<len(data);i++){out[i]=data[i];}return move(out);
+}
+public safe fn available():bool {unsafe{return abi()==65536;}}
+
+/// Trusted native UI. No page authority or C callbacks. Calls stay on the owner thread.
+public final class Window {
+    private let token:int;
+    private let instance:int;
+    private let generation:int;
+    private let last_request:int;
+    private let failure:int;
+    private own words:*int;
+    fn init(borrow mut self,instance:int,width:int,height:int,borrow title:slice<byte>):void {
+        self.words=alloc<int>(8);self.failure=-1;
+        if(instance<=0||width<1||width>16384||height<1||height>16384||len(title)>4096){return;}
+        self.failure=-3;if(!available()){return;}
+        own data:*byte=copy(title);self.instance=instance;
+        let status:int=0;unsafe{status=int(native_open(instance,i32(width),i32(height),data,len(data),self.words));}
+        self.failure=status;
+        if(self.failure==0){self.token=self.words[0];if(self.token==0){self.failure=-6;}}
+    }
+    fn opened(borrow self):bool{return self.token!=0;}
+    fn error(borrow self):int{return self.failure;}
+    fn close(borrow mut self):int {
+        if(self.token==0){return 0;}
+        unsafe{self.failure=int(native_close(self.token));}
+        // A wrong-thread close is refused; retain ownership for the correct thread.
+        if(self.failure==0||self.failure== -2){self.token=0;}
+        return self.failure;
+    }
+    fn drop(borrow mut self):void{let ignored:int=self.close();}
+    fn poll(borrow mut self,timeout_ms:int):Event {
+        if(timeout_ms<0||timeout_ms>50){return new Event(-1,0,0,0,0,0,0);}
+        if(self.token==0){return new Event(-2,0,0,0,0,0,0);}
+        let status:int=0;unsafe{status=int(native_poll(self.token,i32(timeout_ms),self.words,8));}
+        if(status!=0){self.failure=status;return new Event(status,0,0,0,0,0,0);}
+        if(self.words[0]!=65536||self.words[1]<1||self.words[1]>6||self.words[2]!=self.token||
+           self.words[3]!=self.instance||self.words[4]<=0||self.words[7]<=self.last_request||
+           (self.generation!=0&&self.words[4]!=self.generation)){
+            self.failure=-6;return new Event(-6,0,0,0,0,0,0);
+        }
+        self.failure=0;self.generation=self.words[4];self.last_request=self.words[7];
+        return new Event(0,self.words[1],self.instance,self.generation,self.words[5],self.words[6],self.last_request);
+    }
+    fn clear(borrow mut self,rgba:u32):int {
+        if(self.token==0){return -2;}
+        unsafe{self.failure=int(native_clear(self.token,rgba));}return self.failure;
+    }
+    fn draw_text(borrow mut self,x:int,y:int,borrow content:slice<byte>,rgba:u32):int {
+        if(self.token==0){return -2;}
+        if(x< -2147483648||x>2147483647||y< -2147483648||y>2147483647||len(content)>1048576){return -1;}
+        own data:*byte=copy(content);
+        unsafe{self.failure=int(native_text(self.token,i32(x),i32(y),data,len(data),rgba));}return self.failure;
+    }
+    fn present(borrow mut self):int {
+        if(self.token==0){return -2;}
+        unsafe{self.failure=int(native_present(self.token));}return self.failure;
+    }
+}

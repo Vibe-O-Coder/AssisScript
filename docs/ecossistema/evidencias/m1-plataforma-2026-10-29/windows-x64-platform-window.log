@@ -1,0 +1,21 @@
+test_arguments_buffers_utf8_and_unavailable_provider (__main__.PlatformWindow.test_arguments_buffers_utf8_and_unavailable_provider) ... ok
+test_exact_input_limits_and_copied_title (__main__.PlatformWindow.test_exact_input_limits_and_copied_title) ... ok
+test_failed_native_close_preserves_resources_for_retry (__main__.PlatformWindow.test_failed_native_close_preserves_resources_for_retry) ... ok
+test_independent_c_caller_matches_assisscript_both_backends (__main__.PlatformWindow.test_independent_c_caller_matches_assisscript_both_backends) ... ok
+test_injected_oom_every_open_boundary_text_resize_and_neighbor (__main__.PlatformWindow.test_injected_oom_every_open_boundary_text_resize_and_neighbor) ... ok
+test_missing_dll_is_a_loader_failure_before_main (__main__.PlatformWindow.test_missing_dll_is_a_loader_failure_before_main) ... ok
+test_ordered_events_resize_focus_keys_pointer_scale_and_close (__main__.PlatformWindow.test_ordered_events_resize_focus_keys_pointer_scale_and_close) ... ok
+test_owned_wrapper_drop_failures_and_all_output_formats (__main__.PlatformWindow.test_owned_wrapper_drop_failures_and_all_output_formats) ... ok
+test_production_exports_exclude_diagnostics (__main__.PlatformWindow.test_production_exports_exclude_diagnostics) ... ok
+test_queue_coalescing_overflow_and_neighbor_isolation (__main__.PlatformWindow.test_queue_coalescing_overflow_and_neighbor_isolation) ... ok
+test_source_over_and_length_bearing_text_with_independent_color_model (__main__.PlatformWindow.test_source_over_and_length_bearing_text_with_independent_color_model) ... ok
+test_tokens_generation_instance_revocation_and_exhaustion (__main__.PlatformWindow.test_tokens_generation_instance_revocation_and_exhaustion) ... ok
+test_wait_is_bounded_and_thousand_cycles_release_native_resources (__main__.PlatformWindow.test_wait_is_bounded_and_thousand_cycles_release_native_resources) ... ok
+test_window_and_surface_quotas_are_recoverable (__main__.PlatformWindow.test_window_and_surface_quotas_are_recoverable) ... ok
+test_wrapper_negotiates_abi_before_open_and_reports_optional_unavailable (__main__.PlatformWindow.test_wrapper_negotiates_abi_before_open_and_reports_optional_unavailable) ... ok
+test_wrong_thread_refuses_all_operations (__main__.PlatformWindow.test_wrong_thread_refuses_all_operations) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 9.602s
+
+OK

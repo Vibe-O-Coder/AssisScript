@@ -1,0 +1,14 @@
+test_class_cleanup_on_break_continue_and_early_return (__main__.ManagedClasses.test_class_cleanup_on_break_continue_and_early_return) ... ok
+test_constructor_mutation_borrow_and_dynamic_drop (__main__.ManagedClasses.test_constructor_mutation_borrow_and_dynamic_drop) ... ok
+test_final_classes_preserve_library_invariants (__main__.ManagedClasses.test_final_classes_preserve_library_invariants) ... ok
+test_generic_class_and_repeated_replacement (__main__.ManagedClasses.test_generic_class_and_repeated_replacement) ... ok
+test_move_upcast_composition_and_early_return (__main__.ManagedClasses.test_move_upcast_composition_and_early_return) ... ok
+test_owning_collection_move_borrow_pop_and_drop (__main__.ManagedClasses.test_owning_collection_move_borrow_pop_and_drop) ... ok
+test_receiver_exclusivity_and_legacy_rejections (__main__.ManagedClasses.test_receiver_exclusivity_and_legacy_rejections) ... ok
+test_utf8_text_embedded_zero_copy_and_borrow (__main__.ManagedClasses.test_utf8_text_embedded_zero_copy_and_borrow) ... ok
+test_utf8_validity_agrees_with_independent_decoder (__main__.ManagedClasses.test_utf8_validity_agrees_with_independent_decoder) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 4.004s
+
+OK

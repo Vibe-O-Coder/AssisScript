@@ -1,0 +1,15 @@
+{
+  "schema": "assisscript-platform-candidate-v1",
+  "base_revision": "6208ecb5bd5801defcd9c0e6b1809ba731a942db",
+  "platform": "linux",
+  "host": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "architecture": "x86_64",
+  "python": "3.12.3",
+  "provider": "User32/GDI; Windows 10 1703+ x64",
+  "foreign_native_provider_execution": "not-run",
+  "htdl_integration": "not-run",
+  "sandbox": "not-run",
+  "passed": false,
+  "suites": [],
+  "state": "unsupported"
+}
