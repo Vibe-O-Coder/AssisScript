@@ -86,7 +86,7 @@ jobs:
         run: |
           $env:ASSIS_CURL_BIN = $env:ASSIS_TOOLCHAIN_BIN
           New-Item -ItemType Directory -Path build/review-tests -Force | Out-Null
-          ./tests/test-windows.ps1 | Tee-Object -FilePath build/review-tests/native-windows.log
+          ./tests/test-windows.ps1 6>&1 | Tee-Object -FilePath build/review-tests/native-windows.log
           node --test --test-isolation=none tests/test-development.js tests/test-v3.js tests/test-v31.js tests/test-v32.js tests/test-lsp.js vscode-assisscript/test/language.test.js vscode-assisscript/test/extension.test.js *> build/review-tests/node-windows.log
           if ($LASTEXITCODE -ne 0) { throw 'Node tests failed' }
           python tests/test-evolution.py
@@ -251,6 +251,18 @@ jobs:
         with:
           name: windows-validation
           path: build
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-x64-validation
+          path: build/review-tests
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-arm64-host-validation
+          path: build/review-tests
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-arm64-host-validation
+          path: build/review-tests
       - run: python3 tools/write-validation.py
       - run: python3 tools/package-vscode.py && python3 tools/package-release.py && python3 tools/verify-release.py
       - uses: actions/upload-artifact@v4

@@ -81,3 +81,18 @@ no mesmo callback e exige exatamente duas ações antes da parada; mantém
 cancelamento, IDs, reentrância e retomada sem depender desse intervalo de 1 ms.
 O runtime não foi alterado por essa correção. O resultado final deve ser
 conferido nos checks do [PR #1](https://github.com/Vibe-O-Coder/AssisScript/pull/1).
+
+No commit `0c79bbb`, os cinco jobs de plataforma passaram. O empacotamento
+encontrou um problema anterior de captura: `Write-Host` envia o resumo Windows
+ao fluxo de informação, e o pipeline de `Tee-Object` não criava o log exigido.
+A revisão passa a capturar esse fluxo com `6>&1`. O pacote também recebe os
+relatórios de macOS/hosts ARM64 da mesma execução e confere arquitetura, modo,
+casos e hashes; o relatório consolidado passa a distinguir macOS x64 aprovado
+dos requisitos ARM64/instalador/depuração ainda pendentes.
+
+A montagem corrigida foi reproduzida numa cópia local isolada com os artefatos
+reais da execução remota: 130 testes nativos do harness Windows com log capturado,
+consolidação dos relatórios Windows/Linux e dos cinco modos de portabilidade,
+geração de ZIP/VSIX e `verify-release.py` aprovados. O verificador também recusou
+um relatório ARM64/QEMU com modo de execução adulterado para `native` no teste
+negativo isolado. Os arquivos de distribuição da raiz não foram substituídos.
