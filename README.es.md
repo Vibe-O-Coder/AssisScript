@@ -60,12 +60,12 @@ El responsable eligió **CC BY-NC-SA 4.0** para los materiales originales. Consu
 5. No hay garantía. Informe defectos en [issues](https://github.com/Vibe-O-Coder/AssisScript/issues). Consulte la [política de soporte](docs/SUPPORT.md).
 
 
-## Native ARM64 / v1 candidate
+## Native ARM64 / v1
 
 This revision adds `linux-arm64` and `macos-arm64`, a native ARM64 runtime,
 Mach-O DWARF symbols, ad hoc ARM64 signatures and `--app` macOS bundles with
 the selected v1 icons. See [the target contract](docs/ARM64-NATIVO.md) and
 [the applied identity/provenance review](docs/PROCEDENCIA-V1.md).
-Native macOS/ARM64 acceptance of this candidate is pending its Actions run.
+Native Linux ARM64, macOS Intel and Apple Silicon execution, debugging, installers and packages passed [Actions 40847421481](https://github.com/Vibe-O-Coder/AssisScript/actions/runs/40847421481) at revision `bb1605d`. The 35-criterion roadmap is complete at 100/100; this remains an experimental alpha.
 The Linux compiler now uses compatible system glibc; generated programs
 without extern dependencies retain the freestanding project runtime.

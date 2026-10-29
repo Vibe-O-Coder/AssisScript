@@ -1,21 +1,25 @@
-# Critério restante — candidato ARM64/v1, 29/10/2026
+# Plano concluído — ARM64/v1, 29/10/2026
 
-**99/100 pontos** na mesma régua de 35 critérios, com pesos e histórico preservados.
-P6-POLICY foi concluído pela aplicação dos ícones v1 e revisão de distribuição.
-P5-TARGET passa a parcial: a implementação está pronta e validada localmente em
-ARM64 via QEMU, com ABI C e GDB remoto; falta a aprovação nativa remota.
+**100/100 pontos** na mesma régua de 35 critérios, com pesos e histórico preservados.
+Não restam critérios abertos dentro do plano de evolução das fases 0–6.
 
-| Critério | Falta | Evidência exigida |
-| --- | ---: | --- |
-| P5-TARGET | 1 ponto | Passar o Actions do commit candidato em Linux ARM64 e macOS Intel/Apple Silicon, incluindo execução ARM64, instalador, GDB/LLDB, assinatura e pacotes. |
+| Critério final | Entrega | Evidência |
+| --- | --- | --- |
+| P5-TARGET | Emissão/runtime Linux e macOS ARM64; instaladores, símbolos macOS, GDB/LLDB e execução ARM64 nativa | [Actions 40847421481](https://github.com/Vibe-O-Coder/AssisScript/actions/runs/40847421481), revisão `bb1605d`, seis jobs aprovados incluindo pacotes |
+| P6-POLICY | Ícones v1 aplicados no editor, instaladores e binários; procedência, avisos e redistribuição revisados | [PROCEDENCIA-V1.md](PROCEDENCIA-V1.md) e gate de identidade/pacotes aprovado |
 
-O workflow agora executa programas ARM64 nativamente nesses runners. Não depende
-de Rosetta ou QEMU para aprovar os jobs ARM64. Para executar essa matriz, publicar
-a branch candidata e abrir o PR é a etapa seguinte. O sucesso da revisão anterior
-não é reutilizado como evidência do código novo. Após os checks do novo commit
-passarem, anexar o resultado em VALIDACAO-TARGETS-V1.json e então concluir o critério.
+Os dois runners ARM64 executaram instruções ARM64 nativamente. Linux ARM64
+passou 32 suítes / 296 casos, com GDB e os prazos TLS nativos. macOS Intel e
+Apple Silicon passaram execução, ABI C, arquivos, DWARF, LLDB e instalação;
+Apple Silicon também passou a assinatura ad hoc. Windows e Linux x64
+passaram suas matrizes completas, reconstruções limpas e verificações de pacote.
 
-Implementação: [ARM64-NATIVO.md](ARM64-NATIVO.md). Política e ícones:
-[PROCEDENCIA-V1.md](PROCEDENCIA-V1.md). Limites de linguagem previamente declarados
-continuam fora do escopo; esta rodada não adiciona navegador/HTDL, threads,
-varargs C, closures pure, Unicode/grafemas ou registro remoto de pacotes.
+[VALIDACAO-TARGETS-V1.json](VALIDACAO-TARGETS-V1.json) preserva os hashes,
+relatórios e a referência exata da aceitação. A validação local anterior fica
+identificada como histórica. Os ensaios curtos desta revisão não substituem nem
+relabelam o ensaio histórico de 24 horas ou o aceite humano anterior.
+
+A versão continua experimental. Os limites declarados em
+[ARM64-NATIVO.md](ARM64-NATIVO.md) e [SUPPORT.md](SUPPORT.md) permanecem vigentes.
+Conclusão do plano não inclui navegador/HTDL, Windows ARM64, notarização Apple,
+threads, varargs C, closures pure, grafemas ou registro remoto de pacotes.

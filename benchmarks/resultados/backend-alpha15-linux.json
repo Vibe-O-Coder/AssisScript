@@ -1,22 +1,22 @@
 {
   "format": "AssisScript-backend-v1",
   "host": {
-    "system": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "system": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
     "machine": "x86_64",
     "processor": "x86_64",
-    "logicalCpus": 8
+    "logicalCpus": 4
   },
   "samples": 3,
   "iterations": 2000000,
   "reference": "Python integer formulas; both compilers checked before and during measurement",
   "compilers": {
     "candidate": {
-      "sha256": "e28808b4baa1608daf4e674e2948e1d10821c3bde27051af251e1be2aa92aa84",
+      "sha256": "683804bb2d8685847bd0f635ea21b0df0f153a9cd976b68e474c7650e0a2e4f9",
       "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)",
       "mode": "optimized"
     },
     "baseline": {
-      "sha256": "e28808b4baa1608daf4e674e2948e1d10821c3bde27051af251e1be2aa92aa84",
+      "sha256": "683804bb2d8685847bd0f635ea21b0df0f153a9cd976b68e474c7650e0a2e4f9",
       "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)",
       "mode": "--no-opt"
     }
@@ -27,165 +27,165 @@
       "sourceSha256": "04e24e19247a1a13c8390dc43c7a8e8d9fed00ae4536d69fc5879349511b41a9",
       "measurements": {
         "candidate": {
-          "compileMs": 21.796833,
+          "compileMs": 0.980832,
           "bytes": 12289,
           "binarySha256": "a7cd32a5d2c7d213d006ddf9d43bd1e533af54be02f4bece258d7d875c64ae04",
           "runMs": [
-            92.626459,
-            95.310179,
-            87.926648
+            9.674505,
+            9.634456,
+            9.645902
           ],
-          "medianMs": 92.626459,
-          "minMs": 87.926648,
-          "maxMs": 95.310179
+          "medianMs": 9.645902,
+          "minMs": 9.634456,
+          "maxMs": 9.674505
         },
         "baseline": {
-          "compileMs": 22.31349,
+          "compileMs": 0.85365,
           "bytes": 12289,
           "binarySha256": "55f6a53b91f0bcbc24e100f0aeb9af4c045a462fc781e1c5910c4dc566279a16",
           "runMs": [
-            224.425804,
-            238.937431,
-            198.030879
+            33.472768,
+            33.344064,
+            33.332336
           ],
-          "medianMs": 224.425804,
-          "minMs": 198.030879,
-          "maxMs": 238.937431
+          "medianMs": 33.344064,
+          "minMs": 33.332336,
+          "maxMs": 33.472768
         }
       },
-      "speedup": 2.4229124855134536
+      "speedup": 3.4568114003231636
     },
     "stencil_offsets": {
       "expected": 196523427555,
       "sourceSha256": "82f68949969500056cef65b0cd4581b6176580cb7d66f2b306500f92bc5fef76",
       "measurements": {
         "candidate": {
-          "compileMs": 18.577101,
+          "compileMs": 1.018258,
           "bytes": 8193,
           "binarySha256": "ebae9e407df69e8de93bfbac8e9875f7eab6af655232591f6303a8769a0b5cd4",
           "runMs": [
-            340.54812,
-            361.437062,
-            353.885006
+            27.724815,
+            27.133341,
+            26.343227
           ],
-          "medianMs": 353.885006,
-          "minMs": 340.54812,
-          "maxMs": 361.437062
+          "medianMs": 27.133341,
+          "minMs": 26.343227,
+          "maxMs": 27.724815
         },
         "baseline": {
-          "compileMs": 16.228915,
+          "compileMs": 1.0324,
           "bytes": 12289,
           "binarySha256": "c3034ea5077c1ce0221e520bf8fd0f3ac25690a155fdf6df06703ee5a6bcbd35",
           "runMs": [
-            1267.57852,
-            1336.453283,
-            1253.122519
+            107.004516,
+            105.174432,
+            105.353341
           ],
-          "medianMs": 1267.57852,
-          "minMs": 1253.122519,
-          "maxMs": 1336.453283
+          "medianMs": 105.353341,
+          "minMs": 105.174432,
+          "maxMs": 107.004516
         }
       },
-      "speedup": 3.5818938313537934
+      "speedup": 3.8828001682505664
     },
     "reverse_traversal": {
       "expected": 65523806208,
       "sourceSha256": "c2f4223f1468211cd5cbdd55de8d71ad002540e6b4985fabcb4f6ea22228c949",
       "measurements": {
         "candidate": {
-          "compileMs": 22.095473,
+          "compileMs": 2.004388,
           "bytes": 16912,
           "binarySha256": "6d8555127df171cac723cf65356e29d936662c59657099b0dbba6d47c8c3c154",
           "runMs": [
-            81.334498,
-            74.51526,
-            78.964995
+            8.616918,
+            8.204524,
+            8.076161
           ],
-          "medianMs": 78.964995,
-          "minMs": 74.51526,
-          "maxMs": 81.334498
+          "medianMs": 8.204524,
+          "minMs": 8.076161,
+          "maxMs": 8.616918
         },
         "baseline": {
-          "compileMs": 47.240579,
+          "compileMs": 1.672968,
           "bytes": 16912,
           "binarySha256": "36168ca6955702b45d20dea86b8b3543d234041707d6cda73415638e41923cc4",
           "runMs": [
-            147.59217,
-            149.630597,
-            158.740518
+            23.75678,
+            23.691301,
+            25.942212
           ],
-          "medianMs": 149.630597,
-          "minMs": 147.59217,
-          "maxMs": 158.740518
+          "medianMs": 23.75678,
+          "minMs": 23.691301,
+          "maxMs": 25.942212
         }
       },
-      "speedup": 1.8948978214967276
+      "speedup": 2.8955707850936876
     },
     "scalar_leaf": {
       "expected": 383999992000000,
       "sourceSha256": "4419cb5dcb53e5bee8abfe609360ee9d5a41ee85763edb3f229304f4b8498ef8",
       "measurements": {
         "candidate": {
-          "compileMs": 23.713761,
+          "compileMs": 1.127844,
           "bytes": 8193,
           "binarySha256": "9dd949fafeefd86881ac7e1049325b95a20ff74d9bea31f8f85f47c38395a6b7",
           "runMs": [
-            53.266547,
-            60.70679,
-            58.568155
+            7.749768,
+            7.324806,
+            7.10916
           ],
-          "medianMs": 58.568155,
-          "minMs": 53.266547,
-          "maxMs": 60.70679
+          "medianMs": 7.324806,
+          "minMs": 7.10916,
+          "maxMs": 7.749768
         },
         "baseline": {
-          "compileMs": 32.404075,
+          "compileMs": 0.913951,
           "bytes": 8193,
           "binarySha256": "b13d248282c8ae797b45d04f4a3002f0a6c19e399ee7f159aaee278113054ff2",
           "runMs": [
-            237.046747,
-            246.465354,
-            249.215556
+            38.43203,
+            37.896322,
+            38.820377
           ],
-          "medianMs": 246.465354,
-          "minMs": 237.046747,
-          "maxMs": 249.215556
+          "medianMs": 38.43203,
+          "minMs": 37.896322,
+          "maxMs": 38.820377
         }
       },
-      "speedup": 4.208180264514052
+      "speedup": 5.24683247583622
     },
     "float_values": {
       "expected": 8000000,
       "sourceSha256": "62e1381effb27732869ace2065131439bf0111f32b95fc099313c8d509d269f1",
       "measurements": {
         "candidate": {
-          "compileMs": 22.646172,
+          "compileMs": 1.099031,
           "bytes": 8193,
           "binarySha256": "5ccde64defc8403c425b1d45545a074f30d47de67b00b4e40577a78071e725d3",
           "runMs": [
-            64.621769,
-            63.695791,
-            65.14232
+            44.057799,
+            44.997549,
+            48.982019
           ],
-          "medianMs": 64.621769,
-          "minMs": 63.695791,
-          "maxMs": 65.14232
+          "medianMs": 44.997549,
+          "minMs": 44.057799,
+          "maxMs": 48.982019
         },
         "baseline": {
-          "compileMs": 16.875425,
+          "compileMs": 1.090447,
           "bytes": 8193,
           "binarySha256": "635820b6439274c5032ba85759782d741d3432da001938202c5fd1f17ee79042",
           "runMs": [
-            126.543316,
-            131.899666,
-            124.807068
+            44.038199,
+            44.22415,
+            60.541883
           ],
-          "medianMs": 126.543316,
-          "minMs": 124.807068,
-          "maxMs": 131.899666
+          "medianMs": 44.22415,
+          "minMs": 44.038199,
+          "maxMs": 60.541883
         }
       },
-      "speedup": 1.9582149786088339
+      "speedup": 0.9828124194053326
     }
   }
 }

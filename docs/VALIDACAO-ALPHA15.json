@@ -2,11 +2,11 @@
   "version": "3.3.0-alpha.15",
   "date": "2026-10-29",
   "status": "passed",
-  "scope": "Windows/Linux native execution, complete typed IR emission with explicit memory/cleanup/CFG and Mach-O structural validation",
+  "scope": "Windows/Linux native execution, complete typed IR emission with explicit memory/cleanup/CFG and Mach-O structural validation; native macOS x86_64 and native ARM64 outputs on Linux/macOS",
   "native": {
     "windows": {
       "platform": "win32",
-      "compilerSha256": "d4bcda8e0de3eddaf180246995f6e569294aae8746a7a78e34a23ffcf52f6c41",
+      "compilerSha256": "c519e591eacb52f87593064879e93b98f12de69218e09acd79a821cb30d9e4c5",
       "testEnvironment": {
         "tlsTimeoutMilliseconds": "native defaults"
       },
@@ -16,224 +16,224 @@
           "suite": "evolution",
           "returnCode": 0,
           "tests": 12,
-          "seconds": 8.906000000002678,
+          "seconds": 3.7969999999999686,
           "log": "windows-release-evolution.log"
         },
         {
           "suite": "generics",
           "returnCode": 0,
           "tests": 13,
-          "seconds": 8.015999999995984,
+          "seconds": 3.3280000000000314,
           "log": "windows-release-generics.log"
         },
         {
           "suite": "functions",
           "returnCode": 0,
           "tests": 19,
-          "seconds": 10.01600000000326,
+          "seconds": 3.484999999999957,
           "log": "windows-release-functions.log"
         },
         {
           "suite": "generic-classes",
           "returnCode": 0,
           "tests": 17,
-          "seconds": 12.203000000001339,
+          "seconds": 6.187000000000012,
           "log": "windows-release-generic-classes.log"
         },
         {
           "suite": "collections-ast",
           "returnCode": 0,
           "tests": 10,
-          "seconds": 8.98399999999674,
+          "seconds": 4.031000000000006,
           "log": "windows-release-collections-ast.log"
         },
         {
           "suite": "ownership-functions",
           "returnCode": 0,
           "tests": 26,
-          "seconds": 14.656000000002678,
+          "seconds": 5.156999999999982,
           "log": "windows-release-ownership-functions.log"
         },
         {
           "suite": "values",
           "returnCode": 0,
           "tests": 21,
-          "seconds": 10.953000000001339,
+          "seconds": 3.5,
           "log": "windows-release-values.log"
         },
         {
           "suite": "files",
           "returnCode": 0,
           "tests": 10,
-          "seconds": 4.812999999994645,
+          "seconds": 1.3430000000000177,
           "log": "windows-release-files.log"
         },
         {
           "suite": "text-bytes",
           "returnCode": 0,
           "tests": 4,
-          "seconds": 2.2660000000032596,
+          "seconds": 0.6410000000000196,
           "log": "windows-release-text-bytes.log"
         },
         {
           "suite": "cli",
           "returnCode": 0,
           "tests": 1,
-          "seconds": 1.9060000000026776,
+          "seconds": 0.9529999999999745,
           "log": "windows-release-cli.log"
         },
         {
           "suite": "numbers",
           "returnCode": 0,
           "tests": 11,
-          "seconds": 4.7189999999973224,
+          "seconds": 1.5160000000000196,
           "log": "windows-release-numbers.log"
         },
         {
           "suite": "packages",
           "returnCode": 0,
           "tests": 13,
-          "seconds": 4.093000000000757,
+          "seconds": 1.5620000000000118,
           "log": "windows-release-packages.log"
         },
         {
           "suite": "json",
           "returnCode": 0,
           "tests": 4,
-          "seconds": 5.765999999995984,
+          "seconds": 3.234999999999957,
           "log": "windows-release-json.log"
         },
         {
           "suite": "system",
           "returnCode": 0,
           "tests": 8,
-          "seconds": 3.547000000005937,
+          "seconds": 1.2030000000000314,
           "log": "windows-release-system.log"
         },
         {
           "suite": "tooling",
           "returnCode": 0,
           "tests": 5,
-          "seconds": 1.389999999999418,
+          "seconds": 0.38999999999998636,
           "log": "windows-release-tooling.log"
         },
         {
           "suite": "slices",
           "returnCode": 0,
           "tests": 5,
-          "seconds": 3.75,
+          "seconds": 1.2819999999999823,
           "log": "windows-release-slices.log"
         },
         {
           "suite": "managed-classes",
           "returnCode": 0,
           "tests": 9,
-          "seconds": 4.860000000000582,
+          "seconds": 1.5930000000000177,
           "log": "windows-release-managed-classes.log"
         },
         {
           "suite": "backend-alpha9",
           "returnCode": 0,
           "tests": 4,
-          "seconds": 0.9689999999973224,
+          "seconds": 0.375,
           "log": "windows-release-backend-alpha9.log"
         },
         {
           "suite": "optimization",
           "returnCode": 0,
           "tests": 6,
-          "seconds": 12.796000000002095,
+          "seconds": 2.6410000000000196,
           "log": "windows-release-optimization.log"
         },
         {
           "suite": "english-api",
           "returnCode": 0,
           "tests": 4,
-          "seconds": 2.485000000000582,
+          "seconds": 0.9379999999999882,
           "log": "windows-release-english-api.log"
         },
         {
           "suite": "release-policy",
           "returnCode": 0,
           "tests": 2,
-          "seconds": 1.4369999999980791,
+          "seconds": 0.48399999999998045,
           "log": "windows-release-release-policy.log"
         },
         {
           "suite": "ffi",
           "returnCode": 0,
           "tests": 9,
-          "seconds": 7.125,
+          "seconds": 2.625,
           "log": "windows-release-ffi.log"
         },
         {
           "suite": "http",
           "returnCode": 0,
           "tests": 5,
-          "seconds": 16.343999999997322,
+          "seconds": 12.922000000000025,
           "log": "windows-release-http.log"
         },
         {
           "suite": "process",
           "returnCode": 0,
           "tests": 4,
-          "seconds": 6.813000000001921,
+          "seconds": 2.968999999999994,
           "log": "windows-release-process.log"
         },
         {
           "suite": "applications-bc",
           "returnCode": 0,
           "tests": 3,
-          "seconds": 1.2960000000020955,
+          "seconds": 0.9060000000000059,
           "log": "windows-release-applications-bc.log"
         },
         {
           "suite": "safe-default",
           "returnCode": 0,
           "tests": 5,
-          "seconds": 2.4219999999986612,
+          "seconds": 1.0620000000000118,
           "log": "windows-release-safe-default.log"
         },
         {
           "suite": "net",
           "returnCode": 0,
           "tests": 8,
-          "seconds": 13.390999999995984,
+          "seconds": 7.921999999999969,
           "log": "windows-release-net.log"
         },
         {
           "suite": "move-enums",
           "returnCode": 0,
           "tests": 10,
-          "seconds": 3.4690000000045984,
+          "seconds": 1.468999999999994,
           "log": "windows-release-move-enums.log"
         },
         {
           "suite": "closures",
           "returnCode": 0,
           "tests": 15,
-          "seconds": 5.828000000001339,
+          "seconds": 2.4840000000000373,
           "log": "windows-release-closures.log"
         },
         {
           "suite": "usability",
           "returnCode": 0,
           "tests": 10,
-          "seconds": 5.875,
+          "seconds": 2.4069999999999823,
           "log": "windows-release-usability.log"
         },
         {
           "suite": "backend-evolution",
           "returnCode": 0,
           "tests": 16,
-          "seconds": 8.671999999998661,
+          "seconds": 3.156000000000006,
           "log": "windows-release-backend-evolution.log"
         },
         {
           "suite": "complete-ir",
           "returnCode": 0,
           "tests": 7,
-          "seconds": 2.561999999998079,
+          "seconds": 0.9060000000000059,
           "log": "windows-release-complete-ir.log"
         }
       ],
@@ -241,7 +241,7 @@
     },
     "linux": {
       "platform": "linux",
-      "compilerSha256": "e28808b4baa1608daf4e674e2948e1d10821c3bde27051af251e1be2aa92aa84",
+      "compilerSha256": "683804bb2d8685847bd0f635ea21b0df0f153a9cd976b68e474c7650e0a2e4f9",
       "testEnvironment": {
         "tlsTimeoutMilliseconds": "native defaults"
       },
@@ -251,224 +251,224 @@
           "suite": "evolution",
           "returnCode": 0,
           "tests": 12,
-          "seconds": 6.569147869999995,
+          "seconds": 0.673112046,
           "log": "linux-release-evolution.log"
         },
         {
           "suite": "generics",
           "returnCode": 0,
           "tests": 13,
-          "seconds": 4.583180257000009,
+          "seconds": 0.9429652019999963,
           "log": "linux-release-generics.log"
         },
         {
           "suite": "functions",
           "returnCode": 0,
           "tests": 19,
-          "seconds": 5.094853404999981,
+          "seconds": 0.4559376240000006,
           "log": "linux-release-functions.log"
         },
         {
           "suite": "generic-classes",
           "returnCode": 0,
           "tests": 17,
-          "seconds": 7.773659868999999,
+          "seconds": 2.25216447599999,
           "log": "linux-release-generic-classes.log"
         },
         {
           "suite": "collections-ast",
           "returnCode": 0,
           "tests": 10,
-          "seconds": 4.8439122089999955,
+          "seconds": 1.5467293940000104,
           "log": "linux-release-collections-ast.log"
         },
         {
           "suite": "ownership-functions",
           "returnCode": 0,
           "tests": 26,
-          "seconds": 7.157192420999991,
+          "seconds": 0.7532254320000078,
           "log": "linux-release-ownership-functions.log"
         },
         {
           "suite": "values",
           "returnCode": 0,
           "tests": 21,
-          "seconds": 4.473267998000011,
+          "seconds": 0.4817131450000005,
           "log": "linux-release-values.log"
         },
         {
           "suite": "files",
           "returnCode": 0,
           "tests": 10,
-          "seconds": 1.4436639520000085,
+          "seconds": 0.1448305509999983,
           "log": "linux-release-files.log"
         },
         {
           "suite": "text-bytes",
           "returnCode": 0,
           "tests": 4,
-          "seconds": 1.347781619000017,
+          "seconds": 0.15209878299999957,
           "log": "linux-release-text-bytes.log"
         },
         {
           "suite": "cli",
           "returnCode": 0,
           "tests": 1,
-          "seconds": 0.7757538230000023,
+          "seconds": 0.1627507619999875,
           "log": "linux-release-cli.log"
         },
         {
           "suite": "numbers",
           "returnCode": 0,
           "tests": 11,
-          "seconds": 1.6133326839999995,
+          "seconds": 0.1519887160000053,
           "log": "linux-release-numbers.log"
         },
         {
           "suite": "packages",
           "returnCode": 0,
           "tests": 13,
-          "seconds": 1.462924001000033,
+          "seconds": 0.18693306500000517,
           "log": "linux-release-packages.log"
         },
         {
           "suite": "json",
           "returnCode": 0,
           "tests": 4,
-          "seconds": 1.4819096500000342,
+          "seconds": 0.19151523699999018,
           "log": "linux-release-json.log"
         },
         {
           "suite": "system",
           "returnCode": 0,
           "tests": 8,
-          "seconds": 1.9650896470000134,
+          "seconds": 0.211914249000003,
           "log": "linux-release-system.log"
         },
         {
           "suite": "tooling",
           "returnCode": 0,
           "tests": 5,
-          "seconds": 0.7723492000000078,
+          "seconds": 0.12220840099999464,
           "log": "linux-release-tooling.log"
         },
         {
           "suite": "slices",
           "returnCode": 0,
           "tests": 5,
-          "seconds": 1.501633073999983,
+          "seconds": 0.20098935699999743,
           "log": "linux-release-slices.log"
         },
         {
           "suite": "managed-classes",
           "returnCode": 0,
           "tests": 9,
-          "seconds": 2.6983584449999967,
+          "seconds": 0.2457805589999964,
           "log": "linux-release-managed-classes.log"
         },
         {
           "suite": "backend-alpha9",
           "returnCode": 0,
           "tests": 4,
-          "seconds": 0.9047113850000414,
+          "seconds": 0.20168672500000184,
           "log": "linux-release-backend-alpha9.log"
         },
         {
           "suite": "optimization",
           "returnCode": 0,
           "tests": 6,
-          "seconds": 2.842524912999977,
+          "seconds": 0.3218552689999967,
           "log": "linux-release-optimization.log"
         },
         {
           "suite": "english-api",
           "returnCode": 0,
           "tests": 4,
-          "seconds": 2.0673842510000213,
+          "seconds": 0.15567612399999575,
           "log": "linux-release-english-api.log"
         },
         {
           "suite": "release-policy",
           "returnCode": 0,
           "tests": 2,
-          "seconds": 0.7979698590000339,
+          "seconds": 0.08268557099999896,
           "log": "linux-release-release-policy.log"
         },
         {
           "suite": "ffi",
           "returnCode": 0,
           "tests": 9,
-          "seconds": 4.62464399299995,
+          "seconds": 0.47081487799999877,
           "log": "linux-release-ffi.log"
         },
         {
           "suite": "http",
           "returnCode": 0,
           "tests": 5,
-          "seconds": 5.135770326999989,
+          "seconds": 2.929618373000011,
           "log": "linux-release-http.log"
         },
         {
           "suite": "process",
           "returnCode": 0,
           "tests": 4,
-          "seconds": 1.8338270049999892,
+          "seconds": 0.3702035290000083,
           "log": "linux-release-process.log"
         },
         {
           "suite": "applications-bc",
           "returnCode": 0,
           "tests": 3,
-          "seconds": 1.0352998899999761,
+          "seconds": 0.5854670770000041,
           "log": "linux-release-applications-bc.log"
         },
         {
           "suite": "safe-default",
           "returnCode": 0,
           "tests": 5,
-          "seconds": 1.628953107999962,
+          "seconds": 0.1437848729999871,
           "log": "linux-release-safe-default.log"
         },
         {
           "suite": "net",
           "returnCode": 0,
           "tests": 8,
-          "seconds": 9.932671471999981,
+          "seconds": 5.716419533000007,
           "log": "linux-release-net.log"
         },
         {
           "suite": "move-enums",
           "returnCode": 0,
           "tests": 10,
-          "seconds": 1.8840335369999934,
+          "seconds": 0.17399214600000334,
           "log": "linux-release-move-enums.log"
         },
         {
           "suite": "closures",
           "returnCode": 0,
           "tests": 15,
-          "seconds": 3.232517282999993,
+          "seconds": 0.23827575500000364,
           "log": "linux-release-closures.log"
         },
         {
           "suite": "usability",
           "returnCode": 0,
           "tests": 10,
-          "seconds": 3.6753683879999812,
+          "seconds": 0.3173499219999911,
           "log": "linux-release-usability.log"
         },
         {
           "suite": "backend-evolution",
           "returnCode": 0,
           "tests": 16,
-          "seconds": 3.164551992999975,
+          "seconds": 0.39428781499999843,
           "log": "linux-release-backend-evolution.log"
         },
         {
           "suite": "complete-ir",
           "returnCode": 0,
           "tests": 7,
-          "seconds": 0.9790407309999978,
+          "seconds": 0.10394929299999944,
           "log": "linux-release-complete-ir.log"
         }
       ],
@@ -478,22 +478,22 @@
   "cleanBuilds": {
     "windows": {
       "platform": "win32",
-      "compiler": "C:\\msys64\\ucrt64\\bin\\gcc.exe",
-      "cleanBinarySha256": "d4bcda8e0de3eddaf180246995f6e569294aae8746a7a78e34a23ffcf52f6c41",
-      "workspaceBinarySha256": "d4bcda8e0de3eddaf180246995f6e569294aae8746a7a78e34a23ffcf52f6c41",
+      "compiler": "D:\\a\\_temp\\msys64\\ucrt64\\bin\\gcc.exe",
+      "cleanBinarySha256": "c519e591eacb52f87593064879e93b98f12de69218e09acd79a821cb30d9e4c5",
+      "workspaceBinarySha256": "c519e591eacb52f87593064879e93b98f12de69218e09acd79a821cb30d9e4c5",
       "identicalToWorkspaceBinary": true
     },
     "linux": {
       "platform": "linux",
       "compiler": "/usr/bin/gcc",
-      "cleanBinarySha256": "e28808b4baa1608daf4e674e2948e1d10821c3bde27051af251e1be2aa92aa84",
-      "workspaceBinarySha256": "e28808b4baa1608daf4e674e2948e1d10821c3bde27051af251e1be2aa92aa84",
+      "cleanBinarySha256": "683804bb2d8685847bd0f635ea21b0df0f153a9cd976b68e474c7650e0a2e4f9",
+      "workspaceBinarySha256": "683804bb2d8685847bd0f635ea21b0df0f153a9cd976b68e474c7650e0a2e4f9",
       "identicalToWorkspaceBinary": true
     }
   },
   "examples": {
     "windows": {
-      "compilerSha256": "d4bcda8e0de3eddaf180246995f6e569294aae8746a7a78e34a23ffcf52f6c41",
+      "compilerSha256": "c519e591eacb52f87593064879e93b98f12de69218e09acd79a821cb30d9e4c5",
       "passed": true,
       "examples": [
         {
@@ -680,7 +680,7 @@
       ]
     },
     "linux": {
-      "compilerSha256": "e28808b4baa1608daf4e674e2948e1d10821c3bde27051af251e1be2aa92aa84",
+      "compilerSha256": "683804bb2d8685847bd0f635ea21b0df0f153a9cd976b68e474c7650e0a2e4f9",
       "passed": true,
       "examples": [
         {
@@ -868,8 +868,8 @@
     }
   },
   "macos": {
-    "status": "experimental; native execution pending",
-    "validated": "Mach-O structure, segments, bindings and entry; PE/ELF cross-generation"
+    "status": "experimental; native Intel and Apple Silicon target/debugger gates passed in this workflow",
+    "validated": "Native execution, LLDB, embedded DWARF, ARM64 ad hoc signature and offline installation; overall workflow status remains controlled by GitHub"
   },
   "notes": [
     "Manual-memory teaching examples use explicit unsafe blocks.",
@@ -897,7 +897,7 @@
     "src/install_optional.inc": "390a94ceef3e6fe123e6481d2d132f1f4dd819a0d5cb11945ddebc33b7bd29e8",
     "src/ir.h": "d9414d74afa95620f5f703dd908bfc8ceca6a59f8eb7f41b7e551c12f9fc03c0",
     "src/lexer.h": "9b502b5ebfaaf130e3ca3e94e19a57ea46031a17d229a91bd26de53a1faf6d96",
-    "src/macho_writer.h": "3532493a48ac8d8259eaeda497e3fb4bad0f1b9f7ad9b6f368ff6327897df114",
+    "src/macho_writer.h": "789a9fa959c1b936e60025e7f90cc03f82237fb3b83e4be0ce34e50666761c7c",
     "src/modules.h": "84662a3c9d41125ceedd2e0c665df48f935667c76903e0df491cb6e723f56a4e",
     "src/namespaces.h": "7f31c7828c09c20e36da673ec408768f69447248e5c8acb7be9f62cf0c6afed1",
     "src/numeric.h": "a6264e101ddeff3ff503cb8e601365988c5df0cbc44baa85cc85464fa65f4feb",
@@ -908,9 +908,9 @@
     "src/ranges.h": "b3291ef9ad5c641fbf46f443cf270759842f5d823c329438d5fbd013da5b42ca",
     "src/registers.h": "be284d42de984addf242ec0f45cde57f638d5c94dd509749d33458530502e678",
     "src/runtime.S": "9cb1371662938ad7acfdacf2029d438d9ae580c437b26f2a9c5c5b0fa4ce2f70",
-    "src/runtime_arm64.c": "d04df7139d4f5ee135420b769a39bd205a877a45f48010f0b2bc0fdf5f5542b2",
+    "src/runtime_arm64.c": "aaca6a58d08fc4f0a1b090e0b773efa25155a0b01f54fa358e22a3d412961d00",
     "src/runtime_arm64_linux.h": "b7e59e6ac55201842364c70cebb67dc45e2ffad0a4db334fcb5e12fc1c625e00",
-    "src/runtime_arm64_macos.h": "57385c60673ab1137e88b4f4ab8941197389e33567cf86c8834396e2b6364186",
+    "src/runtime_arm64_macos.h": "adeb1efbaf723b3b7cea2c5b7a99a163a549bef40376005708312ebbe472377a",
     "src/runtime_blob.h": "e398ba9c1a4cce091b4f350ed4c10005dc3aa6091d19aab461bdbb0f61092bda",
     "src/runtime_files.inc": "64a20a5ec8db2ffd3fe0e3d0414574c2ffd4d71d507acd7422d3b0b618943e43",
     "src/runtime_io.inc": "012bba759ce7516082c3da327c03e0db9cd31d3b61d37123b7b4dfa7b9afeaa9",
@@ -930,34 +930,34 @@
     "windows": {
       "backend": {
         "path": "benchmarks/resultados/backend-alpha15-windows.json",
-        "sha256": "8a568b0068b926e187eba688ee6976cda3f050f4cd5c90c484f80c2847ee11e7"
+        "sha256": "334caa99343d0a5580dc1637c06dcaf0978eeead13dd1ade173acb8bc1b4ef0a"
       },
       "optimization": {
         "path": "benchmarks/resultados/optimization-alpha15-windows.json",
-        "sha256": "bcfa4d637bf23c2b18b1d4c54cbdd88087c5716f80a813944fa5ae3ed964e1c6"
+        "sha256": "bb1fcb5c95b2d7044e7a975a2607ac0b81ace1c59ad1d4f1921f224141dbbe0d"
       }
     },
     "linux": {
       "backend": {
         "path": "benchmarks/resultados/backend-alpha15-linux.json",
-        "sha256": "de3bc38f0834701cf31838c28536f7271ab86ebea2158fdd89c6ba2177b247dd"
+        "sha256": "1c293db2efb0e2050564fc0763e239026b9a03153173f1925a46f8eb27f0aa7d"
       },
       "optimization": {
         "path": "benchmarks/resultados/optimization-alpha15-linux.json",
-        "sha256": "1c85238628751037529fe5c239b4c0e2e77e30337f578452d7719516c0021585"
+        "sha256": "ec94487742b3880d7fab090be424a1e7602ae370af0620887a1875ac2801bc7f"
       }
     }
   },
   "shortSoak": {
     "windows": {
       "path": "benchmarks/resultados/soak-alpha15-short-windows.json",
-      "elapsedSeconds": 120.5309999999954,
+      "elapsedSeconds": 120.531,
       "workers": 4,
       "qualifies24Hours": false
     },
     "linux": {
       "path": "benchmarks/resultados/soak-alpha15-short-linux.json",
-      "elapsedSeconds": 120.506082223,
+      "elapsedSeconds": 120.506051968,
       "workers": 4,
       "qualifies24Hours": false
     }
@@ -968,7 +968,7 @@
         85
       ],
       "log": "build/review-tests/node-windows.log",
-      "sha256": "6bbbcb5379007df98061e11955dd71f9b2c16dbd16caf0ce38d33ac6034a7ebc"
+      "sha256": "1ac0a5028772dfab2edcac75311df17bc3509c73b154ab01687b82896488d5ce"
     },
     "native-windows": {
       "counts": [
@@ -984,13 +984,13 @@
         41
       ],
       "log": "build/review-tests/native-linux.log",
-      "sha256": "920d38dae9eb05864b3cf03e2ba00547a74693d88490a85674945c12da177d85"
+      "sha256": "61a3363847220cdaa2d071a6cb36d1af6a5040f905d2832703f85476a03e7cc2"
     }
   },
   "portability": {
     "linux-x64": {
       "path": "build/review-tests/ports-linux-x64.json",
-      "sha256": "6741e6d94f391c0d86d52b525d5afe534658cc8c74984562eee29b59800319fd",
+      "sha256": "fcee66e99989839febcf9394c3608a19e178010c0b47b286588be9433c79b095",
       "report": {
         "platform": "linux",
         "hostArchitecture": "x86_64",
@@ -1010,7 +1010,7 @@
               "windows-x64": "04d33a94d6824ccff072056f31255753e61604a1cad26861fafe573fac178227",
               "macos-x64": "d7fb0370f89cbe76fbe4ab4d6d03d10e9c4c603c7238099512a94c2fb32197ff",
               "linux-arm64": "eea9e84969c79a6a6a97d8b568c84fda96a439bf8a08b0025b3d3ae70559be9f",
-              "macos-arm64": "600e8f791f5e1514c65693716bdb44c1cab73a9b7941aa2c4b0e9c78bab3f5a5"
+              "macos-arm64": "57f7641dfb53a6e43386484f20facd12302e497f6fa9feeabe71d37805001f6d"
             }
           },
           {
@@ -1024,7 +1024,7 @@
               "windows-x64": "f5c11f1955dbb0343f82314ca0c789187d6db28c00ffe2c167e6767bbec79451",
               "macos-x64": "f716547de4f7af020dd2ca4124ceee7fe1dacee017da400d3d65e5bfbf07a82a",
               "linux-arm64": "15665d0b78ded91be535cebca98be2fc5c1449a5597448747190dfba3ee91783",
-              "macos-arm64": "e6e124c7cd99002ac0d98b6930015843f11e3f4c02ad5fe4aa3d77ad5d0fca75"
+              "macos-arm64": "60244606b1e30aed0ba8cd756b2ee2d115baa6728c3d6ae5e4bee67fb2195451"
             }
           },
           {
@@ -1038,7 +1038,7 @@
               "windows-x64": "d2be5b8b47a3fcfb7184aa8e599305528c56810aa9d7cae540e1206eb0f0d24d",
               "macos-x64": "077aab5eab38986b4b2065d71a02ada0451a1ceb9c8c882b996e52fd137f6ea4",
               "linux-arm64": "9b69a9fbccf85ade4dc95d7e42c1f1a4413765afee76822485944926e91ec86a",
-              "macos-arm64": "46677b7b661d0f3a9e94c9a051893b311698b8035459ef78b9ce5b2132bbe2d7"
+              "macos-arm64": "39f2d5cfa782d1c35acc0e0e0f9a22a3f425b424d0c5a49cf4d0e176b48dc318"
             }
           },
           {
@@ -1052,7 +1052,7 @@
               "windows-x64": "ce370f3cb477ffa4ef7f87ce779d8f69b15703ff4d364f47c5cda3df4927f377",
               "macos-x64": "a30dc809cc1d49e3a4654e4c78783e5260d2e3551e7d5b6b00eaf40bbe24f43f",
               "linux-arm64": "1c52f94b245b6d8f933d223548f9863f9d2bf8c36240ec1d93eabc69df6fe78c",
-              "macos-arm64": "fd321072eb24dc758b2f6dea7eca91f7160ad3723778ee0a8a29c35ceaf909c9"
+              "macos-arm64": "bf99e646b3765162e21b981b6740cc0a53f37199352971cb0c5a639374adc265"
             }
           },
           {
@@ -1066,7 +1066,7 @@
               "windows-x64": "48151a055e49353e7e53722f71505ba8412c4e836b924404f4eac15d0d6ce13e",
               "macos-x64": "af5147fd1cea34bc28259a1f390d4fa60767388f7d39c0c06d863591093bea24",
               "linux-arm64": "48368e78defbcfcc60bd1245747960d90288d054d29073aaf098cc98bc2701ac",
-              "macos-arm64": "4255e6b9857df75ea4aaad6cb71f5f450fbf2e21f9bf4b35ffdb2f2a7ce6496a"
+              "macos-arm64": "613de019cc9ac09bb004575eef68fba353ce6f144ba4c91b8a9d809d6f1c5ec0"
             }
           },
           {
@@ -1080,7 +1080,7 @@
               "windows-x64": "fc6521846e9d6693754c6311fa8ea1bf956d6852950a4c71393aae6bfb5ec6f3",
               "macos-x64": "c8bc2d9a368920752172a97fda157e8b2cccd46c565d064a8a6b274bcad0cef5",
               "linux-arm64": "bd5231ef09960fd4f9580856054e91e0c09ce0e4b871554aca0d4fadb66a0f69",
-              "macos-arm64": "a5843047e0fc5c914f5f69ab61ea2eeb8e38c939e88bcee3955d5c21353d9d90"
+              "macos-arm64": "bfea8dfb45768b892710885f920b4c3ede1e8ef4db037976009419da483988eb"
             }
           },
           {
@@ -1094,7 +1094,7 @@
               "windows-x64": "7dffe45da159ecdc319bf4fec69156d0341cbdfd49df62f75c005b122423c2d9",
               "macos-x64": "c0fb679bb20f9bcbc9b4124397fc7f82185d28d8a0b8d00a3d181412777e11b2",
               "linux-arm64": "9669b6a193b02a5c40d365d278fcaa430d59e5a379fb546fd5009b64871e7054",
-              "macos-arm64": "cc356eac68735c34e9a28cf66b80738b4f240e92370cde6b8edfa09d09fa783a"
+              "macos-arm64": "d3393f05d9de03cc56b14da89ccbfb18837f9cdec0d924579c90a4ec9eeeaa63"
             }
           },
           {
@@ -1108,7 +1108,7 @@
               "windows-x64": "f9d250e5b1d9986b1ac7889ea2e37f4890a299197d3a12fddcad889b245ad499",
               "macos-x64": "371edcf389f6dcbd0b536ef40121ec310d5d689219b9898b40e192e4df55cef2",
               "linux-arm64": "40b0360cd708c5a10df35a2ca1bd069c9325e7b3236a6d5d7ffb427270e65b0c",
-              "macos-arm64": "8e8844eedaaa8dd526658d748514878c61eff982f6352c07dadde6c815de5431"
+              "macos-arm64": "e6ee411434877004854b651b4bd554db752323d1f50191d9e57c1c38367ad950"
             }
           },
           {
@@ -1122,7 +1122,7 @@
               "windows-x64": "76a56e821c717b150e8d5598f9a165a1780367194b3f568baaab054d9ad218b0",
               "macos-x64": "a2d1feb4e31d01dc7ce9a861ec54414913f42380d2dca4cefa78452e43b29d63",
               "linux-arm64": "5c28f282ca46e432ee8395c84b05129ad5d2427ce2a574fdbbe4400f0d6c407a",
-              "macos-arm64": "66a333bf5820bd3b8a2a33be6ce8e1e988a04fb155722a3869c4ce14258d4119"
+              "macos-arm64": "f0695c3236bc84f8dab6ab5634ecec35813583750fcba729fb67f27a41a00bcd"
             }
           },
           {
@@ -1136,7 +1136,7 @@
               "windows-x64": "7851413b38417acd49ec1cb79c75a5f7b9562f10d1dc93d0997a0934a27c30ab",
               "macos-x64": "c17c971242488908b62ad05e3c47a7cda4978915151e40baacb9e25b6cab4846",
               "linux-arm64": "ec59940c9912a84a3b764a11fd69bcb8b02d19fdd3e9b1763b2fd2cdc7d1b78d",
-              "macos-arm64": "92fc2c6292c04daf4bfed9f1036c3dab23e1b5725d2fc3f53f0aeddf00545def"
+              "macos-arm64": "d1d78e869b64764c582913a04c0564f49c95c98b8d241e1cebcb078ec2a5ac9a"
             }
           },
           {
@@ -1150,7 +1150,7 @@
               "windows-x64": "0c603a55ea4bf100e3a9dc9887d2df7ca20b28cbd77b07723808dc1ed4918040",
               "macos-x64": "898c1557e50a9b423131388e80ac4a3ffcedb8c2db25b2910747ec79eddc0f1e",
               "linux-arm64": "e49be628f57085ce372f4bd70038f3f458f5e8c4eb40f009601efa2fcf10a757",
-              "macos-arm64": "99d376745bb40826936355821dd8329e4ad444c316fac6061dc749a67ae565c5"
+              "macos-arm64": "8efca910a53261d3ac309d23e0ef256b9f66ca772660ab65a79b0d8a214b9783"
             }
           },
           {
@@ -1164,7 +1164,7 @@
               "windows-x64": "68a0042bba1b20cdd30f51e30d2808140509624755a320474147125ca0bb01ec",
               "macos-x64": "d623bb9c06053b7f566957378bb111273e24a0eac35a6e3eaecd5b6d5b3ad4b9",
               "linux-arm64": "e49be628f57085ce372f4bd70038f3f458f5e8c4eb40f009601efa2fcf10a757",
-              "macos-arm64": "99d376745bb40826936355821dd8329e4ad444c316fac6061dc749a67ae565c5"
+              "macos-arm64": "8efca910a53261d3ac309d23e0ef256b9f66ca772660ab65a79b0d8a214b9783"
             }
           },
           {
@@ -1178,7 +1178,7 @@
               "windows-x64": "c636272d2cf9dcb7d80c56f5025a400e8aa73219398e5c6c65d72b9ab23a47f0",
               "macos-x64": "e7f2ff352eedde112b3f428584a9701482b3f2e397291d4e142b545cd062d03e",
               "linux-arm64": "cc77fad8f884141b72d5bc6310ffd7277193b3d166916324d523257127cd5e18",
-              "macos-arm64": "5f68b25cef7a8e09fc0d0d6da02d0cc56da52a2cf7bf34f172ac16aa8350aadb"
+              "macos-arm64": "458d7f90ec3e90d2a3d10efe3ba5be9409bbcd79b2872094395db19006dc5765"
             }
           },
           {
@@ -1192,11 +1192,11 @@
               "windows-x64": "b197ad1810b6ded3f6957da4fee327ebb13711920d592fe230c3c84af95a1f0f",
               "macos-x64": "8be34d34682d0997ded89558dab7f05dd6c2d8dc1ac1fd8264ead5e90ae16002",
               "linux-arm64": "3ca4114e18fabe58b4a36983a9e4c7a6eb2f7aecc2f8e6ce05e9300ae25e66a5",
-              "macos-arm64": "dd3f5a69817b88f18db30874925d9d84415388afe2862e959e895c55e8a99060"
+              "macos-arm64": "b585f483580e1229ef7e639d5aa41f06fbc2d26a029f67763180c18fc701cbe1"
             }
           }
         ],
-        "compilerSha256": "e28808b4baa1608daf4e674e2948e1d10821c3bde27051af251e1be2aa92aa84",
+        "compilerSha256": "683804bb2d8685847bd0f635ea21b0df0f153a9cd976b68e474c7650e0a2e4f9",
         "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)",
         "doctor": "AssisScript 3.3.0-alpha.15\nHost: Linux x86_64\nBackends: ELF64 Linux x64/ARM64 / PE32+ Windows x64 / Mach-O macOS x64/ARM64 (experimental)\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis\n",
         "backendFormat": "AssisScript-TypedIR-v1",
@@ -1205,7 +1205,7 @@
     },
     "windows-x64": {
       "path": "build/review-tests/ports-windows-x64.json",
-      "sha256": "154f523938c93873d8ca9f4dcc8bfb4595bb4d480c8c218c86876f7da42ce6b2",
+      "sha256": "a21c2b1e967521a5ab02a3f461d60fafc1b9efcb37a2e145f179b5f510e49a77",
       "report": {
         "platform": "win32",
         "hostArchitecture": "x86_64",
@@ -1225,7 +1225,7 @@
               "windows-x64": "04d33a94d6824ccff072056f31255753e61604a1cad26861fafe573fac178227",
               "macos-x64": "d7fb0370f89cbe76fbe4ab4d6d03d10e9c4c603c7238099512a94c2fb32197ff",
               "linux-arm64": "eea9e84969c79a6a6a97d8b568c84fda96a439bf8a08b0025b3d3ae70559be9f",
-              "macos-arm64": "600e8f791f5e1514c65693716bdb44c1cab73a9b7941aa2c4b0e9c78bab3f5a5"
+              "macos-arm64": "57f7641dfb53a6e43386484f20facd12302e497f6fa9feeabe71d37805001f6d"
             }
           },
           {
@@ -1239,7 +1239,7 @@
               "windows-x64": "f5c11f1955dbb0343f82314ca0c789187d6db28c00ffe2c167e6767bbec79451",
               "macos-x64": "f716547de4f7af020dd2ca4124ceee7fe1dacee017da400d3d65e5bfbf07a82a",
               "linux-arm64": "15665d0b78ded91be535cebca98be2fc5c1449a5597448747190dfba3ee91783",
-              "macos-arm64": "e6e124c7cd99002ac0d98b6930015843f11e3f4c02ad5fe4aa3d77ad5d0fca75"
+              "macos-arm64": "60244606b1e30aed0ba8cd756b2ee2d115baa6728c3d6ae5e4bee67fb2195451"
             }
           },
           {
@@ -1253,7 +1253,7 @@
               "windows-x64": "d2be5b8b47a3fcfb7184aa8e599305528c56810aa9d7cae540e1206eb0f0d24d",
               "macos-x64": "077aab5eab38986b4b2065d71a02ada0451a1ceb9c8c882b996e52fd137f6ea4",
               "linux-arm64": "9b69a9fbccf85ade4dc95d7e42c1f1a4413765afee76822485944926e91ec86a",
-              "macos-arm64": "46677b7b661d0f3a9e94c9a051893b311698b8035459ef78b9ce5b2132bbe2d7"
+              "macos-arm64": "39f2d5cfa782d1c35acc0e0e0f9a22a3f425b424d0c5a49cf4d0e176b48dc318"
             }
           },
           {
@@ -1267,7 +1267,7 @@
               "windows-x64": "ce370f3cb477ffa4ef7f87ce779d8f69b15703ff4d364f47c5cda3df4927f377",
               "macos-x64": "a30dc809cc1d49e3a4654e4c78783e5260d2e3551e7d5b6b00eaf40bbe24f43f",
               "linux-arm64": "1c52f94b245b6d8f933d223548f9863f9d2bf8c36240ec1d93eabc69df6fe78c",
-              "macos-arm64": "fd321072eb24dc758b2f6dea7eca91f7160ad3723778ee0a8a29c35ceaf909c9"
+              "macos-arm64": "bf99e646b3765162e21b981b6740cc0a53f37199352971cb0c5a639374adc265"
             }
           },
           {
@@ -1281,7 +1281,7 @@
               "windows-x64": "48151a055e49353e7e53722f71505ba8412c4e836b924404f4eac15d0d6ce13e",
               "macos-x64": "af5147fd1cea34bc28259a1f390d4fa60767388f7d39c0c06d863591093bea24",
               "linux-arm64": "48368e78defbcfcc60bd1245747960d90288d054d29073aaf098cc98bc2701ac",
-              "macos-arm64": "4255e6b9857df75ea4aaad6cb71f5f450fbf2e21f9bf4b35ffdb2f2a7ce6496a"
+              "macos-arm64": "613de019cc9ac09bb004575eef68fba353ce6f144ba4c91b8a9d809d6f1c5ec0"
             }
           },
           {
@@ -1295,7 +1295,7 @@
               "windows-x64": "fc6521846e9d6693754c6311fa8ea1bf956d6852950a4c71393aae6bfb5ec6f3",
               "macos-x64": "c8bc2d9a368920752172a97fda157e8b2cccd46c565d064a8a6b274bcad0cef5",
               "linux-arm64": "bd5231ef09960fd4f9580856054e91e0c09ce0e4b871554aca0d4fadb66a0f69",
-              "macos-arm64": "a5843047e0fc5c914f5f69ab61ea2eeb8e38c939e88bcee3955d5c21353d9d90"
+              "macos-arm64": "bfea8dfb45768b892710885f920b4c3ede1e8ef4db037976009419da483988eb"
             }
           },
           {
@@ -1309,7 +1309,7 @@
               "windows-x64": "7dffe45da159ecdc319bf4fec69156d0341cbdfd49df62f75c005b122423c2d9",
               "macos-x64": "c0fb679bb20f9bcbc9b4124397fc7f82185d28d8a0b8d00a3d181412777e11b2",
               "linux-arm64": "9669b6a193b02a5c40d365d278fcaa430d59e5a379fb546fd5009b64871e7054",
-              "macos-arm64": "cc356eac68735c34e9a28cf66b80738b4f240e92370cde6b8edfa09d09fa783a"
+              "macos-arm64": "d3393f05d9de03cc56b14da89ccbfb18837f9cdec0d924579c90a4ec9eeeaa63"
             }
           },
           {
@@ -1323,7 +1323,7 @@
               "windows-x64": "f9d250e5b1d9986b1ac7889ea2e37f4890a299197d3a12fddcad889b245ad499",
               "macos-x64": "371edcf389f6dcbd0b536ef40121ec310d5d689219b9898b40e192e4df55cef2",
               "linux-arm64": "40b0360cd708c5a10df35a2ca1bd069c9325e7b3236a6d5d7ffb427270e65b0c",
-              "macos-arm64": "8e8844eedaaa8dd526658d748514878c61eff982f6352c07dadde6c815de5431"
+              "macos-arm64": "e6ee411434877004854b651b4bd554db752323d1f50191d9e57c1c38367ad950"
             }
           },
           {
@@ -1337,7 +1337,7 @@
               "windows-x64": "76a56e821c717b150e8d5598f9a165a1780367194b3f568baaab054d9ad218b0",
               "macos-x64": "a2d1feb4e31d01dc7ce9a861ec54414913f42380d2dca4cefa78452e43b29d63",
               "linux-arm64": "5c28f282ca46e432ee8395c84b05129ad5d2427ce2a574fdbbe4400f0d6c407a",
-              "macos-arm64": "66a333bf5820bd3b8a2a33be6ce8e1e988a04fb155722a3869c4ce14258d4119"
+              "macos-arm64": "f0695c3236bc84f8dab6ab5634ecec35813583750fcba729fb67f27a41a00bcd"
             }
           },
           {
@@ -1351,7 +1351,7 @@
               "windows-x64": "7851413b38417acd49ec1cb79c75a5f7b9562f10d1dc93d0997a0934a27c30ab",
               "macos-x64": "c17c971242488908b62ad05e3c47a7cda4978915151e40baacb9e25b6cab4846",
               "linux-arm64": "ec59940c9912a84a3b764a11fd69bcb8b02d19fdd3e9b1763b2fd2cdc7d1b78d",
-              "macos-arm64": "92fc2c6292c04daf4bfed9f1036c3dab23e1b5725d2fc3f53f0aeddf00545def"
+              "macos-arm64": "d1d78e869b64764c582913a04c0564f49c95c98b8d241e1cebcb078ec2a5ac9a"
             }
           },
           {
@@ -1365,7 +1365,7 @@
               "windows-x64": "0c603a55ea4bf100e3a9dc9887d2df7ca20b28cbd77b07723808dc1ed4918040",
               "macos-x64": "898c1557e50a9b423131388e80ac4a3ffcedb8c2db25b2910747ec79eddc0f1e",
               "linux-arm64": "e49be628f57085ce372f4bd70038f3f458f5e8c4eb40f009601efa2fcf10a757",
-              "macos-arm64": "99d376745bb40826936355821dd8329e4ad444c316fac6061dc749a67ae565c5"
+              "macos-arm64": "8efca910a53261d3ac309d23e0ef256b9f66ca772660ab65a79b0d8a214b9783"
             }
           },
           {
@@ -1379,7 +1379,7 @@
               "windows-x64": "68a0042bba1b20cdd30f51e30d2808140509624755a320474147125ca0bb01ec",
               "macos-x64": "d623bb9c06053b7f566957378bb111273e24a0eac35a6e3eaecd5b6d5b3ad4b9",
               "linux-arm64": "e49be628f57085ce372f4bd70038f3f458f5e8c4eb40f009601efa2fcf10a757",
-              "macos-arm64": "99d376745bb40826936355821dd8329e4ad444c316fac6061dc749a67ae565c5"
+              "macos-arm64": "8efca910a53261d3ac309d23e0ef256b9f66ca772660ab65a79b0d8a214b9783"
             }
           },
           {
@@ -1393,7 +1393,7 @@
               "windows-x64": "c636272d2cf9dcb7d80c56f5025a400e8aa73219398e5c6c65d72b9ab23a47f0",
               "macos-x64": "e7f2ff352eedde112b3f428584a9701482b3f2e397291d4e142b545cd062d03e",
               "linux-arm64": "cc77fad8f884141b72d5bc6310ffd7277193b3d166916324d523257127cd5e18",
-              "macos-arm64": "5f68b25cef7a8e09fc0d0d6da02d0cc56da52a2cf7bf34f172ac16aa8350aadb"
+              "macos-arm64": "458d7f90ec3e90d2a3d10efe3ba5be9409bbcd79b2872094395db19006dc5765"
             }
           },
           {
@@ -1407,13 +1407,658 @@
               "windows-x64": "b197ad1810b6ded3f6957da4fee327ebb13711920d592fe230c3c84af95a1f0f",
               "macos-x64": "8be34d34682d0997ded89558dab7f05dd6c2d8dc1ac1fd8264ead5e90ae16002",
               "linux-arm64": "3ca4114e18fabe58b4a36983a9e4c7a6eb2f7aecc2f8e6ce05e9300ae25e66a5",
-              "macos-arm64": "dd3f5a69817b88f18db30874925d9d84415388afe2862e959e895c55e8a99060"
+              "macos-arm64": "b585f483580e1229ef7e639d5aa41f06fbc2d26a029f67763180c18fc701cbe1"
             }
           }
         ],
-        "compilerSha256": "d4bcda8e0de3eddaf180246995f6e569294aae8746a7a78e34a23ffcf52f6c41",
+        "compilerSha256": "c519e591eacb52f87593064879e93b98f12de69218e09acd79a821cb30d9e4c5",
         "version": "AssisScript 3.3.0-alpha.15 (nativo, Windows x64)",
         "doctor": "AssisScript 3.3.0-alpha.15\nHost: Windows x64\nBackends: ELF64 Linux x64/ARM64 / PE32+ Windows x64 / Mach-O macOS x64/ARM64 (experimental)\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis\n",
+        "backendFormat": "AssisScript-TypedIR-v1",
+        "rejectedInvalidSource": true
+      }
+    },
+    "macos-x64": {
+      "path": "build/review-tests/ports-macos-x64.json",
+      "sha256": "d9dfb116a67d6589ec5554f09d6804e069aa18acae79fab98d5119d27197d19b",
+      "report": {
+        "platform": "darwin",
+        "hostArchitecture": "x86_64",
+        "execution": "native",
+        "outputArchitecture": "x86_64",
+        "nativeArm64Execution": false,
+        "passed": true,
+        "cases": [
+          {
+            "name": "branches",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "9892eb900a590f746d76ac19e2a513da3a9bbf0cf347564037e5bb2121e76720",
+              "windows-x64": "04d33a94d6824ccff072056f31255753e61604a1cad26861fafe573fac178227",
+              "macos-x64": "d7fb0370f89cbe76fbe4ab4d6d03d10e9c4c603c7238099512a94c2fb32197ff",
+              "linux-arm64": "eea9e84969c79a6a6a97d8b568c84fda96a439bf8a08b0025b3d3ae70559be9f",
+              "macos-arm64": "57f7641dfb53a6e43386484f20facd12302e497f6fa9feeabe71d37805001f6d"
+            }
+          },
+          {
+            "name": "branches",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "05a7fe62af289169fefdf6557bc63d0957fb53142d217ca22080996df1184065",
+              "windows-x64": "f5c11f1955dbb0343f82314ca0c789187d6db28c00ffe2c167e6767bbec79451",
+              "macos-x64": "f716547de4f7af020dd2ca4124ceee7fe1dacee017da400d3d65e5bfbf07a82a",
+              "linux-arm64": "15665d0b78ded91be535cebca98be2fc5c1449a5597448747190dfba3ee91783",
+              "macos-arm64": "60244606b1e30aed0ba8cd756b2ee2d115baa6728c3d6ae5e4bee67fb2195451"
+            }
+          },
+          {
+            "name": "widths",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "f1c77510f6aa7645d458a960ae935c1d2b51042a4be20f351a30d702668f87be",
+              "windows-x64": "d2be5b8b47a3fcfb7184aa8e599305528c56810aa9d7cae540e1206eb0f0d24d",
+              "macos-x64": "077aab5eab38986b4b2065d71a02ada0451a1ceb9c8c882b996e52fd137f6ea4",
+              "linux-arm64": "9b69a9fbccf85ade4dc95d7e42c1f1a4413765afee76822485944926e91ec86a",
+              "macos-arm64": "39f2d5cfa782d1c35acc0e0e0f9a22a3f425b424d0c5a49cf4d0e176b48dc318"
+            }
+          },
+          {
+            "name": "widths",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "616cf032e1ddda191ae153559069d7256defdae1958920fdc5e0350b4cc0139b",
+              "windows-x64": "ce370f3cb477ffa4ef7f87ce779d8f69b15703ff4d364f47c5cda3df4927f377",
+              "macos-x64": "a30dc809cc1d49e3a4654e4c78783e5260d2e3551e7d5b6b00eaf40bbe24f43f",
+              "linux-arm64": "1c52f94b245b6d8f933d223548f9863f9d2bf8c36240ec1d93eabc69df6fe78c",
+              "macos-arm64": "bf99e646b3765162e21b981b6740cc0a53f37199352971cb0c5a639374adc265"
+            }
+          },
+          {
+            "name": "ieee",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "368ef0804d464da2c884ed1e90d731940ada1ccd02832e5e28b04ee18fa4ccce",
+              "windows-x64": "48151a055e49353e7e53722f71505ba8412c4e836b924404f4eac15d0d6ce13e",
+              "macos-x64": "af5147fd1cea34bc28259a1f390d4fa60767388f7d39c0c06d863591093bea24",
+              "linux-arm64": "48368e78defbcfcc60bd1245747960d90288d054d29073aaf098cc98bc2701ac",
+              "macos-arm64": "613de019cc9ac09bb004575eef68fba353ce6f144ba4c91b8a9d809d6f1c5ec0"
+            }
+          },
+          {
+            "name": "ieee",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "e1963174b63eabcb13c260cd65b2649875f10e4f43c0f9ba4c08fd851af61fb5",
+              "windows-x64": "fc6521846e9d6693754c6311fa8ea1bf956d6852950a4c71393aae6bfb5ec6f3",
+              "macos-x64": "c8bc2d9a368920752172a97fda157e8b2cccd46c565d064a8a6b274bcad0cef5",
+              "linux-arm64": "bd5231ef09960fd4f9580856054e91e0c09ce0e4b871554aca0d4fadb66a0f69",
+              "macos-arm64": "bfea8dfb45768b892710885f920b4c3ede1e8ef4db037976009419da483988eb"
+            }
+          },
+          {
+            "name": "ownership",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "62d343c8fafb335f753a76a003a007b2db4f0f16a3054f46cc5a4c179b032042",
+              "windows-x64": "7dffe45da159ecdc319bf4fec69156d0341cbdfd49df62f75c005b122423c2d9",
+              "macos-x64": "c0fb679bb20f9bcbc9b4124397fc7f82185d28d8a0b8d00a3d181412777e11b2",
+              "linux-arm64": "9669b6a193b02a5c40d365d278fcaa430d59e5a379fb546fd5009b64871e7054",
+              "macos-arm64": "d3393f05d9de03cc56b14da89ccbfb18837f9cdec0d924579c90a4ec9eeeaa63"
+            }
+          },
+          {
+            "name": "ownership",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "d568a48a9afd37a95640422992e60c3ca8b3d9df51bf8acb31773ec018b7e62b",
+              "windows-x64": "f9d250e5b1d9986b1ac7889ea2e37f4890a299197d3a12fddcad889b245ad499",
+              "macos-x64": "371edcf389f6dcbd0b536ef40121ec310d5d689219b9898b40e192e4df55cef2",
+              "linux-arm64": "40b0360cd708c5a10df35a2ca1bd069c9325e7b3236a6d5d7ffb427270e65b0c",
+              "macos-arm64": "e6ee411434877004854b651b4bd554db752323d1f50191d9e57c1c38367ad950"
+            }
+          },
+          {
+            "name": "lazy",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "ce8169e45b74d5b615c570f4d6dede54de11d7cbd9e902b80ed196c1579c6aa0",
+              "windows-x64": "76a56e821c717b150e8d5598f9a165a1780367194b3f568baaab054d9ad218b0",
+              "macos-x64": "a2d1feb4e31d01dc7ce9a861ec54414913f42380d2dca4cefa78452e43b29d63",
+              "linux-arm64": "5c28f282ca46e432ee8395c84b05129ad5d2427ce2a574fdbbe4400f0d6c407a",
+              "macos-arm64": "f0695c3236bc84f8dab6ab5634ecec35813583750fcba729fb67f27a41a00bcd"
+            }
+          },
+          {
+            "name": "lazy",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "12d56883367452c4d4cefe0f1e81256f1148408d72af583ac984b72b6cd643dd",
+              "windows-x64": "7851413b38417acd49ec1cb79c75a5f7b9562f10d1dc93d0997a0934a27c30ab",
+              "macos-x64": "c17c971242488908b62ad05e3c47a7cda4978915151e40baacb9e25b6cab4846",
+              "linux-arm64": "ec59940c9912a84a3b764a11fd69bcb8b02d19fdd3e9b1763b2fd2cdc7d1b78d",
+              "macos-arm64": "d1d78e869b64764c582913a04c0564f49c95c98b8d241e1cebcb078ec2a5ac9a"
+            }
+          },
+          {
+            "name": "utf8",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "a964be85689721c53c3478476dbe58b00563b5a88bd34defb732183d9c9d053f",
+              "windows-x64": "0c603a55ea4bf100e3a9dc9887d2df7ca20b28cbd77b07723808dc1ed4918040",
+              "macos-x64": "898c1557e50a9b423131388e80ac4a3ffcedb8c2db25b2910747ec79eddc0f1e",
+              "linux-arm64": "e49be628f57085ce372f4bd70038f3f458f5e8c4eb40f009601efa2fcf10a757",
+              "macos-arm64": "8efca910a53261d3ac309d23e0ef256b9f66ca772660ab65a79b0d8a214b9783"
+            }
+          },
+          {
+            "name": "utf8",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "bf1f67e1d952c03e5e9ddcc2602e81212f62484ca0caf7b9c41eed1a4acc92aa",
+              "windows-x64": "68a0042bba1b20cdd30f51e30d2808140509624755a320474147125ca0bb01ec",
+              "macos-x64": "d623bb9c06053b7f566957378bb111273e24a0eac35a6e3eaecd5b6d5b3ad4b9",
+              "linux-arm64": "e49be628f57085ce372f4bd70038f3f458f5e8c4eb40f009601efa2fcf10a757",
+              "macos-arm64": "8efca910a53261d3ac309d23e0ef256b9f66ca772660ab65a79b0d8a214b9783"
+            }
+          },
+          {
+            "name": "trap",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 70,
+            "binaries": {
+              "linux-x64": "216fac541c206967367e5572e3422d276f893f7c4b33455832ba25ed010fd7b7",
+              "windows-x64": "c636272d2cf9dcb7d80c56f5025a400e8aa73219398e5c6c65d72b9ab23a47f0",
+              "macos-x64": "e7f2ff352eedde112b3f428584a9701482b3f2e397291d4e142b545cd062d03e",
+              "linux-arm64": "cc77fad8f884141b72d5bc6310ffd7277193b3d166916324d523257127cd5e18",
+              "macos-arm64": "458d7f90ec3e90d2a3d10efe3ba5be9409bbcd79b2872094395db19006dc5765"
+            }
+          },
+          {
+            "name": "trap",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-x64",
+            "returnCode": 70,
+            "binaries": {
+              "linux-x64": "99335ca5f8e37374deb453fbdf9b0e5926affd8e06f04173d3680949def0c16c",
+              "windows-x64": "b197ad1810b6ded3f6957da4fee327ebb13711920d592fe230c3c84af95a1f0f",
+              "macos-x64": "8be34d34682d0997ded89558dab7f05dd6c2d8dc1ac1fd8264ead5e90ae16002",
+              "linux-arm64": "3ca4114e18fabe58b4a36983a9e4c7a6eb2f7aecc2f8e6ce05e9300ae25e66a5",
+              "macos-arm64": "b585f483580e1229ef7e639d5aa41f06fbc2d26a029f67763180c18fc701cbe1"
+            }
+          }
+        ],
+        "compilerSha256": "0bd12a157b88cacc9125f83269ab77f367c778ca86d79e74646cb0946ebae790",
+        "version": "AssisScript 3.3.0-alpha.15 (nativo, macOS x86_64)",
+        "doctor": "AssisScript 3.3.0-alpha.15\nHost: macOS x86_64\nBackends: ELF64 Linux x64/ARM64 / PE32+ Windows x64 / Mach-O macOS x64/ARM64 (experimental)\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis\n",
+        "backendFormat": "AssisScript-TypedIR-v1",
+        "rejectedInvalidSource": true
+      }
+    },
+    "linux-arm64-host": {
+      "path": "build/review-tests/linux-arm64-host.json",
+      "sha256": "d873951bddd3558e0d97850cd5c4d689d611eb168f40f2695960756b545993e6",
+      "report": {
+        "platform": "linux",
+        "hostArchitecture": "arm64",
+        "execution": "native",
+        "outputArchitecture": "arm64",
+        "nativeArm64Execution": true,
+        "passed": true,
+        "cases": [
+          {
+            "name": "branches",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "9892eb900a590f746d76ac19e2a513da3a9bbf0cf347564037e5bb2121e76720",
+              "windows-x64": "04d33a94d6824ccff072056f31255753e61604a1cad26861fafe573fac178227",
+              "macos-x64": "d7fb0370f89cbe76fbe4ab4d6d03d10e9c4c603c7238099512a94c2fb32197ff",
+              "linux-arm64": "eea9e84969c79a6a6a97d8b568c84fda96a439bf8a08b0025b3d3ae70559be9f",
+              "macos-arm64": "57f7641dfb53a6e43386484f20facd12302e497f6fa9feeabe71d37805001f6d"
+            }
+          },
+          {
+            "name": "branches",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "05a7fe62af289169fefdf6557bc63d0957fb53142d217ca22080996df1184065",
+              "windows-x64": "f5c11f1955dbb0343f82314ca0c789187d6db28c00ffe2c167e6767bbec79451",
+              "macos-x64": "f716547de4f7af020dd2ca4124ceee7fe1dacee017da400d3d65e5bfbf07a82a",
+              "linux-arm64": "15665d0b78ded91be535cebca98be2fc5c1449a5597448747190dfba3ee91783",
+              "macos-arm64": "60244606b1e30aed0ba8cd756b2ee2d115baa6728c3d6ae5e4bee67fb2195451"
+            }
+          },
+          {
+            "name": "widths",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "f1c77510f6aa7645d458a960ae935c1d2b51042a4be20f351a30d702668f87be",
+              "windows-x64": "d2be5b8b47a3fcfb7184aa8e599305528c56810aa9d7cae540e1206eb0f0d24d",
+              "macos-x64": "077aab5eab38986b4b2065d71a02ada0451a1ceb9c8c882b996e52fd137f6ea4",
+              "linux-arm64": "9b69a9fbccf85ade4dc95d7e42c1f1a4413765afee76822485944926e91ec86a",
+              "macos-arm64": "39f2d5cfa782d1c35acc0e0e0f9a22a3f425b424d0c5a49cf4d0e176b48dc318"
+            }
+          },
+          {
+            "name": "widths",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "616cf032e1ddda191ae153559069d7256defdae1958920fdc5e0350b4cc0139b",
+              "windows-x64": "ce370f3cb477ffa4ef7f87ce779d8f69b15703ff4d364f47c5cda3df4927f377",
+              "macos-x64": "a30dc809cc1d49e3a4654e4c78783e5260d2e3551e7d5b6b00eaf40bbe24f43f",
+              "linux-arm64": "1c52f94b245b6d8f933d223548f9863f9d2bf8c36240ec1d93eabc69df6fe78c",
+              "macos-arm64": "bf99e646b3765162e21b981b6740cc0a53f37199352971cb0c5a639374adc265"
+            }
+          },
+          {
+            "name": "ieee",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "368ef0804d464da2c884ed1e90d731940ada1ccd02832e5e28b04ee18fa4ccce",
+              "windows-x64": "48151a055e49353e7e53722f71505ba8412c4e836b924404f4eac15d0d6ce13e",
+              "macos-x64": "af5147fd1cea34bc28259a1f390d4fa60767388f7d39c0c06d863591093bea24",
+              "linux-arm64": "48368e78defbcfcc60bd1245747960d90288d054d29073aaf098cc98bc2701ac",
+              "macos-arm64": "613de019cc9ac09bb004575eef68fba353ce6f144ba4c91b8a9d809d6f1c5ec0"
+            }
+          },
+          {
+            "name": "ieee",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "e1963174b63eabcb13c260cd65b2649875f10e4f43c0f9ba4c08fd851af61fb5",
+              "windows-x64": "fc6521846e9d6693754c6311fa8ea1bf956d6852950a4c71393aae6bfb5ec6f3",
+              "macos-x64": "c8bc2d9a368920752172a97fda157e8b2cccd46c565d064a8a6b274bcad0cef5",
+              "linux-arm64": "bd5231ef09960fd4f9580856054e91e0c09ce0e4b871554aca0d4fadb66a0f69",
+              "macos-arm64": "bfea8dfb45768b892710885f920b4c3ede1e8ef4db037976009419da483988eb"
+            }
+          },
+          {
+            "name": "ownership",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "62d343c8fafb335f753a76a003a007b2db4f0f16a3054f46cc5a4c179b032042",
+              "windows-x64": "7dffe45da159ecdc319bf4fec69156d0341cbdfd49df62f75c005b122423c2d9",
+              "macos-x64": "c0fb679bb20f9bcbc9b4124397fc7f82185d28d8a0b8d00a3d181412777e11b2",
+              "linux-arm64": "9669b6a193b02a5c40d365d278fcaa430d59e5a379fb546fd5009b64871e7054",
+              "macos-arm64": "d3393f05d9de03cc56b14da89ccbfb18837f9cdec0d924579c90a4ec9eeeaa63"
+            }
+          },
+          {
+            "name": "ownership",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "d568a48a9afd37a95640422992e60c3ca8b3d9df51bf8acb31773ec018b7e62b",
+              "windows-x64": "f9d250e5b1d9986b1ac7889ea2e37f4890a299197d3a12fddcad889b245ad499",
+              "macos-x64": "371edcf389f6dcbd0b536ef40121ec310d5d689219b9898b40e192e4df55cef2",
+              "linux-arm64": "40b0360cd708c5a10df35a2ca1bd069c9325e7b3236a6d5d7ffb427270e65b0c",
+              "macos-arm64": "e6ee411434877004854b651b4bd554db752323d1f50191d9e57c1c38367ad950"
+            }
+          },
+          {
+            "name": "lazy",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "ce8169e45b74d5b615c570f4d6dede54de11d7cbd9e902b80ed196c1579c6aa0",
+              "windows-x64": "76a56e821c717b150e8d5598f9a165a1780367194b3f568baaab054d9ad218b0",
+              "macos-x64": "a2d1feb4e31d01dc7ce9a861ec54414913f42380d2dca4cefa78452e43b29d63",
+              "linux-arm64": "5c28f282ca46e432ee8395c84b05129ad5d2427ce2a574fdbbe4400f0d6c407a",
+              "macos-arm64": "f0695c3236bc84f8dab6ab5634ecec35813583750fcba729fb67f27a41a00bcd"
+            }
+          },
+          {
+            "name": "lazy",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "12d56883367452c4d4cefe0f1e81256f1148408d72af583ac984b72b6cd643dd",
+              "windows-x64": "7851413b38417acd49ec1cb79c75a5f7b9562f10d1dc93d0997a0934a27c30ab",
+              "macos-x64": "c17c971242488908b62ad05e3c47a7cda4978915151e40baacb9e25b6cab4846",
+              "linux-arm64": "ec59940c9912a84a3b764a11fd69bcb8b02d19fdd3e9b1763b2fd2cdc7d1b78d",
+              "macos-arm64": "d1d78e869b64764c582913a04c0564f49c95c98b8d241e1cebcb078ec2a5ac9a"
+            }
+          },
+          {
+            "name": "utf8",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "a964be85689721c53c3478476dbe58b00563b5a88bd34defb732183d9c9d053f",
+              "windows-x64": "0c603a55ea4bf100e3a9dc9887d2df7ca20b28cbd77b07723808dc1ed4918040",
+              "macos-x64": "898c1557e50a9b423131388e80ac4a3ffcedb8c2db25b2910747ec79eddc0f1e",
+              "linux-arm64": "e49be628f57085ce372f4bd70038f3f458f5e8c4eb40f009601efa2fcf10a757",
+              "macos-arm64": "8efca910a53261d3ac309d23e0ef256b9f66ca772660ab65a79b0d8a214b9783"
+            }
+          },
+          {
+            "name": "utf8",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "bf1f67e1d952c03e5e9ddcc2602e81212f62484ca0caf7b9c41eed1a4acc92aa",
+              "windows-x64": "68a0042bba1b20cdd30f51e30d2808140509624755a320474147125ca0bb01ec",
+              "macos-x64": "d623bb9c06053b7f566957378bb111273e24a0eac35a6e3eaecd5b6d5b3ad4b9",
+              "linux-arm64": "e49be628f57085ce372f4bd70038f3f458f5e8c4eb40f009601efa2fcf10a757",
+              "macos-arm64": "8efca910a53261d3ac309d23e0ef256b9f66ca772660ab65a79b0d8a214b9783"
+            }
+          },
+          {
+            "name": "trap",
+            "optimized": true,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 70,
+            "binaries": {
+              "linux-x64": "216fac541c206967367e5572e3422d276f893f7c4b33455832ba25ed010fd7b7",
+              "windows-x64": "c636272d2cf9dcb7d80c56f5025a400e8aa73219398e5c6c65d72b9ab23a47f0",
+              "macos-x64": "e7f2ff352eedde112b3f428584a9701482b3f2e397291d4e142b545cd062d03e",
+              "linux-arm64": "cc77fad8f884141b72d5bc6310ffd7277193b3d166916324d523257127cd5e18",
+              "macos-arm64": "458d7f90ec3e90d2a3d10efe3ba5be9409bbcd79b2872094395db19006dc5765"
+            }
+          },
+          {
+            "name": "trap",
+            "optimized": false,
+            "passed": true,
+            "target": "linux-arm64",
+            "returnCode": 70,
+            "binaries": {
+              "linux-x64": "99335ca5f8e37374deb453fbdf9b0e5926affd8e06f04173d3680949def0c16c",
+              "windows-x64": "b197ad1810b6ded3f6957da4fee327ebb13711920d592fe230c3c84af95a1f0f",
+              "macos-x64": "8be34d34682d0997ded89558dab7f05dd6c2d8dc1ac1fd8264ead5e90ae16002",
+              "linux-arm64": "3ca4114e18fabe58b4a36983a9e4c7a6eb2f7aecc2f8e6ce05e9300ae25e66a5",
+              "macos-arm64": "b585f483580e1229ef7e639d5aa41f06fbc2d26a029f67763180c18fc701cbe1"
+            }
+          }
+        ],
+        "compilerSha256": "ff879a90f5fd8c6e6812ff6ae4b768302645e466fa9495a9f5995385bd78dc38",
+        "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux ARM64)",
+        "doctor": "AssisScript 3.3.0-alpha.15\nHost: Linux ARM64\nBackends: ELF64 Linux x64/ARM64 / PE32+ Windows x64 / Mach-O macOS x64/ARM64 (experimental)\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis\nHost ARM64: check/ir/build/run/test nativos disponíveis.\n",
+        "backendFormat": "AssisScript-TypedIR-v1",
+        "rejectedInvalidSource": true
+      }
+    },
+    "macos-arm64-host": {
+      "path": "build/review-tests/macos-arm64-host.json",
+      "sha256": "50fc57e6ab5958c832ea32b5d0f255eee913dba8e2a315f70dbe2ccfa6c6b21b",
+      "report": {
+        "platform": "darwin",
+        "hostArchitecture": "arm64",
+        "execution": "native",
+        "outputArchitecture": "arm64",
+        "nativeArm64Execution": true,
+        "passed": true,
+        "cases": [
+          {
+            "name": "branches",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "9892eb900a590f746d76ac19e2a513da3a9bbf0cf347564037e5bb2121e76720",
+              "windows-x64": "04d33a94d6824ccff072056f31255753e61604a1cad26861fafe573fac178227",
+              "macos-x64": "d7fb0370f89cbe76fbe4ab4d6d03d10e9c4c603c7238099512a94c2fb32197ff",
+              "linux-arm64": "eea9e84969c79a6a6a97d8b568c84fda96a439bf8a08b0025b3d3ae70559be9f",
+              "macos-arm64": "57f7641dfb53a6e43386484f20facd12302e497f6fa9feeabe71d37805001f6d"
+            }
+          },
+          {
+            "name": "branches",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "05a7fe62af289169fefdf6557bc63d0957fb53142d217ca22080996df1184065",
+              "windows-x64": "f5c11f1955dbb0343f82314ca0c789187d6db28c00ffe2c167e6767bbec79451",
+              "macos-x64": "f716547de4f7af020dd2ca4124ceee7fe1dacee017da400d3d65e5bfbf07a82a",
+              "linux-arm64": "15665d0b78ded91be535cebca98be2fc5c1449a5597448747190dfba3ee91783",
+              "macos-arm64": "60244606b1e30aed0ba8cd756b2ee2d115baa6728c3d6ae5e4bee67fb2195451"
+            }
+          },
+          {
+            "name": "widths",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "f1c77510f6aa7645d458a960ae935c1d2b51042a4be20f351a30d702668f87be",
+              "windows-x64": "d2be5b8b47a3fcfb7184aa8e599305528c56810aa9d7cae540e1206eb0f0d24d",
+              "macos-x64": "077aab5eab38986b4b2065d71a02ada0451a1ceb9c8c882b996e52fd137f6ea4",
+              "linux-arm64": "9b69a9fbccf85ade4dc95d7e42c1f1a4413765afee76822485944926e91ec86a",
+              "macos-arm64": "39f2d5cfa782d1c35acc0e0e0f9a22a3f425b424d0c5a49cf4d0e176b48dc318"
+            }
+          },
+          {
+            "name": "widths",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "616cf032e1ddda191ae153559069d7256defdae1958920fdc5e0350b4cc0139b",
+              "windows-x64": "ce370f3cb477ffa4ef7f87ce779d8f69b15703ff4d364f47c5cda3df4927f377",
+              "macos-x64": "a30dc809cc1d49e3a4654e4c78783e5260d2e3551e7d5b6b00eaf40bbe24f43f",
+              "linux-arm64": "1c52f94b245b6d8f933d223548f9863f9d2bf8c36240ec1d93eabc69df6fe78c",
+              "macos-arm64": "bf99e646b3765162e21b981b6740cc0a53f37199352971cb0c5a639374adc265"
+            }
+          },
+          {
+            "name": "ieee",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "368ef0804d464da2c884ed1e90d731940ada1ccd02832e5e28b04ee18fa4ccce",
+              "windows-x64": "48151a055e49353e7e53722f71505ba8412c4e836b924404f4eac15d0d6ce13e",
+              "macos-x64": "af5147fd1cea34bc28259a1f390d4fa60767388f7d39c0c06d863591093bea24",
+              "linux-arm64": "48368e78defbcfcc60bd1245747960d90288d054d29073aaf098cc98bc2701ac",
+              "macos-arm64": "613de019cc9ac09bb004575eef68fba353ce6f144ba4c91b8a9d809d6f1c5ec0"
+            }
+          },
+          {
+            "name": "ieee",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "e1963174b63eabcb13c260cd65b2649875f10e4f43c0f9ba4c08fd851af61fb5",
+              "windows-x64": "fc6521846e9d6693754c6311fa8ea1bf956d6852950a4c71393aae6bfb5ec6f3",
+              "macos-x64": "c8bc2d9a368920752172a97fda157e8b2cccd46c565d064a8a6b274bcad0cef5",
+              "linux-arm64": "bd5231ef09960fd4f9580856054e91e0c09ce0e4b871554aca0d4fadb66a0f69",
+              "macos-arm64": "bfea8dfb45768b892710885f920b4c3ede1e8ef4db037976009419da483988eb"
+            }
+          },
+          {
+            "name": "ownership",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "62d343c8fafb335f753a76a003a007b2db4f0f16a3054f46cc5a4c179b032042",
+              "windows-x64": "7dffe45da159ecdc319bf4fec69156d0341cbdfd49df62f75c005b122423c2d9",
+              "macos-x64": "c0fb679bb20f9bcbc9b4124397fc7f82185d28d8a0b8d00a3d181412777e11b2",
+              "linux-arm64": "9669b6a193b02a5c40d365d278fcaa430d59e5a379fb546fd5009b64871e7054",
+              "macos-arm64": "d3393f05d9de03cc56b14da89ccbfb18837f9cdec0d924579c90a4ec9eeeaa63"
+            }
+          },
+          {
+            "name": "ownership",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "d568a48a9afd37a95640422992e60c3ca8b3d9df51bf8acb31773ec018b7e62b",
+              "windows-x64": "f9d250e5b1d9986b1ac7889ea2e37f4890a299197d3a12fddcad889b245ad499",
+              "macos-x64": "371edcf389f6dcbd0b536ef40121ec310d5d689219b9898b40e192e4df55cef2",
+              "linux-arm64": "40b0360cd708c5a10df35a2ca1bd069c9325e7b3236a6d5d7ffb427270e65b0c",
+              "macos-arm64": "e6ee411434877004854b651b4bd554db752323d1f50191d9e57c1c38367ad950"
+            }
+          },
+          {
+            "name": "lazy",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "ce8169e45b74d5b615c570f4d6dede54de11d7cbd9e902b80ed196c1579c6aa0",
+              "windows-x64": "76a56e821c717b150e8d5598f9a165a1780367194b3f568baaab054d9ad218b0",
+              "macos-x64": "a2d1feb4e31d01dc7ce9a861ec54414913f42380d2dca4cefa78452e43b29d63",
+              "linux-arm64": "5c28f282ca46e432ee8395c84b05129ad5d2427ce2a574fdbbe4400f0d6c407a",
+              "macos-arm64": "f0695c3236bc84f8dab6ab5634ecec35813583750fcba729fb67f27a41a00bcd"
+            }
+          },
+          {
+            "name": "lazy",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "12d56883367452c4d4cefe0f1e81256f1148408d72af583ac984b72b6cd643dd",
+              "windows-x64": "7851413b38417acd49ec1cb79c75a5f7b9562f10d1dc93d0997a0934a27c30ab",
+              "macos-x64": "c17c971242488908b62ad05e3c47a7cda4978915151e40baacb9e25b6cab4846",
+              "linux-arm64": "ec59940c9912a84a3b764a11fd69bcb8b02d19fdd3e9b1763b2fd2cdc7d1b78d",
+              "macos-arm64": "d1d78e869b64764c582913a04c0564f49c95c98b8d241e1cebcb078ec2a5ac9a"
+            }
+          },
+          {
+            "name": "utf8",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "a964be85689721c53c3478476dbe58b00563b5a88bd34defb732183d9c9d053f",
+              "windows-x64": "0c603a55ea4bf100e3a9dc9887d2df7ca20b28cbd77b07723808dc1ed4918040",
+              "macos-x64": "898c1557e50a9b423131388e80ac4a3ffcedb8c2db25b2910747ec79eddc0f1e",
+              "linux-arm64": "e49be628f57085ce372f4bd70038f3f458f5e8c4eb40f009601efa2fcf10a757",
+              "macos-arm64": "8efca910a53261d3ac309d23e0ef256b9f66ca772660ab65a79b0d8a214b9783"
+            }
+          },
+          {
+            "name": "utf8",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 0,
+            "binaries": {
+              "linux-x64": "bf1f67e1d952c03e5e9ddcc2602e81212f62484ca0caf7b9c41eed1a4acc92aa",
+              "windows-x64": "68a0042bba1b20cdd30f51e30d2808140509624755a320474147125ca0bb01ec",
+              "macos-x64": "d623bb9c06053b7f566957378bb111273e24a0eac35a6e3eaecd5b6d5b3ad4b9",
+              "linux-arm64": "e49be628f57085ce372f4bd70038f3f458f5e8c4eb40f009601efa2fcf10a757",
+              "macos-arm64": "8efca910a53261d3ac309d23e0ef256b9f66ca772660ab65a79b0d8a214b9783"
+            }
+          },
+          {
+            "name": "trap",
+            "optimized": true,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 70,
+            "binaries": {
+              "linux-x64": "216fac541c206967367e5572e3422d276f893f7c4b33455832ba25ed010fd7b7",
+              "windows-x64": "c636272d2cf9dcb7d80c56f5025a400e8aa73219398e5c6c65d72b9ab23a47f0",
+              "macos-x64": "e7f2ff352eedde112b3f428584a9701482b3f2e397291d4e142b545cd062d03e",
+              "linux-arm64": "cc77fad8f884141b72d5bc6310ffd7277193b3d166916324d523257127cd5e18",
+              "macos-arm64": "458d7f90ec3e90d2a3d10efe3ba5be9409bbcd79b2872094395db19006dc5765"
+            }
+          },
+          {
+            "name": "trap",
+            "optimized": false,
+            "passed": true,
+            "target": "macos-arm64",
+            "returnCode": 70,
+            "binaries": {
+              "linux-x64": "99335ca5f8e37374deb453fbdf9b0e5926affd8e06f04173d3680949def0c16c",
+              "windows-x64": "b197ad1810b6ded3f6957da4fee327ebb13711920d592fe230c3c84af95a1f0f",
+              "macos-x64": "8be34d34682d0997ded89558dab7f05dd6c2d8dc1ac1fd8264ead5e90ae16002",
+              "linux-arm64": "3ca4114e18fabe58b4a36983a9e4c7a6eb2f7aecc2f8e6ce05e9300ae25e66a5",
+              "macos-arm64": "b585f483580e1229ef7e639d5aa41f06fbc2d26a029f67763180c18fc701cbe1"
+            }
+          }
+        ],
+        "compilerSha256": "3e5b90433da72239187a6d71db6553dac44902861f8a1cb65fa0c3ea4e414056",
+        "version": "AssisScript 3.3.0-alpha.15 (nativo, macOS ARM64)",
+        "doctor": "AssisScript 3.3.0-alpha.15\nHost: macOS ARM64\nBackends: ELF64 Linux x64/ARM64 / PE32+ Windows x64 / Mach-O macOS x64/ARM64 (experimental)\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis\nHost ARM64: check/ir/build/run/test nativos disponíveis.\n",
         "backendFormat": "AssisScript-TypedIR-v1",
         "rejectedInvalidSource": true
       }
@@ -1422,26 +2067,26 @@
   "newTargets": {
     "linux-x64": {
       "path": "build/review-tests/new-targets-linux-x64.json",
-      "sha256": "68116d83e0bf71252afe8029dc0ac746ddc0cc26dcc40b0d6acec68b94e42089",
+      "sha256": "8a5131619dede58d1e052df73c54c07547d0ed6d289721557a8c45b94c9ffed1",
       "report": {
         "format": "AssisScript-target-validation-v1",
         "host": "linux",
         "hostArchitecture": "x64",
         "target": "linux-x64",
         "execution": "native",
-        "compilerSha256": "e28808b4baa1608daf4e674e2948e1d10821c3bde27051af251e1be2aa92aa84",
+        "compilerSha256": "683804bb2d8685847bd0f635ea21b0df0f153a9cd976b68e474c7650e0a2e4f9",
         "passed": true,
         "cases": [
           {
             "target": "linux-x64",
             "optimized": true,
-            "sha256": "7eb6650a3cd9a00c88ae00f365c86865092f413c618023c90427f89a2530fa80",
+            "sha256": "2ac5eb8b428606f95dd53e5bf890bdd7a4e96eefbb100e5d5c6ad12b72f3ea2d",
             "executed": true
           },
           {
             "target": "linux-x64",
             "optimized": false,
-            "sha256": "5efdc0f90f5ac02c0b5822a275d799889ee1ee7353ced4c1ba297c7c501382ba",
+            "sha256": "ce9ca589c193b48d48d67a073fab84367691ff85ea7926c19c895760e0e57364",
             "executed": true
           },
           {
@@ -1459,44 +2104,277 @@
           {
             "target": "macos-x64",
             "optimized": true,
-            "sha256": "7bc1cd7f3cc25600802cf9eca566ca4fb770ab390cae04819380ecfef357e0d5",
+            "sha256": "619ec7d65fd27ab4c6ed52b3d7cf0e4b695de82b1f6fd8aeaea144b971fe8e00",
             "executed": false
           },
           {
             "target": "macos-x64",
             "optimized": false,
-            "sha256": "9992588614ad96a6fa3d75571991f364b27a5595ca27c2a4b3d0c5afdaf6d5ee",
+            "sha256": "60c4462f5ae90325e32e387fd0a5b546bd0d551144f9f7440be54749df9e4cef",
             "executed": false
           },
           {
             "target": "linux-arm64",
             "optimized": true,
-            "sha256": "0826a041ee65ae3dee3e2b331ee8db20da0959bae30d19b2ee0a99dc2a03acf2",
+            "sha256": "e45575a9ac06493dcf08cb67917d6494a6a2af8c4e75bd4019a79bec6ef79877",
             "executed": false
           },
           {
             "target": "linux-arm64",
             "optimized": false,
-            "sha256": "151cc4648993e653191f1a229afdff3ded551b3619677dfb3f065e1049c952b7",
+            "sha256": "4c278032c512bce4d3ec9750cd76bbf62b6f63bc543a0408b3062a3dd1ee8e9f",
             "executed": false
           },
           {
             "target": "macos-arm64",
             "optimized": true,
-            "sha256": "11f63549e1f43bcc5b9690c6d606057dd9956c4a39ea09d33234ea88014a04ae",
+            "sha256": "737aac9c9dcfda09f402463eae46da360c972ef3e97a2c61fc70312ca435c04f",
             "executed": false
           },
           {
             "target": "macos-arm64",
             "optimized": false,
-            "sha256": "3400a8b2cbca3059ddb42391ea77fba231506e268e3371d3cdd74501c8ba4d05",
+            "sha256": "a7c0ad14c1b292d21bf109ae05284f891fa20c76c6028e79e3899145c967e705",
             "executed": false
           }
         ]
       }
+    },
+    "macos-x64": {
+      "path": "build/review-tests/new-targets-macos-x64.json",
+      "sha256": "0b18c3fcdb4a9983b362692b838bb5f2a920e907a826b7aa63b5aa4223d6c8b3",
+      "report": {
+        "format": "AssisScript-target-validation-v1",
+        "host": "darwin",
+        "hostArchitecture": "x64",
+        "target": "macos-x64",
+        "execution": "native",
+        "compilerSha256": "0bd12a157b88cacc9125f83269ab77f367c778ca86d79e74646cb0946ebae790",
+        "passed": true,
+        "cases": [
+          {
+            "target": "linux-x64",
+            "optimized": true,
+            "sha256": "5fb75f2752b9749ae765b9b6a15b1409e5103caa17708ea6b758fb5c52e5ef75",
+            "executed": false
+          },
+          {
+            "target": "linux-x64",
+            "optimized": false,
+            "sha256": "dedfc054bd38e5da8ba73c2992978971d1afb2e155f3cb97881b4db8483aa9b8",
+            "executed": false
+          },
+          {
+            "target": "windows-x64",
+            "optimized": true,
+            "sha256": "4fd032460440aea8aa7abb90407388c1a1913c9291fa0eaade80390737f21fc5",
+            "executed": false
+          },
+          {
+            "target": "windows-x64",
+            "optimized": false,
+            "sha256": "16a4c1929bdd426fc16365ec042dc964ea27bb76a7dacf414d3cf826758f0a4b",
+            "executed": false
+          },
+          {
+            "target": "macos-x64",
+            "optimized": true,
+            "sha256": "be31883aa6e3f3a6d83ba9cf4238ba4ec9e9d181c1176cd7ab4869752199bfb1",
+            "executed": true
+          },
+          {
+            "target": "macos-x64",
+            "optimized": false,
+            "sha256": "110265d1b67d53547fbf4520d327746ecbc0d1868239bb8b7ffe7d0fa7e8e6a5",
+            "executed": true
+          },
+          {
+            "target": "linux-arm64",
+            "optimized": true,
+            "sha256": "5af28ebba8900be53bf472e44e242d382917222ab64c3ed383f388f08a8d4932",
+            "executed": false
+          },
+          {
+            "target": "linux-arm64",
+            "optimized": false,
+            "sha256": "23dbcf78f17a0ef443d7239abb9790284fcc6dd209dba07c56b0d9e680343531",
+            "executed": false
+          },
+          {
+            "target": "macos-arm64",
+            "optimized": true,
+            "sha256": "a16ca7413d7b9d45302a1afeb061d29df03827f52441c74402dca102362e15ca",
+            "executed": false
+          },
+          {
+            "target": "macos-arm64",
+            "optimized": false,
+            "sha256": "6ced9ff6429e46a54645d6ddeeab8c19f46cf919e9bb51ca6506c8fec4be9fd3",
+            "executed": false
+          }
+        ]
+      }
+    },
+    "linux-arm64-host": {
+      "path": "build/review-tests/new-targets-linux-arm64-host.json",
+      "sha256": "0eaa2279b7cc484b155860e64ac6247c83047fa91ffdf88ecc5523f412fe32b0",
+      "report": {
+        "format": "AssisScript-target-validation-v1",
+        "host": "linux",
+        "hostArchitecture": "arm64",
+        "target": "linux-arm64",
+        "execution": "native",
+        "compilerSha256": "ff879a90f5fd8c6e6812ff6ae4b768302645e466fa9495a9f5995385bd78dc38",
+        "passed": true,
+        "cases": [
+          {
+            "target": "linux-x64",
+            "optimized": true,
+            "sha256": "3d2c2bc525311eba3c8f9ff07d038a60384509fb80cbfc0719284c0f2acd2338",
+            "executed": false
+          },
+          {
+            "target": "linux-x64",
+            "optimized": false,
+            "sha256": "47b52592ab0557c06fcd161744209476c5d5034ada26fcbe85734c3c9cc8ef63",
+            "executed": false
+          },
+          {
+            "target": "windows-x64",
+            "optimized": true,
+            "sha256": "4fd032460440aea8aa7abb90407388c1a1913c9291fa0eaade80390737f21fc5",
+            "executed": false
+          },
+          {
+            "target": "windows-x64",
+            "optimized": false,
+            "sha256": "16a4c1929bdd426fc16365ec042dc964ea27bb76a7dacf414d3cf826758f0a4b",
+            "executed": false
+          },
+          {
+            "target": "macos-x64",
+            "optimized": true,
+            "sha256": "8a92b606dd02addef6b739ee353b473e263f6a1e038a58a2330d2f4041c06528",
+            "executed": false
+          },
+          {
+            "target": "macos-x64",
+            "optimized": false,
+            "sha256": "a1dfdc24c72e3c316c7b922deaa102e3cf3fd938001b5c3df315c81dfeadf759",
+            "executed": false
+          },
+          {
+            "target": "linux-arm64",
+            "optimized": true,
+            "sha256": "0c22355b06ad47ecb692ddbf62196c2b40fbddbfb249073a8f536ce9211421ea",
+            "executed": true
+          },
+          {
+            "target": "linux-arm64",
+            "optimized": false,
+            "sha256": "ec928da6b7744567fce04a7318571e0a2af03af11102b7d786faa0d71adc1b65",
+            "executed": true
+          },
+          {
+            "target": "macos-arm64",
+            "optimized": true,
+            "sha256": "fd8ec87f18091647de43bdc0ae49a8d345fdebc27619faf11209bcd18e86e91b",
+            "executed": false
+          },
+          {
+            "target": "macos-arm64",
+            "optimized": false,
+            "sha256": "72e0f6204bda01aaff2dbb936b78fb67f3aa4db89b532440f857c4248adf6277",
+            "executed": false
+          }
+        ],
+        "runtimeStackGuard": true
+      }
+    },
+    "macos-arm64-host": {
+      "path": "build/review-tests/new-targets-macos-arm64-host.json",
+      "sha256": "3f51446b350c4560588d3e92ddd48382ebe3933938dbe539e7949b6ca967a702",
+      "report": {
+        "format": "AssisScript-target-validation-v1",
+        "host": "darwin",
+        "hostArchitecture": "arm64",
+        "target": "macos-arm64",
+        "execution": "native",
+        "compilerSha256": "3e5b90433da72239187a6d71db6553dac44902861f8a1cb65fa0c3ea4e414056",
+        "passed": true,
+        "cases": [
+          {
+            "target": "linux-x64",
+            "optimized": true,
+            "sha256": "e0b37a1e5258a1f1a2867abbc6f836d78fc56a106ce2e4a85fa4c5586d3bc534",
+            "executed": false
+          },
+          {
+            "target": "linux-x64",
+            "optimized": false,
+            "sha256": "9a520e18265b08e76bec82e747436b7c2d47dae0b190211d1263e30bda2a7d71",
+            "executed": false
+          },
+          {
+            "target": "windows-x64",
+            "optimized": true,
+            "sha256": "4fd032460440aea8aa7abb90407388c1a1913c9291fa0eaade80390737f21fc5",
+            "executed": false
+          },
+          {
+            "target": "windows-x64",
+            "optimized": false,
+            "sha256": "16a4c1929bdd426fc16365ec042dc964ea27bb76a7dacf414d3cf826758f0a4b",
+            "executed": false
+          },
+          {
+            "target": "macos-x64",
+            "optimized": true,
+            "sha256": "fd0c1c5a2f95a00479331d394098075ef67648d28fd5f56ad9cf5964a945b421",
+            "executed": false
+          },
+          {
+            "target": "macos-x64",
+            "optimized": false,
+            "sha256": "2712fc582a17ef00dd66dfed0efefe69607e32db65f8c7561c7128fde8377a57",
+            "executed": false
+          },
+          {
+            "target": "linux-arm64",
+            "optimized": true,
+            "sha256": "ccd8e0ee32d674583f7ae9f6fec142ff102d0ceeef72a5f7da81c4ca4f98deb9",
+            "executed": false
+          },
+          {
+            "target": "linux-arm64",
+            "optimized": false,
+            "sha256": "2f4915762c202d01fccedbc3ea5fd4909b76bf60baa3432b68db6f07e12a94e4",
+            "executed": false
+          },
+          {
+            "target": "macos-arm64",
+            "optimized": true,
+            "sha256": "094b8e9e71b6d3c2c86116645ce391584f79a1d35a3c3e7d0e6f7806f1299d78",
+            "executed": true
+          },
+          {
+            "target": "macos-arm64",
+            "optimized": false,
+            "sha256": "cf78220d8cfc5b49c9994fafa764186789aef963a902260abcf9f13a8690b9ce",
+            "executed": true
+          }
+        ],
+        "runtimeStackGuard": true
+      }
     }
   },
-  "remoteCI": "not triggered; local results do not assert remote success",
+  "remoteCI": {
+    "status": "passed",
+    "sourceCommit": "bb1605d713e1862cac9ec8ba3c99a41a7b882bcf",
+    "runId": 40847421481,
+    "url": "https://github.com/Vibe-O-Coder/AssisScript/actions/runs/40847421481",
+    "scope": "Acceptance of these source hashes and compiler binaries; later documentation-only commits may follow."
+  },
   "longSoak": {
     "windows": {
       "originalPath": "build/soak-alpha15/paced/windows.json",
@@ -1870,12 +2748,11 @@
     }
   },
   "remainingGates": [
-    "24 hours of actual qualified execution on current binaries and sources",
-    "native ARM64 output and macOS installer/debugging validation"
+    "24 hours of actual qualified execution on current binaries and sources"
   ],
   "roadmapStatus": {
     "P5-IR": "complete",
-    "P5-TARGET": "partial",
+    "P5-TARGET": "complete",
     "P6-POLICY": "complete",
     "P6-ACCEPT": "complete"
   },

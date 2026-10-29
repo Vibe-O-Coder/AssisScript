@@ -1,6 +1,6 @@
 # Estimativa de conclusão — 3.3.0-alpha.15
 
-Data: 29/10/2026. **Conclusão estimada: 99%** (99,0 pontos de 100).
+Data: 29/10/2026. **Conclusão estimada: 100%** (100 pontos de 100).
 
 Escopo: Conclusão do plano de evolução das fases 0–6, incluindo a trilha funcional e as aplicações A/B/C. Não inclui construir o navegador, HTDL, estilos ou motor de busca.
 
@@ -19,9 +19,9 @@ As etapas F0–F4 estão incorporadas aos critérios: efeitos/ordem superior na 
 | 2 — Ownership e dados funcionais | 20 | 100% | 20 |
 | 3 — Texto, números e aplicação CLI | 15 | 100% | 15 |
 | 4 — Integração, rede e serviços | 15 | 100% | 15 |
-| 5 — Backend e depuração | 10 | 90% | 9,0 |
+| 5 — Backend e depuração | 10 | 100% | 10 |
 | 6 — Ferramentas e oferta delimitada | 10 | 100% | 10 |
-| **Total** | **100** | **99% estimados** | **99,0** |
+| **Total** | **100** | **100% estimados** | **100** |
 
 ## Histórico pela mesma régua
 
@@ -42,6 +42,7 @@ As etapas F0–F4 estão incorporadas aos critérios: efeitos/ordem superior na 
 | 3.3.0-alpha.15 — 24 horas aprovadas, 28/10/2026 | 94% (94,0 pontos) | Avaliação desta entrega |
 | 3.3.0-alpha.15 — IR integral e aceite independente confirmados | 97% (97,0 pontos) | Avaliação desta entrega |
 | 3.3.0-alpha.15 — ARM64 nativo implementado e identidade v1 aplicada; CI nativa pendente | 99% (99,0 pontos) | Avaliação desta entrega |
+| 3.3.0-alpha.15 — Destinos ARM64/macOS e pacote aprovados nativamente â€” plano concluÃ­do | 100% (100 pontos) | Avaliação desta entrega |
 
 Cada registro histórico congela seus 35 estados; atualizações futuras não alteram retroativamente esses estados.
 
@@ -105,7 +106,7 @@ Cada registro histórico congela seus 35 estados; atualizações futuras não al
 | P5-OPT — Otimizações comprovadas, TCO, intervalos e alocação de registradores | Concluído no escopo do critério | [Documento](BACKEND-ALPHA15.md) — Liveness global com ponto fixo/coloração e reutilização dos quatro registradores preservados, exclusão de locais endereçados, fallback limitado; intervalos em laços diretos/reversos com offsets e chamadas pure. Equivalência/adversos Windows/Linux e comparação com alpha.14; sem alegação de otimalidade do alocador. |
 | P5-ABI — ABI documentada e validada para interfaces e retornos compostos | Concluído no escopo do critério | [Documento](FFI-C.md) — LVS2 preservada e ABI C escalar pública delimitada, registradores mistos/pilha/retornos/callbacks validados contra biblioteca C independente; agregados C por valor são rejeitados. |
 | P5-DEBUG — ELF PIE, símbolos/linhas e depuração nativa | Concluído no escopo do critério | [Documento](RECURSOS-E-FATIAS.md) — ELF ET_DYN/PIE, RIP/vtables relativos, símbolos/DWARF e GDB com parâmetros/locais escalares e escopos. Windows conserva mapas; sem PDB ou descrição de compostos. |
-| P5-TARGET — Backend extensível e novos alvos ARM64/macOS validados | Parcial (50%) | [Documento](ARM64-NATIVO.md) — Backend/runtime ARM64 Linux/macOS implementados, símbolos ELF/Mach-O, assinatura ad hoc, instaladores e seleção no editor; regressões ARM64 locais via QEMU e GDB remoto. Falta aprovação da nova matriz nativa Linux/macOS ARM64 do commit candidato no Actions. |
+| P5-TARGET — Backend extensível e novos alvos ARM64/macOS validados | Concluído no escopo do critério | [Documento](ARM64-NATIVO.md) — Backend/runtime ARM64 Linux/macOS, DWARF ELF/Mach-O, assinatura ad hoc, instaladores e seleÃ§Ã£o no editor. Actions 40847421481 (bb1605d): Linux ARM64 e macOS Apple Silicon nativos, macOS Intel, GDB/LLDB, ABI C, instalaÃ§Ã£o e pacotes aprovados. EvidÃªncias e hashes em VALIDACAO-TARGETS-V1.json. |
 
 ### Fase 6 — Ferramentas e oferta delimitada
 
@@ -117,6 +118,6 @@ Cada registro histórico congela seus 35 estados; atualizações futuras não al
 | P6-POLICY — Licença/procedência resolvidas e política de suporte/compatibilidade | Concluído no escopo do critério | [Documento](PROCEDENCIA-V1.md) — Ícones v1 escolhidos pelo responsável aplicados aos derivados/editor/instalador/PE/bundles; stickers retirados da distribuição. Revisão dos componentes, avisos, fontes, ligação Linux dinâmica e gates de hashes/recursos/inventário registrados. |
 | P6-ACCEPT — Terceiro instala, depura e distribui aplicações A/B/C pelo manual | Concluído no escopo do critério | [Documento](ACEITE-RELATO-USUARIO-2026-10-28.md) — Confirmação humana encaminhada pelo responsável: pessoa distinta usou a versão mais recente disponível, seguiu o manual, testou comandos/exemplos, escreveu programa com IntelliSense e confirmou depuração/distribuição de A/B/C. Sistema e hash exato não informados. Aceite da distribuição disponível na ocasião, separado da validação automatizada do novo candidato P5-IR. |
 
-A evidência vinculada também descreve limites, inclusive para critérios pendentes. A base de bibliotecas, distribuição, vidas explícitas, recursos compostos, fatias/texto gerenciado, valores Copy/variantes e a aplicação A delimitada já existe; a emissão integral por IR e o aceite independente foram concluídos nesta continuação; os novos alvos concentram o restante técnico. As 24 horas reais Windows/Linux da alpha.15 estão registradas no handoff e na validação JSON. Variantes Move/capturas verificadas e pipelines com ambientes foram acrescentados na alpha.13. As aplicações B/C delimitadas e a ABI C escalar foram acrescentadas na alpha.11; a alpha.12 torna safe padrão, acrescenta rede cooperativa e inventário por ligação real. A licença foi escolhida pelo responsável; os ícones v1 foram aplicados e a revisão de distribuição desta entrega está registrada. P5-TARGET aguarda a aprovação nativa remota do candidato ARM64.
+A evidência vinculada também descreve limites, inclusive para critérios pendentes. A base de bibliotecas, distribuição, vidas explícitas, recursos compostos, fatias/texto gerenciado, valores Copy/variantes e a aplicação A delimitada já existe; a emissão integral por IR e o aceite independente foram concluídos nesta continuação. As 24 horas reais Windows/Linux da alpha.15 estão registradas no handoff e na validação JSON, com a revisão original preservada. Variantes Move/capturas verificadas e pipelines com ambientes foram acrescentados na alpha.13. As aplicações B/C delimitadas e a ABI C escalar foram acrescentadas na alpha.11; a alpha.12 torna safe padrão, acrescenta rede cooperativa e inventário por ligação real. A licença foi escolhida pelo responsável; os ícones v1 foram aplicados e a revisão de distribuição desta entrega está registrada. P5-TARGET foi concluído com a aprovação nativa Linux ARM64 e macOS Intel/Apple Silicon, depuração, instaladores e pacotes no Actions 40847421481. Os 35 critérios do plano estão concluídos no escopo declarado.
 
 Fonte auditável: [PROGRESSO.json](PROGRESSO.json). Gerar com `python tools/report-progress.py`; verificar com `python tools/report-progress.py --check`. Relatórios históricos de versões anteriores permanecem preservados; a porcentagem começa a ser publicada na alpha.5.

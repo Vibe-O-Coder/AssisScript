@@ -1,9 +1,9 @@
 {
-  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
-  "compilerSha256": "e28808b4baa1608daf4e674e2948e1d10821c3bde27051af251e1be2aa92aa84",
+  "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+  "compilerSha256": "683804bb2d8685847bd0f635ea21b0df0f153a9cd976b68e474c7650e0a2e4f9",
   "applicationSha256": {
-    "29_http_polling.assis.exe": "a753c8e33b3a5baa9baadda2f0717f51c915d49e56c959e9012a9ec4208c8e61",
-    "28_persistent_service.assis.exe": "1fbce8be5bc71be4f92f6b7353e45abb5190ac913ac02aae7470630ce4b69e31"
+    "29_http_polling.assis.exe": "29d63c0c625f1fe50e216d6f30afc266355ff5e35734bcbb037b1456b1c9e023",
+    "28_persistent_service.assis.exe": "fb8684ecdb4112cd7d8244dab3c391c632eb2de4c5df43190e5c7db4b6cee5cf"
   },
   "sourceHashes": {
     "src/arm64_emit.h": "2bc2e8710eca7950bb2b876c13b88755deb619bd8d515821c40b705f7b565cbc",
@@ -26,7 +26,7 @@
     "src/install_optional.inc": "390a94ceef3e6fe123e6481d2d132f1f4dd819a0d5cb11945ddebc33b7bd29e8",
     "src/ir.h": "d9414d74afa95620f5f703dd908bfc8ceca6a59f8eb7f41b7e551c12f9fc03c0",
     "src/lexer.h": "9b502b5ebfaaf130e3ca3e94e19a57ea46031a17d229a91bd26de53a1faf6d96",
-    "src/macho_writer.h": "3532493a48ac8d8259eaeda497e3fb4bad0f1b9f7ad9b6f368ff6327897df114",
+    "src/macho_writer.h": "789a9fa959c1b936e60025e7f90cc03f82237fb3b83e4be0ce34e50666761c7c",
     "src/modules.h": "84662a3c9d41125ceedd2e0c665df48f935667c76903e0df491cb6e723f56a4e",
     "src/namespaces.h": "7f31c7828c09c20e36da673ec408768f69447248e5c8acb7be9f62cf0c6afed1",
     "src/numeric.h": "a6264e101ddeff3ff503cb8e601365988c5df0cbc44baa85cc85464fa65f4feb",
@@ -37,9 +37,9 @@
     "src/ranges.h": "b3291ef9ad5c641fbf46f443cf270759842f5d823c329438d5fbd013da5b42ca",
     "src/registers.h": "be284d42de984addf242ec0f45cde57f638d5c94dd509749d33458530502e678",
     "src/runtime.S": "9cb1371662938ad7acfdacf2029d438d9ae580c437b26f2a9c5c5b0fa4ce2f70",
-    "src/runtime_arm64.c": "d04df7139d4f5ee135420b769a39bd205a877a45f48010f0b2bc0fdf5f5542b2",
+    "src/runtime_arm64.c": "aaca6a58d08fc4f0a1b090e0b773efa25155a0b01f54fa358e22a3d412961d00",
     "src/runtime_arm64_linux.h": "b7e59e6ac55201842364c70cebb67dc45e2ffad0a4db334fcb5e12fc1c625e00",
-    "src/runtime_arm64_macos.h": "57385c60673ab1137e88b4f4ab8941197389e33567cf86c8834396e2b6364186",
+    "src/runtime_arm64_macos.h": "adeb1efbaf723b3b7cea2c5b7a99a163a549bef40376005708312ebbe472377a",
     "src/runtime_blob.h": "e398ba9c1a4cce091b4f350ed4c10005dc3aa6091d19aab461bdbb0f61092bda",
     "src/runtime_files.inc": "64a20a5ec8db2ffd3fe0e3d0414574c2ffd4d71d507acd7422d3b0b618943e43",
     "src/runtime_io.inc": "012bba759ce7516082c3da327c03e0db9cd31d3b61d37123b7b4dfa7b9afeaa9",
@@ -113,7 +113,7 @@
     "tools/soak-native.py": "00777240e2b429198649b23d250b246bb776bb3a0d70a332a9c59bc770eee956"
   },
   "requestedSeconds": 120.0,
-  "elapsedSeconds": 120.506082223,
+  "elapsedSeconds": 120.506051968,
   "workers": 4,
   "passed": true,
   "error": null,
@@ -121,58 +121,58 @@
   "results": [
     {
       "worker": 0,
-      "rounds": 2548,
+      "rounds": 13764,
       "initial": {
-        "rssBytes": 1355776,
+        "rssBytes": 1413120,
         "handles": 4
       },
       "final": {
-        "rssBytes": 1355776,
+        "rssBytes": 1413120,
         "handles": 4
       },
-      "peakRssBytes": 1355776,
+      "peakRssBytes": 1413120,
       "peakHandles": 4
     },
     {
       "worker": 1,
-      "rounds": 2548,
+      "rounds": 13772,
       "initial": {
-        "rssBytes": 1355776,
+        "rssBytes": 1421312,
         "handles": 4
       },
       "final": {
-        "rssBytes": 1355776,
+        "rssBytes": 1421312,
         "handles": 4
       },
-      "peakRssBytes": 1355776,
+      "peakRssBytes": 1421312,
       "peakHandles": 4
     },
     {
       "worker": 2,
-      "rounds": 2548,
+      "rounds": 13765,
       "initial": {
-        "rssBytes": 1355776,
+        "rssBytes": 1421312,
         "handles": 4
       },
       "final": {
-        "rssBytes": 1355776,
+        "rssBytes": 1421312,
         "handles": 4
       },
-      "peakRssBytes": 1355776,
+      "peakRssBytes": 1421312,
       "peakHandles": 4
     },
     {
       "worker": 3,
-      "rounds": 2540,
+      "rounds": 13811,
       "initial": {
-        "rssBytes": 1347584,
+        "rssBytes": 1425408,
         "handles": 4
       },
       "final": {
-        "rssBytes": 1347584,
+        "rssBytes": 1425408,
         "handles": 4
       },
-      "peakRssBytes": 1347584,
+      "peakRssBytes": 1425408,
       "peakHandles": 4
     }
   ],

@@ -23,8 +23,10 @@ são automaticamente convertidos em provedores macOS.
 
 A matriz configura `macos-15-intel` e `macos-15` para execução e depuração
 nativas, incluindo verificação de assinatura, DWARF e variáveis em LLDB.
-Este computador local Windows/Linux não executa macOS; a aprovação desse novo
-candidato depende do resultado remoto do seu commit. A revisão anterior passou
-em Intel e com saídas x64 sob Rosetta; isso é evidência distinta do novo backend.
+Os dois jobs passaram nativamente na revisão `bb1605d`, no
+[Actions 40847421481](https://github.com/Vibe-O-Coder/AssisScript/actions/runs/40847421481),
+incluindo ABI C, arquivos e instalação offline. O job Apple Silicon executou
+programas ARM64 e validou assinatura ad hoc, DWARF e variáveis em LLDB.
+Hashes dos compiladores e relatórios estão em [VALIDACAO-TARGETS-V1.json](VALIDACAO-TARGETS-V1.json).
 
 Detalhes da ABI, runtime, assinatura e limites: [ARM64-NATIVO.md](ARM64-NATIVO.md).

@@ -2,111 +2,111 @@
   "format": "AssisScript-optimization-v1",
   "platform": "nt",
   "host": {
-    "system": "Windows-10-10.0.19045-SP0",
+    "system": "Windows-2025Server-10.0.26100-SP0",
     "machine": "AMD64",
-    "processor": "Intel64 Family 6 Model 94 Stepping 3, GenuineIntel",
-    "logical_cpus": 8
+    "processor": "AMD64 Family 25 Model 1 Stepping 1, AuthenticAMD",
+    "logical_cpus": 4
   },
   "samples": 3,
   "entries": 20000,
   "compilers": {
     "candidate": {
-      "sha256": "d4bcda8e0de3eddaf180246995f6e569294aae8746a7a78e34a23ffcf52f6c41",
+      "sha256": "c519e591eacb52f87593064879e93b98f12de69218e09acd79a821cb30d9e4c5",
       "version": "AssisScript 3.3.0-alpha.15 (nativo, Windows x64)"
     }
   },
   "workloads": {
     "hash_stride_1": {
       "candidate": {
-        "compile_ms": 50.103,
+        "compile_ms": 13.559,
         "bytes": 56832,
         "binarySha256": "82639d55db56eb9f182286d6433e75c7d4f550d75f6595460f586b901f2618d2",
         "run_ms": [
-          23.3588,
-          24.0295,
-          25.6711
+          17.7314,
+          17.1443,
+          17.6506
         ],
-        "median_ms": 24.0295
+        "median_ms": 17.6506
       }
     },
     "hash_stride_64": {
       "candidate": {
-        "compile_ms": 40.9071,
+        "compile_ms": 14.1305,
         "bytes": 56832,
         "binarySha256": "f7e0cdba2f45dcacfdd8fdebc4cbcac34534fce5ad14718ae56791d1159c7f1a",
         "run_ms": [
-          31.3372,
-          30.1569,
-          29.125
+          17.1753,
+          17.2676,
+          17.1908
         ],
-        "median_ms": 30.1569
+        "median_ms": 17.1908
       }
     },
     "hash_stride_4096": {
       "candidate": {
-        "compile_ms": 41.7596,
+        "compile_ms": 14.3296,
         "bytes": 56832,
         "binarySha256": "cb7d000392a129948dc2dc87fa8b81bb167c901aab545209261692795979cb91",
         "run_ms": [
-          26.1293,
-          26.4067,
-          26.9982
+          17.2078,
+          16.9579,
+          17.0578
         ],
-        "median_ms": 26.4067
+        "median_ms": 17.0578
       }
     },
     "hash_stride_65536": {
       "candidate": {
-        "compile_ms": 31.2676,
+        "compile_ms": 13.7371,
         "bytes": 56832,
         "binarySha256": "54375326cdbe56afa727f280492865ea1d918a490b0a485501ccaf7386719e77",
         "run_ms": [
-          27.4187,
-          27.958,
-          26.9237
+          17.5061,
+          17.0092,
+          17.2481
         ],
-        "median_ms": 27.4187
+        "median_ms": 17.2481
       }
     },
     "large_zero_allocations": {
       "candidate": {
-        "compile_ms": 39.2003,
+        "compile_ms": 11.751,
         "bytes": 40960,
         "binarySha256": "538a4069c3c42115ecc23cd337d7b1c72287032f152a318ca7debf65be85cbb4",
         "run_ms": [
-          23.5891,
-          23.9553,
-          23.291
+          16.4827,
+          16.7771,
+          16.3544
         ],
-        "median_ms": 23.5891
+        "median_ms": 16.4827
       }
     },
     "scalar_leaf_calls": {
       "candidate": {
-        "compile_ms": 29.6015,
+        "compile_ms": 11.5012,
         "bytes": 40960,
         "binarySha256": "0300b142db70253e07f45689859866d822d851f225da0d02827a749f8a193a07",
         "run_ms": [
-          46.0236,
-          42.966,
-          43.0947
+          23.9532,
+          19.4747,
+          19.2052
         ],
-        "median_ms": 43.0947
+        "median_ms": 19.4747
       }
     },
     "fib35": {
       "candidate": {
-        "compile_ms": 40.8188,
+        "compile_ms": 11.7137,
         "bytes": 40960,
         "binarySha256": "c2a4047315edab2ab4458dd84e5d3998ff053fc2a9b2c099972f65c2e6c07712",
         "run_ms": [
-          140.6215,
-          144.8156,
-          142.7815
+          99.1833,
+          98.6162,
+          98.3082
         ],
-        "median_ms": 142.7815
+        "median_ms": 98.6162
       }
     }
   },
-  "max_stride_ratio": 1.2549949020995028
+  "max_stride_ratio": 0.9771962426206474
 }

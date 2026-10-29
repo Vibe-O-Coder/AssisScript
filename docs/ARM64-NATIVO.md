@@ -1,4 +1,4 @@
-# ARM64 nativo — candidato P5-TARGET, 29/10/2026
+# ARM64 nativo — P5-TARGET concluído, 29/10/2026
 
 O compilador emite instruções AArch64 diretamente de TypedIR-v1 e produz ELF64
 PIE Linux ARM64 e Mach-O PIE macOS ARM64. Nenhum programa x86_64, compilador C,
@@ -79,10 +79,18 @@ parâmetros, locais, shadowing e backtrace com e sem otimização. Logs de
 desenvolvimento ficam em `build/review-tests` e não entram na distribuição.
 O relatório `VALIDACAO-TARGETS-V1.json` registra hashes e limites desta rodada.
 
-P5-TARGET permanece parcial até passar a matriz nativa do commit candidato no
-GitHub Actions: Linux ARM64, macOS Intel e macOS Apple Silicon, incluindo
-instalação, execução, GDB/LLDB e assinatura. Resultados de QEMU ou da revisão
-x64 anterior não são apresentados como aprovação nativa deste macOS ARM64.
+P5-TARGET foi concluído após os seis jobs do [Actions 40847421481](https://github.com/Vibe-O-Coder/AssisScript/actions/runs/40847421481)
+passarem na revisão `bb1605d713e1862cac9ec8ba3c99a41a7b882bcf`: Linux x64,
+Windows x64, Linux ARM64, macOS Intel, macOS Apple Silicon e empacotamento.
+Os runners ARM64 executaram saída ARM64 nativamente; Linux ARM64 passou as
+32 suítes / 296 casos com os prazos TLS nativos. GDB/LLDB conferiram parâmetros,
+locais e backtrace; macOS passou DWARF, assinatura, ABI C, arquivos e instalação.
+O pacote aprovado contém os cinco compiladores e a extensão offline.
+
+As regressões incluem a largura dos retornos `int` das APIs C Darwin e a
+separação dos segmentos `__DATA`/`__DWARF`, necessária para executar os Mach-O
+com símbolos. O JSON mantém os hashes e os relatórios da execução aceita,
+além da validação local anterior identificada como histórica.
 
 Referências: [AAPCS64](https://github.com/ARM-software/abi-aa/blob/main/aapcs64/aapcs64.rst),
 [Mach-O](https://github.com/apple-oss-distributions/xnu/blob/main/EXTERNAL_HEADERS/mach-o/loader.h),
