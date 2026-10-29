@@ -1,0 +1,16 @@
+test_buffers_records_callbacks_generics_and_abi (__main__.Numbers.test_buffers_records_callbacks_generics_and_abi) ... ok
+test_decimal_literals_roundtrip_extremes_and_random (__main__.Numbers.test_decimal_literals_roundtrip_extremes_and_random) ... ok
+test_float_arithmetic_ieee_and_exact_output (__main__.Numbers.test_float_arithmetic_ieee_and_exact_output) ... ok
+test_integer_to_f32_uses_one_rounding_and_value_equality_is_numeric (__main__.Numbers.test_integer_to_f32_uses_one_rounding_and_value_equality_is_numeric) ... ok
+test_integer_widths_modular_and_signed_loads (__main__.Numbers.test_integer_widths_modular_and_signed_loads) ... ok
+test_mixed_virtual_abi_and_float_tail_recursion (__main__.Numbers.test_mixed_virtual_abi_and_float_tail_recursion) ... ok
+test_nan_infinity_zero_and_ordered_comparisons (__main__.Numbers.test_nan_infinity_zero_and_ordered_comparisons) ... ok
+test_numeric_rejections_and_output_preservation (__main__.Numbers.test_numeric_rejections_and_output_preservation) ... ok
+test_random_integer_operations_and_unsigned_comparisons (__main__.Numbers.test_random_integer_operations_and_unsigned_comparisons) ... ok
+test_saturating_float_conversions_and_unsigned_64 (__main__.Numbers.test_saturating_float_conversions_and_unsigned_64) ... ok
+test_unsigned_division_shifts_and_wrap (__main__.Numbers.test_unsigned_division_shifts_and_wrap) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.510s
+
+OK

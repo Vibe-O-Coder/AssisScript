@@ -1,0 +1,12 @@
+test_aggregate_argument_and_return_survive_later_memory_effects (__main__.CompleteIR.test_aggregate_argument_and_return_survive_later_memory_effects) ... ok
+test_indirect_callee_is_saved_before_effectful_arguments (__main__.CompleteIR.test_indirect_callee_is_saved_before_effectful_arguments) ... ok
+test_nested_memory_loops_match_independent_python_reference (__main__.CompleteIR.test_nested_memory_loops_match_independent_python_reference) ... ok
+test_own_replacement_and_compound_memory_evaluate_in_source_order (__main__.CompleteIR.test_own_replacement_and_compound_memory_evaluate_in_source_order) ... ok
+test_owned_cleanup_is_present_before_returns_and_loop_exits (__main__.CompleteIR.test_owned_cleanup_is_present_before_returns_and_loop_exits) ... ok
+test_owned_closure_and_inline_variant_returns_with_symbols (__main__.CompleteIR.test_owned_closure_and_inline_variant_returns_with_symbols) ... ok
+test_typed_addresses_resources_runtime_and_dispatch_are_complete (__main__.CompleteIR.test_typed_addresses_resources_runtime_and_dispatch_are_complete) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.741s
+
+OK

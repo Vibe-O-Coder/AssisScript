@@ -153,6 +153,7 @@ static Node *prefix(void){
     Token *t=take();Node *n=NULL;
     switch(t->kind){
     case T_CLOSURE:n=parse_closure(t);break;
+    case T_INC:case T_DEC:error(t,"++ e -- são instruções sem valor; use em uma instrução própria ou no passo do for");break;
     case '-':case '+':case '!':case '~':case '*':case '&':n=node(N_UNARY,t);n->op=t->kind;n->a=prefix();break;
     case T_CHAR:case T_REAL:n=node(N_INT,t);break;case T_INT:n=node(N_INT,t);break;case T_STR:n=node(N_STR,t);break;
     case T_TRUE:case T_FALSE:n=node(N_BOOL,t);break;case T_NULL:n=node(N_NULL,t);break;
@@ -185,6 +186,19 @@ static Node *expression(int minimum){
     return left;
 }
 static bool assignment(int k){return k=='='||(k>=T_ADDSET&&k<=T_SHRSET);}
+static Node *simple_statement(void){
+    Token *t=peek(),*update=NULL;
+    if(t->kind==T_INC||t->kind==T_DEC)update=take();
+    Node *left=expression(1),*n;
+    if(!update&&(peek()->kind==T_INC||peek()->kind==T_DEC))update=take();
+    if(update){
+        n=node(N_ASSIGN,update);n->op=update->kind==T_INC?T_ADDSET:T_SUBSET;n->a=left;
+        Token *one=mem(sizeof(*one));*one=*update;one->kind=T_INT;one->text="1";one->number=1;
+        n->b=node(N_BUILTIN,update);n->b->op=T_NUMTYPE;push(&n->b->items,node(N_INT,one));
+    }else if(assignment(peek()->kind)){t=take();n=node(N_ASSIGN,t);n->op=t->kind;n->a=left;n->b=expression(1);}
+    else{n=node(N_EXPR,t);n->a=left;}
+    return n;
+}
 static Node *block(void){
     if(++parse_depth>MAX_NEST)error(peek(),"bloco aninhado demais");
     Node *n=node(N_BLOCK,expect('{'));while(peek()->kind!='}'&&peek()->kind!=T_EOF)push(&n->items,statement());expect('}');parse_depth--;return n;
@@ -214,8 +228,7 @@ static Node *statement_inner(void){
         expect('(');Node *scope=node(N_BLOCK,t);Node *init=statement();
         if(init->kind!=N_LET&&init->kind!=N_ASSIGN&&init->kind!=N_EXPR)error(init->t,"for exige declaração, atribuição ou expressão na inicialização");push(&scope->items,init);
         Node *loop=node(N_WHILE,t);loop->a=expression(1);expect(';');
-        Node *left=expression(1);Token *op=take();if(!assignment(op->kind))error(op,"for exige atribuição no incremento");
-        loop->step=node(N_ASSIGN,op);loop->step->op=op->kind;loop->step->a=left;loop->step->b=expression(1);expect(')');
+        loop->step=simple_statement();if(loop->step->kind!=N_ASSIGN)error(loop->step->t,"for exige atribuição, ++ ou -- no incremento");expect(')');
         loop->b=block();push(&scope->items,loop);return scope;
     }
     if(accept(T_IF)){n=node(N_IF,t);expect('(');n->a=expression(1);expect(')');n->b=block();if(accept(T_ELSE))n->c=peek()->kind==T_IF?statement():block();return n;}
@@ -225,9 +238,7 @@ static Node *statement_inner(void){
     if(accept(T_FREE)){n=node(N_FREE,t);Vec a={0};args(&a);if(a.n!=1)error(t,"free recebe exatamente um argumento");n->a=a.v[0];free(a.v);expect(';');return n;}
     if(accept(T_ASSERT)){n=node(N_EXPR,t);n->a=node(N_BUILTIN,t);n->a->op=T_ASSERT;args(&n->a->items);expect(';');return n;}
     if(accept(T_BREAK)||accept(T_CONTINUE)){n=node(t->kind==T_BREAK?N_BREAK:N_CONTINUE,t);expect(';');return n;}
-    Node *left=expression(1);
-    if(assignment(peek()->kind)){t=take();n=node(N_ASSIGN,t);n->op=t->kind;n->a=left;n->b=expression(1);}
-    else{n=node(N_EXPR,t);n->a=left;}expect(';');return n;
+    n=simple_statement();expect(';');return n;
 }
 static Node *statement(void){
     if(++parse_depth>MAX_NEST)error(peek(),"instrução aninhada demais");
@@ -713,6 +724,10 @@ static int check_statement(Node *n,bool scoped){
     case N_ASSIGN:{
         Type left=check_expr(n->a);if(!n->a->lvalue)error(n->t,"lado esquerdo não é uma posição gravável");
         if(n->a->kind==N_NAME&&n->a->var->immutable)error(n->t,"vínculo imutável não pode ser reatribuído: %s",n->a->t->text);
+        if(n->t->kind==T_INC||n->t->kind==T_DEC){
+            if(!integer(left)&&!floating(left))error(n->t,"++ e -- exigem posição numérica mutável; ponteiros e bool não são aceitos");
+            n->b->decl=left;
+        }
         Type right=expected_expr(left,n->b);
         if(n->op=='=')require_assign(left,right,n->t);
         else{Type result=binary_type(left,right,compound_op(n->op),n->t);if(!equal_type(left,type_u8)||!equal_type(result,type_i64))require_assign(left,result,n->t);}break;

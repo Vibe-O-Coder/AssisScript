@@ -29,7 +29,7 @@ instrucao = bloco | ("let" | "val"), nome, ":", tipo, "=", expressao, ";"
           | "unsafe", bloco
           | ("own" | "borrow", ["mut"]), nome, ":", tipo, "=", expressao, ";"
           | "defer", "free", "(", nome, ")", ";"
-          | "for", "(", inicializacao, expressao, ";", atribuicao, ")", bloco
+          | "for", "(", inicializacao, expressao, ";", (atribuicao | incremento), ")", bloco
           | "if", "(", expressao, ")", bloco, ["else", (bloco | condicional)]
           | "while", "(", expressao, ")", bloco
           | "match", "(", expressao, ")", "{", {braco}, "}"
@@ -37,6 +37,7 @@ instrucao = bloco | ("let" | "val"), nome, ":", tipo, "=", expressao, ";"
           | ("print" | "write"), argumentos, ";" | "free", "(", expressao, ")", ";"
           | "assert", "(", expressao, [",", expressao], ")", ";"
           | ("break" | "continue"), ";"
+          | incremento, ";"
           | expressao, [operador_atribuicao, expressao], ";" ;
 expressao = unaria, {operador_binario, unaria | ("is" | "as"), tipo} ; (* precedência descrita no manual *)
 unaria = ["+" | "-" | "!" | "~" | "*" | "&"], primaria,
@@ -52,8 +53,10 @@ primaria = closure | caractere | inteiro | real_decimal | texto | "true" | "fals
 argumentos = "(", [expressao, {",", expressao}], ")" ;
 braco = nome, ["(", [nome, {",", nome}], ")"], bloco ;
 inicializacao = ("let" | "val" | "own" | "borrow", ["mut"]), nome, ":", tipo, "=", expressao, ";"
-              | atribuicao, ";" | expressao, ";" ;
+              | atribuicao, ";" | incremento, ";" | expressao, ";" ;
 atribuicao = expressao, operador_atribuicao, expressao ;
+incremento = ("++" | "--"), expressao | expressao, ("++" | "--") ;
+(* Exige destino numérico gravável; é instrução sem valor, inclusive no for. *)
 nome = (letra_ASCII | "_"), {letra_ASCII | digito | "_"} ;
 (* Módulos agregadores também usam import. void só é retorno, não elemento/ponteiro.
    Funções globais, structs e classes admitem parâmetros de tipo; chamadas genéricas

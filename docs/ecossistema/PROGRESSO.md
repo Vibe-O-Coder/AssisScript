@@ -1,10 +1,10 @@
 # Progresso — capacidade do AssisScript para o ecossistema web
 
-Data: 2026-10-29. Régua v1. **19,90/100 pontos (19,90%)**, com **0/5 gates aprovados**.
+Data: 2026-10-29. Régua v1. **20,10/100 pontos (20,10%)**, com **0/5 gates aprovados**.
 
-Estado da avaliação: `provisional-documentary-baseline-not-retested`. Escopo: Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.
+Estado da avaliação: `partial-native-retest-m0-increment`. Escopo: Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.
 
-A baseline inicial é uma estimativa documental provisória das fundações aproveitáveis. Não foram reexecutados testes do compilador/runtime nesta sessão. O número não mede prazo, esforço restante ou prontidão para produção. Casas decimais tornam a soma auditável; não significam precisão de previsão.
+A baseline inicial permanece documental e provisória. Nesta atualização, somente a fatia de incremento/decremento e suas regressões foram reexecutadas: 88 testes no Windows x64 e 88 no Linux x64/WSL, em sete suítes por sistema. Os demais créditos não foram recertificados; nenhum gate de produto foi aprovado. O número não mede prazo, esforço restante ou prontidão para produção. Casas decimais tornam a soma auditável; não significam precisão de previsão.
 
 Os 100/100 das antigas fases 0–6 medem outro escopo e permanecem preservados. Esta régua tem 60 critérios em 12 frentes; cinco critérios dividem igualmente o peso de cada frente. Níveis 0–4 rendem 0%, 25%, 50%, 75% e 100% do crédito. Fórmula: `Σ peso × soma(níveis) / 20`. Só há conclusão com todos os critérios em 4 e os cinco gates aprovados.
 
@@ -14,7 +14,7 @@ Os 100/100 das antigas fases 0–6 medem outro escopo e permanecem preservados. 
 
 | Frente | Peso | Níveis dos cinco critérios | Pontos |
 | --- | ---: | --- | ---: |
-| E00 — Contratos, arquitetura e rastreabilidade | 4 | 1, 1, 1, 0, 1 | 0,80 |
+| E00 — Contratos, arquitetura e rastreabilidade | 4 | 1, 1, 1, 0, 2 | 1,00 |
 | E01 — Linguagem, compilador e garantias semânticas | 14 | 2, 3, 2, 2, 3 | 8,40 |
 | E02 — Memória, coleções, texto e dados grandes | 8 | 2, 1, 0, 2, 1 | 2,40 |
 | E03 — Sistema, tarefas, processos e integração de eventos | 10 | 1, 1, 2, 2, 0 | 3,00 |
@@ -26,7 +26,7 @@ Os 100/100 das antigas fases 0–6 medem outro escopo e permanecem preservados. 
 | E09 — Persistência, perfil e formatos de armazenamento | 8 | 1, 1, 0, 0, 0 | 0,80 |
 | E10 — Rastreamento, indexação e consulta do buscador | 6 | 1, 0, 0, 0, 0 | 0,30 |
 | E11 — Ferramentas, distribuição e aceite integrado | 6 | 2, 2, 2, 1, 1 | 2,40 |
-| **Total** | **100** | **60 critérios** | **19,90** |
+| **Total** | **100** | **60 critérios** | **20,10** |
 
 ## Gates de integração
 
@@ -45,6 +45,7 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 | Data | Retrato | Pontos | Gates |
 | --- | --- | ---: | ---: |
 | 2026-10-29 | Baseline documental inicial; sem novos testes do runtime | 19,90 | 0/5 |
+| 2026-10-29 | M0 parcial: reconciliação ++/--, testes próprios e rastreabilidade da publicação | 20,10 | 0/5 |
 
 ## Estado e evidência dos 60 critérios
 
@@ -56,17 +57,17 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 | E00-02 — Modelo de ameaças e privacidade | 1/4 | Arquitetura de capacidades existe como proposta. `local:htdl/docs/18-arquitetura-nativa-e-capacidades.md` |
 | E00-03 — Fronteiras e decisões arquiteturais | 1/4 | Há desenho documental; nenhuma integração nativa observada. `local:htdl/docs/18-arquitetura-nativa-e-capacidades.md` |
 | E00-04 — Driver e matriz de conformidade | 0/4 | Corpus declarativo ainda sem motor/driver executável. `local:htdl/docs/19-conformidade-e-cenarios.md` |
-| E00-05 — Inventário, publicação e relatório | 1/4 | Repositório e relatórios históricos existem; esta governança ainda será exercitada na nova trilha. [HANDOFF-ARM64-V1.md](../../docs/HANDOFF-ARM64-V1.md); [SUPPORT.md](../../docs/SUPPORT.md) |
+| E00-05 — Inventário, publicação e relatório | 2/4 | Rastreabilidade exercitada na unidade M0 de ++/--: fontes isoladas, builds próprios, logs/hashes, sete suítes por Windows/Linux x64, relatório e branch de publicação. Inventário e aceite integrado do produto permanecem abertos. [HANDOFF-ARM64-V1.md](../../docs/HANDOFF-ARM64-V1.md); [SUPPORT.md](../../docs/SUPPORT.md); [2026-10-29-m0-incremento.md](../../docs/relatorios/2026-10-29-m0-incremento.md); [windows-x64.json](../../docs/ecossistema/evidencias/m0-incremento-2026-10-29/windows-x64.json); [linux-x64.json](../../docs/ecossistema/evidencias/m0-incremento-2026-10-29/linux-x64.json) |
 
 ### E01 — Linguagem, compilador e garantias semânticas
 
 | Critério | Nível | Justificativa e fontes |
 | --- | ---: | --- |
 | E01-01 — DataLayout e ABI por destino | 2/4 | Destinos nativos e ABI escalar existem; novo destino de página não existe. [ARM64-NATIVO.md](../../docs/ARM64-NATIVO.md); [ABI-NATIVA.md](../../docs/ABI-NATIVA.md); [FFI-C.md](../../docs/FFI-C.md) |
-| E01-02 — Tipos e abstrações para programas grandes | 3/4 | Mecanismos nativos demonstrados; ainda sem integração nos produtos. [GENERICS.md](../../docs/GENERICS.md); [VALORES-E-VARIANTES.md](../../docs/VALORES-E-VARIANTES.md); [CAPTURAS-E-VARIANTES-MOVE.md](../../docs/CAPTURAS-E-VARIANTES-MOVE.md); [FUNCOES-E-EFEITOS.md](../../docs/FUNCOES-E-EFEITOS.md) |
+| E01-02 — Tipos e abstrações para programas grandes | 3/4 | Mecanismos nativos demonstrados; ainda sem integração nos produtos. A reconciliação de ++/-- tem reexecução própria em Windows/Linux x64, sem promover o nível por essa fatia. [GENERICS.md](../../docs/GENERICS.md); [VALORES-E-VARIANTES.md](../../docs/VALORES-E-VARIANTES.md); [CAPTURAS-E-VARIANTES-MOVE.md](../../docs/CAPTURAS-E-VARIANTES-MOVE.md); [FUNCOES-E-EFEITOS.md](../../docs/FUNCOES-E-EFEITOS.md); [2026-10-29-m0-incremento.md](../../docs/relatorios/2026-10-29-m0-incremento.md); [windows-x64.json](../../docs/ecossistema/evidencias/m0-incremento-2026-10-29/windows-x64.json); [linux-x64.json](../../docs/ecossistema/evidencias/m0-incremento-2026-10-29/linux-x64.json) |
 | E01-03 — Ownership, vidas e destruição | 2/4 | Verificador e recursos proprietários existem com restrições explícitas. [OWNERSHIP-FUNCOES.md](../../docs/OWNERSHIP-FUNCOES.md); [RECURSOS-E-FATIAS.md](../../docs/RECURSOS-E-FATIAS.md); [SAFE-DEFAULT.md](../../docs/SAFE-DEFAULT.md) |
 | E01-04 — Erros, números e contratos de falha | 2/4 | Result e números nativos disponíveis; contrato geral de OOM/host ainda aberto. [NUMEROS.md](../../docs/NUMEROS.md); [VALORES-E-VARIANTES.md](../../docs/VALORES-E-VARIANTES.md); [ERROS.md](../../docs/ERROS.md) |
-| E01-05 — IR, otimização e diagnósticos | 3/4 | IR nativa integral e validação histórica; formato restrito permanece aberto. [BACKEND-IR-COMPLETA.md](../../docs/BACKEND-IR-COMPLETA.md); [BACKEND-ALPHA15.md](../../docs/BACKEND-ALPHA15.md); [VALIDACAO-TARGETS-V1.json](../../docs/VALIDACAO-TARGETS-V1.json) |
+| E01-05 — IR, otimização e diagnósticos | 3/4 | IR nativa integral e validação histórica; formato restrito permanece aberto. A fatia ++/-- e regressões foram reexecutadas nos dois modos em Windows/Linux x64; outros alvos tiveram somente geração nesta unidade. [BACKEND-IR-COMPLETA.md](../../docs/BACKEND-IR-COMPLETA.md); [BACKEND-ALPHA15.md](../../docs/BACKEND-ALPHA15.md); [VALIDACAO-TARGETS-V1.json](../../docs/VALIDACAO-TARGETS-V1.json); [2026-10-29-m0-incremento.md](../../docs/relatorios/2026-10-29-m0-incremento.md); [windows-x64.json](../../docs/ecossistema/evidencias/m0-incremento-2026-10-29/windows-x64.json); [linux-x64.json](../../docs/ecossistema/evidencias/m0-incremento-2026-10-29/linux-x64.json) |
 
 ### E02 — Memória, coleções, texto e dados grandes
 

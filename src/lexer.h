@@ -4,7 +4,7 @@ enum {
     T_IF,T_ELSE,T_WHILE,T_RETURN,T_PRINT,T_NEW,T_FREE,T_SELF,T_TRUE,T_FALSE,T_NULL,
     T_BREAK,T_CONTINUE,T_ALLOC,T_LEN,T_EQ,T_NE,T_LE,T_GE,T_AND,T_OR,T_SHL,T_SHR,
     T_ADDSET,T_SUBSET,T_MULSET,T_DIVSET,T_MODSET,T_ANDSET,T_ORSET,T_XORSET,T_SHLSET,T_SHRSET,T_IMPORT,T_FILE_END,
-    T_YURI,T_BODY,T_STRUCT,T_BUFFER,T_ASSERT,T_BYTES,T_OWN,T_BORROW,T_MUT,T_MOVE,T_DEFER,T_DIV,T_FOR,T_READ,T_NOW,T_SAFE,T_UNSAFE,
+    T_INC,T_DEC,T_YURI,T_BODY,T_STRUCT,T_BUFFER,T_ASSERT,T_BYTES,T_OWN,T_BORROW,T_MUT,T_MOVE,T_DEFER,T_DIV,T_FOR,T_READ,T_NOW,T_SAFE,T_UNSAFE,
     T_PRIVATE,T_VAL,T_PURE,T_VALUE,T_ENUM,T_MATCH,T_FILE,T_FILE_OPEN,T_FILE_READ,T_FILE_WRITE,T_FILE_CLOSE,T_IO_ERROR,T_ARGC,T_ARG_LEN,T_ARG_COPY,T_NUMTYPE,T_REAL,T_NAMESPACE,T_PUBLIC,T_SLEEP,T_CIVIL,T_FILE_SYNC,T_FILE_REPLACE,T_FILE_REMOVE,T_WRITE_BYTES,T_SLICE,T_SLICE_MAKE,T_EXTERN,T_C_CALLBACK,T_PLATFORM,T_CLOSURE,T_CHAR,T_CONST,T_SUPER,T_WRITE,T_UTF8,T_IS,T_AS
 };
 typedef struct { const char *name; int kind; } Word;
@@ -157,7 +157,7 @@ static void lex(void) {
             if(*p!='"')error(t,"texto sem aspas de fechamento");p++;col++;str[n]=0;
             t->kind=T_STR;t->str=str;t->len=n;t->text=copy(begin,(size_t)(p-begin));
         } else {
-            static const Word ops[]={{"<<=",T_SHLSET},{">>=",T_SHRSET},{"==",T_EQ},{"!=",T_NE},{"<=",T_LE},{">=",T_GE},{"&&",T_AND},{"||",T_OR},{"<<",T_SHL},{">>",T_SHR},{"+=",T_ADDSET},{"-=",T_SUBSET},{"*=",T_MULSET},{"/=",T_DIVSET},{"%=",T_MODSET},{"&=",T_ANDSET},{"|=",T_ORSET},{"^=",T_XORSET},{NULL,0}};
+            static const Word ops[]={{"<<=",T_SHLSET},{">>=",T_SHRSET},{"++",T_INC},{"--",T_DEC},{"==",T_EQ},{"!=",T_NE},{"<=",T_LE},{">=",T_GE},{"&&",T_AND},{"||",T_OR},{"<<",T_SHL},{">>",T_SHR},{"+=",T_ADDSET},{"-=",T_SUBSET},{"*=",T_MULSET},{"/=",T_DIVSET},{"%=",T_MODSET},{"&=",T_ANDSET},{"|=",T_ORSET},{"^=",T_XORSET},{NULL,0}};
             int length=1;t->kind=(unsigned char)*p;
             for(int i=0;ops[i].name;i++){size_t len=strlen(ops[i].name);if(!strncmp(p,ops[i].name,len)){t->kind=ops[i].kind;length=(int)len;break;}}
             if(length==1&&!strchr("{}()[];:,.+-*/%&|^~!<>=",*p))error(t,"caractere inesperado: 0x%02x",(unsigned char)*p);

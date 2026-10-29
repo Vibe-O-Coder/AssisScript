@@ -115,13 +115,14 @@ def evidence_link(source):
 def render(data):
     total = score(data)
     passed = sum(g['passed'] for g in data['gates'])
+    assessment_note = data.get('assessment_note', 'A baseline inicial é uma estimativa documental provisória das fundações aproveitáveis. Não foram reexecutados testes do compilador/runtime nesta sessão.')
     text = f'''# Progresso — capacidade do AssisScript para o ecossistema web
 
 Data: {data['date']}. Régua v{data['rubric_version']}. **{number(total)}/100 pontos ({number(total)}%)**, com **{passed}/5 gates aprovados**.
 
 Estado da avaliação: `{data['assessment']}`. Escopo: {data['scope']}
 
-A baseline inicial é uma estimativa documental provisória das fundações aproveitáveis. Não foram reexecutados testes do compilador/runtime nesta sessão. O número não mede prazo, esforço restante ou prontidão para produção. Casas decimais tornam a soma auditável; não significam precisão de previsão.
+{assessment_note} O número não mede prazo, esforço restante ou prontidão para produção. Casas decimais tornam a soma auditável; não significam precisão de previsão.
 
 Os 100/100 das antigas fases 0–6 medem outro escopo e permanecem preservados. Esta régua tem 60 critérios em 12 frentes; cinco critérios dividem igualmente o peso de cada frente. Níveis 0–4 rendem 0%, 25%, 50%, 75% e 100% do crédito. Fórmula: `Σ peso × soma(níveis) / 20`. Só há conclusão com todos os critérios em 4 e os cinco gates aprovados.
 

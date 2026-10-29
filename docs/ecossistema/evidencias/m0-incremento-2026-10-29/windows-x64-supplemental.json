@@ -1,0 +1,102 @@
+{
+  "platform": "Windows-10-10.0.19045-SP0",
+  "compiler_sha256": "da249e894a274f8d8f2fd72b98744a6fe39a190b60a44b7fc8648a0321a75244",
+  "examples": [
+    {
+      "command": [
+        "run",
+        "exemplos/33_increment.assis",
+        "--debug"
+      ],
+      "return_code": 0,
+      "stdout": "3 255\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "run",
+        "exemplos/33_increment.assis",
+        "--debug",
+        "--no-opt"
+      ],
+      "return_code": 0,
+      "stdout": "3 255\n",
+      "stderr": ""
+    }
+  ],
+  "generated": [
+    {
+      "target": "windows-x64",
+      "optimized": true,
+      "format_verified": true,
+      "sha256": "d7c1c40bc1b78c6a0d21c278a4613610e3f2a6bf0bf08fe11ad11085efdecf27",
+      "bytes": 40960
+    },
+    {
+      "target": "linux-x64",
+      "optimized": true,
+      "format_verified": true,
+      "sha256": "dd173e7684f5b02db591c2147ae93c04399bc495a3e1b062331955e2793765c0",
+      "bytes": 8193
+    },
+    {
+      "target": "macos-x64",
+      "optimized": true,
+      "format_verified": true,
+      "sha256": "05a6c519664f6b2e4b1f9b39912a6ef80bd9ed2294e4e26fcbf9a8e44e6fbf06",
+      "bytes": 20664
+    },
+    {
+      "target": "linux-arm64",
+      "optimized": true,
+      "format_verified": true,
+      "sha256": "f11170181309a033eb08277e519a85a81129af45ffee2406ece5710e61aca379",
+      "bytes": 12289
+    },
+    {
+      "target": "macos-arm64",
+      "optimized": true,
+      "format_verified": true,
+      "sha256": "692afd0a8b48e34c4795fc466c4399b4490cc740ce8bda99b69ad132ab50b219",
+      "bytes": 49891
+    },
+    {
+      "target": "windows-x64",
+      "optimized": false,
+      "format_verified": true,
+      "sha256": "618bcd127197b4af73a48fb3e6bb93b2a1cab3822b1726adf44ef4c2a10da08a",
+      "bytes": 41472
+    },
+    {
+      "target": "linux-x64",
+      "optimized": false,
+      "format_verified": true,
+      "sha256": "f9e9eeda89a6f497a235445341dff32f92faadc583912b51d59057c9c6cbdcfe",
+      "bytes": 12289
+    },
+    {
+      "target": "macos-x64",
+      "optimized": false,
+      "format_verified": true,
+      "sha256": "903401fbeca9ac9b45bf3ecb2a510c297decb34462d193a459634689d676c8c0",
+      "bytes": 20664
+    },
+    {
+      "target": "linux-arm64",
+      "optimized": false,
+      "format_verified": true,
+      "sha256": "e9a85991fe7a86dd6d5c024f8f34d25d5f413d29abcd922cd40c90a1e9d1a884",
+      "bytes": 12289
+    },
+    {
+      "target": "macos-arm64",
+      "optimized": false,
+      "format_verified": true,
+      "sha256": "853b52b34e3630cec5fa110b1b158ffc0072b6a71a6f7d5f185a9133959a8cc3",
+      "bytes": 49891
+    }
+  ],
+  "probes": [],
+  "example_sha256": "88f733edb7793500ad0fac1785e51efe5ad597e83a25f526f457f2e20ef0cfdf",
+  "passed": true
+}

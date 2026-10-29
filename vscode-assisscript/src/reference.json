@@ -35,7 +35,7 @@
     "mut": "borrow mut cria empréstimo exclusivo: permite alterar os dados e suspende o acesso direto ao proprietário.",
     "move": "Transfere um own ou campo own para declaração, parâmetro, campo ou retorno own. Invalida e zera a origem; proprietários emprestados não podem ser consumidos.",
     "defer": "defer free(variavel); agenda liberação no fim do bloco, inclusive em return, break e continue. A variável não pode ser reatribuída.",
-    "for": "for (let i: int = 0; i < limite; i += 1) { ... }. continue executa o incremento. A variável inicial existe somente no laço.",
+    "for": "for (let i: int = 0; i < limite; i++) { ... }. O passo aceita atribuição, ++ ou -- como instrução sem valor. continue executa o passo. A variável inicial existe somente no laço.",
     "read_bytes": "read_bytes(buffer: *byte, capacidade: int): int lê stdin: quantidade de bytes, 0 em EOF, -1 em erro. Não acrescenta zero. Buffer own verifica a capacidade e exige exclusividade.",
     "monotonic_ms": "monotonic_ms(): int retorna milissegundos monotônicos, sem relação com data civil, ou -1 em erro. Use diferenças para medir intervalos.",
     "safe": "Perfil padrão da entrada desde alpha.12. Declare safe fn main. Chamadas legadas e text C externo exigem unsafe; --legacy seleciona compatibilidade explicitamente.",
