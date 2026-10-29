@@ -1,0 +1,20 @@
+// Instruções sem valor: prefixo e sufixo atualizam a mesma posição uma vez.
+safe fn main(): int {
+    let total: int = 0;
+    for (let i: int = 0; i < 4; i++) {
+        if (i == 1) { continue; }
+        ++total;
+    }
+    let small: u8 = u8(255);
+    small++;
+    assert(small == u8(0));
+    --small;
+    assert(small == u8(255));
+    let start: int = 0;
+    for (++start; start < 3; start++) {}
+    assert(start == 3);
+    for (start--; start > 0; --start) { break; }
+    assert(start == 2);
+    print(total, small);
+    return 0;
+}

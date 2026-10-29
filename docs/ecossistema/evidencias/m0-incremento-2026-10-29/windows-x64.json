@@ -1,0 +1,119 @@
+{
+  "schema": "assisscript-increment-candidate-v1",
+  "base_revision": "1ed22f5c898f21f06c429774992469177bdfd3d9",
+  "platform": "win32",
+  "host": "Windows-10-10.0.19045-SP0",
+  "architecture": "AMD64",
+  "python": "3.14.6",
+  "compiler_sha256": "da249e894a274f8d8f2fd72b98744a6fe39a190b60a44b7fc8648a0321a75244",
+  "inputs": {
+    "src/assisc.c": "e7a88d9813f4a7fe7e2ac42893a0e71b477aef34db781fcafe2ec5815e69bd2e",
+    "src/frontend.h": "ed06812b75ce9bde84c6d4e159072872137c8213189ad929b5e851dbf830c92e",
+    "src/lexer.h": "95bcc9bf1ccd4f256dbb00bf5f6c3464d1b64831ff5307acb47f1a999a2a7de1",
+    "tools/validate-increment.py": "9c29ba01bb7ac7bc209a1cdcefc94315adc0d11bbb833dd861763145c1c60816",
+    "tests/test-evolution.py": "36f05a60cd1443b534867eefd15884fa283ed42e1b0a714b05caf343ab9ecc7c",
+    "tests/test-increment.py": "6427db3a393950afebb777aa28af30ddf78724fa1d5ce2ba1ee5ffcdaf6b7248",
+    "tests/test-numbers.py": "f48c4d06db94e52cfc8b32f060be013ddf271d74832000a5471b4bf9959f1a52",
+    "tests/test-ownership-functions.py": "c3d61daeb348d68e8d5a31c86cfbcfdd1bc146343f0297f6df9e9a93ab1782e5",
+    "tests/test-optimization.py": "e7ebc6cbcce9173015be0759cf9854b597f058812e06b351bffa12be351695e4",
+    "tests/test-backend-evolution.py": "fa733ebb66a126b4641647b904bf5f4f6aa903f168b040cb5077d579cf5af59f",
+    "tests/test-complete-ir.py": "2dbeff3c9da2da2733a066bfb94a6a6ee21f25e7f69d3e81fceb88d5c91a21d1"
+  },
+  "native_execution": "current host only; optimized and reference",
+  "foreign_native_execution": "not-run",
+  "product_integration": "not-run",
+  "passed": true,
+  "suites": [
+    {
+      "suite": "increment",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 10,
+      "seconds": 3.388,
+      "log": "windows-x64-increment.log",
+      "log_sha256": "2886fd8c1a65bf915c89f6e13653b563694876e92711d0370faed37a5bbc93de",
+      "command": [
+        "python.exe",
+        "tests/test-increment.py"
+      ]
+    },
+    {
+      "suite": "evolution",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 12,
+      "seconds": 7.987,
+      "log": "windows-x64-evolution.log",
+      "log_sha256": "5d6ee53a43b38e976f0681174f390e175ccc1a2232a5ad8112b23fbe38f34b5f",
+      "command": [
+        "python.exe",
+        "tests/test-evolution.py"
+      ]
+    },
+    {
+      "suite": "numbers",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 11,
+      "seconds": 4.888,
+      "log": "windows-x64-numbers.log",
+      "log_sha256": "bfe9a8d98d49a5a9a9371c3e90afe3bf20e48539c6dd7ec182170ca09eee9248",
+      "command": [
+        "python.exe",
+        "tests/test-numbers.py"
+      ]
+    },
+    {
+      "suite": "ownership-functions",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 26,
+      "seconds": 14.412,
+      "log": "windows-x64-ownership-functions.log",
+      "log_sha256": "ca93f272186dae22d97acfee93604b68fb99d325e00de1f09c3843cc3fafd77a",
+      "command": [
+        "python.exe",
+        "tests/test-ownership-functions.py"
+      ]
+    },
+    {
+      "suite": "optimization",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 6,
+      "seconds": 13.269,
+      "log": "windows-x64-optimization.log",
+      "log_sha256": "f9043d81091565959ec74f8109b9b343880b9bfca7b0e63f4a954b12b6946238",
+      "command": [
+        "python.exe",
+        "tests/test-optimization.py"
+      ]
+    },
+    {
+      "suite": "backend-evolution",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 16,
+      "seconds": 8.903,
+      "log": "windows-x64-backend-evolution.log",
+      "log_sha256": "045f25766dcce14a70b735b6e153889c5dd04f105fd0457252c72f41d209dba7",
+      "command": [
+        "python.exe",
+        "tests/test-backend-evolution.py"
+      ]
+    },
+    {
+      "suite": "complete-ir",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 7,
+      "seconds": 2.653,
+      "log": "windows-x64-complete-ir.log",
+      "log_sha256": "aaf2ba8d7c9a8f16b42a2c997d79837de7530919ff6a797324f0418b26396e29",
+      "command": [
+        "python.exe",
+        "tests/test-complete-ir.py"
+      ]
+    }
+  ]
+}

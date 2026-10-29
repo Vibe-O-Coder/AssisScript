@@ -1,0 +1,119 @@
+{
+  "schema": "assisscript-increment-candidate-v1",
+  "base_revision": "1ed22f5c898f21f06c429774992469177bdfd3d9",
+  "platform": "linux",
+  "host": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "architecture": "x86_64",
+  "python": "3.12.3",
+  "compiler_sha256": "8cb653df1dfc063e4e2645cd70e8e3922b58c78141d3d6c7ce3011499b2b81ec",
+  "inputs": {
+    "src/assisc.c": "e7a88d9813f4a7fe7e2ac42893a0e71b477aef34db781fcafe2ec5815e69bd2e",
+    "src/frontend.h": "ed06812b75ce9bde84c6d4e159072872137c8213189ad929b5e851dbf830c92e",
+    "src/lexer.h": "95bcc9bf1ccd4f256dbb00bf5f6c3464d1b64831ff5307acb47f1a999a2a7de1",
+    "tools/validate-increment.py": "9c29ba01bb7ac7bc209a1cdcefc94315adc0d11bbb833dd861763145c1c60816",
+    "tests/test-evolution.py": "36f05a60cd1443b534867eefd15884fa283ed42e1b0a714b05caf343ab9ecc7c",
+    "tests/test-increment.py": "6427db3a393950afebb777aa28af30ddf78724fa1d5ce2ba1ee5ffcdaf6b7248",
+    "tests/test-numbers.py": "f48c4d06db94e52cfc8b32f060be013ddf271d74832000a5471b4bf9959f1a52",
+    "tests/test-ownership-functions.py": "c3d61daeb348d68e8d5a31c86cfbcfdd1bc146343f0297f6df9e9a93ab1782e5",
+    "tests/test-optimization.py": "e7ebc6cbcce9173015be0759cf9854b597f058812e06b351bffa12be351695e4",
+    "tests/test-backend-evolution.py": "fa733ebb66a126b4641647b904bf5f4f6aa903f168b040cb5077d579cf5af59f",
+    "tests/test-complete-ir.py": "2dbeff3c9da2da2733a066bfb94a6a6ee21f25e7f69d3e81fceb88d5c91a21d1"
+  },
+  "native_execution": "current host only; optimized and reference",
+  "foreign_native_execution": "not-run",
+  "product_integration": "not-run",
+  "passed": true,
+  "suites": [
+    {
+      "suite": "increment",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 10,
+      "seconds": 2.127,
+      "log": "linux-x64-increment.log",
+      "log_sha256": "d9e9b27c9203470079c7478e8466a889d4cfd0df0ec55c74282ccc4f8c33971c",
+      "command": [
+        "python3",
+        "tests/test-increment.py"
+      ]
+    },
+    {
+      "suite": "evolution",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 12,
+      "seconds": 6.671,
+      "log": "linux-x64-evolution.log",
+      "log_sha256": "4a1659ad41edda5e416a4f3f8f24f74bb5c7eb4284e576ded512972008fff39b",
+      "command": [
+        "python3",
+        "tests/test-evolution.py"
+      ]
+    },
+    {
+      "suite": "numbers",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 11,
+      "seconds": 1.739,
+      "log": "linux-x64-numbers.log",
+      "log_sha256": "62619e1b6df4dd28ba0093535c092e37d26f6f7bae56cfbf40b60add332fd736",
+      "command": [
+        "python3",
+        "tests/test-numbers.py"
+      ]
+    },
+    {
+      "suite": "ownership-functions",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 26,
+      "seconds": 7.363,
+      "log": "linux-x64-ownership-functions.log",
+      "log_sha256": "9c91884bc68cdc735844db72b6eaf35bcb3d0c5b33ab414901ad8999f4202075",
+      "command": [
+        "python3",
+        "tests/test-ownership-functions.py"
+      ]
+    },
+    {
+      "suite": "optimization",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 6,
+      "seconds": 2.615,
+      "log": "linux-x64-optimization.log",
+      "log_sha256": "167d5b220554be3dff9e6a5f71ca2c5615cfd5d29aba3a56adadb6251b85545e",
+      "command": [
+        "python3",
+        "tests/test-optimization.py"
+      ]
+    },
+    {
+      "suite": "backend-evolution",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 16,
+      "seconds": 3.098,
+      "log": "linux-x64-backend-evolution.log",
+      "log_sha256": "d26e6d8375eac4095eeb33d16142ea3632d88168d2d4416159115c5551a1fe31",
+      "command": [
+        "python3",
+        "tests/test-backend-evolution.py"
+      ]
+    },
+    {
+      "suite": "complete-ir",
+      "state": "pass",
+      "return_code": 0,
+      "tests": 7,
+      "seconds": 0.941,
+      "log": "linux-x64-complete-ir.log",
+      "log_sha256": "7a5be487c2bd71501994925a0fbbb2fe7b0687c7a5d9f689189b1558258cb8de",
+      "command": [
+        "python3",
+        "tests/test-complete-ir.py"
+      ]
+    }
+  ]
+}

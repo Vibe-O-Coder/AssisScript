@@ -36,6 +36,15 @@ Caracteres com vários bytes UTF-8 usam texto, como `"é"`. Identificadores são
 ASCII e distinguem maiúsculas. `if`/`else`, `while`, `for`, `break`, `continue`
 e `return` compõem o controle de fluxo; blocos usam chaves.
 
+Na continuação de desenvolvimento de 29/10/2026, `i++`, `++i`, `i--` e
+`--i` são instruções sem valor, também aceitas na inicialização e no passo do
+`for`. O destino numérico mutável é avaliado uma vez. Inteiros conservam
+overflow modular; reais conservam o contrato IEEE. `print(i++)` e `print(++i)`
+são rejeitados. Dois sinais unários independentes precisam de separação:
+`+ +i` e `- -i`. Consulte o [contrato e a migração](INCREMENTO-E-DECREMENTO.md).
+Os pacotes alpha.15 anteriores a essa continuação exigem reconstrução do
+compilador para oferecer essas instruções.
+
 Comentários são `//` e `/* ... */`, com aninhamento nos blocos. `te`, `to` e
 `miyabi` podem ser nomes comuns.
 

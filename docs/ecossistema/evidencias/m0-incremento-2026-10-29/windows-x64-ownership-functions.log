@@ -1,0 +1,32 @@
+ASSIS ownership-functions: 578 invocações; C:\Users\babus\Desktop\AssisScript\.worktrees\m0-increment\build\assis-increment.exe
+test_argument_loans_last_until_call (__main__.OwnershipFunctions.test_argument_loans_last_until_call) ... ok
+test_borrowed_return_and_reborrowing (__main__.OwnershipFunctions.test_borrowed_return_and_reborrowing) ... ok
+test_branch_join_uses_only_live_paths (__main__.OwnershipFunctions.test_branch_join_uses_only_live_paths) ... ok
+test_buffer_contracts_and_bounds (__main__.OwnershipFunctions.test_buffer_contracts_and_bounds) ... ok
+test_consumption_return_and_borrow (__main__.OwnershipFunctions.test_consumption_return_and_borrow) ... ok
+test_contracts_in_function_values_and_callbacks (__main__.OwnershipFunctions.test_contracts_in_function_values_and_callbacks) ... ok
+test_field_lifetimes_and_bounds_survive_function_returns (__main__.OwnershipFunctions.test_field_lifetimes_and_bounds_survive_function_returns) ... ok
+test_generic_contracts_preserve_metadata (__main__.OwnershipFunctions.test_generic_contracts_preserve_metadata) ... ok
+test_loops_cannot_consume_outer_owners_even_in_condition (__main__.OwnershipFunctions.test_loops_cannot_consume_outer_owners_even_in_condition) ... ok
+test_managed_functional_library_and_example (__main__.OwnershipFunctions.test_managed_functional_library_and_example) ... ok
+test_nested_calls_and_saved_assignment_address (__main__.OwnershipFunctions.test_nested_calls_and_saved_assignment_address) ... ok
+test_nested_reborrow_suspends_parent (__main__.OwnershipFunctions.test_nested_reborrow_suspends_parent) ... ok
+test_owned_field_loans_and_reinitialization_in_branches (__main__.OwnershipFunctions.test_owned_field_loans_and_reinitialization_in_branches) ... ok
+test_owned_fields_nested_drop_move_and_replacement (__main__.OwnershipFunctions.test_owned_fields_nested_drop_move_and_replacement) ... ok
+test_owned_parameters_drop_on_all_exits (__main__.OwnershipFunctions.test_owned_parameters_drop_on_all_exits) ... ok
+test_owned_records_cannot_enter_legacy_or_hide_raw_resources (__main__.OwnershipFunctions.test_owned_records_cannot_enter_legacy_or_hide_raw_resources) ... ok
+test_partial_move_preserves_sibling_and_partial_drop (__main__.OwnershipFunctions.test_partial_move_preserves_sibling_and_partial_drop) ... ok
+test_partial_state_joins_and_recursive_drop (__main__.OwnershipFunctions.test_partial_state_joins_and_recursive_drop) ... ok
+test_recursive_owned_records_and_empty_fields (__main__.OwnershipFunctions.test_recursive_owned_records_and_empty_fields) ... ok
+test_return_lifetimes_are_not_inferred_from_type (__main__.OwnershipFunctions.test_return_lifetimes_are_not_inferred_from_type) ... ok
+test_safe_function_values_keep_effect_and_ownership (__main__.OwnershipFunctions.test_safe_function_values_keep_effect_and_ownership) ... ok
+test_safe_profile_and_explicit_legacy_boundary (__main__.OwnershipFunctions.test_safe_profile_and_explicit_legacy_boundary) ... ok
+test_shared_derived_results_cannot_mutate_or_free (__main__.OwnershipFunctions.test_shared_derived_results_cannot_mutate_or_free) ... ok
+test_shared_return_cannot_be_upgraded (__main__.OwnershipFunctions.test_shared_return_cannot_be_upgraded) ... ok
+test_signature_lifetime_and_type_validation (__main__.OwnershipFunctions.test_signature_lifetime_and_type_validation) ... ok
+test_use_after_move_and_implicit_copy (__main__.OwnershipFunctions.test_use_after_move_and_implicit_copy) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 14.099s
+
+OK
