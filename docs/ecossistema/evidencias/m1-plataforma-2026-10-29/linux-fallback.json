@@ -1,0 +1,30 @@
+{
+  "platform": "linux",
+  "host": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "architecture": "x86_64",
+  "compiler_sha256": "46aa2618ea3bcbe143eb11870096990e7f1b033a7eb4215de5f8bb8b9fdae7d5",
+  "source_sha256": "629aad953df5a38c80738cf7e1ea930c697e1d3469fdd6473a3bb8266d18c179",
+  "window_library_sha256": "261ba964c4202cbcf7c9eb109f21b0991ac524841e4ca2719a7740d405d4095c",
+  "provider_state": "unsupported",
+  "native_fallback_execution": [
+    {
+      "mode": "optimized",
+      "build_return_code": 0,
+      "return_code": 0,
+      "stdout": "provider unavailable\n",
+      "stderr": "",
+      "passed": true,
+      "binary_sha256": "7b76bccec4d2b7547f5cff4bff9949738e2c3b54a3c7ff2265a5957bdf612f79"
+    },
+    {
+      "mode": "reference",
+      "build_return_code": 0,
+      "return_code": 0,
+      "stdout": "provider unavailable\n",
+      "stderr": "",
+      "passed": true,
+      "binary_sha256": "86ad59befcd14a287b4e779f3dbb7d46364be75cb66421fe38ca476247d3fede"
+    }
+  ],
+  "passed": true
+}

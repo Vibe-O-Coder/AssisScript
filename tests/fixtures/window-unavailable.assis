@@ -1,0 +1,14 @@
+import "std/window.assis";
+safe fn main():int {
+    assert(!window::available());
+    own view:window::Window=new window::Window(1,320,160,"unavailable");
+    assert(!view.opened()&&view.error()== -3);
+    assert(view.poll(0).status== -2);
+    assert(view.clear(u32(0))== -2);
+    assert(view.draw_text(0,0,"",u32(0))== -2);
+    assert(view.present()== -2);
+    assert(view.close()==0);
+    own invalid:window::Window=new window::Window(2,0,1,"");
+    assert(!invalid.opened()&&invalid.error()== -1);
+    print("provider unavailable");return 0;
+}

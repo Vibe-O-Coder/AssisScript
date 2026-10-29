@@ -1,0 +1,24 @@
+// Build the Windows provider first; place assis_platform_v1.dll beside this executable.
+// Trusted local program. The event loop and UI state are written in AssisScript.
+import "std/window.assis";
+safe fn draw(borrow mut view:window::Window,count:int):bool {
+    if(view.clear(u32(0x182334ff))!=0){return false;}
+    if(view.draw_text(24,24,"AssisScript — janela nativa, ação e coração",u32(0xf4f7ffff))!=0){return false;}
+    if(view.draw_text(24,56,"Espaço: alterar mensagem | Esc: fechar | Redimensione a janela",u32(0xa6c9ffff))!=0){return false;}
+    if(count%2==1){if(view.draw_text(24,92,"Tecla recebida!",u32(0x7de2b4ff))!=0){return false;}}
+    return view.present()==0;
+}
+safe fn main():int {
+    own view:window::Window=new window::Window(1,720,240,"AssisScript — plataforma v1");
+    if(!view.opened()){print("Window provider error",view.error());return 1;}
+    let count:int=0;if(!draw(view,count)){return 2;}
+    while(view.opened()){
+        val event:window::Event=view.poll(16);
+        if(event.status<0){print("Window event error",event.status);return 3;}
+        if(event.status==1){continue;}
+        if(event.kind==1||(event.kind==3&&event.arg0==27&&event.arg1==1)){break;}
+        if(event.kind==3&&event.arg0==32&&event.arg1==1){count++;}
+        if(event.kind==2||event.kind==3){if(!draw(view,count)){return 2;}}
+    }
+    return int(view.close()!=0);
+}

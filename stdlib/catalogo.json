@@ -172,6 +172,16 @@
       }
     },
     {
+      "name": "window",
+      "required": false,
+      "doc": "BIBLIOTECA-window.md",
+      "description": "Janela nativa confiável com provider Windows x64 opcional, eventos e descarte próprio.",
+      "dependencies": [],
+      "externalDependencies": {
+        "windows-x64": ["assis_platform_v1.dll built from providers/platform/windows.c", "Windows 10 1703+ User32/GDI/UCRT"]
+      }
+    },
+    {
       "name": "random",
       "required": false,
       "description": "Deterministic random generator for simulations and games",

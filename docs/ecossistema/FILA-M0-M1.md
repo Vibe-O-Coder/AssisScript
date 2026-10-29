@@ -18,6 +18,12 @@ primeiro spike de cada área, sem prazo de entrega global.
 | M2-WINDOW | Shim → janela com texto/eventos/redimensionamento | M1-SHIM | Execução nativa, loop responsivo e fechamento | Reestimar após spike; acessibilidade não implícita |
 | M3-PARSER | Perfil bootstrap → parser real e árvore | M1-ARENA/M0-PROFILE | Corpus real com atributos/entidades/estrutura e diagnósticos | Reestimar após arena; microformato não serve como parser |
 
-Ordem imediata: arena e spikes de plataforma/executor são tarefas pequenas
+Atualização M1: arena entregue no commit 6208ecb; provider Windows entregue
+como prova parcial com módulo window, exemplo, oráculo C, falhas e recursos
+contados (relatório 2026-10-29-m1-plataforma-windows.md). OOM do runtime e
+visualizador integrado continuam pendentes. M2 exige ampliar teclado/ponteiro,
+texto/DPI e acessibilidade, além de verificar a experiência visual.
+
+Ordem imediata: alocação fallível do runtime e spikes do executor são tarefas pequenas
 independentes, sem exigir terminar uma frente inteira. Nenhuma delegação
 automática é requerida. Não pontuar hipóteses ou marcar not-run como pass.

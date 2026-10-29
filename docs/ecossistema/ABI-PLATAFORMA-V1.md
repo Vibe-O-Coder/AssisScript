@@ -1,6 +1,9 @@
 # assis_platform_v1 — contrato inicial da ponte nativa
 
-Estado em 29/10/2026: **interface especificada, provider não implementado**.
+Estado em 29/10/2026: **provider Windows x64 implementado e validado como prova parcial**.
+Contrato do módulo em [BIBLIOTECA-window.md](../BIBLIOTECA-window.md), implementação
+em providers/platform/windows.c e relatório em
+[M1 plataforma](../relatorios/2026-10-29-m1-plataforma-windows.md).
 Serve shell/motor nativo confiáveis; página não importa essa biblioteca.
 Mantém a [ABI C escalar existente](../FFI-C.md), sem agregados por valor,
 varargs, closures C ou callbacks em threads estrangeiras.
@@ -63,12 +66,18 @@ composição source-over e coordenadas de pixels físicos. A primeira prova pode
 usar superfície por software. UTF-8 não comprova shaping/bidi/IME: E04-04 e
 ponte de acessibilidade exigem interfaces/corpus adicionais antes de G1.
 
-Inventário inicial de candidatos: Windows User32/GDI; Linux e macOS ainda sem
-provider selecionado. Cada provider implementado deve registrar versão do SO,
-SDK/bibliotecas, licença/redistribuição, binário/hash, thread, ABI e falhas.
-Esses campos estão pendentes; nenhuma dependência externa é incluída agora.
+Provider Windows: User32/GDI/UCRT do sistema, com APIs que exigem Windows 10
+1703+; somente o host Windows x64 registrado na evidência foi executado.
+GCC/headers MinGW-w64 de MSYS2 constam do inventário de build da unidade.
+Nenhuma biblioteca ou fonte Microsoft é redistribuída. Shim próprio segue
+a licença do repositório; GCC Runtime Exception/avisos MinGW continuam em
+THIRD_PARTY_NOTICES.md. Linux/macOS permanecem sem provider.
 
-Aceite futuro: oráculo C independente contra AssisScript em ambos os modos,
+Aceite desta prova: oráculo C independente contra AssisScript em ambos os modos,
 argumentos/retornos/buffers, provider ausente, UTF-8, OOM injetado, thread
 errada, token forjado/expirado, fila saturada e 1.000 ciclos sem recursos
-residuais. Execução nativa em cada destino anunciado. Todos **not-run**.
+residuais. Resultados por teste, hashes e limitações no relatório/evidência.
+DLL ausente falha no loader; -3 foi injetado somente no backend opcional de
+teste já carregado. A produção não expõe os mecanismos de injeção/inspeção.
+Execução de providers em outros sistemas, IME, leitores de tela, 200%/monitores,
+soak integrado e visualizador HTDL continuam **not-run**; nenhum gate aprovado.

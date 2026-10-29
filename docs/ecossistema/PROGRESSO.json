@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-10-29",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "partial-native-retest-m1-generational-arena",
+  "assessment": "partial-native-retest-m1-windows-platform",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -72,7 +72,9 @@
             "docs/ecossistema/evidencias/m0-incremento-2026-10-29/windows-x64.json",
             "docs/ecossistema/evidencias/m0-incremento-2026-10-29/linux-x64.json",
             "docs/relatorios/2026-10-29-m0-owned.md",
-            "docs/relatorios/2026-10-29-m1-arena.md"
+            "docs/relatorios/2026-10-29-m1-arena.md",
+            "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
+            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json"
           ]
         }
       ]
@@ -125,7 +127,9 @@
             "docs/RECURSOS-E-FATIAS.md",
             "docs/SAFE-DEFAULT.md",
             "docs/relatorios/2026-10-29-m0-owned.md",
-            "docs/relatorios/2026-10-29-m1-arena.md"
+            "docs/relatorios/2026-10-29-m1-arena.md",
+            "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
+            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json"
           ]
         },
         {
@@ -259,7 +263,9 @@
           "evidence": [
             "docs/EVENTOS-E-PERSISTENCIA.md",
             "docs/BIBLIOTECA-eventos.md",
-            "docs/BIBLIOTECA-net.md"
+            "docs/BIBLIOTECA-net.md",
+            "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
+            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json"
           ]
         },
         {
@@ -315,27 +321,33 @@
           "baseline": "ABI C escalar e callbacks síncronos existem; bibliotecas gráficas não integradas.",
           "evidence": [
             "docs/FFI-C.md",
-            "docs/ARM64-NATIVO.md"
+            "docs/ARM64-NATIVO.md",
+            "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
+            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json"
           ]
         },
         {
           "id": "E04-02",
           "name": "Janela, monitores e eventos",
-          "level": 0,
+          "level": 1,
           "acceptance": "Abrir/redimensionar/fechar janela, integrar DPI, múltiplos monitores, foco, teclado/ponteiro/touch e suspensão; testar loop nativo sem espera ocupada e liberação de recursos.",
-          "baseline": "Sem implementação encontrada na pasta Browser.",
+          "baseline": "Prova Windows x64: criação/resize/close, eventos nativos em janelas ocultas, fila limitada e recursos contados; inspeção visual, monitores/200%, touch e suspensão permanecem abertos.",
           "evidence": [
-            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md"
+            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md",
+            "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
+            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json"
           ]
         },
         {
           "id": "E04-03",
           "name": "Desenho, imagens e composição",
-          "level": 0,
+          "level": 1,
           "acceptance": "Implementar superfícies, clipping, transforms e snapshots imutáveis com fallback de renderização; decodificar imagens sob limites e isolamento, testar perda/recriação de recursos e hit testing consistente.",
-          "baseline": "Sem pipeline gráfico nativo demonstrado.",
+          "baseline": "Superfície por software, máscara GDI de texto e source-over contra oráculo independente; sem imagens, transforms, snapshots imutáveis ou motor HTDL integrado.",
           "evidence": [
-            "local:htdl/docs/17-execucao-transacoes-e-layout.md"
+            "local:htdl/docs/17-execucao-transacoes-e-layout.md",
+            "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
+            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json"
           ]
         },
         {
@@ -1337,7 +1349,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-10-29",
+      "rubric_version": 1,
+      "label": "M1 parcial: janela/eventos Windows e desenho por software; E04-02/E04-03 de 0 para 1",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 1,
+        "E00-03": 1,
+        "E00-04": 0,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 0,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 1,
+        "E03-03": 2,
+        "E03-04": 2,
+        "E03-05": 0,
+        "E04-01": 2,
+        "E04-02": 1,
+        "E04-03": 1,
+        "E04-04": 0,
+        "E04-05": 0,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 0,
+        "E06-02": 0,
+        "E06-03": 0,
+        "E06-04": 0,
+        "E06-05": 0,
+        "E07-01": 1,
+        "E07-02": 0,
+        "E07-03": 0,
+        "E07-04": 0,
+        "E07-05": 0,
+        "E08-01": 0,
+        "E08-02": 0,
+        "E08-03": 0,
+        "E08-04": 0,
+        "E08-05": 0,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 1,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Arena geracional validada nesta unidade: 81/81 métodos em sete suítes por host Windows/Linux x64, sem dispensas, e 20/20 casos de portabilidade por host. E02-02 passa a nível 2 pelo subconjunto de identidades; relações ordenadas, OOM, integração HTDL e execução macOS/ARM64 continuam abertas. Demais créditos mantêm suas evidências próprias/provisórias; nenhum gate aprovado."
+  "assessment_note": "Ponte Windows validada nesta unidade: 84/84 métodos em sete suítes, incluindo 16 testes da fronteira e 1.000 ciclos de recursos. Linux: 4/4 métodos de APIs e 2/2 execuções do ramo sem provider; provider Linux explicitamente unsupported. E04-02/E04-03 recebem somente nível 1 de fundação. Inspeção visual não concluída (autorização de aplicativo expirou); demais destinos, texto/IME/acessibilidade, HTDL e sandbox continuam abertos. Demais créditos conservam evidências próprias/provisórias; nenhum gate aprovado."
 }

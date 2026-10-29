@@ -35,6 +35,11 @@ MinGW runtime notices.
 - Optional networking uses separately installed libcurl and its TLS/resolver
   providers. No libcurl, OpenSSL, WinHTTP or external provider binary is shipped.
   Whoever bundles such providers must follow their terms for that new bundle.
+- The optional Windows window provider is original project C code built with
+  MinGW-w64 GCC and the notices above. It imports system User32/GDI/UCRT;
+  no Microsoft library binary or font is redistributed. DEFAULT_GUI_FONT
+  remains a system resource. Provider source/build inventory and tested OS
+  are recorded in docs/relatorios/2026-10-29-m1-plataforma-windows.md.
 - GCC, binutils, LLVM, Python, Pillow, CairoSVG, Node, VS Code and CI actions are
   maintenance tools/integrations. Their implementations are not copied into
   the distribution by naming or invoking them. The extension/LSP have no bundled
