@@ -1,6 +1,7 @@
 # Bibliotecas — alpha.14
 
-São 20 módulos. O caminho recomendado para novos programas é unicode, own/borrow
+São 21 módulos nos fontes de desenvolvimento, incluindo a nova [arena geracional](BIBLIOTECA-arena.md).
+O caminho recomendado para novos programas é unicode, own/borrow
 e slices. A revisão acrescenta random, o builder Unicode, sort safe e
 owned::OwnedArray de recursos Move. Consulte [o manual atual](LINGUAGEM.md).
 As atualizações abaixo preservam a história dos contratos anteriores.

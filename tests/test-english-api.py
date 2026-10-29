@@ -11,7 +11,7 @@ base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
 class English(base.Evolution):
     def test_canonical_catalog_and_every_module(self):
         catalog=json.loads((base.ROOT/'stdlib/catalogo.json').read_text(encoding='utf-8'))
-        self.assertEqual({x['name'] for x in catalog['libraries']},{'math','strings','memory','errors','convert','algorithms','csv','encoding','cli','json','time','log','iterators','events','unicode','owned','http','process','net','random'})
+        self.assertEqual({x['name'] for x in catalog['libraries']},{'math','strings','memory','errors','convert','algorithms','csv','encoding','cli','json','time','log','iterators','events','unicode','owned','arena','http','process','net','random'})
         mapping=json.loads((base.ROOT/'docs/API-MIGRATION.json').read_text(encoding='utf-8'))
         obsolete=set(mapping['modules'])|set(mapping['identifiers'])|set(mapping['builtins'])
         for library in catalog['libraries']:

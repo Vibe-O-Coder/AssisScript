@@ -1,0 +1,9 @@
+test_canonical_catalog_and_every_module (__main__.English.test_canonical_catalog_and_every_module) ... ok
+test_english_builtin_aliases_remain_compatible (__main__.English.test_english_builtin_aliases_remain_compatible) ... ok
+test_entry_constructor_import_and_callbacks (__main__.English.test_entry_constructor_import_and_callbacks) ... ok
+test_managed_english_libraries (__main__.English.test_managed_english_libraries) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.913s
+
+OK
