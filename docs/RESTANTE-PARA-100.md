@@ -9,8 +9,8 @@ O total atual é **94/100 pontos (94%)**. Restam 6 pontos.
 
 | Critério | Pontos faltantes | Trabalho e evidência necessários |
 | --- | ---: | --- |
-| P5-IR | 1 | Separar resolução/tipagem e emissão com operações tipadas também para expressões; migrar a emissão com equivalência Windows/Linux e referência independente. IR escalar já emite valores sem AST; instruções, recursos/endereços e condições otimizadas ainda dependem de AST. |
-| P5-TARGET | 2 | Interface de backend estabilizada, geração/runtime ARM64 e macOS, instaladores, depuração e CI com execução nos novos destinos. Emitir x86_64 em outro host ou produzir apenas arquivos de exemplo não atende. |
+| P5-IR | 1 | Separar resolução/tipagem e emissão com operações tipadas; migrar com equivalência e referência independente. IR já emite valores, escritas locais e condições escalares elegíveis sem AST; recursos/endereços, retornos/cleanups e controle estruturado ainda têm caminhos AST. Veja [a continuação](BACKEND-IR-CONTROL.md). |
+| P5-TARGET | 2 | Interface de backend estabilizada, geração/runtime ARM64 e macOS, instaladores, depuração e CI com execução nos novos destinos. Hosts ARM64 agora podem analisar/gerar x86_64; CI QEMU/Rosetta mede compatibilidade, sem atender geração nativa ARM64. |
 | P6-POLICY | 1 | Responsável comprovar direitos das imagens/assets e fechar revisão dos termos/fontes de redistribuição. Inventário de ligação não decide autoria ou autorização de imagens. |
 | P6-ACCEPT | 2 | Pessoa distinta instalar, compilar, testar, depurar e distribuir A/B/C usando só documentação pública; registrar falhas, correções e aceite independente. Autorrevisão do agente não substitui essa pessoa. |
 

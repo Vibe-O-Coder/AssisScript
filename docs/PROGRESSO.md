@@ -99,11 +99,11 @@ Cada registro histórico congela seus 35 estados; atualizações futuras não al
 
 | Critério | Estado | Evidência e limites |
 | --- | --- | --- |
-| P5-IR — Frontend separado e IR tipada com fluxo/efeitos | Parcial (50%) | [Documento](BACKEND-ALPHA15.md) — CFG tipada e ScalarIR independente de AST para expressões escalares, casts e chamadas globais; emissão nativa e referência AST --no-opt. Instruções, recursos, endereços e condições otimizadas ainda usam AST; migração integral permanece aberta. |
+| P5-IR — Frontend separado e IR tipada com fluxo/efeitos | Parcial (50%) | [Documento](BACKEND-IR-CONTROL.md) — CFG tipada e ScalarIR independente de AST para valores, escritas locais e condições escalares elegíveis; referência AST --no-opt. Recursos/endereços, retornos, cleanups e controle estruturado ainda têm caminhos AST; migração integral permanece aberta. |
 | P5-OPT — Otimizações comprovadas, TCO, intervalos e alocação de registradores | Concluído no escopo do critério | [Documento](BACKEND-ALPHA15.md) — Liveness global com ponto fixo/coloração e reutilização dos quatro registradores preservados, exclusão de locais endereçados, fallback limitado; intervalos em laços diretos/reversos com offsets e chamadas pure. Equivalência/adversos Windows/Linux e comparação com alpha.14; sem alegação de otimalidade do alocador. |
 | P5-ABI — ABI documentada e validada para interfaces e retornos compostos | Concluído no escopo do critério | [Documento](FFI-C.md) — LVS2 preservada e ABI C escalar pública delimitada, registradores mistos/pilha/retornos/callbacks validados contra biblioteca C independente; agregados C por valor são rejeitados. |
 | P5-DEBUG — ELF PIE, símbolos/linhas e depuração nativa | Concluído no escopo do critério | [Documento](RECURSOS-E-FATIAS.md) — ELF ET_DYN/PIE, RIP/vtables relativos, símbolos/DWARF e GDB com parâmetros/locais escalares e escopos. Windows conserva mapas; sem PDB ou descrição de compostos. |
-| P5-TARGET — Backend extensível e novos alvos ARM64/macOS validados | Pendente | [Documento](PLANO-EVOLUCAO-E-HANDOFF.md) |
+| P5-TARGET — Backend extensível e novos alvos ARM64/macOS validados | Pendente | [Documento](BACKEND-IR-CONTROL.md) — Hosts Linux/macOS ARM64 preparados para frontend e geração cruzada x86_64, com CI QEMU/Rosetta explicitamente emulado. Geração/runtime ARM64, instaladores e depuração dos novos destinos permanecem abertos. Resultado remoto deve ser verificado por commit. |
 
 ### Fase 6 — Ferramentas e oferta delimitada
 
