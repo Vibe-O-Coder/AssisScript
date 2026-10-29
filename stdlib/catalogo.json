@@ -112,7 +112,7 @@
       "name": "owned",
       "required": false,
       "doc": "BIBLIOTECA-proprios.md",
-      "description": "Lista limitada de proprietários com transferência e empréstimos.",
+      "description": "Coleções de recursos Move com empréstimos, mutação e transferência segura.",
       "dependencies": []
     },
     {

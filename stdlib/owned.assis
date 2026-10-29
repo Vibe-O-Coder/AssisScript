@@ -52,15 +52,38 @@ safe fn array_get<T>(borrow node:ArrayNode<T>,index:int,capacity:int):borrow(nod
     if(index<half){return array_get::<T>(node.left,index,half);}
     return array_get::<T>(node.right,index-half,half);
 }
+safe fn array_get_mut<T>(borrow mut node:ArrayNode<T>,index:int,capacity:int):borrow mut(node) T {
+    if(capacity==1){return node.value;}
+    val half:int=capacity/2;
+    if(index<half){return array_get_mut::<T>(node.left,index,half);}
+    return array_get_mut::<T>(node.right,index-half,half);
+}
 safe fn array_take<T>(borrow mut node:ArrayNode<T>,index:int,capacity:int):own T {
     if(capacity==1){return move(node.value);}
     val half:int=capacity/2;
-    if(index<half){return array_take::<T>(node.left,index,half);}
-    return array_take::<T>(node.right,index-half,half);
+    if(index<half){
+        own value:T=array_take::<T>(node.left,index,half);
+        if(half==1 || (node.left.left==null && node.left.right==null)){
+            own empty:ArrayNode<T>=move(node.left);
+        }
+        return move(value);
+    }
+    own value:T=array_take::<T>(node.right,index-half,half);
+    if(half==1 || (node.right.left==null && node.right.right==null)){
+        own empty:ArrayNode<T>=move(node.right);
+    }
+    return move(value);
+}
+safe fn array_replace<T>(borrow mut node:ArrayNode<T>,index:int,capacity:int,own value:T):own T {
+    if(capacity==1){own previous:T=move(node.value);node.value=move(value);return move(previous);}
+    val half:int=capacity/2;
+    if(index<half){return array_replace::<T>(node.left,index,half,move(value));}
+    return array_replace::<T>(node.right,index-half,half,move(value));
 }
 
 /// Indexed collection of Move resources, without the linked list's 1024 limit.
-/// push/get/pop O(log capacity), destruction O(n) with O(log capacity) stack.
+/// Indexed access/transfers O(log capacity); empty paths are freed on removal.
+/// Destruction visits remaining nodes with O(log capacity) index stack depth.
 /// This initial representation uses tree nodes, not a contiguous memory buffer.
 public final class OwnedArray<T> {
     private own root:ArrayNode<T>;
@@ -78,6 +101,32 @@ public final class OwnedArray<T> {
     }
     fn get(borrow self,index:int):borrow(self) T {
         assert(index>=0 && index<self.count);return array_get::<T>(self.root,index,self.capacity);
+    }
+    /// Exclusive element loan; the entire collection stays borrowed until it ends.
+    fn get_mut(borrow mut self,index:int):borrow mut(self) T {
+        assert(index>=0 && index<self.count);
+        val capacity:int=self.capacity;return array_get_mut::<T>(self.root,index,capacity);
+    }
+    /// Transfers the old item to the caller; size and all indices stay unchanged.
+    fn replace(borrow mut self,index:int,own value:T):own T {
+        assert(index>=0 && index<self.count);val capacity:int=self.capacity;
+        return array_replace::<T>(self.root,index,capacity,move(value));
+    }
+    /// Transfers the removed item; the last item takes its index. Order is not preserved.
+    fn swap_remove(borrow mut self,index:int):own T {
+        assert(index>=0 && index<self.count);val capacity:int=self.capacity;
+        self.count-=1;val last:int=self.count;
+        own removed:T=array_take::<T>(self.root,index,capacity);
+        if(index!=last){
+            own value:T=array_take::<T>(self.root,last,capacity);
+            array_put::<T>(self.root,index,capacity,move(value));
+        }
+        return move(removed);
+    }
+    /// Destroys all remaining items and index nodes; reusable as an empty collection.
+    fn clear(borrow mut self):void {
+        // Moving zeroes the root; the local owner drops it when this method returns.
+        own previous:ArrayNode<T>=move(self.root);self.count=0;self.capacity=0;
     }
     fn pop(borrow mut self):own T {
         assert(self.count>0);self.count-=1;val index:int=self.count;val capacity:int=self.capacity;

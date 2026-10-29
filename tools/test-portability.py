@@ -56,6 +56,10 @@ def main():
          'let sum:int=0;for(let i:int=0;i<10;i+=1){if(i%2==0){sum+=double(i);}}print(sum);', 0, '40\n'),
         ('widths', '', 'let a:i8=i8(127);a+=i8(1);let b:u64=u64(0xffffffffffffffff);'
          'if(b>u64(0)){b>>=63;}print(a,b);', 0, '-128 1\n'),
+        ('increment', '', 'let a:i8=i8(127);a++;let b:u64=u64(0);--b;'
+         'let f:f32=f32(1.5);++f;f--;assert(f==f32(1.5));'
+         'let n:int=0;for(let i:int=0;i<4;++i){if(i==1){continue;}n++;}print(a,b,n);',
+         0, '-128 18446744073709551615 3\n'),
         ('ieee', '', 'let z:f64=0.0;let n:f64=z/z;if(n!=n&&!(n<z)){print(42);}let f:f32=f32(1.5);f*=f32(2.0);print(f);',
          0, '42\n0x1.8000000000000p+1\n'),
         ('ownership', '', 'own a:Array<int>=[1,2,3];a.push(4);let sum:int=0;'
@@ -63,6 +67,15 @@ def main():
         ('lazy', '', 'let z:int=0;let no:bool=false;let yes:bool=true;'
          'if((no&&bool(1/z))||(!no&&yes)){print(42);}if(!(yes||bool(1/z))){print(99);}', 0, '42\n'),
         ('utf8', '', 'print(utf8("a\\0b"));', 0, 'a\0b\n'),
+        ('owned-mutation', 'import "std/owned.assis";struct Item{let n:int;own data:*byte;}',
+         'own items:owned::OwnedArray<Item>=new owned::OwnedArray<Item>();'
+         'for(let i:int=0;i<17;i++){items.push(new Item(i,alloc<byte>(1)));}'
+         '{borrow mut entry:Item=items.get_mut(0);entry.n=42;}'
+         'own old:Item=items.replace(0,new Item(9,alloc<byte>(1)));'
+         'own removed:Item=items.swap_remove(1);'
+         '{borrow entry:Item=items.get(1);print(old.n,removed.n,entry.n,items.size());}'
+         'items.clear();items.clear();items.push(new Item(7,alloc<byte>(1)));'
+         '{borrow entry:Item=items.get(0);print(entry.n);}', 0, '42 1 16 16\n7\n'),
         ('trap', '', 'let z:int=0;print(1/z);', 70, ''),
     ]
     try:
