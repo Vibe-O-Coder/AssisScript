@@ -1,0 +1,6 @@
+// Expected: F404. A representable negative width violates the property domain.
+flow NegativeWidth {
+    -1px -> layout.width;
+}
+
+bind .box to NegativeWidth;

@@ -1,0 +1,34 @@
+// Numerical kernel probe only. This does not implement SSC or the browser.
+// The caller must check ranges before calling these pure functions.
+pure assis fx_mul(a: int, b: int): int {
+    return (a * b + 32768) >> 16;
+}
+
+pure assis spring_next_x(m11: int, m12: int, x: int, v: int): int {
+    return fx_mul(m11, x) + fx_mul(m12, v);
+}
+
+pure assis spring_next_v(m21: int, m22: int, x: int, v: int): int {
+    return fx_mul(m21, x) + fx_mul(m22, v);
+}
+
+assis assis_assis(): int {
+    let x: int = 524288;
+    let v: int = 0;
+    let calm: int = 0;
+    let steps: int = 0;
+    assert(fx_mul(-1, 32768) == 0);
+    while (calm < 3 && steps < 120) {
+        val nextX: int = spring_next_x(64251, 461, x, v);
+        val nextV: int = spring_next_v(-290983, 45727, x, v);
+        x = nextX;
+        v = nextV;
+        steps += 1;
+        if (x > -1024 && x < 1024 && v > -32768 && v < 32768) {
+            calm += 1;
+        } else { calm = 0; }
+    }
+    assert(steps == 41);
+    print("SSC numerical kernel:", steps);
+    return 0;
+}

@@ -1,0 +1,46 @@
+// Conceptual FluxStyle 0.1; no compiler or browser is implemented here.
+flow PageFrame {
+    24px -> layout.padding;
+    column(gap: 24px) -> layout.children;
+}
+
+flow PageSurface {
+    input scheme: colorScheme = env.colorScheme;
+    input contrastMode: contrast = env.contrast;
+    let background = choose(contrastMode == high, #000000,
+        choose(scheme == dark, #171922, #ffffff));
+    background -> paint.background;
+}
+
+flow ReadingMeasure {
+    input available: length = parent.availableWidth;
+    min(available, 720px) -> layout.width;
+}
+
+flow ReadingSpacing {
+    column(gap: 16px) -> layout.children;
+}
+
+flow TextInk {
+    input scheme: colorScheme = env.colorScheme;
+    input contrastMode: contrast = env.contrast;
+    choose(contrastMode == high, #ffffff,
+        choose(scheme == dark, #f4f1ff, #20212a)) -> paint.text;
+}
+
+flow TitleMetrics {
+    32px -> text.size;
+    700 -> text.weight;
+}
+
+flow ProseMetrics {
+    18px -> text.size;
+}
+
+bind .page to PageFrame;
+bind .page to PageSurface;
+bind .reading to ReadingMeasure;
+bind .reading to ReadingSpacing;
+bind .copy to TextInk;
+bind .title to TitleMetrics;
+bind .prose to ProseMetrics;

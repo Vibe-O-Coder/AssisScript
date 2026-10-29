@@ -1,0 +1,7 @@
+// Initial width is 8px; setting divisor to zero rejects the next FS transaction.
+flow RecoverableWidth {
+    input divisor: number = state("divisor", 1);
+    8px / divisor -> layout.width;
+}
+
+bind .box to RecoverableWidth;

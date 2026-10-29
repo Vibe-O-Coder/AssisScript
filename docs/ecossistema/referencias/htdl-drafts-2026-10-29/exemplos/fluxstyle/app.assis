@@ -1,0 +1,15 @@
+// Conceptual browser API. The browser/htdl.assis module is not implemented yet.
+#yuri <browser/htdl.assis>
+
+assis assis_assis(): int {
+    return htdl_estado_int_definir("card.expanded", 0);
+}
+
+assis toggleCard(target: int, event: int): void {
+    val current: int = htdl_estado_int("card.expanded");
+    if (current == 0) {
+        assert(htdl_estado_int_definir("card.expanded", 1) == 0);
+    } else {
+        assert(htdl_estado_int_definir("card.expanded", 0) == 0);
+    }
+}

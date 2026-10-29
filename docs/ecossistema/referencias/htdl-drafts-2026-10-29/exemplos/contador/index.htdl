@@ -1,0 +1,17 @@
+<div type="document" version="0.1" lang="pt-BR">
+  <div type="head">
+    <div type="title">Contador HTDL + AssisScript</div>
+    <div type="script" src="./app.assis" format="source"></div>
+  </div>
+  <div type="body">
+    <div type="main">
+      <div type="heading" level="1">Contador</div>
+      <div type="paragraph">Ative os botões com o mouse, Enter ou Espaço.</div>
+      <div type="paragraph" id="valor" a11y-live="polite">0</div>
+      <div type="container" class="acoes">
+        <div type="button" id="somar" on:click="incrementar">Somar um</div>
+        <div type="button" id="reiniciar" on:click="zerar">Zerar</div>
+      </div>
+    </div>
+  </div>
+</div>

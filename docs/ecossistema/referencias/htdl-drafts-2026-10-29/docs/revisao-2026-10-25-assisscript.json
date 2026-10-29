@@ -1,0 +1,30 @@
+{
+  "compilerVersion": [
+    "AssisScript 3.3.0-alpha.6 (nativo, Windows x64)"
+  ],
+  "kernelCheck": {
+    "status": 0,
+    "output": [
+      "{\"ok\":true}"
+    ]
+  },
+  "kernelRun": {
+    "status": 0,
+    "output": [
+      "SSC numerical kernel: 41"
+    ]
+  },
+  "kernelUnoptimized": {
+    "status": 0,
+    "output": [
+      "SSC numerical kernel: 41"
+    ]
+  },
+  "appCheckWithTemporarySignatures": {
+    "status": 0,
+    "output": [
+      "{\"ok\":true}"
+    ]
+  },
+  "compilerSha256": "56413C3A10CEA7CCC1C93C3B44E76ACC64CCC882C8810DB0D50C849587ABF98C"
+}

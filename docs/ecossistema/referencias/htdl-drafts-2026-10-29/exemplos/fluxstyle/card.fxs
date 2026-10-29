@@ -1,0 +1,18 @@
+// Conceptual FluxStyle example (.fxs). No FS compiler is available yet.
+flow CardVisuals {
+    input expanded: bool = state("card.expanded", false);
+    input available: length = parent.availableWidth;
+
+    let cardWidth = min(available, choose(expanded, 640px, 320px));
+    let cardLift = choose(expanded, -8px, 0px);
+
+    cardWidth -> layout.width;
+    20px -> layout.padding;
+    column(gap: 12px) -> layout.children;
+    choose(expanded, #7454d8, #252936) -> paint.background;
+    #f4f1ff -> paint.text;
+    12px -> paint.radius;
+    cardLift -> target.offsetY;
+}
+
+bind .card to CardVisuals;

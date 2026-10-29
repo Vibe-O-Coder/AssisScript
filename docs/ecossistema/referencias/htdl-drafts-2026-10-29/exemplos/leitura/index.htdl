@@ -1,0 +1,16 @@
+<div type="document" version="0.2" lang="en">
+  <div type="head">
+    <div type="title">Reading room</div>
+    <div type="presentation" src="./reading.fxs" language="fluxstyle"></div>
+  </div>
+  <div type="body" class="page">
+    <div type="main" class="reading">
+      <div type="heading" level="1" class="title copy">Reading room</div>
+      <div type="paragraph" class="prose copy">The page adapts to the space its parent offers.</div>
+      <div type="link" href="#details" class="copy">Read the details</div>
+      <div type="section" id="details" a11y-label="Details">
+        <div type="paragraph" class="prose copy">Presentation is optional. Meaning stays in HTDL.</div>
+      </div>
+    </div>
+  </div>
+</div>

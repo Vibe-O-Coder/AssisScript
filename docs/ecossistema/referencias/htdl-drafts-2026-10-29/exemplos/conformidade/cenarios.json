@@ -1,0 +1,184 @@
+{
+  "format": "htdl-scenarios-draft-1",
+  "date": "2026-10-27",
+  "status": "not-run",
+  "pathBase": "directory-containing-this-index",
+  "note": "Declarative expectations only. Driver actions are not page API functions.",
+  "scenarios": [
+    {
+      "id": "L01",
+      "category": "authorship",
+      "document": "../leitura/index.htdl",
+      "resources": ["../leitura/reading.fxs"],
+      "phase": "presentation",
+      "expect": {"accepted": true, "scriptRequired": false, "sscRequired": false}
+    },
+    {
+      "id": "L02",
+      "category": "authorship",
+      "document": "../paineis/index.htdl",
+      "resources": ["../paineis/panels.fxs", "../paineis/panels.sscr", "../paineis/app.assis"],
+      "phase": "binding",
+      "expect": {"accepted": true, "logicalNodeScopedStateCells": 2, "channelCount": 2}
+    },
+    {
+      "id": "H01",
+      "category": "negative",
+      "document": "invalid/missing-type.htdl",
+      "phase": "semantic-validation",
+      "expect": {"accepted": false, "diagnostic": "H201"}
+    },
+    {
+      "id": "H02",
+      "category": "negative",
+      "document": "invalid/presentation-in-0.1.htdl",
+      "phase": "semantic-validation",
+      "expect": {"accepted": false, "diagnosticFamily": "H2xx", "reason": "presentation-is-not-in-the-0.1-catalog"}
+    },
+    {
+      "id": "F01",
+      "category": "negative",
+      "document": "context.htdl",
+      "resources": ["invalid/dimension.fxs"],
+      "phase": "type-check",
+      "expect": {"accepted": false, "diagnostic": "F201"}
+    },
+    {
+      "id": "F02",
+      "category": "negative",
+      "document": "context.htdl",
+      "resources": ["invalid/writers.fxs"],
+      "phase": "binding",
+      "expect": {"accepted": false, "diagnostic": "F302", "producerSourceCount": 2}
+    },
+    {
+      "id": "F03",
+      "category": "positive",
+      "document": "context.htdl",
+      "resources": ["valid/lazy-branch.fxs"],
+      "phase": "evaluation",
+      "expect": {"accepted": true, "property": "layout.width", "value": "8px", "forbiddenDiagnostic": "F402"}
+    },
+    {
+      "id": "F04",
+      "category": "negative",
+      "document": "context.htdl",
+      "resources": ["invalid/branch-types.fxs"],
+      "phase": "type-check",
+      "expect": {"accepted": false, "diagnostic": "F203"}
+    },
+    {
+      "id": "F05",
+      "category": "negative",
+      "document": "context.htdl",
+      "resources": ["invalid/state-defaults.fxs"],
+      "phase": "binding",
+      "expect": {"accepted": false, "diagnostic": "F306"}
+    },
+    {
+      "id": "F06",
+      "category": "negative",
+      "document": "context.htdl",
+      "resources": ["invalid/property-domain.fxs"],
+      "phase": "domain-check",
+      "expect": {"accepted": false, "diagnostic": "F404"}
+    },
+    {
+      "id": "S01",
+      "category": "negative",
+      "document": "context.htdl",
+      "resources": ["invalid/missing-target.sscr"],
+      "phase": "binding",
+      "expect": {"accepted": false, "diagnostic": "S302"}
+    },
+    {
+      "id": "S02",
+      "category": "negative",
+      "document": "context.htdl",
+      "resources": ["invalid/channel-mismatch.sscr"],
+      "phase": "channel-validation",
+      "expect": {"accepted": false, "diagnostic": "S203"}
+    },
+    {
+      "id": "R01",
+      "category": "runtime",
+      "document": "../paineis/index.htdl",
+      "resources": ["../paineis/panels.fxs", "../paineis/panels.sscr", "../paineis/app.assis"],
+      "phase": "interaction",
+      "setup": {"viewportWidthPx": 900, "reducedMotion": false},
+      "steps": [{"action": "activate", "id": "toggleFirst"}],
+      "expect": {
+        "firstPanel": {"expanded": true, "widthPx": 640, "targetOffsetYPx": -8},
+        "secondPanel": {"expanded": false, "widthPx": 320, "targetOffsetYPx": 0}
+      }
+    },
+    {
+      "id": "R02",
+      "category": "runtime",
+      "document": "context.htdl",
+      "resources": ["valid/fallback.fxs"],
+      "phase": "presentation-failure",
+      "setup": {"initialPublishedWidthPx": 8},
+      "steps": [
+        {"action": "beginTask"},
+        {"action": "setDisabled", "id": "box", "value": true},
+        {"action": "setPageState", "key": "divisor", "value": 0},
+        {"action": "finishTask"}
+      ],
+      "expect": {
+        "diagnostic": "F402",
+        "styleVersionChanged": false,
+        "semanticVersionChanged": true,
+        "widthPx": 8,
+        "disabled": true,
+        "activationAllowed": false,
+        "accessibilityDisabled": true,
+        "stateRolledBack": false
+      }
+    },
+    {
+      "id": "R03",
+      "category": "runtime",
+      "document": "../fluxstyle/index.htdl",
+      "resources": ["../fluxstyle/card.fxs", "../fluxstyle/card.sscr", "../fluxstyle/app.assis"],
+      "phase": "visibility-and-scheduler",
+      "setup": {"simulationHz": 120, "maxStepsPerFrame": 8, "reducedMotion": false},
+      "steps": [
+        {"action": "setPageState", "key": "card.expanded", "value": 1},
+        {"action": "publishTargets"},
+        {"action": "advanceForegroundClock", "elapsedMs": 1000},
+        {"action": "setVisibility", "value": "background"},
+        {"action": "advanceBackgroundClock", "elapsedMs": 60000},
+        {"action": "setVisibility", "value": "foreground"}
+      ],
+      "expect": {
+        "foregroundFrame": {"executedTicks": 8, "discardedTicks": 112},
+        "onResume": {"presentationOffsetYPx": -8, "velocityPxPerSecond": 0, "timeRemainder": 0},
+        "backgroundIntegrationSteps": 0,
+        "discardedWorkResurrected": false
+      }
+    },
+    {
+      "id": "R04",
+      "category": "runtime-internal",
+      "document": "../paineis/index.htdl",
+      "resources": ["../paineis/panels.fxs", "../paineis/panels.sscr", "../paineis/app.assis"],
+      "phase": "node-lifetime",
+      "steps": [
+        {"action": "activate", "id": "toggleFirst"},
+        {"action": "rememberHandle", "id": "firstPanel", "as": "oldPanel"},
+        {"action": "removeNode", "id": "firstPanel"},
+        {"action": "createSection", "id": "firstPanel", "class": "panel", "parentClass": "panels", "accessibleLabel": "Replacement panel"},
+        {"action": "finishTask"}
+      ],
+      "expect": {
+        "oldHandleValid": false,
+        "newGeneration": true,
+        "nodeStatePresent": false,
+        "expanded": false,
+        "presentationOffsetYPx": 0,
+        "velocityPxPerSecond": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+// Expected: F203, even though the color branch is inactive.
+flow WrongBranchType {
+    choose(true, 8px, #fff) -> layout.width;
+}
+
+bind .box to WrongBranchType;

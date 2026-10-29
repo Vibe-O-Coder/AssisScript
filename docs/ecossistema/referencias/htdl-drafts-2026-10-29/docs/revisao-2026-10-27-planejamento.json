@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-27",
+  "scope": "Documentation integrity only; not language or runtime conformance.",
+  "markdownFiles": 26,
+  "localLinksChecked": 161,
+  "outOfWorkspaceLinksSkippedWithoutReading": 10,
+  "scenarioCount": 16,
+  "scenarioStatus": "not-run",
+  "scenarioFileReferencesChecked": 38,
+  "auxiliaryXmlExamples": [
+    {
+      "path": "exemplos/conformidade/context.htdl",
+      "elements": 6,
+      "version": "0.2"
+    },
+    {
+      "path": "exemplos/contador/index.htdl",
+      "elements": 12,
+      "version": "0.1"
+    },
+    {
+      "path": "exemplos/fluxstyle/index.htdl",
+      "elements": 12,
+      "version": "0.2"
+    },
+    {
+      "path": "exemplos/leitura/index.htdl",
+      "elements": 11,
+      "version": "0.2"
+    },
+    {
+      "path": "exemplos/ola.htdl",
+      "elements": 22,
+      "version": "0.1"
+    },
+    {
+      "path": "exemplos/paineis/index.htdl",
+      "elements": 15,
+      "version": "0.2"
+    }
+  ],
+  "localHtdlResourceReferencesChecked": 8,
+  "assisScriptProjectInspected": false,
+  "assisScriptCompilerExecuted": false,
+  "processesInspectedOrControlled": false,
+  "languageParsersExecuted": false,
+  "errors": [],
+  "integrityPassed": true
+}

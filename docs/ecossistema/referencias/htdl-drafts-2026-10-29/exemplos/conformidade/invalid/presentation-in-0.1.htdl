@@ -1,0 +1,9 @@
+<div type="document" version="0.1" lang="en">
+  <div type="head">
+    <div type="title">Version boundary</div>
+    <div type="presentation" src="../valid/lazy-branch.fxs" language="fluxstyle"></div>
+  </div>
+  <div type="body">
+    <div type="paragraph">Presentation resources are not part of HTDL 0.1.</div>
+  </div>
+</div>

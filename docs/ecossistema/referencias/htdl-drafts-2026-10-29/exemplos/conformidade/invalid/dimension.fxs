@@ -1,0 +1,6 @@
+// Expected: F201, color cannot feed layout.width.
+flow WrongDimension {
+    #7454d8 -> layout.width;
+}
+
+bind .box to WrongDimension;

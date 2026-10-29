@@ -1,0 +1,11 @@
+// Conceptual SSC example (.sscr is the reviewed extension proposal).
+// No SSC compiler is available yet.
+motion CardMotion {
+    spring(
+        target: fs.target.offsetY,
+        frequency: 4Hz,
+        dampingRatio: 0.8
+    ) -> presentation.offsetY;
+}
+
+bind .card to CardMotion;

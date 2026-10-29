@@ -1,0 +1,11 @@
+// Expected: F302. The id selector has no priority over the class selector.
+flow Surface {
+    #252936 -> paint.background;
+}
+
+flow Accent {
+    #7454d8 -> paint.background;
+}
+
+bind .box to Surface;
+bind #box to Accent;

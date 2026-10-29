@@ -1,0 +1,17 @@
+[
+  {
+    "case": "tamper",
+    "state": "pass",
+    "rejected": "Snapshot hash mismatch: docs/02-htdl-0.1.md"
+  },
+  {
+    "case": "escape",
+    "state": "pass",
+    "rejected": "Duplicate or escaping path: ../escape.md"
+  },
+  {
+    "case": "duplicate",
+    "state": "pass",
+    "rejected": "Duplicate scenario: L01"
+  }
+]

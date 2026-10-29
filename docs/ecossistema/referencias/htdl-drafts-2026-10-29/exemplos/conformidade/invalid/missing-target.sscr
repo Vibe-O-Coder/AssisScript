@@ -1,0 +1,7 @@
+// Expected: S302 when linked without an FS producer of target.offsetY.
+motion MissingTarget {
+    spring(target: fs.target.offsetY, frequency: 4Hz, dampingRatio: 0.8)
+        -> presentation.offsetY;
+}
+
+bind .box to MissingTarget;

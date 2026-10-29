@@ -1,0 +1,21 @@
+<div type="document" version="0.2" lang="en">
+  <div type="head">
+    <div type="title">Independent panels</div>
+    <div type="presentation" src="./panels.fxs" language="fluxstyle"></div>
+    <div type="presentation" src="./panels.sscr" language="ssc"></div>
+    <div type="script" src="./app.assis" format="source"></div>
+  </div>
+  <div type="body" class="page">
+    <div type="main" class="panels">
+      <div type="heading" level="1">Independent panels</div>
+      <div type="button" id="toggleFirst" on:click="toggleFirst">Toggle first panel</div>
+      <div type="section" id="firstPanel" class="panel" a11y-label="First panel">
+        <div type="paragraph" class="panel-copy">The first panel owns its state.</div>
+      </div>
+      <div type="button" id="toggleSecond" on:click="toggleSecond">Toggle second panel</div>
+      <div type="section" id="secondPanel" class="panel" a11y-label="Second panel">
+        <div type="paragraph" class="panel-copy">The second panel owns another state cell.</div>
+      </div>
+    </div>
+  </div>
+</div>

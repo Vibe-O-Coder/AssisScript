@@ -1,0 +1,29 @@
+// Proposta de programa para o futuro perfil de navegador.
+// browser/htdl.assis e as funcoes htdl_* ainda precisam ser implementados.
+#yuri <browser/htdl.assis>
+
+assis assis_assis(): int {
+    let visor: int = htdl_no_por_id("valor");
+    if (visor == 0) { return 1; }
+    if (htdl_estado_int_definir("contador", 0) != 0) { return 2; }
+    return htdl_no_texto_int(visor, 0);
+}
+
+assis incrementar(alvo: int, evento: int): void {
+    let visor: int = htdl_no_por_id("valor");
+    assert(visor != 0, "O elemento valor precisa existir.");
+
+    let atual: int = htdl_estado_int("contador");
+    if (atual == 9_223_372_036_854_775_807) { return; }
+
+    let novo: int = atual + 1;
+    assert(htdl_estado_int_definir("contador", novo) == 0);
+    assert(htdl_no_texto_int(visor, novo) == 0);
+}
+
+assis zerar(alvo: int, evento: int): void {
+    let visor: int = htdl_no_por_id("valor");
+    assert(visor != 0, "O elemento valor precisa existir.");
+    assert(htdl_estado_int_definir("contador", 0) == 0);
+    assert(htdl_no_texto_int(visor, 0) == 0);
+}

@@ -2,9 +2,9 @@
 
 Data: 2026-10-29. Régua v1. **20,10/100 pontos (20,10%)**, com **0/5 gates aprovados**.
 
-Estado da avaliação: `partial-native-retest-m0-microformat`. Escopo: Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.
+Estado da avaliação: `partial-native-retest-m0-with-versioned-contracts`. Escopo: Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.
 
-Após incremento e OwnedArray, esta unidade executa o microformato nested-div-probe-v1: 8/8 métodos em Windows x64 e 8/8 em Linux x64/WSL, sem dispensas, em otimizado/referência. Não é conformidade HTDL ou busca multidocumento. Demais créditos conservam seus limites; nenhum gate aprovado. O número não mede prazo, esforço restante ou prontidão para produção. Casas decimais tornam a soma auditável; não significam precisão de previsão.
+Reconciliações nativas de incremento, OwnedArray e microformato conservam seus resultados próprios. Esta atualização acrescenta somente contratos/snapshot verificados documentalmente: 57 fontes e 16 cenários ainda not-run para conformidade. Não implementa parser HTDL, janela, executor ou sandbox; nenhum gate é promovido. O número não mede prazo, esforço restante ou prontidão para produção. Casas decimais tornam a soma auditável; não significam precisão de previsão.
 
 Os 100/100 das antigas fases 0–6 medem outro escopo e permanecem preservados. Esta régua tem 60 critérios em 12 frentes; cinco critérios dividem igualmente o peso de cada frente. Níveis 0–4 rendem 0%, 25%, 50%, 75% e 100% do crédito. Fórmula: `Σ peso × soma(níveis) / 20`. Só há conclusão com todos os critérios em 4 e os cinco gates aprovados.
 
@@ -48,6 +48,7 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 | 2026-10-29 | M0 parcial: reconciliação ++/--, testes próprios e rastreabilidade da publicação | 20,10 | 0/5 |
 | 2026-10-29 | M0 parcial: OwnedArray mutável publicado com modelos independentes; níveis preservados | 20,10 | 0/5 |
 | 2026-10-29 | M0 parcial: prova de microformato reconciliada, 8/8 por host; níveis preservados | 20,10 | 0/5 |
+| 2026-10-29 | M0 parcial: snapshot e contratos versionados; sem promoção de runtime | 20,10 | 0/5 |
 
 ## Estado e evidência dos 60 critérios
 
@@ -55,9 +56,9 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 
 | Critério | Nível | Justificativa e fontes |
 | --- | ---: | --- |
-| E00-01 — Especificações versionadas | 1/4 | Há rascunhos no projeto irmão; não foram congelados nem certificados. `local:htdl/docs/14-fundamentos-e-perfis.md`; `local:htdl/docs/19-conformidade-e-cenarios.md` |
+| E00-01 — Especificações versionadas | 1/4 | Há rascunhos no projeto irmão; não foram congelados nem certificados. `local:htdl/docs/14-fundamentos-e-perfis.md`; `local:htdl/docs/19-conformidade-e-cenarios.md`; [2026-10-29-m0-contratos.md](../../docs/relatorios/2026-10-29-m0-contratos.md); [PROVENANCE.json](../../docs/ecossistema/referencias/htdl-drafts-2026-10-29/PROVENANCE.json) |
 | E00-02 — Modelo de ameaças e privacidade | 1/4 | Arquitetura de capacidades existe como proposta. `local:htdl/docs/18-arquitetura-nativa-e-capacidades.md` |
-| E00-03 — Fronteiras e decisões arquiteturais | 1/4 | Há desenho documental; nenhuma integração nativa observada. `local:htdl/docs/18-arquitetura-nativa-e-capacidades.md` |
+| E00-03 — Fronteiras e decisões arquiteturais | 1/4 | Há desenho documental; nenhuma integração nativa observada. `local:htdl/docs/18-arquitetura-nativa-e-capacidades.md`; [2026-10-29-m0-contratos.md](../../docs/relatorios/2026-10-29-m0-contratos.md); [PROVENANCE.json](../../docs/ecossistema/referencias/htdl-drafts-2026-10-29/PROVENANCE.json) |
 | E00-04 — Driver e matriz de conformidade | 0/4 | Corpus declarativo ainda sem motor/driver executável. `local:htdl/docs/19-conformidade-e-cenarios.md` |
 | E00-05 — Inventário, publicação e relatório | 2/4 | Rastreabilidade exercitada na unidade M0 de ++/--: fontes isoladas, builds próprios, logs/hashes, sete suítes por Windows/Linux x64, relatório e branch de publicação. Inventário e aceite integrado do produto permanecem abertos. [HANDOFF-ARM64-V1.md](../../docs/HANDOFF-ARM64-V1.md); [SUPPORT.md](../../docs/SUPPORT.md); [2026-10-29-m0-incremento.md](../../docs/relatorios/2026-10-29-m0-incremento.md); [windows-x64.json](../../docs/ecossistema/evidencias/m0-incremento-2026-10-29/windows-x64.json); [linux-x64.json](../../docs/ecossistema/evidencias/m0-incremento-2026-10-29/linux-x64.json); [2026-10-29-m0-owned.md](../../docs/relatorios/2026-10-29-m0-owned.md) |
 

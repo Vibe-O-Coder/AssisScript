@@ -1,0 +1,65 @@
+{
+  "auditPassed": true,
+  "scope": "Python reference and proposal checks; no FS/SSC engine",
+  "goldenCard": {
+    "coefficients": [
+      64251,
+      461,
+      -290983,
+      45727
+    ],
+    "restStep": 41,
+    "minimumPx": -8.12188720703125,
+    "reversalRestStep": 51,
+    "reversalMinimumPx": -5.9496002197265625
+  },
+  "eightPixelGrid": {
+    "cases": 42,
+    "slowestRestSeconds": 15.758333333333333,
+    "maxErrorVsAnalyticFirst3SecondsPx": 0.02130126332269495,
+    "coverage": "42 sampled pairs, 8 px step; not entire parameter domain"
+  },
+  "coefficientCounterexample": {
+    "deviationPx": 17.90625,
+    "step": 407,
+    "coefficientErrorsUlp": [
+      1,
+      -1,
+      1,
+      1
+    ],
+    "frequencyHz": 0.5,
+    "dampingRatio": 0.1,
+    "targetPx": -4096,
+    "formerTolerancePx": 0.0625
+  },
+  "rounding": {
+    "negativeHalfUlpLiteral": -1,
+    "negativeHalfUlpProduct": 0,
+    "int64Overflow": "rejected"
+  },
+  "schedulerReference": {
+    "frames": [
+      {
+        "elapsedMs": 1000,
+        "executed": 8,
+        "discarded": 112,
+        "phase": 0
+      },
+      {
+        "elapsedMs": 8,
+        "executed": 0,
+        "discarded": 0,
+        "phase": 960
+      },
+      {
+        "elapsedMs": 1,
+        "executed": 1,
+        "discarded": 0,
+        "phase": 80
+      }
+    ],
+    "simulated": 9,
+    "discarded": 112
+  }
+}
