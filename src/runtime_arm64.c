@@ -6,10 +6,11 @@ typedef struct { U pool[10],live,debug,top,bottom,error,argv,argc; } State;
 #define R(name) U ar_##name(U a,U b,U c,State *s)
 #define UNUSED (void)a;(void)b;(void)c;(void)s
 #ifdef ARM_MACOS
-extern I os_read(I,void*,U),os_write(I,const void*,U),os_close(I),os_fsync(I);
-extern void *os_mmap(void*,U,I,I,I,I);
-extern I os_munmap(void*,U),os_nanosleep(void*,void*),os_clock_gettime(I,void*);
-extern I os_rename(const char*,const char*),os_unlink(const char*),os_open(const char*,I,I);
+extern I os_read(I,void*,U),os_write(I,const void*,U);
+extern int os_close(int),os_fsync(int);
+extern void *os_mmap(void*,U,int,int,int,I);
+extern int os_munmap(void*,U),os_nanosleep(void*,void*),os_clock_gettime(int,void*);
+extern int os_rename(const char*,const char*),os_unlink(const char*),os_open(const char*,int,int);
 extern int *os___error(void);
 extern void os__exit(int);
 static I result(I v){return v==-1?-(I)*os___error():v;}

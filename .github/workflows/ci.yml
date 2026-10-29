@@ -2,6 +2,9 @@ name: Native language checks
 on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
+concurrency:
+  group: native-language-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 jobs:
   linux:
     runs-on: ubuntu-24.04
@@ -14,6 +17,8 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y gdb binutils libcurl4 clang-18 lld-18 binutils-aarch64-linux-gnu python3-cairosvg python3-pil
       - name: Rebuild runtimes and compiler from source
         run: python3 tools/embed-runtime.py && python3 tools/embed-arm64.py && python3 tools/build-icons.py && make -B all
+      - name: Check Darwin C API error return widths
+        run: mkdir -p build && cc -O2 -std=c11 -Wall -Wextra tests/arm64-macos-runtime-fixture.c -o build/macos-runtime-oracle && build/macos-runtime-oracle
       - run: |
           mkdir -p build/review-tests
           set -o pipefail
@@ -213,6 +218,9 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y gdb binutils libcurl4
       - run: make -B all CC=${{ matrix.cc }}
+      - name: Native AArch64 oracle for Darwin C API return widths
+        if: runner.os == 'Linux'
+        run: mkdir -p build && cc -O2 -std=c11 -Wall -Wextra tests/arm64-macos-runtime-fixture.c -o build/macos-runtime-oracle && build/macos-runtime-oracle
       - name: Execute ARM64 and verify all output architectures
         run: python3 tools/test-portability.py --expect-host arm64 --output build/review-tests/${{ matrix.artifact }}.json
       - name: Native ARM64 debugger, macOS signature and format gates
