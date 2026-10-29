@@ -1,0 +1,33 @@
+{
+  "schema": "assisscript-microformat-candidate-v1",
+  "profile": "nested-div-probe-v1",
+  "base_revision": "9c09baf934eb2ae6a73dd7a15df4d8fa3c30717f",
+  "state": "pass",
+  "return_code": 0,
+  "tests": 8,
+  "not_run": 0,
+  "host": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "architecture": "x86_64",
+  "python": "3.12.3",
+  "compiler_sha256": "8cb653df1dfc063e4e2645cd70e8e3922b58c78141d3d6c7ce3011499b2b81ec",
+  "command": [
+    "python3",
+    "tests/test-htdl-readiness.py"
+  ],
+  "inputs": {
+    "tests/fixtures/htdl-core.assis": "b9177ee5a5ac812f02a426785aa170cb93ffedcb5f528d6a3bed4fd75afb3d1d",
+    "tests/test-htdl-readiness.py": "0967209571748cb591cf9a1d8b224d5d53e95a33036fc3f7611b98b30d658349",
+    "tests/test-evolution.py": "36f05a60cd1443b534867eefd15884fa283ed42e1b0a714b05caf343ab9ecc7c",
+    "stdlib/unicode.assis": "df36dbcecc7bedc585f621e1994a0a1b3734c7072c7b162b8904767c6929794f",
+    "tools/validate-microformat.py": "74886abd0d0f9e0f57186d8855ac8f9527f75c1c29640e21bd46d88d76ebae66",
+    "src/assisc.c": "e7a88d9813f4a7fe7e2ac42893a0e71b477aef34db781fcafe2ec5815e69bd2e",
+    "src/frontend.h": "ed06812b75ce9bde84c6d4e159072872137c8213189ad929b5e851dbf830c92e",
+    "src/lexer.h": "95bcc9bf1ccd4f256dbb00bf5f6c3464d1b64831ff5307acb47f1a999a2a7de1",
+    "src/version.h": "7000caab95cfacf0fe3f728266c324291370e3f9532b7b8ef62db8dcb20a166f"
+  },
+  "log": "linux-x64.log",
+  "log_sha256": "18bf66ffc112a80a303ba62f37f3d054043a2ac7ae4aab2c57a8b8a5c60a9096",
+  "foreign_native_execution": "not-run",
+  "htdl_conformance": "not-run",
+  "product_integration": "not-run"
+}

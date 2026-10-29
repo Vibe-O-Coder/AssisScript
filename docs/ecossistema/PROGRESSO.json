@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-10-29",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "partial-native-retest-m0-owned",
+  "assessment": "partial-native-retest-m0-microformat",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -213,7 +213,10 @@
           "baseline": "Há mapas e prova de colisões por correção; resistência de custo não comprovada.",
           "evidence": [
             "docs/COLECOES.md",
-            "local:assis/docs/AUDITORIA-HTDL.md"
+            "local:assis/docs/AUDITORIA-HTDL.md",
+            "docs/relatorios/2026-10-29-m0-microparser.md",
+            "tests/fixtures/htdl-core.assis",
+            "tests/test-htdl-readiness.py"
           ]
         }
       ]
@@ -497,7 +500,10 @@
           "baseline": "Microparser local aceita somente div/texto sem atributos; não é HTDL.",
           "evidence": [
             "local:assis/docs/AUDITORIA-HTDL.md",
-            "local:htdl/docs/02-htdl-0.1.md"
+            "local:htdl/docs/02-htdl-0.1.md",
+            "docs/relatorios/2026-10-29-m0-microparser.md",
+            "tests/fixtures/htdl-core.assis",
+            "tests/test-htdl-readiness.py"
           ]
         },
         {
@@ -691,7 +697,10 @@
           "acceptance": "Extrair texto/links de vários documentos, preservar docId e posições, normalizar e tokenizar por política; comparar termos e offsets a um oráculo multilingue.",
           "baseline": "Prova local conta palavras em um documento com conversão ASCII.",
           "evidence": [
-            "local:assis/docs/AUDITORIA-HTDL.md"
+            "local:assis/docs/AUDITORIA-HTDL.md",
+            "docs/relatorios/2026-10-29-m0-microparser.md",
+            "tests/fixtures/htdl-core.assis",
+            "tests/test-htdl-readiness.py"
           ]
         },
         {
@@ -1097,7 +1106,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-10-29",
+      "rubric_version": 1,
+      "label": "M0 parcial: prova de microformato reconciliada, 8/8 por host; níveis preservados",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 1,
+        "E00-03": 1,
+        "E00-04": 0,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 1,
+        "E02-03": 0,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 1,
+        "E03-03": 2,
+        "E03-04": 2,
+        "E03-05": 0,
+        "E04-01": 2,
+        "E04-02": 0,
+        "E04-03": 0,
+        "E04-04": 0,
+        "E04-05": 0,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 0,
+        "E06-02": 0,
+        "E06-03": 0,
+        "E06-04": 0,
+        "E06-05": 0,
+        "E07-01": 1,
+        "E07-02": 0,
+        "E07-03": 0,
+        "E07-04": 0,
+        "E07-05": 0,
+        "E08-01": 0,
+        "E08-02": 0,
+        "E08-03": 0,
+        "E08-04": 0,
+        "E08-05": 0,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 1,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Baseline inicial preservada. Após a reconciliação de incremento, esta atualização valida OwnedArray e regressões em Windows x64 e Linux x64/WSL: 133 métodos executados por host, sem falhas; um caso de symlink por host permanece not-run. Portabilidade: 18 casos por host, com geração dos cinco formatos e execução apenas nativa x64. Os demais créditos e todos os gates permanecem abertos/provisórios."
+  "assessment_note": "Após incremento e OwnedArray, esta unidade executa o microformato nested-div-probe-v1: 8/8 métodos em Windows x64 e 8/8 em Linux x64/WSL, sem dispensas, em otimizado/referência. Não é conformidade HTDL ou busca multidocumento. Demais créditos conservam seus limites; nenhum gate aprovado."
 }

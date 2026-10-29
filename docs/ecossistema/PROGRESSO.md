@@ -2,9 +2,9 @@
 
 Data: 2026-10-29. Régua v1. **20,10/100 pontos (20,10%)**, com **0/5 gates aprovados**.
 
-Estado da avaliação: `partial-native-retest-m0-owned`. Escopo: Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.
+Estado da avaliação: `partial-native-retest-m0-microformat`. Escopo: Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.
 
-Baseline inicial preservada. Após a reconciliação de incremento, esta atualização valida OwnedArray e regressões em Windows x64 e Linux x64/WSL: 133 métodos executados por host, sem falhas; um caso de symlink por host permanece not-run. Portabilidade: 18 casos por host, com geração dos cinco formatos e execução apenas nativa x64. Os demais créditos e todos os gates permanecem abertos/provisórios. O número não mede prazo, esforço restante ou prontidão para produção. Casas decimais tornam a soma auditável; não significam precisão de previsão.
+Após incremento e OwnedArray, esta unidade executa o microformato nested-div-probe-v1: 8/8 métodos em Windows x64 e 8/8 em Linux x64/WSL, sem dispensas, em otimizado/referência. Não é conformidade HTDL ou busca multidocumento. Demais créditos conservam seus limites; nenhum gate aprovado. O número não mede prazo, esforço restante ou prontidão para produção. Casas decimais tornam a soma auditável; não significam precisão de previsão.
 
 Os 100/100 das antigas fases 0–6 medem outro escopo e permanecem preservados. Esta régua tem 60 critérios em 12 frentes; cinco critérios dividem igualmente o peso de cada frente. Níveis 0–4 rendem 0%, 25%, 50%, 75% e 100% do crédito. Fórmula: `Σ peso × soma(níveis) / 20`. Só há conclusão com todos os critérios em 4 e os cinco gates aprovados.
 
@@ -47,6 +47,7 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 | 2026-10-29 | Baseline documental inicial; sem novos testes do runtime | 19,90 | 0/5 |
 | 2026-10-29 | M0 parcial: reconciliação ++/--, testes próprios e rastreabilidade da publicação | 20,10 | 0/5 |
 | 2026-10-29 | M0 parcial: OwnedArray mutável publicado com modelos independentes; níveis preservados | 20,10 | 0/5 |
+| 2026-10-29 | M0 parcial: prova de microformato reconciliada, 8/8 por host; níveis preservados | 20,10 | 0/5 |
 
 ## Estado e evidência dos 60 critérios
 
@@ -78,7 +79,7 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 | E02-02 — Arenas e identidades estáveis | 1/4 | Prova local usa índices e IDs sem reutilização; ainda sem arena geracional. `local:assis/docs/AUDITORIA-HTDL.md`; `local:assis/exemplos/32_document_resources.assis` |
 | E02-03 — Alocação e quotas recuperáveis | 0/4 | Não demonstrado para documentos/índices e limites completos. [RECURSOS-E-FATIAS.md](../../docs/RECURSOS-E-FATIAS.md) |
 | E02-04 — Unicode e edição de texto | 2/4 | String UTF-8 com vida/comprimento existe; processamento linguístico completo não existe. [BIBLIOTECA-unicode.md](../../docs/BIBLIOTECA-unicode.md); [BIBLIOTECA-texto.md](../../docs/BIBLIOTECA-texto.md) |
-| E02-05 — Mapas e armazenamento eficientes | 1/4 | Há mapas e prova de colisões por correção; resistência de custo não comprovada. [COLECOES.md](../../docs/COLECOES.md); `local:assis/docs/AUDITORIA-HTDL.md` |
+| E02-05 — Mapas e armazenamento eficientes | 1/4 | Há mapas e prova de colisões por correção; resistência de custo não comprovada. [COLECOES.md](../../docs/COLECOES.md); `local:assis/docs/AUDITORIA-HTDL.md`; [2026-10-29-m0-microparser.md](../../docs/relatorios/2026-10-29-m0-microparser.md); [htdl-core.assis](../../tests/fixtures/htdl-core.assis); [test-htdl-readiness.py](../../tests/test-htdl-readiness.py) |
 
 ### E03 — Sistema, tarefas, processos e integração de eventos
 
@@ -124,7 +125,7 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 
 | Critério | Nível | Justificativa e fontes |
 | --- | ---: | --- |
-| E07-01 — Parser e diagnóstico HTDL real | 1/4 | Microparser local aceita somente div/texto sem atributos; não é HTDL. `local:assis/docs/AUDITORIA-HTDL.md`; `local:htdl/docs/02-htdl-0.1.md` |
+| E07-01 — Parser e diagnóstico HTDL real | 1/4 | Microparser local aceita somente div/texto sem atributos; não é HTDL. `local:assis/docs/AUDITORIA-HTDL.md`; `local:htdl/docs/02-htdl-0.1.md`; [2026-10-29-m0-microparser.md](../../docs/relatorios/2026-10-29-m0-microparser.md); [htdl-core.assis](../../tests/fixtures/htdl-core.assis); [test-htdl-readiness.py](../../tests/test-htdl-readiness.py) |
 | E07-02 — Árvore, seletores e mutações | 0/4 | Coleções são fundação; ainda não há árvore HTDL de produto. `local:htdl/docs/17-execucao-transacoes-e-layout.md` |
 | E07-03 — SDK e ABI htdl_v1 | 0/4 | SDK e nomes antigos dos rascunhos não são API implementada. `local:htdl/docs/03-assisscript-no-navegador.md`; [ENGLISH-API.md](../../docs/ENGLISH-API.md) |
 | E07-04 — Estado, eventos e transações | 0/4 | Eventos cooperativos da stdlib não são eventos de documento. `local:htdl/docs/17-execucao-transacoes-e-layout.md` |
@@ -154,7 +155,7 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 
 | Critério | Nível | Justificativa e fontes |
 | --- | ---: | --- |
-| E10-01 — Extração e análise linguística | 1/4 | Prova local conta palavras em um documento com conversão ASCII. `local:assis/docs/AUDITORIA-HTDL.md` |
+| E10-01 — Extração e análise linguística | 1/4 | Prova local conta palavras em um documento com conversão ASCII. `local:assis/docs/AUDITORIA-HTDL.md`; [2026-10-29-m0-microparser.md](../../docs/relatorios/2026-10-29-m0-microparser.md); [htdl-core.assis](../../tests/fixtures/htdl-core.assis); [test-htdl-readiness.py](../../tests/test-htdl-readiness.py) |
 | E10-02 — Crawler e fronteira persistente | 0/4 | Não há crawler no WebAssis. [BIBLIOTECA-net.md](../../docs/BIBLIOTECA-net.md) |
 | E10-03 — Índice invertido em disco | 0/4 | Mapa de contagem local não é índice multidocumento. `local:assis/docs/AUDITORIA-HTDL.md` |
 | E10-04 — Consulta, ranking e avaliação | 0/4 | Sem serviço/algoritmo de busca multidocumento demonstrado. `local:htdl/docs/08-navegador-assisscript-privacidade-e-busca.md` |
