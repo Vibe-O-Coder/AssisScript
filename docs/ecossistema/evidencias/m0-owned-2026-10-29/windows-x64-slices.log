@@ -1,0 +1,10 @@
+test_bounds_at_creation_and_index (__main__.Slices.test_bounds_at_creation_and_index) ... ok
+test_copy_elements_and_narrow_widths (__main__.Slices.test_copy_elements_and_narrow_widths) ... ok
+test_lifetime_and_exclusivity_rejections (__main__.Slices.test_lifetime_and_exclusivity_rejections) ... ok
+test_mutable_nested_slice_and_empty_end (__main__.Slices.test_mutable_nested_slice_and_empty_end) ... ok
+test_returned_generic_and_indirect_borrow (__main__.Slices.test_returned_generic_and_indirect_borrow) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 3.418s
+
+OK

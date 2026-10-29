@@ -1,0 +1,1 @@
+import "std/owned.assis";struct Item{let n:int;own data:*byte;}safe fn main():int{own items:owned::OwnedArray<Item>=new owned::OwnedArray<Item>();items.push(new Item(1,alloc<byte>(1)));{borrow mut value:Item=items.get_mut(0);value.n=42;}items.clear();return 0;}

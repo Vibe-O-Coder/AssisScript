@@ -1,0 +1,21 @@
+test_addressed_locals_and_effectful_aliases_stay_in_memory (__main__.BackendEvolution.test_addressed_locals_and_effectful_aliases_stay_in_memory) ... ok
+test_all_integer_branch_relations_against_python (__main__.BackendEvolution.test_all_integer_branch_relations_against_python) ... ok
+test_branch_short_circuit_negation_and_effect_order (__main__.BackendEvolution.test_branch_short_circuit_negation_and_effect_order) ... ok
+test_forward_reverse_offset_and_pure_call_induction (__main__.BackendEvolution.test_forward_reverse_offset_and_pure_call_induction) ... ok
+test_ieee_branches_and_owned_cleanup_at_loop_exits (__main__.BackendEvolution.test_ieee_branches_and_owned_cleanup_at_loop_exits) ... ok
+test_liveness_limit_falls_back_without_rejecting_program (__main__.BackendEvolution.test_liveness_limit_falls_back_without_rejecting_program) ... ok
+test_match_definitions_nested_loops_and_owned_cleanup (__main__.BackendEvolution.test_match_definitions_nested_loops_and_owned_cleanup) ... ok
+test_modulo_branch_extremes_and_zero_divisor (__main__.BackendEvolution.test_modulo_branch_extremes_and_zero_divisor) ... ok
+test_register_liveness_through_backedges_branches_and_parameters (__main__.BackendEvolution.test_register_liveness_through_backedges_branches_and_parameters) ... ok
+test_registers_reused_across_scopes_and_dead_writes (__main__.BackendEvolution.test_registers_reused_across_scopes_and_dead_writes) ... ok
+test_scalar_emission_matches_independent_modular_reference (__main__.BackendEvolution.test_scalar_emission_matches_independent_modular_reference) ... ok
+test_scalar_stores_and_compound_assignments_have_explicit_ir (__main__.BackendEvolution.test_scalar_stores_and_compound_assignments_have_explicit_ir) ... ok
+test_scalar_stores_keep_width_rounding_and_aliased_reads (__main__.BackendEvolution.test_scalar_stores_keep_width_rounding_and_aliased_reads) ... ok
+test_scalar_values_have_types_effects_and_dominating_operands (__main__.BackendEvolution.test_scalar_values_have_types_effects_and_dominating_operands) ... ok
+test_short_circuit_call_order_and_traps_remain_observable (__main__.BackendEvolution.test_short_circuit_call_order_and_traps_remain_observable) ... ok
+test_unproven_offsets_mutation_and_overflow_keep_checks (__main__.BackendEvolution.test_unproven_offsets_mutation_and_overflow_keep_checks) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 8.668s
+
+OK

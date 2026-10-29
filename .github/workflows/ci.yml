@@ -110,7 +110,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Collections AST tests failed' }
           python tests/test-ownership-functions.py
           if ($LASTEXITCODE -ne 0) { throw 'Ownership function tests failed' }
-          foreach ($suite in @('values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy','ffi','http','process','applications-bc','safe-default','net','move-enums','closures','usability','backend-evolution','complete-ir','increment')) {
+          foreach ($suite in @('values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy','ffi','http','process','applications-bc','safe-default','net','move-enums','closures','usability','backend-evolution','complete-ir','increment','owned-mutation')) {
             python ('tests/test-' + $suite + '.py')
             if ($LASTEXITCODE -ne 0) { throw ('New suite failed: ' + $suite) }
           }
@@ -183,6 +183,7 @@ jobs:
       - run: python3 tests/test-closures.py
       - run: python3 tests/test-backend-evolution.py
       - run: python3 tests/test-complete-ir.py
+      - run: python3 tests/test-owned-mutation.py
       - run: bin/assis run exemplos/31_language_review.assis --debug
       - name: Record native macOS host and output validation
         run: python3 tools/test-portability.py --expect-host x86_64 --output build/review-tests/ports-macos-x64.json
@@ -239,6 +240,7 @@ jobs:
           python3 tests/test-ffi.py
           python3 tests/test-backend-evolution.py
           python3 tests/test-complete-ir.py
+          python3 tests/test-owned-mutation.py
       - name: Offline install and uninstall of the native compiler
         run: python3 tools/test-native-installer.py
       - run: cp bin/assis bin/${{ matrix.binary }}

@@ -1,0 +1,48 @@
+// Native resource lifecycle example, not an HTDL parser or a page SDK.
+// IDs are unique within this run and never reused. Array indices are storage positions.
+import "std/owned.assis";
+import "std/unicode.assis";
+
+struct Node {let id:int;own label:unicode::String;}
+
+safe fn node(id:int,borrow content:slice<byte>):own Node {
+    own label:unicode::String=new unicode::String();
+    assert(label.append(content));return new Node(id,move(label));
+}
+
+safe fn main():int {
+    own nodes:owned::OwnedArray<Node>=new owned::OwnedArray<Node>();
+    own positions:HashMap<int,int>=new HashMap<int,int>();
+    nodes.push(node(10,"Temporário"));positions.set(10,0);
+    nodes.push(node(11,"0"));positions.set(11,1);
+    nodes.push(node(12,"Aguardando"));positions.set(12,2);
+
+    // An exclusive loan can update nested resources without removing the node.
+    {
+        borrow mut current:Node=nodes.get_mut(positions.get(11));
+        current.label.clear();current.label.append_int(42);
+    }
+    {
+        own previous:Node=nodes.replace(positions.get(12),node(12,"Pronto"));
+        assert(previous.id==12); // The caller owns and destroys the previous resource.
+    }
+
+    // swap_remove moves the last entry. Update the ID lookup before delivering events.
+    {
+        val slot:int=positions.get(10);
+        own removed:Node=nodes.swap_remove(slot);
+        assert(positions.remove(removed.id));
+        if(slot<nodes.size()){
+            borrow moved:Node=nodes.get(slot);positions.set(moved.id,slot);
+        }
+    }
+    own pending:Array<int>=[10,11,12];
+    for(let i:int=0;i<len(pending);i++){
+        val id:int=pending[i];
+        if(!positions.has(id)){continue;}
+        borrow current:Node=nodes.get(positions.get(id));
+        print(current.id,current.label);
+    }
+    nodes.clear();positions.clear();
+    return 0;
+}
