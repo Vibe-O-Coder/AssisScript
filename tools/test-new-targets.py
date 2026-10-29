@@ -19,17 +19,20 @@ import tempfile
 ROOT=Path(__file__).resolve().parent.parent
 def macho(data):
     cpu=struct.unpack_from('<I',data,4)[0]
-    count=struct.unpack_from('<I',data,16)[0];at=32;commands={};sections=[]
+    count=struct.unpack_from('<I',data,16)[0];at=32;commands={};sections=[];ranges=[]
     for _ in range(count):
         cmd,size=struct.unpack_from('<II',data,at);assert size>=8 and at+size<=len(data)
         commands[cmd]=data[at:at+size]
         if cmd==0x19:
             name,vm,vmsize,off,used,maxp,initp,nsects=struct.unpack_from('<16sQQQQIII',data,at+8)
             assert off+used<=len(data) and not (initp&2 and initp&4)
+            if vmsize:ranges.append((vm,vm+vmsize,name))
             if cpu==0x100000c:assert vm%16384==0
             for k in range(nsects):sections.append(data[at+72+80*k:at+88+80*k].rstrip(b'\0'))
         at+=size
     assert at==32+struct.unpack_from('<I',data,20)[0]
+    ranges.sort()
+    assert all(a[1]<=b[0] for a,b in zip(ranges,ranges[1:])),('Overlapping Mach-O segments',ranges)
     assert {b'__debug_info',b'__debug_line',b'__debug_abbrev'}<=set(sections)
     assert 2 in commands
     if cpu==0x100000c:

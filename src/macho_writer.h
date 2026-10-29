@@ -53,7 +53,7 @@ static void write_macho(const char *path){
     macho_segment(&commands,"__PAGEZERO",0,0,0,(size_t)base,0,false);
     macho_segment(&commands,"__TEXT",base,0,4096+code.n,const_offset,5,true);
     macho_segment(&commands,"__DATA_CONST",base+const_offset,const_offset,data.n,got_offset-const_offset,1,false);
-    macho_segment(&commands,"__DATA",base+got_offset,got_offset,got.n,linkedit_offset-got_offset,3,false);
+    macho_segment(&commands,"__DATA",base+got_offset,got_offset,got.n,dwarf_offset-got_offset,3,false);
     if(debug_symbols){u32(&commands,0x19);u32(&commands,72+3*80);macho_name(&commands,"__DWARF");u64(&commands,base+dwarf_offset);u64(&commands,align_page(dwarf.n));u64(&commands,dwarf_offset);u64(&commands,dwarf.n);u32(&commands,1);u32(&commands,1);u32(&commands,3);u32(&commands,0);const char*names[]={"__debug_line","__debug_info","__debug_abbrev"};for(int k=0;k<3;k++){macho_name(&commands,names[k]);macho_name(&commands,"__DWARF");u64(&commands,base+dwarf_offset+dwarf_offsets[k]);u64(&commands,dwarf_sizes[k]);u32(&commands,(uint32_t)(dwarf_offset+dwarf_offsets[k]));u32(&commands,0);u32(&commands,0);u32(&commands,0);u32(&commands,0x02000000);u32(&commands,0);u32(&commands,0);u32(&commands,0);}}
     macho_segment(&commands,"__LINKEDIT",base+linkedit_offset,linkedit_offset,linkedit_size,align_page(linkedit_size),1,false);
     macho_string_command(&commands,0xe,"/usr/lib/dyld",false);
