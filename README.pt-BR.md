@@ -49,7 +49,7 @@ Módulos: `math`, `strings`, `memory`, `errors`, `convert`, `algorithms`, `csv`,
 
 Alpha.14 focuses on language usability: text output/building, global constants, byte characters, constructor chaining, two-phase receiver borrows, checked downcasts, indexed owned collections and random numbers. Closures already existed in alpha.13. Linux and Windows are tested natively; [macOS x86_64 is experimental](docs/MACOS.md). This review does not advance the internal roadmap percentage or claim browser readiness.
 
-A alpha.15 retoma o plano: expressões escalares em IR tipada, reutilização global de registradores e provas de limites para laços diretos/reversos. Os ensaios de 24 horas Windows/Linux foram aprovados. Progresso: **94% estimados (94/100)**; consulte os [resultados](docs/HANDOFF-3.3-ALPHA.15.md) e [contratos e limites](docs/BACKEND-ALPHA15.md).
+A continuação de desenvolvimento da alpha.15 conclui a emissão por IR tipada, incluindo memória, recursos, controle e escopos de depuração. O responsável confirmou o aceite independente. Progresso: **97% estimados (97/100)**; consulte a [implementação e validação](docs/BACKEND-IR-COMPLETA.md) e o [trabalho restante](docs/RESTANTE-PARA-100.md). Geração nativa ARM64 e política de distribuição continuam abertas.
 
 ## Uso, bibliotecas e versões alternativas
 

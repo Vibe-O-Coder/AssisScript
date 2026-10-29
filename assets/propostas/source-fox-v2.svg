@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">AssisScript — fonte, proposta raposa 2</title>
+  <desc id="desc">Chaves de código claras, duas orelhas geométricas azuis e uma barra vermelha sobre fundo grafite.</desc>
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="#141927"/>
+  <path d="M66 104 69 52 107 79 M149 79 187 52 190 104" fill="none" stroke="#8bc7e8" stroke-width="11" stroke-linejoin="round"/>
+  <path d="M103 91H87L79 100V119L65 133 79 147V166L87 175H103 M153 91H169L177 100V119L191 133 177 147V166L169 175H153" fill="none" stroke="#edf3f7" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M140 111 116 156" stroke="#d84e63" stroke-width="12" stroke-linecap="round"/>
+  <path d="m113 190 15 10 15-10" fill="none" stroke="#8bc7e8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

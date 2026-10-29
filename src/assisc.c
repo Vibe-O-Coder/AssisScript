@@ -285,6 +285,7 @@ static bool constant(Node *n,uint64_t *value){
 }
 #include "ranges.h"
 #include "ir.h"
+#include "backend_ir.h"
 static void load_local(int reg,Var *v){
     if(inline_type(v->ty)){local_address(reg,v);return;}
     if(optimize&&v->reg>=0){u8(&code,v->reg>=8?0x4c:0x48);u8(&code,0x89);u8(&code,0xc0+(unsigned)((v->reg&7)*8+reg));return;}
@@ -310,6 +311,7 @@ static void cache_text_length(Var *v){
     INS(0x50);movreg(RDI,RAX);rt_call(RT_len);INS(0x48,0x89,0x85);u32(&code,(uint32_t)(-8*(v->length_slot+1)));INS(0x58);
 }
 static void gen_address(Node *n){
+    if(optimize)fatal("emissor AST indisponível após lowering da IR");
     if(n->kind==N_NAME){INS(0x48,0x8d,0x85);u32(&code,(uint32_t)(-8*(n->var->slot+1)));}
     else if(n->kind==N_MEMBER){
         if(optimize&&value_type(n->a->ty)&&n->a->kind==N_NAME)local_address(RAX,n->a->var);else gen_expr(n->a);
@@ -583,7 +585,7 @@ static void gen_expr_inner(Node *n){
     }
 }
 static void gen_expr(Node *n){
-    if(optimize&&n->ir){ir_emit_expr(n->ir);return;}
+    if(optimize)fatal("emissor AST indisponível após lowering da IR");
     gen_expr_inner(n);if(!n->ty.depth&&n->ty.kind>=TY_I8)normalize_numeric(n->ty);if(n->temp&&n->kind!=N_NEW&&n->kind!=N_CALL){local_address(RDX,n->temp);store_value(n->ty);}
 }
 static int return_label,loop_count,loop_start[MAX_NEST],loop_end[MAX_NEST],loop_cleanup[MAX_NEST];
@@ -616,7 +618,7 @@ static void gen_cleanup(int from){
     for(int i=cleanups.n-1;i>=from;i--){Var *v=cleanups.v[i];load_local(RAX,v);gen_release(v->ty);}
 }
 static void gen_false(Node *n,int label){
-    if(optimize&&n->ir){ir_emit_branch(n->ir,label,false);return;}
+    if(optimize)fatal("emissor AST indisponível após lowering da IR");
     if(optimize&&n->kind==N_BINARY&&(n->op==T_EQ||n->op==T_NE)&&n->a->kind==N_BINARY&&n->a->op=='%'&&equal_type(n->a->a->ty,type_i64)){
         uint64_t divisor,zero;
         if(constant(n->b,&zero)&&!zero&&constant(n->a->b,&divisor)&&divisor){
@@ -637,12 +639,9 @@ static void gen_false(Node *n,int label){
     gen_expr(n);INS(0x48,0x85,0xc0);branch_if(0x84,label);
 }
 static void gen_stmt(Node *n){
-    if(optimize&&n->unreachable)return;
+    if(optimize)fatal("emissor AST indisponível após lowering da IR");
     n->code_start=code.n;
     if(debug_symbols&&n->kind!=N_BLOCK&&n->kind!=N_UNSAFE){DebugSite *site=mem(sizeof(*site));site->offset=code.n;site->token=n->t;push(&debug_sites,site);}
-    if(optimize&&n->operation&&n->operation->kind!=IO_AST){
-        IROperation *op=n->operation;ir_emit_expr(op->value);if(op->kind==IO_STORE_LOCAL)store_local(op->local);n->code_end=code.n;return;
-    }
     switch(n->kind){
     case N_MATCH:{
         gen_expr(n->a);if(!n->cls->value)nonnull(n->t);store_local(n->var);int done=new_label(),outer=cleanups.n;
@@ -710,6 +709,7 @@ static void gen_stmt(Node *n){
     }
     n->code_end=code.n;
 }
+#include "backend_emit.h"
 static size_t entry_offset;
 static void generate(void){
     if(target_windows)bytes(&code,runtime_win_blob,sizeof(runtime_win_blob));else if(target_macos)bytes(&code,runtime_macos_blob,sizeof(runtime_macos_blob));else bytes(&code,runtime_blob,sizeof(runtime_blob));
@@ -755,9 +755,9 @@ static void generate(void){
             if(v->ownership==1)push(&cleanups,v);
         }
         for(int j=0;j<f->params.n;j++){Var *v=f->params.v[j];if(v->length_slot>=0){load_local(RAX,v);cache_text_length(v);}}
-        generating_body=new_label();mark(generating_body,&code);gen_stmt(f->body);
-        gen_cleanup(0);
-        if(isvoid(f->result)){INS(0x31,0xc0);}else panic_at(7,f->t);
+        generating_body=new_label();mark(generating_body,&code);
+        if(optimize)backend_emit_function(backend_function(f));
+        else{gen_stmt(f->body);gen_cleanup(0);if(isvoid(f->result)){INS(0x31,0xc0);}else panic_at(7,f->t);}
         mark(return_label,&code);
         for(unsigned r=0;r<saved_count;r++){u8(&code,saved[r]>=8?0x4c:0x48);u8(&code,0x8b);u8(&code,0x85+((saved[r]&7)*8));u32(&code,(uint32_t)(-8*(slots+r+1)));}
         INS(0xc9,0xc3);f->code_end=code.n;
@@ -1005,8 +1005,8 @@ static int compiler_main(int argc,char **argv){
     if(!input)input="assis.assis";module_search_paths();initialize_packages(input);Vec expanded={0};load_module(input,NULL,stdin_source,&expanded,0);tokens=expanded;
     if(!locking)package_lock(false);
     if(show_tokens){for(int i=0;i<tokens.n;i++){Token *t=tokens.v[i];printf("%4d:%-3d %-18s %s\n",t->line,t->col,token_name(t),t->text);}return 0;}
-    scan_platforms();scan_namespaces();parse();if(testing)prepare_tests();bind_namespaces();check();check_ownership();check_safety();prepare_ir();prepare_ranges();prepare_registers();if(inspecting_ir){print_ir();return 0;}if(locking){package_lock(true);return 0;}if(documenting){document_api(output);return 0;}if(validate){if(json_diagnostics)puts("{\"ok\":true}");else printf("ASSIS: %s passou na análise de sintaxe e tipos.\n",input);return 0;}
-    generate();if(run)return run_program(timeout);
+    scan_platforms();scan_namespaces();parse();if(testing)prepare_tests();bind_namespaces();check();check_ownership();check_safety();prepare_ir();prepare_ranges();prepare_registers();if(inspecting_ir){prepare_backend_ir();print_ir();return 0;}if(locking){package_lock(true);return 0;}if(documenting){document_api(output);return 0;}if(validate){if(json_diagnostics)puts("{\"ok\":true}");else printf("ASSIS: %s passou na análise de sintaxe e tipos.\n",input);return 0;}
+    if(optimize){prepare_backend_ir();discard_frontend_ast();}generate();if(run)return run_program(timeout);
     if(!output){
         size_t len=strlen(input);char *name=copy(input,len);char *slash=strrchr(name,'/'),*dot=strrchr(name,'.');
 #ifdef _WIN32

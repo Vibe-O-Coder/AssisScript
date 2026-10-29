@@ -1,5 +1,10 @@
 # Versão experimental para testes no GitHub
 
+Este guia descreve a publicação original da branch `testing/alpha15`.
+A continuação P5-IR tem [implementação e validação próprias](BACKEND-IR-COMPLETA.md),
+com os binários de desenvolvimento atualizados e [97/100 pontos](PROGRESSO.md).
+Use a revisão/commit indicado pelo respectivo relatório ao comparar resultados.
+
 Preparada em 28/10/2026. Compilador: **3.3.0-alpha.15**. Os registros alpha.16
 são uma continuação da auditoria/documentação; não representam uma nova versão
 do compilador.

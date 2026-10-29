@@ -121,3 +121,4 @@ test-usability: bin/assis
 .PHONY: test-alpha15
 test-alpha15: bin/assis
 	python3 tests/test-backend-evolution.py
+	python3 tests/test-complete-ir.py

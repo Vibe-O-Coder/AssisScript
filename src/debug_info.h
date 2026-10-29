@@ -26,6 +26,12 @@ static void debug_scope(Buffer *info,Node *n){
     else{debug_scope(info,n->a);debug_scope(info,n->b);debug_scope(info,n->c);debug_scope(info,n->step);}
     if(block)u8(info,0);
 }
+static void debug_backend_scope(Buffer *info,BackendScope *scope){
+    if(!scope||scope->code_end<=scope->code_start)return;
+    u8(info,6);u64(info,ELF_BASE+4096+scope->code_start);u64(info,scope->code_end-scope->code_start);
+    for(int i=0;i<scope->variables.n;i++)debug_variable(info,scope->variables.v[i],false);
+    for(int i=0;i<scope->children.n;i++)debug_backend_scope(info,scope->children.v[i]);u8(info,0);
+}
 static void append_debug_elf(Elf64_Ehdr *eh,size_t start){
     Buffer line={0},abbrev={0},info={0},str={0},sym={0},names={0};
     u32(&line,0);debug_u16(&line,4);u32(&line,0);u8(&line,1);u8(&line,1);u8(&line,1);u8(&line,251);u8(&line,14);u8(&line,13);
@@ -53,7 +59,7 @@ static void append_debug_elf(Elf64_Ehdr *eh,size_t start){
         Function *f=all_functions.v[i];Label *label=labels.v[f->label];uint64_t low=ELF_BASE+4096+label->position,size=f->code_end-label->position;
         u8(&info,2);bytes(&info,f->t->text,strlen(f->t->text)+1);u64(&info,low);u64(&info,size);u32(&info,debug_file(f->t->file));u32(&info,(uint32_t)f->t->line);
         u8(&info,1);u8(&info,0x56); /* DW_AT_frame_base = DW_OP_reg6 (rbp). */
-        if(!f->foreign)for(int j=0;j<f->params.n;j++)debug_variable(&info,f->params.v[j],true);debug_scope(&info,f->body);u8(&info,0);
+        if(!f->foreign){for(int j=0;j<f->params.n;j++)debug_variable(&info,f->params.v[j],true);if(optimize)debug_backend_scope(&info,backend_function(f)->scope);else debug_scope(&info,f->body);}u8(&info,0);
         const char *name=f->t->text;char *method=NULL;if(f->owner){method=qualified_name(f->owner->display?f->owner->display:f->owner->t->text,name);name=method;}
         DebugSymbol symbol={(uint32_t)str.n,0x12,0,1,low,size};bytes(&str,name,strlen(name)+1);bytes(&sym,&symbol,sizeof(symbol));free(method);
     }u8(&info,0);debug_patch32(&info,0,(uint32_t)(info.n-4));

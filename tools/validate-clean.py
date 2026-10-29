@@ -17,7 +17,8 @@ ROOT = Path(__file__).resolve().parent.parent
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--cc', default='gcc')
 parser.add_argument('--binutils-dir')
-suites=['evolution','generics','functions','generic-classes','collections-ast','ownership-functions','values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy','ffi','http','process','applications-bc','safe-default','net','move-enums','closures','usability','backend-evolution']
+parser.add_argument('--compare-binary',type=Path,help='Candidate binary to reproduce; default is the installed workspace compiler')
+suites=['evolution','generics','functions','generic-classes','collections-ast','ownership-functions','values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy','ffi','http','process','applications-bc','safe-default','net','move-enums','closures','usability','backend-evolution','complete-ir']
 parser.add_argument('--suite',action='append',choices=suites,help='Limit validation to named suites; default runs the complete matrix')
 args = parser.parse_args()
 cc = shutil.which(args.cc)
@@ -47,7 +48,7 @@ with tempfile.TemporaryDirectory(prefix='assis-clean-') as temp:
     environment['ASSIS_BIN'] = str(binary)
     for suite in args.suite or suites:
         subprocess.run([sys.executable, ROOT / ('tests/test-' + suite + '.py')], env=environment, check=True)
-    installed = ROOT / 'bin' / binary.name
+    installed = (args.compare_binary or ROOT / 'bin' / binary.name).resolve()
     record = dict(platform=sys.platform, compiler=cc,
                   cleanBinarySha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
                   workspaceBinarySha256=hashlib.sha256(installed.read_bytes()).hexdigest())
