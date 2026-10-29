@@ -1,0 +1,7 @@
+// Expected: S203 during channel validation, before node linkage.
+motion WrongAxis {
+    spring(target: fs.target.offsetX, frequency: 4Hz, dampingRatio: 0.8)
+        -> presentation.offsetY;
+}
+
+bind .box to WrongAxis;

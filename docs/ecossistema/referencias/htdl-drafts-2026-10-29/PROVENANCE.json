@@ -1,0 +1,299 @@
+{
+  "schema": "assisscript-reference-snapshot-v1",
+  "date": "2026-10-29",
+  "source": "workspace sibling Hypertext Div Language",
+  "source_revision": null,
+  "status": "draft-reference-only-not-conformance-tested",
+  "normalization": "UTF-8, LF line endings; source and normalized hashes kept separately",
+  "excluded": [
+    "simulador",
+    "archives and binaries"
+  ],
+  "files": [
+    {
+      "path": "docs/01-ecossistema.md",
+      "source_sha256": "f154ab5b018f2668bd714227bbf19b575c35e8a9a507d4522d7ce56b5d96265b",
+      "snapshot_sha256": "f154ab5b018f2668bd714227bbf19b575c35e8a9a507d4522d7ce56b5d96265b"
+    },
+    {
+      "path": "docs/02-htdl-0.1.md",
+      "source_sha256": "d5e0edde6be27aa76cad2792b4503fd643aa29d8e751b30785ac6706c86ed8f6",
+      "snapshot_sha256": "d5e0edde6be27aa76cad2792b4503fd643aa29d8e751b30785ac6706c86ed8f6"
+    },
+    {
+      "path": "docs/03-assisscript-no-navegador.md",
+      "source_sha256": "c0b752b943b5832f7cc7f737f982d3fdddd0d95f9240837411055f7829ee491f",
+      "snapshot_sha256": "c0b752b943b5832f7cc7f737f982d3fdddd0d95f9240837411055f7829ee491f"
+    },
+    {
+      "path": "docs/04-estilo-e-renderizacao.md",
+      "source_sha256": "84654e37f7603652d3da442e46c3f9fdee6913b1508f206532c1530b2d8da303",
+      "snapshot_sha256": "84654e37f7603652d3da442e46c3f9fdee6913b1508f206532c1530b2d8da303"
+    },
+    {
+      "path": "docs/05-plano-de-execucao.md",
+      "source_sha256": "b6a8360869d8969591940eb6db3fe7f3b69ef2664f87842d232017bde592a724",
+      "snapshot_sha256": "b6a8360869d8969591940eb6db3fe7f3b69ef2664f87842d232017bde592a724"
+    },
+    {
+      "path": "docs/06-decisoes-e-fontes.md",
+      "source_sha256": "e282a2cbdb37cdbf4a66e4701f253c6631fe39cb59432b73a10a9cdd632b566e",
+      "snapshot_sha256": "e282a2cbdb37cdbf4a66e4701f253c6631fe39cb59432b73a10a9cdd632b566e"
+    },
+    {
+      "path": "docs/07-propostas-visuais-e-ssc.md",
+      "source_sha256": "283bd35b555060bcaeb64fd02ee2ce26de796eec08f3a5e548756b7230ebf3fa",
+      "snapshot_sha256": "283bd35b555060bcaeb64fd02ee2ce26de796eec08f3a5e548756b7230ebf3fa"
+    },
+    {
+      "path": "docs/08-navegador-assisscript-privacidade-e-busca.md",
+      "source_sha256": "ac0f82a17214f4695ad960477c19b572107729e6ffe08937f940f694e1a36b2f",
+      "snapshot_sha256": "ac0f82a17214f4695ad960477c19b572107729e6ffe08937f940f694e1a36b2f"
+    },
+    {
+      "path": "docs/09-fluxstyle-e-fluxo.md",
+      "source_sha256": "0ba972a53706f5faaf2e00a182d77130a1dd1dbb440f4b929ce7266905b996af",
+      "snapshot_sha256": "0ba972a53706f5faaf2e00a182d77130a1dd1dbb440f4b929ce7266905b996af"
+    },
+    {
+      "path": "docs/10-fluxstyle-referencia.md",
+      "source_sha256": "44f419a85fd23229131a62c863bdf8b1e05212348b9a587c43aaeba8a867aafb",
+      "snapshot_sha256": "44f419a85fd23229131a62c863bdf8b1e05212348b9a587c43aaeba8a867aafb"
+    },
+    {
+      "path": "docs/11-ssc-referencia.md",
+      "source_sha256": "123f5f852b49086ffff346985738f032c232059dc32ab77df5281eb2a1f81e6b",
+      "snapshot_sha256": "123f5f852b49086ffff346985738f032c232059dc32ab77df5281eb2a1f81e6b"
+    },
+    {
+      "path": "docs/12-contrato-fs-ssc-e-assisscript.md",
+      "source_sha256": "2b35889db5224504e12760f6f528a2f6e7729c05d22427faf599546f8005e764",
+      "snapshot_sha256": "2b35889db5224504e12760f6f528a2f6e7729c05d22427faf599546f8005e764"
+    },
+    {
+      "path": "docs/13-revisao-extensoes-abertos-e-propostas.md",
+      "source_sha256": "94907e807e96776a91ab4359713731c0992e6ac8fefc59a515952cc62bbff490",
+      "snapshot_sha256": "94907e807e96776a91ab4359713731c0992e6ac8fefc59a515952cc62bbff490"
+    },
+    {
+      "path": "docs/14-fundamentos-e-perfis.md",
+      "source_sha256": "be32c674be040a6843ce0f8317eff3d383a1373f605fc8b504c0fb5d47fd97fc",
+      "snapshot_sha256": "be32c674be040a6843ce0f8317eff3d383a1373f605fc8b504c0fb5d47fd97fc"
+    },
+    {
+      "path": "docs/15-htdl-0.2-e-carregamento.md",
+      "source_sha256": "7f9909db26b27108fa00b9e81900a847057eeae6ad8bcacef7efd6e63638f344",
+      "snapshot_sha256": "7f9909db26b27108fa00b9e81900a847057eeae6ad8bcacef7efd6e63638f344"
+    },
+    {
+      "path": "docs/16-gramaticas-fs-e-ssc.md",
+      "source_sha256": "7b55fd993aa5749e6ff4e6b900bd0353be25a1e342d36015c7b135b94eeb453e",
+      "snapshot_sha256": "9b8c4393aa0a388e28c5b018c0398c062b58daa14843f53824fa4909e130c2f1"
+    },
+    {
+      "path": "docs/17-execucao-transacoes-e-layout.md",
+      "source_sha256": "2a54b630faa6e2b146e4aeb13b5402ac408a36a09e3ab87e2bc4833b98cf878a",
+      "snapshot_sha256": "2a54b630faa6e2b146e4aeb13b5402ac408a36a09e3ab87e2bc4833b98cf878a"
+    },
+    {
+      "path": "docs/18-arquitetura-nativa-e-capacidades.md",
+      "source_sha256": "b6518c54cdda31c7ac7b6da164c58d9ca068c1e6d86e909558b87ca166fc27b9",
+      "snapshot_sha256": "b6518c54cdda31c7ac7b6da164c58d9ca068c1e6d86e909558b87ca166fc27b9"
+    },
+    {
+      "path": "docs/19-conformidade-e-cenarios.md",
+      "source_sha256": "9c2f6d32e49ac5ab895decca6d18149a72ca41fb6bd46fbda4e1d546e7444aaf",
+      "snapshot_sha256": "9c2f6d32e49ac5ab895decca6d18149a72ca41fb6bd46fbda4e1d546e7444aaf"
+    },
+    {
+      "path": "docs/revisao-2026-10-25-assisscript.json",
+      "source_sha256": "010684e42cb47c96908397cdf3c09af8624679f1686317f7761f2f61e7110db4",
+      "snapshot_sha256": "22c7c4bdd90b40307d6857d863343a173e5072c9879053cf97de3ec8aebca94e"
+    },
+    {
+      "path": "docs/revisao-2026-10-25-spring.json",
+      "source_sha256": "eaa8f5f4d9e402aa85e2b9a0b26d300c66496a4b56ef3deceae09e8d669fc06a",
+      "snapshot_sha256": "eaa8f5f4d9e402aa85e2b9a0b26d300c66496a4b56ef3deceae09e8d669fc06a"
+    },
+    {
+      "path": "docs/revisao-2026-10-27-planejamento.json",
+      "source_sha256": "d3e2dcc9c6cc914055b0fda046ee90b0b388f8122d95ae6cb59d0a77ec44aa6a",
+      "snapshot_sha256": "6633fab3ceed17c6eeca535312519dcea8f4a1b18713cc73002b6cfde3c0f29a"
+    },
+    {
+      "path": "docs/VALIDACAO.md",
+      "source_sha256": "3b3795c22daf4bacbbf6461bcf8bf769ac1d827bb24932becff38c053092435b",
+      "snapshot_sha256": "3b3795c22daf4bacbbf6461bcf8bf769ac1d827bb24932becff38c053092435b"
+    },
+    {
+      "path": "exemplos/conformidade/cenarios.json",
+      "source_sha256": "ebda98b5ea1d307a9fa73f569d7cff6ded740ff3bdf344b9afee12c8026d61da",
+      "snapshot_sha256": "ebda98b5ea1d307a9fa73f569d7cff6ded740ff3bdf344b9afee12c8026d61da"
+    },
+    {
+      "path": "exemplos/conformidade/context.htdl",
+      "source_sha256": "d55cc8cef870789d936ddbb5b2c7415fa4b8fcd12330d3ddb13eb3b56cd05d1a",
+      "snapshot_sha256": "d55cc8cef870789d936ddbb5b2c7415fa4b8fcd12330d3ddb13eb3b56cd05d1a"
+    },
+    {
+      "path": "exemplos/conformidade/invalid/branch-types.fxs",
+      "source_sha256": "334f55ec5f55cbe9e92aaabfb3bd70e9ee0ec1d6456321fd0de881789fe37ee1",
+      "snapshot_sha256": "334f55ec5f55cbe9e92aaabfb3bd70e9ee0ec1d6456321fd0de881789fe37ee1"
+    },
+    {
+      "path": "exemplos/conformidade/invalid/channel-mismatch.sscr",
+      "source_sha256": "cc71a813e2011cb6ddf6df8f322bd76362a919ddfd71f71fcd2972a3d36c4718",
+      "snapshot_sha256": "cc71a813e2011cb6ddf6df8f322bd76362a919ddfd71f71fcd2972a3d36c4718"
+    },
+    {
+      "path": "exemplos/conformidade/invalid/dimension.fxs",
+      "source_sha256": "d9336c7831739a1a93a6dc45cc34aa2db61c92bfd4a4bae227209860664688ec",
+      "snapshot_sha256": "d9336c7831739a1a93a6dc45cc34aa2db61c92bfd4a4bae227209860664688ec"
+    },
+    {
+      "path": "exemplos/conformidade/invalid/missing-target.sscr",
+      "source_sha256": "16bc8456c61497387c63c42a5a737c226b2b29312bf2737e18353b8afe37ab86",
+      "snapshot_sha256": "16bc8456c61497387c63c42a5a737c226b2b29312bf2737e18353b8afe37ab86"
+    },
+    {
+      "path": "exemplos/conformidade/invalid/missing-type.htdl",
+      "source_sha256": "39fe86ff22f5a2953df3e898bdd4c7ef19a3b24debe9981f1c4340455d7dcd83",
+      "snapshot_sha256": "39fe86ff22f5a2953df3e898bdd4c7ef19a3b24debe9981f1c4340455d7dcd83"
+    },
+    {
+      "path": "exemplos/conformidade/invalid/presentation-in-0.1.htdl",
+      "source_sha256": "de2052d27ce9dcc390e07ace724452f641f752c6b981298b1f249ce4eafe7783",
+      "snapshot_sha256": "de2052d27ce9dcc390e07ace724452f641f752c6b981298b1f249ce4eafe7783"
+    },
+    {
+      "path": "exemplos/conformidade/invalid/property-domain.fxs",
+      "source_sha256": "75c8fc8bcbfc10f297629beb8bc67dbd54ce0d7b954af30a95a12d32b0e6feb8",
+      "snapshot_sha256": "75c8fc8bcbfc10f297629beb8bc67dbd54ce0d7b954af30a95a12d32b0e6feb8"
+    },
+    {
+      "path": "exemplos/conformidade/invalid/state-defaults.fxs",
+      "source_sha256": "a1085e1c4291ab5ac976421ea4967893b02544ad271fad70efce439c07c94033",
+      "snapshot_sha256": "a1085e1c4291ab5ac976421ea4967893b02544ad271fad70efce439c07c94033"
+    },
+    {
+      "path": "exemplos/conformidade/invalid/writers.fxs",
+      "source_sha256": "9894193d07e1c79738b67816f4ebedc92daa48fd5516a1f662e880ea004fb0d6",
+      "snapshot_sha256": "9894193d07e1c79738b67816f4ebedc92daa48fd5516a1f662e880ea004fb0d6"
+    },
+    {
+      "path": "exemplos/conformidade/README.md",
+      "source_sha256": "5b068009523b3a8e50ac1c294f75158a72a1e4b6a31790b13f6b8828ce6da730",
+      "snapshot_sha256": "5b068009523b3a8e50ac1c294f75158a72a1e4b6a31790b13f6b8828ce6da730"
+    },
+    {
+      "path": "exemplos/conformidade/valid/fallback.fxs",
+      "source_sha256": "faa00282bcca68e8f702cb6888f5a677934fbca7b26b95d12a3df3cad97da523",
+      "snapshot_sha256": "faa00282bcca68e8f702cb6888f5a677934fbca7b26b95d12a3df3cad97da523"
+    },
+    {
+      "path": "exemplos/conformidade/valid/lazy-branch.fxs",
+      "source_sha256": "c75944974034cc48276690f0c6bcf4010750686fee30c8e16ea798667ee9e7a8",
+      "snapshot_sha256": "c75944974034cc48276690f0c6bcf4010750686fee30c8e16ea798667ee9e7a8"
+    },
+    {
+      "path": "exemplos/contador/app.assis",
+      "source_sha256": "6e0ae82c7dfe5e5ba2debf5121b5ac398f2a7dac47fb730fdbc6bed7553e64d2",
+      "snapshot_sha256": "6e0ae82c7dfe5e5ba2debf5121b5ac398f2a7dac47fb730fdbc6bed7553e64d2"
+    },
+    {
+      "path": "exemplos/contador/index.htdl",
+      "source_sha256": "145890c8776be12831861a8193e2f1d339b17103d8d6e1e0cce74a8229bb2d1a",
+      "snapshot_sha256": "145890c8776be12831861a8193e2f1d339b17103d8d6e1e0cce74a8229bb2d1a"
+    },
+    {
+      "path": "exemplos/contador/README.md",
+      "source_sha256": "e535ba53b576a067f5f412bb3b7583b852f89f1a0a0ff82190d4f01bfd1405b2",
+      "snapshot_sha256": "e535ba53b576a067f5f412bb3b7583b852f89f1a0a0ff82190d4f01bfd1405b2"
+    },
+    {
+      "path": "exemplos/fluxstyle/app.assis",
+      "source_sha256": "553022cbdea9eb7bcd3c1c9e0d693addf42deeb841cb0492d50a6856bba654e2",
+      "snapshot_sha256": "553022cbdea9eb7bcd3c1c9e0d693addf42deeb841cb0492d50a6856bba654e2"
+    },
+    {
+      "path": "exemplos/fluxstyle/audit_reference.py",
+      "source_sha256": "2953fa51612d28d3c3b59592bef75753ac51e08ea3d07f876198c5f6a982c4d6",
+      "snapshot_sha256": "2953fa51612d28d3c3b59592bef75753ac51e08ea3d07f876198c5f6a982c4d6"
+    },
+    {
+      "path": "exemplos/fluxstyle/card.fxs",
+      "source_sha256": "6b353de95439aa0c708c891dd192b467a204b435cc9cb3a0cd6dafa0240f93c0",
+      "snapshot_sha256": "6b353de95439aa0c708c891dd192b467a204b435cc9cb3a0cd6dafa0240f93c0"
+    },
+    {
+      "path": "exemplos/fluxstyle/card.sscr",
+      "source_sha256": "dc8041dcffc7070b3f6e04f822042ba61e1675d9c96f2a0e006b2b0fd8bb4a7f",
+      "snapshot_sha256": "dc8041dcffc7070b3f6e04f822042ba61e1675d9c96f2a0e006b2b0fd8bb4a7f"
+    },
+    {
+      "path": "exemplos/fluxstyle/index.htdl",
+      "source_sha256": "80a72a50a6636f89eb015c5d548907576919630874197cf04362b5891e762bd4",
+      "snapshot_sha256": "80a72a50a6636f89eb015c5d548907576919630874197cf04362b5891e762bd4"
+    },
+    {
+      "path": "exemplos/fluxstyle/README.md",
+      "source_sha256": "efcad8aa425f640fea1fcef3a00ff9c9261fdd95d361ed838a5f3dfe05b9190d",
+      "snapshot_sha256": "efcad8aa425f640fea1fcef3a00ff9c9261fdd95d361ed838a5f3dfe05b9190d"
+    },
+    {
+      "path": "exemplos/fluxstyle/spring_kernel.assis",
+      "source_sha256": "bf614df5a29639f2b6b6b1e01c63f4986cd81a1938ff56f7ba1bed9c496a1442",
+      "snapshot_sha256": "bf614df5a29639f2b6b6b1e01c63f4986cd81a1938ff56f7ba1bed9c496a1442"
+    },
+    {
+      "path": "exemplos/fluxstyle/spring_reference.py",
+      "source_sha256": "d9137126983c2fa5668dd588fe316d15a709d6e18e428aee51b5b6f582b34f8d",
+      "snapshot_sha256": "d9137126983c2fa5668dd588fe316d15a709d6e18e428aee51b5b6f582b34f8d"
+    },
+    {
+      "path": "exemplos/leitura/index.htdl",
+      "source_sha256": "4f9a84446c0c4349be44fa82bb3b028a6e5f9e47bc91e7b74630ebf99502eba5",
+      "snapshot_sha256": "4f9a84446c0c4349be44fa82bb3b028a6e5f9e47bc91e7b74630ebf99502eba5"
+    },
+    {
+      "path": "exemplos/leitura/reading.fxs",
+      "source_sha256": "636756b1bf839beb491e83830653cf514b57aacdb345ecea7dccdcb0ef648369",
+      "snapshot_sha256": "636756b1bf839beb491e83830653cf514b57aacdb345ecea7dccdcb0ef648369"
+    },
+    {
+      "path": "exemplos/leitura/README.md",
+      "source_sha256": "ea611cb952697771048fa4bd0501f01bd0167743745b5d9f03b30a84fc743148",
+      "snapshot_sha256": "ea611cb952697771048fa4bd0501f01bd0167743745b5d9f03b30a84fc743148"
+    },
+    {
+      "path": "exemplos/ola.htdl",
+      "source_sha256": "18414c9641c7c7873cdcd2ee4abd4320ba269fcecd72e21d9c9fabdfde81cbd9",
+      "snapshot_sha256": "18414c9641c7c7873cdcd2ee4abd4320ba269fcecd72e21d9c9fabdfde81cbd9"
+    },
+    {
+      "path": "exemplos/paineis/app.assis",
+      "source_sha256": "f80ad10196a32f9eeb748469476238f3d633cb71dbe7f7430c85afe471151d28",
+      "snapshot_sha256": "f80ad10196a32f9eeb748469476238f3d633cb71dbe7f7430c85afe471151d28"
+    },
+    {
+      "path": "exemplos/paineis/index.htdl",
+      "source_sha256": "a15d028ce3de6b7c038bda4d98d9c00fcb67085c4ca014009f0007aed09589d4",
+      "snapshot_sha256": "a15d028ce3de6b7c038bda4d98d9c00fcb67085c4ca014009f0007aed09589d4"
+    },
+    {
+      "path": "exemplos/paineis/panels.fxs",
+      "source_sha256": "d0213605d0fd37820b2dcd1b5344d7e8dabb2354bfa8e7389f5780312cfe6604",
+      "snapshot_sha256": "d0213605d0fd37820b2dcd1b5344d7e8dabb2354bfa8e7389f5780312cfe6604"
+    },
+    {
+      "path": "exemplos/paineis/panels.sscr",
+      "source_sha256": "6e17613e0c59a89621ae6a2a5a41c359f6960909b47a274d1999b35136305dc5",
+      "snapshot_sha256": "6e17613e0c59a89621ae6a2a5a41c359f6960909b47a274d1999b35136305dc5"
+    },
+    {
+      "path": "exemplos/paineis/README.md",
+      "source_sha256": "c372f5f84475039757248138dac6ca8ac9f8a38b85a5fa580049e3bb98b6ef3a",
+      "snapshot_sha256": "c372f5f84475039757248138dac6ca8ac9f8a38b85a5fa580049e3bb98b6ef3a"
+    }
+  ]
+}

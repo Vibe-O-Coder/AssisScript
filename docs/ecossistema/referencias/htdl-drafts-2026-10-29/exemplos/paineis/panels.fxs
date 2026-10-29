@@ -1,0 +1,31 @@
+// Conceptual FluxStyle 0.1; node state is a proposed host contract.
+flow PageFrame {
+    20px -> layout.padding;
+    column(gap: 24px) -> layout.children;
+}
+
+flow PanelStack {
+    input available: length = parent.availableWidth;
+    min(available, 720px) -> layout.width;
+    column(gap: 16px) -> layout.children;
+}
+
+flow PanelVisuals {
+    input expanded: bool = state("expanded", false, scope: node);
+    input available: length = parent.availableWidth;
+    min(available, choose(expanded, 640px, 320px)) -> layout.width;
+    20px -> layout.padding;
+    column(gap: 12px) -> layout.children;
+    choose(expanded, #7454d8, #252936) -> paint.background;
+    12px -> paint.radius;
+    choose(expanded, -8px, 0px) -> target.offsetY;
+}
+
+flow PanelText {
+    #f4f1ff -> paint.text;
+}
+
+bind .page to PageFrame;
+bind .panels to PanelStack;
+bind .panel to PanelVisuals;
+bind .panel-copy to PanelText;

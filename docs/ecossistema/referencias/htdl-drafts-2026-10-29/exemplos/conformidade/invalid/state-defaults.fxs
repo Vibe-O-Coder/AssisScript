@@ -1,0 +1,13 @@
+// Expected: F306. These page-scoped cells have the same key and different defaults.
+flow Surface {
+    input expanded: bool = state("expanded", false);
+    choose(expanded, #7454d8, #252936) -> paint.background;
+}
+
+flow Radius {
+    input expanded: bool = state("expanded", true);
+    choose(expanded, 12px, 4px) -> paint.radius;
+}
+
+bind .box to Surface;
+bind .box to Radius;

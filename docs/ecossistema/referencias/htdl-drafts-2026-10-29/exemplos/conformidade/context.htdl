@@ -1,0 +1,10 @@
+<div type="document" version="0.2" lang="en">
+  <div type="head">
+    <div type="title">Conformance context</div>
+  </div>
+  <div type="body">
+    <div type="main">
+      <div type="button" id="box" class="box">Reference target</div>
+    </div>
+  </div>
+</div>

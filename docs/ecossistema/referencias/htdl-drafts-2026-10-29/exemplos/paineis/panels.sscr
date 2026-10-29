@@ -1,0 +1,7 @@
+// Conceptual SanSCript 0.1; .sscr remains the recommended extension.
+motion PanelMotion {
+    spring(target: fs.target.offsetY, frequency: 4Hz, dampingRatio: 0.8)
+        -> presentation.offsetY;
+}
+
+bind .panel to PanelMotion;

@@ -1,0 +1,32 @@
+<div type="document" version="0.1" lang="pt-BR">
+  <div type="head">
+    <div type="title">Olá, HTDL</div>
+    <div type="meta" name="description" content="Primeiro documento estático do ecossistema HTDL."></div>
+  </div>
+  <div type="body">
+    <div type="main">
+      <div type="heading" level="1">Olá, HTDL!</div>
+      <div type="paragraph">Estrutura com divs, lógica com AssisScript.</div>
+      <div type="paragraph">Texto pode conter &lt;div&gt; sem criar outro elemento.</div>
+      <div type="section" id="linguagens" a11y-label="As linguagens do ecossistema">
+        <div type="heading" level="2">As linguagens do ecossistema</div>
+        <div type="list">
+          <div type="item">
+            <div type="paragraph">HTDL: estrutura e semântica.</div>
+          </div>
+          <div type="item">
+            <div type="paragraph">AssisScript: programação e interatividade.</div>
+          </div>
+          <div type="item">
+            <div type="paragraph">FluxStyle: apresentação dinâmica por fluxo.</div>
+          </div>
+          <div type="item">
+            <div type="paragraph">SSC: física e movimento.</div>
+          </div>
+        </div>
+      </div>
+      <div type="paragraph">Esta página foi projetada para funcionar sem programação.</div>
+      <div type="link" href="#linguagens">Voltar às linguagens</div>
+    </div>
+  </div>
+</div>

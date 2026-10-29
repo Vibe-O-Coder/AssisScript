@@ -1,0 +1,6 @@
+// Expected: 8px. The inactive branch must not divide by zero.
+flow LazyWidth {
+    choose(false, 1px / 0, 8px) -> layout.width;
+}
+
+bind .box to LazyWidth;

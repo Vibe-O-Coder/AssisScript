@@ -1,0 +1,18 @@
+<!-- Conceptual HTDL 0.2 resource-loading proposal; no browser implementation yet. -->
+<div type="document" version="0.2" lang="en">
+  <div type="head">
+    <div type="title">Expandable card</div>
+    <div type="presentation" src="./card.fxs" language="fluxstyle"></div>
+    <div type="presentation" src="./card.sscr" language="ssc"></div>
+    <div type="script" src="./app.assis" format="source"></div>
+  </div>
+  <div type="body">
+    <div type="main">
+      <div type="heading" level="1">Expandable card</div>
+      <div type="button" id="toggleCard" on:click="toggleCard">Expand or collapse</div>
+      <div type="section" class="card" a11y-label="Card details">
+        <div type="paragraph">This card changes width, color and presentation offset.</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<div type="document" version="0.2" lang="en">
+  <div type="head">
+    <div type="title">Missing type</div>
+  </div>
+  <div type="body">
+    <div id="box">This element intentionally has no type.</div>
+  </div>
+</div>

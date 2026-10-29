@@ -1,0 +1,25 @@
+// Authorship sketch only; the browser host API is proposed, not implemented here.
+#yuri <browser/htdl.assis>
+
+assis assis_assis(): int {
+    return 0;
+}
+
+assis togglePanel(id: text): void {
+    val panel: int = htdl_no_por_id(id);
+    assert(panel > 0);
+    val current: int = htdl_estado_no_int(panel, "expanded");
+    if (current == 0) {
+        assert(htdl_estado_no_int_definir(panel, "expanded", 1) == 0);
+    } else {
+        assert(htdl_estado_no_int_definir(panel, "expanded", 0) == 0);
+    }
+}
+
+assis toggleFirst(target: int, event: int): void {
+    togglePanel("firstPanel");
+}
+
+assis toggleSecond(target: int, event: int): void {
+    togglePanel("secondPanel");
+}
