@@ -19,9 +19,12 @@ class System(base.Evolution):
 
     def test_event_order_cancel_reschedule_stop_and_reentrancy(self):
         code='import "std/events.assis";\n'
-        code+='safe fn action(borrow mut l:events::Loop,n:int):void{print(n);if(n==1){assert(events::cancel(l,2));assert(events::schedule(l,0,4,action)>0);assert(events::run(l,1)==-2);}if(n==4){events::stop(l);}}'
-        self.accepted(code+'safe '+main('own l:events::Loop=events::create(4);assert(events::schedule(l,0,1,action)==1);assert(events::schedule(l,100,2,action)==2);assert(events::schedule(l,1,3,action)==3);'
-                                      'assert(events::run(l,10)>=2);assert(!events::cancel(l,2));print(events::run(l,10));'),
+        # Schedule the stopping action before the pending action in the same
+        # callback. Their deadline/ID order is stable even if the host pauses.
+        # A previously queued 1ms timer can legitimately precede a later 0ms one.
+        code+='safe fn action(borrow mut l:events::Loop,n:int):void{print(n);if(n==1){assert(events::cancel(l,2));assert(events::schedule(l,0,4,action)==3);assert(events::schedule(l,0,3,action)==4);assert(events::run(l,1)==-2);}if(n==4){events::stop(l);}}'
+        self.accepted(code+'safe '+main('own l:events::Loop=events::create(4);assert(events::schedule(l,0,1,action)==1);assert(events::schedule(l,100,2,action)==2);'
+                                      'assert(events::run(l,10)==2);assert(!events::cancel(l,2));print(events::run(l,10));'),
                       '1\n4\n3\n1\n')
 
     def test_event_capacity_limits_and_finite_budget(self):

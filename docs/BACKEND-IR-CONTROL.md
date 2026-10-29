@@ -71,3 +71,13 @@ a DLL já instalada no Git. O relatório inicial e o log da repetição foram
 preservados separadamente em `build/review-tests/`.
 SHA-256 do compilador candidato:
 `29c866b18ab13c7e13179655a1e2c4b6665443f797b17f05fdcfb5517fd5c837`.
+
+A primeira [execução remota desta revisão](https://github.com/Vibe-O-Coder/AssisScript/actions/runs/40794766601)
+aprovou macOS Intel, Linux ARM64/QEMU e macOS ARM64/Rosetta. No Linux x64,
+um teste de eventos pressupunha que um timer de 1 ms ainda estaria no futuro
+quando outro callback agendasse um timer imediato. Essa ordem pode mudar em
+qualquer host. O teste passou a criar a ação de parada antes da ação pendente
+no mesmo callback e exige exatamente duas ações antes da parada; mantém
+cancelamento, IDs, reentrância e retomada sem depender desse intervalo de 1 ms.
+O runtime não foi alterado por essa correção. O resultado final deve ser
+conferido nos checks do [PR #1](https://github.com/Vibe-O-Coder/AssisScript/pull/1).
