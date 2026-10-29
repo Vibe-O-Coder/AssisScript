@@ -18,6 +18,74 @@ class BackendEvolution(base.Evolution):
         data = json.loads(result.stdout)
         return data, next(f for f in data['functions'] if f['name'] == function)
 
+    def test_scalar_stores_and_compound_assignments_have_explicit_ir(self):
+        source = 'fn tick(n:int):int{print(n);return n;}' + main(
+            'let x:int=2;x+=3;x*=4;x=x-2;tick(x);print(x);')
+        data, function = self.inspect(source)
+        operations = [op for block in function['blocks'] for op in block['operations']]
+        stores = [op for op in operations if op['opcode'] == 'store-local']
+        self.assertEqual(len(stores), 4)
+        self.assertTrue(all(op['local'] == 'x' and op['type'] == 'int' and op['effects'] & 2 for op in stores))
+        for op, operator in zip(stores[1:3], ['+', '*']):
+            value = data['values'][op['value']]
+            self.assertEqual((value['opcode'], value['operator']), ('binary', ord(operator)))
+            self.assertTrue(all(operand < value['id'] for operand in value['inputs']))
+        self.assertTrue(any(op['opcode'] == 'eval' for op in operations))
+        self.accepted(source, '18\n18\n')
+
+    def test_branch_short_circuit_negation_and_effect_order(self):
+        helper = 'fn mark(n:int):bool{print(n);return n>0;}fn value(n:int):int{print(n);return n;}'
+        self.accepted(helper + main('let yes:bool=true;let no:bool=false;'
+            'if((no&&mark(1))||(!no&&mark(2))){print(10);}'
+            'if(!(yes||mark(3))&&mark(4)){print(99);}'
+            'while(yes&&mark(5)){yes=false;}'
+            'if(value(7)<value(8)){print(1);}'), '2\n10\n5\n7\n8\n1\n')
+
+    def test_all_integer_branch_relations_against_python(self):
+        rng = random.Random(3316)
+        checks = []
+        relations = [('==', lambda a,b:a==b), ('!=', lambda a,b:a!=b), ('<', lambda a,b:a<b),
+                     ('<=', lambda a,b:a<=b), ('>', lambda a,b:a>b), ('>=', lambda a,b:a>=b)]
+        for ty, bits, signed in [('i8',8,True),('i16',16,True),('i32',32,True),
+                                 ('u16',16,False),('u32',32,False),('u64',64,False),('int',64,True),('byte',8,False)]:
+            values = [0, 1, (1 << bits)-1, 1 << (bits-1)] + [rng.randrange(1 << bits) for _ in range(6)]
+            norm = lambda n: n-(1 << bits) if signed and n >= 1 << (bits-1) else n
+            for a, b in zip(values, reversed(values)):
+                for op, reference in relations:
+                    expected = '1' if reference(norm(a), norm(b)) else '0'
+                    # Test the branch itself, including its inverse, rather than print(bool).
+                    checks.append(f'{{let a:{ty}={ty}(0x{a:x});let b:{ty}={ty}(0x{b:x});'
+                                  f'let r:int=0;if(a{op}b){{r=1;}}assert(r=={expected});'
+                                  f'if(!(a{op}b)){{assert(r==0);}}else{{assert(r==1);}}}}')
+        self.accepted(main(''.join(checks)))
+
+    def test_modulo_branch_extremes_and_zero_divisor(self):
+        checks = []
+        for a in [-2**63, -17, -1, 0, 1, 17, 2**63-1]:
+            for b in [-2**63, -8, -1, 1, 2, 8, 3]:
+                expected = int(a % b == 0)
+                checks.append(f'{{let a:int={a};let yes:int=0;if(a%({b})==0){{yes=1;}}'
+                              f'assert(yes=={expected});if(a%({b})!=0){{assert(yes==0);}}}}')
+        self.accepted(main(''.join(checks)))
+        file = self.source(main('let z:int=0;if(1%z==0){print(1);}'))
+        for flags in [[], ['--no-opt']]:
+            self.assertEqual(self.invoke('run', file, *flags).returncode, 70)
+
+    def test_scalar_stores_keep_width_rounding_and_aliased_reads(self):
+        self.accepted('fn change(p:*int):int{*p=10;return 3;}' + main(
+            'let x:int=2;x+=change(&x);print(x);'
+            'let a:i8=i8(127);a+=i8(1);a*=i8(3);a/=i8(-1);'
+            'let u:u64=u64(0xffffffffffffffff);u>>=63;u<<=63;'
+            'let f:f32=f32(16777216.0);f+=f32(1.0);f-=f32(16777216.0);'
+            'print(a,u,f);'), '5\n-128 9223372036854775808 0x0.0000000000000p+0\n')
+
+    def test_ieee_branches_and_owned_cleanup_at_loop_exits(self):
+        self.accepted(main('let z:f64=0.0;let nan:f64=z/z;let score:int=0;'
+            'if(nan==nan){score+=100;}if(nan!=nan){score+=1;}'
+            'if(nan<z||nan<=z||nan>z||nan>=z){score+=100;}if(z==-z){score+=2;}'
+            'for(let i:int=0;i<5;i+=1){own p:*int=alloc<int>(1);p[0]=i;'
+            'if(i==1){continue;}if(i==4){break;}score+=p[0];}print(score);'), '8\n')
+
     def test_scalar_values_have_types_effects_and_dominating_operands(self):
         source = 'pure fn calc(x:int,y:int):int{return (x+y)/(y|1);}' + main(
             'let x:int=40;let y:int=2;print(calc(x,y));let n:f64=f64(x)+0.5;print(int(n));')

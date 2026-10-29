@@ -1,10 +1,21 @@
 /* AssisScript 3.3 alpha. Compilador nativo C11 -> ELF64 / PE32+ x86_64.
  * O binário distribuído não invoca Python, um compilador C ou um assembler.
  */
+#ifdef __APPLE__
+/* Darwin hides mkdtemp behind its full API level when POSIX is requested. */
+#define _DARWIN_C_SOURCE 1
+#endif
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
-#if (!defined(__linux__) && !defined(_WIN32) && !defined(__APPLE__)) || !defined(__x86_64__)
-#error "Esta versão do compilador é destinada a Linux/Windows/macOS x86_64."
+#if (!defined(__linux__) && !defined(_WIN32) && !defined(__APPLE__)) || (!defined(__x86_64__) && !((defined(__aarch64__) || defined(__arm64__)) && !defined(_WIN32)))
+#error "Hosts suportados: Linux/macOS x86_64 ou ARM64, Windows x86_64. Destinos: x86_64."
+#endif
+#if defined(__aarch64__) || defined(__arm64__)
+#define HOST_ARCH "ARM64"
+#define HOST_RUN_X64 0
+#else
+#define HOST_ARCH "x86_64"
+#define HOST_RUN_X64 1
 #endif
 #include <stdint.h>
 #include <stdbool.h>
@@ -34,13 +45,13 @@ static bool target_windows=true;
 #include <sys/wait.h>
 #include <unistd.h>
 #include <signal.h>
-#define HOST_NAME "Linux x86_64"
+#define HOST_NAME "Linux " HOST_ARCH
 static bool target_windows=false;
 #endif
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
 #undef HOST_NAME
-#define HOST_NAME "macOS x86_64"
+#define HOST_NAME "macOS " HOST_ARCH
 static bool target_macos=true;
 #else
 static bool target_macos=false;
@@ -605,6 +616,7 @@ static void gen_cleanup(int from){
     for(int i=cleanups.n-1;i>=from;i--){Var *v=cleanups.v[i];load_local(RAX,v);gen_release(v->ty);}
 }
 static void gen_false(Node *n,int label){
+    if(optimize&&n->ir){ir_emit_branch(n->ir,label,false);return;}
     if(optimize&&n->kind==N_BINARY&&(n->op==T_EQ||n->op==T_NE)&&n->a->kind==N_BINARY&&n->a->op=='%'&&equal_type(n->a->a->ty,type_i64)){
         uint64_t divisor,zero;
         if(constant(n->b,&zero)&&!zero&&constant(n->a->b,&divisor)&&divisor){
@@ -628,6 +640,9 @@ static void gen_stmt(Node *n){
     if(optimize&&n->unreachable)return;
     n->code_start=code.n;
     if(debug_symbols&&n->kind!=N_BLOCK&&n->kind!=N_UNSAFE){DebugSite *site=mem(sizeof(*site));site->offset=code.n;site->token=n->t;push(&debug_sites,site);}
+    if(optimize&&n->operation&&n->operation->kind!=IO_AST){
+        IROperation *op=n->operation;ir_emit_expr(op->value);if(op->kind==IO_STORE_LOCAL)store_local(op->local);n->code_end=code.n;return;
+    }
     switch(n->kind){
     case N_MATCH:{
         gen_expr(n->a);if(!n->cls->value)nonnull(n->t);store_local(n->var);int done=new_label(),outer=cleanups.n;
@@ -937,7 +952,8 @@ static int compiler_main(int argc,char **argv){
     if(same(cmd,"--help")||same(cmd,"help")||same(cmd,"--ajuda")){help();return 0;}
     if(same(cmd,"--version")||same(cmd,"version")){puts("AssisScript " VERSION " (nativo, " HOST_NAME ")");return 0;}
     if(same(cmd,"doctor")){
-        puts("AssisScript " VERSION "\nHost: " HOST_NAME "\nBackends: ELF64 Linux / PE32+ Windows x64\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis");return 0;
+        puts("AssisScript " VERSION "\nHost: " HOST_NAME "\nBackends: ELF64 Linux / PE32+ Windows / Mach-O macOS (experimental), todos x86_64\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis");
+        if(!HOST_RUN_X64)puts("Host ARM64: check/ir/build disponíveis; run/test aguardam backend ARM64. Saídas x86_64 podem ser executadas externamente com emulação.");return 0;
     }
     if(same(cmd,"new")||same(cmd,"init")||same(cmd,"create")){if(argc!=3)fatal("use: assis new <pasta>");create_project(argv[2]);return 0;}
     if(same(cmd,"fmt"))return format_command(argc,argv);
@@ -976,6 +992,7 @@ static int compiler_main(int argc,char **argv){
         else if(!input)input=argv[i];else fatal("informe apenas um arquivo fonte");
     }
     if(run){
+        if(!HOST_RUN_X64)fatal("run/test indisponível em host ARM64: os destinos atuais são x86_64; use check, ir ou build e execute a saída externamente com emulação");
 #ifdef _WIN32
         if(!target_windows)fatal("run no Windows exige destino windows-x64; use build para outro sistema");
 #elif defined(__APPLE__)

@@ -2,7 +2,10 @@
  * checked ASTs during incremental backend migration; this is not SSA. */
 enum { IR_READ=1,IR_WRITE=2,IR_ALLOC=4,IR_IO=8,IR_CALL=16,IR_TRAP=32,IR_UNSAFE=64,IR_DROP=128 };
 #include "expression_ir.h"
-typedef struct {Node *node;Type type;unsigned effects;IRExpr *value;} IROperation;
+enum { IO_AST,IO_STORE_LOCAL,IO_EVAL };
+/* node remains for diagnostics, liveness and the explicit resource fallback.
+ * Scalar instruction emission reads only kind, local and value. */
+struct IROperation {Node *node;Type type;unsigned effects;IRExpr *value;int kind;Var *local;};
 typedef struct {int id;Vec operations,successors;const char *terminator;Node *condition;} IRBlock;
 typedef struct {Function *source;Vec blocks;IRExpr *single_return;int register_variables,register_reuses;bool liveness;} IRFunction;
 static Vec ir_functions;
@@ -36,7 +39,21 @@ static unsigned ir_effects(Node *n){
     e|=ir_effects(n->a)|ir_effects(n->b)|ir_effects(n->c)|ir_effects(n->step);
     for(int i=0;i<n->items.n;i++)e|=ir_effects(n->items.v[i]);return e;
 }
-static void ir_operation(IRBlock *b,Node *n){IROperation *op=mem(sizeof(*op));op->node=n;op->type=n->kind==N_LET?n->decl:n->kind==N_RETURN&&n->a?n->a->ty:type_void;op->effects=ir_effects(n);if(n->kind==N_LET||n->kind==N_RETURN||n->kind==N_EXPR)op->value=n->a?n->a->ir:NULL;else if(n->kind==N_ASSIGN)op->value=n->b->ir;push(&b->operations,op);}
+static void ir_operation(IRBlock *b,Node *n){
+    IROperation *op=mem(sizeof(*op));op->node=n;op->type=n->kind==N_LET?n->decl:n->kind==N_RETURN&&n->a?n->a->ty:type_void;op->effects=ir_effects(n);
+    if(n->kind==N_LET||n->kind==N_RETURN||n->kind==N_EXPR)op->value=n->a?n->a->ir:NULL;else if(n->kind==N_ASSIGN)op->value=n->b->ir;
+    if(n->kind==N_LET&&op->value&&ir_scalar(n->var->ty)&&!n->ownership){op->kind=IO_STORE_LOCAL;op->local=n->var;}
+    else if(n->kind==N_ASSIGN&&n->a->kind==N_NAME&&op->value&&ir_scalar(n->a->ty)&&!n->replace_owned){
+        op->kind=IO_STORE_LOCAL;op->local=n->a->var;op->type=n->a->ty;
+        if(n->op!='='){
+            IRExpr *v=mem(sizeof(*v));v->kind=IV_BINARY;v->op=compound_op(n->op);v->type=binary_type(n->a->ty,n->b->ty,v->op,n->t);v->site=n->t;v->a=n->a->ir;v->b=op->value;
+            v->effects=v->a->effects|v->b->effects;if(v->op=='/'||v->op=='%'||v->op==T_SHL||v->op==T_SHR)v->effects|=IR_TRAP;
+            v->id=ir_values.n;push(&ir_values,v);op->value=v;
+        }
+    }else if(n->kind==N_EXPR&&op->value)op->kind=IO_EVAL;
+    if(op->kind==IO_STORE_LOCAL)op->effects|=IR_WRITE|op->value->effects;
+    n->operation=op;push(&b->operations,op);
+}
 static IRBlock *ir_lower(IRFunction *f,Node *n,IRBlock *b,IRBlock *again,IRBlock *end){
     if(!n)return b;
     if(!b){n->unreachable=true;return NULL;}
@@ -81,7 +98,7 @@ static void print_ir(void){
         for(int j=0;j<f->blocks.n;j++){
             IRBlock *b=f->blocks.v[j];if(j)fputc(',',stdout);fprintf(stdout,"{\"id\":%d,\"terminator\":",b->id);json_string(stdout,b->terminator);fprintf(stdout,",\"conditionEffects\":%u,\"conditionValue\":%d,\"successors\":[",ir_effects(b->condition),b->condition&&b->condition->ir?b->condition->ir->id:-1);
             for(int k=0;k<b->successors.n;k++){if(k)fputc(',',stdout);fprintf(stdout,"%d",(int)(intptr_t)b->successors.v[k]-1);}fputs("],\"operations\":[",stdout);
-            for(int k=0;k<b->operations.n;k++){IROperation *op=b->operations.v[k];if(k)fputc(',',stdout);fprintf(stdout,"{\"kind\":%d,\"line\":%d,\"effects\":%u,\"value\":%d,\"type\":",op->node->kind,op->node->t->line,op->effects,op->value?op->value->id:-1);json_string(stdout,type_name(op->type));fputc('}',stdout);}fputs("]}",stdout);
+            for(int k=0;k<b->operations.n;k++){IROperation *op=b->operations.v[k];if(k)fputc(',',stdout);fprintf(stdout,"{\"kind\":%d,\"opcode\":\"%s\",\"line\":%d,\"effects\":%u,\"value\":%d,\"type\":",op->node->kind,op->kind==IO_STORE_LOCAL?"store-local":op->kind==IO_EVAL?"eval":"ast",op->node->t->line,op->effects,op->value?op->value->id:-1);json_string(stdout,type_name(op->type));if(op->local){fputs(",\"local\":",stdout);json_string(stdout,op->local->t->text);}fputc('}',stdout);}fputs("]}",stdout);
         }fputs("]}",stdout);
     }fputc(']',stdout);ir_print_values();fputs("}\n",stdout);
 }

@@ -58,7 +58,7 @@ abertos. A pontuação permanece em 94/100.
 ## Próximo passo obrigatório
 
 Os 10 testes backend foram confirmados na revalidação acima. O próximo passo
-técnico é iniciar a migração integral da IR com equivalência e casos adversos.
+técnico é continuar a migração integral da IR com equivalência e casos adversos.
 Os resultados da alpha.15 e o ensaio de 24 horas permanecem válidos conforme
 `HANDOFF-3.3-ALPHA.15.md` e `VALIDACAO-ALPHA15.json`.
 
@@ -74,3 +74,16 @@ manifesto de 263 arquivos, incluindo os quatro documentos novos. A alteração d
 `src/install_files.inc` é posterior aos hashes da validação histórica alpha.15.
 O pacote VSIX alpha.10 acrescentado pelo responsável ao GitHub foi preservado;
 o guia distingue esse arquivo dos binários da branch de testes.
+
+## Continuação: instruções escalares e validação de hosts
+
+O responsável informou novamente sucesso nos testes em outras máquinas e
+recomendou Actions para macOS/ARM64. A continuação está descrita em
+[BACKEND-IR-CONTROL.md](BACKEND-IR-CONTROL.md): emissão IR de escritas locais e
+condições escalares elegíveis, 16 regressões de backend, compilador hospedeiro
+Linux/macOS ARM64 e jobs de saídas x86_64 via QEMU/Rosetta. Também corrige a
+declaração oculta de `mkdtemp` que impediu o build macOS da execução anterior.
+O novo relato reforça o sucesso informado, sem inventar arquitetura, versão ou
+passos de teste não especificados. P5-IR permanece parcial, P5-TARGET pendente e
+o total preserva 94/100. Próximo incremento: endereços, efeitos de memória e
+cleanups explícitos antes de migrar integralmente o controle e o backend ARM64.

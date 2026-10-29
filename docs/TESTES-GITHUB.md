@@ -8,7 +8,8 @@ Esta branch facilita testes e relatos em outros computadores. O projeto segue
 experimental, com [94/100 pontos do plano](PROGRESSO.md). Suporte ARM64,
 validação macOS, emissão integral por IR, revisão de distribuição e aceite
 independente continuam descritos no [restante do plano](RESTANTE-PARA-100.md).
-Os stickers atuais têm procedência em revisão; a [identidade proposta](IDENTIDADE-VISUAL-PROPOSTA.md)+ainda aguarda escolha. A publicação para testes não encerra essas pendências.
+Os stickers atuais têm procedência em revisão; a [identidade proposta](IDENTIDADE-VISUAL-PROPOSTA.md)
+ainda aguarda escolha. A publicação para testes não encerra essas pendências.
 
 ## Obter a mesma revisão
 
@@ -71,6 +72,14 @@ Os [resultados do GitHub Actions](https://github.com/Vibe-O-Coder/AssisScript/ac
 devem ser consultados para o commit testado. Publicação da branch e início de um
 workflow não equivalem a aprovação dos jobs. Relatórios anteriores permanecem
 identificados pelas versões e hashes aos quais pertencem.
+
+A continuação de desenvolvimento acrescenta testes de hosts Linux ARM64 e
+macOS Apple Silicon. Os compiladores nesses jobs são ARM64, mas as saídas
+continuam x86_64 e são executadas com QEMU/Rosetta, respectivamente. O job
+macOS Intel executa nativamente. Os artefatos `*-host-validation` e
+`macos-x64-validation` registram arquitetura, modo de execução e hashes.
+Esses jobs ainda não certificam geração nativa ARM64, instalador macOS ou
+depuração Mach-O. Veja [o escopo técnico](BACKEND-IR-CONTROL.md).
 
 Na preparação desta branch, os 10 testes de backend, 2 de documentação/avisos
 de distribuição e 41 testes de desenvolvimento/editor/LSP passaram no Windows.

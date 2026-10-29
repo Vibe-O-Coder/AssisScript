@@ -216,8 +216,8 @@
           "id": "P5-IR",
           "name": "Frontend separado e IR tipada com fluxo/efeitos",
           "status": "partial",
-          "evidence": "BACKEND-ALPHA15.md",
-          "notes": "CFG tipada e ScalarIR independente de AST para expressões escalares, casts e chamadas globais; emissão nativa e referência AST --no-opt. Instruções, recursos, endereços e condições otimizadas ainda usam AST; migração integral permanece aberta."
+          "evidence": "BACKEND-IR-CONTROL.md",
+          "notes": "CFG tipada e ScalarIR independente de AST para valores, escritas locais e condições escalares elegíveis; referência AST --no-opt. Recursos/endereços, retornos, cleanups e controle estruturado ainda têm caminhos AST; migração integral permanece aberta."
         },
         {
           "id": "P5-OPT",
@@ -244,7 +244,8 @@
           "id": "P5-TARGET",
           "name": "Backend extensível e novos alvos ARM64/macOS validados",
           "status": "pending",
-          "evidence": "PLANO-EVOLUCAO-E-HANDOFF.md"
+          "evidence": "BACKEND-IR-CONTROL.md",
+          "notes": "Hosts Linux/macOS ARM64 preparados para frontend e geração cruzada x86_64, com CI QEMU/Rosetta explicitamente emulado. Geração/runtime ARM64, instaladores e depuração dos novos destinos permanecem abertos. Resultado remoto deve ser verificado por commit."
         }
       ]
     },

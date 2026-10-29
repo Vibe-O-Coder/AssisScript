@@ -45,6 +45,22 @@ for name,pattern in [('node-windows',r'\btests (\d+)'),('native-windows',r'(\d+)
     path=ROOT/f'build/review-tests/{name}.log';contents=path.read_text(encoding='utf-8')
     counts=[int(n) for n in re.findall(pattern,contents)];assert counts,(name,'missing test evidence')
     record['supplemental'][name]=dict(counts=counts,log=path.relative_to(ROOT).as_posix(),sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+record['portability']={}
+for name,host,execution in [('linux-x64','x86_64','native'),('windows-x64','x86_64','native'),('macos-x64','x86_64','native'),('linux-arm64-host','arm64','qemu'),('macos-arm64-host','arm64','rosetta')]:
+    path=ROOT/'build/review-tests'/((('ports-'+name) if name.endswith('-x64') else name)+'.json')
+    if not path.exists():
+        assert not os.environ.get('GITHUB_ACTIONS'),(name,'missing portability evidence')
+        continue
+    proof=read(path)
+    assert proof['passed'] and proof['hostArchitecture']==host and proof['execution']==execution,(name,'failed or mismatched host/execution mode')
+    assert proof['outputArchitecture']=='x86_64' and proof['nativeArm64Execution'] is False
+    assert len(proof['cases'])==14 and all(case['passed'] for case in proof['cases']) and proof['rejectedInvalidSource']
+    if name in ('linux-x64','windows-x64'):
+        assert proof['compilerSha256']==record['native'][name.split('-')[0]]['compilerSha256'],(name,'stale compiler')
+    record['portability'][name]=dict(path=path.relative_to(ROOT).as_posix(),sha256=hashlib.sha256(path.read_bytes()).hexdigest(),report=proof)
+if 'macos-x64' in record['portability']:
+    record['macos']=dict(status='experimental; native x86_64 execution passed',validated='Native x86_64 portability cases with/without optimization; PE/ELF cross-generation',remaining='ARM64 native output, installer, signing and Mach-O debugging')
+    record['scope']+='; native macOS x86_64 execution and native ARM64 compiler hosts with emulated x86_64 outputs'
 record['remoteCI']='current workflow job; overall workflow result is determined by GitHub' if os.environ.get('GITHUB_ACTIONS') else 'not triggered; local results do not assert remote success'
 validation_path=ROOT/f'docs/VALIDACAO-ALPHA{version.split("alpha.")[1]}.json'
 previous=read(validation_path) if validation_path.exists() else {}
@@ -71,7 +87,7 @@ for platform,binary in [('windows','assis.exe'),('linux','assis')]:
     record['longSoak'][platform]=dict(originalPath=path.relative_to(ROOT).as_posix(),sha256=report_hash,compilerSha256=proof['compilerSha256'],matchesCurrentSourcesAndCompiler=current,elapsedSeconds=proof['elapsedSeconds'],workers=proof['workers'],rounds=sum(r['rounds'] for r in proof['results']),intervalSeconds=proof['intervalSeconds'],qualifies24Hours=True,report=proof)
 qualified=len(record['longSoak'])==2 and all(r['matchesCurrentSourcesAndCompiler'] for r in record['longSoak'].values())
 record['remainingGates']=[] if qualified else ['24 hours of actual qualified execution on current binaries and sources']
-record['remainingGates']+=['complete IR statement/resource emission','native ARM64/macOS validation','asset rights and redistribution review','independent human acceptance']
+record['remainingGates']+=['complete IR statement/resource emission','native ARM64 output and macOS installer/debugging validation','asset rights and redistribution review','independent human acceptance']
 if qualified:record['scope']+='; qualified 24-hour Windows/Linux polling and persistence endurance'
 (ROOT/f'docs/VALIDACAO-ALPHA{version.split("alpha.")[1]}.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 print('Validation evidence recorded:',{p:r['testCount'] for p,r in record['native'].items()})

@@ -59,3 +59,27 @@ static void ir_emit_expr(IRExpr *v){
     }
     if(v->type.kind>=TY_I8)normalize_numeric(v->type);
 }
+/* Branch selection uses the same value graph as expression emission. Lazy
+ * operands and traps keep their source order; no checked AST is inspected. */
+static void ir_emit_branch(IRExpr *v,int label,bool when_true){
+    if(v->kind==IV_CONSTANT){if(!!v->value==when_true)branch(label);return;}
+    if(v->kind==IV_UNARY&&v->op=='!'){ir_emit_branch(v->a,label,!when_true);return;}
+    if(v->kind==IV_BINARY&&(v->op==T_AND||v->op==T_OR)){
+        bool both=v->op==T_AND;
+        if(when_true!=both){ir_emit_branch(v->a,label,when_true);ir_emit_branch(v->b,label,when_true);}
+        else{int done=new_label();ir_emit_branch(v->a,done,!when_true);ir_emit_branch(v->b,label,when_true);mark(done,&code);}return;
+    }
+    if(v->kind==IV_BINARY&&(v->op==T_EQ||v->op==T_NE)&&v->a->kind==IV_BINARY&&v->a->op=='%'&&equal_type(v->a->a->type,type_i64)&&v->a->b->kind==IV_CONSTANT&&v->b->kind==IV_CONSTANT&&!v->b->value){
+        uint64_t divisor=v->a->b->value,magnitude=(int64_t)divisor<0?0-divisor:divisor;
+        if(magnitude&&!(magnitude&(magnitude-1))){ir_emit_expr(v->a->a);immediate(RCX,magnitude-1);INS(0x48,0x85,0xc8);unsigned cc=v->op==T_EQ?0x84:0x85;branch_if(when_true?cc:cc^1,label);return;}
+    }
+    if(v->kind==IV_BINARY&&(v->op==T_EQ||v->op==T_NE||v->op=='<'||v->op=='>'||v->op==T_LE||v->op==T_GE)&&!floating(v->a->type)){
+        ir_emit_expr(v->a);
+        unsigned cc=v->op==T_EQ?0x84:v->op==T_NE?0x85:v->op=='<'?0x8c:v->op==T_LE?0x8e:v->op=='>'?0x8f:0x8d;
+        if(unsigned_integer(v->a->type)&&v->a->type.kind!=TY_U8){if(v->op=='<')cc=0x82;else if(v->op==T_LE)cc=0x86;else if(v->op=='>')cc=0x87;else if(v->op==T_GE)cc=0x83;}
+        if(v->b->kind==IV_CONSTANT&&(int64_t)v->b->value>=INT32_MIN&&(int64_t)v->b->value<=INT32_MAX){INS(0x48,0x3d);u32(&code,(uint32_t)v->b->value);}
+        else{if(!ir_operand_rcx(v->b)){INS(0x50);ir_emit_expr(v->b);movreg(RCX,RAX);INS(0x58);}INS(0x48,0x39,0xc8);}
+        branch_if(when_true?cc:cc^1,label);return;
+    }
+    ir_emit_expr(v);INS(0x48,0x85,0xc0);branch_if(when_true?0x85:0x84,label);
+}
