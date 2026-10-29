@@ -1,0 +1,203 @@
+{
+  "schema": "assisscript-ecosystem-baseline-v1",
+  "date": "2026-10-29",
+  "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
+  "branch": "development/native-arm64-icons-v1",
+  "previous_plan_points": 100,
+  "previous_plan_scope": "phases 0-6 only",
+  "inspected_only": true,
+  "runtime_tests_run_this_session": false,
+  "source_files": [
+    {
+      "scope": "AssisScript",
+      "path": "src/version.h",
+      "sha256": "7000caab95cfacf0fe3f728266c324291370e3f9532b7b8ef62db8dcb20a166f",
+      "tracked": true,
+      "local_changes": false
+    },
+    {
+      "scope": "AssisScript",
+      "path": "docs/ARM64-NATIVO.md",
+      "sha256": "ae42037c7d5be14e87d417b8113870c10b9c0611309452cbd3664c260cdab843",
+      "tracked": true,
+      "local_changes": false
+    },
+    {
+      "scope": "AssisScript",
+      "path": "docs/BACKEND-IR-COMPLETA.md",
+      "sha256": "c0fecc452094af723149157388114e79e1d4bf43393a68295fa8847c9d9b0cf6",
+      "tracked": true,
+      "local_changes": false
+    },
+    {
+      "scope": "AssisScript",
+      "path": "docs/FFI-C.md",
+      "sha256": "e1baeb9e23e41051cd1db1cfa0d86d4b9b1b3a3ff88f91070ab25920455b1b88",
+      "tracked": true,
+      "local_changes": false
+    },
+    {
+      "scope": "AssisScript",
+      "path": "docs/SAFE-DEFAULT.md",
+      "sha256": "ce203a1770eab6dc36f85ff630d8a9949b8bf466ad80055d34a5542813a78696",
+      "tracked": true,
+      "local_changes": false
+    },
+    {
+      "scope": "AssisScript",
+      "path": "docs/VALIDACAO-TARGETS-V1.json",
+      "sha256": "0ee9b5a905ce893042729e7af319d4afb95b58efa14c1177e3cf49285429de8c",
+      "tracked": true,
+      "local_changes": false
+    },
+    {
+      "scope": "AssisScript",
+      "path": "docs/PACOTES-E-NAMESPACES.md",
+      "sha256": "61929bb40d5ed975c62dd5853a36b2ad1ec54af271ecb9c0495743d1ca258daf",
+      "tracked": true,
+      "local_changes": false
+    },
+    {
+      "scope": "AssisScript",
+      "path": "docs/AUDITORIA-HTDL.md",
+      "sha256": "59d7cbd44c48ddbdfee5aebd692d027d759c16c3a69ff3fc4712437d4954f398",
+      "tracked": false,
+      "local_changes": true
+    },
+    {
+      "scope": "AssisScript",
+      "path": "docs/EVOLUCAO-ECOSSISTEMA-HTDL.md",
+      "sha256": "d66904548d453c6310b4adecdafd6641fe4865953dc2d482f69b48b3e650845c",
+      "tracked": false,
+      "local_changes": true
+    },
+    {
+      "scope": "AssisScript",
+      "path": "docs/VALIDACAO-COLECOES-HTDL.json",
+      "sha256": "43d607e60221abb26e9488c3fe2b3dccb46c0b6d8ab18b5a1bd1b2d7c09a7b24",
+      "tracked": false,
+      "local_changes": true
+    },
+    {
+      "scope": "AssisScript",
+      "path": "docs/VALIDACAO-HTDL.json",
+      "sha256": "2987c377ea13dc2d80d4dc962f6ae20cdaead115d3cedacd71878f23f60e0c9f",
+      "tracked": false,
+      "local_changes": true
+    },
+    {
+      "scope": "AssisScript",
+      "path": "stdlib/owned.assis",
+      "sha256": "5fc307d3a3b39fa7615003f65f8c6e3d8726f2bff10972faecd51850636ae4b0",
+      "tracked": true,
+      "local_changes": true
+    },
+    {
+      "scope": "AssisScript",
+      "path": "exemplos/32_document_resources.assis",
+      "sha256": "eb996de512a5f54c77c7e867ee85bd7595bfa7f223b9d5667a907394b8005df1",
+      "tracked": false,
+      "local_changes": true
+    },
+    {
+      "scope": "Hypertext Div Language",
+      "path": "docs/02-htdl-0.1.md",
+      "sha256": "d5e0edde6be27aa76cad2792b4503fd643aa29d8e751b30785ac6706c86ed8f6",
+      "status": "local-draft-not-conformance-tested"
+    },
+    {
+      "scope": "Hypertext Div Language",
+      "path": "docs/03-assisscript-no-navegador.md",
+      "sha256": "c0b752b943b5832f7cc7f737f982d3fdddd0d95f9240837411055f7829ee491f",
+      "status": "local-draft-not-conformance-tested"
+    },
+    {
+      "scope": "Hypertext Div Language",
+      "path": "docs/08-navegador-assisscript-privacidade-e-busca.md",
+      "sha256": "ac0f82a17214f4695ad960477c19b572107729e6ffe08937f940f694e1a36b2f",
+      "status": "local-draft-not-conformance-tested"
+    },
+    {
+      "scope": "Hypertext Div Language",
+      "path": "docs/12-contrato-fs-ssc-e-assisscript.md",
+      "sha256": "2b35889db5224504e12760f6f528a2f6e7729c05d22427faf599546f8005e764",
+      "status": "local-draft-not-conformance-tested"
+    },
+    {
+      "scope": "Hypertext Div Language",
+      "path": "docs/14-fundamentos-e-perfis.md",
+      "sha256": "be32c674be040a6843ce0f8317eff3d383a1373f605fc8b504c0fb5d47fd97fc",
+      "status": "local-draft-not-conformance-tested"
+    },
+    {
+      "scope": "Hypertext Div Language",
+      "path": "docs/15-htdl-0.2-e-carregamento.md",
+      "sha256": "7f9909db26b27108fa00b9e81900a847057eeae6ad8bcacef7efd6e63638f344",
+      "status": "local-draft-not-conformance-tested"
+    },
+    {
+      "scope": "Hypertext Div Language",
+      "path": "docs/16-gramaticas-fs-e-ssc.md",
+      "sha256": "7b55fd993aa5749e6ff4e6b900bd0353be25a1e342d36015c7b135b94eeb453e",
+      "status": "local-draft-not-conformance-tested"
+    },
+    {
+      "scope": "Hypertext Div Language",
+      "path": "docs/17-execucao-transacoes-e-layout.md",
+      "sha256": "2a54b630faa6e2b146e4aeb13b5402ac408a36a09e3ab87e2bc4833b98cf878a",
+      "status": "local-draft-not-conformance-tested"
+    },
+    {
+      "scope": "Hypertext Div Language",
+      "path": "docs/18-arquitetura-nativa-e-capacidades.md",
+      "sha256": "b6518c54cdda31c7ac7b6da164c58d9ca068c1e6d86e909558b87ca166fc27b9",
+      "status": "local-draft-not-conformance-tested"
+    },
+    {
+      "scope": "Hypertext Div Language",
+      "path": "docs/19-conformidade-e-cenarios.md",
+      "sha256": "9c2f6d32e49ac5ab895decca6d18149a72ca41fb6bd46fbda4e1d546e7444aaf",
+      "status": "local-draft-not-conformance-tested"
+    }
+  ],
+  "initial_git_status": [
+    "M .github/workflows/ci.yml",
+    " M Makefile",
+    " M README.en.md",
+    " M README.es.md",
+    " M README.md",
+    " M README.pt-BR.md",
+    " M docs/BIBLIOTECA-proprios.md",
+    " M docs/GRAMATICA.ebnf",
+    " M docs/LINGUAGEM.md",
+    " M docs/PLANO-EVOLUCAO-E-HANDOFF.md",
+    " M docs/PROGRESSO.json",
+    " M docs/PROGRESSO.md",
+    " M docs/RECURSOS-E-FATIAS.md",
+    " M docs/RESTANTE-PARA-100.md",
+    " M docs/TESTES-GITHUB.md",
+    " M src/frontend.h",
+    " M src/install_files.inc",
+    " M src/lexer.h",
+    " M stdlib/catalogo.json",
+    " M stdlib/owned.assis",
+    " M tools/test-native.py",
+    " M tools/test-portability.py",
+    "?? docs/AUDITORIA-HTDL.md",
+    "?? docs/EVOLUCAO-ECOSSISTEMA-HTDL.md",
+    "?? docs/VALIDACAO-COLECOES-HTDL.json",
+    "?? docs/VALIDACAO-HTDL.json",
+    "?? exemplos/32_document_resources.assis",
+    "?? tests/fixtures/htdl-core.assis",
+    "?? tests/test-htdl-readiness.py",
+    "?? tests/test-increment.py",
+    "?? tests/test-owned-mutation.py"
+  ],
+  "empty_project_directories": [
+    "AssisBrowser",
+    "WebAssis (SearchEngine)",
+    "FluxStyle (FS)",
+    "SansSCript (SSC)"
+  ],
+  "note": "Evidências locais não publicadas são identificadas por hash; não são promovidas a releases nem incluídas na publicação documental desta sessão."
+}

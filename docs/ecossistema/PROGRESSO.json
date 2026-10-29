@@ -1,0 +1,941 @@
+{
+  "schema": "assisscript-ecosystem-progress-v1",
+  "rubric_version": 1,
+  "date": "2026-10-29",
+  "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
+  "assessment": "provisional-documentary-baseline-not-retested",
+  "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
+  "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
+  "groups": [
+    {
+      "id": "E00",
+      "name": "Contratos, arquitetura e rastreabilidade",
+      "weight": 4,
+      "dependencies": [],
+      "layer": "Especificação e governança",
+      "items": [
+        {
+          "id": "E00-01",
+          "name": "Especificações versionadas",
+          "level": 1,
+          "acceptance": "Fixar gramáticas e catálogos HTDL/FS/SSC, versões, subconjuntos, diagnósticos e negociação; ligar cada requisito a cenários positivos e negativos executáveis.",
+          "baseline": "Há rascunhos no projeto irmão; não foram congelados nem certificados.",
+          "evidence": [
+            "local:htdl/docs/14-fundamentos-e-perfis.md",
+            "local:htdl/docs/19-conformidade-e-cenarios.md"
+          ]
+        },
+        {
+          "id": "E00-02",
+          "name": "Modelo de ameaças e privacidade",
+          "level": 1,
+          "acceptance": "Inventariar ativos, agentes hostis e autoridades; testar origens, concessões, revogação, fluxo de dados, logs e comportamento de falhas por componente.",
+          "baseline": "Arquitetura de capacidades existe como proposta.",
+          "evidence": [
+            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md"
+          ]
+        },
+        {
+          "id": "E00-03",
+          "name": "Fronteiras e decisões arquiteturais",
+          "level": 1,
+          "acceptance": "Registrar decisões de backend de página, providers nativos, processos, protocolos e dependências; demonstrar separação shell/broker/conteúdo e atualização de versões.",
+          "baseline": "Há desenho documental; nenhuma integração nativa observada.",
+          "evidence": [
+            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md"
+          ]
+        },
+        {
+          "id": "E00-04",
+          "name": "Driver e matriz de conformidade",
+          "level": 0,
+          "acceptance": "Executar corpus por perfil e sistema; distinguir pass/fail/not-run/unsupported, com hashes, versões e resultados sem depender de inspeção manual de exemplos.",
+          "baseline": "Corpus declarativo ainda sem motor/driver executável.",
+          "evidence": [
+            "local:htdl/docs/19-conformidade-e-cenarios.md"
+          ]
+        },
+        {
+          "id": "E00-05",
+          "name": "Inventário, publicação e relatório",
+          "level": 1,
+          "acceptance": "Vincular requisitos, commits, relatórios, evidências, dependências e suporte; publicar cada unidade de mudança no GitHub do AssisScript e verificar a revisão remota.",
+          "baseline": "Repositório e relatórios históricos existem; esta governança ainda será exercitada na nova trilha.",
+          "evidence": [
+            "docs/HANDOFF-ARM64-V1.md",
+            "docs/SUPPORT.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E01",
+      "name": "Linguagem, compilador e garantias semânticas",
+      "weight": 14,
+      "dependencies": [
+        "E00"
+      ],
+      "layer": "Compilador e runtime",
+      "items": [
+        {
+          "id": "E01-01",
+          "name": "DataLayout e ABI por destino",
+          "level": 2,
+          "acceptance": "Explicitar tamanho/alinhamento de tipos, ponteiros, slices, vtables e retornos; testar C/IR/runtime em x64/ARM64 e no formato restrito escolhido, inclusive serialização entre larguras.",
+          "baseline": "Destinos nativos e ABI escalar existem; novo destino de página não existe.",
+          "evidence": [
+            "docs/ARM64-NATIVO.md",
+            "docs/ABI-NATIVA.md",
+            "docs/FFI-C.md"
+          ]
+        },
+        {
+          "id": "E01-02",
+          "name": "Tipos e abstrações para programas grandes",
+          "level": 3,
+          "acceptance": "Preservar generics, classes/structs, enums exaustivos, Option/Result, funções/closures e efeitos; validar composição em parsers, grafos e serviços reais, com diagnósticos estáveis.",
+          "baseline": "Mecanismos nativos demonstrados; ainda sem integração nos produtos.",
+          "evidence": [
+            "docs/GENERICS.md",
+            "docs/VALORES-E-VARIANTES.md",
+            "docs/CAPTURAS-E-VARIANTES-MOVE.md",
+            "docs/FUNCOES-E-EFEITOS.md"
+          ]
+        },
+        {
+          "id": "E01-03",
+          "name": "Ownership, vidas e destruição",
+          "level": 2,
+          "acceptance": "Validar recursos compostos, mutação emprestada, callbacks com estado, cancelamento e encerramento de instância; impedir referência expirada, destruição dupla e reentrada inválida nas pontes.",
+          "baseline": "Verificador e recursos proprietários existem com restrições explícitas.",
+          "evidence": [
+            "docs/OWNERSHIP-FUNCOES.md",
+            "docs/RECURSOS-E-FATIAS.md",
+            "docs/SAFE-DEFAULT.md"
+          ]
+        },
+        {
+          "id": "E01-04",
+          "name": "Erros, números e contratos de falha",
+          "level": 2,
+          "acceptance": "Definir erros recuperáveis, traps/panics de componente, overflow, NaN/Inf, conversões, limites e OOM; comprovar cleanup sem corromper perfil ou derrubar o shell.",
+          "baseline": "Result e números nativos disponíveis; contrato geral de OOM/host ainda aberto.",
+          "evidence": [
+            "docs/NUMEROS.md",
+            "docs/VALORES-E-VARIANTES.md",
+            "docs/ERROS.md"
+          ]
+        },
+        {
+          "id": "E01-05",
+          "name": "IR, otimização e diagnósticos",
+          "level": 3,
+          "acceptance": "Preservar avaliação/efeitos/cleanup e posições de fonte; comparar otimizado e referência, executar rejeições e equivalência em todos os alvos anunciados, incluindo novo perfil.",
+          "baseline": "IR nativa integral e validação histórica; formato restrito permanece aberto.",
+          "evidence": [
+            "docs/BACKEND-IR-COMPLETA.md",
+            "docs/BACKEND-ALPHA15.md",
+            "docs/VALIDACAO-TARGETS-V1.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E02",
+      "name": "Memória, coleções, texto e dados grandes",
+      "weight": 8,
+      "dependencies": [
+        "E01"
+      ],
+      "layer": "Runtime e bibliotecas",
+      "items": [
+        {
+          "id": "E02-01",
+          "name": "Coleções proprietárias mutáveis",
+          "level": 2,
+          "acceptance": "Oferecer arrays/vetores/mapas/filas com recursos Move, mutação, remoção e custos documentados; verificar empréstimos, drops e ordem dos filhos sob mutações aleatórias.",
+          "baseline": "OwnedArray mutável foi validado apenas na continuação local; árvore tem custos logarítmicos.",
+          "evidence": [
+            "local:assis/docs/VALIDACAO-COLECOES-HTDL.json",
+            "local:assis/stdlib/owned.assis"
+          ]
+        },
+        {
+          "id": "E02-02",
+          "name": "Arenas e identidades estáveis",
+          "level": 1,
+          "acceptance": "Implementar NodeId e handles com categoria, instância e geração, IDs independentes de posição e relações ordenadas; rejeitar uso após remoção, reciclagem ou navegação.",
+          "baseline": "Prova local usa índices e IDs sem reutilização; ainda sem arena geracional.",
+          "evidence": [
+            "local:assis/docs/AUDITORIA-HTDL.md",
+            "local:assis/exemplos/32_document_resources.assis"
+          ]
+        },
+        {
+          "id": "E02-03",
+          "name": "Alocação e quotas recuperáveis",
+          "level": 0,
+          "acceptance": "Disponibilizar alocação fallível/reserve, checagem de tamanho e quotas por instância; injetar OOM em cada fronteira e conservar estado válido sem abortar serviços vizinhos.",
+          "baseline": "Não demonstrado para documentos/índices e limites completos.",
+          "evidence": [
+            "docs/RECURSOS-E-FATIAS.md"
+          ]
+        },
+        {
+          "id": "E02-04",
+          "name": "Unicode e edição de texto",
+          "level": 2,
+          "acceptance": "Ampliar UTF-8 com normalização, case folding, segmentação de palavras/grafemas, bidi e quebra de linha via providers versionados; testar NUL, acentos combinantes e entradas inválidas.",
+          "baseline": "String UTF-8 com vida/comprimento existe; processamento linguístico completo não existe.",
+          "evidence": [
+            "docs/BIBLIOTECA-unicode.md",
+            "docs/BIBLIOTECA-texto.md"
+          ]
+        },
+        {
+          "id": "E02-05",
+          "name": "Mapas e armazenamento eficientes",
+          "level": 1,
+          "acceptance": "Definir hash resistente a colisões hostis, interning, buffers binários e vistas com invalidação explícita; medir arenas, segmentos e coleções sob crescimento/remoção.",
+          "baseline": "Há mapas e prova de colisões por correção; resistência de custo não comprovada.",
+          "evidence": [
+            "docs/COLECOES.md",
+            "local:assis/docs/AUDITORIA-HTDL.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E03",
+      "name": "Sistema, tarefas, processos e integração de eventos",
+      "weight": 10,
+      "dependencies": [
+        "E01"
+      ],
+      "layer": "Runtime, bibliotecas e adaptadores",
+      "items": [
+        {
+          "id": "E03-01",
+          "name": "Arquivos, caminhos e diretórios",
+          "level": 1,
+          "acceptance": "Oferecer enumeração/metadados, caminhos Unicode, operações relativas a raiz e permissões; testar links, traversal, TOCTOU e cancelamento sem expor pastas à página.",
+          "baseline": "Arquivos/argumentos existem; API geral de diretórios e confinamento ainda aberta.",
+          "evidence": [
+            "docs/IO-E-APLICACAO-A.md",
+            "docs/BIBLIOTECA-cli.md"
+          ]
+        },
+        {
+          "id": "E03-02",
+          "name": "Loop responsivo e I/O não bloqueante",
+          "level": 1,
+          "acceptance": "Integrar eventos nativos, polling de I/O, timers monotônicos, deadlines e filas limitadas; assegurar fairness, pressão de retorno e cancelamento com callbacks em thread correta.",
+          "baseline": "Fila cooperativa e polling de rede separados; sem loop gráfico integrado.",
+          "evidence": [
+            "docs/EVENTOS-E-PERSISTENCIA.md",
+            "docs/BIBLIOTECA-eventos.md",
+            "docs/BIBLIOTECA-net.md"
+          ]
+        },
+        {
+          "id": "E03-03",
+          "name": "Workers, IPC e supervisão",
+          "level": 2,
+          "acceptance": "Evoluir processos/pipes para protocolo binário versionado, framing, tamanho máximo, transferências e encerramento; recuperar worker travado/derrubado sem deadlock ou mensagem tardia.",
+          "baseline": "Processos, pipes e supervisão delimitados disponíveis.",
+          "evidence": [
+            "docs/BIBLIOTECA-process.md",
+            "docs/FFI-C.md"
+          ]
+        },
+        {
+          "id": "E03-04",
+          "name": "Ciclo de vida de recursos e assinaturas",
+          "level": 2,
+          "acceptance": "Cancelar árvore de tarefas, revogar subscriptions, fechar handles e drenar trabalho ao fechar aba/perfil; definir reentrada e impedimento de callback após drop.",
+          "baseline": "Recursos own e cancelamento básicos existem; ainda sem ciclo de vida de aba.",
+          "evidence": [
+            "docs/OWNERSHIP-FUNCOES.md",
+            "docs/BIBLIOTECA-eventos.md",
+            "docs/BIBLIOTECA-process.md"
+          ]
+        },
+        {
+          "id": "E03-05",
+          "name": "Paralelismo com contrato seguro",
+          "level": 0,
+          "acceptance": "Adotar primeiro processos e mensagens; demonstrar CPU/I/O em segundo plano. Se threads forem necessárias, especificar envio/compartilhamento, atomics, modelo de memória e análise de corridas antes de expor heap compartilhado.",
+          "baseline": "Sem contrato de threads ou integração paralela do motor.",
+          "evidence": [
+            "docs/EVENTOS-E-PERSISTENCIA.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E04",
+      "name": "Plataforma gráfica, entrada e acessibilidade",
+      "weight": 10,
+      "dependencies": [
+        "E01",
+        "E03"
+      ],
+      "layer": "Bibliotecas e adaptadores nativos",
+      "items": [
+        {
+          "id": "E04-01",
+          "name": "Ponte nativa segura e versionada",
+          "level": 2,
+          "acceptance": "Encapsular ABI C, handles, buffers e erros com ownership; usar shim para agregados/varargs ou thread estrangeira, ou ampliar FFI com testes independentes de ABI nos cinco destinos.",
+          "baseline": "ABI C escalar e callbacks síncronos existem; bibliotecas gráficas não integradas.",
+          "evidence": [
+            "docs/FFI-C.md",
+            "docs/ARM64-NATIVO.md"
+          ]
+        },
+        {
+          "id": "E04-02",
+          "name": "Janela, monitores e eventos",
+          "level": 0,
+          "acceptance": "Abrir/redimensionar/fechar janela, integrar DPI, múltiplos monitores, foco, teclado/ponteiro/touch e suspensão; testar loop nativo sem espera ocupada e liberação de recursos.",
+          "baseline": "Sem implementação encontrada na pasta Browser.",
+          "evidence": [
+            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md"
+          ]
+        },
+        {
+          "id": "E04-03",
+          "name": "Desenho, imagens e composição",
+          "level": 0,
+          "acceptance": "Implementar superfícies, clipping, transforms e snapshots imutáveis com fallback de renderização; decodificar imagens sob limites e isolamento, testar perda/recriação de recursos e hit testing consistente.",
+          "baseline": "Sem pipeline gráfico nativo demonstrado.",
+          "evidence": [
+            "local:htdl/docs/17-execucao-transacoes-e-layout.md"
+          ]
+        },
+        {
+          "id": "E04-04",
+          "name": "Fontes, edição e entrada de texto",
+          "level": 0,
+          "acceptance": "Integrar shaping/fallback/bidi, medição e quebra, seleção, clipboard e IME; validar edição com graphemes, escala 200%, RTL e navegação por teclado em providers de cada OS.",
+          "baseline": "Texto de terminal não prova edição ou shaping gráfico.",
+          "evidence": [
+            "docs/BIBLIOTECA-unicode.md"
+          ]
+        },
+        {
+          "id": "E04-05",
+          "name": "Acessibilidade e políticas do usuário",
+          "level": 0,
+          "acceptance": "Exportar árvore semântica, nome/role/valor, foco e ações às APIs assistivas do OS; testar leitor de tela, contraste, zoom e movimento reduzido com usuário e automação.",
+          "baseline": "Há proposta semântica, sem ponte nativa verificada.",
+          "evidence": [
+            "local:htdl/docs/14-fundamentos-e-perfis.md",
+            "local:htdl/docs/19-conformidade-e-cenarios.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E05",
+      "name": "Rede, URLs e serviços web",
+      "weight": 8,
+      "dependencies": [
+        "E01",
+        "E03"
+      ],
+      "layer": "Bibliotecas e broker",
+      "items": [
+        {
+          "id": "E05-01",
+          "name": "Cliente HTTP(S) geral",
+          "level": 1,
+          "acceptance": "Adicionar métodos, status, cabeçalhos, corpos/upload, autenticação explicitamente concedida e TLS verificado; provar cancelamento e reutilização sem bloquear UI ou vazar estado entre origens.",
+          "baseline": "GET cooperativo limitado existe; não é cliente de navegação completo.",
+          "evidence": [
+            "docs/BIBLIOTECA-net.md",
+            "docs/BIBLIOTECA-http.md"
+          ]
+        },
+        {
+          "id": "E05-02",
+          "name": "Políticas de navegação e origem",
+          "level": 0,
+          "acceptance": "Aplicar redirects limitados, cookies, cache/validadores, partição, proxy explícito e proteção de conteúdo misto; revalidar destino e autoridade em cada salto e após resolução DNS.",
+          "baseline": "Esses serviços estão desabilitados ou ausentes no cliente delimitado.",
+          "evidence": [
+            "docs/BIBLIOTECA-net.md"
+          ]
+        },
+        {
+          "id": "E05-03",
+          "name": "URL, DNS e codificação",
+          "level": 0,
+          "acceptance": "Criar parser/serializer de URLs com relativos, percent encoding, IPv6, IDNA e origem opaca local; separar canonicalização para busca de autorização; testar corpus externo e DNS hostil.",
+          "baseline": "Aceitar URL via libcurl não é biblioteca pública de URL/origem.",
+          "evidence": [
+            "docs/BIBLIOTECA-net.md"
+          ]
+        },
+        {
+          "id": "E05-04",
+          "name": "Streaming e canais contínuos",
+          "level": 0,
+          "acceptance": "Oferecer leitura incremental, buffers limitados, backpressure, compressão com teto de expansão, downloads retomáveis e canais de atualização previstos no contrato; avaliar WebSocket por requisito.",
+          "baseline": "Corpo limitado em memória, sem streaming geral demonstrado.",
+          "evidence": [
+            "docs/BIBLIOTECA-net.md"
+          ]
+        },
+        {
+          "id": "E05-05",
+          "name": "Servidor e serviço de consulta",
+          "level": 0,
+          "acceptance": "Disponibilizar escuta/aceitação e HTTP por provider ou serviço integrado, com concorrência, limites e encerramento; testar solicitações truncadas/lentas, framing, timeouts e autenticação administrativa.",
+          "baseline": "Não há servidor HTTP ou API socket geral demonstrados.",
+          "evidence": [
+            "docs/BIBLIOTECA-net.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E06",
+      "name": "Executor restrito, capacidades e isolamento",
+      "weight": 10,
+      "dependencies": [
+        "E00",
+        "E01",
+        "E03"
+      ],
+      "layer": "Backend, runtime e host",
+      "items": [
+        {
+          "id": "E06-01",
+          "name": "Formato de execução de página",
+          "level": 0,
+          "acceptance": "Escolher VM/Wasm com ADR e prova; implementar layout, validação, loader e imports permitidos; preservar semântica declarada e comparar execução com referência nativa ou oráculo.",
+          "baseline": "browser-wasm32 é proposta, não alvo existente.",
+          "evidence": [
+            "local:htdl/docs/03-assisscript-no-navegador.md",
+            "docs/ARM64-NATIVO.md"
+          ]
+        },
+        {
+          "id": "E06-02",
+          "name": "Memória, CPU e interrupção",
+          "level": 0,
+          "acceptance": "Limitar heap, pilha, instruções/tempo, compilação, mensagens e chamadas hospedeiras; interromper loop, recursão e host bloqueante sem prejudicar shell ou outra aba.",
+          "baseline": "safe e timeout externo não demonstram essas garantias.",
+          "evidence": [
+            "docs/SAFE-DEFAULT.md",
+            "local:assis/docs/AUDITORIA-HTDL.md"
+          ]
+        },
+        {
+          "id": "E06-03",
+          "name": "Capacidades e API hospedeira",
+          "level": 0,
+          "acceptance": "Negar arquivos/processos/FFI/rede/relógio por padrão; expor somente imports versionados e tokens revogáveis por origem/instância/geração; testar forja, replay e confused deputy.",
+          "baseline": "Modelo descrito, sem enforcement executável.",
+          "evidence": [
+            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md"
+          ]
+        },
+        {
+          "id": "E06-04",
+          "name": "Sandbox de processo por OS",
+          "level": 0,
+          "acceptance": "Implementar restrições nativas de conteúdo/broker em Windows/Linux/macOS, herança mínima e filtros apropriados; testar tentativa real de acesso a rede, perfil, arquivos e processos sem concessão.",
+          "baseline": "Criar processo por si só não isola autoridade.",
+          "evidence": [
+            "docs/BIBLIOTECA-process.md",
+            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md"
+          ]
+        },
+        {
+          "id": "E06-05",
+          "name": "Ciclo de vida e recuperação de aba",
+          "level": 0,
+          "acceptance": "Inicializar/eventuar/descartar instância, invalidar callbacks e interromper conteúdo travado; validar reload, navegação, falha e rollback de ativação com isolamento entre abas.",
+          "baseline": "Nenhum runtime de aba integrado disponível.",
+          "evidence": [
+            "local:htdl/docs/15-htdl-0.2-e-carregamento.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E07",
+      "name": "HTDL, árvore semântica e SDK de documentos",
+      "weight": 8,
+      "dependencies": [
+        "E00",
+        "E02",
+        "E04"
+      ],
+      "layer": "Bibliotecas e integração de referência",
+      "items": [
+        {
+          "id": "E07-01",
+          "name": "Parser e diagnóstico HTDL real",
+          "level": 1,
+          "acceptance": "Implementar gramática versionada com atributos, comentários, entidades, semântica, spans e recuperação; executar corpus real, limites e entradas hostis sem recursão não limitada.",
+          "baseline": "Microparser local aceita somente div/texto sem atributos; não é HTDL.",
+          "evidence": [
+            "local:assis/docs/AUDITORIA-HTDL.md",
+            "local:htdl/docs/02-htdl-0.1.md"
+          ]
+        },
+        {
+          "id": "E07-02",
+          "name": "Árvore, seletores e mutações",
+          "level": 0,
+          "acceptance": "Oferecer criação/remoção/consulta, hierarquia ordenada, atributos/tipos semânticos e invalidação; manter identidade geracional, foco e acessibilidade coerentes após transações.",
+          "baseline": "Coleções são fundação; ainda não há árvore HTDL de produto.",
+          "evidence": [
+            "local:htdl/docs/17-execucao-transacoes-e-layout.md"
+          ]
+        },
+        {
+          "id": "E07-03",
+          "name": "SDK e ABI htdl_v1",
+          "level": 0,
+          "acceptance": "Definir handles, tipos, erros, strings e assinaturas de inicialização/eventos; oferecer pacote compilável com APIs canônicas em inglês e compatibilidade/versionamento sem acesso a ponteiros do host.",
+          "baseline": "SDK e nomes antigos dos rascunhos não são API implementada.",
+          "evidence": [
+            "local:htdl/docs/03-assisscript-no-navegador.md",
+            "docs/ENGLISH-API.md"
+          ]
+        },
+        {
+          "id": "E07-04",
+          "name": "Estado, eventos e transações",
+          "level": 0,
+          "acceptance": "Implementar células por página/nó, inscrição/desinscrição, snapshot e fila determinística; cobrir teclado/ponteiro, disabled/hidden, remoção e falhas sem handlers tardios.",
+          "baseline": "Eventos cooperativos da stdlib não são eventos de documento.",
+          "evidence": [
+            "local:htdl/docs/17-execucao-transacoes-e-layout.md"
+          ]
+        },
+        {
+          "id": "E07-05",
+          "name": "Loader e ativação atômica",
+          "level": 0,
+          "acceptance": "Carregar HTDL, código, FS/SSC e recursos locais/remotos sob política; resolver versões/dependências, validar antes de ativar e descartar resultados atrasados; cache somente de artefato imutável.",
+          "baseline": "Há contrato documental de carregamento.",
+          "evidence": [
+            "local:htdl/docs/15-htdl-0.2-e-carregamento.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E08",
+      "name": "FluxStyle, SSC, layout e integração visual",
+      "weight": 8,
+      "dependencies": [
+        "E00",
+        "E02",
+        "E04"
+      ],
+      "layer": "Bibliotecas e motores de referência",
+      "items": [
+        {
+          "id": "E08-01",
+          "name": "Frontend e avaliador FluxStyle",
+          "level": 0,
+          "acceptance": "Implementar gramática/tipos/unidades, seletores/bindings, DAG, produtor único e avaliação incremental pura; testar ciclos, ramos curtos, conflitos e dirtiness sem cascata implícita.",
+          "baseline": "Rascunhos e exemplos conceituais, sem avaliador nativo demonstrado.",
+          "evidence": [
+            "local:htdl/docs/16-gramaticas-fs-e-ssc.md",
+            "local:htdl/docs/12-contrato-fs-ssc-e-assisscript.md"
+          ]
+        },
+        {
+          "id": "E08-02",
+          "name": "Layout e snapshots coerentes",
+          "level": 0,
+          "acceptance": "Definir constraints, distribuição row/column, texto, overflow/scroll e invalidações; provar ausência de ciclo geométrico e uso do mesmo snapshot por desenho, hit test e acessibilidade.",
+          "baseline": "Questões de row e dimensões grandes seguem abertas no rascunho.",
+          "evidence": [
+            "local:htdl/docs/17-execucao-transacoes-e-layout.md",
+            "local:htdl/docs/19-conformidade-e-cenarios.md"
+          ]
+        },
+        {
+          "id": "E08-03",
+          "name": "Perfil numérico e temporal SSC",
+          "level": 0,
+          "acceptance": "Fixar representação/faixa, arredondamento, coeficientes e passo de tempo; implementar parser/canais com vetores independentes e fallback de erro numérico, sem prometer igualdade de float sem prova.",
+          "baseline": "Simulador isolado não é motor SSC integrado ao navegador.",
+          "evidence": [
+            "local:htdl/docs/12-contrato-fs-ssc-e-assisscript.md",
+            "local:htdl/docs/16-gramaticas-fs-e-ssc.md"
+          ]
+        },
+        {
+          "id": "E08-04",
+          "name": "Foco, movimento e falhas reativas",
+          "level": 0,
+          "acceptance": "Integrar transações semânticas e visuais, conservar último estilo válido com disabled atual, congelar movimento em edição, pausar aba oculta e respeitar reducedMotion sem backlog físico.",
+          "baseline": "Regras propostas, ainda sem execução ponta a ponta.",
+          "evidence": [
+            "local:htdl/docs/17-execucao-transacoes-e-layout.md"
+          ]
+        },
+        {
+          "id": "E08-05",
+          "name": "Corpus visual e inspeção",
+          "level": 0,
+          "acceptance": "Executar contador, leitura e dois painéis com screenshots controladas, árvores/eventos e leitor de tela; inspecionar grafo, custos e versões com diagnóstico de origem.",
+          "baseline": "Cenários especificados, não executados por motor nativo.",
+          "evidence": [
+            "local:htdl/docs/19-conformidade-e-cenarios.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E09",
+      "name": "Persistência, perfil e formatos de armazenamento",
+      "weight": 8,
+      "dependencies": [
+        "E02",
+        "E03"
+      ],
+      "layer": "Bibliotecas e serviços",
+      "items": [
+        {
+          "id": "E09-01",
+          "name": "Commit durável e recuperação",
+          "level": 1,
+          "acceptance": "Implementar WAL/transação ou provider testado, flush de arquivo/diretório, commit e recuperação; injetar interrupções, disco cheio e corrupção, definindo diferença entre kill e perda de energia.",
+          "baseline": "Substituição atômica e serviço C existem; durabilidade física não certificada.",
+          "evidence": [
+            "docs/EVENTOS-E-PERSISTENCIA.md",
+            "docs/BIBLIOTECA-process.md"
+          ]
+        },
+        {
+          "id": "E09-02",
+          "name": "Serialização e formatos versionados",
+          "level": 1,
+          "acceptance": "Oferecer leitores/escritores binários e texto incrementais, checksums, endianness, limites e migrações; testar entrada truncada, versão desconhecida e snapshot independente do layout de memória.",
+          "baseline": "JSON limitado e arquivos existem; formatos do perfil/índice não.",
+          "evidence": [
+            "docs/BIBLIOTECA-json.md",
+            "docs/IO-E-APLICACAO-A.md"
+          ]
+        },
+        {
+          "id": "E09-03",
+          "name": "Banco, segmentos e consultas",
+          "level": 0,
+          "acceptance": "Integrar provider de banco ou implementar segmentos/índices transacionais com iteração, compactação e leitura concorrente; demonstrar conjunto maior que RAM sob limites definidos.",
+          "baseline": "Sem mecanismo geral de banco ou índice persistente demonstrado.",
+          "evidence": [
+            "docs/BIBLIOTECAS.md"
+          ]
+        },
+        {
+          "id": "E09-04",
+          "name": "Perfil, partições e dados sensíveis",
+          "level": 0,
+          "acceptance": "Separar configurações, histórico, favoritos, cookies e cache por perfil/origem; proteger credenciais por provider do OS, testar limpeza completa e modo privado sem persistência incidental.",
+          "baseline": "Diretórios do Browser e WebAssis estão sem implementação.",
+          "evidence": [
+            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md"
+          ]
+        },
+        {
+          "id": "E09-05",
+          "name": "Quotas, migração e concorrência",
+          "level": 0,
+          "acceptance": "Definir locks, ownership de arquivo, tamanho máximo, backup/restore e migração reversível; testar dois processos, crash durante upgrade e revogação de armazenamento de origem.",
+          "baseline": "Locks nativos delimitados não resolvem ciclo de vida do perfil.",
+          "evidence": [
+            "docs/BIBLIOTECA-process.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E10",
+      "name": "Rastreamento, indexação e consulta do buscador",
+      "weight": 6,
+      "dependencies": [
+        "E02",
+        "E05",
+        "E09"
+      ],
+      "layer": "Bibliotecas e aplicação de referência",
+      "items": [
+        {
+          "id": "E10-01",
+          "name": "Extração e análise linguística",
+          "level": 1,
+          "acceptance": "Extrair texto/links de vários documentos, preservar docId e posições, normalizar e tokenizar por política; comparar termos e offsets a um oráculo multilingue.",
+          "baseline": "Prova local conta palavras em um documento com conversão ASCII.",
+          "evidence": [
+            "local:assis/docs/AUDITORIA-HTDL.md"
+          ]
+        },
+        {
+          "id": "E10-02",
+          "name": "Crawler e fronteira persistente",
+          "level": 0,
+          "acceptance": "Oferecer fila por host, robots.txt, deduplicação, canonicalização, sitemap opcional, politeness, retries/backoff e reindexação; negar redes privadas/loopback por política após DNS/redirect.",
+          "baseline": "Não há crawler no WebAssis.",
+          "evidence": [
+            "docs/BIBLIOTECA-net.md"
+          ]
+        },
+        {
+          "id": "E10-03",
+          "name": "Índice invertido em disco",
+          "level": 0,
+          "acceptance": "Implementar postings por doc/posição, segmentos, compressão, merge, update/delete e tombstones; recuperar crash e conferir consultas após reinício contra modelo independente.",
+          "baseline": "Mapa de contagem local não é índice multidocumento.",
+          "evidence": [
+            "local:assis/docs/AUDITORIA-HTDL.md"
+          ]
+        },
+        {
+          "id": "E10-04",
+          "name": "Consulta, ranking e avaliação",
+          "level": 0,
+          "acceptance": "Definir sintaxe de consulta, interseção/união/frases, ranking inicial explicável, paginação, snippets seguros e cache; medir precisão/recall ou NDCG em corpus rotulado e comparar consultas exatas ao oráculo.",
+          "baseline": "Sem serviço/algoritmo de busca multidocumento demonstrado.",
+          "evidence": [
+            "local:htdl/docs/08-navegador-assisscript-privacidade-e-busca.md"
+          ]
+        },
+        {
+          "id": "E10-05",
+          "name": "Serviço de busca e operação",
+          "level": 0,
+          "acceptance": "Servir consultas pelo transporte escolhido, integrar submissão voluntária no Browser e demonstrar atualização concorrente do índice, limites, logs sem consultas privadas, recuperação e abuso controlado.",
+          "baseline": "Visão de produto, sem serviço em operação.",
+          "evidence": [
+            "local:htdl/docs/08-navegador-assisscript-privacidade-e-busca.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E11",
+      "name": "Ferramentas, distribuição e aceite integrado",
+      "weight": 6,
+      "dependencies": [
+        "E00",
+        "E01"
+      ],
+      "layer": "Ferramentas e qualidade de entrega",
+      "items": [
+        {
+          "id": "E11-01",
+          "name": "Builds, pacotes e dependências",
+          "level": 2,
+          "acceptance": "Garantir build limpo reprodutível, manifestos/lockfiles, providers e hashes coerentes; distribuir SDK/runtime/stdlib/editor com instalação, atualização e remoção testadas por perfil.",
+          "baseline": "Pacotes nativos/offline existem; componentes de navegador ainda não empacotados.",
+          "evidence": [
+            "docs/PACOTES-E-NAMESPACES.md",
+            "docs/INSTALACAO.md",
+            "docs/VALIDACAO-TARGETS-V1.json"
+          ]
+        },
+        {
+          "id": "E11-02",
+          "name": "Editor, debugger e ferramentas web",
+          "level": 2,
+          "acceptance": "Ampliar LSP/fmt/check/test/doc com DSLs, source maps e depuração de página/host; mostrar erro de import/quota/handle com span e origem; integrar inspector local sem dar autoridade à página.",
+          "baseline": "LSP e ferramentas da linguagem disponíveis, ferramentas web pendentes.",
+          "evidence": [
+            "docs/FERRAMENTAS-ALPHA.8.md",
+            "docs/VSCODE.md"
+          ]
+        },
+        {
+          "id": "E11-03",
+          "name": "CI, fuzzing e validação multiplataforma",
+          "level": 2,
+          "acceptance": "Executar suites semânticas e ABI por destino nativo, corpus/fuzzing diferencial e falhas injetadas; bloquear promoção por testes omitidos, incompatibilidade de provider ou erro de sandbox.",
+          "baseline": "CI nativa histórica aprovada; testes novos do ecossistema ainda não existem.",
+          "evidence": [
+            "docs/VALIDACAO-TARGETS-V1.json",
+            ".github/workflows/ci.yml"
+          ]
+        },
+        {
+          "id": "E11-04",
+          "name": "Performance, carga e orçamento",
+          "level": 1,
+          "acceptance": "Fixar corpus/hardware/seeds e medir p50/p95/p99, memória, handles e bytes; ensaiar UI, crawler e busca em conjunto por 24h reais e comparar candidato à baseline sem regressão não justificada.",
+          "baseline": "Há benchmarks/soak nativos históricos; não do navegador/buscador.",
+          "evidence": [
+            "docs/HANDOFF-3.3-ALPHA.15.md",
+            "docs/DESEMPENHO.md"
+          ]
+        },
+        {
+          "id": "E11-05",
+          "name": "Compatibilidade, atualização e aceite",
+          "level": 1,
+          "acceptance": "Publicar política por perfil, inventário/procedência e atualização verificada com rollback; terceiro instala e usa demos Browser/busca pelo manual em revisão exata, com canais de correção e vulnerabilidade.",
+          "baseline": "Política/aceite anteriores cobrem outro escopo; não promovem o ecossistema.",
+          "evidence": [
+            "docs/SUPPORT.md",
+            "docs/PROCEDENCIA-V1.md",
+            "docs/ACEITE-RELATO-USUARIO-2026-10-28.md"
+          ]
+        }
+      ]
+    }
+  ],
+  "level_names": {
+    "0": "Pendente",
+    "1": "Fundação ou protótipo parcial",
+    "2": "Implementação funcional delimitada",
+    "3": "Validação adversa e de destinos",
+    "4": "Aceite integrado reproduzível"
+  },
+  "gates": [
+    {
+      "id": "G1",
+      "name": "Visualizador local",
+      "required": [
+        "E01",
+        "E02",
+        "E03",
+        "E04",
+        "E07"
+      ],
+      "passed": false
+    },
+    {
+      "id": "G2",
+      "name": "Página remota isolada",
+      "required": [
+        "E05",
+        "E06",
+        "E07"
+      ],
+      "passed": false
+    },
+    {
+      "id": "G3",
+      "name": "Ecossistema visual integrado",
+      "required": [
+        "E07",
+        "E08"
+      ],
+      "passed": false
+    },
+    {
+      "id": "G4",
+      "name": "Busca persistente integrada",
+      "required": [
+        "E05",
+        "E09",
+        "E10"
+      ],
+      "passed": false
+    },
+    {
+      "id": "G5",
+      "name": "Distribuição e aceite final",
+      "required": [
+        "E00",
+        "E01",
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E07",
+        "E08",
+        "E09",
+        "E10",
+        "E11"
+      ],
+      "passed": false
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-10-29",
+      "rubric_version": 1,
+      "label": "Baseline documental inicial; sem novos testes do runtime",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 1,
+        "E00-03": 1,
+        "E00-04": 0,
+        "E00-05": 1,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 1,
+        "E02-03": 0,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 1,
+        "E03-03": 2,
+        "E03-04": 2,
+        "E03-05": 0,
+        "E04-01": 2,
+        "E04-02": 0,
+        "E04-03": 0,
+        "E04-04": 0,
+        "E04-05": 0,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 0,
+        "E06-02": 0,
+        "E06-03": 0,
+        "E06-04": 0,
+        "E06-05": 0,
+        "E07-01": 1,
+        "E07-02": 0,
+        "E07-03": 0,
+        "E07-04": 0,
+        "E07-05": 0,
+        "E08-01": 0,
+        "E08-02": 0,
+        "E08-03": 0,
+        "E08-04": 0,
+        "E08-05": 0,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 1,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
+    }
+  ]
+}

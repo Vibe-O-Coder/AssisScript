@@ -1,0 +1,74 @@
+{
+  "schema": "assisscript-ecosystem-planning-validation-v1",
+  "date": "2026-10-29",
+  "platform": "Windows",
+  "python": "3.14.6",
+  "scope": "documentary-and-rubric-only",
+  "checks": {
+    "groups": 12,
+    "criteria": 60,
+    "weight": 100,
+    "independent_score": "19.90",
+    "gates_passed": 0,
+    "invalid_states_rejected": [
+      "weights-not-100",
+      "duplicate-criterion",
+      "level-out-of-range",
+      "boolean-level-is-not-integer",
+      "incomplete-history",
+      "unrecorded-level-change",
+      "dependency-cycle",
+      "missing-evidence-file",
+      "uninventoried-local-source",
+      "level-four-without-verification",
+      "approved-gate-without-evidence",
+      "100-percent-with-pending-gates"
+    ],
+    "local_markdown_links": 85,
+    "browser_mirror_identical": true,
+    "preexisting_files_unchanged": 30,
+    "generated_report_matches": true,
+    "clean_committed_base_check": true
+  },
+  "runtime_tests_run": false,
+  "compiler_rebuilt": false,
+  "files": [
+    {
+      "path": "PLANO-ECOSSISTEMA.md",
+      "sha256": "ed76fbef25132da2ab4109905a2dda13e979ec68a07d8e79d49027a0669f00af"
+    },
+    {
+      "path": "tools/report-ecosystem-progress.py",
+      "sha256": "5d9bfa53ef4807555274716f9dc10b7f2cba2ae6e27138c086514b02def27c5f"
+    },
+    {
+      "path": "docs/relatorios/2026-10-29-planejamento-ecossistema.md",
+      "sha256": "42891e4657644046f6890969b5b2ee09a4d6eab314ea1033b9083cbd1acdcff6"
+    },
+    {
+      "path": "docs/ecossistema/PLANO-MESTRE.md",
+      "sha256": "9e5774b3e3aa59dfbf299cc16b45903b2b85ddd3f45dcbbe7036a03a1af36ff3"
+    },
+    {
+      "path": "docs/ecossistema/PROGRESSO.json",
+      "sha256": "fed570954066a186bdab39a3e5c749bdb8def7d5324c39f42b1dc525520b01b2"
+    },
+    {
+      "path": "docs/ecossistema/PROGRESSO.md",
+      "sha256": "d2952d28843717f6f84afc2bef9903a0231f1324c08fc27875b1d258422f25b8"
+    },
+    {
+      "path": "docs/ecossistema/BASELINE-2026-10-29.json",
+      "sha256": "ddef99086b2adfd355ba2c6680842f0582e57ea3f6f23986fe4389d120276246"
+    },
+    {
+      "path": "docs/ecossistema/MASTERPROMPT.md",
+      "sha256": "053d7e2167e3ddf2a04a74bd0cf0aa179247b2254c75fbee2ca765b59c4a0295"
+    },
+    {
+      "path": "docs/ecossistema/browser/IMPLEMENTACOES-FUTURAS.md",
+      "sha256": "1ad275d22412ca7f349a13f58bb632b7efd5000e8bd0782334b4b4293ddea730"
+    }
+  ],
+  "note": "This file excludes its own hash. These checks verify planning consistency, not runtime readiness."
+}
