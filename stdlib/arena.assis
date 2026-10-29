@@ -1,0 +1,83 @@
+namespace arena;
+import "std/owned.assis";
+
+/// Local identity, not an authorization capability or a serialized pointer.
+public value struct Handle{let category:int;let instance:int;let slot:int;let generation:int;}
+public enum Insertion<T>{Inserted(Handle);Rejected(int,own T);}
+public enum Removal<T>{Missing;Removed(own T);}
+struct Slot<T>{own value:T;let generation:int;let occupied:bool;let next:int;}
+
+safe fn take_slot<T>(borrow mut slot:Slot<T>):own T{
+    slot.occupied=false;return move(slot.value);
+}
+
+/// Sparse slots never move. Removed generations are never reused or wrapped.
+public final class Arena<T>{
+    private own slots:owned::OwnedArray<Slot<T>>;
+    private let instance:int;
+    private let category:int;
+    private let slot_limit:int;
+    private let generation_limit:int;
+    private let free_head:int;
+    private let count:int;
+    private let active:bool;
+
+    fn init(borrow mut self,instance:int,category:int,slot_limit:int,generation_limit:int):void{
+        assert(self.instance==0);
+        assert(instance>0 && category>0 && slot_limit>=0 && generation_limit>0);
+        self.slots=new owned::OwnedArray<Slot<T>>();self.instance=instance;self.category=category;
+        self.slot_limit=slot_limit;self.generation_limit=generation_limit;self.free_head=-1;self.active=true;
+    }
+    fn size(borrow self):int{return self.count;}
+    fn slots_used(borrow self):int{return self.slots.size();}
+    fn contains(borrow self,handle:Handle):bool{
+        if(!self.active || handle.category!=self.category || handle.instance!=self.instance ||
+           handle.slot<0 || handle.slot>=self.slots.size() || handle.generation<=0){return false;}
+        borrow slot:Slot<T>=self.slots.get(handle.slot);
+        return slot.occupied && slot.generation==handle.generation;
+    }
+    fn insert(borrow mut self,own value:T):own Insertion<T>{
+        if(!self.active){return new Insertion<T>.Rejected(1,move(value));}
+        let index:int=self.free_head;let generation:int=1;
+        if(index>=0){
+            let next:int=-1;
+            {borrow mut slot:Slot<T>=self.slots.get_mut(index);
+             next=slot.next;generation=slot.generation;slot.value=move(value);slot.occupied=true;slot.next=-1;}
+            self.free_head=next;
+        }else{
+            index=self.slots.size();
+            if(index>=self.slot_limit){return new Insertion<T>.Rejected(2,move(value));}
+            self.slots.push(new Slot<T>(move(value),1,true,-1));
+        }
+        self.count+=1;
+        return new Insertion<T>.Inserted(new Handle(self.category,self.instance,index,generation));
+    }
+    /// Validate with contains before borrowing. Invalid access is a contract trap.
+    fn get(borrow self,handle:Handle):borrow(self) T{
+        assert(self.contains(handle));
+        return self.slots.get(handle.slot).value;
+    }
+    fn get_mut(borrow mut self,handle:Handle):borrow mut(self) T{
+        assert(self.contains(handle));
+        return self.slots.get_mut(handle.slot).value;
+    }
+    fn remove(borrow mut self,handle:Handle):own Removal<T>{
+        if(!self.contains(handle)){return new Removal<T>.Missing();}
+        own value:T=take_slot::<T>(self.slots.get_mut(handle.slot));
+        val head:int=self.free_head;
+        if(handle.generation<self.generation_limit){
+            {borrow mut slot:Slot<T>=self.slots.get_mut(handle.slot);
+             slot.generation=handle.generation+1;slot.next=head;}
+            self.free_head=handle.slot;
+        }
+        self.count-=1;return new Removal<T>.Removed(move(value));
+    }
+    fn close(borrow mut self):void{
+        self.active=false;self.count=0;self.free_head=-1;self.slots.clear();
+    }
+    /// The trusted caller supplies a strictly newer, globally unique instance.
+    fn reset(borrow mut self,instance:int):bool{
+        if(instance<=self.instance){return false;}
+        self.close();self.instance=instance;self.active=true;return true;
+    }
+}

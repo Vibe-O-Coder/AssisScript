@@ -1,0 +1,20 @@
+import "std/arena.assis";
+struct Node{let value:int;own data:*byte;}
+safe fn add(borrow mut nodes:arena::Arena<Node>,value:int):arena::Handle{
+    own result:arena::Insertion<Node>=nodes.insert(new Node(value,alloc<byte>(1)));
+    match(move(result)){
+        Inserted(handle){return handle;}
+        Rejected(code,node){assert(false);return new arena::Handle();}
+    }
+}
+safe fn main():int{
+    own nodes:arena::Arena<Node>=new arena::Arena<Node>(1,1,32,0x7fff_ffff_ffff_ffff);
+    val old:arena::Handle=add(nodes,10);
+    {own removed:arena::Removal<Node>=nodes.remove(old);}
+    val current:arena::Handle=add(nodes,42);
+    assert(old.slot==current.slot && old.generation!=current.generation);
+    assert(!nodes.contains(old));
+    {borrow node:Node=nodes.get(current);print(node.value);}
+    assert(nodes.reset(2));assert(!nodes.contains(current));
+    nodes.close();nodes.close();return 0;
+}

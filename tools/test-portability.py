@@ -76,6 +76,15 @@ def main():
          '{borrow entry:Item=items.get(1);print(old.n,removed.n,entry.n,items.size());}'
          'items.clear();items.clear();items.push(new Item(7,alloc<byte>(1)));'
          '{borrow entry:Item=items.get(0);print(entry.n);}', 0, '42 1 16 16\n7\n'),
+        ('arena', 'import "std/arena.assis";',
+         'own a:arena::Arena<*int>=new arena::Arena<*int>(1,7,1,2);'
+         'let h:arena::Handle=new arena::Handle();'
+         '{own r:arena::Insertion<*int>=a.insert(alloc<int>(1));'
+         'match(move(r)){Inserted(x){h=x;}Rejected(c,v){assert(false);}}}'
+         '{borrow mut p:*int=a.get_mut(h);p[0]=42;}'
+         '{own r:arena::Removal<*int>=a.remove(h);'
+         'match(move(r)){Missing{assert(false);}Removed(v){print(v[0]);}}}'
+         'assert(!a.contains(h) && a.reset(2));a.close();a.close();', 0, '42\n'),
         ('trap', '', 'let z:int=0;print(1/z);', 70, ''),
     ]
     try:

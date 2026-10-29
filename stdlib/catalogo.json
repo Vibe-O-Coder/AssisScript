@@ -116,6 +116,15 @@
       "dependencies": []
     },
     {
+      "name": "arena",
+      "required": false,
+      "doc": "BIBLIOTECA-arena.md",
+      "description": "Identidades locais com categoria, instância, geração e transferência de recursos.",
+      "dependencies": [
+        "owned"
+      ]
+    },
+    {
       "name": "http",
       "required": false,
       "doc": "BIBLIOTECA-http.md",
