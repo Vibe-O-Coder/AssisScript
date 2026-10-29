@@ -97,7 +97,9 @@ HOME="$tmp/home" sh "$root/desinstalar.sh" --prefix "$tmp/prefixo com espaço" >
 count=$((count+1))
 
 if command -v readelf >/dev/null 2>&1; then
-    if readelf -l "$assis" | grep -q INTERP; then fail 'o compilador distribuído depende de loader dinâmico'; fi
+    # The reviewed compiler distribution uses replaceable system glibc. The
+    # program emitted below still contains only the project's native runtime.
+    readelf -l "$assis" | grep -q INTERP || fail 'o compilador distribuído deve usar a glibc compartilhada documentada'
     if readelf -l "$tmp/sem-dependencias" | grep -q INTERP; then fail 'o programa depende de loader dinâmico'; fi
     count=$((count+2))
 fi

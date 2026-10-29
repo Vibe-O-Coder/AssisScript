@@ -26,7 +26,11 @@ API int64_t ffi_live_handles(void){return live_handles;}
 API int64_t ffi_closed_handles(void){return closed_handles;}
 /* Force a nonvolatile register to hold a value while the callback is active. */
 API int64_t ffi_runtime_register(uintptr_t address,int64_t n){
+#if defined(__aarch64__) || defined(__arm64__)
+    register uintptr_t marker __asm__("x27")=UINT64_C(0x123456789abcdef0);
+#else
     register uintptr_t marker __asm__("r15")=UINT64_C(0x123456789abcdef0);
+#endif
     __asm__ volatile("" : "+r"(marker));
     int64_t result=((int64_t (*)(int64_t))address)(n);
     __asm__ volatile("" : "+r"(marker));

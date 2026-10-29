@@ -2,6 +2,8 @@
 import importlib.util
 import json
 import os
+import platform
+import sys
 from pathlib import Path
 import struct
 import subprocess
@@ -37,17 +39,17 @@ class Backend(base.Evolution):
 
     def test_elf_is_position_independent_with_no_writable_code(self):
         source=self.source('pure fn id(n:int):int{return n;}'+main('val f:pure fn(int):int=id;print(f,f(42));'))
-        binary=self.temp/'pie';r=self.invoke('build',source,'--target','linux-x64','-o',binary);self.assertEqual(r.returncode,0,r.stderr)
+        binary=self.temp/'pie';r=self.invoke('build',source,'--target','linux-arm64' if platform.machine().lower() in ('arm64','aarch64') else 'linux-x64','-o',binary);self.assertEqual(r.returncode,0,r.stderr)
         data=binary.read_bytes();self.assertEqual(struct.unpack_from('<H',data,16)[0],3)
         offset=struct.unpack_from('<Q',data,32)[0];count=struct.unpack_from('<H',data,56)[0]
         for i in range(count):
             kind,flags=struct.unpack_from('<II',data,offset+i*56)
             self.assertNotEqual(flags&3,3)
-        if os.name!='nt':
+        if sys.platform=='linux':
             outputs=[subprocess.check_output([binary],text=True).strip().split() for _ in range(3)]
             self.assertTrue(all(out[1]=='42' for out in outputs));self.assertGreater(len({out[0] for out in outputs}),1)
 
-    @unittest.skipIf(os.name=='nt','GDB/ELF is validated in Linux')
+    @unittest.skipIf(os.name=='nt' or os.environ.get('ASSIS_CROSS_DEBUG')=='1','Native GDB is validated on a matching Linux host; cross runs use the remote ARM64 gate')
     def test_gdb_parameters_locals_and_nested_shadowing(self):
         source=self.source('pure fn calc(n:int):int{\nlet x:int=n+2;\n{let x:int=99;\nn=x;\n}\nreturn x;\n}\n'+main('print(calc(40));'))
         # Pure parameters are immutable; use a separate local at the inner stop.

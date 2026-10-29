@@ -13,7 +13,7 @@ public final class Output {
 }
 safe fn failure(code:int):own Output{return new Output(alloc<byte>(0),0,-1,code);}
 
-platform("linux-x64") {
+platform("linux") {
     extern("libc.so.6","unused.dll","pipe2") fn pipe(borrow mut fds:*i32,flags:i32):i32;
     extern("libc.so.6","unused.dll","fork") fn fork():i32;
     extern("libc.so.6","unused.dll","dup2") fn duplicate(source:i32,destination:i32):i32;

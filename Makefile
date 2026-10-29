@@ -3,7 +3,7 @@ CFLAGS ?= -O2 -std=c11 -Wall -Wextra -Wpedantic -Wno-misleading-indentation
 ifeq ($(shell uname -s),Darwin)
 LDFLAGS ?=
 else
-LDFLAGS ?= -static -s
+LDFLAGS ?= -s
 endif
 
 .PHONY: all windows test test-pe test-dev test-evolution test-generics test-functions test-generic-classes test-collections-ast test-ownership-functions test-values test-files test-text-bytes test-cli test-alpha8 bench clean runtime
@@ -16,13 +16,21 @@ bin/assis: src/assisc.c $(wildcard src/*.h src/*.inc)
 MINGW_CC ?= x86_64-w64-mingw32-gcc
 windows: bin/assis.exe bin/assis-setup.exe
 
-bin/assis.exe: src/assisc.c $(wildcard src/*.h src/*.inc)
-	mkdir -p bin
-	$(MINGW_CC) $(CFLAGS) -municode -static -static-libgcc -s -Wl,--no-insert-timestamp src/assisc.c -o bin/assis.exe
+MINGW_WINDRES ?= x86_64-w64-mingw32-windres
+build/compiler-icon.o: assets/compiler.rc assets/source.ico
+	mkdir -p build
+	$(MINGW_WINDRES) $< -O coff -o $@
+build/installer-icon.o: assets/installer.rc assets/compiled.ico
+	mkdir -p build
+	$(MINGW_WINDRES) $< -O coff -o $@
 
-bin/assis-setup.exe: src/windows_setup.c src/version.h src/install_files.inc src/install_optional.inc
+bin/assis.exe: build/compiler-icon.o src/assisc.c $(wildcard src/*.h src/*.inc)
 	mkdir -p bin
-	$(MINGW_CC) $(CFLAGS) -municode -static -static-libgcc -s -Wl,--no-insert-timestamp src/windows_setup.c -lshell32 -ladvapi32 -luser32 -o bin/assis-setup.exe
+	$(MINGW_CC) $(CFLAGS) -municode -static -static-libgcc -s -Wl,--no-insert-timestamp src/assisc.c build/compiler-icon.o -o bin/assis.exe
+
+bin/assis-setup.exe: build/installer-icon.o src/windows_setup.c src/version.h src/install_files.inc src/install_optional.inc
+	mkdir -p bin
+	$(MINGW_CC) $(CFLAGS) -municode -static -static-libgcc -s -Wl,--no-insert-timestamp src/windows_setup.c build/installer-icon.o -lshell32 -ladvapi32 -luser32 -o bin/assis-setup.exe
 
 runtime:
 	sh tools/embed-runtime.sh

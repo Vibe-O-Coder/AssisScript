@@ -1,32 +1,36 @@
 {
   "format": "AssisScript-link-audit-v1",
   "platform": "nt",
-  "auditToolSha256": "606a8441633326e3b55531cae416034f09b598239ca8b36446e3d71ef5ff2b0d",
+  "auditToolSha256": "f0af7dae9c1a1fcb8c60dc733665609724941fbe315a8d71c5d5063645bd9988",
   "compiler": {
-    "version": "gcc.exe (Rev13, Built by MSYS2 project) 15.2.0",
+    "version": "gcc.exe (Rev4, Built by MSYS2 project) 16.2.0",
     "target": "x86_64-w64-mingw32",
-    "sha256": "b6aa727e46c8c7d494ed2e712fe40cb51e2360cc9ca0706979d698f1aabeb387"
+    "sha256": "f4120ffea38b73efaf4d770c1942905e220819ae97299c94bfeab3c396b686e2"
   },
   "sourceHashes": {
-    "src/assisc.c": "22468fdb4015040e17af3d39d8dd4cfc98c2aa9581fcfc691925a80421f2f3c9",
+    "src/arm64_emit.h": "2bc2e8710eca7950bb2b876c13b88755deb619bd8d515821c40b705f7b565cbc",
+    "src/assisc.c": "e7a88d9813f4a7fe7e2ac42893a0e71b477aef34db781fcafe2ec5815e69bd2e",
+    "src/backend_emit.h": "7bc608866fec74e5e42d32348d9ad1da22afd25c1cab1f09693faf78834af4b9",
+    "src/backend_ir.h": "3efbc9e271eb8ff452b86a62f2228c5f4f537b52f4fb93cc973e973e1cbfdeaa",
     "src/collections.h": "905c4242cba5c3ba08e066f89574f5c0391f4226d8ab58539587c07025f2d1cf",
-    "src/debug_info.h": "6d3ffe95d8bac0a2adeba6e13ab7e2d522058eb32d4c104641d2f6deeaf9ea14",
+    "src/debug_info.h": "ed8249fbda79302b92fa6fbfeedb3f031500913209153bf59b9df1df8a340f9c",
     "src/devtools.h": "503cf4cbaf3a302227404e1eabeab606e456825ebe14b1dc30e5d32bf8e9c6c2",
     "src/elf_format.h": "8aa29e334756432f62b458f411bd16dd29d86da6f2746814c3309b1d2c910322",
-    "src/expression_emit.h": "220fd1f95ae2c2c7d6d2e73f66e6fc293c6745116d0d374b8f6f4ece7acd446f",
-    "src/expression_ir.h": "8eaf4ced21234e8432c322fde203b225d7007fbc6e501a209deeaf6df09a1c28",
-    "src/ffi_elf.h": "ecceba924c5e56baf3fea995bdfdc33235b45fb8476ca21dc6c91cbcd71b593b",
+    "src/expression_emit.h": "acf8fc3e2aa9583667db3d2c67a6dfbd3d5c3c81f63062e09968f33c64eaf830",
+    "src/expression_ir.h": "6bdc26bfd75bc61fd621f33ac3831c4ac87bddba2095d94d8976be43d9f46cd4",
+    "src/ffi_elf.h": "bcb9e1d4c3ceabae15d798ff64f41dd60afd1480765c4e4a352bf06928ce50ea",
     "src/ffi_emit.h": "010053ca3165871397b5004ac50ca99c869ddd2d2a811d699d8fa1823dc187a8",
-    "src/frontend.h": "fe82321b5bc938dcf83fe145e878d94fd6c1df894a1b3e3142b017432ef08c34",
+    "src/frontend.h": "779dfe237513501817ff76909b687ab781362e58aa2001c68b800880fa02d820",
     "src/generics.h": "101a6d09e61bd0b240918bb906252498348f00e9b252f77207a7ebeffdd84069",
-    "src/icon_blob.h": "74646ad2eee260df4579744e9789f405573e8124b61e8a265b61ae3d937be37a",
-    "src/install_files.inc": "9cc12736280334089bbc0fea6d9dc6c0448f0fa4a57bf0d81def09c6c3efa4f7",
+    "src/icon_blob.h": "4c52392780110640152fa702b9447f8403e9bfa4e40b468b4cbe2ca5711a90c5",
+    "src/icon_icns.h": "ba42070a47ae1c6034769bd82cfbdce1c2353a466efe7c51fc52f98aed2fe636",
+    "src/install_files.inc": "e31b343d91251c73f781dda26d92eaa666650a93cc74dd92cc609583eb13efc7",
     "src/install_optional.inc": "390a94ceef3e6fe123e6481d2d132f1f4dd819a0d5cb11945ddebc33b7bd29e8",
-    "src/ir.h": "047ff32cc1777155e64205013609ab73e501209b6981aaacb96ab99821b0ecf5",
+    "src/ir.h": "d9414d74afa95620f5f703dd908bfc8ceca6a59f8eb7f41b7e551c12f9fc03c0",
     "src/lexer.h": "9b502b5ebfaaf130e3ca3e94e19a57ea46031a17d229a91bd26de53a1faf6d96",
-    "src/macho_writer.h": "da81962dee5592f2a6006f1b6ffb853d07728414116342b2f1333c2a8753c8e8",
+    "src/macho_writer.h": "789a9fa959c1b936e60025e7f90cc03f82237fb3b83e4be0ce34e50666761c7c",
     "src/modules.h": "84662a3c9d41125ceedd2e0c665df48f935667c76903e0df491cb6e723f56a4e",
-    "src/namespaces.h": "c2362c7fe6802c50f84abab6c7767de3ac85515d36b38e7ccdfee162a838c386",
+    "src/namespaces.h": "7f31c7828c09c20e36da673ec408768f69447248e5c8acb7be9f62cf0c6afed1",
     "src/numeric.h": "a6264e101ddeff3ff503cb8e601365988c5df0cbc44baa85cc85464fa65f4feb",
     "src/numeric_emit.h": "90d9991939841fbadb2048a3f913b5d654c6c65f720d6a72a8847a05550594ba",
     "src/ownership.h": "4a3148f4fba02cdecc74a750399f0bd1947dcdcf0b64830f62e88836c145e1b1",
@@ -35,6 +39,9 @@
     "src/ranges.h": "b3291ef9ad5c641fbf46f443cf270759842f5d823c329438d5fbd013da5b42ca",
     "src/registers.h": "be284d42de984addf242ec0f45cde57f638d5c94dd509749d33458530502e678",
     "src/runtime.S": "9cb1371662938ad7acfdacf2029d438d9ae580c437b26f2a9c5c5b0fa4ce2f70",
+    "src/runtime_arm64.c": "aaca6a58d08fc4f0a1b090e0b773efa25155a0b01f54fa358e22a3d412961d00",
+    "src/runtime_arm64_linux.h": "b7e59e6ac55201842364c70cebb67dc45e2ffad0a4db334fcb5e12fc1c625e00",
+    "src/runtime_arm64_macos.h": "adeb1efbaf723b3b7cea2c5b7a99a163a549bef40376005708312ebbe472377a",
     "src/runtime_blob.h": "e398ba9c1a4cce091b4f350ed4c10005dc3aa6091d19aab461bdbb0f61092bda",
     "src/runtime_files.inc": "64a20a5ec8db2ffd3fe0e3d0414574c2ffd4d71d507acd7422d3b0b618943e43",
     "src/runtime_io.inc": "012bba759ce7516082c3da327c03e0db9cd31d3b61d37123b7b4dfa7b9afeaa9",
@@ -50,12 +57,23 @@
     "src/version.h": "7000caab95cfacf0fe3f728266c324291370e3f9532b7b8ef62db8dcb20a166f",
     "src/windows_setup.c": "7f72e0a53467d2e528cef728860f7cde759c8d296a79e2ac66fc062a8be181c9"
   },
+  "assetHashes": {
+    "assets/compiled.icns": "cc97eddf3e01f4f81e0e6220e7cb2b7d0456c04048f5f34943830af200037864",
+    "assets/compiled.ico": "45211afc931a7912f202e671d764ba35932051194aa6a5712062286cbf7a6fdc",
+    "assets/compiled.png": "f380b436fa56fc3cfdb6de0c3822e56c84d1ec8bd4287e8e1c87a3653e351747",
+    "assets/compiler.rc": "51d02a679cf9cb036b925198d03a2f648068d2be6671366ac233abca46be57f4",
+    "assets/IDENTIDADE-V1.json": "64fd0c3469bde3b9263b497ce0ca91a67e5c2be6c737bd6c8b7556060a9b5d7f",
+    "assets/installer.rc": "5840c30410ba61ba1761ba97e6c6bbb3d094af8f3446a1e149f3a5006d0a121a",
+    "assets/source.icns": "69eda356ccb6929a6f745d0fe3499a6da1dc1eb8849d6c6d2a8c96a1aadc63c8",
+    "assets/source.ico": "9e03cb1e04c8e1d3ad4331483ded3a538b25d59635bc671376802c7b720fd329",
+    "assets/source.png": "73837cedaa62d6beeef626b5b68af18dcd294ede5e09858b5ada48bc7d474a55"
+  },
   "binaries": [
     {
       "path": "bin/assis.exe",
       "source": "src/assisc.c",
-      "sourceObjectSha256": "224165778ee062cfb29f74841cfd2ba7956ea9e32cd3fbc93fcbc86b64278a99",
-      "sha256": "96a7f046c263290d3a603e0c7fc6e4c1be2f330a466d793f2af537aa4a592f58",
+      "sourceObjectSha256": "a02d11738a42a27dc4d9cfb66adc457d4ff08a1f22b52527f033102665349e30",
+      "sha256": "c519e591eacb52f87593064879e93b98f12de69218e09acd79a821cb30d9e4c5",
       "identicalToRelease": true,
       "flags": [
         "-O2",
@@ -64,11 +82,17 @@
         "-Wextra",
         "-Wpedantic",
         "-Wno-misleading-indentation",
-        "-static",
         "-s",
+        "-static",
         "-municode",
         "-static-libgcc",
         "-Wl,--no-insert-timestamp"
+      ],
+      "projectResourceObjects": [
+        {
+          "sha256": "1a7e95c452c23cc8f53eb37bdb312888d4c623d86128e191e9b615ba9367e9db",
+          "origin": "assets/*.rc and v1 ICO sources"
+        }
       ],
       "linkLibraries": [],
       "systemImports": [
@@ -88,79 +112,77 @@
       ],
       "inputs": [
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\crt2u.o",
-          "sha256": "75b63efe43fdea50038224275095391015ba3d60f22aed04009c7de10c809b6a",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\crt2u.o",
+          "sha256": "0976a6715e30a35217e9716abcf8df9130cabd9e79a2a25323ed6ad331745c12",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\default-manifest.o",
-          "sha256": "d2a37dc06a868339fb0e6dcddebfae1656bd7e9e62ea1c70df4458e195ef7783",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\default-manifest.o",
+          "sha256": "9af5e18f01a63a7d02ba11e097324e046f778de5c74cd093b52296f8613dbcc8",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-windows-default-manifest",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libadvapi32.a",
-          "sha256": "a2fc9ba2bb1473c12f60f3f07bcf80d4ec3c275fa1ba6078cbc75ddf9c258e9e",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libadvapi32.a",
+          "sha256": "0b7d185a8041c052ffdf554df7636d40c950f37f5b38c852b59846badb980036",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libkernel32.a",
-          "sha256": "1d516d43c6b9dc7e1b21d653a8f04266d897e29f5cfc9d843ca85cd97b0d04ab",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libkernel32.a",
+          "sha256": "db620a4166a9774b293d56beb15aa2979aea4c49ac684e2f791044db7d5d7b89",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": [
             "libkernel32h.o",
             "libkernel32s00151.o",
-            "libkernel32s00206.o",
-            "libkernel32s00223.o",
-            "libkernel32s00250.o",
-            "libkernel32s00295.o",
-            "libkernel32s00300.o",
-            "libkernel32s00333.o",
-            "libkernel32s00569.o",
-            "libkernel32s00605.o",
-            "libkernel32s00608.o",
-            "libkernel32s00621.o",
-            "libkernel32s00631.o",
-            "libkernel32s00640.o",
-            "libkernel32s00648.o",
-            "libkernel32s00662.o",
-            "libkernel32s00669.o",
-            "libkernel32s00768.o",
-            "libkernel32s00806.o",
-            "libkernel32s00826.o",
-            "libkernel32s00918.o",
-            "libkernel32s01012.o",
-            "libkernel32s01057.o",
-            "libkernel32s01064.o",
-            "libkernel32s01234.o",
-            "libkernel32s01317.o",
-            "libkernel32s01433.o",
-            "libkernel32s01449.o",
-            "libkernel32s01465.o",
-            "libkernel32s01485.o",
-            "libkernel32s01533.o",
-            "libkernel32s01535.o",
-            "libkernel32s01544.o",
-            "libkernel32s01588.o",
+            "libkernel32s00208.o",
+            "libkernel32s00226.o",
+            "libkernel32s00253.o",
+            "libkernel32s00298.o",
+            "libkernel32s00305.o",
+            "libkernel32s00338.o",
+            "libkernel32s00574.o",
+            "libkernel32s00610.o",
+            "libkernel32s00613.o",
+            "libkernel32s00626.o",
+            "libkernel32s00636.o",
+            "libkernel32s00645.o",
+            "libkernel32s00653.o",
+            "libkernel32s00667.o",
+            "libkernel32s00674.o",
+            "libkernel32s00773.o",
+            "libkernel32s00811.o",
+            "libkernel32s00831.o",
+            "libkernel32s00923.o",
+            "libkernel32s01017.o",
+            "libkernel32s01062.o",
+            "libkernel32s01069.o",
+            "libkernel32s01241.o",
+            "libkernel32s01324.o",
+            "libkernel32s01440.o",
+            "libkernel32s01456.o",
+            "libkernel32s01472.o",
+            "libkernel32s01540.o",
+            "libkernel32s01542.o",
+            "libkernel32s01551.o",
+            "libkernel32s01595.o",
             "libkernel32t.o"
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libmingw32.a",
-          "sha256": "db5f9306a8b0363692ca68824c18e4f7bd662c3101a5e2d904ea9aba9b49d931",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libmingw32.a",
+          "sha256": "14f567e7f181903f7191bcf8fe35cfc7f1db97eb8b98b0474e152151c6a8e526",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": [
             "lib64_libmingw32_a-CRT_fp10.o",
             "lib64_libmingw32_a-_newmode.o",
             "lib64_libmingw32_a-cinitexe.o",
-            "lib64_libmingw32_a-crt_handler.o",
             "lib64_libmingw32_a-gccmain.o",
             "lib64_libmingw32_a-merr.o",
             "lib64_libmingw32_a-mingw_helpers.o",
@@ -168,9 +190,6 @@
             "lib64_libmingw32_a-pesect.o",
             "lib64_libmingw32_a-pseudo-reloc-list.o",
             "lib64_libmingw32_a-pseudo-reloc.o",
-            "lib64_libmingw32_a-tlsmcrt.o",
-            "lib64_libmingw32_a-tlssup.o",
-            "lib64_libmingw32_a-tlsthrd.o",
             "lib64_libmingw32_a-udllargc.o",
             "lib64_libmingw32_a-usermatherr.o",
             "lib64_libmingw32_a-wildcard.o",
@@ -180,8 +199,8 @@
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libmingwex.a",
-          "sha256": "7446f12d35b090cc805f4681cb5ea100ffe8aade592644930c192157f1249dab",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libmingwex.a",
+          "sha256": "d6a9376c50b813b18823ca9243bc8aea733418df6fda152ba23437130c732b04",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": [
@@ -209,8 +228,8 @@
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libmsvcrt.a",
-          "sha256": "8f5c25cf805a9de3235ce5e91808ca9e5410d11cfb7ecde1dc831d712799aedb",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libmsvcrt.a",
+          "sha256": "7a34bc8e1517bab3646d7e6c89a4dd47961a2df4c43423a40d518d1392479b23",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": [
@@ -251,7 +270,6 @@
             "libapi-ms-win-crt-math-l1-1-0s00009.o",
             "libapi-ms-win-crt-math-l1-1-0t.o",
             "libapi-ms-win-crt-private-l1-1-0h.o",
-            "libapi-ms-win-crt-private-l1-1-0s00012.o",
             "libapi-ms-win-crt-private-l1-1-0s01086.o",
             "libapi-ms-win-crt-private-l1-1-0s01087.o",
             "libapi-ms-win-crt-private-l1-1-0s01088.o",
@@ -268,15 +286,15 @@
             "libapi-ms-win-crt-runtime-l1-1-0s00030.o",
             "libapi-ms-win-crt-runtime-l1-1-0s00033.o",
             "libapi-ms-win-crt-runtime-l1-1-0s00035.o",
-            "libapi-ms-win-crt-runtime-l1-1-0s00054.o",
             "libapi-ms-win-crt-runtime-l1-1-0s00055.o",
             "libapi-ms-win-crt-runtime-l1-1-0s00056.o",
             "libapi-ms-win-crt-runtime-l1-1-0s00057.o",
-            "libapi-ms-win-crt-runtime-l1-1-0s00073.o",
-            "libapi-ms-win-crt-runtime-l1-1-0s00086.o",
+            "libapi-ms-win-crt-runtime-l1-1-0s00058.o",
+            "libapi-ms-win-crt-runtime-l1-1-0s00068.o",
+            "libapi-ms-win-crt-runtime-l1-1-0s00074.o",
             "libapi-ms-win-crt-runtime-l1-1-0s00087.o",
-            "libapi-ms-win-crt-runtime-l1-1-0s00101.o",
-            "libapi-ms-win-crt-runtime-l1-1-0s00102.o",
+            "libapi-ms-win-crt-runtime-l1-1-0s00088.o",
+            "libapi-ms-win-crt-runtime-l1-1-0s00103.o",
             "libapi-ms-win-crt-runtime-l1-1-0t.o",
             "libapi-ms-win-crt-stdio-l1-1-0h.o",
             "libapi-ms-win-crt-stdio-l1-1-0s00000.o",
@@ -324,43 +342,43 @@
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libpthread.a",
-          "sha256": "161f3b46cb7c72faea727144a97a0eb81b9328668503e562b9e0fd6674f3244a",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libpthread.a",
+          "sha256": "4847aee76337c371075c39ed97b0c97c515c2b094d2f45168feaed84aeeb14f9",
           "licenseGroup": "MinGW-w64 winpthreads / bundled winpthreads notices (members list determines inclusion)",
           "package": "mingw-w64-ucrt-x86_64-winpthreads",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libshell32.a",
-          "sha256": "c7e26461e5eaa8e6beaa1e849cd466f3ac39f046cbd799e6296e5ed868a317af",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libshell32.a",
+          "sha256": "47ab637e66c75fb5e9681c47d5b1205753da40750838ecaf38cbeb2d4d4a2cac",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libuser32.a",
-          "sha256": "1b9c02268ae4e888ce22c7727ec07b894ccf660610eac084349228ea6357e031",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libuser32.a",
+          "sha256": "9f3a8229b0e108546b8f998da7bbce5be0e355be24fced095b7bb68295988012",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\15.2.0\\crtbegin.o",
-          "sha256": "6bcf5dc2fa165ea57f2557eb55f66c8793e1990184cf7bac830348a657fcf83c",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\16.2.0\\crtbegin.o",
+          "sha256": "2648b587caaf44239702bdebd370d681fd888aeb58865f2d7ee0775d16adf0ff",
           "licenseGroup": "GCC runtime / GPL-3.0 with GCC Runtime Library Exception",
           "package": "mingw-w64-ucrt-x86_64-gcc",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\15.2.0\\crtend.o",
-          "sha256": "bfb5fb7213b64959c8a55afc0a53538433c2cef2030040e4a4a4e96033121801",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\16.2.0\\crtend.o",
+          "sha256": "64dc0853ce7664483f0b49f18822c86cf08e179bd25e6df81eb5783263ceed1e",
           "licenseGroup": "GCC runtime / GPL-3.0 with GCC Runtime Library Exception",
           "package": "mingw-w64-ucrt-x86_64-gcc",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\15.2.0\\libgcc.a",
-          "sha256": "fef0e46dab3e3b1bc9629ad7609f5e54dab19adbe06b58ee5c14331565740f03",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\16.2.0\\libgcc.a",
+          "sha256": "8608eb73c587ca0ee8f048565edd425ca97756b543403d17fe34fea3fe703f07",
           "licenseGroup": "GCC runtime / GPL-3.0 with GCC Runtime Library Exception",
           "package": "mingw-w64-ucrt-x86_64-gcc",
           "members": [
@@ -369,8 +387,8 @@
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\15.2.0\\libgcc_eh.a",
-          "sha256": "99ea6fe744c94ba3c0ef564da5ae46f6a831a01d1bb227c92a98ec4e0717582d",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\16.2.0\\libgcc_eh.a",
+          "sha256": "c585632c880604ea06eb02f383441a28d1eb42b279425bc222237b81a1e636e5",
           "licenseGroup": "GCC runtime / GPL-3.0 with GCC Runtime Library Exception",
           "package": "mingw-w64-ucrt-x86_64-gcc",
           "members": []
@@ -383,8 +401,8 @@
     {
       "path": "bin/assis-setup.exe",
       "source": "src/windows_setup.c",
-      "sourceObjectSha256": "224fd421b69c91356bc39f8d8362bb49a448e5debbd4b02ccca6ab4a3977fc76",
-      "sha256": "6779fa4aabdc7deb10dac52aa377d7eb995cb9208e5dc3cd50c6f0b91844bbcf",
+      "sourceObjectSha256": "8eff6c2b76f8dcf062759320113e46b27db44d3a3ff7ece9e905eaa53d6088d7",
+      "sha256": "92d3ee5b1b3aaee613e947c38f3d50486df50a19e1c5f0424e740a5fcb8fa73d",
       "identicalToRelease": true,
       "flags": [
         "-O2",
@@ -393,11 +411,17 @@
         "-Wextra",
         "-Wpedantic",
         "-Wno-misleading-indentation",
-        "-static",
         "-s",
+        "-static",
         "-municode",
         "-static-libgcc",
         "-Wl,--no-insert-timestamp"
+      ],
+      "projectResourceObjects": [
+        {
+          "sha256": "dc4bc4ba5731fdef71c6c318019d1b280276c2386a84a0019f185405c7969876",
+          "origin": "assets/*.rc and v1 ICO sources"
+        }
       ],
       "linkLibraries": [
         "-lshell32",
@@ -420,22 +444,22 @@
       ],
       "inputs": [
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\crt2u.o",
-          "sha256": "75b63efe43fdea50038224275095391015ba3d60f22aed04009c7de10c809b6a",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\crt2u.o",
+          "sha256": "0976a6715e30a35217e9716abcf8df9130cabd9e79a2a25323ed6ad331745c12",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\default-manifest.o",
-          "sha256": "d2a37dc06a868339fb0e6dcddebfae1656bd7e9e62ea1c70df4458e195ef7783",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\default-manifest.o",
+          "sha256": "9af5e18f01a63a7d02ba11e097324e046f778de5c74cd093b52296f8613dbcc8",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-windows-default-manifest",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libadvapi32.a",
-          "sha256": "a2fc9ba2bb1473c12f60f3f07bcf80d4ec3c275fa1ba6078cbc75ddf9c258e9e",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libadvapi32.a",
+          "sha256": "0b7d185a8041c052ffdf554df7636d40c950f37f5b38c852b59846badb980036",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": [
@@ -452,44 +476,38 @@
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libkernel32.a",
-          "sha256": "1d516d43c6b9dc7e1b21d653a8f04266d897e29f5cfc9d843ca85cd97b0d04ab",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libkernel32.a",
+          "sha256": "db620a4166a9774b293d56beb15aa2979aea4c49ac684e2f791044db7d5d7b89",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": [
             "libkernel32h.o",
             "libkernel32s00193.o",
-            "libkernel32s00295.o",
-            "libkernel32s00300.o",
-            "libkernel32s00333.o",
-            "libkernel32s00384.o",
-            "libkernel32s00605.o",
-            "libkernel32s00619.o",
-            "libkernel32s00640.o",
-            "libkernel32s00648.o",
-            "libkernel32s00669.o",
-            "libkernel32s00918.o",
-            "libkernel32s01012.o",
-            "libkernel32s01234.o",
-            "libkernel32s01370.o",
-            "libkernel32s01433.o",
-            "libkernel32s01449.o",
-            "libkernel32s01485.o",
-            "libkernel32s01533.o",
-            "libkernel32s01535.o",
+            "libkernel32s00305.o",
+            "libkernel32s00389.o",
+            "libkernel32s00610.o",
+            "libkernel32s00624.o",
+            "libkernel32s00645.o",
+            "libkernel32s00653.o",
+            "libkernel32s00674.o",
+            "libkernel32s01241.o",
+            "libkernel32s01377.o",
+            "libkernel32s01440.o",
+            "libkernel32s01456.o",
+            "libkernel32s01540.o",
+            "libkernel32s01542.o",
             "libkernel32t.o"
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libmingw32.a",
-          "sha256": "db5f9306a8b0363692ca68824c18e4f7bd662c3101a5e2d904ea9aba9b49d931",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libmingw32.a",
+          "sha256": "14f567e7f181903f7191bcf8fe35cfc7f1db97eb8b98b0474e152151c6a8e526",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": [
             "lib64_libmingw32_a-CRT_fp10.o",
             "lib64_libmingw32_a-_newmode.o",
             "lib64_libmingw32_a-cinitexe.o",
-            "lib64_libmingw32_a-crt_handler.o",
             "lib64_libmingw32_a-gccmain.o",
             "lib64_libmingw32_a-merr.o",
             "lib64_libmingw32_a-mingw_helpers.o",
@@ -497,9 +515,6 @@
             "lib64_libmingw32_a-pesect.o",
             "lib64_libmingw32_a-pseudo-reloc-list.o",
             "lib64_libmingw32_a-pseudo-reloc.o",
-            "lib64_libmingw32_a-tlsmcrt.o",
-            "lib64_libmingw32_a-tlssup.o",
-            "lib64_libmingw32_a-tlsthrd.o",
             "lib64_libmingw32_a-udllargc.o",
             "lib64_libmingw32_a-usermatherr.o",
             "lib64_libmingw32_a-wildcard.o",
@@ -509,8 +524,8 @@
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libmingwex.a",
-          "sha256": "7446f12d35b090cc805f4681cb5ea100ffe8aade592644930c192157f1249dab",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libmingwex.a",
+          "sha256": "d6a9376c50b813b18823ca9243bc8aea733418df6fda152ba23437130c732b04",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": [
@@ -518,8 +533,8 @@
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libmsvcrt.a",
-          "sha256": "8f5c25cf805a9de3235ce5e91808ca9e5410d11cfb7ecde1dc831d712799aedb",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libmsvcrt.a",
+          "sha256": "7a34bc8e1517bab3646d7e6c89a4dd47961a2df4c43423a40d518d1392479b23",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": [
@@ -549,7 +564,6 @@
             "libapi-ms-win-crt-math-l1-1-0s00009.o",
             "libapi-ms-win-crt-math-l1-1-0t.o",
             "libapi-ms-win-crt-private-l1-1-0h.o",
-            "libapi-ms-win-crt-private-l1-1-0s00012.o",
             "libapi-ms-win-crt-private-l1-1-0s01088.o",
             "libapi-ms-win-crt-private-l1-1-0s01096.o",
             "libapi-ms-win-crt-private-l1-1-0s01097.o",
@@ -561,14 +575,14 @@
             "libapi-ms-win-crt-runtime-l1-1-0s00025.o",
             "libapi-ms-win-crt-runtime-l1-1-0s00030.o",
             "libapi-ms-win-crt-runtime-l1-1-0s00035.o",
-            "libapi-ms-win-crt-runtime-l1-1-0s00054.o",
             "libapi-ms-win-crt-runtime-l1-1-0s00055.o",
             "libapi-ms-win-crt-runtime-l1-1-0s00056.o",
             "libapi-ms-win-crt-runtime-l1-1-0s00057.o",
-            "libapi-ms-win-crt-runtime-l1-1-0s00073.o",
-            "libapi-ms-win-crt-runtime-l1-1-0s00086.o",
+            "libapi-ms-win-crt-runtime-l1-1-0s00058.o",
+            "libapi-ms-win-crt-runtime-l1-1-0s00068.o",
+            "libapi-ms-win-crt-runtime-l1-1-0s00074.o",
             "libapi-ms-win-crt-runtime-l1-1-0s00087.o",
-            "libapi-ms-win-crt-runtime-l1-1-0s00101.o",
+            "libapi-ms-win-crt-runtime-l1-1-0s00088.o",
             "libapi-ms-win-crt-runtime-l1-1-0t.o",
             "libapi-ms-win-crt-stdio-l1-1-0h.o",
             "libapi-ms-win-crt-stdio-l1-1-0s00000.o",
@@ -589,7 +603,6 @@
             "libapi-ms-win-crt-string-l1-1-0h.o",
             "libapi-ms-win-crt-string-l1-1-0s00095.o",
             "libapi-ms-win-crt-string-l1-1-0s00160.o",
-            "libapi-ms-win-crt-string-l1-1-0s00168.o",
             "libapi-ms-win-crt-string-l1-1-0s00171.o",
             "libapi-ms-win-crt-string-l1-1-0s00184.o",
             "libapi-ms-win-crt-string-l1-1-0s00186.o",
@@ -600,15 +613,15 @@
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libpthread.a",
-          "sha256": "161f3b46cb7c72faea727144a97a0eb81b9328668503e562b9e0fd6674f3244a",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libpthread.a",
+          "sha256": "4847aee76337c371075c39ed97b0c97c515c2b094d2f45168feaed84aeeb14f9",
           "licenseGroup": "MinGW-w64 winpthreads / bundled winpthreads notices (members list determines inclusion)",
           "package": "mingw-w64-ucrt-x86_64-winpthreads",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libshell32.a",
-          "sha256": "c7e26461e5eaa8e6beaa1e849cd466f3ac39f046cbd799e6296e5ed868a317af",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libshell32.a",
+          "sha256": "47ab637e66c75fb5e9681c47d5b1205753da40750838ecaf38cbeb2d4d4a2cac",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": [
@@ -619,8 +632,8 @@
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\libuser32.a",
-          "sha256": "1b9c02268ae4e888ce22c7727ec07b894ccf660610eac084349228ea6357e031",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\libuser32.a",
+          "sha256": "9f3a8229b0e108546b8f998da7bbce5be0e355be24fced095b7bb68295988012",
           "licenseGroup": "MinGW-w64 runtime and Windows import libraries / bundled MinGW-w64 notices",
           "package": "mingw-w64-ucrt-x86_64-crt",
           "members": [
@@ -630,22 +643,22 @@
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\15.2.0\\crtbegin.o",
-          "sha256": "6bcf5dc2fa165ea57f2557eb55f66c8793e1990184cf7bac830348a657fcf83c",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\16.2.0\\crtbegin.o",
+          "sha256": "2648b587caaf44239702bdebd370d681fd888aeb58865f2d7ee0775d16adf0ff",
           "licenseGroup": "GCC runtime / GPL-3.0 with GCC Runtime Library Exception",
           "package": "mingw-w64-ucrt-x86_64-gcc",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\15.2.0\\crtend.o",
-          "sha256": "bfb5fb7213b64959c8a55afc0a53538433c2cef2030040e4a4a4e96033121801",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\16.2.0\\crtend.o",
+          "sha256": "64dc0853ce7664483f0b49f18822c86cf08e179bd25e6df81eb5783263ceed1e",
           "licenseGroup": "GCC runtime / GPL-3.0 with GCC Runtime Library Exception",
           "package": "mingw-w64-ucrt-x86_64-gcc",
           "members": []
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\15.2.0\\libgcc.a",
-          "sha256": "fef0e46dab3e3b1bc9629ad7609f5e54dab19adbe06b58ee5c14331565740f03",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\16.2.0\\libgcc.a",
+          "sha256": "8608eb73c587ca0ee8f048565edd425ca97756b543403d17fe34fea3fe703f07",
           "licenseGroup": "GCC runtime / GPL-3.0 with GCC Runtime Library Exception",
           "package": "mingw-w64-ucrt-x86_64-gcc",
           "members": [
@@ -654,8 +667,8 @@
           ]
         },
         {
-          "path": "C:\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\15.2.0\\libgcc_eh.a",
-          "sha256": "99ea6fe744c94ba3c0ef564da5ae46f6a831a01d1bb227c92a98ec4e0717582d",
+          "path": "D:\\a\\_temp\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\16.2.0\\libgcc_eh.a",
+          "sha256": "c585632c880604ea06eb02f383441a28d1eb42b279425bc222237b81a1e636e5",
           "licenseGroup": "GCC runtime / GPL-3.0 with GCC Runtime Library Exception",
           "package": "mingw-w64-ucrt-x86_64-gcc",
           "members": []

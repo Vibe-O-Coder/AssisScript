@@ -73,7 +73,7 @@ class FFI(base.Evolution):
         self.accepted(src,'42\n')
 
     def test_platform_branches_are_selected_before_binding(self):
-        self.accepted('platform("windows-x64"){pure fn answer():int{return 42;}}platform("linux-x64"){pure fn answer():int{return 42;}}safe fn main():int{print(answer());return 0;}','42\n')
+        self.accepted('platform("windows-x64"){pure fn answer():int{return 42;}}platform("linux"){pure fn answer():int{return 42;}}platform("macos"){pure fn answer():int{return 42;}}safe fn main():int{print(answer());return 0;}','42\n')
         self.rejected('platform("other"){fn x():int{return 0;}}fn main():int{return 0;}','desconhecida')
 
     def test_dynamic_elf_format_and_ambiguous_symbols(self):

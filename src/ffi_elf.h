@@ -19,7 +19,7 @@ static void build_elf_imports(size_t rva){
     size_t got=elf_imports.n;
     for(int i=0;i<native_imports.n;i++){NativeImport *p=native_imports.v[i];import_slot(p->label,elf_imports.n);u64(&elf_imports,0);}
     size_t rela=elf_imports.n;
-    for(int i=0;i<native_imports.n;i++){u64(&elf_imports,rva+got+(size_t)i*8);u64(&elf_imports,((uint64_t)(i+1)<<32)|6);u64(&elf_imports,0);}
+    for(int i=0;i<native_imports.n;i++){u64(&elf_imports,rva+got+(size_t)i*8);u64(&elf_imports,((uint64_t)(i+1)<<32)|(target_arm64?1025:6));u64(&elf_imports,0);}
     elf_dynamic_offset=elf_imports.n;
     for(int i=0;i<libraries.n;i++)elf_dynamic(1,needed[i]);
     elf_dynamic(5,rva+strtab);elf_dynamic(10,names.n);elf_dynamic(6,rva+symtab);elf_dynamic(11,24);elf_dynamic(4,rva+hash);

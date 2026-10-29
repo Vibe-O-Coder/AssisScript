@@ -46,22 +46,31 @@ for name,pattern in [('node-windows',r'\btests (\d+)'),('native-windows',r'(\d+)
     counts=[int(n) for n in re.findall(pattern,contents)];assert counts,(name,'missing test evidence')
     record['supplemental'][name]=dict(counts=counts,log=path.relative_to(ROOT).as_posix(),sha256=hashlib.sha256(path.read_bytes()).hexdigest())
 record['portability']={}
-for name,host,execution in [('linux-x64','x86_64','native'),('windows-x64','x86_64','native'),('macos-x64','x86_64','native'),('linux-arm64-host','arm64','qemu'),('macos-arm64-host','arm64','rosetta')]:
+for name,host,execution in [('linux-x64','x86_64','native'),('windows-x64','x86_64','native'),('macos-x64','x86_64','native'),('linux-arm64-host','arm64','native'),('macos-arm64-host','arm64','native')]:
     path=ROOT/'build/review-tests'/((('ports-'+name) if name.endswith('-x64') else name)+'.json')
     if not path.exists():
         assert not os.environ.get('GITHUB_ACTIONS'),(name,'missing portability evidence')
         continue
     proof=read(path)
     assert proof['passed'] and proof['hostArchitecture']==host and proof['execution']==execution,(name,'failed or mismatched host/execution mode')
-    assert proof['outputArchitecture']=='x86_64' and proof['nativeArm64Execution'] is False
+    assert proof['outputArchitecture']==('arm64' if host=='arm64' else 'x86_64') and proof['nativeArm64Execution']==(host=='arm64')
     assert len(proof['cases'])==14 and all(case['passed'] for case in proof['cases']) and proof['rejectedInvalidSource']
     if name in ('linux-x64','windows-x64'):
         assert proof['compilerSha256']==record['native'][name.split('-')[0]]['compilerSha256'],(name,'stale compiler')
     record['portability'][name]=dict(path=path.relative_to(ROOT).as_posix(),sha256=hashlib.sha256(path.read_bytes()).hexdigest(),report=proof)
 if 'macos-x64' in record['portability']:
     record['macos']=dict(status='experimental; native x86_64 execution passed',validated='Native x86_64 portability cases with/without optimization; PE/ELF cross-generation',remaining='ARM64 native output, installer, signing and Mach-O debugging')
-    record['scope']+='; native macOS x86_64 execution and native ARM64 compiler hosts with emulated x86_64 outputs'
+    record['scope']+='; native macOS x86_64 and native ARM64 outputs on Linux/macOS'
+record['newTargets']={}
+for name in ['linux-x64','macos-x64','linux-arm64-host','macos-arm64-host']:
+    path=ROOT/f'build/review-tests/new-targets-{name}.json'
+    if path.exists():
+        proof=read(path);assert proof['passed'] and proof['execution']=='native',name
+        record['newTargets'][name]=dict(path=path.relative_to(ROOT).as_posix(),sha256=hashlib.sha256(path.read_bytes()).hexdigest(),report=proof)
+    else:assert not os.environ.get('GITHUB_ACTIONS'),(name,'missing native target/debugger gate')
 record['remoteCI']='current workflow job; overall workflow result is determined by GitHub' if os.environ.get('GITHUB_ACTIONS') else 'not triggered; local results do not assert remote success'
+if all(name in record['newTargets'] for name in ('macos-x64','macos-arm64-host')):
+    record['macos']=dict(status='experimental; native Intel and Apple Silicon target/debugger gates passed in this workflow',validated='Native execution, LLDB, embedded DWARF, ARM64 ad hoc signature and offline installation; overall workflow status remains controlled by GitHub')
 validation_path=ROOT/f'docs/VALIDACAO-ALPHA{version.split("alpha.")[1]}.json'
 previous=read(validation_path) if validation_path.exists() else {}
 record['longSoak']={}

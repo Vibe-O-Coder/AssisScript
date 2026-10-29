@@ -1,3 +1,9 @@
+# Procedência atual
+
+A revisão de 29/10/2026 está em [PROCEDENCIA-V1.md](PROCEDENCIA-V1.md). Ela aplica os ícones v1 escolhidos, retira stickers da distribuição e fecha a revisão dos componentes desta entrega. As pendências descritas abaixo pertencem aos registros históricos.
+
+## Registro histórico
+
 # Inventário inicial de procedência — 24/10/2026
 
 **Informação do responsável, 28/10/2026:** as duas imagens originais são stickers

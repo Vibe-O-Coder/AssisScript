@@ -32,23 +32,32 @@ while [ "$changed" = yes ]; do
     done
 done
 case "$(uname -s):$(uname -m)" in
-    Linux:x86_64) ;;
-    *) echo 'Este instalador .sh é para Linux x86_64. No Windows x64, use instalar-windows.cmd.' >&2; exit 1 ;;
+    Linux:x86_64) target=linux-x64; expected='Linux x86_64' ;;
+    Linux:aarch64|Linux:arm64) target=linux-arm64; expected='Linux ARM64' ;;
+    Darwin:x86_64) target=macos-x64; expected='macOS x86_64' ;;
+    Darwin:arm64) target=macos-arm64; expected='macOS ARM64' ;;
+    *) echo 'Sistema/arquitetura não suportado. No Windows x64, use instalar-windows.cmd.' >&2; exit 1 ;;
 esac
-[ -f "$root/bin/assis" ] || { echo 'bin/assis não encontrado. Extraia o pacote completo.' >&2; exit 1; }
+compiler="$root/bin/assis-$target"
+[ -f "$compiler" ] || compiler="$root/bin/assis"
+[ -f "$compiler" ] || { echo 'bin/assis não encontrado. Extraia o pacote completo.' >&2; exit 1; }
+chmod 755 "$compiler"
+case "$("$compiler" version)" in *"$expected"*) ;; *) echo "Pacote incompatível: esperado $target" >&2; exit 1 ;; esac
 [ -n "$prefix" ] || { echo 'O prefixo não pode ser vazio.' >&2; exit 2; }
 mkdir -p "$prefix"
 prefix=$(CDPATH= cd -- "$prefix" && pwd -P)
 mkdir -p "$prefix/bin" "$prefix/share/assisscript/exemplos" "$prefix/share/assisscript/docs" "$prefix/share/assisscript/stdlib"
-mkdir -p "$prefix/share/assisscript/assets"
-cp "$root/bin/assis" "$prefix/bin/assis"
+mkdir -p "$prefix/share/assisscript/assets/propostas"
+cp "$compiler" "$prefix/bin/assis"
 chmod 755 "$prefix/bin/assis"
 cp "$root/README.md" "$prefix/share/assisscript/README.md"
 cp "$root/README.en.md" "$root/README.pt-BR.md" "$root/README.es.md" "$root/LICENSE" "$root/THIRD_PARTY_NOTICES.md" "$prefix/share/assisscript/"
 cp "$root/exemplos/"*.assis "$prefix/share/assisscript/exemplos/"
 cp -R "$root/exemplos/." "$prefix/share/assisscript/exemplos/"
 cp "$root/exemplos/"*.pillow "$prefix/share/assisscript/exemplos/"
-cp "$root/assets/"*.ico "$prefix/share/assisscript/assets/"
+cp "$root/assets/IDENTIDADE-V1.json" "$prefix/share/assisscript/assets/"
+cp "$root/assets/propostas/"*-v1.svg "$prefix/share/assisscript/assets/propostas/"
+cp "$root/assets/"*.png "$root/assets/"*.icns "$root/assets/"*.ico "$prefix/share/assisscript/assets/"
 mkdir -p "$prefix/share/assisscript/benchmarks/resultados"
 cp "$root/benchmarks/resultados/"*.md "$root/benchmarks/resultados/"*.json "$prefix/share/assisscript/benchmarks/resultados/"
 for lib in $ASSIS_REQUIRED $optional; do cp "$root/stdlib/$lib.assis" "$prefix/share/assisscript/stdlib/"; done
@@ -67,11 +76,11 @@ cp "$root/docs/third-party/"*.txt "$prefix/share/assisscript/docs/third-party/"
 printf 'AssisScript %s\n' "$ASSIS_VERSION" > "$prefix/share/assisscript/INSTALADO"
 manifest="$prefix/share/assisscript/INSTALADOS.txt"
 {
-    printf '%s\n' README.md README.en.md README.pt-BR.md README.es.md LICENSE THIRD_PARTY_NOTICES.md docs/LICENSE stdlib/catalogo.json stdlib/catalogo.sh INSTALADO tools/assis-lsp.js vscode-assisscript/src/language.js vscode-assisscript/src/reference.json vscode-assisscript/package.json
+    printf '%s\n' assets/IDENTIDADE-V1.json assets/propostas/source-v1.svg assets/propostas/compiled-v1.svg README.md README.en.md README.pt-BR.md README.es.md LICENSE THIRD_PARTY_NOTICES.md docs/LICENSE stdlib/catalogo.json stdlib/catalogo.sh INSTALADO tools/assis-lsp.js vscode-assisscript/src/language.js vscode-assisscript/src/reference.json vscode-assisscript/package.json
     for notice in "$root/docs/third-party/"*.txt; do printf '%s\n' "${notice#"$root/"}"; done
     find "$root/exemplos" -type f | while IFS= read -r example; do printf '%s\n' "${example#"$root/"}"; done
     for lib in $ASSIS_REQUIRED $optional; do printf 'stdlib/%s.assis\n' "$lib"; done
-    for file in "$root/docs/"*.md "$root/docs/"*.json "$root/docs/"*.ebnf "$root/exemplos/"*.assis "$root/exemplos/"*.pillow "$root/exemplos/bibliotecas/"*.assis "$root/assets/"*.ico "$root/benchmarks/resultados/"*.md "$root/benchmarks/resultados/"*.json; do
+    for file in "$root/docs/"*.md "$root/docs/"*.json "$root/docs/"*.ebnf "$root/exemplos/"*.assis "$root/exemplos/"*.pillow "$root/exemplos/bibliotecas/"*.assis "$root/assets/"*.png "$root/assets/"*.icns "$root/assets/"*.ico "$root/benchmarks/resultados/"*.md "$root/benchmarks/resultados/"*.json; do
         [ -f "$file" ] || continue
         printf '%s\n' "${file#"$root/"}"
     done

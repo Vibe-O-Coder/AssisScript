@@ -1,4 +1,4 @@
-"""Validate native compiler hosts and x86_64 outputs, recording emulation explicitly."""
+"""Validate native compiler hosts and ELF/PE/Mach-O x64/ARM64 outputs."""
 import argparse
 import hashlib
 import json
@@ -23,9 +23,10 @@ def main():
     machine = platform.machine().lower()
     arch = 'arm64' if machine in ('aarch64', 'arm64') else 'x86_64' if machine in ('amd64', 'x86_64') else machine
     target = 'windows-x64' if os.name == 'nt' else 'macos-x64' if sys.platform == 'darwin' else 'linux-x64'
+    if arch=='arm64' and args.execution=='native': target=target.replace('-x64','-arm64')
     runner = {'native': [], 'qemu': ['qemu-x86_64'], 'rosetta': ['/usr/bin/arch', '-x86_64']}[args.execution]
     report = dict(platform=sys.platform, hostArchitecture=arch, execution=args.execution,
-                  outputArchitecture='x86_64', nativeArm64Execution=False, passed=False, cases=[])
+                  outputArchitecture='arm64' if target.endswith('arm64') else 'x86_64', nativeArm64Execution=arch=='arm64' and args.execution=='native', passed=False, cases=[])
     args.output.parent.mkdir(parents=True, exist_ok=True)
 
     def invoke(*command):
@@ -40,14 +41,14 @@ def main():
 
     def assert_format(path, destination):
         data = path.read_bytes()
-        if destination == 'linux-x64':
-            assert data[:6] == b'\x7fELF\x02\x01' and struct.unpack_from('<H', data, 18)[0] == 62, 'Expected x86_64 ELF64'
+        if destination in ('linux-x64','linux-arm64'):
+            assert data[:6] == b'\x7fELF\x02\x01' and struct.unpack_from('<H', data, 18)[0] == (183 if destination.endswith('arm64') else 62), 'Expected x86_64 ELF64'
         elif destination == 'windows-x64':
             offset = struct.unpack_from('<I', data, 0x3c)[0]
             assert data[:2] == b'MZ' and data[offset:offset+4] == b'PE\0\0', 'Expected PE signature'
             assert struct.unpack_from('<H', data, offset+4)[0] == 0x8664, 'Expected x86_64 PE'
         else:
-            assert struct.unpack_from('<II', data) == (0xfeedfacf, 0x01000007), 'Expected x86_64 Mach-O'
+            assert struct.unpack_from('<II', data) == (0xfeedfacf, 0x0100000c if destination.endswith('arm64') else 0x01000007), 'Expected x86_64 Mach-O'
 
     # The same sources and independent expected results run on every host.
     cases = [
@@ -66,7 +67,7 @@ def main():
     ]
     try:
         assert args.expect_host is None or arch == args.expect_host, f'Expected {args.expect_host} host, got {machine}'
-        assert args.execution != 'native' or arch == 'x86_64', 'ARM64 output execution requires an explicit emulator'
+        assert arch in ('arm64','x86_64'), 'Unsupported host architecture'
         assert args.execution != 'qemu' or (arch == 'arm64' and sys.platform == 'linux'), 'QEMU job requires Linux ARM64'
         assert args.execution != 'rosetta' or (arch == 'arm64' and sys.platform == 'darwin'), 'Rosetta job requires macOS ARM64'
         report['compilerSha256'] = hashlib.sha256(compiler.read_bytes()).hexdigest()
@@ -84,14 +85,10 @@ def main():
                 assert ir['valueFormat'] == 'AssisScript-ScalarIR-v1'
                 assert ir['backendFormat'] == 'AssisScript-TypedIR-v1' and ir['astFallbacks'] == 0
                 report['backendFormat'] = ir['backendFormat']
-                if arch == 'arm64':
-                    for command in ['run', 'test']:
-                        result = invoke(compiler, command, source, '--diagnostics=json')
-                        assert result.returncode == 2 and 'ARM64' in json.loads(result.stderr)['message'], 'Expected explicit ARM64 execution limit'
                 for optimized in [True, False]:
                     flags = [] if optimized else ['--no-opt']
                     outputs = {}
-                    for destination in ['linux-x64', 'windows-x64', 'macos-x64']:
+                    for destination in ['linux-x64', 'windows-x64', 'macos-x64', 'linux-arm64', 'macos-arm64']:
                         binary = folder / (name+'-'+destination+('' if optimized else '-no-opt')+('.exe' if destination == 'windows-x64' else ''))
                         checked(compiler, 'build', source, '--target', destination, '--debug', '-o', binary, *flags)
                         assert_format(binary, destination)

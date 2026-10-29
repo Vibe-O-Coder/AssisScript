@@ -1,6 +1,6 @@
 {
   "version": "3.3.0-alpha.15",
-  "date": "28/10/2026",
+  "date": "29/10/2026",
   "scope": "Conclusão do plano de evolução das fases 0–6, incluindo a trilha funcional e as aplicações A/B/C. Não inclui construir o navegador, HTDL, estilos ou motor de busca.",
   "phases": [
     {
@@ -243,9 +243,9 @@
         {
           "id": "P5-TARGET",
           "name": "Backend extensível e novos alvos ARM64/macOS validados",
-          "status": "pending",
-          "evidence": "BACKEND-IR-CONTROL.md",
-          "notes": "CI b7f9212 aprovada em macOS Intel e hosts Linux/macOS ARM64 com saídas x86_64 por QEMU/Rosetta. Geração/runtime ARM64 nativos e instalador/depuração dos novos destinos continuam abertos."
+          "status": "complete",
+          "evidence": "ARM64-NATIVO.md",
+          "notes": "Backend/runtime ARM64 Linux/macOS, DWARF ELF/Mach-O, assinatura ad hoc, instaladores e seleÃ§Ã£o no editor. Actions 40847421481 (bb1605d): Linux ARM64 e macOS Apple Silicon nativos, macOS Intel, GDB/LLDB, ABI C, instalaÃ§Ã£o e pacotes aprovados. EvidÃªncias e hashes em VALIDACAO-TARGETS-V1.json."
         }
       ]
     },
@@ -278,9 +278,9 @@
         {
           "id": "P6-POLICY",
           "name": "Licença/procedência resolvidas e política de suporte/compatibilidade",
-          "status": "partial",
-          "evidence": "PROCEDENCIA.md",
-          "notes": "Licença escolhida pelo responsável e avisos publicados; inventário técnico de ligação concluído na alpha.12. Direitos de imagens e revisão dos termos/fontes de redistribuição continuam abertos."
+          "status": "complete",
+          "evidence": "PROCEDENCIA-V1.md",
+          "notes": "Ícones v1 escolhidos pelo responsável aplicados aos derivados/editor/instalador/PE/bundles; stickers retirados da distribuição. Revisão dos componentes, avisos, fontes, ligação Linux dinâmica e gates de hashes/recursos/inventário registrados."
         },
         {
           "id": "P6-ACCEPT",
@@ -881,6 +881,94 @@
       },
       "note": "P5-IR +1 ponto com emissão integral e equivalência Windows/Linux; P6-ACCEPT +2 pontos por confirmação do teste independente seguindo o manual. Pesos e estados históricos preservados.",
       "milestone": "IR integral e aceite independente confirmados"
+    },
+    {
+      "version": "3.3.0-alpha.15",
+      "date": "29/10/2026",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "complete",
+        "P0-FLOW": "complete",
+        "P0-CI": "complete",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "complete",
+        "P2-VALUE": "complete",
+        "P2-ADT": "complete",
+        "P3-TEXT": "complete",
+        "P3-NUM": "complete",
+        "P3-IO": "complete",
+        "P3-LIB": "complete",
+        "P3-PKG": "complete",
+        "P4-FFI": "complete",
+        "P4-EVENT": "complete",
+        "P4-NET": "complete",
+        "P4-STORE": "complete",
+        "P4-SOAK": "complete",
+        "P5-IR": "complete",
+        "P5-OPT": "complete",
+        "P5-ABI": "complete",
+        "P5-DEBUG": "complete",
+        "P5-TARGET": "partial",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "complete",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "complete",
+        "P6-ACCEPT": "complete"
+      },
+      "note": "P5-TARGET +1 ponto pela implementação com validação local ARM64 e depuração; aprovação nativa remota permanece pendente. P6-POLICY +1 ponto com v1 e revisão de distribuição.",
+      "milestone": "ARM64 nativo implementado e identidade v1 aplicada; CI nativa pendente"
+    },
+    {
+      "version": "3.3.0-alpha.15",
+      "date": "29/10/2026",
+      "retrospective": false,
+      "overrides": {
+        "P0-BASE": "complete",
+        "P0-PRIV": "complete",
+        "P0-SAFE": "complete",
+        "P0-FLOW": "complete",
+        "P0-CI": "complete",
+        "P1-TYPES": "complete",
+        "P1-FUN": "complete",
+        "P1-CLASS": "complete",
+        "P1-EFFECT": "complete",
+        "P1-COL": "complete",
+        "P2-LOCAL": "complete",
+        "P2-LIFE": "complete",
+        "P2-DROP": "complete",
+        "P2-VALUE": "complete",
+        "P2-ADT": "complete",
+        "P3-TEXT": "complete",
+        "P3-NUM": "complete",
+        "P3-IO": "complete",
+        "P3-LIB": "complete",
+        "P3-PKG": "complete",
+        "P4-FFI": "complete",
+        "P4-EVENT": "complete",
+        "P4-NET": "complete",
+        "P4-STORE": "complete",
+        "P4-SOAK": "complete",
+        "P5-IR": "complete",
+        "P5-OPT": "complete",
+        "P5-ABI": "complete",
+        "P5-DEBUG": "complete",
+        "P5-TARGET": "complete",
+        "P6-INSTALL": "complete",
+        "P6-TOOLS": "complete",
+        "P6-RELEASE": "complete",
+        "P6-POLICY": "complete",
+        "P6-ACCEPT": "complete"
+      },
+      "note": "P5-TARGET +1 ponto apÃ³s aprovaÃ§Ã£o dos seis jobs da revisÃ£o bb1605d no Actions 40847421481, incluindo Linux/macOS ARM64 nativos, macOS Intel, depuraÃ§Ã£o, instaladores e pacote. P6-POLICY concluÃ­do com os Ã­cones v1. Os 35 critÃ©rios, pesos e registros anteriores foram preservados.",
+      "milestone": "Destinos ARM64/macOS e pacote aprovados nativamente â€” plano concluÃ­do"
     }
   ]
 }

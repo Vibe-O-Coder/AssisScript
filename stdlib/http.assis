@@ -26,7 +26,7 @@ safe fn c_string(borrow data:*byte):bool {
     return true;
 }
 
-platform("linux-x64") {
+platform("linux") {
     extern("libcurl.so.4","unused.dll","curl_global_init") fn global_init(flags:int):i32;
     extern("libcurl.so.4","unused.dll","curl_global_cleanup") fn global_cleanup():void;
     extern("libcurl.so.4","unused.dll","curl_easy_init") fn easy_init():u64;

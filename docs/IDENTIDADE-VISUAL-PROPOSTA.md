@@ -1,3 +1,9 @@
+# Identidade visual ativa: v1
+
+Em 29/10/2026 o responsável selecionou **v1**. Os SVGs source-v1.svg e compiled-v1.svg foram aplicados ao editor, instalador, recursos PE e bundles macOS. A revisão e os hashes estão em [PROCEDENCIA-V1.md](PROCEDENCIA-V1.md) e `assets/IDENTIDADE-V1.json`. A proposta fox-v2 foi preservada como alternativa histórica.
+
+## Registro anterior da proposta
+
 # Proposta de identidade visual — 28/10/2026
 
 Estado: proposta para avaliação do responsável, sem troca dos ícones ativos e

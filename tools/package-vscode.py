@@ -25,10 +25,11 @@ with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
     for file in sorted(extension.rglob("*")):
         if file.is_file() and "test" not in file.relative_to(extension).parts:
             archive.write(file, "extension/" + file.relative_to(extension).as_posix())
-    for name in ["assis", "assis.exe"]:
+    for name in ["assis", "assis.exe", "assis-linux-arm64", "assis-macos-x64", "assis-macos-arm64"]:
         source = root / "bin" / name
         if not source.is_file():
-            raise FileNotFoundError(source)
+            if name in ("assis","assis.exe"): raise FileNotFoundError(source)
+            continue
         info = zipfile.ZipInfo("extension/bin/" + name)
         info.create_system = 3
         info.external_attr = 0o100755 << 16

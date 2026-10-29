@@ -3,6 +3,7 @@ bin/assis -text
 *.exe -text
 *.png -text
 *.ico -text
+*.icns -text
 *.zip -text
 *.vsix -text
 # Preserve imported historical snapshots byte-for-byte.

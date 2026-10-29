@@ -33,6 +33,7 @@ with tempfile.TemporaryDirectory(prefix='assis-clean-') as temp:
     (folder / 'tools').mkdir()
     (folder / 'bin').mkdir()
     shutil.copytree(ROOT / 'src', folder / 'src')
+    shutil.copytree(ROOT / 'assets', folder / 'assets')
     shutil.copytree(ROOT / 'stdlib', folder / 'stdlib')
     shutil.copytree(ROOT / 'exemplos', folder / 'exemplos')
     shutil.copy2(ROOT / 'tools/embed-runtime.py', folder / 'tools/embed-runtime.py')
@@ -40,11 +41,20 @@ with tempfile.TemporaryDirectory(prefix='assis-clean-') as temp:
     for name in ['runtime_blob.h', 'runtime_win_blob.h','runtime_macos_blob.h']:
         (folder / 'src' / name).unlink()
     subprocess.run([sys.executable, folder / 'tools/embed-runtime.py'], cwd=folder, env=environment, check=True)
+    if os.name!='nt':
+        shutil.copy2(ROOT/'tools/embed-arm64.py',folder/'tools/embed-arm64.py')
+        for name in ('runtime_arm64_linux.h','runtime_arm64_macos.h'):(folder/'src'/name).unlink()
+        subprocess.run([sys.executable,folder/'tools/embed-arm64.py'],cwd=folder,env=environment,check=True)
     binary = folder / 'bin' / ('assis.exe' if os.name == 'nt' else 'assis')
-    flags = ['-O2', '-std=c11', '-Wall', '-Wextra', '-Wpedantic', '-Wno-misleading-indentation', '-static', '-s']
+    flags = ['-O2', '-std=c11', '-Wall', '-Wextra', '-Wpedantic', '-Wno-misleading-indentation', '-s']
     if os.name == 'nt':
-        flags += ['-municode', '-static-libgcc', '-Wl,--no-insert-timestamp']
-    subprocess.run([cc, *flags, folder / 'src/assisc.c', '-o', binary], cwd=folder, env=environment, check=True)
+        flags += ['-static', '-municode', '-static-libgcc', '-Wl,--no-insert-timestamp']
+    resources=[]
+    if os.name=='nt':
+        resource=folder/'icon.o'
+        subprocess.run([str(Path(cc).with_name('windres.exe')),'assets/compiler.rc','-O','coff','-o',str(resource)],cwd=folder,env=environment,check=True)
+        resources=[str(resource)]
+    subprocess.run([cc, *flags, folder / 'src/assisc.c', *resources, '-o', binary], cwd=folder, env=environment, check=True)
     environment['ASSIS_BIN'] = str(binary)
     for suite in args.suite or suites:
         subprocess.run([sys.executable, ROOT / ('tests/test-' + suite + '.py')], env=environment, check=True)

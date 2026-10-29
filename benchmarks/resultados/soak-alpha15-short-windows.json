@@ -1,30 +1,34 @@
 {
-  "platform": "Windows-10-10.0.19045-SP0",
-  "compilerSha256": "96a7f046c263290d3a603e0c7fc6e4c1be2f330a466d793f2af537aa4a592f58",
+  "platform": "Windows-2025Server-10.0.26100-SP0",
+  "compilerSha256": "c519e591eacb52f87593064879e93b98f12de69218e09acd79a821cb30d9e4c5",
   "applicationSha256": {
-    "29_http_polling.assis.exe": "a8fba7bf319ebdb8abdfe89f1d9ae32e8ab392d41e51bd2fe65766259c1efb7f",
-    "28_persistent_service.assis.exe": "cdbc7a1f27aea50332771114f25c07dbe8df3a535807b0ffa7f38d98ea7d02f8"
+    "29_http_polling.assis.exe": "9a30f09267b2c3470ca70e496008990bd7620af40c20fef9a077e947f6d57d8d",
+    "28_persistent_service.assis.exe": "9ed9620d0a44b922ebb26c133149ffda887cc60b539e55208d35ef11617bccf0"
   },
   "sourceHashes": {
-    "src/assisc.c": "22468fdb4015040e17af3d39d8dd4cfc98c2aa9581fcfc691925a80421f2f3c9",
+    "src/arm64_emit.h": "2bc2e8710eca7950bb2b876c13b88755deb619bd8d515821c40b705f7b565cbc",
+    "src/assisc.c": "e7a88d9813f4a7fe7e2ac42893a0e71b477aef34db781fcafe2ec5815e69bd2e",
+    "src/backend_emit.h": "7bc608866fec74e5e42d32348d9ad1da22afd25c1cab1f09693faf78834af4b9",
+    "src/backend_ir.h": "3efbc9e271eb8ff452b86a62f2228c5f4f537b52f4fb93cc973e973e1cbfdeaa",
     "src/collections.h": "905c4242cba5c3ba08e066f89574f5c0391f4226d8ab58539587c07025f2d1cf",
-    "src/debug_info.h": "6d3ffe95d8bac0a2adeba6e13ab7e2d522058eb32d4c104641d2f6deeaf9ea14",
+    "src/debug_info.h": "ed8249fbda79302b92fa6fbfeedb3f031500913209153bf59b9df1df8a340f9c",
     "src/devtools.h": "503cf4cbaf3a302227404e1eabeab606e456825ebe14b1dc30e5d32bf8e9c6c2",
     "src/elf_format.h": "8aa29e334756432f62b458f411bd16dd29d86da6f2746814c3309b1d2c910322",
-    "src/expression_emit.h": "220fd1f95ae2c2c7d6d2e73f66e6fc293c6745116d0d374b8f6f4ece7acd446f",
-    "src/expression_ir.h": "8eaf4ced21234e8432c322fde203b225d7007fbc6e501a209deeaf6df09a1c28",
-    "src/ffi_elf.h": "ecceba924c5e56baf3fea995bdfdc33235b45fb8476ca21dc6c91cbcd71b593b",
+    "src/expression_emit.h": "acf8fc3e2aa9583667db3d2c67a6dfbd3d5c3c81f63062e09968f33c64eaf830",
+    "src/expression_ir.h": "6bdc26bfd75bc61fd621f33ac3831c4ac87bddba2095d94d8976be43d9f46cd4",
+    "src/ffi_elf.h": "bcb9e1d4c3ceabae15d798ff64f41dd60afd1480765c4e4a352bf06928ce50ea",
     "src/ffi_emit.h": "010053ca3165871397b5004ac50ca99c869ddd2d2a811d699d8fa1823dc187a8",
-    "src/frontend.h": "fe82321b5bc938dcf83fe145e878d94fd6c1df894a1b3e3142b017432ef08c34",
+    "src/frontend.h": "779dfe237513501817ff76909b687ab781362e58aa2001c68b800880fa02d820",
     "src/generics.h": "101a6d09e61bd0b240918bb906252498348f00e9b252f77207a7ebeffdd84069",
-    "src/icon_blob.h": "74646ad2eee260df4579744e9789f405573e8124b61e8a265b61ae3d937be37a",
-    "src/install_files.inc": "9cc12736280334089bbc0fea6d9dc6c0448f0fa4a57bf0d81def09c6c3efa4f7",
+    "src/icon_blob.h": "4c52392780110640152fa702b9447f8403e9bfa4e40b468b4cbe2ca5711a90c5",
+    "src/icon_icns.h": "ba42070a47ae1c6034769bd82cfbdce1c2353a466efe7c51fc52f98aed2fe636",
+    "src/install_files.inc": "e31b343d91251c73f781dda26d92eaa666650a93cc74dd92cc609583eb13efc7",
     "src/install_optional.inc": "390a94ceef3e6fe123e6481d2d132f1f4dd819a0d5cb11945ddebc33b7bd29e8",
-    "src/ir.h": "047ff32cc1777155e64205013609ab73e501209b6981aaacb96ab99821b0ecf5",
+    "src/ir.h": "d9414d74afa95620f5f703dd908bfc8ceca6a59f8eb7f41b7e551c12f9fc03c0",
     "src/lexer.h": "9b502b5ebfaaf130e3ca3e94e19a57ea46031a17d229a91bd26de53a1faf6d96",
-    "src/macho_writer.h": "da81962dee5592f2a6006f1b6ffb853d07728414116342b2f1333c2a8753c8e8",
+    "src/macho_writer.h": "789a9fa959c1b936e60025e7f90cc03f82237fb3b83e4be0ce34e50666761c7c",
     "src/modules.h": "84662a3c9d41125ceedd2e0c665df48f935667c76903e0df491cb6e723f56a4e",
-    "src/namespaces.h": "c2362c7fe6802c50f84abab6c7767de3ac85515d36b38e7ccdfee162a838c386",
+    "src/namespaces.h": "7f31c7828c09c20e36da673ec408768f69447248e5c8acb7be9f62cf0c6afed1",
     "src/numeric.h": "a6264e101ddeff3ff503cb8e601365988c5df0cbc44baa85cc85464fa65f4feb",
     "src/numeric_emit.h": "90d9991939841fbadb2048a3f913b5d654c6c65f720d6a72a8847a05550594ba",
     "src/ownership.h": "4a3148f4fba02cdecc74a750399f0bd1947dcdcf0b64830f62e88836c145e1b1",
@@ -33,6 +37,9 @@
     "src/ranges.h": "b3291ef9ad5c641fbf46f443cf270759842f5d823c329438d5fbd013da5b42ca",
     "src/registers.h": "be284d42de984addf242ec0f45cde57f638d5c94dd509749d33458530502e678",
     "src/runtime.S": "9cb1371662938ad7acfdacf2029d438d9ae580c437b26f2a9c5c5b0fa4ce2f70",
+    "src/runtime_arm64.c": "aaca6a58d08fc4f0a1b090e0b773efa25155a0b01f54fa358e22a3d412961d00",
+    "src/runtime_arm64_linux.h": "b7e59e6ac55201842364c70cebb67dc45e2ffad0a4db334fcb5e12fc1c625e00",
+    "src/runtime_arm64_macos.h": "adeb1efbaf723b3b7cea2c5b7a99a163a549bef40376005708312ebbe472377a",
     "src/runtime_blob.h": "e398ba9c1a4cce091b4f350ed4c10005dc3aa6091d19aab461bdbb0f61092bda",
     "src/runtime_files.inc": "64a20a5ec8db2ffd3fe0e3d0414574c2ffd4d71d507acd7422d3b0b618943e43",
     "src/runtime_io.inc": "012bba759ce7516082c3da327c03e0db9cd31d3b61d37123b7b4dfa7b9afeaa9",
@@ -56,7 +63,7 @@
     "stdlib/encoding.assis": "e1dbca19786f2b9b81fb62011992a2809e210030b7c000c9e9f03ee73b31dc95",
     "stdlib/errors.assis": "ad9c4f1703d7cead9af736deca8de5ef9082b11a4b03aa503c29ede907f35e2e",
     "stdlib/events.assis": "c463c7a13395f98448394639cbab4238662b25340dd106400b447a6bf7488225",
-    "stdlib/http.assis": "40c0f18df299e52a21c04fe3ccaf776e17a5947ec31d8c5e3fa08de01805c82f",
+    "stdlib/http.assis": "2d2a5108f5d7b70929de77070e2b836a6adf33bdede7d01a28d40755ad9c7632",
     "stdlib/iterators.assis": "57e7c46d1194ee22172a82da3c9339cca6c7de98f967eb6eac9f7a33ffff401f",
     "stdlib/json.assis": "fe96539dd9967442cf186c719a12c105fb91b6593244d605e1dad48ce00a639a",
     "stdlib/log.assis": "b15ef60cc12b5a58835f0be9846e613db0d4d671afc0dcded7d78f9935c2e332",
@@ -64,7 +71,7 @@
     "stdlib/memory.assis": "7a875e5b479ff7f3f2ad5423d1346b6bc7735cbc6c8bc53a0ceae1ad868563fd",
     "stdlib/net.assis": "376ec5e6992d50520001b8689bf2f225deccd1df113f2f8a5d2a05d01ebbc2e0",
     "stdlib/owned.assis": "e7b81efe90b432d73d10afebb9ef0d167d60b96f6a59756a1fa1c8dcd4c69b60",
-    "stdlib/process.assis": "9b6a74ef9a54beefa08eacd20b36dc2f2f7f861283dbc5b762862343745bd464",
+    "stdlib/process.assis": "32799a30a80cadfefae7a6cd1ac9811a3bf42323764b0d144a286eff7e858d09",
     "stdlib/random.assis": "22456db64cf65bd533be3fa509857f48f4026d314f95dba23170b3f1033d0f45",
     "stdlib/strings.assis": "7ce05b4174fed594470a53a4a50e9708d90a0b8213833ff92b436e55aeedf40d",
     "stdlib/time.assis": "0a4fa74239155d2521b107c1f304885e3b0a3fe2e93b9542f9cdd09d28dfa062",
@@ -103,10 +110,10 @@
     "exemplos/32_backend_evolution.assis": "a12920a1535180d6b2a64bdf6028a582b8677c5c720e8ede9d97c57111d81841",
     "exemplos/rpg.assis": "4991011bdcb6d81b3c68e0a2122e1f247adcc74abb7299d9c80e3af1205a7059",
     "exemplos/src.pillow": "5bc22d578b2f0e403db709ccea9b772c131972b3c31ee24c191440cf43f0a7b8",
-    "tools/soak-native.py": "a129a1d8e15eee51869a767af5f36f840726b3614d40a8ca6e6976a061b1c167"
+    "tools/soak-native.py": "00777240e2b429198649b23d250b246bb776bb3a0d70a332a9c59bc770eee956"
   },
   "requestedSeconds": 120.0,
-  "elapsedSeconds": 120.52286579999782,
+  "elapsedSeconds": 120.531,
   "workers": 4,
   "passed": true,
   "error": null,
@@ -114,60 +121,61 @@
   "results": [
     {
       "worker": 0,
-      "rounds": 1810,
+      "rounds": 852,
       "initial": {
-        "rssBytes": 5685248,
-        "handles": 91
+        "rssBytes": 7122944,
+        "handles": 100
       },
       "final": {
-        "rssBytes": 5652480,
-        "handles": 91
+        "rssBytes": 7073792,
+        "handles": 100
       },
-      "peakRssBytes": 5685248,
-      "peakHandles": 91
+      "peakRssBytes": 7122944,
+      "peakHandles": 100
     },
     {
       "worker": 1,
-      "rounds": 1788,
+      "rounds": 855,
       "initial": {
-        "rssBytes": 5689344,
-        "handles": 91
+        "rssBytes": 6365184,
+        "handles": 94
       },
       "final": {
-        "rssBytes": 5668864,
-        "handles": 91
+        "rssBytes": 6336512,
+        "handles": 94
       },
-      "peakRssBytes": 5689344,
-      "peakHandles": 91
+      "peakRssBytes": 6365184,
+      "peakHandles": 94
     },
     {
       "worker": 2,
-      "rounds": 1785,
+      "rounds": 855,
       "initial": {
-        "rssBytes": 5689344,
-        "handles": 91
+        "rssBytes": 6365184,
+        "handles": 94
       },
       "final": {
-        "rssBytes": 5681152,
-        "handles": 91
+        "rssBytes": 6336512,
+        "handles": 94
       },
-      "peakRssBytes": 5718016,
-      "peakHandles": 91
+      "peakRssBytes": 6365184,
+      "peakHandles": 94
     },
     {
       "worker": 3,
-      "rounds": 1793,
+      "rounds": 851,
       "initial": {
-        "rssBytes": 5672960,
-        "handles": 91
+        "rssBytes": 6361088,
+        "handles": 94
       },
       "final": {
-        "rssBytes": 5648384,
-        "handles": 91
+        "rssBytes": 6332416,
+        "handles": 94
       },
-      "peakRssBytes": 5672960,
-      "peakHandles": 91
+      "peakRssBytes": 6361088,
+      "peakHandles": 94
     }
   ],
-  "networkMode": "polling"
+  "networkMode": "polling",
+  "intervalSeconds": 0.0
 }

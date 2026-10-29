@@ -2,220 +2,111 @@
   "format": "AssisScript-optimization-v1",
   "platform": "posix",
   "host": {
-    "system": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "system": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
     "machine": "x86_64",
     "processor": "x86_64",
-    "logical_cpus": 8
+    "logical_cpus": 4
   },
-  "samples": 5,
+  "samples": 3,
   "entries": 20000,
   "compilers": {
     "candidate": {
-      "sha256": "dbab5395ac9f9abfdbd2ec92c5569ad4bf03abff5dfe56c03da71e649cf60a28",
+      "sha256": "683804bb2d8685847bd0f635ea21b0df0f153a9cd976b68e474c7650e0a2e4f9",
       "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)"
-    },
-    "baseline": {
-      "sha256": "31da97cec9aa9c017fc4d41898f7b08203c118c3cb6fa3c923430960fc7e59a5",
-      "version": "AssisScript 3.3.0-alpha.14 (nativo, Linux x86_64)"
     }
   },
   "workloads": {
     "hash_stride_1": {
       "candidate": {
-        "compile_ms": 30.742727,
+        "compile_ms": 2.445464,
         "bytes": 25440,
-        "binarySha256": "2ae2871a6f791db5162ccd70e0fe32821a653bb80b531d6460b1b3d38877c826",
+        "binarySha256": "00f02bd5b240354ea5ebcf838515cd0ad80d8d67b0f5e361620f02d81d34c55c",
         "run_ms": [
-          9.404266,
-          9.934084,
-          9.266813,
-          9.185141,
-          9.178843
+          3.794914,
+          3.787151,
+          3.758318
         ],
-        "median_ms": 9.266813
-      },
-      "baseline": {
-        "compile_ms": 37.164619,
-        "bytes": 25440,
-        "binarySha256": "db1b3bc1746f7070c57368deef42ded4b5a16eb024ae9b1b22b658bd4a483df5",
-        "run_ms": [
-          9.589002,
-          10.466401,
-          10.102625,
-          10.683726,
-          9.712959
-        ],
-        "median_ms": 10.102625
+        "median_ms": 3.787151
       }
     },
     "hash_stride_64": {
       "candidate": {
-        "compile_ms": 36.576321,
+        "compile_ms": 2.490092,
         "bytes": 25440,
-        "binarySha256": "1c0124563d3ad62053bfc0eb3b70095d38eafd4905492f57d5bdcaca692f62ef",
+        "binarySha256": "5e01d32b00fc3e24f7c2673638932bf5e5f6116b0693f43d4e91776a8ea680e0",
         "run_ms": [
-          9.433156,
-          9.373576,
-          9.460247,
-          9.801729,
-          9.047688
+          3.695403,
+          3.674801,
+          3.724526
         ],
-        "median_ms": 9.433156
-      },
-      "baseline": {
-        "compile_ms": 37.784506,
-        "bytes": 25440,
-        "binarySha256": "5a732843d3b15f8a2b755090fe20776035cba7f7e77279a9f9d905b42247bfdd",
-        "run_ms": [
-          9.286206,
-          9.303,
-          9.642683,
-          9.395569,
-          9.768441
-        ],
-        "median_ms": 9.395569
+        "median_ms": 3.695403
       }
     },
     "hash_stride_4096": {
       "candidate": {
-        "compile_ms": 36.834132,
+        "compile_ms": 2.575651,
         "bytes": 25440,
-        "binarySha256": "5ff2980f19a6b77e5c9fc66b4f32bd20398b2c884b85c97c596e2e2a7ba68f02",
+        "binarySha256": "d6b216dc5041e50baa81b4b25d1741668bd2a752ffa7592aff556d0ff4d6cef2",
         "run_ms": [
-          9.264713,
-          9.900608,
-          9.52133,
-          10.178619,
-          9.773649
+          3.907483,
+          3.877608,
+          3.861273
         ],
-        "median_ms": 9.773649
-      },
-      "baseline": {
-        "compile_ms": 35.523483,
-        "bytes": 25440,
-        "binarySha256": "7b67361834e916dabcbf373115f44a3e235abc77c6df750c4a0bd1dbcd4411c6",
-        "run_ms": [
-          9.49703,
-          9.582611,
-          9.944194,
-          10.115539,
-          9.643291
-        ],
-        "median_ms": 9.643291
+        "median_ms": 3.877608
       }
     },
     "hash_stride_65536": {
       "candidate": {
-        "compile_ms": 36.116156,
+        "compile_ms": 2.554339,
         "bytes": 25440,
-        "binarySha256": "e3e0a4220c8aa55a0358b2ce3b54c9adab9a1f51cbbcdf4ee9b617e5cc91cf58",
+        "binarySha256": "242234aaba9faadc9db0a2b6595476b43a54fb97eea1a7017e80693ce34616eb",
         "run_ms": [
-          9.346387,
-          9.70627,
-          10.313675,
-          9.142152,
-          9.05618
+          3.840943,
+          3.789045,
+          3.796416
         ],
-        "median_ms": 9.346387
-      },
-      "baseline": {
-        "compile_ms": 40.859026,
-        "bytes": 25440,
-        "binarySha256": "a1ffe58cb50554681e4fde1b84c112e842b9a31302618d3aae9bb05729ccf038",
-        "run_ms": [
-          9.591907,
-          9.348786,
-          9.665283,
-          9.357983,
-          9.454152
-        ],
-        "median_ms": 9.454152
+        "median_ms": 3.796416
       }
     },
     "large_zero_allocations": {
       "candidate": {
-        "compile_ms": 46.457921,
+        "compile_ms": 1.261966,
         "bytes": 8193,
-        "binarySha256": "98a1546e4e91237bafed318a43988244b5d883297e37f1391e8f792c4c73b687",
+        "binarySha256": "2763a3981793eae1e651fa6cbc1d3fd2953fef8769ffc954cb3c34f81e3bdee4",
         "run_ms": [
-          6.833697,
-          6.865087,
-          6.004864,
-          5.750147,
-          5.804428
+          3.10419,
+          3.053243,
+          3.220215
         ],
-        "median_ms": 6.004864
-      },
-      "baseline": {
-        "compile_ms": 34.49188,
-        "bytes": 8193,
-        "binarySha256": "98a1546e4e91237bafed318a43988244b5d883297e37f1391e8f792c4c73b687",
-        "run_ms": [
-          5.958779,
-          6.07824,
-          5.539914,
-          8.12698,
-          5.748746
-        ],
-        "median_ms": 5.958779
+        "median_ms": 3.10419
       }
     },
     "scalar_leaf_calls": {
       "candidate": {
-        "compile_ms": 38.281357,
+        "compile_ms": 1.219953,
         "bytes": 8193,
-        "binarySha256": "8540254d02dacc299772fb7961bffae2cf0e40e177fc8c96ac849939818af88d",
+        "binarySha256": "230d7d4ca93c4355be515e1919a2ef465cc169f6eed3e9396cbc44ceff5c13ee",
         "run_ms": [
-          17.30492,
-          17.680399,
-          17.924421,
-          17.115482,
-          16.860364
+          5.000565,
+          4.453679,
+          4.386176
         ],
-        "median_ms": 17.30492
-      },
-      "baseline": {
-        "compile_ms": 38.877066,
-        "bytes": 8193,
-        "binarySha256": "8540254d02dacc299772fb7961bffae2cf0e40e177fc8c96ac849939818af88d",
-        "run_ms": [
-          16.737804,
-          17.313418,
-          18.012993,
-          18.108262,
-          17.15187
-        ],
-        "median_ms": 17.313418
+        "median_ms": 4.453679
       }
     },
     "fib35": {
       "candidate": {
-        "compile_ms": 34.641831,
+        "compile_ms": 1.207964,
         "bytes": 8193,
-        "binarySha256": "59b069175bc994660126eece2137800b2ba2a52ae8fa8d5174951ede7d35ab1b",
+        "binarySha256": "2564a68d0c847f9b3611b620fd75277402e453bc110fd635f188e0e392ead991",
         "run_ms": [
-          96.54895,
-          97.528221,
-          95.669383,
-          96.911008,
-          95.959996
+          39.464029,
+          39.486814,
+          39.635258
         ],
-        "median_ms": 96.54895
-      },
-      "baseline": {
-        "compile_ms": 40.831636,
-        "bytes": 8193,
-        "binarySha256": "59b069175bc994660126eece2137800b2ba2a52ae8fa8d5174951ede7d35ab1b",
-        "run_ms": [
-          98.594599,
-          96.923704,
-          96.354476,
-          97.562912,
-          96.226515
-        ],
-        "median_ms": 96.923704
+        "median_ms": 39.486814
       }
     }
   },
-  "max_stride_ratio": 1.054693668686311
+  "max_stride_ratio": 1.0238852372139373
 }

@@ -108,10 +108,12 @@ class Net(base.Evolution):
         context=ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER);fixtures=Path(__file__).parent/'fixtures/tls'
         context.load_cert_chain(fixtures/'test-cert.pem',fixtures/'test-key.pem')
         self.server.socket=context.wrap_socket(self.server.socket,server_side=True)
-        self.accepted(self.source_url('/ok','while(request.poll(10)==0){}print(request.error());',host='localhost',secure=True),'-5\n')
-        self.accepted(self.source_url('/ok','while(request.poll(10)==0){}print(request.error(),request.status_code());',host='localhost',secure=True,trust=True),'0 200\n')
+        timeout=int(os.environ.get('ASSIS_TLS_TEST_TIMEOUT_MS','3000'))
+        self.assertTrue(3000<=timeout<=60000)
+        self.accepted(self.source_url('/ok','while(request.poll(10)==0){}print(request.error());',host='localhost',secure=True,timeout=timeout),'-5\n')
+        self.accepted(self.source_url('/ok','while(request.poll(10)==0){}print(request.error(),request.status_code());',host='localhost',secure=True,trust=True,timeout=timeout),'0 200\n')
         # Fixture has only DNS localhost; numeric host must still fail.
-        self.accepted(self.source_url('/ok','while(request.poll(10)==0){}print(request.error());',secure=True,trust=True),'-5\n')
+        self.accepted(self.source_url('/ok','while(request.poll(10)==0){}print(request.error());',secure=True,trust=True,timeout=timeout),'-5\n')
 
     def test_invalid_input_is_recoverable(self):
         prefix='import "std/net.assis";\nsafe fn main():int{'

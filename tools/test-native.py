@@ -21,6 +21,6 @@ for suite in suites:
     records.append(dict(suite=suite,returnCode=result.returncode,tests=int(match[1]) if match else None,seconds=time.monotonic()-started,log=log.name))
     print(suite, 'PASS' if not result.returncode else 'FAIL',flush=True)
 compiler=Path(os.environ.get('ASSIS_BIN',ROOT/'bin'/('assis.exe' if os.name=='nt' else 'assis')))
-report=dict(platform=sys.platform,compilerSha256=hashlib.sha256(compiler.read_bytes()).hexdigest(),passed=all(r['returnCode']==0 for r in records),suites=records)
+report=dict(platform=sys.platform,compilerSha256=hashlib.sha256(compiler.read_bytes()).hexdigest(),testEnvironment=dict(tlsTimeoutMilliseconds=os.environ.get('ASSIS_TLS_TEST_TIMEOUT_MS','native defaults')),passed=all(r['returnCode']==0 for r in records),suites=records)
 args.output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
 raise SystemExit(0 if report['passed'] else 1)
