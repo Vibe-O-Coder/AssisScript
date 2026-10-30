@@ -1,0 +1,7 @@
+test_license_and_notices_are_in_the_native_install_manifest (__main__.ReleasePolicy.test_license_and_notices_are_in_the_native_install_manifest) ... ok
+test_readme_examples_execute_with_canonical_syntax (__main__.ReleasePolicy.test_readme_examples_execute_with_canonical_syntax) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.098s
+
+OK

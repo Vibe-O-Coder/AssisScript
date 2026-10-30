@@ -68,7 +68,10 @@ relatar erro. Categoria/instância/geração e aposentadoria sem wrap seguem o
 contrato da arena. O limite é de slots, incluindo aposentados, não de memória.
 insert antigo devolve o recurso rejeitado em um resultado own e continua fatal
 em OOM; try_insert consome e destrói em recusa. remove também ainda aloca seu
-resultado own. Não há quota global nem recuperação completa do documento.
+resultado own. A continuação de 30/10 acrescenta take (handle válido) e erase
+(bool para identidade possivelmente expirada), sem alocação pela biblioteca;
+contrato em [arena](BIBLIOTECA-arena.md). Não há quota global nem recuperação
+completa do documento.
 
 ## Testes e limites
 

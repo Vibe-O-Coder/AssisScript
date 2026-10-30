@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "execution": "qemu-aarch64 emulation on Linux x64; not native ARM64",
+  "compiler_sha256": "034d61bfe7b1106f53b4e5dadec1100faffaa4292688adfc5cd5a4f2ff9ae78c",
+  "cases": [
+    {
+      "source": "exemplos/38_allocation_free_removal.assis",
+      "source_sha256": "0371e057bf0d08205b772138ae34994bdaabe70e3612196cb316e2f418320a44",
+      "flags": [],
+      "binary_sha256": "c6836bd2f9dc69c07d0cb888326824bb9c48296cf82fef08d37b4a343fddaf60",
+      "returnCode": 0,
+      "stdout": "42 0\n",
+      "stderr": ""
+    },
+    {
+      "source": "exemplos/38_allocation_free_removal.assis",
+      "source_sha256": "0371e057bf0d08205b772138ae34994bdaabe70e3612196cb316e2f418320a44",
+      "flags": [
+        "--no-opt"
+      ],
+      "binary_sha256": "7e23399fb04f5960573a3825be5bcff83fa85ee90dc7f16b38005a572e49609a",
+      "returnCode": 0,
+      "stdout": "42 0\n",
+      "stderr": ""
+    }
+  ]
+}

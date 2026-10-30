@@ -97,6 +97,16 @@ def main():
          'own a:arena::Arena<Item>=try_new arena::Arena<Item>(1,2,4,8);assert(a!=null);'
          'val r:arena::InsertStatus=a.try_insert(try_new Item(42,try_alloc<byte>(1)));'
          'match(r){Inserted(h){assert(a.contains(h));print(a.get(h).n);}Rejected(code){assert(false);}}', 0, '42\n'),
+        ('arena-removal', 'import "std/arena.assis";struct Item{let n:int;own data:*byte;}',
+         'own a:arena::Arena<Item>=new arena::Arena<Item>(1,2,4,8);'
+         'val r:arena::InsertStatus=a.try_insert(new Item(42,alloc<byte>(1)));'
+         'match(r){Inserted(h){own value:Item=a.take(h);assert(!a.erase(h));print(value.n,a.size());}'
+         'Rejected(code){assert(false);}}'
+         'val s:arena::InsertStatus=a.try_insert(new Item(7,alloc<byte>(1)));'
+         'match(s){Inserted(h){assert(a.erase(h) && !a.erase(h));}Rejected(code){assert(false);}}'
+         'own b:owned::OwnedArray<Item>=new owned::OwnedArray<Item>();'
+         'for(let i:int=0;i<9;i++){b.push(new Item(i,alloc<byte>(1)));}'
+         'own removed:Item=b.swap_remove(0);assert(removed.n==0 && b.get(0).n==8 && b.size()==8);', 0, '42 0\n'),
     ]
     try:
         assert args.expect_host is None or arch == args.expect_host, f'Expected {args.expect_host} host, got {machine}'

@@ -119,7 +119,7 @@
       "name": "arena",
       "required": false,
       "doc": "BIBLIOTECA-arena.md",
-      "description": "Handles geracionais e try_insert recuperável com resultado Copy, sem quota total de memória.",
+      "description": "Handles geracionais, try_insert recuperável e take/erase sem alocar resultado; sem quota total de memória.",
       "dependencies": [
         "owned"
       ]

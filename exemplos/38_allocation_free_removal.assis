@@ -1,0 +1,17 @@
+import "std/arena.assis";
+struct Item{let number:int;own data:*byte;}
+
+safe fn main():int{
+    own nodes:arena::Arena<Item>=new arena::Arena<Item>(1,1,16,0x7fff_ffff_ffff_ffff);
+    val result:arena::InsertStatus=nodes.try_insert(new Item(42,alloc<byte>(8)));
+    match(result){
+        Inserted(handle){
+            own value:Item=nodes.take(handle);
+            assert(!nodes.contains(handle) && !nodes.erase(handle));
+            nodes.close(); // The transferred value remains owned by this scope.
+            print(value.number,nodes.size());
+        }
+        Rejected(code){return code;}
+    }
+    return 0;
+}

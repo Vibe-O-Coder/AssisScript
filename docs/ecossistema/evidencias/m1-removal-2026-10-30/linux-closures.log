@@ -1,0 +1,20 @@
+test_value_capture_is_a_snapshot (__main__.Closures.test_value_capture_is_a_snapshot) ... ok
+test_owned_capture_and_mutable_receiver (__main__.Closures.test_owned_capture_and_mutable_receiver) ... ok
+test_copy_record_and_function_capture (__main__.Closures.test_copy_record_and_function_capture) ... ok
+test_shared_borrow_capture_and_end_of_scope (__main__.Closures.test_shared_borrow_capture_and_end_of_scope) ... ok
+test_borrowed_callback_parameter (__main__.Closures.test_borrowed_callback_parameter) ... ok
+test_owned_return_move_and_nested_environments (__main__.Closures.test_owned_return_move_and_nested_environments) ... ok
+test_generic_closure_factory (__main__.Closures.test_generic_closure_factory) ... ok
+test_inline_return_abi_and_argument_order (__main__.Closures.test_inline_return_abi_and_argument_order) ... ok
+test_borrowed_slice_capture (__main__.Closures.test_borrowed_slice_capture) ... ok
+test_borrow_return_lifetime_is_tied_to_environment (__main__.Closures.test_borrow_return_lifetime_is_tied_to_environment) ... ok
+test_standard_library_pipeline_and_owned_results (__main__.Closures.test_standard_library_pipeline_and_owned_results) ... ok
+test_capture_destruction_order_and_single_drop (__main__.Closures.test_capture_destruction_order_and_single_drop) ... ok
+test_mutable_call_requires_exclusive_access (__main__.Closures.test_mutable_call_requires_exclusive_access) ... ok
+test_reject_escaped_borrow_and_active_loans (__main__.Closures.test_reject_escaped_borrow_and_active_loans) ... ok
+test_reject_implicit_copies_mutation_and_unsafe_callbacks (__main__.Closures.test_reject_implicit_copies_mutation_and_unsafe_callbacks) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 3.067s
+
+OK

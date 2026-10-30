@@ -36,3 +36,10 @@ O retorno Copy evita alocar para informar OOM; APIs antigas preservam contratos.
 Próxima unidade M1-ALLOC: orçamento de memória compartilhado por documento,
 reserva antecipada e criação/remoção de controladores sem caminho fatal.
 M0-EXEC e a verificação visual M2 continuam na fila com contratos próprios.
+
+Continuação de 30/10/2026: take/erase na arena e swap_remove sem reconstrução
+de caminho entregues no [relatório de remoção](../relatorios/2026-10-30-m1-remocao-sem-alocacao.md).
+Há liberação/transferência sem alocar resultado, inclusive sob recusa do OS.
+remove antigo conserva o resultado own fatal. Quota compartilhada por documento,
+reserva antecipada e construção de controladores continuam sendo o próximo
+incremento M1-ALLOC. Esta entrega não encerra M1 nem aprova gates.

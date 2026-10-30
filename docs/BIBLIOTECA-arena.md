@@ -24,6 +24,8 @@ política próprios. A arena valida os quatro campos antes de acessar o slot.
 | `get(handle): borrow(self) T` | Empréstimo compartilhado; exige contains verdadeiro |
 | `get_mut(handle): borrow mut(self) T` | Empréstimo exclusivo da arena inteira; exige contains verdadeiro |
 | `remove(handle): own Removal<T>` | `Missing` para identidade inválida; `Removed(own value)` transfere o recurso uma vez |
+| `take(handle): own T` | Exige contains verdadeiro; transfere o recurso e invalida o handle sem alocar resultado |
+| `erase(handle): bool` | Destrói o recurso presente e retorna true; identidade inválida retorna false sem mudar estado; não aloca resultado |
 | `size(): int` | Recursos atualmente presentes |
 | `slots_used(): int` | Slots alocados na instância, incluindo livres e aposentados |
 | `close(): void` | Revoga todos os handles e destrói recursos restantes; idempotente |
@@ -37,7 +39,8 @@ Ao atingir generation_limit, o slot é aposentado, sem wrap. O limite pode ser
 pequeno nos testes; produção pode usar INT64_MAX. Instância máxima não pode
 ser reaberta após close: o host precisa recusar novas instâncias nesse domínio.
 
-Use contains/remove para tratar identidades expiradas sem abortar. get/get_mut
+Use contains/erase para tratar identidades expiradas sem abortar e sem alocar;
+remove mantém seu resultado own e pode falhar fatalmente em OOM. get/get_mut/take
 inválidos e precondições do construtor encerram com status 70. Não há retorno
 borrow opcional nessa interface: o verificador atual exige origem viva em todos
 os retornos emprestados. Empréstimos impedem mutação, reset, close e destruição
@@ -51,7 +54,7 @@ insert rejeitado exige consumir o
 resultado own para preservar/destruir o valor devolvido. Tipos exercitados:
 structs, classes finais com drop e buffers próprios. Não há cópia de recurso.
 
-contains/get/get_mut/remove e inserção em slot existente custam
+contains/get/get_mut/take/erase/remove e inserção em slot existente custam
 O(log slots) pela OwnedArray. Criar slot pode crescer seu índice; close/reset
 visitam os nós remanescentes e drops dos recursos. Slots vazios conservam
 metadados até reset/close, dentro da quota. A arena não define ordem de filhos,
@@ -64,3 +67,22 @@ equivale à execução nativa macOS/ARM64. Não há integração de Browser/HTDL
 
 Veja [objetos e inserções recuperáveis](INSERCAO-FALLIVEL.md) e
 [exemplo](../exemplos/37_fallible_slots.assis).
+
+## Remoção durante recuperação de memória (30/10/2026)
+
+take/erase atualizam ocupação, geração, lista de slots livres e tamanho antes
+de devolver/destruir o recurso. Conservam aposentadoria sem wrap, slots estáveis
+e empréstimo exclusivo da arena inteira. take aceita um recurso null presente:
+contains distingue esse caso de uma identidade inválida. take inválido é erro
+R001/status 70; para um evento possivelmente expirado, use erase ou contains
+antes de take. Nenhum callback é invocado entre a validação e a transferência.
+
+take não chama o drop do recurso transferido. O custo de erase inclui o drop
+do usuário, que pode alocar, fazer I/O ou falhar segundo seu contrato; a garantia
+de não alocação cobre a operação da biblioteca. Drops de recursos aninhados e
+close também conservam seus contratos. Não há captura de OOM, quota em bytes
+ou sandbox implícita. As APIs anteriores não mudam seu contrato público.
+
+Veja [exemplo de transferência](../exemplos/38_allocation_free_removal.assis),
+[testes adversos](../tests/test-arena-removal.py) e
+[relatório desta unidade](relatorios/2026-10-30-m1-remocao-sem-alocacao.md).
