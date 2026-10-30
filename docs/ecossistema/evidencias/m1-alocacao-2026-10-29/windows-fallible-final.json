@@ -1,0 +1,10 @@
+{
+  "return_code": 0,
+  "seconds": 7.175969600000826,
+  "command": [
+    "python",
+    "tests/test-fallible-allocation.py"
+  ],
+  "compiler_sha256": "abd49cde561eeff8bc5c73fbcae1fe9568e1e79709be68d44af02935f351a503",
+  "suite_sha256": "0611a4a4d1b0a5074f3ee42c2a2fb2062c02bb2880910f6fdf40f4cc9f5496ae"
+}

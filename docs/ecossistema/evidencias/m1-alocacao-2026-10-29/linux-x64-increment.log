@@ -1,0 +1,15 @@
+test_all_integer_widths_wrap_in_both_directions (__main__.Increment.test_all_integer_widths_wrap_in_both_directions) ... ok
+test_borrow_conflicts_and_private_members_are_rejected (__main__.Increment.test_borrow_conflicts_and_private_members_are_rejected) ... ok
+test_float_special_values_preserve_ieee_contract (__main__.Increment.test_float_special_values_preserve_ieee_contract) ... ok
+test_floating_point_and_generic_specializations (__main__.Increment.test_floating_point_and_generic_specializations) ... ok
+test_immutable_and_non_numeric_targets_are_rejected (__main__.Increment.test_immutable_and_non_numeric_targets_are_rejected) ... ok
+test_index_and_receiver_evaluated_once (__main__.Increment.test_index_and_receiver_evaluated_once) ... ok
+test_integer_sequences_against_python_model (__main__.Increment.test_integer_sequences_against_python_model) ... ok
+test_prefix_postfix_and_for_continue (__main__.Increment.test_prefix_postfix_and_for_continue) ... ok
+test_typed_ir_and_every_output_target (__main__.Increment.test_typed_ir_and_every_output_target) ... ok
+test_updates_do_not_produce_expression_values (__main__.Increment.test_updates_do_not_produce_expression_values) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 2.055s
+
+OK

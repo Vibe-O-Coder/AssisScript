@@ -1,0 +1,21 @@
+{
+  "state": "pass",
+  "commands": [
+    [
+      "python3",
+      "tools/embed-runtime.py"
+    ],
+    [
+      "python3",
+      "tools/embed-arm64.py"
+    ]
+  ],
+  "headers_sha256": {
+    "runtime_blob.h": "b7e8deadd53a759d6ef54ac2900373c33c9b91274e265a57b78f226ba21d2710",
+    "runtime_win_blob.h": "946d3dd44e26fcb3c556c7633dfb0b27ef5c542cd941c650a72e835e5f8a08c4",
+    "runtime_macos_blob.h": "ac97d12357b07936418523bbb413bf2ff43f02c89874d0523a200c45e715002c",
+    "runtime_arm64_linux.h": "5b50fd257497d6f7ea50196266fe32cffb8f7952310a3055a87616ca967b3d7a",
+    "runtime_arm64_macos.h": "f7603852b5f45d1833f5e23a7d62c95909602774fac07aae51fbf110d6cc7993"
+  },
+  "identity": "five headers byte-identical after regeneration on this toolchain"
+}

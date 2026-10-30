@@ -139,7 +139,11 @@ static void backend_emit_value(BackendValue *v){
     case BV_UTF8:load_label(string_label(v->text,v->length));local_address(RDX,v->temp);INS(0x48,0x89,0x02);immediate(RAX,v->length);INS(0x48,0x89,0x42,0x08);movreg(RAX,RDX);break;
     case BV_SLICE:backend_emit_slice(v);break;
     case BV_ALLOC:
-        backend_emit_value(v->a);if(v->op==T_BUFFER){int valid=new_label();immediate(RCX,(uint64_t)INT64_MAX/(unsigned)value_size(v->element));INS(0x48,0x39,0xc8);branch_if(0x86,valid);panic_at(4,v->site);mark(valid,&code);if(value_size(v->element)>1){INS(0x48,0x69,0xc0);u32(&code,(uint32_t)value_size(v->element));}}movreg(RDI,RAX);site(RSI,v->site);rt_call(RT_alloc);break;
+        backend_emit_value(v->a);if(v->op==T_BUFFER||v->op==T_TRY_BUFFER){
+            int valid=new_label(),sized=new_label();immediate(RCX,(uint64_t)INT64_MAX/(unsigned)value_size(v->element));INS(0x48,0x39,0xc8);branch_if(0x86,valid);
+            if(v->op==T_TRY_BUFFER){immediate(RAX,UINT64_MAX);branch(sized);}else panic_at(4,v->site);
+            mark(valid,&code);if(value_size(v->element)>1){INS(0x48,0x69,0xc0);u32(&code,(uint32_t)value_size(v->element));}mark(sized,&code);
+        }movreg(RDI,RAX);site(RSI,v->site);rt_call(v->op==T_TRY_BUFFER?RT_try_alloc:RT_alloc);break;
     case BV_LENGTH:
         backend_emit_value(v->a);
         if(slice_type(v->a->type)){INS(0x48,0x8b,0x40,0x08);}

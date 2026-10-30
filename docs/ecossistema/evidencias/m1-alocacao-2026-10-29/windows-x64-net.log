@@ -1,0 +1,13 @@
+test_application_b_polls_and_preserves_output_on_cancel (__main__.Net.test_application_b_polls_and_preserves_output_on_cancel) ... ok
+test_cancel_before_start_during_io_and_repeated_cancel (__main__.Net.test_cancel_before_start_during_io_and_repeated_cancel) ... ok
+test_completion_bounds_errors_and_request_retains_inputs (__main__.Net.test_completion_bounds_errors_and_request_retains_inputs) ... ok
+test_invalid_input_is_recoverable (__main__.Net.test_invalid_input_is_recoverable) ... ok
+test_native_handles_and_buffers_are_released_in_one_live_process (__main__.Net.test_native_handles_and_buffers_are_released_in_one_live_process) ... ok
+test_partial_body_stops_changing_after_cancel (__main__.Net.test_partial_body_stops_changing_after_cancel) ... ok
+test_timeout_parallel_requests_and_drop_while_pending (__main__.Net.test_timeout_parallel_requests_and_drop_while_pending) ... ok
+test_tls_positive_untrusted_and_hostname_verification (__main__.Net.test_tls_positive_untrusted_and_hostname_verification) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 13.238s
+
+OK

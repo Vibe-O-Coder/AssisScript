@@ -1,0 +1,23 @@
+ASSIS generic classes: 358 invocações; C:\Users\babus\Desktop\AssisScript\worktrees\m1-allocation\build\assis-allocation.exe
+test_arity_nominal_identity_and_constructor_arguments (__main__.GenericClasses.test_arity_nominal_identity_and_constructor_arguments) ... ok
+test_cache_and_shared_specialization_budget (__main__.GenericClasses.test_cache_and_shared_specialization_budget) ... ok
+test_callbacks_in_fields_parameters_and_returns (__main__.GenericClasses.test_callbacks_in_fields_parameters_and_returns) ... ok
+test_concrete_child_and_concrete_base (__main__.GenericClasses.test_concrete_child_and_concrete_base) ... ok
+test_expansion_in_bases_fields_and_queued_methods (__main__.GenericClasses.test_expansion_in_bases_fields_and_queued_methods) ... ok
+test_fields_constructor_methods_and_distinct_types (__main__.GenericClasses.test_fields_constructor_methods_and_distinct_types) ... ok
+test_finite_recursive_types_and_method_queue (__main__.GenericClasses.test_finite_recursive_types_and_method_queue) ... ok
+test_generic_inheritance_virtual_dispatch_and_upcasts (__main__.GenericClasses.test_generic_inheritance_virtual_dispatch_and_upcasts) ... ok
+test_inherited_privacy_and_override_contracts (__main__.GenericClasses.test_inherited_privacy_and_override_contracts) ... ok
+test_invalid_bases_cycles_and_distinct_specializations (__main__.GenericClasses.test_invalid_bases_cycles_and_distinct_specializations) ... ok
+test_method_locals_allocations_and_global_specializations (__main__.GenericClasses.test_method_locals_allocations_and_global_specializations) ... ok
+test_modules_original_diagnostics_and_lazy_templates (__main__.GenericClasses.test_modules_original_diagnostics_and_lazy_templates) ... ok
+test_nested_collections_and_class_types (__main__.GenericClasses.test_nested_collections_and_class_types) ... ok
+test_nominal_privacy_and_same_specialization_access (__main__.GenericClasses.test_nominal_privacy_and_same_specialization_access) ... ok
+test_ownership_and_purity_are_checked_on_concrete_methods (__main__.GenericClasses.test_ownership_and_purity_are_checked_on_concrete_methods) ... ok
+test_private_constructor_and_no_callers_authority (__main__.GenericClasses.test_private_constructor_and_no_callers_authority) ... ok
+test_reordered_type_parameters_in_inheritance (__main__.GenericClasses.test_reordered_type_parameters_in_inheritance) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 13.889s
+
+OK

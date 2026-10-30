@@ -182,7 +182,7 @@ static void rt_call(size_t offset){
 #define MAP_RT(name) case RT_##name: offset=WRT_##name;break
         switch(offset){
         MAP_RT(stdout_write);MAP_RT(sleep);MAP_RT(civil);MAP_RT(file_sync);MAP_RT(file_replace);MAP_RT(file_remove);MAP_RT(print_float);MAP_RT(print_uint);MAP_RT(write);MAP_RT(print_str);MAP_RT(print_int);MAP_RT(print_char);MAP_RT(print_bool);MAP_RT(print_ptr);
-        MAP_RT(alloc);MAP_RT(free);MAP_RT(len);MAP_RT(streq);MAP_RT(strbyte);MAP_RT(error);MAP_RT(finish);MAP_RT(read);MAP_RT(now);
+        MAP_RT(alloc);MAP_RT(try_alloc);MAP_RT(free);MAP_RT(len);MAP_RT(streq);MAP_RT(strbyte);MAP_RT(error);MAP_RT(finish);MAP_RT(read);MAP_RT(now);
         MAP_RT(args_init);MAP_RT(argc);MAP_RT(arg_len);MAP_RT(arg_copy);MAP_RT(io_error);MAP_RT(file_open);MAP_RT(file_close);MAP_RT(file_drop);MAP_RT(file_read);MAP_RT(file_write);
         default:fatal("rotina Windows desconhecida");
         }
@@ -192,7 +192,7 @@ static void rt_call(size_t offset){
 #define MAP_RT(name) case RT_##name: offset=MRT_##name;break
         switch(offset){
         MAP_RT(stdout_write);MAP_RT(sleep);MAP_RT(civil);MAP_RT(file_sync);MAP_RT(file_replace);MAP_RT(file_remove);MAP_RT(print_float);MAP_RT(print_uint);MAP_RT(write);MAP_RT(print_str);MAP_RT(print_int);MAP_RT(print_char);MAP_RT(print_bool);MAP_RT(print_ptr);
-        MAP_RT(alloc);MAP_RT(free);MAP_RT(len);MAP_RT(streq);MAP_RT(strbyte);MAP_RT(error);MAP_RT(finish);MAP_RT(read);MAP_RT(now);
+        MAP_RT(alloc);MAP_RT(try_alloc);MAP_RT(free);MAP_RT(len);MAP_RT(streq);MAP_RT(strbyte);MAP_RT(error);MAP_RT(finish);MAP_RT(read);MAP_RT(now);
         MAP_RT(args_init);MAP_RT(argc);MAP_RT(arg_len);MAP_RT(arg_copy);MAP_RT(io_error);MAP_RT(file_open);MAP_RT(file_close);MAP_RT(file_drop);MAP_RT(file_read);MAP_RT(file_write);
         default:fatal("rotina macOS desconhecida");
         }
@@ -510,9 +510,9 @@ static void gen_expr_inner(Node *n){
         }
         if(n->op==T_MOVE){gen_address(n->items.v[0]);movreg(RDX,RAX);load_value(n->ty);INS(0x48,0xc7,0x02);u32(&code,0);break;}
         gen_expr(n->items.v[0]);
-        if(n->op==T_BUFFER){
-            int valid=new_label();immediate(RCX,(uint64_t)INT64_MAX/(unsigned)value_size(n->decl));INS(0x48,0x39,0xc8);branch_if(0x86,valid);panic_at(4,n->t);mark(valid,&code);
-            if(value_size(n->decl)>1){INS(0x48,0x69,0xc0);u32(&code,(uint32_t)value_size(n->decl));}movreg(RDI,RAX);site(RSI,n->t);rt_call(RT_alloc);
+        if(n->op==T_BUFFER||n->op==T_TRY_BUFFER){
+            int sized=new_label();int valid=new_label();immediate(RCX,(uint64_t)INT64_MAX/(unsigned)value_size(n->decl));INS(0x48,0x39,0xc8);branch_if(0x86,valid);if(n->op==T_TRY_BUFFER){immediate(RAX,UINT64_MAX);branch(sized);}else panic_at(4,n->t);mark(valid,&code);
+            if(value_size(n->decl)>1){INS(0x48,0x69,0xc0);u32(&code,(uint32_t)value_size(n->decl));}mark(sized,&code);movreg(RDI,RAX);site(RSI,n->t);rt_call(n->op==T_TRY_BUFFER?RT_try_alloc:RT_alloc);
         }
         else if(n->op==T_ASSERT){
             int valid=new_label();INS(0x48,0x85,0xc0);branch_if(0x85,valid);

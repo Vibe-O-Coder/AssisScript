@@ -112,7 +112,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Collections AST tests failed' }
           python tests/test-ownership-functions.py
           if ($LASTEXITCODE -ne 0) { throw 'Ownership function tests failed' }
-          foreach ($suite in @('values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy','ffi','http','process','applications-bc','safe-default','net','move-enums','closures','usability','backend-evolution','complete-ir','increment','owned-mutation','htdl-readiness','arena')) {
+          foreach ($suite in @('values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy','ffi','http','process','applications-bc','safe-default','net','move-enums','closures','usability','backend-evolution','complete-ir','increment','owned-mutation','htdl-readiness','arena','fallible-allocation')) {
             python ('tests/test-' + $suite + '.py')
             if ($LASTEXITCODE -ne 0) { throw ('New suite failed: ' + $suite) }
           }
@@ -193,6 +193,7 @@ jobs:
       - run: python3 tests/test-backend-evolution.py
       - run: python3 tests/test-complete-ir.py
       - run: python3 tests/test-owned-mutation.py
+      - run: python3 tests/test-fallible-allocation.py
       - run: python3 tests/test-htdl-readiness.py
       - run: python3 tests/test-arena.py
       - run: bin/assis run exemplos/31_language_review.assis --debug
@@ -252,6 +253,7 @@ jobs:
           python3 tests/test-backend-evolution.py
           python3 tests/test-complete-ir.py
           python3 tests/test-owned-mutation.py
+          python3 tests/test-fallible-allocation.py
           python3 tests/test-htdl-readiness.py
           python3 tests/test-arena.py
       - name: Offline install and uninstall of the native compiler

@@ -57,7 +57,7 @@ Fontes repetidos são incluídos uma única vez, inclusive se referenciados por 
 | --- | --- |
 | `std/math.assis` | `min`, `max`, `clamp`, `abs` |
 | `std/strings.assis` | `starts_with`, `ends_with`, `contains` |
-| `std/memory.assis` | `fill`, `copy` |
+| `std/memory.assis` | `ByteBuffer` com reserva recuperável e limite de payload; `fill`, `copy` legados |
 | `std/errors.assis` | `IntResult`, `checked_add`, `checked_div`, `error_message` |
 | `std/convert.assis` | `parse_int`, `int_to_string` |
 | `std/algorithms.assis` (opcional) | Heapsort, busca binária, deduplicação |

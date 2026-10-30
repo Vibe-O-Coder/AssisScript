@@ -1,0 +1,8 @@
+test_b_download_and_http_failure_preserve_existing_output (__main__.Applications.test_b_download_and_http_failure_preserve_existing_output) ... ok
+test_c_lock_contention_crash_release_and_corruption (__main__.Applications.test_c_lock_contention_crash_release_and_corruption) ... ok
+test_c_persistence_protocol_limits_and_restart (__main__.Applications.test_c_persistence_protocol_limits_and_restart) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.877s
+
+OK

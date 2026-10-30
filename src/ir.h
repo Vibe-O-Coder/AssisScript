@@ -30,7 +30,7 @@ static unsigned ir_effects(Node *n){
     case N_PRINT:e|=IR_IO;break;
     case N_BINARY:if(n->op=='/'||n->op=='%'||n->op==T_SHL||n->op==T_SHR)e|=IR_TRAP;break;
     case N_BUILTIN:
-        if(n->op==T_BUFFER||n->op==T_ALLOC)e|=IR_ALLOC|IR_TRAP;
+        if(n->op==T_BUFFER||n->op==T_TRY_BUFFER||n->op==T_ALLOC)e|=IR_ALLOC|IR_TRAP;
         else if(n->op==T_MOVE)e|=IR_WRITE;
         else if(n->op==T_SLICE_MAKE||n->op==T_ASSERT||n->op==T_LEN)e|=IR_READ|IR_TRAP;
         else if(n->op!=T_U8&&n->op!=T_I64&&n->op!=T_BOOL&&n->op!=T_NUMTYPE&&n->op!=T_BYTES&&n->op!=T_TEXT)e|=IR_IO|IR_READ|IR_WRITE|IR_TRAP;

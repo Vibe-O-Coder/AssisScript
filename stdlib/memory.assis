@@ -3,6 +3,48 @@ fn fill(destino: *byte, count: int, value: byte): void {
     assert(count >= 0); let i: int = 0;
     while (i < count) { destino[i] = value; i += 1; }
 }
+
+/// Recoverable byte storage. Limit includes old + candidate payload during growth;
+/// allocator headers, cached slabs and the control object are outside this limit.
+final class ByteBuffer {
+    private own data:*byte;
+    private let count:int;
+    private let allocated:int;
+    private let limit:int;
+
+    fn init(borrow mut self,max_bytes:int):void {
+        assert(max_bytes>=0);self.limit=max_bytes;
+    }
+    fn size(borrow self):int{return self.count;}
+    fn capacity(borrow self):int{return self.allocated;}
+    fn max_bytes(borrow self):int{return self.limit;}
+    /// False leaves data, size and capacity unchanged. Exact growth, no rounding.
+    fn try_reserve(borrow mut self,capacity:int):bool {
+        if(capacity<0){return false;}
+        if(capacity<=self.allocated){return true;}
+        if(capacity>self.limit-self.allocated){return false;}
+        own candidate:*byte=try_alloc<byte>(capacity);
+        if(candidate==null){return false;}
+        for(let i:int=0;i<self.count;i++){candidate[i]=self.data[i];}
+        self.data=move(candidate);self.allocated=capacity;return true;
+    }
+    /// Newly visible bytes are zero, including bytes exposed again after shrink.
+    fn try_resize(borrow mut self,size:int):bool {
+        if(!self.try_reserve(size)){return false;}
+        for(let i:int=self.count;i<size;i++){self.data[i]=byte(0);}
+        self.count=size;return true;
+    }
+    fn get(borrow self,index:int):byte {
+        assert(index>=0 && index<self.count);return self.data[index];
+    }
+    fn set(borrow mut self,index:int,value:byte):void {
+        assert(index>=0 && index<self.count);self.data[index]=value;
+    }
+    fn clear(borrow mut self):void{self.count=0;}
+    fn release(borrow mut self):void {
+        own previous:*byte=move(self.data);self.count=0;self.allocated=0;
+    }
+}
 /// Copia quantidade bytes da origem para destino. Exige buffers válidos sem sobreposição e quantidade >= 0; não verifica limites.
 fn copy(destino: *byte, origem: *byte, count: int): void {
     assert(count >= 0); let i: int = 0;

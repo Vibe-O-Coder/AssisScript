@@ -1,0 +1,106 @@
+{
+  "schema": "assisscript-allocation-arm64-emulated-v1",
+  "execution": "qemu-aarch64; not native ARM64",
+  "qemu": "qemu-aarch64 version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+  "state": "pass",
+  "cases": [
+    {
+      "source": "exemplos/36_fallible_buffers.assis",
+      "source_sha256": "d37a70e77be95415993fd5f75a57d094adc8ea228c55be19d80d4deaab0c43a9",
+      "optimized": true,
+      "build_command": [
+        "build/assis-allocation-linux",
+        "build",
+        "exemplos/36_fallible_buffers.assis",
+        "--target",
+        "linux-arm64",
+        "--debug",
+        "-o",
+        "build/arm-smoke-0"
+      ],
+      "execution_command": [
+        "qemu-aarch64",
+        "build/arm-smoke-0"
+      ],
+      "binary_sha256": "732a229afd4ec1482716707ff4674eeb7928518538eddbbc8e1539d11968e86a",
+      "return_code": 0,
+      "stdout": "32 64 42\n64 0\n",
+      "stderr": "",
+      "state": "pass"
+    },
+    {
+      "source": "exemplos/36_fallible_buffers.assis",
+      "source_sha256": "d37a70e77be95415993fd5f75a57d094adc8ea228c55be19d80d4deaab0c43a9",
+      "optimized": false,
+      "build_command": [
+        "build/assis-allocation-linux",
+        "build",
+        "exemplos/36_fallible_buffers.assis",
+        "--target",
+        "linux-arm64",
+        "--debug",
+        "-o",
+        "build/arm-smoke-1",
+        "--no-opt"
+      ],
+      "execution_command": [
+        "qemu-aarch64",
+        "build/arm-smoke-1"
+      ],
+      "binary_sha256": "d8bd77c00917369055bec0833889ba7969a9c93491d86f3d00c375d978c9e2a0",
+      "return_code": 0,
+      "stdout": "32 64 42\n64 0\n",
+      "stderr": "",
+      "state": "pass"
+    },
+    {
+      "source": "docs/ecossistema/evidencias/m1-alocacao-2026-10-29/arm64-smoke.assis",
+      "source_sha256": "7c9eeebbac4b91d84fe4e7da5471f52c61c4e8cebfffa1d7aee6eed2536014fb",
+      "optimized": true,
+      "build_command": [
+        "build/assis-allocation-linux",
+        "build",
+        "docs/ecossistema/evidencias/m1-alocacao-2026-10-29/arm64-smoke.assis",
+        "--target",
+        "linux-arm64",
+        "--debug",
+        "-o",
+        "build/arm-smoke-2"
+      ],
+      "execution_command": [
+        "qemu-aarch64",
+        "build/arm-smoke-2"
+      ],
+      "binary_sha256": "0075a48ee5720777365aa25259b233eed53d4b9e31841eb8a7fed1247c686830",
+      "return_code": 0,
+      "stdout": "ok\n",
+      "stderr": "",
+      "state": "pass"
+    },
+    {
+      "source": "docs/ecossistema/evidencias/m1-alocacao-2026-10-29/arm64-smoke.assis",
+      "source_sha256": "7c9eeebbac4b91d84fe4e7da5471f52c61c4e8cebfffa1d7aee6eed2536014fb",
+      "optimized": false,
+      "build_command": [
+        "build/assis-allocation-linux",
+        "build",
+        "docs/ecossistema/evidencias/m1-alocacao-2026-10-29/arm64-smoke.assis",
+        "--target",
+        "linux-arm64",
+        "--debug",
+        "-o",
+        "build/arm-smoke-3",
+        "--no-opt"
+      ],
+      "execution_command": [
+        "qemu-aarch64",
+        "build/arm-smoke-3"
+      ],
+      "binary_sha256": "40587319d1703a4497a9de92094476ebb8f9a5a04c7e19d505e8682fb2b60416",
+      "return_code": 0,
+      "stdout": "ok\n",
+      "stderr": "",
+      "state": "pass"
+    }
+  ]
+}

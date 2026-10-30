@@ -54,12 +54,14 @@ R(print_float){
     if(exp==2047){const char*p=frac?"nan":"inf";for(int k=0;k<3;k++)buf[n++]=p[k];}
     else{buf[n++]='0';buf[n++]='x';buf[n++]=exp?'1':'0';buf[n++]='.';for(int k=12;k>=0;k--)buf[n++]=hex[(frac>>(k*4))&15];buf[n++]='p';I e=exp?(I)exp-1023:frac?-1022:0;buf[n++]=e<0?'-':'+';U v=e<0?-e:e;char tail[8];U t=0;do{tail[t++]=(char)('0'+v%10);v/=10;}while(v);while(t)buf[n++]=tail[--t];}output(b,buf,n);return 0;
 }
-R(alloc){
-    UNUSED;if((I)a<0||a>0x7fffffffffffffdfUL)error(4,b);U cls=0,size=64;while(size<a+32&&cls<10){size*=2;cls++;}U*p;
-    if(cls==10){p=map(a+32);if(!p)error(5,b);p[0]=a+32;p[1]=10;}
-    else{if(!s->pool[cls]){char*slab=map(65536);if(!slab)error(5,b);for(U off=0;off<65536;off+=size){U*q=(U*)(slab+off);q[0]=size;q[1]=cls;q[2]=off+size<65536?(U)(slab+off+size):0;q[3]=0x46524545;}s->pool[cls]=(U)slab;}p=(U*)s->pool[cls];s->pool[cls]=p[2];char*q=(char*)(p+4);for(U i=0;i<a;i++)q[i]=0;}
+static U allocate(U a,State*s){
+    if((I)a<0||a>0x7fffffffffffffdfUL)return 0;U cls=0,size=64;while(size<a+32&&cls<10){size*=2;cls++;}U*p;
+    if(cls==10){p=map(a+32);if(!p)return 0;p[0]=a+32;p[1]=10;}
+    else{if(!s->pool[cls]){char*slab=map(65536);if(!slab)return 0;for(U off=0;off<65536;off+=size){U*q=(U*)(slab+off);q[0]=size;q[1]=cls;q[2]=off+size<65536?(U)(slab+off+size):0;q[3]=0x46524545;}s->pool[cls]=(U)slab;}p=(U*)s->pool[cls];s->pool[cls]=p[2];char*q=(char*)(p+4);for(U i=0;i<a;i++)q[i]=0;}
     p[2]=a;p[3]=0x41534953;s->live++;return (U)(p+4);
 }
+R(try_alloc){UNUSED;return allocate(a,s);}
+R(alloc){UNUSED;if((I)a<0||a>0x7fffffffffffffdfUL)error(4,b);U p=allocate(a,s);if(!p)error(5,b);return p;}
 R(free){
     UNUSED;if(!a)return 0;U*p=(U*)a-4;if(p[3]!=0x41534953)error(12,0);p[3]=0x46524545;s->live--;if(p[1]==10){if(!s->debug)unmap(p,p[0]);return 0;}if(s->debug){char*q=(char*)a;for(U i=0;i<p[2];i++)q[i]=(char)0xdd;}p[2]=s->pool[p[1]];s->pool[p[1]]=(U)p;return 0;
 }

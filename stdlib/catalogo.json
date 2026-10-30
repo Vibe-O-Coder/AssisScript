@@ -19,7 +19,7 @@
       "name": "memory",
       "required": true,
       "doc": "BIBLIOTECA-memoria.md",
-      "description": "Preenchimento e cópia de buffers nativos.",
+      "description": "Buffers com reserva recuperável e limite de payload por instância; cópia e preenchimento legados.",
       "dependencies": []
     },
     {

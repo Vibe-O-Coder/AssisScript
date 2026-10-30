@@ -1,0 +1,10 @@
+ASSIS text bytes: 32 invocações; C:\Users\babus\Desktop\AssisScript\worktrees\m1-allocation\build\assis-allocation.exe
+test_utf8_matches_independent_decoder (__main__.TextBytes.test_utf8_matches_independent_decoder) ... ok
+test_length_is_element_count_through_fields_and_borrowed_returns (__main__.TextBytes.test_length_is_element_count_through_fields_and_borrowed_returns) ... ok
+test_explicit_length_failure_and_nul_codepoint (__main__.TextBytes.test_explicit_length_failure_and_nul_codepoint) ... ok
+test_decimal_buffer_matches_python_including_int64_min (__main__.TextBytes.test_decimal_buffer_matches_python_including_int64_min) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 2.284s
+
+OK

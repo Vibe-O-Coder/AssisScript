@@ -1,0 +1,18 @@
+ASSIS evolution: 472 invocações; nt; C:\Users\babus\Desktop\AssisScript\worktrees\m1-allocation\build\assis-allocation.exe
+test_aliases_borrows_indirection_and_nested_types (__main__.Evolution.test_aliases_borrows_indirection_and_nested_types) ... ok
+test_all_collection_fields_are_private (__main__.Evolution.test_all_collection_fields_are_private) ... ok
+test_collection_private_methods (__main__.Evolution.test_collection_private_methods) ... ok
+test_collections_keep_bounds_and_public_operations (__main__.Evolution.test_collections_keep_bounds_and_public_operations) ... ok
+test_module_diagnostics_preserve_origin (__main__.Evolution.test_module_diagnostics_preserve_origin) ... ok
+test_private_members_are_nominal_not_filename_privileges (__main__.Evolution.test_private_members_are_nominal_not_filename_privileges) ... ok
+test_private_positive_paths_and_underscore_is_not_visibility (__main__.Evolution.test_private_positive_paths_and_underscore_is_not_visibility) ... ok
+test_pure_composition_recursion_and_local_state (__main__.Evolution.test_pure_composition_recursion_and_local_state) ... ok
+test_pure_rejects_effects_even_in_unreachable_branches (__main__.Evolution.test_pure_rejects_effects_even_in_unreachable_branches) ... ok
+test_pure_signature_boundaries (__main__.Evolution.test_pure_signature_boundaries) ... ok
+test_standard_library_internals_and_reuse (__main__.Evolution.test_standard_library_internals_and_reuse) ... ok
+test_val_values_scope_and_legacy_mutability (__main__.Evolution.test_val_values_scope_and_legacy_mutability) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 9.947s
+
+OK

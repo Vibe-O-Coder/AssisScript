@@ -45,6 +45,11 @@ são rejeitados. Dois sinais unários independentes precisam de separação:
 Os pacotes alpha.15 anteriores a essa continuação exigem reconstrução do
 compilador para oferecer essas instruções.
 
+Na primeira fatia M1, `try_alloc<T>(count)` retorna um buffer gerenciado zerado
+ou null em tamanho inválido, overflow e recusa do sistema. Exige own em safe;
+verifique null antes de consultar len ou indexar. `alloc<T>` e new mantêm falha
+fatal. Veja [alocação recuperável e limites por buffer](ALOCACAO-FALLIVEL.md).
+
 Comentários são `//` e `/* ... */`, com aninhamento nos blocos. `te`, `to` e
 `miyabi` podem ser nomes comuns.
 

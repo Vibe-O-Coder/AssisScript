@@ -159,7 +159,7 @@ static Node *prefix(void){
     case T_TRUE:case T_FALSE:n=node(N_BOOL,t);break;case T_NULL:n=node(N_NULL,t);break;
     case T_SUPER:case T_SELF:n=node(N_SELF,t);n->op=t->kind;break;case T_ID:n=node(N_NAME,qualified_token(t));break;
     case T_NEW:n=node(N_NEW,t);n->decl=parse_type();if((n->decl.kind!=TY_OBJ&&n->decl.kind!=TY_APPLY)||n->decl.depth)error(t,"new exige classe, struct ou coleção");if(accept('.'))n->variant_name=expect(T_ID);args(&n->items);break;
-    case T_BUFFER:n=node(N_BUILTIN,t);n->op=t->kind;expect('<');n->decl=parse_type();generic_end();args(&n->items);break;
+    case T_BUFFER:case T_TRY_BUFFER:n=node(N_BUILTIN,t);n->op=t->kind;expect('<');n->decl=parse_type();generic_end();args(&n->items);break;
     case '[':n=node(N_ARRAY,t);if(peek()->kind!=']'){do{push(&n->items,expression(1));}while(accept(',')&&peek()->kind!=']');}expect(']');break;
     case T_NUMTYPE:n=node(N_BUILTIN,t);n->op=T_NUMTYPE;n->decl=numeric_type(t->text);args(&n->items);break;
     case T_UTF8:case T_C_CALLBACK:case T_SLICE_MAKE:case T_ALLOC:case T_LEN:case T_I64:case T_U8:case T_BOOL:case T_TEXT:case T_BYTES:case T_MOVE:case T_READ:case T_NOW:n=node(N_BUILTIN,t);n->op=t->kind;args(&n->items);break;
@@ -667,7 +667,7 @@ static Type check_expr(Node *n){
         if(n->op==T_ASSERT){if(n->items.n<1||n->items.n>2)error(n->t,"assert recebe condição e mensagem text opcional");if(n->items.n==2)require_assign(type_str,check_expr(n->items.v[1]),((Node*)n->items.v[1])->t);}
         else if(n->items.n!=1)error(n->t,"%s recebe exatamente um argumento",n->t->text);
         a=check_expr(n->items.v[0]);
-        if(n->op==T_BUFFER){valid_type(n->decl,n->t,false);if(!numeric(a))error(n->t,"alloc<T> exige uma quantidade inteira de elementos");ty=pointer(n->decl);}
+        if(n->op==T_BUFFER||n->op==T_TRY_BUFFER){valid_type(n->decl,n->t,false);if(!numeric(a))error(n->t,"%s<T> exige uma quantidade inteira de elementos",n->t->text);ty=pointer(n->decl);}
         else if(n->op==T_ASSERT){if(!equal_type(a,type_bool))error(n->t,"assert exige bool");ty=type_void;}
         else if(n->op==T_ALLOC){if(!numeric(a))error(n->t,"alloc<byte> recebe uma quantidade inteira de bytes");ty=pointer(type_u8);}
         else if(n->op==T_LEN){if(!equal_type(a,type_str)&&!collection_of(a)&&!a.depth&&!slice_type(a))error(n->t,"len recebe text, Array, HashMap ou buffer gerenciado; slice também é aceito");ty=type_i64;}

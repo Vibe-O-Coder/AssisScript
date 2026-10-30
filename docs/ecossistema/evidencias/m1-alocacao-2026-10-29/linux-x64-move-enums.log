@@ -1,0 +1,15 @@
+test_borrow_then_consume (__main__.MoveEnums.test_borrow_then_consume) ... ok
+test_active_variant_only_and_nested_drop (__main__.MoveEnums.test_active_variant_only_and_nested_drop) ... ok
+test_generic_return_and_consuming_parameter (__main__.MoveEnums.test_generic_return_and_consuming_parameter) ... ok
+test_move_payload_out_and_cleanup_on_return (__main__.MoveEnums.test_move_payload_out_and_cleanup_on_return) ... ok
+test_copy_payload_with_inline_aggregate (__main__.MoveEnums.test_copy_payload_with_inline_aggregate) ... ok
+test_recursive_owned_variants (__main__.MoveEnums.test_recursive_owned_variants) ... ok
+test_loops_break_and_continue_cleanup (__main__.MoveEnums.test_loops_break_and_continue_cleanup) ... ok
+test_borrowed_payload_can_return_from_borrowed_parameter (__main__.MoveEnums.test_borrowed_payload_can_return_from_borrowed_parameter) ... ok
+test_reject_implicit_copies_and_reuse (__main__.MoveEnums.test_reject_implicit_copies_and_reuse) ... ok
+test_exhaustiveness_type_and_safe_boundary (__main__.MoveEnums.test_exhaustiveness_type_and_safe_boundary) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.971s
+
+OK

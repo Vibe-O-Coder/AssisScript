@@ -86,7 +86,8 @@
     "write": "Imprime os argumentos consecutivamente, sem separador ou quebra de linha.",
     "utf8": "utf8(literal) cria slice<byte> estático sem alocação, preservando bytes NUL.",
     "is": "Consulta o tipo dinâmico de uma referência de classe; null resulta false.",
-    "as": "Downcast verificado de referência. Incompatibilidade resulta null, sem transferir propriedade."
+    "as": "Downcast verificado de referência. Incompatibilidade resulta null, sem transferir propriedade.",
+    "try_alloc": "try_alloc<T>(count): own *T em safe. Buffer zerado ou null em tamanho inválido, overflow e falta de memória. Cheque null antes de len/indexar. Compartilha bounds, empréstimos e drop de alloc."
   },
   "signatures": {
     "text": {
@@ -273,6 +274,12 @@
       "label": "utf8(literal: text): slice<byte>",
       "params": [
         "literal: text"
+      ]
+    },
+    "try_alloc": {
+      "label": "try_alloc<T>(count: int): *T",
+      "params": [
+        "count: int"
       ]
     }
   },
