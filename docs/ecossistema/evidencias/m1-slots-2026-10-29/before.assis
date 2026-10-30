@@ -1,0 +1,2 @@
+struct Slot {let value:int;}
+safe fn main():int{own slot:Slot=try_new Slot();return 0;}

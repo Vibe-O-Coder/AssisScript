@@ -1,0 +1,27 @@
+import "std/arena.assis";
+
+struct Entry{let number:int;own data:*byte;}
+
+safe fn main():int{
+    // Only the initial object reservation is recoverable. Arena.init still
+    // constructs its index controller with new; it can fail fatally.
+    own entries:arena::Arena<Entry>=try_new arena::Arena<Entry>(1,7,2,8);
+    if(entries==null){return 1;}
+    own entry:Entry=try_new Entry();
+    if(entry==null){return 1;}
+    entry.number=42;entry.data=try_alloc<byte>(16);
+    if(entry.data==null){return 1;}
+
+    // try_insert consumes entry in both outcomes. Rejection destroys it once;
+    // InsertStatus is a Copy result that does not allocate on the heap.
+    val result:arena::InsertStatus=entries.try_insert(move(entry));
+    match(result){
+        Inserted(handle){
+            assert(entries.contains(handle));
+            print(entries.get(handle).number,entries.size());
+            entries.close();assert(!entries.contains(handle));
+        }
+        Rejected(code){print(code);return 1;}
+    }
+    return 0;
+}

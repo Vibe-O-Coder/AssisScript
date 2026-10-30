@@ -1,0 +1,39 @@
+✔ comando check inclui pacotes e bibliotecas não salvos e publica o diagnóstico (33.4311ms)
+✔ catálogo abre manual individual offline de cada biblioteca (30.1263ms)
+✔ diagnóstico de dependência usa entrada e lockfile do projeto (24.138ms)
+✔ verificação manual repete quando uma edição real interrompe o processo (6.6837ms)
+✔ provedor de hover mostra assinatura concreta e abre o manual offline (8.5905ms)
+✔ try_new keeps record and Move enum signature help (4.1189ms)
+✔ constants, character braces and super use the canonical model (1.1006ms)
+✔ extern declarations end parameter scope at their semicolon (2.1681ms)
+✔ block documentation survives canonical English declaration modifiers (0.7555ms)
+✔ canonical English functions, classes, constructors and imports are indexed (1.0208ms)
+✔ receptores não viram arg_count explícitos e fatias conservam o tipo (0.8519ms)
+✔ classes genéricas substituem métodos, construtores e bases antes da navegação (7.6691ms)
+✔ generics do usuário preservam navegação, campos concretos e assinaturas (3.6257ms)
+✔ val, pure e private preservam símbolos e visibilidade nominal (3.7154ms)
+✔ ownership e div têm referências e for limita a variável de inicialização (0.9355ms)
+✔ ignora strings e comentários aninhados, preservando posições UTF-16 (1.1477ms)
+✔ resolve escopos, parâmetros, herança e membros com tipos (1.081ms)
+✔ assinaturas contam arg_count sem contar chamadas internas (0.4506ms)
+✔ coleta imports transitivos e fontes não salvos (1.2104ms)
+✔ cadeias de campos e retornos de método conservam o tipo do receptor (0.8401ms)
+✔ tipos genéricos concretos, structs e membros indexados têm documentação técnica (1.378ms)
+✔ literais, construtores genéricos e alloc não atrapalham ajuda de parâmetros (1.0742ms)
+✔ try_alloc oferece assinatura genérica e explica a falha recuperável (0.4626ms)
+✔ documentação ///, miyabi e bloco inclui parâmetros e retorno de bibliotecas (0.7879ms)
+✔ #body, #yuri e caminhos pontuados coletam docs de dependências não salvas (1.4187ms)
+✔ tipos de callback preservam parâmetros, retorno, efeitos e assinatura indireta (2.0862ms)
+✔ ownership em parâmetros e retornos conserva contratos e navegação (1.2077ms)
+✔ callbacks safe preservam modos aninhados e origem da vida (0.7611ms)
+✔ valores, variantes e vínculos de match preservam tipos e escopos (1.9988ms)
+✔ closures preservam assinatura, capturas e escopo dos parâmetros (1.2058ms)
+✔ enum Move e match consumidor mantêm o tipo do recurso extraído (2.5509ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 212.9513

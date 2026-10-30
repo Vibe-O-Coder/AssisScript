@@ -1,9 +1,9 @@
 {
   "schema": "assisscript-ecosystem-progress-v1",
   "rubric_version": 1,
-  "date": "2026-10-29",
+  "date": "2026-10-30",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "partial-native-retest-m1-fallible-buffers",
+  "assessment": "partial-native-retest-m1-fallible-slots",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -200,15 +200,18 @@
         {
           "id": "E02-03",
           "name": "Alocação e quotas recuperáveis",
-          "level": 1,
+          "level": 2,
           "acceptance": "Disponibilizar alocação fallível/reserve, checagem de tamanho e quotas por instância; injetar OOM em cada fronteira e conservar estado válido sem abortar serviços vizinhos.",
-          "baseline": "try_alloc<T> recuperável e ByteBuffer com reserva transacional e teto de payload antigo+candidato demonstrados em Windows/Linux x64. Falhas injetadas nas dez classes pequenas no Linux; objetos/coleções/arenas e quotas completas continuam pendentes.",
+          "baseline": "Subconjunto útil reproduzido em Windows/Linux x64: buffers com limite próprio, reserva inicial de objetos e inserções Move/slots com rollback sob recusa em cada alocação. Quota compartilhada de documento, controladores/remove e recuperação geral continuam abertos.",
           "evidence": [
             "docs/ALOCACAO-FALLIVEL.md",
             "stdlib/memory.assis",
             "tests/test-fallible-allocation.py",
             "docs/ecossistema/evidencias/m1-alocacao-2026-10-29/summary.json",
-            "docs/relatorios/2026-10-29-m1-alocacao.md"
+            "docs/relatorios/2026-10-29-m1-alocacao.md",
+            "docs/INSERCAO-FALLIVEL.md",
+            "docs/relatorios/2026-10-30-m1-slots-falliveis.md",
+            "docs/ecossistema/evidencias/m1-slots-2026-10-29/summary.json"
           ]
         },
         {
@@ -1501,7 +1504,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-10-30",
+      "rubric_version": 1,
+      "label": "M1 parcial: reserva inicial de objetos e inserções Move/slots recuperáveis; E02-03 de 1 para 2",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 1,
+        "E00-03": 1,
+        "E00-04": 0,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 1,
+        "E03-03": 2,
+        "E03-04": 2,
+        "E03-05": 0,
+        "E04-01": 2,
+        "E04-02": 1,
+        "E04-03": 1,
+        "E04-04": 0,
+        "E04-05": 0,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 0,
+        "E06-02": 0,
+        "E06-03": 0,
+        "E06-04": 0,
+        "E06-05": 0,
+        "E07-01": 1,
+        "E07-02": 0,
+        "E07-03": 0,
+        "E07-04": 0,
+        "E07-05": 0,
+        "E08-01": 0,
+        "E08-02": 0,
+        "E08-03": 0,
+        "E08-04": 0,
+        "E08-05": 0,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 1,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Alocação de buffers recuperável e ByteBuffer com limite de payload por instância testados nesta unidade em Windows/Linux x64, otimizado/referência. Linux injeta ENOMEM nas dez classes pequenas; ambos exercitam recusa real do sistema e preservação de dados/vizinhos. Somente E02-03 recebe nível 1 de fundação. new, coleções/arenas, quotas completas e Browser continuam abertos; demais créditos conservam suas evidências próprias/provisórias e nenhum gate é aprovado."
+  "assessment_note": "Objetos e inserções recuperáveis validados nesta unidade: 11/11 métodos da suíte nova em cada host Windows/Linux x64, nos modos otimizado/referência, com recusa do OS em cada fronteira de crescimento, recursos e handles preservados. E02-03 passa de 1 para 2 por esse subconjunto útil; quotas compartilhadas, controladores, remove e recuperação de documentos permanecem abertos. Demais créditos conservam evidências próprias/provisórias; nenhum gate é aprovado."
 }

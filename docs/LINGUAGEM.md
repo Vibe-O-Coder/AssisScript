@@ -50,6 +50,14 @@ ou null em tamanho inválido, overflow e recusa do sistema. Exige own em safe;
 verifique null antes de consultar len ou indexar. `alloc<T>` e new mantêm falha
 fatal. Veja [alocação recuperável e limites por buffer](ALOCACAO-FALLIVEL.md).
 
+`try_new Type(args)` recupera a recusa da reserva inicial de classe, struct
+gerenciada ou enum Move retornando null. Todos os argumentos são avaliados
+uma vez, da esquerda para a direita, inclusive na recusa. Argumentos own são
+consumidos nos dois resultados; na recusa são destruídos em ordem inversa e
+init não é chamado. Argumentos e init conservam seus próprios contratos de
+falha; não há captura geral de OOM. Valores Copy usam new sem heap.
+Veja [objetos e inserções recuperáveis](INSERCAO-FALLIVEL.md).
+
 Comentários são `//` e `/* ... */`, com aninhamento nos blocos. `te`, `to` e
 `miyabi` podem ser nomes comuns.
 

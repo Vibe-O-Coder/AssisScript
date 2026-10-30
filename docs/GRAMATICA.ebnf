@@ -43,7 +43,7 @@ expressao = unaria, {operador_binario, unaria | ("is" | "as"), tipo} ; (* preced
 unaria = ["+" | "-" | "!" | "~" | "*" | "&"], primaria,
          {".", nome | argumentos | "[", expressao, "]" | "::", argumentos_tipo} ;
 primaria = closure | caractere | inteiro | real_decimal | texto | "true" | "false" | "null" | "self" | "super" | nome
-         | "(", expressao, ")" | "new", tipo, [".", nome], argumentos
+         | "(", expressao, ")" | ("new" | "try_new"), tipo, [".", nome], argumentos
          | ("alloc" | "try_alloc"), "<", tipo, ">", argumentos
          | ("utf8" | "len" | "slice_of" | "int" | "byte" | "i8" | "i16" | "i32" | "i64" | "u8" | "u16" | "u32" | "u64" | "f32" | "f64" | "bool" | "text" | "bytes" | "move" | "read_bytes" | "monotonic_ms"
             | "file_open" | "file_read" | "file_write" | "file_close" | "io_error"

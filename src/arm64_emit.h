@@ -99,6 +99,21 @@ static void a_call_value(BackendValue*v){
     else a_call(v->callee->label);a_clean(v->arguments.n+extra);
 }
 static void a_construct(BackendValue*v){
+    if(v->op==T_TRY_NEW){
+        a_imm(0,(uint64_t)v->layout->size);a_site(1,v->site);a_rt(RT_try_alloc);a_push(0);
+        for(int i=0;i<v->arguments.n;i++){a_value(v->arguments.v[i]);a_push(0);}
+        a_mem(true,0,31,v->arguments.n*16,8);a_test(0);int failed=new_label(),done=new_label();a_cond(0,failed);
+        if(v->tagged){a_imm(1,(uint64_t)v->offset);a_mem(false,1,0,0,8);}
+        else{a_address(1,v->layout->label);a_mem(false,1,0,0,8);for(int i=0;i<v->fields.n;i++){Field*f=v->fields.v[i];if(equal_type(f->ty,type_str)){a_address(1,string_label("",0));a_mem(false,1,0,f->offset,8);}}}
+        if(v->tagged||v->layout->record){for(int i=0;i<v->arguments.n;i++){Field*f=v->fields.v[i];a_mem(true,0,31,(v->arguments.n-1-i)*16,8);a_mem(true,2,31,v->arguments.n*16,8);a_add(2,2,f->offset);a_store(f->ty);}}
+        else if(v->callee)a_call(v->callee->label);
+        a_clean(v->arguments.n);a_pop(0);a_branch(done);mark(failed,&code);
+        for(int i=v->arguments.n-1;i>=0;i--){
+            bool owned=(v->tagged||v->layout->record)?((Field*)v->fields.v[i])->owned:v->callee&&((Var*)v->callee->params.v[i])->ownership==1;
+            if(owned){a_mem(true,0,31,(v->arguments.n-1-i)*16,8);a_release(((BackendValue*)v->arguments.v[i])->type);}
+        }
+        a_clean(v->arguments.n);a_pop(0);mark(done,&code);return;
+    }
     if(v->layout->value){a_local(2,v->temp);a_imm(0,0);for(int off=0;off<v->layout->size;off+=8)a_mem(false,0,2,off,8);a_mov(0,2);}
     else{a_imm(0,(uint64_t)v->layout->size);a_site(1,v->site);a_rt(RT_alloc);}a_push(0);
     if(v->tagged){a_imm(1,(uint64_t)v->offset);a_mem(false,1,0,0,8);}

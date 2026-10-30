@@ -87,7 +87,8 @@
     "utf8": "utf8(literal) cria slice<byte> estático sem alocação, preservando bytes NUL.",
     "is": "Consulta o tipo dinâmico de uma referência de classe; null resulta false.",
     "as": "Downcast verificado de referência. Incompatibilidade resulta null, sem transferir propriedade.",
-    "try_alloc": "try_alloc<T>(count): own *T em safe. Buffer zerado ou null em tamanho inválido, overflow e falta de memória. Cheque null antes de len/indexar. Compartilha bounds, empréstimos e drop de alloc."
+    "try_alloc": "try_alloc<T>(count): own *T em safe. Buffer zerado ou null em tamanho inválido, overflow e falta de memória. Cheque null antes de len/indexar. Compartilha bounds, empréstimos e drop de alloc.",
+    "try_new": "try_new Type(args): objeto gerenciado ou null se a reserva inicial falhar. Avalia todos os argumentos uma vez em ordem; argumentos own são consumidos e destruídos em ordem inversa na falha. Não chama init sem objeto. Alocações nos argumentos/init têm seus próprios contratos."
   },
   "signatures": {
     "text": {

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-isolation=none",
+    "vscode-assisscript/test/language.test.js",
+    "vscode-assisscript/test/extension.test.js"
+  ],
+  "return_code": 0,
+  "tests": 31,
+  "passed": 31,
+  "failed": 0,
+  "skipped": 0,
+  "node": "v24.17.0",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "log": "editor.log"
+}

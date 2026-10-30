@@ -1,0 +1,25 @@
+value struct Pair{let x:int;let y:int;}
+final class Resource{
+    let id:int;
+    own data:*byte;
+    fn init(borrow mut self,id:int):void{self.id=id;self.data=alloc<byte>(1);}
+    fn drop(borrow mut self):void{print(self.id);}
+}
+safe fn argument(id:int):own Resource{print(id+10);return try_new Resource(id);}
+struct Box{let pair:Pair;own first:Resource;own second:Resource;}
+enum Event{None;Ready(own Box,Pair);}
+class Base{
+    let n:int;
+    fn init(borrow mut self,n:int):void{self.n=n;}
+    fn read(borrow self):int{return self.n;}
+}
+class Child extends Base{fn read(borrow self):int{return self.n+1;}}
+safe fn main():int{
+    own base:Base=try_new Child(41);assert(base!=null && base.read()==42);
+    own box:Box=try_new Box(new Pair(20,22),argument(1),argument(2));
+    assert(box!=null);
+    own event:Event=try_new Event.Ready(move(box),new Pair(3,4));
+    assert(event!=null);
+    match(event){None{assert(false);}Ready(value,pair){print(value.pair.x+value.pair.y,pair.x+pair.y);}}
+    return 0;
+}

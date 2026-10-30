@@ -29,3 +29,10 @@ Ordem imediata: alocação recuperável de objetos/arenas, quota compartilhada p
 documento e spikes do executor. A primeira fatia try_alloc/ByteBuffer não
 encerra M1-ALLOC nem exige terminar uma frente inteira. Nenhuma delegação
 automática é requerida. Não pontuar hipóteses ou marcar not-run como pass.
+
+Continuação de 30/10/2026: try_new e inserções recuperáveis de OwnedArray/Arena
+entregues no [relatório de slots](../relatorios/2026-10-30-m1-slots-falliveis.md).
+O retorno Copy evita alocar para informar OOM; APIs antigas preservam contratos.
+Próxima unidade M1-ALLOC: orçamento de memória compartilhado por documento,
+reserva antecipada e criação/remoção de controladores sem caminho fatal.
+M0-EXEC e a verificação visual M2 continuam na fila com contratos próprios.

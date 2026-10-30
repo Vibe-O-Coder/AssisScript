@@ -300,7 +300,7 @@ function receiverType(model, dotIndex, models, depth = 0) {
         const callee = typeBefore(tokens, open - 1); if (!callee) return undefined;
         if (callee.token?.value === 'move') return receiverType(model, model.pairs.get(open), models, depth + 1);
         index = callee.start; token = tokens[index]; if (!token) return undefined;
-        if (tokens[index - 1]?.value === 'new') return callee.type;
+        if (['new', 'try_new'].includes(tokens[index - 1]?.value)) return callee.type;
         if (callee.arguments) return specializeSymbol(visibleSymbols(model, token.start, models).find(s => s.name === token.value), callee.arguments)?.type;
     }
     if (token.value === 'self') return ownerAt(model, token.start);
@@ -334,17 +334,18 @@ function signatureAt(model, offset, models) {
             let fn = specializeSymbol(resolveSymbol(model, name.start, models), callee.arguments);
             if (tokens[callee.start - 1]?.value === '.') {
                 const parent = typeBefore(tokens, callee.start - 2);
-                if (parent && ['new', 'fodase'].includes(tokens[parent.start - 1]?.value)) {
+                if (parent && ['new', 'try_new', 'fodase'].includes(tokens[parent.start - 1]?.value)) {
                     const variant = members(models, parent.type).find(s => s.kind === 'variant' && s.name === name.value);
-                    if (variant) fn = { ...variant, label: `new ${parent.type}.${variant.name}(${variant.params.map(parameterLabel).join(', ')}): ${parent.type}` };
+                    if (variant) fn = { ...variant, label: `${tokens[parent.start - 1].value === 'try_new' ? 'try_new' : 'new'} ${parent.type}.${variant.name}(${variant.params.map(parameterLabel).join(', ')}): ${parent.type}` };
                 }
             }
-            if (['fodase', 'new'].includes(tokens[callee.start - 1]?.value)) {
+            if (['fodase', 'new', 'try_new'].includes(tokens[callee.start - 1]?.value)) {
+                const construction = tokens[callee.start - 1].value === 'try_new' ? 'try_new' : 'new';
                 const cls = models.flatMap(m => m.symbols).find(s => s.kind === 'class' && s.name === name.value);
                 if (cls?.record) {
                     const params = members(models, callee.type).filter(s => s.kind === 'field').map(s => ({ name: s.name, type: s.type }));
-                    fn = { label: `new ${callee.type}(${params.map(p => `${p.name}: ${p.type}`).join(', ')}): ${callee.type}`, params, documentation: cls.documentation };
-                } else if (reference[genericParts(callee.type)?.kind]) fn = { label: `new ${callee.type}(): ${callee.type}`, params: [], documentation: keywords[name.value] };
+                    fn = { label: `${construction} ${callee.type}(${params.map(p => `${p.name}: ${p.type}`).join(', ')}): ${callee.type}`, params, documentation: cls.documentation };
+                } else if (reference[genericParts(callee.type)?.kind]) fn = { label: `${construction} ${callee.type}(): ${callee.type}`, params: [], documentation: keywords[name.value] };
                 else fn = members(models, callee.type, new Set(), ownerAt(model, offset)).find(s => ['init'].includes(s.name));
             }
             const callback = functionParts(fn?.type);

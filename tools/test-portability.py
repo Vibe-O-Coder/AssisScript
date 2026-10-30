@@ -93,6 +93,10 @@ def main():
          'print(b.size(),b.capacity(),int(b.get(3)));b.release();assert(b.try_resize(12));',
          0, '4 8 42\n'),
         ('trap', '', 'let z:int=0;print(1/z);', 70, ''),
+        ('fallible-slots', 'import "std/arena.assis";struct Item{let n:int;own data:*byte;}',
+         'own a:arena::Arena<Item>=try_new arena::Arena<Item>(1,2,4,8);assert(a!=null);'
+         'val r:arena::InsertStatus=a.try_insert(try_new Item(42,try_alloc<byte>(1)));'
+         'match(r){Inserted(h){assert(a.contains(h));print(a.get(h).n);}Rejected(code){assert(false);}}', 0, '42\n'),
     ]
     try:
         assert args.expect_host is None or arch == args.expect_host, f'Expected {args.expect_host} host, got {machine}'

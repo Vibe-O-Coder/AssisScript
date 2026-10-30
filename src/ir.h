@@ -21,7 +21,7 @@ static unsigned ir_effects(Node *n){
     switch(n->kind){
     case N_NAME:case N_SELF:case N_MEMBER:e|=IR_READ;break;
     case N_INDEX:e|=IR_READ|IR_TRAP;break;
-    case N_NEW:if(!value_type(n->ty))e|=IR_ALLOC|IR_TRAP;break;
+    case N_NEW:if(!value_type(n->ty))e|=IR_ALLOC|IR_TRAP;if(n->op==T_TRY_NEW)e|=IR_DROP|IR_CALL|IR_WRITE;break;
     case N_ARRAY:e|=IR_ALLOC|IR_WRITE|IR_TRAP;break;
     case N_CALL:e|=IR_CALL|IR_TRAP;if(!(n->fn?n->fn->pure:n->a->ty.ref->pure))e|=IR_READ|IR_WRITE|IR_ALLOC|IR_IO;break;
     case N_ASSIGN:e|=IR_WRITE;if(n->replace_owned)e|=IR_DROP;break;
