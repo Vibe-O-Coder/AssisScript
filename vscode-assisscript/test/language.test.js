@@ -4,6 +4,16 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const l = require('../src/language');
 
+test('try_new keeps record and Move enum signature help', () => {
+    const text='struct S<T>{let x:T;}enum E<T>{Some(own T);None;}safe fn main():int{own s:S<int>=try_new S<int>(42);own e:E<S<int>>=try_new E<S<int>>.Some(move(s));return 0;}';
+    const model=l.analyze(text,'fallible.assis');
+    const record=l.signatureAt(model,text.indexOf('S<int>(42)')+7,[model]);
+    assert.match(record.label,/try_new S<int>\(x: int\)/);
+    const variant=l.signatureAt(model,text.indexOf('.Some(')+6,[model]);
+    assert.match(variant.label,/try_new E<S<int>>\.Some/);
+    assert(l.keywords.try_new.includes('null'));
+});
+
 test('constants, character braces and super use the canonical model', () => {
     const model=l.analyze("namespace a;public const OPEN:byte='{';const HIDDEN:int=1;public class B{fn get(borrow self):int{return 1;}}public class C extends B{fn get(borrow self):int{return super.get();}}",'new.assis');
     assert(model.symbols.some(s=>s.name==='a::OPEN'&&s.kind==='constant'&&!s.modulePrivate));

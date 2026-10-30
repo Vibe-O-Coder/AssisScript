@@ -1,7 +1,7 @@
 /* Lexical analysis and source diagnostics. Included by the compiler driver. */
 enum {
     T_EOF=256,T_ID,T_INT,T_STR,T_CLASS,T_EXTENDS,T_FN,T_LET,T_I64,T_U8,T_BOOL,T_TEXT,T_VOID,
-    T_IF,T_ELSE,T_WHILE,T_RETURN,T_PRINT,T_NEW,T_FREE,T_SELF,T_TRUE,T_FALSE,T_NULL,
+    T_IF,T_ELSE,T_WHILE,T_RETURN,T_PRINT,T_NEW,T_TRY_NEW,T_FREE,T_SELF,T_TRUE,T_FALSE,T_NULL,
     T_BREAK,T_CONTINUE,T_ALLOC,T_LEN,T_EQ,T_NE,T_LE,T_GE,T_AND,T_OR,T_SHL,T_SHR,
     T_ADDSET,T_SUBSET,T_MULSET,T_DIVSET,T_MODSET,T_ANDSET,T_ORSET,T_XORSET,T_SHLSET,T_SHRSET,T_IMPORT,T_FILE_END,
     T_INC,T_DEC,T_YURI,T_BODY,T_STRUCT,T_BUFFER,T_TRY_BUFFER,T_ASSERT,T_BYTES,T_OWN,T_BORROW,T_MUT,T_MOVE,T_DEFER,T_DIV,T_FOR,T_READ,T_NOW,T_SAFE,T_UNSAFE,
@@ -15,7 +15,7 @@ static const Word words[]={
     {"slice",T_SLICE},
     {"let",T_LET},{"int",T_I64},{"byte",T_U8},{"bool",T_BOOL},{"text",T_TEXT},{"void",T_VOID},
     {"if",T_IF},{"else",T_ELSE},{"while",T_WHILE},{"return",T_RETURN},{"print",T_PRINT},
-    {"new",T_NEW},{"free",T_FREE},{"self",T_SELF},{"true",T_TRUE},{"false",T_FALSE},{"null",T_NULL},
+    {"new",T_NEW},{"try_new",T_TRY_NEW},{"free",T_FREE},{"self",T_SELF},{"true",T_TRUE},{"false",T_FALSE},{"null",T_NULL},
     {"break",T_BREAK},{"continue",T_CONTINUE},{"alloc",T_BUFFER},{"try_alloc",T_TRY_BUFFER},{"len",T_LEN},{"extends",T_EXTENDS},
     {"struct",T_STRUCT},{"assert",T_ASSERT},{"bytes",T_BYTES},
     {"own",T_OWN},{"borrow",T_BORROW},{"mut",T_MUT},{"move",T_MOVE},{"safe",T_SAFE},{"unsafe",T_UNSAFE},

@@ -112,14 +112,14 @@
       "name": "owned",
       "required": false,
       "doc": "BIBLIOTECA-proprios.md",
-      "description": "Coleções de recursos Move com empréstimos, mutação e transferência segura.",
+      "description": "Coleções Move com empréstimos, transferências e try_push recuperável.",
       "dependencies": []
     },
     {
       "name": "arena",
       "required": false,
       "doc": "BIBLIOTECA-arena.md",
-      "description": "Identidades locais com categoria, instância, geração e transferência de recursos.",
+      "description": "Handles geracionais e try_insert recuperável com resultado Copy, sem quota total de memória.",
       "dependencies": [
         "owned"
       ]
@@ -178,7 +178,10 @@
       "description": "Janela nativa confiável com provider Windows x64 opcional, eventos e descarte próprio.",
       "dependencies": [],
       "externalDependencies": {
-        "windows-x64": ["assis_platform_v1.dll built from providers/platform/windows.c", "Windows 10 1703+ User32/GDI/UCRT"]
+        "windows-x64": [
+          "assis_platform_v1.dll built from providers/platform/windows.c",
+          "Windows 10 1703+ User32/GDI/UCRT"
+        ]
       }
     },
     {

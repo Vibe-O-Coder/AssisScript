@@ -158,7 +158,7 @@ static Node *prefix(void){
     case T_CHAR:case T_REAL:n=node(N_INT,t);break;case T_INT:n=node(N_INT,t);break;case T_STR:n=node(N_STR,t);break;
     case T_TRUE:case T_FALSE:n=node(N_BOOL,t);break;case T_NULL:n=node(N_NULL,t);break;
     case T_SUPER:case T_SELF:n=node(N_SELF,t);n->op=t->kind;break;case T_ID:n=node(N_NAME,qualified_token(t));break;
-    case T_NEW:n=node(N_NEW,t);n->decl=parse_type();if((n->decl.kind!=TY_OBJ&&n->decl.kind!=TY_APPLY)||n->decl.depth)error(t,"new exige classe, struct ou coleção");if(accept('.'))n->variant_name=expect(T_ID);args(&n->items);break;
+    case T_NEW:case T_TRY_NEW:n=node(N_NEW,t);n->op=t->kind;n->decl=parse_type();if((n->decl.kind!=TY_OBJ&&n->decl.kind!=TY_APPLY)||n->decl.depth)error(t,"new exige classe, struct ou coleção");if(accept('.'))n->variant_name=expect(T_ID);args(&n->items);break;
     case T_BUFFER:case T_TRY_BUFFER:n=node(N_BUILTIN,t);n->op=t->kind;expect('<');n->decl=parse_type();generic_end();args(&n->items);break;
     case '[':n=node(N_ARRAY,t);if(peek()->kind!=']'){do{push(&n->items,expression(1));}while(accept(',')&&peek()->kind!=']');}expect(']');break;
     case T_NUMTYPE:n=node(N_BUILTIN,t);n->op=T_NUMTYPE;n->decl=numeric_type(t->text);args(&n->items);break;
@@ -533,7 +533,7 @@ static Type check_expr(Node *n){
         if(g){Token *site=n->t;Node *value=copy_constant(constant_source(g),0);Type actual=check_expr(value);require_assign(g->ty,actual,site);*n=*value;n->ty=g->ty;check_depth--;return n->ty;}
     }
     if(checking->pure){
-        if((n->kind==N_NEW&&!value_type(n->decl))||n->kind==N_ARRAY||n->kind==N_STR||n->kind==N_NULL||n->kind==N_SELF||n->kind==N_INDEX)
+        if((n->kind==N_NEW&&(n->op==T_TRY_NEW||!value_type(n->decl)))||n->kind==N_ARRAY||n->kind==N_STR||n->kind==N_NULL||n->kind==N_SELF||n->kind==N_INDEX)
             error(n->t,"pure permite apenas valores int, byte e bool nesta etapa");
         if(n->kind==N_UNARY&&(n->op=='&'||n->op=='*'))error(n->t,"pure não permite ponteiros");
         if(n->kind==N_BUILTIN&&n->op!=T_I64&&n->op!=T_U8&&n->op!=T_NUMTYPE&&n->op!=T_BOOL)error(n->t,"efeito não permitido em pure: %s",n->t->text);
@@ -602,6 +602,7 @@ static Type check_expr(Node *n){
     }
     case N_NEW:{
         n->cls=find_class(n->decl.name);if(!n->cls)error(n->t,"classe inexistente para new: %s",n->decl.name);
+        if(n->op==T_TRY_NEW&&n->cls->value)error(n->t,"try_new exige objeto gerenciado; value struct/enum usa new sem heap");
         if(n->cls->closure){
             if(n->items.n!=n->cls->fields.n)error(n->t,"construção de closure exige uma expressão por captura");
             for(int i=0;i<n->items.n;i++){Field *f=n->cls->fields.v[i];require_assign(f->ty,expected_expr(f->ty,n->items.v[i]),n->t);}

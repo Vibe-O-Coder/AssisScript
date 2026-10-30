@@ -1,0 +1,27 @@
+ASSIS values: 334 invocações; C:\Users\babus\Desktop\AssisScript\worktrees\m1-fallible-slots\build\assis-slots-final.exe
+test_records_copy_independently (__main__.Values.test_records_copy_independently) ... ok
+test_tail_recursion_preserves_argument_order_and_value_results (__main__.Values.test_tail_recursion_preserves_argument_order_and_value_results) ... ok
+test_nested_layout_and_zero_padding (__main__.Values.test_nested_layout_and_zero_padding) ... ok
+test_layout_and_frame_limits_are_checked_without_expansion (__main__.Values.test_layout_and_frame_limits_are_checked_without_expansion) ... ok
+test_managed_functional_callbacks_with_copy_records (__main__.Values.test_managed_functional_callbacks_with_copy_records) ... ok
+test_function_values_and_composite_returns (__main__.Values.test_function_values_and_composite_returns) ... ok
+test_callbacks_in_records_and_symbolic_match_bindings (__main__.Values.test_callbacks_in_records_and_symbolic_match_bindings) ... ok
+test_virtual_and_generic_methods_return_values (__main__.Values.test_virtual_and_generic_methods_return_values) ... ok
+test_aggregate_arguments_snapshot_before_later_effects (__main__.Values.test_aggregate_arguments_snapshot_before_later_effects) ... ok
+test_arrays_maps_buffers_and_legacy_embedded_values (__main__.Values.test_arrays_maps_buffers_and_legacy_embedded_values) ... ok
+test_enum_nested_generic_and_exhaustive_returns (__main__.Values.test_enum_nested_generic_and_exhaustive_returns) ... ok
+test_enum_union_size_canonical_and_copy (__main__.Values.test_enum_union_size_canonical_and_copy) ... ok
+test_match_evaluates_subject_once_and_preserves_scope (__main__.Values.test_match_evaluates_subject_once_and_preserves_scope) ... ok
+test_match_flow_joins_only_continuing_arms (__main__.Values.test_match_flow_joins_only_continuing_arms) ... ok
+test_match_break_continue_and_drop (__main__.Values.test_match_break_continue_and_drop) ... ok
+test_result_option_standard_library (__main__.Values.test_result_option_standard_library) ... ok
+test_immutable_deep_fields_and_binding (__main__.Values.test_immutable_deep_fields_and_binding) ... ok
+test_rejected_layout_and_ownership (__main__.Values.test_rejected_layout_and_ownership) ... ok
+test_match_diagnostics_and_constructors (__main__.Values.test_match_diagnostics_and_constructors) ... ok
+test_pure_unused_templates_reject_effects_inside_match (__main__.Values.test_pure_unused_templates_reject_effects_inside_match) ... ok
+test_safe_value_construction_and_buffer_bounds (__main__.Values.test_safe_value_construction_and_buffer_bounds) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 9.945s
+
+OK

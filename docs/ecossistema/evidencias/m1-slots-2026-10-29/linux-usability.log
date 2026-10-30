@@ -1,0 +1,15 @@
+test_all_output_formats_and_platform_filtering (__main__.Usability.test_all_output_formats_and_platform_filtering) ... ok
+test_constants_characters_names_and_module_visibility (__main__.Usability.test_constants_characters_names_and_module_visibility) ... ok
+test_constructor_chaining_dynamic_dispatch_and_downcasts (__main__.Usability.test_constructor_chaining_dynamic_dispatch_and_downcasts) ... ok
+test_generated_api_includes_constants_and_canonical_method_syntax (__main__.Usability.test_generated_api_includes_constants_and_canonical_method_syntax) ... ok
+test_historical_syntax_is_not_a_compatibility_mode (__main__.Usability.test_historical_syntax_is_not_a_compatibility_mode) ... ok
+test_owned_indexed_collection_scales_and_transfers (__main__.Usability.test_owned_indexed_collection_scales_and_transfers) ... ok
+test_owned_utf8_builder_and_decimal_display (__main__.Usability.test_owned_utf8_builder_and_decimal_display) ... ok
+test_receiver_reservations_allow_reads_and_reject_aliasing_mutations (__main__.Usability.test_receiver_reservations_allow_reads_and_reject_aliasing_mutations) ... ok
+test_seeded_random_and_managed_sort (__main__.Usability.test_seeded_random_and_managed_sort) ... ok
+test_static_utf8_slices_nul_and_unformatted_write (__main__.Usability.test_static_utf8_slices_nul_and_unformatted_write) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 3.882s
+
+OK

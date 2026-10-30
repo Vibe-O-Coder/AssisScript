@@ -156,3 +156,9 @@ test-fallible-allocation: bin/assis
 	python3 tests/test-fallible-allocation.py
 
 test-alpha15: test-fallible-allocation
+
+.PHONY: test-fallible-slots
+test-fallible-slots: bin/assis
+	python3 tests/test-fallible-slots.py
+
+test-alpha15: test-fallible-slots

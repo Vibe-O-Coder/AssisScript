@@ -50,7 +50,30 @@ static void backend_emit_call(BackendValue *v){
     else call_label(v->callee->label);
     clean_stack(v->arguments.n+((v->mode==BC_VIRTUAL||v->mode==BC_SUPER)?1:0)+(v->temp?1:0));
 }
+static void backend_emit_try_construct(BackendValue *v){
+    /* Reserve first, then evaluate every argument once, even on refusal.
+     * Own arguments are consumed in both branches; failure drops in reverse. */
+    immediate(RDI,(uint64_t)v->layout->size);site(RSI,v->site);rt_call(RT_try_alloc);INS(0x50);
+    for(int i=0;i<v->arguments.n;i++){backend_emit_value(v->arguments.v[i]);INS(0x50);}
+    load_stack(RAX,v->arguments.n*8);INS(0x48,0x85,0xc0);int failed=new_label(),done=new_label();branch_if(0x84,failed);
+    if(v->tagged){INS(0x48,0xc7,0x00);u32(&code,(uint32_t)v->offset);}
+    else{
+        load_label(v->layout->label);load_stack(RDX,v->arguments.n*8);INS(0x48,0x89,0x02);
+        for(int i=0;i<v->fields.n;i++){Field *f=v->fields.v[i];if(equal_type(f->ty,type_str)){load_label(string_label("",0));load_stack(RDX,v->arguments.n*8);INS(0x48,0x89,0x82);u32(&code,(uint32_t)f->offset);}}
+    }
+    if(v->tagged||v->layout->record){
+        for(int i=0;i<v->arguments.n;i++){Field *f=v->fields.v[i];load_stack(RAX,(v->arguments.n-1-i)*8);load_stack(RDX,v->arguments.n*8);INS(0x48,0x81,0xc2);u32(&code,(uint32_t)f->offset);store_value(f->ty);}
+    }else if(v->callee){load_stack(RAX,v->arguments.n*8);call_label(v->callee->label);}
+    clean_stack(v->arguments.n);INS(0x58);branch(done);
+    mark(failed,&code);
+    for(int i=v->arguments.n-1;i>=0;i--){
+        bool owned=(v->tagged||v->layout->record)?((Field*)v->fields.v[i])->owned:v->callee&&((Var*)v->callee->params.v[i])->ownership==1;
+        if(owned){load_stack(RAX,(v->arguments.n-1-i)*8);gen_release(((BackendValue*)v->arguments.v[i])->type);}
+    }
+    clean_stack(v->arguments.n);INS(0x58);mark(done,&code);
+}
 static void backend_emit_construct(BackendValue *v){
+    if(v->op==T_TRY_NEW){backend_emit_try_construct(v);return;}
     if(v->layout->value){
         local_address(RDI,v->temp);immediate(RCX,(uint64_t)v->layout->size);INS(0x31,0xc0,0xfc,0xf3,0xaa);
         if(v->tagged){local_address(RDX,v->temp);INS(0x48,0xc7,0x02);u32(&code,(uint32_t)v->offset);}

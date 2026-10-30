@@ -40,6 +40,24 @@ public final class OwnedList<T> {
 // A sparse binary index keeps both lookup and destruction depth logarithmic.
 // Leaf values move independently; internal nodes only own child nodes.
 struct ArrayNode<T>{own value:T;own left:ArrayNode<T>;own right:ArrayNode<T>;}
+// Existing nodes are changed only after the last fallible reservation succeeds.
+// Detached candidates own every partially prepared path and clean it on refusal.
+safe fn array_try_put<T>(borrow mut node:ArrayNode<T>,index:int,capacity:int,own value:T):bool {
+    if(capacity==1){node.value=move(value);return true;}
+    val half:int=capacity/2;
+    if(index<half){
+        if(node.left!=null){return array_try_put::<T>(node.left,index,half,move(value));}
+        own candidate:ArrayNode<T>=try_new ArrayNode<T>();
+        if(candidate==null){return false;}
+        if(!array_try_put::<T>(candidate,index,half,move(value))){return false;}
+        node.left=move(candidate);return true;
+    }
+    if(node.right!=null){return array_try_put::<T>(node.right,index-half,half,move(value));}
+    own candidate:ArrayNode<T>=try_new ArrayNode<T>();
+    if(candidate==null){return false;}
+    if(!array_try_put::<T>(candidate,index-half,half,move(value))){return false;}
+    node.right=move(candidate);return true;
+}
 safe fn array_put<T>(borrow mut node:ArrayNode<T>,index:int,capacity:int,own value:T):void {
     if(capacity==1){node.value=move(value);return;}
     val half:int=capacity/2;
@@ -90,6 +108,25 @@ public final class OwnedArray<T> {
     private let count:int;
     private let capacity:int;
     fn size(borrow self):int{return self.count;}
+    /// Consumes value on both outcomes. False drops it and preserves the array.
+    fn try_push(borrow mut self,own value:T):bool {
+        if(self.capacity==0){
+            own candidate:ArrayNode<T>=try_new ArrayNode<T>();
+            if(candidate==null){return false;}
+            candidate.value=move(value);self.root=move(candidate);self.capacity=1;
+        }else if(self.count==self.capacity){
+            if(self.capacity>0x2000_0000_0000_0000){return false;}
+            val capacity:int=self.capacity*2;val index:int=self.count;
+            own candidate:ArrayNode<T>=try_new ArrayNode<T>();
+            if(candidate==null){return false;}
+            if(!array_try_put::<T>(candidate,index,capacity,move(value))){return false;}
+            candidate.left=move(self.root);self.root=move(candidate);self.capacity=capacity;
+        }else{
+            val capacity:int=self.capacity;val index:int=self.count;
+            if(!array_try_put::<T>(self.root,index,capacity,move(value))){return false;}
+        }
+        self.count+=1;return true;
+    }
     fn push(borrow mut self,own value:T):void {
         if(self.capacity==0){self.root=new ArrayNode<T>();self.capacity=1;}
         else if(self.count==self.capacity){

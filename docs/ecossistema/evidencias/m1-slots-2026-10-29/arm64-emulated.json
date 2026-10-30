@@ -1,0 +1,110 @@
+{
+  "execution": "qemu-aarch64 on Linux x64; not native ARM64",
+  "compiler_sha256": "034d61bfe7b1106f53b4e5dadec1100faffaa4292688adfc5cd5a4f2ff9ae78c",
+  "qemu": "qemu-aarch64 version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+  "passed": true,
+  "cases": [
+    {
+      "source": "exemplos/37_fallible_slots.assis",
+      "source_sha256": "4098fe4174b9228a95c51b88f7d3df809c4ef4a5dab1b7d171eb6f55ae140215",
+      "flags": [],
+      "binary_sha256": "b4600a05e191f9169430e8a9c0c0d458b945466fee94ad6d9a9f7f95c9f49996",
+      "return_code": 0,
+      "stdout": "42 1\n",
+      "stderr": "",
+      "passed": true,
+      "build_command": [
+        "/mnt/c/Users/babus/Desktop/AssisScript/worktrees/m1-fallible-slots/build/assis-slots-final-linux",
+        "build",
+        "exemplos/37_fallible_slots.assis",
+        "--target",
+        "linux-arm64",
+        "--debug",
+        "-o",
+        "/tmp/assis-slots-arm64-x8ziy86i/candidate"
+      ],
+      "run_command": [
+        "qemu-aarch64",
+        "<generated-linux-arm64>"
+      ]
+    },
+    {
+      "source": "exemplos/37_fallible_slots.assis",
+      "source_sha256": "4098fe4174b9228a95c51b88f7d3df809c4ef4a5dab1b7d171eb6f55ae140215",
+      "flags": [
+        "--no-opt"
+      ],
+      "binary_sha256": "76fd44585816cc3c0a44bf872b4f8b0b913796fe50e2643715b897b3a215e55b",
+      "return_code": 0,
+      "stdout": "42 1\n",
+      "stderr": "",
+      "passed": true,
+      "build_command": [
+        "/mnt/c/Users/babus/Desktop/AssisScript/worktrees/m1-fallible-slots/build/assis-slots-final-linux",
+        "build",
+        "exemplos/37_fallible_slots.assis",
+        "--target",
+        "linux-arm64",
+        "--debug",
+        "-o",
+        "/tmp/assis-slots-arm64-x8ziy86i/candidate",
+        "--no-opt"
+      ],
+      "run_command": [
+        "qemu-aarch64",
+        "<generated-linux-arm64>"
+      ]
+    },
+    {
+      "source": "tests/fixtures/fallible-construct.assis",
+      "source_sha256": "beaffa4a68477c575d0076e050efebb0a3bf0da1e333474a3193503115549eff",
+      "flags": [],
+      "binary_sha256": "9c44267f970e57c11be9361e470c5108b0b3eb8262fd550861749c487e91fea1",
+      "return_code": 0,
+      "stdout": "11\n12\n42 7\n2\n1\n",
+      "stderr": "",
+      "passed": true,
+      "build_command": [
+        "/mnt/c/Users/babus/Desktop/AssisScript/worktrees/m1-fallible-slots/build/assis-slots-final-linux",
+        "build",
+        "tests/fixtures/fallible-construct.assis",
+        "--target",
+        "linux-arm64",
+        "--debug",
+        "-o",
+        "/tmp/assis-slots-arm64-x8ziy86i/candidate"
+      ],
+      "run_command": [
+        "qemu-aarch64",
+        "<generated-linux-arm64>"
+      ]
+    },
+    {
+      "source": "tests/fixtures/fallible-construct.assis",
+      "source_sha256": "beaffa4a68477c575d0076e050efebb0a3bf0da1e333474a3193503115549eff",
+      "flags": [
+        "--no-opt"
+      ],
+      "binary_sha256": "d14987de01d697ddd819e5162fc15e03fce9b7bc15a38c349f7b9ba243f973d3",
+      "return_code": 0,
+      "stdout": "11\n12\n42 7\n2\n1\n",
+      "stderr": "",
+      "passed": true,
+      "build_command": [
+        "/mnt/c/Users/babus/Desktop/AssisScript/worktrees/m1-fallible-slots/build/assis-slots-final-linux",
+        "build",
+        "tests/fixtures/fallible-construct.assis",
+        "--target",
+        "linux-arm64",
+        "--debug",
+        "-o",
+        "/tmp/assis-slots-arm64-x8ziy86i/candidate",
+        "--no-opt"
+      ],
+      "run_command": [
+        "qemu-aarch64",
+        "<generated-linux-arm64>"
+      ]
+    }
+  ]
+}

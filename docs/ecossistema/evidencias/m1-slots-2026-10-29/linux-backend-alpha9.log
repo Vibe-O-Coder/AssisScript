@@ -1,0 +1,9 @@
+test_dead_code_preserves_diagnostics_and_runtime (__main__.Backend.test_dead_code_preserves_diagnostics_and_runtime) ... ok
+test_elf_is_position_independent_with_no_writable_code (__main__.Backend.test_elf_is_position_independent_with_no_writable_code) ... ok
+test_gdb_parameters_locals_and_nested_shadowing (__main__.Backend.test_gdb_parameters_locals_and_nested_shadowing) ... ok
+test_ir_cfg_types_effects_and_all_successors (__main__.Backend.test_ir_cfg_types_effects_and_all_successors) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.733s
+
+OK

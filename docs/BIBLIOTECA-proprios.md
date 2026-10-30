@@ -83,3 +83,11 @@ de página, gerações, isolamento nem conformidade HTDL.
 
 Validação e limites: [relatório M0 de coleções](relatorios/2026-10-29-m0-owned.md).
 O próximo contrato de identidades estáveis está no [plano do ecossistema](ecossistema/PLANO-MESTRE.md).
+
+`OwnedArray.try_push(own value):bool` usa reserva recuperável do caminho de
+índice. Consome value nos dois resultados; false o destrói uma única vez e
+preserva tamanho, capacidade, posições e recursos anteriores. O crescimento
+prepara ramos separados antes de publicar a troca. Não oferece quota em bytes
+nem reserve geral; o controlador e push/pop/swap_remove existentes conservam
+seus contratos. Custos O(log capacidade), incluindo rollback do caminho.
+Contrato e evidência: [inserções recuperáveis](INSERCAO-FALLIVEL.md).

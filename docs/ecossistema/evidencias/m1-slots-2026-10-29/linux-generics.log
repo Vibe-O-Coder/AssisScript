@@ -1,0 +1,19 @@
+ASSIS generics: 305 invocações; /mnt/c/Users/babus/Desktop/AssisScript/worktrees/m1-fallible-slots/build/assis-slots-final-linux
+test_arity_explicit_arguments_and_invalid_declarations (__main__.Generics.test_arity_explicit_arguments_and_invalid_declarations) ... ok
+test_cache_reuses_types_and_limits_distinct_specializations (__main__.Generics.test_cache_reuses_types_and_limits_distinct_specializations) ... ok
+test_expanding_function_and_struct_rejected_deterministically (__main__.Generics.test_expanding_function_and_struct_rejected_deterministically) ... ok
+test_identity_scalar_specializations_and_pure (__main__.Generics.test_identity_scalar_specializations_and_pure) ... ok
+test_modules_diagnostics_and_lazy_body_validation (__main__.Generics.test_modules_diagnostics_and_lazy_body_validation) ... ok
+test_nested_types_arrays_maps_and_contextual_literals (__main__.Generics.test_nested_types_arrays_maps_and_contextual_literals) ... ok
+test_nominal_identity_and_no_conflation_of_type_parameters (__main__.Generics.test_nominal_identity_and_no_conflation_of_type_parameters) ... ok
+test_ownership_is_checked_on_each_concrete_instance (__main__.Generics.test_ownership_is_checked_on_each_concrete_instance) ... ok
+test_pointer_substitution_and_finite_recursive_struct (__main__.Generics.test_pointer_substitution_and_finite_recursive_struct) ... ok
+test_private_access_does_not_gain_callers_authority (__main__.Generics.test_private_access_does_not_gain_callers_authority) ... ok
+test_pure_templates_reject_effects_even_when_unused (__main__.Generics.test_pure_templates_reject_effects_even_when_unused) ... ok
+test_structs_multiple_parameters_and_scoped_type_variables (__main__.Generics.test_structs_multiple_parameters_and_scoped_type_variables) ... ok
+test_transitive_queue_recursion_and_repeated_instances (__main__.Generics.test_transitive_queue_recursion_and_repeated_instances) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 4.788s
+
+OK

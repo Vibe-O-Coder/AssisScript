@@ -1,0 +1,18 @@
+test_buffers_preserve_owned_payload (__main__.Arena.test_buffers_preserve_owned_payload) ... ok
+test_close_reset_and_instance_exhaustion (__main__.Arena.test_close_reset_and_instance_exhaustion) ... ok
+test_constructor_preconditions_and_zero_slot_limit (__main__.Arena.test_constructor_preconditions_and_zero_slot_limit) ... ok
+test_drop_once_after_rejection_removal_reset_and_close (__main__.Arena.test_drop_once_after_rejection_removal_reset_and_close) ... ok
+test_exhausted_generation_retires_slot_without_wrap_and_returns_ownership (__main__.Arena.test_exhausted_generation_retires_slot_without_wrap_and_returns_ownership) ... ok
+test_forged_domains_generations_and_indices_are_rejected_before_lookup (__main__.Arena.test_forged_domains_generations_and_indices_are_rejected_before_lookup) ... ok
+test_invalid_get_is_contract_error_and_init_cannot_replay_old_instance (__main__.Arena.test_invalid_get_is_contract_error_and_init_cannot_replay_old_instance) ... ok
+test_loans_block_mutation_close_reset_and_owner_destruction (__main__.Arena.test_loans_block_mutation_close_reset_and_owner_destruction) ... ok
+test_local_loans_cannot_escape (__main__.Arena.test_local_loans_cannot_escape) ... ok
+test_random_operations_against_independent_logical_object_model (__main__.Arena.test_random_operations_against_independent_logical_object_model) ... ok
+test_recycling_preserves_other_identities_and_nested_mutation (__main__.Arena.test_recycling_preserves_other_identities_and_nested_mutation) ... ok
+test_repeated_recycling_stays_within_slot_quota (__main__.Arena.test_repeated_recycling_stays_within_slot_quota) ... ok
+test_typed_ir_output_formats_and_example (__main__.Arena.test_typed_ir_output_formats_and_example) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 18.877s
+
+OK

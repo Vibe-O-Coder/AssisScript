@@ -89,3 +89,8 @@ Próxima obrigação de E02-03: tornar criação/reserva de arena e coleções M
 recuperáveis, com quota compartilhada por documento, rollback de cada alocação
 e injeção de falhas por fronteira. OOM de objetos, enums, closures e serviços,
 quotas completas e integração Browser continuam abertos. Nenhum gate é fechado.
+
+Continuação de 30/10: [try_new, try_push e try_insert](INSERCAO-FALLIVEL.md)
+recuperam a reserva inicial de objetos e a criação de slots/ramos. As quotas
+compartilhadas, controladores, remove e recuperação de serviços ainda estão
+abertos. Os resultados acima continuam pertencendo à primeira fatia de buffers.

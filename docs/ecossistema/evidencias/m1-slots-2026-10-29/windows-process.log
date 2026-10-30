@@ -1,0 +1,9 @@
+test_embedded_nul_and_limits_rejected_without_spawning (__main__.Process.test_embedded_nul_and_limits_rejected_without_spawning) ... ok
+test_repeated_processes_release_runtime_resources (__main__.Process.test_repeated_processes_release_runtime_resources) ... ok
+test_stdout_stderr_and_nonzero_exit (__main__.Process.test_stdout_stderr_and_nonzero_exit) ... ok
+test_timeout_output_limit_and_recovery (__main__.Process.test_timeout_output_limit_and_recovery) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 7.353s
+
+OK

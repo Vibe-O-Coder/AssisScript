@@ -5,6 +5,8 @@ import "std/owned.assis";
 public value struct Handle{let category:int;let instance:int;let slot:int;let generation:int;}
 public enum Insertion<T>{Inserted(Handle);Rejected(int,own T);}
 public enum Removal<T>{Missing;Removed(own T);}
+/// No heap allocation for the result. Rejection consumes/drops the input value.
+public enum InsertStatus{Inserted(Handle);Rejected(int);}
 struct Slot<T>{own value:T;let generation:int;let occupied:bool;let next:int;}
 
 safe fn take_slot<T>(borrow mut slot:Slot<T>):own T{
@@ -35,6 +37,26 @@ public final class Arena<T>{
            handle.slot<0 || handle.slot>=self.slots.size() || handle.generation<=0){return false;}
         borrow slot:Slot<T>=self.slots.get(handle.slot);
         return slot.occupied && slot.generation==handle.generation;
+    }
+    /// Rejection: 1 closed, 2 slot limit, 3 allocator refusal. No state changes.
+    fn try_insert(borrow mut self,own value:T):InsertStatus{
+        if(!self.active){return new InsertStatus.Rejected(1);}
+        let index:int=self.free_head;let generation:int=1;
+        if(index>=0){
+            let next:int=-1;
+            {borrow mut slot:Slot<T>=self.slots.get_mut(index);
+             next=slot.next;generation=slot.generation;slot.value=move(value);slot.occupied=true;slot.next=-1;}
+            self.free_head=next;
+        }else{
+            index=self.slots.size();
+            if(index>=self.slot_limit){return new InsertStatus.Rejected(2);}
+            own slot:Slot<T>=try_new Slot<T>();
+            if(slot==null){return new InsertStatus.Rejected(3);}
+            slot.generation=1;slot.occupied=true;slot.next=-1;slot.value=move(value);
+            if(!self.slots.try_push(move(slot))){return new InsertStatus.Rejected(3);}
+        }
+        self.count+=1;
+        return new InsertStatus.Inserted(new Handle(self.category,self.instance,index,generation));
     }
     fn insert(borrow mut self,own value:T):own Insertion<T>{
         if(!self.active){return new Insertion<T>.Rejected(1,move(value));}

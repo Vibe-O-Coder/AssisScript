@@ -112,7 +112,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Collections AST tests failed' }
           python tests/test-ownership-functions.py
           if ($LASTEXITCODE -ne 0) { throw 'Ownership function tests failed' }
-          foreach ($suite in @('values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy','ffi','http','process','applications-bc','safe-default','net','move-enums','closures','usability','backend-evolution','complete-ir','increment','owned-mutation','htdl-readiness','arena','fallible-allocation')) {
+          foreach ($suite in @('values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy','ffi','http','process','applications-bc','safe-default','net','move-enums','closures','usability','backend-evolution','complete-ir','increment','owned-mutation','htdl-readiness','arena','fallible-allocation','fallible-slots')) {
             python ('tests/test-' + $suite + '.py')
             if ($LASTEXITCODE -ne 0) { throw ('New suite failed: ' + $suite) }
           }

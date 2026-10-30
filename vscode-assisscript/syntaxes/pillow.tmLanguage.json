@@ -30,7 +30,7 @@
     },
     {
       "name": "support.function.assis",
-      "match": "\\b(?:new|write|utf8|free|print|len|slice_of|alloc|try_alloc|assert|bytes|move|read_bytes|monotonic_ms|sleep_ms|civil_ms|write_bytes|file_sync|file_replace|file_remove|file_open|file_read|file_write|file_close|io_error|arg_count|arg_size|arg_copy)\\b"
+      "match": "\\b(?:new|try_new|write|utf8|free|print|len|slice_of|alloc|try_alloc|assert|bytes|move|read_bytes|monotonic_ms|sleep_ms|civil_ms|write_bytes|file_sync|file_replace|file_remove|file_open|file_read|file_write|file_close|io_error|arg_count|arg_size|arg_copy)\\b"
     },
     {
       "name": "constant.language.assis",

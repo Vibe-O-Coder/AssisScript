@@ -1,10 +1,10 @@
 # Progresso — capacidade do AssisScript para o ecossistema web
 
-Data: 2026-10-29. Régua v1. **21,90/100 pontos (21,90%)**, com **0/5 gates aprovados**.
+Data: 2026-10-30. Régua v1. **22,30/100 pontos (22,30%)**, com **0/5 gates aprovados**.
 
-Estado da avaliação: `partial-native-retest-m1-fallible-buffers`. Escopo: Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.
+Estado da avaliação: `partial-native-retest-m1-fallible-slots`. Escopo: Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.
 
-Alocação de buffers recuperável e ByteBuffer com limite de payload por instância testados nesta unidade em Windows/Linux x64, otimizado/referência. Linux injeta ENOMEM nas dez classes pequenas; ambos exercitam recusa real do sistema e preservação de dados/vizinhos. Somente E02-03 recebe nível 1 de fundação. new, coleções/arenas, quotas completas e Browser continuam abertos; demais créditos conservam suas evidências próprias/provisórias e nenhum gate é aprovado. O número não mede prazo, esforço restante ou prontidão para produção. Casas decimais tornam a soma auditável; não significam precisão de previsão.
+Objetos e inserções recuperáveis validados nesta unidade: 11/11 métodos da suíte nova em cada host Windows/Linux x64, nos modos otimizado/referência, com recusa do OS em cada fronteira de crescimento, recursos e handles preservados. E02-03 passa de 1 para 2 por esse subconjunto útil; quotas compartilhadas, controladores, remove e recuperação de documentos permanecem abertos. Demais créditos conservam evidências próprias/provisórias; nenhum gate é aprovado. O número não mede prazo, esforço restante ou prontidão para produção. Casas decimais tornam a soma auditável; não significam precisão de previsão.
 
 Os 100/100 das antigas fases 0–6 medem outro escopo e permanecem preservados. Esta régua tem 60 critérios em 12 frentes; cinco critérios dividem igualmente o peso de cada frente. Níveis 0–4 rendem 0%, 25%, 50%, 75% e 100% do crédito. Fórmula: `Σ peso × soma(níveis) / 20`. Só há conclusão com todos os critérios em 4 e os cinco gates aprovados.
 
@@ -16,7 +16,7 @@ Os 100/100 das antigas fases 0–6 medem outro escopo e permanecem preservados. 
 | --- | ---: | --- | ---: |
 | E00 — Contratos, arquitetura e rastreabilidade | 4 | 1, 1, 1, 0, 2 | 1,00 |
 | E01 — Linguagem, compilador e garantias semânticas | 14 | 2, 3, 2, 2, 3 | 8,40 |
-| E02 — Memória, coleções, texto e dados grandes | 8 | 2, 2, 1, 2, 1 | 3,20 |
+| E02 — Memória, coleções, texto e dados grandes | 8 | 2, 2, 2, 2, 1 | 3,60 |
 | E03 — Sistema, tarefas, processos e integração de eventos | 10 | 1, 1, 2, 2, 0 | 3,00 |
 | E04 — Plataforma gráfica, entrada e acessibilidade | 10 | 2, 1, 1, 0, 0 | 2,00 |
 | E05 — Rede, URLs e serviços web | 8 | 1, 0, 0, 0, 0 | 0,40 |
@@ -26,7 +26,7 @@ Os 100/100 das antigas fases 0–6 medem outro escopo e permanecem preservados. 
 | E09 — Persistência, perfil e formatos de armazenamento | 8 | 1, 1, 0, 0, 0 | 0,80 |
 | E10 — Rastreamento, indexação e consulta do buscador | 6 | 1, 0, 0, 0, 0 | 0,30 |
 | E11 — Ferramentas, distribuição e aceite integrado | 6 | 2, 2, 2, 1, 1 | 2,40 |
-| **Total** | **100** | **60 critérios** | **21,90** |
+| **Total** | **100** | **60 critérios** | **22,30** |
 
 ## Gates de integração
 
@@ -52,6 +52,7 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 | 2026-10-29 | M1 parcial: arena com identidades geracionais nativas; E02-02 de 1 para 2 | 20,50 | 0/5 |
 | 2026-10-29 | M1 parcial: janela/eventos Windows e desenho por software; E04-02/E04-03 de 0 para 1 | 21,50 | 0/5 |
 | 2026-10-29 | M1 parcial: alocação recuperável de buffers e limite por instância; E02-03 de 0 para 1 | 21,90 | 0/5 |
+| 2026-10-30 | M1 parcial: reserva inicial de objetos e inserções Move/slots recuperáveis; E02-03 de 1 para 2 | 22,30 | 0/5 |
 
 ## Estado e evidência dos 60 critérios
 
@@ -81,7 +82,7 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 | --- | ---: | --- |
 | E02-01 — Coleções proprietárias mutáveis | 2/4 | OwnedArray mutável reconciliado e testado em Windows/Linux x64; mutação, transferência, remoção, drops e modelos independentes. Outras coleções, ordem de filhos e integração completas permanecem abertas. [owned.assis](../../stdlib/owned.assis); [test-owned-mutation.py](../../tests/test-owned-mutation.py); [2026-10-29-m0-owned.md](../../docs/relatorios/2026-10-29-m0-owned.md); [summary.json](../../docs/ecossistema/evidencias/m0-owned-2026-10-29/summary.json) |
 | E02-02 — Arenas e identidades estáveis | 2/4 | Arena genérica nativa com categoria/instância/geração, reciclagem, aposentadoria sem wrap e close/reset; Windows/Linux x64 contra modelo independente. Identidade local não é capacidade; relações ordenadas e integração HTDL continuam abertas. [arena.assis](../../stdlib/arena.assis); [test-arena.py](../../tests/test-arena.py); [2026-10-29-m1-arena.md](../../docs/relatorios/2026-10-29-m1-arena.md); [windows-x64.json](../../docs/ecossistema/evidencias/m1-arena-2026-10-29/windows-x64.json); [linux-x64.json](../../docs/ecossistema/evidencias/m1-arena-2026-10-29/linux-x64.json) |
-| E02-03 — Alocação e quotas recuperáveis | 1/4 | try_alloc<T> recuperável e ByteBuffer com reserva transacional e teto de payload antigo+candidato demonstrados em Windows/Linux x64. Falhas injetadas nas dez classes pequenas no Linux; objetos/coleções/arenas e quotas completas continuam pendentes. [ALOCACAO-FALLIVEL.md](../../docs/ALOCACAO-FALLIVEL.md); [memory.assis](../../stdlib/memory.assis); [test-fallible-allocation.py](../../tests/test-fallible-allocation.py); [summary.json](../../docs/ecossistema/evidencias/m1-alocacao-2026-10-29/summary.json); [2026-10-29-m1-alocacao.md](../../docs/relatorios/2026-10-29-m1-alocacao.md) |
+| E02-03 — Alocação e quotas recuperáveis | 2/4 | Subconjunto útil reproduzido em Windows/Linux x64: buffers com limite próprio, reserva inicial de objetos e inserções Move/slots com rollback sob recusa em cada alocação. Quota compartilhada de documento, controladores/remove e recuperação geral continuam abertos. [ALOCACAO-FALLIVEL.md](../../docs/ALOCACAO-FALLIVEL.md); [memory.assis](../../stdlib/memory.assis); [test-fallible-allocation.py](../../tests/test-fallible-allocation.py); [summary.json](../../docs/ecossistema/evidencias/m1-alocacao-2026-10-29/summary.json); [2026-10-29-m1-alocacao.md](../../docs/relatorios/2026-10-29-m1-alocacao.md); [INSERCAO-FALLIVEL.md](../../docs/INSERCAO-FALLIVEL.md); [2026-10-30-m1-slots-falliveis.md](../../docs/relatorios/2026-10-30-m1-slots-falliveis.md); [summary.json](../../docs/ecossistema/evidencias/m1-slots-2026-10-29/summary.json) |
 | E02-04 — Unicode e edição de texto | 2/4 | String UTF-8 com vida/comprimento existe; processamento linguístico completo não existe. [BIBLIOTECA-unicode.md](../../docs/BIBLIOTECA-unicode.md); [BIBLIOTECA-texto.md](../../docs/BIBLIOTECA-texto.md) |
 | E02-05 — Mapas e armazenamento eficientes | 1/4 | Há mapas e prova de colisões por correção; resistência de custo não comprovada. [COLECOES.md](../../docs/COLECOES.md); `local:assis/docs/AUDITORIA-HTDL.md`; [2026-10-29-m0-microparser.md](../../docs/relatorios/2026-10-29-m0-microparser.md); [htdl-core.assis](../../tests/fixtures/htdl-core.assis); [test-htdl-readiness.py](../../tests/test-htdl-readiness.py) |
 

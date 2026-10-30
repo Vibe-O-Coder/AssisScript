@@ -1,7 +1,8 @@
 # arena — identidades geracionais locais
 
 Módulo opcional dos fontes de desenvolvimento, dependente de `owned`.
-Importe `std/arena.assis`. Não requer sintaxe, ABI ou runtime novos.
+Importe `std/arena.assis`. A continuação try_insert exige o compilador com try_new;
+os pacotes anteriores não recebem a API sem reconstrução.
 
 `Arena<T>(instance,category,slot_limit,generation_limit)` guarda recursos Move
 em slots estáveis. instance/category devem ser positivos; slot_limit não
@@ -18,6 +19,7 @@ política próprios. A arena valida os quatro campos antes de acessar o slot.
 | Operação | Resultado e contrato |
 | --- | --- |
 | `insert(own value:T): own Insertion<T>` | `Inserted(handle)` ou `Rejected(code,own value)`; rejeição transfere o recurso de volta, sem perdê-lo |
+| `try_insert(own value:T): InsertStatus` | Resultado Copy `Inserted(handle)`/`Rejected(code)`, sem heap. Consome o recurso nos dois resultados; rejeição o destrói e mantém todo o estado anterior |
 | `contains(handle): bool` | False para domínio/slot/geração inválidos, removidos ou instância encerrada |
 | `get(handle): borrow(self) T` | Empréstimo compartilhado; exige contains verdadeiro |
 | `get_mut(handle): borrow mut(self) T` | Empréstimo exclusivo da arena inteira; exige contains verdadeiro |
@@ -41,8 +43,11 @@ borrow opcional nessa interface: o verificador atual exige origem viva em todos
 os retornos emprestados. Empréstimos impedem mutação, reset, close e destruição
 do proprietário enquanto estão ativos. init não é chamado manualmente.
 
-A quota é lógica; não é alocação fallível. OOM nativo, inclusive alocação das
-variantes de resultado, ainda é fatal. insert rejeitado exige consumir o
+A quota é lógica e não limita memória total. try_insert recusa OOM em slots e
+ramos do índice com código 3; slot livre é reutilizado sem alocar. Códigos 1/2
+mantêm os significados acima. O controlador, init e remove ainda podem falhar
+fatalmente; insert e suas variantes de resultado conservam o contrato fatal.
+insert rejeitado exige consumir o
 resultado own para preservar/destruir o valor devolvido. Tipos exercitados:
 structs, classes finais com drop e buffers próprios. Não há cópia de recurso.
 
@@ -56,3 +61,6 @@ Veja [exemplo](../exemplos/34_generational_arena.assis),
 [testes](../tests/test-arena.py) e [relatório](relatorios/2026-10-29-m1-arena.md).
 Execução publicada cobre Windows/Linux x64; geração dos demais formatos não
 equivale à execução nativa macOS/ARM64. Não há integração de Browser/HTDL.
+
+Veja [objetos e inserções recuperáveis](INSERCAO-FALLIVEL.md) e
+[exemplo](../exemplos/37_fallible_slots.assis).

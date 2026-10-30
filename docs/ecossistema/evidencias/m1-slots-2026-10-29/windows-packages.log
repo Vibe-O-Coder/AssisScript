@@ -1,0 +1,18 @@
+test_hardlink_alias_deduplication_does_not_omit_dependency_hash (__main__.Packages.test_hardlink_alias_deduplication_does_not_omit_dependency_hash) ... ok
+test_lock_transitive_offline_sha256_and_repeatability (__main__.Packages.test_lock_transitive_offline_sha256_and_repeatability) ... ok
+test_module_local_callbacks_and_lexical_shadowing (__main__.Packages.test_module_local_callbacks_and_lexical_shadowing) ... ok
+test_namespace_malformed_and_public_requires_module (__main__.Packages.test_namespace_malformed_and_public_requires_module) ... ok
+test_overlay_cannot_bypass_dependency_lock (__main__.Packages.test_overlay_cannot_bypass_dependency_lock) ... ok
+test_package_import_escape_and_missing_dependency (__main__.Packages.test_package_import_escape_and_missing_dependency) ... ok
+test_physical_dependency_path_cannot_escape_through_symlink (__main__.Packages.test_physical_dependency_path_cannot_escape_through_symlink) ... skipped 'O host não permite criar symlinks de teste'
+test_private_globals_types_generics_and_impersonation (__main__.Packages.test_private_globals_types_generics_and_impersonation) ... ok
+test_sha256_block_boundaries_and_bom_hash_exact_loaded_bytes (__main__.Packages.test_sha256_block_boundaries_and_bom_hash_exact_loaded_bytes) ... ok
+test_short_long_paths_share_lock_and_unsaved_overlays (__main__.Packages.test_short_long_paths_share_lock_and_unsaved_overlays) ... ok
+test_std_prefix_cannot_disguise_escape_from_dependency (__main__.Packages.test_std_prefix_cannot_disguise_escape_from_dependency) ... ok
+test_two_modules_same_names_and_generic_ast (__main__.Packages.test_two_modules_same_names_and_generic_ast) ... ok
+test_version_cycle_escape_and_invalid_alias_rejected (__main__.Packages.test_version_cycle_escape_and_invalid_alias_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 3.734s
+
+OK (skipped=1)

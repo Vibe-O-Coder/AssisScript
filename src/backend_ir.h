@@ -92,7 +92,7 @@ static BackendValue *backend_value(Node *n){
         else if(!n->fn){v->mode=closure_type(n->a->ty)?BC_CLOSURE:BC_INDIRECT;v->a=backend_value(n->a);}
         for(int i=0;i<n->items.n;i++)push(&v->arguments,backend_value(n->items.v[i]));break;
     case N_NEW:
-        v->kind=BV_CONSTRUCT;v->layout=n->cls;v->callee=n->fn;v->tagged=n->variant!=NULL;v->offset=n->variant?n->variant->tag:0;v->fields=n->variant?n->variant->fields:n->cls->fields;
+        v->kind=BV_CONSTRUCT;v->op=n->op;v->layout=n->cls;v->callee=n->fn;v->tagged=n->variant!=NULL;v->offset=n->variant?n->variant->tag:0;v->fields=n->variant?n->variant->fields:n->cls->fields;
         for(int i=0;i<n->items.n;i++)push(&v->arguments,backend_value(n->items.v[i]));break;
     case N_ARRAY:{
         v->kind=BV_ARRAY;v->callee=n->fn;

@@ -300,6 +300,7 @@ static bool operand_rcx(Node *n){
     if(n->kind==N_NAME&&n->var){load_local(RCX,n->var);return true;}return false;
 }
 static void gen_expr(Node *n);
+static void gen_release(Type ty);
 /* Keep the thin-pointer ABI for legacy text/buffer interop. Immutable local
  * text bindings cache a length alongside their stack slot, including params. */
 static void gen_text_length(Node *n){
@@ -554,6 +555,26 @@ static void gen_expr_inner(Node *n){
         }else call_label(n->fn->label);
         clean_stack(n->items.n+(n->fn->owner?1:0)+(n->temp?1:0));break;
     case N_NEW:{
+        if(n->op==T_TRY_NEW){
+            immediate(RDI,(uint64_t)n->cls->size);site(RSI,n->t);rt_call(RT_try_alloc);INS(0x50);
+            for(int i=0;i<n->items.n;i++){gen_expr(n->items.v[i]);INS(0x50);}
+            load_stack(RAX,n->items.n*8);INS(0x48,0x85,0xc0);int failed=new_label(),done=new_label();branch_if(0x84,failed);
+            Vec fields=n->variant?n->variant->fields:n->cls->fields;
+            if(n->variant){INS(0x48,0xc7,0x00);u32(&code,(uint32_t)n->variant->tag);}
+            else{
+                load_label(n->cls->label);load_stack(RDX,n->items.n*8);INS(0x48,0x89,0x02);
+                for(int i=0;i<fields.n;i++){Field *f=fields.v[i];if(equal_type(f->ty,type_str)){load_label(string_label("",0));load_stack(RDX,n->items.n*8);INS(0x48,0x89,0x82);u32(&code,(uint32_t)f->offset);}}
+            }
+            if(n->variant||n->cls->record){
+                for(int i=0;i<n->items.n;i++){Field *f=fields.v[i];load_stack(RAX,(n->items.n-1-i)*8);load_stack(RDX,n->items.n*8);INS(0x48,0x81,0xc2);u32(&code,(uint32_t)f->offset);store_value(f->ty);}
+            }else if(n->fn){load_stack(RAX,n->items.n*8);call_label(n->fn->label);}
+            clean_stack(n->items.n);INS(0x58);branch(done);mark(failed,&code);
+            for(int i=n->items.n-1;i>=0;i--){
+                bool owned=(n->variant||n->cls->record)?((Field*)fields.v[i])->owned:n->fn&&((Var*)n->fn->params.v[i])->ownership==1;
+                if(owned){load_stack(RAX,(n->items.n-1-i)*8);gen_release(((Node*)n->items.v[i])->ty);}
+            }
+            clean_stack(n->items.n);INS(0x58);mark(done,&code);break;
+        }
         if(n->cls->value){
             local_address(RDI,n->temp);immediate(RCX,(uint64_t)n->cls->size);INS(0x31,0xc0,0xfc,0xf3,0xaa);
             if(n->variant){local_address(RDX,n->temp);INS(0x48,0xc7,0x02);u32(&code,(uint32_t)n->variant->tag);}

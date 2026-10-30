@@ -1,0 +1,14 @@
+test_callback_address_without_a_c_dependency (__main__.FFI.test_callback_address_without_a_c_dependency) ... ok
+test_callback_restores_runtime_and_c_register (__main__.FFI.test_callback_restores_runtime_and_c_register) ... ok
+test_dynamic_elf_format_and_ambiguous_symbols (__main__.FFI.test_dynamic_elf_format_and_ambiguous_symbols) ... ok
+test_external_resources_drop_once_on_all_exits (__main__.FFI.test_external_resources_drop_once_on_all_exits) ... ok
+test_narrow_values_borrowed_buffers_and_function_values (__main__.FFI.test_narrow_values_borrowed_buffers_and_function_values) ... ok
+test_nested_callback_and_alias_deduplication (__main__.FFI.test_nested_callback_and_alias_deduplication) ... ok
+test_platform_branches_are_selected_before_binding (__main__.FFI.test_platform_branches_are_selected_before_binding) ... ok
+test_registers_stack_returns_and_callbacks (__main__.FFI.test_registers_stack_returns_and_callbacks) ... ok
+test_rejections_are_before_emission (__main__.FFI.test_rejections_are_before_emission) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 6.214s
+
+OK

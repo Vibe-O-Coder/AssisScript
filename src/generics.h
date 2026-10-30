@@ -208,7 +208,7 @@ static void check_template_purity(Node *n){
         for(int i=0;i<n->items.n;i++)check_template_purity(n->items.v[i]);
         template_bindings.n=old;return;
     }
-    if(n->kind==N_PRINT||n->kind==N_FREE||n->kind==N_DEFER||(n->kind==N_NEW&&!declared_value_type(n->decl))||n->kind==N_ARRAY||n->kind==N_STR||n->kind==N_NULL||n->kind==N_SELF||n->kind==N_INDEX||n->kind==N_UNSAFE)
+    if(n->kind==N_PRINT||n->kind==N_FREE||n->kind==N_DEFER||(n->kind==N_NEW&&(n->op==T_TRY_NEW||!declared_value_type(n->decl)))||n->kind==N_ARRAY||n->kind==N_STR||n->kind==N_NULL||n->kind==N_SELF||n->kind==N_INDEX||n->kind==N_UNSAFE)
         error(n->t,"efeito ou referência não permitido em template pure");
     if(n->kind==N_UNARY&&(n->op=='&'||n->op=='*'))error(n->t,"pure não permite ponteiros");
     if(n->kind==N_BUILTIN&&n->op!=T_I64&&n->op!=T_U8&&n->op!=T_NUMTYPE&&n->op!=T_BOOL)error(n->t,"efeito não permitido em template pure");
