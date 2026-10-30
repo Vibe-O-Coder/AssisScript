@@ -1,0 +1,13 @@
+test_atomic_config_persistence_restart_and_preservation (__main__.System.test_atomic_config_persistence_restart_and_preservation) ... ok
+test_binary_stdout_stderr_and_filtered_log (__main__.System.test_binary_stdout_stderr_and_filtered_log) ... ok
+test_clocks_sleep_error_and_elapsed_time (__main__.System.test_clocks_sleep_error_and_elapsed_time) ... ok
+test_event_callbacks_obey_effect_and_borrow_contracts (__main__.System.test_event_callbacks_obey_effect_and_borrow_contracts) ... ok
+test_event_capacity_limits_and_finite_budget (__main__.System.test_event_capacity_limits_and_finite_budget) ... ok
+test_event_order_cancel_reschedule_stop_and_reentrancy (__main__.System.test_event_order_cancel_reschedule_stop_and_reentrancy) ... ok
+test_sync_closed_and_remove_missing_are_recoverable (__main__.System.test_sync_closed_and_remove_missing_are_recoverable) ... ok
+test_tempo_iterator_pipeline_and_overflow_boundary (__main__.System.test_tempo_iterator_pipeline_and_overflow_boundary) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 2.161s
+
+OK

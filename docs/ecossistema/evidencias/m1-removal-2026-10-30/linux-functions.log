@@ -1,0 +1,25 @@
+ASSIS functions: 383 invocações; /mnt/c/Users/babus/Desktop/AssisScript/worktrees/ecosystem-20261030/build/assis-linux
+test_effectful_callbacks_void_text_and_safe_widening (__main__.Functions.test_effectful_callbacks_void_text_and_safe_widening) ... ok
+test_fields_arrays_pointers_privacy_and_owner_lifetime (__main__.Functions.test_fields_arrays_pointers_privacy_and_owner_lifetime) ... ok
+test_generic_map_filter_fold_empty_and_ordered_results (__main__.Functions.test_generic_map_filter_fold_empty_and_ordered_results) ... ok
+test_generic_specialized_values_and_function_type_substitution (__main__.Functions.test_generic_specialized_values_and_function_type_substitution) ... ok
+test_global_values_aliases_and_equality (__main__.Functions.test_global_values_aliases_and_equality) ... ok
+test_managed_arguments_cannot_escape_through_indirect_calls (__main__.Functions.test_managed_arguments_cannot_escape_through_indirect_calls) ... ok
+test_methods_remain_bound_calls_without_implicit_closures (__main__.Functions.test_methods_remain_bound_calls_without_implicit_closures) ... ok
+test_modules_and_diagnostics_preserve_specialization_origin (__main__.Functions.test_modules_and_diagnostics_preserve_specialization_origin) ... ok
+test_mutable_alias_shadowing_and_scope_restoration (__main__.Functions.test_mutable_alias_shadowing_and_scope_restoration) ... ok
+test_native_argument_order_callee_once_and_many_arguments (__main__.Functions.test_native_argument_order_callee_once_and_many_arguments) ... ok
+test_nested_signatures_are_invariant_and_canonically_specialized (__main__.Functions.test_nested_signatures_are_invariant_and_canonically_specialized) ... ok
+test_null_default_function_has_runtime_diagnostic (__main__.Functions.test_null_default_function_has_runtime_diagnostic) ... ok
+test_parameters_composition_recursion_and_forward_definitions (__main__.Functions.test_parameters_composition_recursion_and_forward_definitions) ... ok
+test_pure_bodies_reject_transitive_effects_and_dead_branches (__main__.Functions.test_pure_bodies_reject_transitive_effects_and_dead_branches) ... ok
+test_reject_arity_signature_and_nonfunction_operations (__main__.Functions.test_reject_arity_signature_and_nonfunction_operations) ... ok
+test_reject_effect_laundering_through_assignments_returns_and_arguments (__main__.Functions.test_reject_effect_laundering_through_assignments_returns_and_arguments) ... ok
+test_returns_and_chained_indirect_calls (__main__.Functions.test_returns_and_chained_indirect_calls) ... ok
+test_unused_pure_templates_check_callbacks_and_lexical_names (__main__.Functions.test_unused_pure_templates_check_callbacks_and_lexical_names) ... ok
+test_wide_function_types_in_intrinsic_collections_keep_structural_identity (__main__.Functions.test_wide_function_types_in_intrinsic_collections_keep_structural_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 4.865s
+
+OK

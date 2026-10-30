@@ -83,8 +83,9 @@ public final class Arena<T>{
         assert(self.contains(handle));
         return self.slots.get_mut(handle.slot).value;
     }
-    fn remove(borrow mut self,handle:Handle):own Removal<T>{
-        if(!self.contains(handle)){return new Removal<T>.Missing();}
+    /// Transfers a present value without allocating. Invalid handles trap.
+    fn take(borrow mut self,handle:Handle):own T{
+        assert(self.contains(handle));
         own value:T=take_slot::<T>(self.slots.get_mut(handle.slot));
         val head:int=self.free_head;
         if(handle.generation<self.generation_limit){
@@ -92,7 +93,16 @@ public final class Arena<T>{
              slot.generation=handle.generation+1;slot.next=head;}
             self.free_head=handle.slot;
         }
-        self.count-=1;return new Removal<T>.Removed(move(value));
+        self.count-=1;return move(value);
+    }
+    /// Invalid handles leave the arena unchanged. User drops keep their effects.
+    fn erase(borrow mut self,handle:Handle):bool{
+        if(!self.contains(handle)){return false;}
+        own value:T=self.take(handle);return true;
+    }
+    fn remove(borrow mut self,handle:Handle):own Removal<T>{
+        if(!self.contains(handle)){return new Removal<T>.Missing();}
+        return new Removal<T>.Removed(self.take(handle));
     }
     fn close(borrow mut self):void{
         self.active=false;self.count=0;self.free_head=-1;self.slots.clear();

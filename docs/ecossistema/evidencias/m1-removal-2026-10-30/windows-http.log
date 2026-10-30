@@ -1,0 +1,10 @@
+test_bounds_redirects_and_invalid_urls (__main__.HTTP.test_bounds_redirects_and_invalid_urls) ... ok
+test_independent_process_load_and_released_handles (__main__.HTTP.test_independent_process_load_and_released_handles) ... ok
+test_success_binary_status_and_exact_limit (__main__.HTTP.test_success_binary_status_and_exact_limit) ... ok
+test_timeouts_disconnect_and_recovery (__main__.HTTP.test_timeouts_disconnect_and_recovery) ... ok
+test_untrusted_tls_certificate_is_rejected (__main__.HTTP.test_untrusted_tls_certificate_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 17.053s
+
+OK

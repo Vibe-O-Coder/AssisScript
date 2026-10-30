@@ -1,0 +1,11 @@
+test_immediates_scaled_addresses_and_leaf_calls (__main__.Optimization.test_immediates_scaled_addresses_and_leaf_calls) ... ok
+test_inline_preserves_effects_and_argument_order (__main__.Optimization.test_inline_preserves_effects_and_argument_order) ... ok
+test_optimized_bounds_and_traps_are_retained (__main__.Optimization.test_optimized_bounds_and_traps_are_retained) ... ok
+test_range_proof_and_mutation_call_unsafe_fallbacks (__main__.Optimization.test_range_proof_and_mutation_call_unsafe_fallbacks) ... ok
+test_strided_negative_extreme_keys_and_tombstones (__main__.Optimization.test_strided_negative_extreme_keys_and_tombstones) ... ok
+test_zeroed_fresh_and_reused_allocations (__main__.Optimization.test_zeroed_fresh_and_reused_allocations) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 13.706s
+
+OK

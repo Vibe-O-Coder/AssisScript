@@ -1,0 +1,15 @@
+test_destructors_once_and_transfer_order (__main__.ArenaRemoval.test_destructors_once_and_transfer_order) ... ok
+test_erase_rejects_stale_forged_closed_and_previous_instances (__main__.ArenaRemoval.test_erase_rejects_stale_forged_closed_and_previous_instances) ... ok
+test_invalid_take_has_explicit_contract_trap (__main__.ArenaRemoval.test_invalid_take_has_explicit_contract_trap) ... ok
+test_loans_and_unconsumed_owned_results_are_rejected (__main__.ArenaRemoval.test_loans_and_unconsumed_owned_results_are_rejected) ... ok
+test_operations_against_independent_logical_document_model (__main__.ArenaRemoval.test_operations_against_independent_logical_document_model) ... ok
+test_os_refusal_swap_remove_at_sparse_tree_boundaries (__main__.ArenaRemoval.test_os_refusal_swap_remove_at_sparse_tree_boundaries) ... ok
+test_os_refusal_take_erase_reuse_and_neighbor (__main__.ArenaRemoval.test_os_refusal_take_erase_reuse_and_neighbor) ... ok
+test_retirement_generation_max_and_many_reuses (__main__.ArenaRemoval.test_retirement_generation_max_and_many_reuses) ... ok
+test_take_transfers_nested_resources_and_survives_close (__main__.ArenaRemoval.test_take_transfers_nested_resources_and_survives_close) ... ok
+test_typed_ir_all_targets_and_example (__main__.ArenaRemoval.test_typed_ir_all_targets_and_example) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 6.185s
+
+OK

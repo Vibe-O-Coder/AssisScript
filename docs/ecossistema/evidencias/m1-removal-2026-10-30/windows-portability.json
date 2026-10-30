@@ -1,0 +1,379 @@
+{
+  "platform": "win32",
+  "hostArchitecture": "x86_64",
+  "execution": "native",
+  "outputArchitecture": "x86_64",
+  "nativeArm64Execution": false,
+  "passed": true,
+  "cases": [
+    {
+      "name": "branches",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "10eb65dc760e615c3d2b724dbf3a0b1b9d269a718dc9567aa68999c0fc3ad3ef",
+        "windows-x64": "68c2617485d225d83cda92a32d9075eb2c4da4bc86d6336f8d28c6c71913c742",
+        "macos-x64": "710abd7bf2f539bcd1c8b9c157609c2f3551747ca053a546c4544e3e3c27d2bd",
+        "linux-arm64": "a1b3050ded0cc59915f85a7b2b9d775d65955517d3c81debc9075be4453ae515",
+        "macos-arm64": "2f6b4826c231261f5e8e85658a08f2cae39762b32ef17acc676c48bc63efd8e3"
+      }
+    },
+    {
+      "name": "branches",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "8140678f9e0fe9d13346e46c576ebae04a1c1090610ac93c31e7f1d247223600",
+        "windows-x64": "1c0fc1845795579410c3c75f70a6f3b8b2de637369cdcfe375603cf26046dd68",
+        "macos-x64": "1cdb5332ab1d3840a94aadd3657c3160d78e1d8263aba0b3c96fed72ac9e9860",
+        "linux-arm64": "93a4b0a602ac79f5050a1da91bd36010d9dc69c474f7333aa838121c0dadb11f",
+        "macos-arm64": "9953dbeb5e947c852f64af8a4f87f128ff5d8cd3557c6bb1331ce5b6027158db"
+      }
+    },
+    {
+      "name": "widths",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "e835a84681b09c11f13c4edbb7b550299426d404851f453d82cc533add56feb6",
+        "windows-x64": "c7cdfb46774e311dee61f34fd54da7922c711544688ce4371544039f1d3538e2",
+        "macos-x64": "a6250b187ee541b9c8fcc639418d8c38589bb9b69dfa8043a7680cc8ee83c60e",
+        "linux-arm64": "ca5ecb39404f6d29d0d56e09a62f867a859d73ea2965b109e840928a3cd88d8c",
+        "macos-arm64": "9d43fe5acd429cc87cb3bf59269440cb29ee2647b658f83bcd42bfcc25a773f0"
+      }
+    },
+    {
+      "name": "widths",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "e1f95a2d7ee2b1ad2117a786327d7d79254ba21f66b6e15f130c0e5d3b7d7d6d",
+        "windows-x64": "c8f6f5ac54a47cfd3bac09bcc8101e2625cc6ac20624916225253d2846159655",
+        "macos-x64": "48681085298a0e2dcb650bcba55f445ffffefcebb68de411f5f7fa4a3981a593",
+        "linux-arm64": "348f7cf8d54b84ba2dfad1fa17081f453e85977a2f1d578d3218387fe454847a",
+        "macos-arm64": "453a4b9ef55b4d3f50122cb78a159996817aabded100ea9bff5ff7323c469b20"
+      }
+    },
+    {
+      "name": "increment",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "95cbd659f73d9df58cb09ead58cdd73ad916077c6a793564548708f353bba2e4",
+        "windows-x64": "43cde84f599978f03bec2a4bc6020c7feaa6b00022fc1ef1fdd99ab98d5fd2fb",
+        "macos-x64": "b9edb0b43795863decffb712c68892c0e8d6fcf9d11b12885c2a233bb3497b05",
+        "linux-arm64": "e0b5ed1890ec2ffcfbb1591a274c40619dd83f384dd22cf9a3ba01a9e224e8dd",
+        "macos-arm64": "234c49891348a8e991ed7b799eb7e785456523b750e34b148de20e8c51f2c193"
+      }
+    },
+    {
+      "name": "increment",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "f9490c23284819b0fefebbb03ad49fa88416c76f50b8c1be9264de04db501ec4",
+        "windows-x64": "72f8db182024b717a11a22dae3b8a28799c36a215e2b4aacb16293068df50390",
+        "macos-x64": "d1ba163ca7b02a772264abbbb7cfa83913ebee3a795af126f28bee5132c7e00c",
+        "linux-arm64": "6e5d1f72cabd4675ad190c5c9c64eb4e5e928b67f8a0413adcbc59ac111423c3",
+        "macos-arm64": "d476e8c1dfbb44ea370088960fffe720d017a38793ffc96663763d9b5b23fc13"
+      }
+    },
+    {
+      "name": "ieee",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "7276f2a1c7a1d0eb38af1c6ffcac4442638362e476e40b3c3c7d69a7e6d735ea",
+        "windows-x64": "ba1d51a5d85673eb011d9497cfc5413825819cf84cf4473aba26ca4145534753",
+        "macos-x64": "e24bac89be5a3bd0f386553401d2a59a791b8074ad58f4b0c22b4d8fc614fcf7",
+        "linux-arm64": "a0bb25d700fadd97c41ea431cbf701206721c90f69167a037af58c34de31fc99",
+        "macos-arm64": "be5ce19f35ff21d6671069f1da35de31599a50d28df62baeb1171597664ea8c7"
+      }
+    },
+    {
+      "name": "ieee",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "8965f13d0ec87d728ad8adac269cdd3deeead59ae5866378153ccffb79f67e00",
+        "windows-x64": "be003be07b124cb8ad69a8da2fa9cf1fd7bd2a25668c9b27af8c9892d6a1418f",
+        "macos-x64": "343e72d4d7f3d5ea6ac90b9870d277dc7f94635330dfe6e228036980f92fb8cb",
+        "linux-arm64": "ee1e9342572bdff43ab1ac9a86b5d99d5741017a4a89af6257295b0296e57853",
+        "macos-arm64": "188e0e0de6fc2f38e2f181b4789df012d5c1ea9d3a3104a284aa79e869aeef0a"
+      }
+    },
+    {
+      "name": "ownership",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "31143a7112c5faa2165ac42a74e1c8fff88842e324e4248262e0a43f2521617e",
+        "windows-x64": "38032a7a4f04f069b02c02da1a67b1e026f3a27a9b88f9b00b1775cb634853c0",
+        "macos-x64": "7e4945be9ce0556444a1ef156b852c6c50f8ece8fd09439af4190bf507fe6179",
+        "linux-arm64": "eeac6b4b042606e8fa50ee5d38761f28221d65161efdfe94189048a8654e0a68",
+        "macos-arm64": "24f5382c04ef47107659cc77ceb18ca67e3506b4aebcf2ff728fe4d80447c316"
+      }
+    },
+    {
+      "name": "ownership",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "4cd6b4e09d170176cd06efc6b2be611976993aeaf830981c11c2ee954951c545",
+        "windows-x64": "47514671ff3a4709fcfb69c6c37eacef66468efaf6d01a4e7dd9584fa0e2d52b",
+        "macos-x64": "589a21a228ed8b014456a3c9ca0e70856938cbeb003ed0a26322771fea96bc47",
+        "linux-arm64": "60803e283d2976e03c817487c04ac6fe16613e3760461baabd9ba417e6f45ca1",
+        "macos-arm64": "7dfb1fe850477b14762ec929520e421f6dd872ac7905343617ac8c629141d56f"
+      }
+    },
+    {
+      "name": "lazy",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "26ed7cc786ccb461e2ba12974470914eb4f8fa0b053dc0383df7ced281ccc582",
+        "windows-x64": "044c6697b4f73ee1ab99cf7a9478ee6fab39e3a7bd9d2d3606f4908f9efe0366",
+        "macos-x64": "e53acce50563821eca6a26f2fea7c093164ce3c7ff093b611fb509c6d3bdf9f0",
+        "linux-arm64": "7229bddaa43736ff5ee895e6290ddaa8fd79105b4a84b49c5fee068bef85c4d0",
+        "macos-arm64": "4a885c23e104835fda94358087fbd9597222e5c8d6a28f943bc824beaf79d654"
+      }
+    },
+    {
+      "name": "lazy",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "41df8da7a44704c8269a3c405ecb79eaaf68e52dc7e2c6e8800a7a7a0e0012ec",
+        "windows-x64": "2242181715886335d0ed2de2c66500a4df246a625fe5283a8b25118f6addde23",
+        "macos-x64": "606a3e6c3092e1c4112849cd4f6776c3da1d4dc7f71db7dba934644cb682cd78",
+        "linux-arm64": "e23d2fb7936a0ffae2a59a90b6730805840f39fa306208cee2a2f43091d21c89",
+        "macos-arm64": "235260f37eb11c3c4c0fd9d6a125bd7980803fa08c49826c9b3701498536347e"
+      }
+    },
+    {
+      "name": "utf8",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "9c00016f41d1d97dbb6f591841111aea9d3d1f3bd588fde6d2246530c02dbcda",
+        "windows-x64": "ba0b2c194bf0136391ec717dc63c84ad1931ede30254305500fc41b3d953d37c",
+        "macos-x64": "5b3cba09c1a992d69e73503fb1026f148eb4bef6a3e63cc2272e9e32dbf27919",
+        "linux-arm64": "0e75feacde8b04b5f51a3390d0642caee7f947a805ab2e4d51fcc36af75d127b",
+        "macos-arm64": "dea149a83e5a14180a677e6be650c6c096e1c4f1ddb9c576d7d97fcfa78d77c9"
+      }
+    },
+    {
+      "name": "utf8",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "631255d75623be29354e4d13e639a528531121b290d665ec6c4aab32b66fe50e",
+        "windows-x64": "ecf85fb9451c77c64037dc4a2099ece93fc8043b4bae9168053cdda9b1be07f4",
+        "macos-x64": "57b81766f636b708ff35ce09d1dfc3801a7297b40561b7d3e1c5e1545fe3ecc2",
+        "linux-arm64": "0e75feacde8b04b5f51a3390d0642caee7f947a805ab2e4d51fcc36af75d127b",
+        "macos-arm64": "dea149a83e5a14180a677e6be650c6c096e1c4f1ddb9c576d7d97fcfa78d77c9"
+      }
+    },
+    {
+      "name": "owned-mutation",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "b861f80123967ed0244a6b610fce12b81253acedcb5b36ab187b803de6b4dcf7",
+        "windows-x64": "db77286480f7503163ed1f77167b1dcad1c3e24dd6acfb7f45cb46d6589471f4",
+        "macos-x64": "745bde78ba8ab035402ee94bc8912eeb674eeb5c95c0d6af435a3033e1b17320",
+        "linux-arm64": "8ce2da50492ce49349e8309c4130d46b440ce1bd022d3380587f2d8e4a9969cc",
+        "macos-arm64": "1f78f80cbb63b05baad34ad9e8b063f15a614fdbd9a26756a10a712e43c73059"
+      }
+    },
+    {
+      "name": "owned-mutation",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "9551d2ba98f2ab0191c87843eb476dd9d90c1e4023c0de7fb0cc7a998ed35730",
+        "windows-x64": "a4232bd37dc094d70a737e0ad8e9f4001db0192911f2262baf3f5bcc0e1c5741",
+        "macos-x64": "8af02b3c28d6c85880185d3b928d4bbe9dfd4d29c67965d757af8f4f253135df",
+        "linux-arm64": "56fe8bdfc4f2e4de42d5122e3add934b0be1b7f5bc624cfe894ac4e85248a00b",
+        "macos-arm64": "3473f3e1959c1cdaf921b10b04f2716a1fc6ffe7cf0b9b212469bc70c6fe78e0"
+      }
+    },
+    {
+      "name": "arena",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "138afb511567d79b75e84b1f336c3f7c9c3c9de4c6ec453cdcdab45c675d6e6f",
+        "windows-x64": "751b195084a5dde50be99f1e356c8232ad3d3c500227dda5d76b46e8907c16b1",
+        "macos-x64": "e879433943d67bd39fdeacad08eb13bf7b97269c2b8db3a28fe424c1017e661a",
+        "linux-arm64": "a5b3b8e715f4b903e2bda2e78332a401145c37609f977b02e7f73edf828f284c",
+        "macos-arm64": "c5344d209fb9a02d1679153b92f1ce5aa02644f1d304b108f493b07087bd0429"
+      }
+    },
+    {
+      "name": "arena",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "d19770cd22248df787f3855423faaf4740c2cb69766b6c4d8dc572ba43d0e242",
+        "windows-x64": "0f1ab09cdb746b881f2f5e4be02ff338bc85b75df393881f08cd2b3011dd6446",
+        "macos-x64": "f4a771a12ed89a0834b5d6917b10be0f7a7e27f9698a37449458edff3b90ac96",
+        "linux-arm64": "b9f3e73ae69f75a34d9cb8f95eb6a2bdfe28bec33cbb152438e49891890e6b85",
+        "macos-arm64": "083ae945c06230c16f77400349924ed6089e51e1713a50e8b33978848067f546"
+      }
+    },
+    {
+      "name": "fallible-allocation",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "cc1043ae1f9e828e1acf64a2368bdaba3a5aa0a86b76e17aafd9498fa4193e9c",
+        "windows-x64": "860d1dcda09a499249948e028b5a009fe2314dbfc3798963707a84243015adef",
+        "macos-x64": "fd523f7166abcd9686ad119ee4f43cc728c4a44ea22d2b3c96f10b76f8a3c9f5",
+        "linux-arm64": "47228aa401954ed4cb4efe354c6eca6059e7c3959388907b1a117952637cb3ce",
+        "macos-arm64": "82189191c3a8b8ad92789394888a9a2088c7347cb4b7a2f54adcead8dbf0ea33"
+      }
+    },
+    {
+      "name": "fallible-allocation",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "96669a0e038963763c5a8f2a4a0135257ea317692b6f43e01c6864024c5e39f0",
+        "windows-x64": "1a83b29cf61b419afef313d752cb92a9dbefb76a004eed037156a409a90ee888",
+        "macos-x64": "76ef4b6c5d1ac4b3e7ca8ff2dd4f5a55cd339d65c1186905e339e7f3f9ee527e",
+        "linux-arm64": "9dd986a2dc2834bfebb79418b1a379b9e67823987d23cf3b7e99a83d24c9e208",
+        "macos-arm64": "64001d984128c66472d333fc1791eb3330066435e34c5232219bee5e448d0d6d"
+      }
+    },
+    {
+      "name": "trap",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 70,
+      "binaries": {
+        "linux-x64": "1583e3807a7ed9b93d734d52bc8ee53b0c6631d189eb7c6d2d17054064481a49",
+        "windows-x64": "119766bc9c87aed5314382ba50575ad0c65116be5c0ea5deb68d9fd8d292af44",
+        "macos-x64": "bd643eb76ec7c795f0537c0f2c3b0862718031c74899286669aebe7943605f52",
+        "linux-arm64": "a5ee34d1bf6e058abbd4c61c8acd78cfe54ff63b183139357d29ac71f49d344b",
+        "macos-arm64": "d45555a10cfdf5c1c9a73b8fe725e16cecd87466eb3b887bd52d27c42f1a0c82"
+      }
+    },
+    {
+      "name": "trap",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 70,
+      "binaries": {
+        "linux-x64": "391159b7b8e74217bbcfa9fca2fb6f7420b98a26ed988d99baa6738de30d3e2b",
+        "windows-x64": "9a1cad3db090c0b819e4edff6ee2080ee677517f81d1c597da1851788592d214",
+        "macos-x64": "c1ada5eacbbcfbd8a94bc730fc951e151da9a2c2fc05e95cf1748c30d4b74029",
+        "linux-arm64": "ee2f3710809c6617c8239b29317d3098771e88b002fca9ff4a7220de31bf7ebd",
+        "macos-arm64": "de8860f3a67d17756eefb48f83b2f0b9df78185b2f379b689a0436f37fc89cbc"
+      }
+    },
+    {
+      "name": "fallible-slots",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "9254ad355fe9c1dd2207d5c090e1105bfe3a318f020724556e4bbcd6bb3fd61a",
+        "windows-x64": "cbf6577ace13f50375dacdec48bdf24ab869288e93fbfdc839a9dff08215326f",
+        "macos-x64": "c1093e47888d22c9e9b50b17b9cf20728be17f82bf65c1b1eacb2361332ae4be",
+        "linux-arm64": "2afc4ed47108b7165ad9644f893b62dfaeac118ac5c808506091275958bd1f09",
+        "macos-arm64": "377c8c48a1affbae0861e79bc8b3d86d2a6a1e60f6cbfabe031fd90e9570b3ba"
+      }
+    },
+    {
+      "name": "fallible-slots",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "2a4d28674bc8130dacffa95cb55642cdf19e92a70426cd56d62db2c40d679dc4",
+        "windows-x64": "e48dfe82b4c66abab221b33226745350ed591f8d9988cd01c34ac17c16c0ab17",
+        "macos-x64": "ecbe0d431bb0b30605b4d42fefba4ed8048827b049bc70946571d90b46fe735b",
+        "linux-arm64": "6963b6a7343e95ad31a9702d55a3961006aaef6440caaf3e09d29f7fb99b7448",
+        "macos-arm64": "3a80f5c962ba431d5a99cfc564bd39de5d8aaeff0544a15dbce248bc08006d9c"
+      }
+    },
+    {
+      "name": "arena-removal",
+      "optimized": true,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "c7a627ae90c5a6d80d3eca38eae4be4203b3ccb40f8708dfddf3a8e67f775547",
+        "windows-x64": "59d4535f044b65643ab40882d9f6960d5713484092524419aeee9bee7ae508f1",
+        "macos-x64": "09172306277123187e7a1acc581e3c06d1d7ca203f454df54cb04cf14d2ba315",
+        "linux-arm64": "13e97888faf759ec1e3bd176b98494628d24dbe771a869d804dade4f65209d81",
+        "macos-arm64": "b8dc0878822ff1d7793da7181675d8140ad479b4edfda1e21ea03e186bb338ea"
+      }
+    },
+    {
+      "name": "arena-removal",
+      "optimized": false,
+      "passed": true,
+      "target": "windows-x64",
+      "returnCode": 0,
+      "binaries": {
+        "linux-x64": "6d3b7b3368318eae4c49c284ff66b10735ce5f19e4f83e6395bc6228e3b10d45",
+        "windows-x64": "3f8180010c87564cffb4ef8597c74269b2ee2586e9e144db0e8ae675802591d7",
+        "macos-x64": "2d7de772db6d99c927a277d348647eb250fcca75b7a85a8ed23ad8ede7d84379",
+        "linux-arm64": "d7865828c1cee3b6369112fd51f00c203946c1b4c5eb1aa9a7d91d741ddadf89",
+        "macos-arm64": "d7632935cb5137d2ed30d79ab3092c4fc6115c73072872e86c47bf741f31b8c5"
+      }
+    }
+  ],
+  "compilerSha256": "0970dfaeee0710a2106b4e0c3661ff8165346ca299b4d39a5c6335457630ee62",
+  "version": "AssisScript 3.3.0-alpha.15 (nativo, Windows x64)",
+  "doctor": "AssisScript 3.3.0-alpha.15\nHost: Windows x64\nBackends: ELF64 Linux x64/ARM64 / PE32+ Windows x64 / Mach-O macOS x64/ARM64 (experimental)\nRuntime: incorporado; usa APIs do sistema de destino\nDependências para compilar: nenhuma ferramenta externa\nEntrada do projeto: assis.assis\n",
+  "backendFormat": "AssisScript-TypedIR-v1",
+  "rejectedInvalidSource": true
+}

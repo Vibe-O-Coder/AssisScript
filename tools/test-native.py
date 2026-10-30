@@ -11,7 +11,7 @@ import time
 
 ROOT=Path(__file__).resolve().parent.parent
 parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);args=parser.parse_args()
-suites=['evolution','generics','functions','generic-classes','collections-ast','ownership-functions','values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy','ffi','http','process','applications-bc','safe-default','net','move-enums','closures','usability','backend-evolution','complete-ir','increment','owned-mutation','htdl-readiness','arena','fallible-allocation','fallible-slots']
+suites=['evolution','generics','functions','generic-classes','collections-ast','ownership-functions','values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy','ffi','http','process','applications-bc','safe-default','net','move-enums','closures','usability','backend-evolution','complete-ir','increment','owned-mutation','htdl-readiness','arena','fallible-allocation','fallible-slots','arena-removal']
 records=[];args.output.parent.mkdir(parents=True,exist_ok=True)
 environment=os.environ.copy();environment['PYTHONIOENCODING']='utf-8'
 for suite in suites:

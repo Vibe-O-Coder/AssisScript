@@ -42,7 +42,8 @@ Usam os contratos existentes de ownership, sem acrescentar sintaxe à linguagem.
 
 Todos os métodos indexados exigem `0 <= index < size()`. Falhas encerram com
 status 70; não são erros recuperáveis de análise de documento. OOM continua
-sendo fatal. O custo de destruição dos recursos guardados depende de cada tipo.
+sendo fatal nas APIs que alocam. O custo de destruição dos recursos guardados
+depende de cada tipo.
 
 ```assis
 import "std/owned.assis";
@@ -91,3 +92,10 @@ prepara ramos separados antes de publicar a troca. Não oferece quota em bytes
 nem reserve geral; o controlador e push/pop/swap_remove existentes conservam
 seus contratos. Custos O(log capacidade), incluindo rollback do caminho.
 Contrato e evidência: [inserções recuperáveis](INSERCAO-FALLIVEL.md).
+
+Desde a continuação de 30/10/2026, swap_remove retira o último item e substitui
+o destino enquanto seu caminho ainda existe. Não reserva novos nós de índice.
+pop, replace, swap_remove e clear não alocam na biblioteca; drops de recursos
+do usuário mantêm seus próprios efeitos. swap_remove preserva o retorno own,
+o movimento do último item, a invalidação de posições e o custo logarítmico.
+Veja [remoção sob recusa de memória](relatorios/2026-10-30-m1-remocao-sem-alocacao.md).

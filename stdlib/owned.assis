@@ -153,12 +153,10 @@ public final class OwnedArray<T> {
     fn swap_remove(borrow mut self,index:int):own T {
         assert(index>=0 && index<self.count);val capacity:int=self.capacity;
         self.count-=1;val last:int=self.count;
-        own removed:T=array_take::<T>(self.root,index,capacity);
-        if(index!=last){
-            own value:T=array_take::<T>(self.root,last,capacity);
-            array_put::<T>(self.root,index,capacity,move(value));
-        }
-        return move(removed);
+        own value:T=array_take::<T>(self.root,last,capacity);
+        if(index==last){return move(value);}
+        // Keep the target path alive: replacing it cannot need new index nodes.
+        return array_replace::<T>(self.root,index,capacity,move(value));
     }
     /// Destroys all remaining items and index nodes; reusable as an empty collection.
     fn clear(borrow mut self):void {

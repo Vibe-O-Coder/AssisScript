@@ -1,0 +1,16 @@
+test_arena_free_slot_reuse_needs_no_allocation_under_os_refusal (__main__.FallibleSlots.test_arena_free_slot_reuse_needs_no_allocation_under_os_refusal) ... ok
+test_arena_limits_recycling_generation_and_closed_rejection (__main__.FallibleSlots.test_arena_limits_recycling_generation_and_closed_rejection) ... ok
+test_argument_order_constructor_and_cleanup (__main__.FallibleSlots.test_argument_order_constructor_and_cleanup) ... ok
+test_array_against_independent_list_model (__main__.FallibleSlots.test_array_against_independent_list_model) ... ok
+test_example_and_large_regrowth (__main__.FallibleSlots.test_example_and_large_regrowth) ... ok
+test_os_refusal_does_not_skip_argument_effects_and_drops_in_reverse (__main__.FallibleSlots.test_os_refusal_does_not_skip_argument_effects_and_drops_in_reverse) ... ok
+test_os_refusal_preserves_arena_slots_handles_and_neighbor (__main__.FallibleSlots.test_os_refusal_preserves_arena_slots_handles_and_neighbor) ... ok
+test_os_refusal_rolls_back_each_array_insertion_path (__main__.FallibleSlots.test_os_refusal_rolls_back_each_array_insertion_path) ... ok
+test_record_generic_class_inheritance_and_owned_enum (__main__.FallibleSlots.test_record_generic_class_inheritance_and_owned_enum) ... ok
+test_safe_ownership_effects_value_types_and_borrows (__main__.FallibleSlots.test_safe_ownership_effects_value_types_and_borrows) ... ok
+test_targets_and_ir (__main__.FallibleSlots.test_targets_and_ir) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 16.439s
+
+OK

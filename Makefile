@@ -162,3 +162,9 @@ test-fallible-slots: bin/assis
 	python3 tests/test-fallible-slots.py
 
 test-alpha15: test-fallible-slots
+
+.PHONY: test-arena-removal
+test-arena-removal: bin/assis
+	python3 tests/test-arena-removal.py
+
+test-alpha15: test-arena-removal

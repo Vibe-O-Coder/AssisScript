@@ -1,0 +1,16 @@
+[
+  {
+    "flags": [],
+    "returnCode": 70,
+    "stdout": "",
+    "stderr": "assis: erro R001, linha C:\\Users\\babus\\Desktop\\AssisScript\\worktrees\\ecosystem-20261030\\build\\tmp\\assis-evolution-mthfbapk\\baseline-arena.assis:95: memória insuficiente\n"
+  },
+  {
+    "flags": [
+      "--no-opt"
+    ],
+    "returnCode": 70,
+    "stdout": "",
+    "stderr": "assis: erro R001, linha C:\\Users\\babus\\Desktop\\AssisScript\\worktrees\\ecosystem-20261030\\build\\tmp\\assis-evolution-mthfbapk\\baseline-arena.assis:95: memória insuficiente\n"
+  }
+]

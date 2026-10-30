@@ -1,0 +1,13 @@
+test_all_output_targets_compile_the_core (__main__.HtdlReadiness.test_all_output_targets_compile_the_core) ... ok
+test_exact_byte_node_depth_limits_and_unsupported_syntax (__main__.HtdlReadiness.test_exact_byte_node_depth_limits_and_unsupported_syntax) ... ok
+test_generated_tree_shapes_against_construction_oracle (__main__.HtdlReadiness.test_generated_tree_shapes_against_construction_oracle) ... ok
+test_index_results_against_independent_generated_inputs (__main__.HtdlReadiness.test_index_results_against_independent_generated_inputs) ... ok
+test_large_tree_and_iterative_deep_nesting (__main__.HtdlReadiness.test_large_tree_and_iterative_deep_nesting) ... ok
+test_recoverable_errors_and_explicit_budgets (__main__.HtdlReadiness.test_recoverable_errors_and_explicit_budgets) ... ok
+test_safe_native_code_has_file_access_and_no_intrinsic_cpu_budget (__main__.HtdlReadiness.test_safe_native_code_has_file_access_and_no_intrinsic_cpu_budget) ... ok
+test_tree_utf8_and_exact_index_even_when_all_hashes_collide (__main__.HtdlReadiness.test_tree_utf8_and_exact_index_even_when_all_hashes_collide) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 2.023s
+
+OK
