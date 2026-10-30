@@ -192,14 +192,19 @@ enviado à branch de destino e confirmado por git ls-remote. Os 219 hashes
 foram conferidos contra os blobs desse commit. O SHA deste adendo documental
 é encontrado no histórico do relatório, sem autorreferência.
 
-O PR permanece pendente: o conector GitHub devolveu 403 (permissão da
+Na primeira tentativa de criar o PR, o conector GitHub devolveu 403 (permissão da
 integração). A revisão automática rejeitou o script alternativo que usaria a
 credencial Git por considerar esse acesso uma sondagem não autorizada; o
 script não foi executado e nenhuma credencial foi lida. A alternativa pela
 interface normal encontrou uma tela de login, sem sessão autenticada.
-Ação pendente: o usuário entrar no GitHub, ou conceder a permissão apropriada
-ao conector, para criar o PR de rascunho com a base indicada. A branch, o código,
-o relatório e a evidência já estão públicos; não houve merge ou release.
+
+Após o usuário entrar pela interface normal do GitHub, foi criado e conferido
+o [PR de rascunho #11](https://github.com/Vibe-O-Coder/AssisScript/pull/11),
+base work/m1-allocation-2026-10-29, head work/m1-fallible-slots-2026-10-29.
+O PR foi vinculado à conversa. A criação foi confirmada tanto pela interface
+quanto pela API de leitura, com draft=true, merged=false e base_sha igual à
+base deste relatório. Não foi necessário acessar a credencial Git. A CI remota
+estava em andamento na conferência; não se declara aprovação, merge ou release.
 
 Próximo incremento: orçamento de memória compartilhado por documento,
 controladores/reserva antecipada e remoção sem alocar para informar resultado,
