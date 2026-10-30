@@ -150,3 +150,9 @@ test-alpha15: bin/assis
 	python3 tests/test-owned-mutation.py
 	python3 tests/test-htdl-readiness.py
 	python3 tests/test-arena.py
+
+.PHONY: test-fallible-allocation
+test-fallible-allocation: bin/assis
+	python3 tests/test-fallible-allocation.py
+
+test-alpha15: test-fallible-allocation

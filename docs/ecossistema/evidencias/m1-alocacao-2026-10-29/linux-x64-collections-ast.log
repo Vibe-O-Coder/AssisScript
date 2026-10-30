@@ -1,0 +1,16 @@
+ASSIS collections AST: 143 invocações; /mnt/c/Users/babus/Desktop/AssisScript/worktrees/m1-allocation/build/assis-allocation-linux
+test_array_operations_against_independent_list (__main__.CollectionsAST.test_array_operations_against_independent_list) ... ok
+test_callbacks_and_nested_user_types_do_not_roundtrip_through_text (__main__.CollectionsAST.test_callbacks_and_nested_user_types_do_not_roundtrip_through_text) ... ok
+test_canonical_types_and_effects_remain_distinct (__main__.CollectionsAST.test_canonical_types_and_effects_remain_distinct) ... ok
+test_map_operations_against_independent_dictionary (__main__.CollectionsAST.test_map_operations_against_independent_dictionary) ... ok
+test_ownership_and_functional_algorithms_keep_existing_contracts (__main__.CollectionsAST.test_ownership_and_functional_algorithms_keep_existing_contracts) ... ok
+test_private_templates_never_grant_user_authority (__main__.CollectionsAST.test_private_templates_never_grant_user_authority) ... ok
+test_runtime_bounds_and_missing_keys_preserve_diagnostics (__main__.CollectionsAST.test_runtime_bounds_and_missing_keys_preserve_diagnostics) ... ok
+test_scalar_layouts_recoverable_operations_and_dispose (__main__.CollectionsAST.test_scalar_layouts_recoverable_operations_and_dispose) ... ok
+test_separate_budgets_and_repeated_collection_cache (__main__.CollectionsAST.test_separate_budgets_and_repeated_collection_cache) ... ok
+test_text_hash_content_collisions_and_external_lifetime (__main__.CollectionsAST.test_text_hash_content_collisions_and_external_lifetime) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 5.538s
+
+OK

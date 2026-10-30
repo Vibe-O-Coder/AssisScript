@@ -109,7 +109,7 @@ static BackendValue *backend_value(Node *n){
         if(n->op==T_UTF8){Node *literal=n->items.v[0];v->kind=BV_UTF8;v->text=literal->t->str;v->length=literal->t->len;break;}
         if(n->op==T_MOVE)return backend_load(backend_address(n->items.v[0]),n->ty,n->t,true);
         if(n->op==T_SLICE_MAKE){v->kind=BV_SLICE;v->element=slice_element(n->ty);v->mode=backend_memory_mode(n->items.v[0]);}
-        else if(n->op==T_BUFFER||n->op==T_ALLOC){v->kind=BV_ALLOC;v->element=n->decl;}
+        else if(n->op==T_BUFFER||n->op==T_TRY_BUFFER||n->op==T_ALLOC){v->kind=BV_ALLOC;v->element=n->decl;}
         else if(n->op==T_LEN)v->kind=BV_LENGTH;
         else if(n->op==T_ASSERT)v->kind=BV_ASSERT;
         else if(n->op==T_TEXT)v->kind=BV_NONNULL;

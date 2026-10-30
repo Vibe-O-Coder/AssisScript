@@ -1,0 +1,10 @@
+test_debug_maps_and_elf_sections_match_sources (__main__.Tooling.test_debug_maps_and_elf_sections_match_sources) ... ok
+test_doc_public_api_generics_lifetimes_and_protected_output (__main__.Tooling.test_doc_public_api_generics_lifetimes_and_protected_output) ... ok
+test_formatter_idempotence_comments_strings_and_crlf (__main__.Tooling.test_formatter_idempotence_comments_strings_and_crlf) ... ok
+test_formatter_lexical_error_does_not_replace (__main__.Tooling.test_formatter_lexical_error_does_not_replace) ... ok
+test_native_test_driver_owns_resources_and_checks_returns (__main__.Tooling.test_native_test_driver_owns_resources_and_checks_returns) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.180s
+
+OK

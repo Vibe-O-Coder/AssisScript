@@ -85,6 +85,13 @@ def main():
          '{own r:arena::Removal<*int>=a.remove(h);'
          'match(move(r)){Missing{assert(false);}Removed(v){print(v[0]);}}}'
          'assert(!a.contains(h) && a.reset(2));a.close();a.close();', 0, '42\n'),
+        ('fallible-allocation', 'import "std/memory.assis";',
+         'own b:ByteBuffer=new ByteBuffer(12);assert(b.try_resize(4));b.set(3,byte(42));'
+         'assert(!b.try_reserve(9) && b.try_reserve(8));'
+         'own p:*int=try_alloc<int>(9223372036854775807);assert(p==null);'
+         'own zero:*u16=try_alloc<u16>(0);assert(zero!=null && len(zero)==0);'
+         'print(b.size(),b.capacity(),int(b.get(3)));b.release();assert(b.try_resize(12));',
+         0, '4 8 42\n'),
         ('trap', '', 'let z:int=0;print(1/z);', 70, ''),
     ]
     try:

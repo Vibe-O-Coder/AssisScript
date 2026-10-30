@@ -38,7 +38,7 @@ static void safe_node(Node *n){
     if(n->kind==N_BUILTIN){
         if(n->op==T_C_CALLBACK)error(n->t,"c_callback exige unsafe { ... }");
         if(n->op==T_TEXT||n->op==T_BYTES)error(n->t,"conversão de text externo em safe exige unsafe { ... }");
-        if((n->op==T_BUFFER||n->op==T_ALLOC)&&!n->ownership)error(n->t,"alocação em safe exige destino own");
+        if((n->op==T_BUFFER||n->op==T_TRY_BUFFER||n->op==T_ALLOC)&&!n->ownership)error(n->t,"alocação em safe exige destino own");
         if(n->op==T_READ&&!((Node*)n->items.v[0])->ownership)error(n->t,"buffer legado em safe exige unsafe { ... }");
         if((n->op==T_FILE_READ||n->op==T_FILE_WRITE||n->op==T_ARG_COPY||n->op==T_WRITE_BYTES)&&!((Node*)n->items.v[1])->ownership)error(n->t,"buffer legado em safe exige unsafe { ... }");
     }

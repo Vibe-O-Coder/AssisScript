@@ -57,15 +57,41 @@ asrt_init_memory:
 asrt_alloc:
 .Lalloc:
     push r12
+    mov r12, rsi
+    test rdi, rdi
+    js .Lfatal_bad_alloc
+    mov rax, 0x7fffffffffffffdf
+    cmp rdi, rax
+    ja .Lfatal_bad_alloc
+    call .Ltry_alloc
+    test rax, rax
+    jz .Lfatal_no_memory
+    pop r12
+    ret
+.Lfatal_bad_alloc:
+    mov edi, 4
+    mov rsi, r12
+    jmp .Lerror
+.Lfatal_no_memory:
+    mov edi, 5
+    mov rsi, r12
+    jmp .Lerror
+
+/* Same managed header/zeroing/free contract, but never traps on size or OOM.
+ * Failure does not consume a free block or increment the live counter. */
+.global asrt_try_alloc
+asrt_try_alloc:
+.Ltry_alloc:
+    push r12
     push r13
     push r14
     mov r12, rsi
     mov r13, rdi
     test rdi, rdi
-    js .Lbad_alloc
+    js .Ltry_alloc_failed
     mov rax, 0x7fffffffffffffdf
     cmp rdi, rax
-    ja .Lbad_alloc
+    ja .Ltry_alloc_failed
     lea rcx, [rdi+32]
     mov edx, 64
     xor r14d, r14d
@@ -79,7 +105,7 @@ asrt_alloc:
     mov rdi, rcx
     call .Los_map
     test rax, rax
-    jz .Lno_memory
+    jz .Ltry_alloc_failed
     lea rcx, [r13+32]
     mov qword ptr [rax], rcx
     mov qword ptr [rax+8], 10
@@ -91,7 +117,7 @@ asrt_alloc:
     mov edi, 65536
     call .Los_map
     test rax, rax
-    jz .Lno_memory
+    jz .Ltry_alloc_failed
     mov qword ptr [r15+r14*8], rax
     mov ecx, r14d
     mov edx, 64
@@ -133,14 +159,12 @@ asrt_alloc:
     pop r13
     pop r12
     ret
-.Lbad_alloc:
-    mov edi, 4
-    mov rsi, r12
-    jmp .Lerror
-.Lno_memory:
-    mov edi, 5
-    mov rsi, r12
-    jmp .Lerror
+.Ltry_alloc_failed:
+    xor eax, eax
+    pop r14
+    pop r13
+    pop r12
+    ret
 
 .global asrt_free
 asrt_free:

@@ -1,0 +1,16 @@
+ASSIS files: 101 invocações; C:\Users\babus\Desktop\AssisScript\worktrees\m1-allocation\build\assis-allocation.exe
+test_binary_unicode_path_roundtrip_and_append (__main__.Files.test_binary_unicode_path_roundtrip_and_append) ... ok
+test_failed_open_invalid_mode_and_closed_resource_recover (__main__.Files.test_failed_open_invalid_mode_and_closed_resource_recover) ... ok
+test_composite_drop_returns_and_all_control_exits (__main__.Files.test_composite_drop_returns_and_all_control_exits) ... ok
+test_no_implicit_copy_or_discard_or_use_after_move (__main__.Files.test_no_implicit_copy_or_discard_or_use_after_move) ... ok
+test_generics_callbacks_and_borrowed_file_returns (__main__.Files.test_generics_callbacks_and_borrowed_file_returns) ... ok
+test_automatic_drop_preserves_the_error_of_the_operation (__main__.Files.test_automatic_drop_preserves_the_error_of_the_operation) ... ok
+test_argument_list_utf8_quotes_empty_and_backslashes (__main__.Files.test_argument_list_utf8_quotes_empty_and_backslashes) ... ok
+test_argument_bounds_preserve_buffer_and_error (__main__.Files.test_argument_bounds_preserve_buffer_and_error) ... ok
+test_managed_buffer_capacity_checked_before_os_call (__main__.Files.test_managed_buffer_capacity_checked_before_os_call) ... ok
+test_mutable_buffer_loan_is_required (__main__.Files.test_mutable_buffer_loan_is_required) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 5.150s
+
+OK

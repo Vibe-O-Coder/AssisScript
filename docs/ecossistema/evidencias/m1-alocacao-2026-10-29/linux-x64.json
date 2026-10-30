@@ -1,0 +1,269 @@
+{
+  "platform": "linux",
+  "compilerSha256": "9c4441ecc31e810c926f0216af9115314453f7e6fd8ac56872a6b5fda51a14b5",
+  "testEnvironment": {
+    "tlsTimeoutMilliseconds": "native defaults"
+  },
+  "passed": true,
+  "suites": [
+    {
+      "suite": "evolution",
+      "returnCode": 0,
+      "tests": 12,
+      "seconds": 6.639142696,
+      "log": "linux-x64-evolution.log"
+    },
+    {
+      "suite": "generics",
+      "returnCode": 0,
+      "tests": 13,
+      "seconds": 4.978262972,
+      "log": "linux-x64-generics.log"
+    },
+    {
+      "suite": "functions",
+      "returnCode": 0,
+      "tests": 19,
+      "seconds": 5.210441696,
+      "log": "linux-x64-functions.log"
+    },
+    {
+      "suite": "generic-classes",
+      "returnCode": 0,
+      "tests": 17,
+      "seconds": 8.225918464000003,
+      "log": "linux-x64-generic-classes.log"
+    },
+    {
+      "suite": "collections-ast",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 5.829603063,
+      "log": "linux-x64-collections-ast.log"
+    },
+    {
+      "suite": "ownership-functions",
+      "returnCode": 0,
+      "tests": 26,
+      "seconds": 8.803921509000006,
+      "log": "linux-x64-ownership-functions.log"
+    },
+    {
+      "suite": "values",
+      "returnCode": 0,
+      "tests": 21,
+      "seconds": 5.363269608000003,
+      "log": "linux-x64-values.log"
+    },
+    {
+      "suite": "files",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 1.768216159000005,
+      "log": "linux-x64-files.log"
+    },
+    {
+      "suite": "text-bytes",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 1.6537887960000006,
+      "log": "linux-x64-text-bytes.log"
+    },
+    {
+      "suite": "cli",
+      "returnCode": 0,
+      "tests": 1,
+      "seconds": 0.866792021000002,
+      "log": "linux-x64-cli.log"
+    },
+    {
+      "suite": "numbers",
+      "returnCode": 0,
+      "tests": 11,
+      "seconds": 1.9017303339999998,
+      "log": "linux-x64-numbers.log"
+    },
+    {
+      "suite": "packages",
+      "returnCode": 0,
+      "tests": 13,
+      "seconds": 1.6429540779999954,
+      "log": "linux-x64-packages.log"
+    },
+    {
+      "suite": "json",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 1.4853901159999978,
+      "log": "linux-x64-json.log"
+    },
+    {
+      "suite": "system",
+      "returnCode": 0,
+      "tests": 8,
+      "seconds": 2.0418090289999995,
+      "log": "linux-x64-system.log"
+    },
+    {
+      "suite": "tooling",
+      "returnCode": 0,
+      "tests": 5,
+      "seconds": 0.8455957060000046,
+      "log": "linux-x64-tooling.log"
+    },
+    {
+      "suite": "slices",
+      "returnCode": 0,
+      "tests": 5,
+      "seconds": 1.763149379000005,
+      "log": "linux-x64-slices.log"
+    },
+    {
+      "suite": "managed-classes",
+      "returnCode": 0,
+      "tests": 9,
+      "seconds": 3.3322971489999986,
+      "log": "linux-x64-managed-classes.log"
+    },
+    {
+      "suite": "backend-alpha9",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 1.1473828740000016,
+      "log": "linux-x64-backend-alpha9.log"
+    },
+    {
+      "suite": "optimization",
+      "returnCode": 0,
+      "tests": 6,
+      "seconds": 3.0639190140000068,
+      "log": "linux-x64-optimization.log"
+    },
+    {
+      "suite": "english-api",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 2.1395529899999985,
+      "log": "linux-x64-english-api.log"
+    },
+    {
+      "suite": "release-policy",
+      "returnCode": 0,
+      "tests": 2,
+      "seconds": 1.0268748840000086,
+      "log": "linux-x64-release-policy.log"
+    },
+    {
+      "suite": "ffi",
+      "returnCode": 0,
+      "tests": 9,
+      "seconds": 5.086405226000011,
+      "log": "linux-x64-ffi.log"
+    },
+    {
+      "suite": "http",
+      "returnCode": 0,
+      "tests": 5,
+      "seconds": 6.549233514999997,
+      "log": "linux-x64-http.log"
+    },
+    {
+      "suite": "process",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 2.278403787000002,
+      "log": "linux-x64-process.log"
+    },
+    {
+      "suite": "applications-bc",
+      "returnCode": 0,
+      "tests": 3,
+      "seconds": 1.2546592229999902,
+      "log": "linux-x64-applications-bc.log"
+    },
+    {
+      "suite": "safe-default",
+      "returnCode": 0,
+      "tests": 5,
+      "seconds": 2.3596883719999937,
+      "log": "linux-x64-safe-default.log"
+    },
+    {
+      "suite": "net",
+      "returnCode": 0,
+      "tests": 8,
+      "seconds": 11.341405862000002,
+      "log": "linux-x64-net.log"
+    },
+    {
+      "suite": "move-enums",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 2.2631545200000005,
+      "log": "linux-x64-move-enums.log"
+    },
+    {
+      "suite": "closures",
+      "returnCode": 0,
+      "tests": 15,
+      "seconds": 3.8614587339999957,
+      "log": "linux-x64-closures.log"
+    },
+    {
+      "suite": "usability",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 4.134182342000003,
+      "log": "linux-x64-usability.log"
+    },
+    {
+      "suite": "backend-evolution",
+      "returnCode": 0,
+      "tests": 16,
+      "seconds": 3.5025744259999954,
+      "log": "linux-x64-backend-evolution.log"
+    },
+    {
+      "suite": "complete-ir",
+      "returnCode": 0,
+      "tests": 7,
+      "seconds": 1.1178960800000084,
+      "log": "linux-x64-complete-ir.log"
+    },
+    {
+      "suite": "increment",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 2.3215726920000037,
+      "log": "linux-x64-increment.log"
+    },
+    {
+      "suite": "owned-mutation",
+      "returnCode": 0,
+      "tests": 12,
+      "seconds": 7.9312979179999985,
+      "log": "linux-x64-owned-mutation.log"
+    },
+    {
+      "suite": "htdl-readiness",
+      "returnCode": 0,
+      "tests": 8,
+      "seconds": 2.616638421999994,
+      "log": "linux-x64-htdl-readiness.log"
+    },
+    {
+      "suite": "arena",
+      "returnCode": 0,
+      "tests": 13,
+      "seconds": 18.861787969000005,
+      "log": "linux-x64-arena.log"
+    },
+    {
+      "suite": "fallible-allocation",
+      "returnCode": 0,
+      "tests": 12,
+      "seconds": 3.505059213999999,
+      "log": "linux-x64-fallible-allocation.log"
+    }
+  ]
+}

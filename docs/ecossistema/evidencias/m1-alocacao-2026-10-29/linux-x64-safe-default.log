@@ -1,0 +1,10 @@
+test_default_requires_safe_root_and_legacy_is_explicit (__main__.SafeDefault.test_default_requires_safe_root_and_legacy_is_explicit) ... ok
+test_managed_initializer_cannot_reenter_or_replace_live_native_state (__main__.SafeDefault.test_managed_initializer_cannot_reenter_or_replace_live_native_state) ... ok
+test_new_project_runs_in_default_profile_without_toolchain (__main__.SafeDefault.test_new_project_runs_in_default_profile_without_toolchain) ... ok
+test_raw_operations_external_text_and_hidden_calls_stay_at_boundary (__main__.SafeDefault.test_raw_operations_external_text_and_hidden_calls_stay_at_boundary) ... ok
+test_static_text_managed_utf8_and_explicit_unsafe (__main__.SafeDefault.test_static_text_managed_utf8_and_explicit_unsafe) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.960s
+
+OK

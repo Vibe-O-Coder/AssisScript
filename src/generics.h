@@ -150,7 +150,7 @@ static void resolve_node(Node *n,Function *f){
     Vec arguments=f->type_args;
     if(f->owner&&f->owner->generic){parameters=f->owner->generic->type_params;arguments=f->owner->type_args;}
     if(n->kind==N_NEW&&n->decl.kind==TY_OBJ&&!n->decl.ref&&!find_class(n->decl.name)&&!find_generic_class(n->decl.name))error(n->t,"classe inexistente para new: %s",n->decl.name);
-    if(n->kind==N_LET||n->kind==N_NEW||n->kind==N_IS||n->kind==N_CAST||(n->kind==N_BUILTIN&&n->op==T_BUFFER))n->decl=resolve_type(n->decl,parameters,arguments,n->t);
+    if(n->kind==N_LET||n->kind==N_NEW||n->kind==N_IS||n->kind==N_CAST||(n->kind==N_BUILTIN&&(n->op==T_BUFFER||n->op==T_TRY_BUFFER)))n->decl=resolve_type(n->decl,parameters,arguments,n->t);
     if(n->kind==N_NAME&&n->specialized){
         Function *generic=find_generic_function(n->t->text);
         if(!generic){if(find_fn(n->t->text))error(n->t,"função não genérica não aceita argumentos de tipo");error(n->t,"função genérica desconhecida: %s",n->t->text);}

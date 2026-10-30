@@ -1,0 +1,17 @@
+import "std/memory.assis";
+
+safe fn main():int {
+    own article:ByteBuffer=new ByteBuffer(96);
+    own sidebar:ByteBuffer=new ByteBuffer(16);
+    assert(article.try_resize(32));article.set(0,byte(65));
+    assert(!article.try_reserve(80)); // 32 + 80 exceeds this instance's payload limit.
+    assert(article.try_reserve(64));
+    assert(article.size()==32 && article.get(0)==byte(65));
+    assert(sidebar.try_resize(8));sidebar.set(0,byte(42));
+    own too_large:*int=try_alloc<int>(0x7fff_ffff_ffff_ffff);
+    assert(too_large==null);
+    print(article.size(),article.capacity(),int(sidebar.get(0)));
+    article.release();assert(article.try_resize(64));
+    print(article.size(),int(article.get(0)));
+    return 0;
+}

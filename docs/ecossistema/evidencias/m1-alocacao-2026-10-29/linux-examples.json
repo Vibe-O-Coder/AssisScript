@@ -1,0 +1,212 @@
+{
+  "compilerSha256": "9c4441ecc31e810c926f0216af9115314453f7e6fd8ac56872a6b5fda51a14b5",
+  "passed": true,
+  "examples": [
+    {
+      "file": "01_ola.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "02_objetos.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "03_polimorfismo.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "04_memoria.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "05_bits.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "06_fibonacci.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "07_arena.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "08_modulos.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "09_colecoes.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "10_structs.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "11_pacotes.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "12_relatorio_vendas.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "13_codificacao.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "14_ownership.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "15_funcional.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "16_generics.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "17_funcoes.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "18_classes_genericas.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "19_ownership_funcoes.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "20_valores_e_resultados.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "21_relatorio_csv_stream.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "22_numeros.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "23_eventos.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "24_config_json.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "25_recursos_e_unicode.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "26_english_api.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "27_http_client.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "28_persistent_service.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "29_http_polling.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "30_closures_and_owned_results.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "31_language_review.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "32_backend_evolution.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "32_document_resources.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "33_increment.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "34_generational_arena.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "35_native_window.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "36_fallible_buffers.assis",
+      "passed": true,
+      "error": ""
+    },
+    {
+      "file": "rpg.assis",
+      "passed": true,
+      "error": ""
+    }
+  ],
+  "rpg": [
+    {
+      "seed": 1,
+      "ending": "victory",
+      "returnCode": 0,
+      "stderr": "",
+      "outputBytes": 12915
+    },
+    {
+      "seed": 5,
+      "ending": "defeat",
+      "returnCode": 0,
+      "stderr": "",
+      "outputBytes": 13754
+    }
+  ]
+}

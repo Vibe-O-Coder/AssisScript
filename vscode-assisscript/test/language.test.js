@@ -156,6 +156,15 @@ test('literais, construtores genéricos e alloc não atrapalham ajuda de parâme
     const ctor = 'fn main(): int { new Array<int>().push(42); return 0; }'; const c = l.analyze(ctor, 'main.assis');
     assert.equal(l.resolveSymbol(c, ctor.indexOf('.push') + 1, [c]).params[0].type, 'int');
 });
+
+test('try_alloc oferece assinatura genérica e explica a falha recuperável', () => {
+    const text = 'safe fn main():int{own p:*int=try_alloc<int>(8);return 0;}';
+    const m = l.analyze(text, 'main.assis');
+    const signature = l.signatureAt(m, text.indexOf('(8)') + 2, [m]);
+    assert.match(signature.label, /try_alloc<T>/);
+    assert.match(signature.documentation, /null/);
+    assert.equal(signature.active, 0);
+});
 test('documentação ///, miyabi e bloco inclui parâmetros e retorno de bibliotecas', () => {
     const source = '/// Retorna o dobro.\n/// @param value Inteiro de entrada.\n/// @return Inteiro multiplicado por dois.\nfn dobro(valor: int): int { return valor * 2; }\n/** Retorna o triplo. */\nfn triplo(valor: int): int { return valor * 3; }';
     const m = l.analyze(source, 'lib.assis');

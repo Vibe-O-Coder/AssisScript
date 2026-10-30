@@ -1,0 +1,1 @@
+safe fn main():int{own data:*byte=try_alloc<byte>(8);return 0;}

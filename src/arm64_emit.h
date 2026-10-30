@@ -28,7 +28,7 @@ static void a_test(int n){a_cmp(n,31);}
 static void a_bool(int cc){a_ins(0x9a9f07e0u|((unsigned)(cc^1)<<12));}
 static void a_rt(size_t offset){
 #define ARM_RT(name) case RT_##name:offset=target_macos?AMRT_##name:ART_##name;break
-    switch(offset){ARM_RT(write);ARM_RT(stdout_write);ARM_RT(sleep);ARM_RT(civil);ARM_RT(file_sync);ARM_RT(file_replace);ARM_RT(file_remove);ARM_RT(print_float);ARM_RT(print_uint);ARM_RT(print_str);ARM_RT(print_int);ARM_RT(print_char);ARM_RT(print_bool);ARM_RT(print_ptr);ARM_RT(alloc);ARM_RT(free);ARM_RT(len);ARM_RT(streq);ARM_RT(strbyte);ARM_RT(error);ARM_RT(finish);ARM_RT(read);ARM_RT(now);ARM_RT(args_init);ARM_RT(argc);ARM_RT(arg_len);ARM_RT(arg_copy);ARM_RT(io_error);ARM_RT(file_open);ARM_RT(file_close);ARM_RT(file_drop);ARM_RT(file_read);ARM_RT(file_write);default:fatal("ARM64: rotina desconhecida");}
+    switch(offset){ARM_RT(write);ARM_RT(stdout_write);ARM_RT(sleep);ARM_RT(civil);ARM_RT(file_sync);ARM_RT(file_replace);ARM_RT(file_remove);ARM_RT(print_float);ARM_RT(print_uint);ARM_RT(print_str);ARM_RT(print_int);ARM_RT(print_char);ARM_RT(print_bool);ARM_RT(print_ptr);ARM_RT(alloc);ARM_RT(try_alloc);ARM_RT(free);ARM_RT(len);ARM_RT(streq);ARM_RT(strbyte);ARM_RT(error);ARM_RT(finish);ARM_RT(read);ARM_RT(now);ARM_RT(args_init);ARM_RT(argc);ARM_RT(arg_len);ARM_RT(arg_copy);ARM_RT(io_error);ARM_RT(file_open);ARM_RT(file_close);ARM_RT(file_drop);ARM_RT(file_read);ARM_RT(file_write);default:fatal("ARM64: rotina desconhecida");}
 #undef ARM_RT
     a_mov(3,27);int64_t delta=(int64_t)offset-(int64_t)code.n;if(delta%4||delta<-(1<<27)||delta>=(1<<27))fatal("ARM64: runtime fora do alcance");a_ins(0x94000000u|((uint32_t)(delta/4)&0x3ffffff));
 }
@@ -131,7 +131,11 @@ static void a_value(BackendValue*v){
     case BV_STRING_INDEX:a_value(v->a);a_push(0);a_value(v->b);a_mov(1,0);a_pop(0);a_site(2,v->site);a_rt(RT_strbyte);break;
     case BV_UTF8:a_address(0,string_label(v->text,v->length));a_local(2,v->temp);a_mem(false,0,2,0,8);a_imm(0,v->length);a_mem(false,0,2,8,8);a_mov(0,2);break;
     case BV_SLICE:{a_value(v->a);a_nonnull(v->site);a_mem(true,1,0,v->mode==BM_SLICE?8:-16,8);if(v->mode==BM_SLICE)a_mem(true,0,0,0,8);else{a_imm(2,(uint64_t)value_size(v->element));a_rr(0x9ac00800,1,1,2);}a_push(0);a_push(1);a_value(v->arguments.v[1]);a_push(0);a_value(v->arguments.v[2]);a_mov(2,0);a_pop(0);a_pop(1);a_pop(3);int ok=new_label(),enough=new_label();a_cmp(0,1);a_cond(9,ok);a_panic(9,v->site);mark(ok,&code);a_rr(0xcb000000,1,1,0);a_cmp(2,1);a_cond(9,enough);a_panic(9,v->site);mark(enough,&code);a_imm(1,(uint64_t)value_size(v->element));a_rr(0x9b007c00,0,0,1);a_rr(0x8b000000,3,3,0);a_local(0,v->temp);a_mem(false,3,0,0,8);a_mem(false,2,0,8,8);break;}
-    case BV_ALLOC:a_value(v->a);if(v->op==T_BUFFER){int ok=new_label();a_imm(1,(uint64_t)INT64_MAX/(unsigned)value_size(v->element));a_cmp(0,1);a_cond(9,ok);a_panic(4,v->site);mark(ok,&code);a_imm(1,(uint64_t)value_size(v->element));a_rr(0x9b007c00,0,0,1);}a_site(1,v->site);a_rt(RT_alloc);break;
+    case BV_ALLOC:a_value(v->a);if(v->op==T_BUFFER||v->op==T_TRY_BUFFER){
+        int ok=new_label(),sized=new_label();a_imm(1,(uint64_t)INT64_MAX/(unsigned)value_size(v->element));a_cmp(0,1);a_cond(9,ok);
+        if(v->op==T_TRY_BUFFER){a_imm(0,UINT64_MAX);a_branch(sized);}else a_panic(4,v->site);
+        mark(ok,&code);a_imm(1,(uint64_t)value_size(v->element));a_rr(0x9b007c00,0,0,1);mark(sized,&code);
+    }a_site(1,v->site);a_rt(v->op==T_TRY_BUFFER?RT_try_alloc:RT_alloc);break;
     case BV_LENGTH:a_value(v->a);if(slice_type(v->a->type)||collection_of(v->a->type)){a_nonnull(v->site);a_mem(true,0,0,8,8);}else if(v->a->type.depth){a_nonnull(v->site);a_mem(true,0,0,-16,8);a_imm(1,(uint64_t)value_size(pointed(v->a->type)));a_rr(0x9ac00800,0,0,1);}else a_rt(RT_len);break;
     case BV_ASSERT:{a_value(v->a);int ok=new_label();a_test(0);a_cond(1,ok);if(v->arguments.n==2){a_value(v->arguments.v[1]);a_imm(1,2);a_rt(RT_print_str);a_imm(0,10);a_imm(1,2);a_rt(RT_print_char);}a_panic(10,v->site);mark(ok,&code);break;}
     case BV_NONNULL:a_value(v->a);a_nonnull(v->site);break;case BV_REINTERPRET:a_value(v->a);break;case BV_RUNTIME:a_runtime(v);break;case BV_MATERIALIZE:a_value(v->a);a_local(2,v->local);a_store(v->type);break;

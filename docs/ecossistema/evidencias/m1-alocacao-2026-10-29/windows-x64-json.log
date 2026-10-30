@@ -1,0 +1,9 @@
+test_budgets_and_error_position (__main__.Json.test_budgets_and_error_position) ... ok
+test_grammar_and_utf8_adversarial_against_oracle (__main__.Json.test_grammar_and_utf8_adversarial_against_oracle) ... ok
+test_serializer_preserves_nul_unicode_and_destination_on_failure (__main__.Json.test_serializer_preserves_nul_unicode_and_destination_on_failure) ... ok
+test_tokens_offsets_and_no_pointer_escape (__main__.Json.test_tokens_offsets_and_no_pointer_escape) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 6.277s
+
+OK

@@ -44,7 +44,7 @@ unaria = ["+" | "-" | "!" | "~" | "*" | "&"], primaria,
          {".", nome | argumentos | "[", expressao, "]" | "::", argumentos_tipo} ;
 primaria = closure | caractere | inteiro | real_decimal | texto | "true" | "false" | "null" | "self" | "super" | nome
          | "(", expressao, ")" | "new", tipo, [".", nome], argumentos
-         | "alloc", "<", tipo, ">", argumentos
+         | ("alloc" | "try_alloc"), "<", tipo, ">", argumentos
          | ("utf8" | "len" | "slice_of" | "int" | "byte" | "i8" | "i16" | "i32" | "i64" | "u8" | "u16" | "u32" | "u64" | "f32" | "f64" | "bool" | "text" | "bytes" | "move" | "read_bytes" | "monotonic_ms"
             | "file_open" | "file_read" | "file_write" | "file_close" | "io_error"
             | "arg_count" | "arg_size" | "arg_copy" | "sleep_ms" | "civil_ms" | "write_bytes"

@@ -119,7 +119,7 @@ static void memory_take(Node *n){
     if(n->kind==N_CALL&&call_contract(n)->result_mode==1)n->ownership=1;
     memory_expr(n);
     if(n->capture_roots.n&&n!=borrow_capture_initializer)error(n->t,"closure com captura borrow exige vínculo own local; passe borrow");
-    if(n->kind!=N_NEW&&n->kind!=N_ARRAY&&!(n->kind==N_BUILTIN&&(n->op==T_BUFFER||n->op==T_ALLOC))&&!(n->kind==N_CALL&&call_contract(n)->result_mode==1))error(n->t,"own exige alocação nova, retorno own ou move(proprietario)");
+    if(n->kind!=N_NEW&&n->kind!=N_ARRAY&&!(n->kind==N_BUILTIN&&(n->op==T_BUFFER||n->op==T_TRY_BUFFER||n->op==T_ALLOC))&&!(n->kind==N_CALL&&call_contract(n)->result_mode==1))error(n->t,"own exige alocação nova, retorno own ou move(proprietario)");
     n->ownership=1;
 }
 static void memory_arguments(Node *n,TypeRef *r){
