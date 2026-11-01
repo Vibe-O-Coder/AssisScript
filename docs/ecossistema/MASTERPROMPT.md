@@ -11,6 +11,10 @@ publicada `b8b89803b8e89fe1cbe3096ae97e0b4bfd06d55d`, branch
 A unidade atual fica em `AssisScript/work/document-memory-20261101`, branch
 `work/m1-document-memory-2026-11-01`; publicação e revisão exata no
 [relatório de documento candidato](../relatorios/2026-11-01-m1-documento-candidato.md).
+Implementação/testes no commit local `90aa24042726e26ab274d946e97e3ebc2eab5d54`.
+A revisão automática bloqueou o envio dos 57 arquivos por exigir autorização
+direta do usuário para o conjunto/destino públicos. Não há nova PR/publicação.
+Ao ler a cópia original, abra o [relatório local](<C:/Users/babus/Desktop/AssisScript/work/document-memory-20261101/docs/relatorios/2026-11-01-m1-documento-candidato.md>).
 Confira o SHA remoto e a PR; publicação de branch não significa merge no master.
 
 Já existem reconciliações M0, contratos bootstrap, arena geracional, provider

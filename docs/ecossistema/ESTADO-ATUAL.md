@@ -7,6 +7,10 @@ confirmada aberta, em rascunho e sem merge pelo conector nesta sessão.
 Continuação isolada: `AssisScript/work/document-memory-20261101`, branch
 `work/m1-document-memory-2026-11-01`. Revisão, testes e publicação no
 [relatório de documento candidato](../relatorios/2026-11-01-m1-documento-candidato.md).
+Implementação/testes no commit local `90aa240`; envio dos 57 arquivos bloqueado
+pela revisão automática até autorização direta para payload/destino públicos.
+Nenhuma nova PR/publicação confirmada. Na cópia original, consulte o
+[relatório local](<C:/Users/babus/Desktop/AssisScript/work/document-memory-20261101/docs/relatorios/2026-11-01-m1-documento-candidato.md>).
 
 ## Encontrar a revisão que deve continuar
 

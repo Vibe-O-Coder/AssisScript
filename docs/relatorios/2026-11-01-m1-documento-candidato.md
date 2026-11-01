@@ -181,3 +181,29 @@ com atributos cobrados, corpus positivo/negativo e diagnósticos H101–H401;
 ativar o candidato somente após conformidade. Spikes VM/Wasm M0-EXEC e
 experiência visual M2 seguem independentes, com seus aceites próprios.
 Web/Easy não são antecipados; Easy permanece a última etapa do projeto.
+
+## Adendo — publicação bloqueada pela revisão automática
+
+Implementação, testes e evidências registrados em
+`90aa24042726e26ab274d946e97e3ebc2eab5d54`, **57 arquivos**, com árvore de
+trabalho limpa. Os **110 hashes** também foram conferidos contra os blobs
+desse commit. O adendo posterior altera apenas continuidade/publicação e os
+hashes desses documentos; não muda o código validado.
+
+O comando `git push -u origin work/m1-document-memory-2026-11-01` foi
+rejeitado pela revisão automática **antes da execução**. Motivo: enviar esse
+conjunto de código, logs, evidências e relatórios, que inclui metadados de
+caminhos locais, a um remoto público exige autorização direta do usuário para
+o payload e destino exatos. A autorização normal de publicação contida no
+masterprompt não foi considerada suficiente pela revisão automática.
+
+Não foi usada rota alternativa. Não há publicação ou PR nova confirmada.
+O commit e este adendo permanecem locais; a cópia original do masterprompt
+aponta à continuação e ao relatório local. A unidade não precisa ser refeita.
+
+Pendente de autorização específica: publicar os 57 arquivos desta unidade e
+o adendo na branch `work/m1-document-memory-2026-11-01` do repositório público
+[Vibe-O-Coder/AssisScript](https://github.com/Vibe-O-Coder/AssisScript), verificar
+SHA/inventário remoto e criar PR de rascunho sobre
+`work/m1-document-store-2026-11-01` (#15), sem merge ou release.
+O comando pendente é o push acima; o SHA do adendo se encontra pelo histórico.
