@@ -162,3 +162,25 @@ controles/foco/seleção/scroll, ponte acessível, catálogo completo,
 recuperação de edição e mutações semânticas. M0-EXEC exige os dois spikes
 VM/Wasm e decisão; parsing não o libera. M1 ainda não limita RSS/processo.
 Easy permanece a última etapa.
+
+## Adendo — publicação bloqueada pela revisão automática
+
+Implementação/testes/evidências registrados em
+`d8af5d1940698452e408b7d88e13724b4bce1941`, **53 arquivos**, com árvore de
+trabalho limpa. Os 115 hashes foram conferidos também contra os blobs desse
+commit. Este adendo atualiza somente continuidade/publicação e hashes
+documentais; não altera código ou resultados validados.
+
+O primeiro push falhou por conexão bloqueada. A tentativa com acesso à rede,
+`git push -u origin work/m3-htdl-parser-2026-11-01`, foi **rejeitada antes da
+execução pela revisão automática**. Motivo informado: publicar 53 arquivos
+locais de fontes/testes/evidências num GitHub público pode expor dados do
+projeto e exige autorização direta do usuário para payload e destino exatos.
+A autorização de publicação no masterprompt não foi considerada suficiente.
+
+Não foi usada rota alternativa. **Sem publicação ou PR nova confirmadas**.
+O commit e um patch completo ficam locais; a ação pendente é autorizar o envio
+dos 53 arquivos desta branch ao repositório público
+`https://github.com/Vibe-O-Coder/AssisScript.git`, seguido de PR de rascunho
+incremental sobre `work/m1-document-memory-2026-11-01`, sem merge/release.
+O SHA final deste adendo é localizado pelo histórico, sem hash autorreferente.

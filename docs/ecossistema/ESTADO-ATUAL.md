@@ -7,7 +7,9 @@ branch `work/m1-document-memory-2026-11-01`,
 Continuação: `AssisScript/work/htdl-parser-20261101`, branch
 `work/m3-htdl-parser-2026-11-01`. Parser/atributos/spans, corpus e ativação
 validada no [relatório M3](../relatorios/2026-11-01-m3-parser-htdl.md).
-O adendo desse relatório confirma ou registra impedimento de publicação.
+Implementação/testes em `d8af5d1940698452e408b7d88e13724b4bce1941`, 53 arquivos.
+**Publicação bloqueada pela revisão automática**, aguardando autorização direta
+para esse payload e destino público; sem PR nova. Detalhes no adendo do relatório.
 Confira o SHA remoto antes de continuar. A pasta original é histórica/suja.
 
 Parser bootstrap real não aprova visualizador ou HTDL completo. A meta de 30%

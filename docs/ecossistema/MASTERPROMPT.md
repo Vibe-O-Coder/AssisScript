@@ -12,6 +12,10 @@ A unidade nova fica em `AssisScript/work/htdl-parser-20261101`, branch
 `work/m3-htdl-parser-2026-11-01`; estado de publicação e evidências no
 [relatório M3](../relatorios/2026-11-01-m3-parser-htdl.md). Confira SHA remoto/PR
 antes de continuar; envio de branch não significa merge no master.
+Implementação/testes em `d8af5d1940698452e408b7d88e13724b4bce1941`, 53 arquivos.
+Publicação bloqueada pela revisão automática, aguardando autorização direta
+para payload/destino públicos; não usar uma rota alternativa ao bloqueio.
+Sem PR nova. O adendo do relatório registra a ação exata pendente.
 Ao ler a cópia original, abra o
 [relatório local](<C:/Users/babus/Desktop/AssisScript/work/htdl-parser-20261101/docs/relatorios/2026-11-01-m3-parser-htdl.md>).
 
