@@ -1,0 +1,128 @@
+namespace buffers;
+import "std/owned.assis";
+
+/// Local identity. The trusted host assigns a unique, positive instance.
+public value struct BufferId{let instance:int;let slot:int;let generation:int;}
+/// Copy result: no allocation is needed to report rejection.
+public enum Creation{Created(BufferId);Rejected(int);}
+struct Slot{own data:*byte;let count:int;let capacity:int;let generation:int;let occupied:bool;let next:int;}
+
+safe fn payload(size:int):own *byte{
+    if(size==0){return try_alloc<byte>(-1);} // Typed null; no allocator call.
+    return try_alloc<byte>(size);
+}
+
+/// Shared payload budget, including old + candidate during growth.
+/// Metadata, allocator overhead/caches, stack and other objects are excluded.
+public final class BufferPool{
+    private own slots:owned::OwnedArray<Slot>;
+    private let instance:int;
+    private let limit:int;
+    private let slot_limit:int;
+    private let generation_limit:int;
+    private let used:int;
+    private let count:int;
+    private let free_head:int;
+    private let active:bool;
+
+    fn init(borrow mut self,instance:int,max_bytes:int,max_buffers:int,generation_limit:int):void{
+        assert(self.instance==0);
+        assert(instance>0 && max_bytes>=0 && max_buffers>=0 && generation_limit>0);
+        self.instance=instance;self.limit=max_bytes;self.slot_limit=max_buffers;
+        self.generation_limit=generation_limit;self.free_head=-1;
+        self.slots=try_new owned::OwnedArray<Slot>();self.active=self.slots!=null;
+    }
+    fn is_open(borrow self):bool{return self.active;}
+    fn size(borrow self):int{return self.count;}
+    fn used_bytes(borrow self):int{return self.used;}
+    fn max_bytes(borrow self):int{return self.limit;}
+    fn slots_used(borrow self):int{if(self.slots==null){return 0;}return self.slots.size();}
+    fn contains(borrow self,id:BufferId):bool{
+        if(!self.active || id.instance!=self.instance || id.slot<0 ||
+           id.slot>=self.slots.size() || id.generation<=0){return false;}
+        borrow slot:Slot=self.slots.get(id.slot);
+        return slot.occupied && slot.generation==id.generation;
+    }
+    /// Rejection: 1 closed, 2 slot limit, 3 allocator refusal, 4 size/budget.
+    /// Failure publishes neither an ID nor partial quota/slot changes.
+    fn try_create(borrow mut self,size:int):Creation{
+        if(!self.active){return new Creation.Rejected(1);}
+        if(size<0 || size>self.limit-self.used){return new Creation.Rejected(4);}
+        let index:int=self.free_head;let generation:int=1;
+        if(index<0 && self.slots.size()>=self.slot_limit){return new Creation.Rejected(2);}
+        own data:*byte=payload(size);
+        if(size>0 && data==null){return new Creation.Rejected(3);}
+        if(index>=0){
+            let next:int=-1;
+            {borrow mut slot:Slot=self.slots.get_mut(index);
+             next=slot.next;generation=slot.generation;slot.data=move(data);
+             slot.count=size;slot.capacity=size;slot.occupied=true;slot.next=-1;}
+            self.free_head=next;
+        }else{
+            index=self.slots.size();own slot:Slot=try_new Slot();
+            if(slot==null){return new Creation.Rejected(3);}
+            slot.data=move(data);slot.count=size;slot.capacity=size;
+            slot.generation=1;slot.occupied=true;slot.next=-1;
+            if(!self.slots.try_push(move(slot))){return new Creation.Rejected(3);}
+        }
+        self.used+=size;self.count+=1;
+        return new Creation.Created(new BufferId(self.instance,index,generation));
+    }
+    fn byte_size(borrow self,id:BufferId):int{assert(self.contains(id));return self.slots.get(id.slot).count;}
+    fn capacity(borrow self,id:BufferId):int{assert(self.contains(id));return self.slots.get(id.slot).capacity;}
+    /// Invalid/stale IDs and negative sizes return false, without mutation.
+    fn try_reserve(borrow mut self,id:BufferId,capacity:int):bool{
+        if(!self.contains(id) || capacity<0){return false;}
+        let previous:int=0;
+        {borrow slot:Slot=self.slots.get(id.slot);previous=slot.capacity;}
+        if(capacity<=previous){return true;}
+        // Existing payload remains charged until the replacement is committed.
+        if(capacity>self.limit-self.used){return false;}
+        own candidate:*byte=try_alloc<byte>(capacity);
+        if(candidate==null){return false;}
+        {borrow mut slot:Slot=self.slots.get_mut(id.slot);
+         for(let i:int=0;i<slot.count;i++){candidate[i]=slot.data[i];}
+         slot.data=move(candidate);slot.capacity=capacity;}
+        self.used=self.used-previous+capacity;return true;
+    }
+    fn try_resize(borrow mut self,id:BufferId,size:int):bool{
+        if(!self.try_reserve(id,size)){return false;}
+        borrow mut slot:Slot=self.slots.get_mut(id.slot);
+        for(let i:int=slot.count;i<size;i++){slot.data[i]=byte(0);}
+        slot.count=size;return true;
+    }
+    fn get(borrow self,id:BufferId,index:int):byte{
+        assert(self.contains(id));borrow slot:Slot=self.slots.get(id.slot);
+        assert(index>=0 && index<slot.count);return slot.data[index];
+    }
+    fn set(borrow mut self,id:BufferId,index:int,value:byte):void{
+        assert(self.contains(id));borrow mut slot:Slot=self.slots.get_mut(id.slot);
+        assert(index>=0 && index<slot.count);slot.data[index]=value;
+    }
+    /// Releases payload and quota; the empty buffer's identity remains valid.
+    fn release(borrow mut self,id:BufferId):bool{
+        if(!self.contains(id)){return false;}
+        let capacity:int=0;
+        {borrow mut slot:Slot=self.slots.get_mut(id.slot);capacity=slot.capacity;
+         own previous:*byte=move(slot.data);slot.count=0;slot.capacity=0;}
+        self.used-=capacity;return true;
+    }
+    /// Invalidates before recycling; generation exhaustion retires the slot.
+    fn erase(borrow mut self,id:BufferId):bool{
+        if(!self.release(id)){return false;}
+        val head:int=self.free_head;val recycle:bool=id.generation<self.generation_limit;
+        {borrow mut slot:Slot=self.slots.get_mut(id.slot);slot.occupied=false;
+         if(recycle){slot.generation=id.generation+1;slot.next=head;}}
+        if(recycle){self.free_head=id.slot;}
+        self.count-=1;return true;
+    }
+    fn close(borrow mut self):void{
+        self.active=false;self.used=0;self.count=0;self.free_head=-1;
+        if(self.slots!=null){self.slots.clear();}
+    }
+    /// A newer host-assigned instance invalidates every previous identity.
+    fn reset(borrow mut self,instance:int):bool{
+        if(instance<=self.instance || self.slots==null){return false;}
+        self.close();self.instance=instance;self.active=true;return true;
+    }
+}

@@ -1,6 +1,6 @@
 # Bibliotecas — alpha.14
 
-São 22 módulos nos fontes de desenvolvimento, incluindo a [arena geracional](BIBLIOTECA-arena.md) e a [janela nativa Windows](BIBLIOTECA-window.md). O provider da janela é opcional e ainda exige build separado; os pacotes anteriores não o contêm.
+São 23 módulos nos fontes de desenvolvimento, incluindo a [arena geracional](BIBLIOTECA-arena.md), o [pool com orçamento conjunto de buffers](BIBLIOTECA-buffers.md) e a [janela nativa Windows](BIBLIOTECA-window.md). O provider da janela é opcional e ainda exige build separado; os pacotes anteriores não o contêm.
 O caminho recomendado para novos programas é unicode, own/borrow
 e slices. A revisão acrescenta random, o builder Unicode, sort safe e
 owned::OwnedArray de recursos Move. Consulte [o manual atual](LINGUAGEM.md).
@@ -71,6 +71,7 @@ O instalador inclui as cinco obrigatórias em todos os perfis. Por padrão insta
 - [Matemática](BIBLIOTECA-matematica.md)
 - [Texto, busca KMP e Texto proprietário](BIBLIOTECA-texto.md)
 - [Memória](BIBLIOTECA-memoria.md)
+- [Buffers com orçamento compartilhado](BIBLIOTECA-buffers.md)
 - [Erros e resultados](BIBLIOTECA-erros.md)
 - [Conversões](BIBLIOTECA-conversoes.md)
 - [Algoritmos](BIBLIOTECA-algoritmos.md)

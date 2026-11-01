@@ -1,0 +1,290 @@
+{
+  "platform": "win32",
+  "compilerSha256": "0970dfaeee0710a2106b4e0c3661ff8165346ca299b4d39a5c6335457630ee62",
+  "testEnvironment": {
+    "tlsTimeoutMilliseconds": "native defaults"
+  },
+  "passed": false,
+  "suites": [
+    {
+      "suite": "evolution",
+      "returnCode": 0,
+      "tests": 12,
+      "seconds": 10.145803800000067,
+      "log": "windows-evolution.log"
+    },
+    {
+      "suite": "generics",
+      "returnCode": 0,
+      "tests": 13,
+      "seconds": 8.686170599999969,
+      "log": "windows-generics.log"
+    },
+    {
+      "suite": "functions",
+      "returnCode": 0,
+      "tests": 19,
+      "seconds": 10.09770539999954,
+      "log": "windows-functions.log"
+    },
+    {
+      "suite": "generic-classes",
+      "returnCode": 0,
+      "tests": 17,
+      "seconds": 13.217582100000072,
+      "log": "windows-generic-classes.log"
+    },
+    {
+      "suite": "collections-ast",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 10.01674229999935,
+      "log": "windows-collections-ast.log"
+    },
+    {
+      "suite": "ownership-functions",
+      "returnCode": 0,
+      "tests": 26,
+      "seconds": 16.41967460000069,
+      "log": "windows-ownership-functions.log"
+    },
+    {
+      "suite": "values",
+      "returnCode": 0,
+      "tests": 21,
+      "seconds": 11.531293600000026,
+      "log": "windows-values.log"
+    },
+    {
+      "suite": "files",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 5.48115560000042,
+      "log": "windows-files.log"
+    },
+    {
+      "suite": "text-bytes",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 2.815551400000004,
+      "log": "windows-text-bytes.log"
+    },
+    {
+      "suite": "cli",
+      "returnCode": 0,
+      "tests": 1,
+      "seconds": 2.5020695999992313,
+      "log": "windows-cli.log"
+    },
+    {
+      "suite": "numbers",
+      "returnCode": 0,
+      "tests": 11,
+      "seconds": 5.852445399999851,
+      "log": "windows-numbers.log"
+    },
+    {
+      "suite": "packages",
+      "returnCode": 0,
+      "tests": 13,
+      "seconds": 5.212963899999522,
+      "log": "windows-packages.log"
+    },
+    {
+      "suite": "json",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 6.682830499999909,
+      "log": "windows-json.log"
+    },
+    {
+      "suite": "system",
+      "returnCode": 0,
+      "tests": 8,
+      "seconds": 4.18054310000025,
+      "log": "windows-system.log"
+    },
+    {
+      "suite": "tooling",
+      "returnCode": 0,
+      "tests": 5,
+      "seconds": 1.524634000000333,
+      "log": "windows-tooling.log"
+    },
+    {
+      "suite": "slices",
+      "returnCode": 0,
+      "tests": 5,
+      "seconds": 4.499811700000464,
+      "log": "windows-slices.log"
+    },
+    {
+      "suite": "managed-classes",
+      "returnCode": 0,
+      "tests": 9,
+      "seconds": 5.529036199999609,
+      "log": "windows-managed-classes.log"
+    },
+    {
+      "suite": "backend-alpha9",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 1.2877078000001347,
+      "log": "windows-backend-alpha9.log"
+    },
+    {
+      "suite": "optimization",
+      "returnCode": 0,
+      "tests": 6,
+      "seconds": 14.989204299999983,
+      "log": "windows-optimization.log"
+    },
+    {
+      "suite": "english-api",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 2.664892400000099,
+      "log": "windows-english-api.log"
+    },
+    {
+      "suite": "release-policy",
+      "returnCode": 0,
+      "tests": 2,
+      "seconds": 1.5114282000004096,
+      "log": "windows-release-policy.log"
+    },
+    {
+      "suite": "ffi",
+      "returnCode": 0,
+      "tests": 9,
+      "seconds": 7.502502800000002,
+      "log": "windows-ffi.log"
+    },
+    {
+      "suite": "http",
+      "returnCode": 0,
+      "tests": 5,
+      "seconds": 18.115357399999994,
+      "log": "windows-http.log"
+    },
+    {
+      "suite": "process",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 7.541989899999862,
+      "log": "windows-process.log"
+    },
+    {
+      "suite": "applications-bc",
+      "returnCode": 0,
+      "tests": 3,
+      "seconds": 1.3875455000006696,
+      "log": "windows-applications-bc.log"
+    },
+    {
+      "suite": "safe-default",
+      "returnCode": 0,
+      "tests": 5,
+      "seconds": 2.4325207000001683,
+      "log": "windows-safe-default.log"
+    },
+    {
+      "suite": "net",
+      "returnCode": 1,
+      "tests": 8,
+      "seconds": 4.428437099999428,
+      "log": "windows-net.log"
+    },
+    {
+      "suite": "move-enums",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 3.5019280999995317,
+      "log": "windows-move-enums.log"
+    },
+    {
+      "suite": "closures",
+      "returnCode": 0,
+      "tests": 15,
+      "seconds": 6.10616200000004,
+      "log": "windows-closures.log"
+    },
+    {
+      "suite": "usability",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 6.184524700000111,
+      "log": "windows-usability.log"
+    },
+    {
+      "suite": "backend-evolution",
+      "returnCode": 0,
+      "tests": 16,
+      "seconds": 8.568741699999919,
+      "log": "windows-backend-evolution.log"
+    },
+    {
+      "suite": "complete-ir",
+      "returnCode": 0,
+      "tests": 7,
+      "seconds": 2.693261000000348,
+      "log": "windows-complete-ir.log"
+    },
+    {
+      "suite": "increment",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 3.6341898999999103,
+      "log": "windows-increment.log"
+    },
+    {
+      "suite": "owned-mutation",
+      "returnCode": 0,
+      "tests": 12,
+      "seconds": 12.258962500000052,
+      "log": "windows-owned-mutation.log"
+    },
+    {
+      "suite": "htdl-readiness",
+      "returnCode": 0,
+      "tests": 8,
+      "seconds": 5.697680799999944,
+      "log": "windows-htdl-readiness.log"
+    },
+    {
+      "suite": "arena",
+      "returnCode": 0,
+      "tests": 13,
+      "seconds": 17.811033599999973,
+      "log": "windows-arena.log"
+    },
+    {
+      "suite": "fallible-allocation",
+      "returnCode": 0,
+      "tests": 11,
+      "seconds": 6.912202900000011,
+      "log": "windows-fallible-allocation.log"
+    },
+    {
+      "suite": "fallible-slots",
+      "returnCode": 0,
+      "tests": 11,
+      "seconds": 16.657307800000126,
+      "log": "windows-fallible-slots.log"
+    },
+    {
+      "suite": "arena-removal",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 9.54754580000008,
+      "log": "windows-arena-removal.log"
+    },
+    {
+      "suite": "shared-buffer-budget",
+      "returnCode": 0,
+      "tests": 11,
+      "seconds": 12.72662070000024,
+      "log": "windows-shared-buffer-budget.log"
+    }
+  ]
+}

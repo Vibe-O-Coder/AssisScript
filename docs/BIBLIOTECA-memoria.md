@@ -11,6 +11,11 @@ Veja o [contrato de alocação recuperável](ALOCACAO-FALLIVEL.md) e o
 [exemplo](../exemplos/36_fallible_buffers.assis). Exige compilador reconstruído
 com `try_alloc<T>`; não promove os pacotes anteriores.
 
+Para vários buffers com um teto conjunto, use
+[std/buffers.assis](BIBLIOTECA-buffers.md). O pool cobra capacidades e a reserva
+transitória de crescimento, com controladores recuperáveis e IDs geracionais;
+não altera os limites independentes de ByteBuffer nem mede todo o documento.
+
 `fill(destino: *byte, count: int, value: byte)` preenche bytes. `copy(destino: *byte, origem: *byte, count: int)` copia buffers sem sobreposição. Ambas são O(n), exigem quantidade >= 0 e memória válida em todo o intervalo. Quantidade zero não acessa memória. Os aliases históricos foram removidos.
 
 ```assis

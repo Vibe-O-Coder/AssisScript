@@ -1,0 +1,33 @@
+{
+  "compiler_sha256": "034d61bfe7b1106f53b4e5dadec1100faffaa4292688adfc5cd5a4f2ff9ae78c",
+  "source_sha256": "cd9bc5348c84e57c13649cfb54429d80cae5c97486a44388fc94941429c5075a",
+  "cases": [
+    {
+      "command": [
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/shared-budget-20261101/build/assis-budget-linux",
+        "run",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/shared-budget-20261101/docs/ecossistema/evidencias/m1-buffer-budget-2026-11-01/before.assis",
+        "--debug"
+      ],
+      "flags": [],
+      "returnCode": 0,
+      "stdout": "16\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/shared-budget-20261101/build/assis-budget-linux",
+        "run",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/shared-budget-20261101/docs/ecossistema/evidencias/m1-buffer-budget-2026-11-01/before.assis",
+        "--debug",
+        "--no-opt"
+      ],
+      "flags": [
+        "--no-opt"
+      ],
+      "returnCode": 0,
+      "stdout": "16\n",
+      "stderr": ""
+    }
+  ]
+}

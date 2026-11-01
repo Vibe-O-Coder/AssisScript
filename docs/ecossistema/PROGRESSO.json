@@ -1,9 +1,9 @@
 {
   "schema": "assisscript-ecosystem-progress-v1",
   "rubric_version": 1,
-  "date": "2026-10-30",
+  "date": "2026-11-01",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "partial-native-retest-m1-removal",
+  "assessment": "partial-native-retest-m1-shared-buffer-budget",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -202,7 +202,7 @@
           "name": "Alocação e quotas recuperáveis",
           "level": 2,
           "acceptance": "Disponibilizar alocação fallível/reserve, checagem de tamanho e quotas por instância; injetar OOM em cada fronteira e conservar estado válido sem abortar serviços vizinhos.",
-          "baseline": "Subconjunto útil reproduzido em Windows/Linux x64: buffers com limite próprio, reserva inicial de objetos, inserções Move/slots com rollback e remoção/transferência sem alocação pela biblioteca sob recusa do OS. Quota compartilhada de documento, controladores e reserva antecipada continuam abertos; remove antigo ainda aloca resultado.",
+          "baseline": "Subconjunto útil reproduzido em Windows/Linux x64: alocação/inserção/remoção recuperáveis e pool com orçamento compartilhado de payload, controladores fallíveis e rollback sob recusa do OS. Quota integral de documento, overhead/metadados e reserva antecipada permanecem abertos; remove antigo ainda aloca resultado.",
           "evidence": [
             "docs/ALOCACAO-FALLIVEL.md",
             "stdlib/memory.assis",
@@ -214,7 +214,12 @@
             "docs/ecossistema/evidencias/m1-slots-2026-10-29/summary.json",
             "docs/relatorios/2026-10-30-m1-remocao-sem-alocacao.md",
             "docs/ecossistema/evidencias/m1-removal-2026-10-30/summary.json",
-            "tests/test-arena-removal.py"
+            "tests/test-arena-removal.py",
+            "docs/BIBLIOTECA-buffers.md",
+            "stdlib/buffers.assis",
+            "tests/test-shared-buffer-budget.py",
+            "docs/relatorios/2026-11-01-m1-orcamento-buffers.md",
+            "docs/ecossistema/evidencias/m1-buffer-budget-2026-11-01/summary.json"
           ]
         },
         {
@@ -1655,7 +1660,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-01",
+      "rubric_version": 1,
+      "label": "M1 parcial: orçamento conjunto de payload em pool de buffers; níveis preservados",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 1,
+        "E00-03": 1,
+        "E00-04": 0,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 1,
+        "E03-03": 2,
+        "E03-04": 2,
+        "E03-05": 0,
+        "E04-01": 2,
+        "E04-02": 1,
+        "E04-03": 1,
+        "E04-04": 0,
+        "E04-05": 0,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 0,
+        "E06-02": 0,
+        "E06-03": 0,
+        "E06-04": 0,
+        "E06-05": 0,
+        "E07-01": 1,
+        "E07-02": 0,
+        "E07-03": 0,
+        "E07-04": 0,
+        "E07-05": 0,
+        "E08-01": 0,
+        "E08-02": 0,
+        "E08-03": 0,
+        "E08-04": 0,
+        "E08-05": 0,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 1,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Remoção sem alocação validada nesta unidade em Windows/Linux x64: Arena.take/erase e OwnedArray.swap_remove, com modelo independente, identidades expiradas, drops e recusa do OS nos modos otimizado/referência. E02-03 permanece em 2: quota compartilhada, controladores e reserva antecipada continuam abertos. Demais créditos conservam evidências próprias/provisórias; nenhum gate é aprovado."
+  "assessment_note": "Pool de buffers com orçamento conjunto de payload validado nesta unidade em Windows/Linux x64: quota transitória, controladores fallíveis, IDs geracionais, rollback e recusa do OS em otimizado/referência. E02-03 permanece em 2: metadados, arena/texto e quota integral do documento continuam abertos. Demais créditos conservam evidências próprias/provisórias; nenhum gate é aprovado."
 }

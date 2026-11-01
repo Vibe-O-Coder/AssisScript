@@ -1,0 +1,26 @@
+{
+  "command": [
+    "gcc",
+    "-O2",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Wno-misleading-indentation",
+    "-municode",
+    "-static",
+    "-static-libgcc",
+    "-s",
+    "-Wl,--no-insert-timestamp",
+    "src/windows_setup.c",
+    "-lshell32",
+    "-ladvapi32",
+    "-luser32",
+    "-o",
+    "build/assis-budget-setup-check.exe"
+  ],
+  "returnCode": 0,
+  "binary_sha256": "ec5ad9cb045bbe61225cca302f6a6d15d77f15c47406862e5ecf09e2fa1948ce",
+  "category": "generation-only",
+  "installation": "not-run"
+}

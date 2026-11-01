@@ -1,0 +1,14 @@
+{
+  "command": [
+    "python",
+    "tests/test-net.py"
+  ],
+  "compiler_sha256": "0970dfaeee0710a2106b4e0c3661ff8165346ca299b4d39a5c6335457630ee62",
+  "returnCode": 0,
+  "registered": 8,
+  "not_run": 0,
+  "provider": "C:/Program Files/Git/mingw64/bin/libcurl-4.dll",
+  "provider_sha256": "aaf5f6e90bc3d35526355193fc38227194f240609915de062b3dc01bc2fe731f",
+  "reason": "Initial matrix configured C:/msys64/ucrt64/bin without libcurl-4.dll; NTSTATUS 0xc0000135. Retest uses the existing Git provider; sources unchanged.",
+  "log": "windows-net-retest.log"
+}

@@ -1,0 +1,152 @@
+test_application_b_polls_and_preserves_output_on_cancel (__main__.Net.test_application_b_polls_and_preserves_output_on_cancel) ... FAIL
+test_cancel_before_start_during_io_and_repeated_cancel (__main__.Net.test_cancel_before_start_during_io_and_repeated_cancel) ... FAIL
+test_completion_bounds_errors_and_request_retains_inputs (__main__.Net.test_completion_bounds_errors_and_request_retains_inputs) ... FAIL
+test_invalid_input_is_recoverable (__main__.Net.test_invalid_input_is_recoverable) ... FAIL
+test_native_handles_and_buffers_are_released_in_one_live_process (__main__.Net.test_native_handles_and_buffers_are_released_in_one_live_process) ... FAIL
+test_partial_body_stops_changing_after_cancel (__main__.Net.test_partial_body_stops_changing_after_cancel) ... FAIL
+test_timeout_parallel_requests_and_drop_while_pending (__main__.Net.test_timeout_parallel_requests_and_drop_while_pending) ... FAIL
+test_tls_positive_untrusted_and_hostname_verification (__main__.Net.test_tls_positive_untrusted_and_hostname_verification) ... FAIL
+
+======================================================================
+FAIL: test_application_b_polls_and_preserves_output_on_cancel (__main__.Net.test_application_b_polls_and_preserves_output_on_cancel)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-net.py", line 103, in test_application_b_polls_and_preserves_output_on_cancel
+    self.assertEqual((r.returncode,r.stdout,r.stderr),(1,b'Transport error -7 0\n',b''));self.assertEqual(output.read_bytes(),b'preserve')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (3221225781, b'', b'') != (1, b'Transport error -7 0\n', b'')
+
+First differing element 0:
+3221225781
+1
+
+- (3221225781, b'', b'')
++ (1, b'Transport error -7 0\n', b'')
+
+======================================================================
+FAIL: test_cancel_before_start_during_io_and_repeated_cancel (__main__.Net.test_cancel_before_start_during_io_and_repeated_cancel)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-net.py", line 68, in test_cancel_before_start_during_io_and_repeated_cancel
+    self.accepted(self.source_url('/slow','assert(!request.done());assert(request.error()==1);assert(request.cancel());assert(!request.cancel());assert(request.poll(50)==1);print(request.error(),request.size());'),'-7 0\n')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-evolution.py", line 67, in accepted
+    self.assertEqual((ran.returncode, ran.stdout, ran.stderr), (0, stdout, ''))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (3221225781, '', '') != (0, '-7 0\n', '')
+
+First differing element 0:
+3221225781
+0
+
+- (3221225781, '', '')
++ (0, '-7 0\n', '')
+
+======================================================================
+FAIL: test_completion_bounds_errors_and_request_retains_inputs (__main__.Net.test_completion_bounds_errors_and_request_retains_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-net.py", line 63, in test_completion_bounds_errors_and_request_retains_inputs
+    self.accepted(self.source_url('/ok','url[7]=byte(88);while(request.poll(10)==0){}print(request.error(),request.status_code(),request.size());{borrow b:slice<byte>=request.body();print(b[5],b[6],b[7]);}assert(!request.cancel());assert(request.poll(0)==1);',limit=8),'0 200 8\n0 195 167\n')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-evolution.py", line 67, in accepted
+    self.assertEqual((ran.returncode, ran.stdout, ran.stderr), (0, stdout, ''))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (3221225781, '', '') != (0, '0 200 8\n0 195 167\n', '')
+
+First differing element 0:
+3221225781
+0
+
+- (3221225781, '', '')
++ (0, '0 200 8\n0 195 167\n', '')
+
+======================================================================
+FAIL: test_invalid_input_is_recoverable (__main__.Net.test_invalid_input_is_recoverable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-net.py", line 121, in test_invalid_input_is_recoverable
+    self.accepted(prefix+buffer('url',url)+'own r:net::Request=net::start(url,1000,1);print(r.done(),r.error(),r.size());return 0;}','true -1 0\n')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-evolution.py", line 67, in accepted
+    self.assertEqual((ran.returncode, ran.stdout, ran.stderr), (0, stdout, ''))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (3221225781, '', '') != (0, 'true -1 0\n', '')
+
+First differing element 0:
+3221225781
+0
+
+- (3221225781, '', '')
++ (0, 'true -1 0\n', '')
+
+======================================================================
+FAIL: test_native_handles_and_buffers_are_released_in_one_live_process (__main__.Net.test_native_handles_and_buffers_are_released_in_one_live_process)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-net.py", line 93, in test_native_handles_and_buffers_are_released_in_one_live_process
+    self.assertEqual(child.stdout.readline(),b'READY\n');before=handles();child.stdin.write(b'x');child.stdin.flush()
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'' != b'READY\n'
+
+======================================================================
+FAIL: test_partial_body_stops_changing_after_cancel (__main__.Net.test_partial_body_stops_changing_after_cancel)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-net.py", line 79, in test_partial_body_stops_changing_after_cancel
+    self.accepted(self.source_url('/stream','while(request.size()==0){assert(request.poll(10)==0);}assert(request.cancel());val size:int=request.size();assert(size>0&&size<4096);assert(sleep_ms(50)==0);assert(request.poll(0)==1&&request.size()==size);print(request.error());',limit=8192),'-7\n')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-evolution.py", line 67, in accepted
+    self.assertEqual((ran.returncode, ran.stdout, ran.stderr), (0, stdout, ''))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (3221225781, '', '') != (0, '-7\n', '')
+
+First differing element 0:
+3221225781
+0
+
+- (3221225781, '', '')
++ (0, '-7\n', '')
+
+======================================================================
+FAIL: test_timeout_parallel_requests_and_drop_while_pending (__main__.Net.test_timeout_parallel_requests_and_drop_while_pending)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-net.py", line 73, in test_timeout_parallel_requests_and_drop_while_pending
+    self.accepted(self.source_url('/slow','while(request.poll(10)==0){}print(request.error());',timeout=40),'-3\n')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-evolution.py", line 67, in accepted
+    self.assertEqual((ran.returncode, ran.stdout, ran.stderr), (0, stdout, ''))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (3221225781, '', '') != (0, '-3\n', '')
+
+First differing element 0:
+3221225781
+0
+
+- (3221225781, '', '')
++ (0, '-3\n', '')
+
+======================================================================
+FAIL: test_tls_positive_untrusted_and_hostname_verification (__main__.Net.test_tls_positive_untrusted_and_hostname_verification)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-net.py", line 113, in test_tls_positive_untrusted_and_hostname_verification
+    self.accepted(self.source_url('/ok','while(request.poll(10)==0){}print(request.error());',host='localhost',secure=True,timeout=timeout),'-5\n')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\Desktop\AssisScript\work\shared-budget-20261101\tests\test-evolution.py", line 67, in accepted
+    self.assertEqual((ran.returncode, ran.stdout, ran.stderr), (0, stdout, ''))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (3221225781, '', '') != (0, '-5\n', '')
+
+First differing element 0:
+3221225781
+0
+
+- (3221225781, '', '')
++ (0, '-5\n', '')
+
+----------------------------------------------------------------------
+Ran 8 tests in 4.086s
+
+FAILED (failures=8)

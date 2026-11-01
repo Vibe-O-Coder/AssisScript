@@ -1,0 +1,2 @@
+import "std/memory.assis";
+safe fn main():int{own a:ByteBuffer=try_new ByteBuffer(12);own b:ByteBuffer=try_new ByteBuffer(12);assert(a!=null && b!=null);assert(a.try_reserve(8));assert(b.try_reserve(8));print(a.capacity()+b.capacity());return 0;}
