@@ -192,6 +192,13 @@
       "dependencies": ["owned"]
     },
     {
+      "name": "doctree",
+      "required": false,
+      "doc": "BIBLIOTECA-doctree.md",
+      "description": "Árvore ordenada com identidades geracionais e quota conjunta de registros/texto UTF-8; sem parser HTDL ou quota de RSS.",
+      "dependencies": ["buffers", "unicode"]
+    },
+    {
       "name": "random",
       "required": false,
       "description": "Deterministic random generator for simulations and games",

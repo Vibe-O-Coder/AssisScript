@@ -1,6 +1,7 @@
 # Fila operacional após as reconciliações M0
 
-29/10/2026. M0 permanece aberto. Cada tarefa produz teste, evidência, relatório
+Atualização operacional: 01/11/2026. O histórico das entregas está abaixo da
+tabela. M0/M1 permanecem abertos. Cada tarefa produz teste, evidência, relatório
 e publicação próprios. As durações dos testes de fundação foram medidas nos
 JSONs das reconciliações; elas não permitem estimar esforço de produto.
 As estimativas abaixo são hipóteses em sessões de escopo, a revisar após o
@@ -12,9 +13,9 @@ primeiro spike de cada área, sem prazo de entrega global.
 | M0-PROFILE | HTDL 0.1 → perfil bootstrap e diagnósticos fixados | M0-REF | Contrato do subconjunto e casos positivos/negativos planejados | Contrato entregue; implementação em tarefa própria |
 | M0-ABI | FFI escalar → contrato assis_platform_v1 | E01 | Interface/ownership/thread/falhas e inventário | Contrato entregue; risco de provider e texto permanece |
 | M0-EXEC | ADR-0001 → dois spikes e escolha fundamentada | E01/E03 | Semântica e autoridade medidas | 2 sessões para spikes, mais decisão; sandbox separada |
-| M1-ARENA | OwnedArray → handles de categoria/instância/geração | E02-01/M0-REF | Modelo independente, reciclagem, geração esgotada, drops e empréstimos | 1 sessão para subconjunto nativo; OOM separado |
-| M1-ALLOC | Runtime → reserve/alocação fallível e quotas | E01/E02 | OOM injetado preserva estado e vizinhos | Primeira fatia entregue: try_alloc/ByteBuffer; new/arenas e quota total pendentes |
-| M1-SHIM | Contrato ABI → provider Windows mínimo | M0-ABI | Oráculo C/AssisScript, falhas e recursos contados | 1 sessão de spike; licenças/versões no build |
+| M1-ARENA | OwnedArray → handles de categoria/instância/geração | E02-01/M0-REF | Modelo independente, reciclagem, geração esgotada, drops e empréstimos | Entregue como subconjunto; arena genérica sem quota integral |
+| M1-ALLOC | Runtime → reserve/alocação fallível e quotas | E01/E02 | OOM injetado preserva estado e vizinhos | Entregues try_alloc/try_new, slots/remoção, BufferPool/preparação e doctree com registro/texto cobrados; quota integral pendente |
+| M1-SHIM | Contrato ABI → provider Windows mínimo | M0-ABI | Oráculo C/AssisScript, falhas e recursos contados | Prova Windows entregue; outros sistemas e integração visual pendentes |
 | M2-WINDOW | Shim → janela com texto/eventos/redimensionamento | M1-SHIM | Execução nativa, loop responsivo e fechamento | Reestimar após spike; acessibilidade não implícita |
 | M3-PARSER | Perfil bootstrap → parser real e árvore | M1-ARENA/M0-PROFILE | Corpus real com atributos/entidades/estrutura e diagnósticos | Reestimar após arena; microformato não serve como parser |
 
@@ -25,9 +26,10 @@ contados (relatório 2026-10-29-m1-plataforma-windows.md). Alocação de buffers
 continuam pendentes. M2 exige ampliar teclado/ponteiro,
 texto/DPI e acessibilidade, além de verificar a experiência visual.
 
-Ordem imediata: alocação recuperável de objetos/arenas, quota compartilhada por
-documento e spikes do executor. A primeira fatia try_alloc/ByteBuffer não
-encerra M1-ALLOC nem exige terminar uma frente inteira. Nenhuma delegação
+Ordem imediata: completar o contrato de cobrança de metadados/demais recursos
+por documento e preparar candidato completo; spikes do executor em paralelo
+conceitual, sem depender de fechar toda a frente de memória. O parser M3 pode
+usar a árvore recuperável com seus limites explícitos. Nenhuma delegação
 automática é requerida. Não pontuar hipóteses ou marcar not-run como pass.
 
 Continuação de 30/10/2026: try_new e inserções recuperáveis de OwnedArray/Arena
@@ -60,3 +62,12 @@ alocações. Payload não vazio continua dependente do alocador e a quota exclui
 metadados. Próximo M1-ALLOC: integração do orçamento com arena/árvore/texto
 por documento, cobrança e rollback. Estado/relatórios da linhagem estão no
 [índice de continuidade](ESTADO-ATUAL.md); não repetir as reconciliações M0.
+
+Continuação de 01/11/2026: `std/doctree.assis` integra a árvore ordenada e seu
+texto UTF-8 na arena de bytes do BufferPool. Registros reais de 128 bytes,
+texto e crescimento transitório dividem orçamento; recusas de append/texto
+preservam os nós vivos. Reparent valida ciclos antes da mudança; apagar uma
+subárvore é iterativo e sem alocação. Não implementa parser/semântica HTDL e
+não encerra quota integral. Consulte o [relatório de árvore e orçamento](../relatorios/2026-11-01-m1-arvore-orcamento.md).
+Próximo: metadados e recursos fora do pool, candidato completo transacional,
+parser M3 pelo perfil congelado; M0-EXEC/M2 continuam com aceites próprios.

@@ -5,6 +5,9 @@ Versão da régua: **1**. Data: **29/10/2026**. Base nativa inspecionada: **3.3.
 **Atualização de continuidade em 01/11/2026:** o diagnóstico acima e a primeira
 fila abaixo são históricos. Reconciliações M0, contratos, arena, provider
 Windows e caminhos recuperáveis de alocação/remoção já têm entregas publicadas.
+Nesta continuação, `std/doctree.assis` integra registros de nós e texto UTF-8
+no orçamento do BufferPool; [relatório de árvore](../relatorios/2026-11-01-m1-arvore-orcamento.md).
+Metadados e demais recursos continuam fora da quota; não há parser HTDL real.
 Consulte o [estado atual e índice de relatórios](ESTADO-ATUAL.md) e a
 [fila operacional](FILA-M0-M1.md) na branch efetiva antes de escolher trabalho.
 A régua evoluiu para 22,30%, com 0/5 gates; isso não encerra M0/M1.

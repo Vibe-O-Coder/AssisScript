@@ -180,3 +180,9 @@ test-buffer-preallocation: bin/assis
 	python3 tests/test-buffer-preallocation.py
 
 test-alpha15: test-buffer-preallocation
+
+.PHONY: test-document-tree
+test-document-tree: bin/assis
+	python3 tests/test-document-tree.py
+
+test-alpha15: test-document-tree

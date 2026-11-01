@@ -1,0 +1,14 @@
+test_deep_tree_has_iterative_subtree_cleanup (__main__.DocumentTree.test_deep_tree_has_iterative_subtree_cleanup) ... ok
+test_example_ir_and_five_formats (__main__.DocumentTree.test_example_ir_and_five_formats) ... ok
+test_limits_stale_cross_document_retirement_and_reset (__main__.DocumentTree.test_limits_stale_cross_document_retirement_and_reset) ... ok
+test_links_reparent_cycles_and_subtree_deletion (__main__.DocumentTree.test_links_reparent_cycles_and_subtree_deletion) ... ok
+test_ordered_tree_against_independent_dictionary_model (__main__.DocumentTree.test_ordered_tree_against_independent_dictionary_model) ... ok
+test_os_refusal_rolls_back_and_keeps_neighbor (__main__.DocumentTree.test_os_refusal_rolls_back_and_keeps_neighbor) ... ok
+test_privacy_borrows_and_access_contracts (__main__.DocumentTree.test_privacy_borrows_and_access_contracts) ... ok
+test_shared_record_text_budget_and_transient_growth (__main__.DocumentTree.test_shared_record_text_budget_and_transient_growth) ... ok
+test_unicode_copy_validation_and_embedded_nul (__main__.DocumentTree.test_unicode_copy_validation_and_embedded_nul) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 15.324s
+
+OK
