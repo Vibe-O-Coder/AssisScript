@@ -184,3 +184,32 @@ rollback do candidato completo. M3: parser HTDL real do perfil congelado usando
 armazenamento recuperável, corpus positivo/negativo e diagnósticos. M0-EXEC e
 M2 continuam com seus próprios aceites, sem dependência de terminar toda a
 frente de memória. Web/Easy não são antecipados; Easy permanece a última etapa.
+
+## Adendo — publicação bloqueada pela revisão automática
+
+Implementação, testes, documentação e evidências registrados no commit
+`2dd09ef7c1d75ab80f8aafbd7663f0e02bbb217f`, **44 arquivos**. Os **95 hashes**
+foram conferidos também contra os blobs desse commit. A branch isolada estava
+limpa após o commit. Este adendo atualiza só a continuidade/publicação e seus
+hashes documentais, sem mudar a implementação testada.
+
+O comando `git push -u origin work/m1-document-store-2026-11-01` foi rejeitado
+pela revisão automática **antes de executar**: o envio dos 44 arquivos de
+código, testes e documentação a repositório público exige autorização direta
+do usuário para esse conjunto/destino. A revisão não considerou a autorização
+do masterprompt suficiente. O envio exporia esses fontes e evidências de
+teste publicamente, incluindo os caminhos locais registrados nos comandos.
+Não foi tentada rota alternativa nem criada PR sem a branch publicada.
+
+Pendente de autorização específica: publicar os 44 arquivos desta unidade e o
+adendo na branch `work/m1-document-store-2026-11-01` do repositório público
+[Vibe-O-Coder/AssisScript](https://github.com/Vibe-O-Coder/AssisScript), conferir
+SHA remoto/arquivos e abrir PR de rascunho sobre
+`work/ecosystem-current-2026-11-01` (#14), sem merge ou release.
+O comando exato pendente é o push acima. Após aprovação, a continuação parte
+deste commit/adendo local; não requer reimplementar ou republicar fontes antigas.
+
+O masterprompt no caminho original aponta ao relatório local para evitar
+depender do link remoto ainda inexistente. O SHA do adendo é localizado pelo
+histórico deste relatório, sem hash autorreferente. Não se declara publicação,
+CI ou PR concluída desta unidade.

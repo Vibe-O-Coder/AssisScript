@@ -7,7 +7,9 @@ branch `work/ecosystem-current-2026-11-01`,
 e em rascunho nesta sessão pelo conector GitHub, com o mesmo SHA local/remoto.
 A nova continuação é `work/m1-document-store-2026-11-01`, baseada nela.
 Publicação e revisão exata no [relatório da árvore](../relatorios/2026-11-01-m1-arvore-orcamento.md).
-Não há merge automático nem release nesta unidade.
+O código testado está no commit local `2dd09ef`; a revisão automática bloqueou
+o push dos 44 arquivos por exigir autorização direta do usuário para o
+payload/destino públicos. Não há nova PR, merge ou release desta unidade.
 
 ## Encontrar a revisão que deve continuar
 
@@ -45,7 +47,7 @@ próprias unidades, não testes reexecutados nesta.
 | M1: transferência/remoção sem alocação de resultado | [52c8bb1 — remoção](https://github.com/Vibe-O-Coder/AssisScript/blob/52c8bb1f1d7482865660580941637a3074329167/docs/relatorios/2026-10-30-m1-remocao-sem-alocacao.md) |
 | M1: quota conjunta e transitória de payload | [a77f3d6 — orçamento e publicação confirmada](https://github.com/Vibe-O-Coder/AssisScript/blob/a77f3d6d377d233886f586d11a676c2554062ceb/docs/relatorios/2026-11-01-m1-orcamento-buffers.md) |
 | M1: preparação de metadados e continuidade | [ee852b1 — metadados](https://github.com/Vibe-O-Coder/AssisScript/blob/ee852b13721f81553169d716dd803e9fc36d96ad/docs/relatorios/2026-11-01-m1-reserva-metadados.md) |
-| Esta unidade: árvore e texto no orçamento de payload | [relatório atual](https://github.com/Vibe-O-Coder/AssisScript/blob/work/m1-document-store-2026-11-01/docs/relatorios/2026-11-01-m1-arvore-orcamento.md) |
+| Esta unidade: árvore e texto no orçamento de payload, ainda local | [relatório atual](../relatorios/2026-11-01-m1-arvore-orcamento.md) — 2dd09ef; publicação bloqueada |
 
 ## Contratos e limites atuais
 
