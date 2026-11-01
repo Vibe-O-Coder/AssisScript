@@ -96,9 +96,16 @@ public final class Store{
     fn candidate(borrow mut self):borrow mut(self) Document{assert(self.pending!=null);return self.pending;}
     /// 0 success; 1 closed, 3 allocator, 4 storage, 5 instance, 6 UTF-8, 7 busy.
     fn begin(borrow mut self,instance:int,borrow source:slice<byte>):int{
+        return self.begin_reserved(instance,source,0);
+    }
+    /// Reserve caller-owned temporary bodies alongside active/candidate storage.
+    /// The reservation remains in the candidate ceiling after the caller drops it.
+    fn begin_reserved(borrow mut self,instance:int,borrow source:slice<byte>,temporary_bytes:int):int{
         if(!self.active){return 1;}if(self.pending!=null){return 7;}
         if(instance<=self.last_instance){return 5;}
-        val available:int=self.limit-self.storage_bytes();
+        val remaining:int=self.limit-self.storage_bytes();
+        if(temporary_bytes<0 || temporary_bytes>remaining){return 4;}
+        val available:int=remaining-temporary_bytes;
         if(available<document_bytes() || len(source)>available-document_bytes()){return 4;}
         if(unicode::error(source)>=0){return 6;}
         own candidate:Document=try_new Document(instance,available,self.node_limit,self.generation_limit,source);

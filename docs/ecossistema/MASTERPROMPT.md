@@ -4,44 +4,46 @@ Você vai continuar o desenvolvimento real do AssisScript para que a linguagem, 
 
 ## Estado de continuidade — 01/11/2026
 
-A pasta original está no planejamento `1ed22f5`, com fontes antigas. Leia o
-[índice de evolução](ESTADO-ATUAL.md). A base desta continuação é a revisão
-publicada `b8b89803b8e89fe1cbe3096ae97e0b4bfd06d55d`, branch
-`work/m1-document-store-2026-11-01`, [PR de rascunho #15](https://github.com/Vibe-O-Coder/AssisScript/pull/15).
-A unidade atual fica em `AssisScript/work/document-memory-20261101`, branch
-`work/m1-document-memory-2026-11-01`; publicação e revisão exata no
-[relatório de documento candidato](../relatorios/2026-11-01-m1-documento-candidato.md).
-Implementação/testes em `90aa24042726e26ab274d946e97e3ebc2eab5d54`; após
-autorização direta do usuário, os 57 arquivos até
-`3f0882890f7a0b2bf48d1a6748eae451ed5b1289` foram publicados, com SHA e
-inventário remoto conferidos. [PR de rascunho #16](https://github.com/Vibe-O-Coder/AssisScript/pull/16),
-sobre #15, vinculada à conversa. Adendo documental posterior registra a
-confirmação; o SHA final é obtido pelo histórico, sem hash autorreferente.
-Ao ler a cópia original, abra o [relatório local](<C:/Users/babus/Desktop/AssisScript/work/document-memory-20261101/docs/relatorios/2026-11-01-m1-documento-candidato.md>).
-Confira o SHA remoto e a PR; publicação de branch não significa merge no master.
+Leia o [índice atual](ESTADO-ATUAL.md). A pasta original ainda está no
+planejamento `1ed22f5`, com fontes antigas e alterações alheias; preserve-as.
+A base publicada desta continuação é `8bec8933a6a179b07bfc6ce96ab145030e4dcaa1`,
+branch `work/m1-document-memory-2026-11-01`, PR de rascunho #16 aberta, sem merge.
+A unidade nova fica em `AssisScript/work/htdl-parser-20261101`, branch
+`work/m3-htdl-parser-2026-11-01`; estado de publicação e evidências no
+[relatório M3](../relatorios/2026-11-01-m3-parser-htdl.md). Confira SHA remoto/PR
+antes de continuar; envio de branch não significa merge no master.
+Implementação/testes em `d8af5d1940698452e408b7d88e13724b4bce1941`, 53 arquivos.
+Após autorização direta do usuário, os 53 arquivos até
+`ff2997322995ce797ddc47ae6c600785eb2014ea` foram publicados, com SHA/inventário
+remoto conferidos. [PR de rascunho #17](https://github.com/Vibe-O-Coder/AssisScript/pull/17),
+aberta/sem merge sobre #16 e vinculada à conversa. O adendo do relatório
+confirma a publicação; o SHA documental final é obtido pelo histórico.
+Ao ler a cópia original, abra o
+[relatório local](<C:/Users/babus/Desktop/AssisScript/work/htdl-parser-20261101/docs/relatorios/2026-11-01-m3-parser-htdl.md>).
 
 Já existem reconciliações M0, contratos bootstrap, arena geracional, provider
-Windows, alocação/construção/remoção recuperáveis, BufferPool com quota de
-payload, preparação de slots e árvore ordenada com registro/texto cobrados.
-Não reimplemente essas entregas. Esta unidade acrescenta teto opcional de
-corpos nativos solicitados: controladores, slots e índice, além de payload.
-`std/documents.assis` cobra fonte própria e árvore, preparando candidato sob
-o mesmo teto do documento ativo. Abort libera o candidato completo; commit
-exige raiz e instância correspondente, transfere sem alocação e libera o ativo
-anterior. O chamador ainda valida o formato. Não há parser/semântica HTDL.
+Windows, alocação/construção/remoção recuperáveis, BufferPool, árvore com texto,
+metadados/fonte próprios e candidato/ativo transacional. Não reimplemente.
+`std/htdl.assis` agora implementa parser real do perfil viewer-local-bootstrap-v1:
+UTF-8, comentários/entidades/atributos, estrutura/valores/IDs/classes, spans,
+diagnósticos e limites, com parsing/validação iterativos. Atributos e spans
+usam a mesma árvore cobrada. load só ativa após validar; erro aborta o candidato
+completo e preserva ativo/vizinho. Há consultas somente leitura, sem mutação
+HTDL validada, janela, acessibilidade, rede, script ou catálogo completo 0.1.
 
-Régua: **22,30/100, 0/5 gates**, sem promoção. M0/M1 permanecem abertos.
-Os tamanhos nativos v1 são confrontados com `allocationBytes` emitidos no IR.
-O teto exclui cabeçalhos/alinhamento/slabs/cache/RSS, pilha, entrada emprestada
-e recursos não implementados (atributos, imagens/fontes gráficas etc.). Não
-há quota total de processo. Preparação interna continua incremental; abort
-faz rollback do candidato completo. IDs são locais, não capacidades.
+Régua: **23,90/100, 0/5 gates**. A meta solicitada de 30% não foi atingida nesta
+unidade. E07-01=2, E07-02/E07-05=1, E00-04=2; demais estados preservados.
+M0/M1/M2/M3 permanecem abertos. O teto é de corpos nativos solicitados, inclui
+reserva temporária conservadora do parser, mas exclui overhead/RSS, pilha,
+entrada emprestada/I/O do chamador e recursos futuros. IDs não são capacidades.
+As evidências distinguem execução Windows/Linux x64 de geração nos cinco
+formatos e produto not-run; nenhum gate ou CI global foi aprovado por inferência.
 
-Próximo: parser HTDL real M3 do perfil congelado consumindo esse armazenamento,
-com corpus/diagnósticos e ativação só após validação; integrar atributos e
-outros recursos à cobrança conforme forem implementados. M0-EXEC (spikes
-VM/Wasm) e experiência visual M2 continuam pendentes com aceites próprios.
-Use o JSON/fila da revisão efetiva; Easy permanece a última etapa.
+Próximo: M2-WINDOW integrado à fonte/árvore HTDL validada, com texto/eventos e
+prova visual; seguir com foco, seleção, scroll e acessibilidade do M3. O catálogo
+completo, recuperação de editor e mutações semânticas têm aceites pendentes.
+M0-EXEC exige spikes VM/Wasm/decisão, sem depender de fechar toda memória.
+Use o JSON/fila efetivos. Easy permanece a última etapa de todo o projeto.
 
 ## 1. Localize e leia o estado real antes de alterar
 

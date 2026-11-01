@@ -1,0 +1,396 @@
+namespace htdl;
+import "std/documents.assis";
+
+/// viewer-local-bootstrap-v1. Codes are the numeric suffix of H101..H401.
+public value struct Diagnostic{
+    let code:int;let start:int;let end:int;
+    let line:int;let column:int;let end_line:int;let end_column:int;
+}
+public value struct Position{let line:int;let column:int;}
+public pure fn space(c:int):bool{return c==32 || c==9 || c==10 || c==13;}
+pure fn letter(c:int):bool{return (c>=65 && c<=90) || (c>=97 && c<=122);}
+pure fn digit(c:int):bool{return c>=48 && c<=57;}
+pure fn name_char(c:int):bool{return letter(c) || digit(c) || c==45 || c==58 || c==95;}
+pure fn identifier_start(c:int):bool{return letter(c) || c==95;}
+pure fn identifier_char(c:int):bool{return identifier_start(c) || digit(c) || c==45;}
+pure fn scalar(c:int):bool{return c>0 && c<=1114111 && !(c>=55296 && c<=57343) && (c>=32 || c==9 || c==10 || c==13);}
+safe fn equal_source(borrow s:slice<byte>,start:int,end:int,borrow value:slice<byte>):bool{
+    if(end-start!=len(value)){return false;}
+    for(let i:int=0;i<len(value);i++){if(s[start+i]!=value[i]){return false;}}return true;
+}
+public safe fn position(borrow source:slice<byte>,offset:int):Position{
+    let line:int=1;let column:int=1;let i:int=0;
+    while(i<offset && i<len(source)){
+        val c:int=int(source[i]);
+        if(c==13){line++;column=1;i++;if(i<offset && source[i]==10){i++;}}
+        else if(c==10){line++;column=1;i++;}
+        else if(c<128){column++;i++;}
+        else if(c>=192){if(c>=240){column+=2;i+=4;}else if(c>=224){column++;i+=3;}else{column++;i+=2;}}
+        else{column++;i++;}
+    }
+    return new Position(line,column);
+}
+safe fn diagnostic(borrow s:slice<byte>,code:int,start:int,end:int):Diagnostic{
+    let first:int=start;let last:int=end;
+    if(first>len(s)){first=len(s);}if(last>len(s)){last=len(s);}if(last<first){last=first;}
+    val a:Position=position(s,first);val b:Position=position(s,last);
+    return new Diagnostic(code,first,last,a.line,a.column,b.line,b.column);
+}
+
+/// Internal tree encoding: element=1, character data=2, attribute=100+key.
+/// Payload starts with two eight-digit hexadecimal source offsets, then UTF-8.
+public safe fn span_start(borrow tree:doctree::Tree,id:doctree::NodeId):int{
+    let result:int=0;for(let i:int=0;i<8;i++){val c:int=int(tree.text_byte(id,i));result=result*16+c-48;}return result;
+}
+public safe fn span_end(borrow tree:doctree::Tree,id:doctree::NodeId):int{
+    let result:int=0;for(let i:int=8;i<16;i++){val c:int=int(tree.text_byte(id,i));result=result*16+c-48;}return result;
+}
+public safe fn value_size(borrow tree:doctree::Tree,id:doctree::NodeId):int{return tree.text_size(id)-16;}
+public safe fn value_byte(borrow tree:doctree::Tree,id:doctree::NodeId,index:int):byte{
+    assert(index>=0 && index<value_size(tree,id));return tree.text_byte(id,index+16);
+}
+public safe fn value_equals(borrow tree:doctree::Tree,id:doctree::NodeId,borrow value:slice<byte>):bool{
+    if(doctree::absent(id) || value_size(tree,id)!=len(value)){return false;}
+    for(let i:int=0;i<len(value);i++){if(value_byte(tree,id,i)!=value[i]){return false;}}return true;
+}
+/// Attribute keys: type=1, version=2, lang=3, level=4, id=5, class=6,
+/// hidden=7, disabled=8, action=9, a11y-label=10.
+public safe fn attribute(borrow tree:doctree::Tree,node:doctree::NodeId,key:int):doctree::NodeId{
+    if(key<1 || key>10){return new doctree::NodeId();}
+    let child:doctree::NodeId=tree.first_child(node);
+    while(!doctree::absent(child)){if(tree.kind(child)==100+key){return child;}child=tree.next_sibling(child);}
+    return new doctree::NodeId();
+}
+/// Semantic types: document=1, head=2, title=3, body=4, container=5,
+/// paragraph=6, text=7, heading=8, button=9; 0 denotes a non-element.
+public safe fn kind(borrow tree:doctree::Tree,node:doctree::NodeId):int{
+    if(tree.kind(node)!=1){return 0;}val t:doctree::NodeId=attribute(tree,node,1);
+    if(value_equals(tree,t,utf8("document"))){return 1;}if(value_equals(tree,t,utf8("head"))){return 2;}
+    if(value_equals(tree,t,utf8("title"))){return 3;}if(value_equals(tree,t,utf8("body"))){return 4;}
+    if(value_equals(tree,t,utf8("container"))){return 5;}if(value_equals(tree,t,utf8("paragraph"))){return 6;}
+    if(value_equals(tree,t,utf8("text"))){return 7;}if(value_equals(tree,t,utf8("heading"))){return 8;}
+    if(value_equals(tree,t,utf8("button"))){return 9;}return 0;
+}
+public safe fn first_element(borrow tree:doctree::Tree,node:doctree::NodeId):doctree::NodeId{
+    let c:doctree::NodeId=tree.first_child(node);
+    while(!doctree::absent(c)){if(tree.kind(c)==1){return c;}c=tree.next_sibling(c);}return c;
+}
+public safe fn next_element(borrow tree:doctree::Tree,node:doctree::NodeId):doctree::NodeId{
+    let c:doctree::NodeId=tree.next_sibling(node);
+    while(!doctree::absent(c)){if(tree.kind(c)==1){return c;}c=tree.next_sibling(c);}return c;
+}
+safe fn next_node(borrow tree:doctree::Tree,node:doctree::NodeId):doctree::NodeId{
+    val child:doctree::NodeId=tree.first_child(node);if(!doctree::absent(child)){return child;}
+    let n:doctree::NodeId=node;
+    while(!doctree::absent(n)){val sibling:doctree::NodeId=tree.next_sibling(n);if(!doctree::absent(sibling)){return sibling;}n=tree.parent(n);}
+    return new doctree::NodeId();
+}
+/// Local, read-only query; source IDs are not authorization capabilities.
+public safe fn find_id(borrow tree:doctree::Tree,borrow id:slice<byte>):doctree::NodeId{
+    let n:doctree::NodeId=tree.root();
+    while(!doctree::absent(n)){if(tree.kind(n)==1 && value_equals(tree,attribute(tree,n,5),id)){return n;}n=next_node(tree,n);}
+    return new doctree::NodeId();
+}
+
+/// Parser temporary storage is reserved before allocation and never escapes.
+final class Parser{
+    private own scratch:*byte;
+    private own ids:*int;
+    private let cursor:int;private let used:int;private let code:int;
+    private let first:int;private let last:int;private let nodes:int;
+    private let id_count:int;private let work:int;private let ready:bool;
+
+    fn init(borrow mut self,capacity:int,id_capacity:int):void{
+        self.scratch=try_alloc<byte>(capacity);if(self.scratch==null){return;}
+        self.ids=try_alloc<int>(id_capacity);if(self.ids==null){return;}self.ready=true;
+    }
+    private fn fail(borrow mut self,code:int,start:int,end:int):void{
+        if(self.code==0){self.code=code;self.first=start;self.last=end;}
+    }
+    private fn prefix(borrow mut self,start:int,end:int):void{
+        let a:int=start;let b:int=end;
+        // Digits 0..15 are encoded as ASCII 48..63 (internal, never source).
+        for(let i:int=7;i>=0;i--){self.scratch[i]=byte(48+a%16);a/=16;self.scratch[i+8]=byte(48+b%16);b/=16;}
+    }
+    private fn append(borrow mut self,borrow mut d:documents::Document,parent:doctree::NodeId,kind:int,start:int,end:int):doctree::NodeId{
+        if(kind<100){if(self.nodes>=20000){self.fail(401,start,end);return new doctree::NodeId();}self.nodes++;}
+        self.prefix(start,end);
+        val r:doctree::Append=d.try_append(parent,kind,slice_of(self.scratch,0,self.used));
+        match(r){Appended(id){return id;}Rejected(code){self.fail(401,start,end);return new doctree::NodeId();}}
+    }
+    private fn emit_scalar(borrow mut self,value:int):void{
+        if(value<128){self.scratch[self.used]=byte(value);self.used++;}
+        else if(value<2048){self.scratch[self.used]=byte(192+value/64);self.scratch[self.used+1]=byte(128+value%64);self.used+=2;}
+        else if(value<65536){self.scratch[self.used]=byte(224+value/4096);self.scratch[self.used+1]=byte(128+(value/64)%64);self.scratch[self.used+2]=byte(128+value%64);self.used+=3;}
+        else{self.scratch[self.used]=byte(240+value/262144);self.scratch[self.used+1]=byte(128+(value/4096)%64);self.scratch[self.used+2]=byte(128+(value/64)%64);self.scratch[self.used+3]=byte(128+value%64);self.used+=4;}
+    }
+    private fn entity(borrow mut self,borrow source:slice<byte>):void{
+        val start:int=self.cursor;self.cursor++;let value:int=-1;
+        if(self.cursor<len(source) && source[self.cursor]==35){
+            self.cursor++;let base:int=10;
+            if(self.cursor<len(source) && source[self.cursor]==120){base=16;self.cursor++;}
+            val digits:int=self.cursor;value=0;
+            while(self.cursor<len(source) && source[self.cursor]!=59){
+                val c:int=int(source[self.cursor]);let n:int=-1;
+                if(digit(c)){n=c-48;}else if(base==16 && c>=65 && c<=70){n=c-55;}else if(base==16 && c>=97 && c<=102){n=c-87;}
+                if(n<0 || n>=base || value>(1114111-n)/base){self.fail(102,start,self.cursor+1);return;}
+                value=value*base+n;self.cursor++;
+            }
+            if(self.cursor==digits){self.fail(102,start,self.cursor);return;}
+        }else{
+            val begin:int=self.cursor;
+            while(self.cursor<len(source) && letter(int(source[self.cursor]))){self.cursor++;}
+            if(equal_source(source,begin,self.cursor,utf8("amp"))){value=38;}
+            else if(equal_source(source,begin,self.cursor,utf8("lt"))){value=60;}
+            else if(equal_source(source,begin,self.cursor,utf8("gt"))){value=62;}
+            else if(equal_source(source,begin,self.cursor,utf8("quot"))){value=34;}
+            else if(equal_source(source,begin,self.cursor,utf8("apos"))){value=39;}
+        }
+        if(self.cursor>=len(source) || source[self.cursor]!=59 || !scalar(value)){
+            self.fail(102,start,self.cursor);return;
+        }
+        self.cursor++;self.emit_scalar(value);
+    }
+    private fn decode(borrow mut self,borrow source:slice<byte>,quote:int):void{
+        self.used=16;
+        while(self.cursor<len(source) && self.code==0){
+            val c:int=int(source[self.cursor]);
+            if((quote>0 && c==quote) || (quote==0 && c==60) || (quote<0 && (space(c) || c==62))){return;}
+            if(c==60 || (quote<0 && (c==34 || c==39 || c==96 || c==61 || c==38 || c==47))){self.fail(102,self.cursor,self.cursor+1);return;}
+            if(c==38){self.entity(source);}
+            else if(c==13){self.scratch[self.used]=byte(10);self.used++;self.cursor++;if(self.cursor<len(source) && source[self.cursor]==10){self.cursor++;}}
+            else{self.scratch[self.used]=source[self.cursor];self.used++;self.cursor++;}
+            if(quote!=0 && self.used-16>65536){self.fail(401,self.cursor-1,self.cursor);}
+        }
+    }
+    private fn skip_space(borrow mut self,borrow source:slice<byte>):void{
+        while(self.cursor<len(source) && space(int(source[self.cursor]))){self.cursor++;}
+    }
+    private fn starts(borrow self,borrow s:slice<byte>,borrow value:slice<byte>):bool{
+        return len(value)<=len(s)-self.cursor && equal_source(s,self.cursor,self.cursor+len(value),value);
+    }
+    private fn comment(borrow mut self,borrow s:slice<byte>):void{
+        val begin:int=self.cursor;self.cursor+=4;
+        while(self.cursor<len(s)){
+            if(self.starts(s,utf8("-->"))){self.cursor+=3;return;}
+            if(self.starts(s,utf8("--"))){self.fail(102,self.cursor,self.cursor+2);return;}self.cursor++;
+        }
+        self.fail(102,begin,self.cursor);
+    }
+    private fn key(borrow self,borrow s:slice<byte>,a:int,b:int):int{
+        if(equal_source(s,a,b,utf8("type"))){return 1;}if(equal_source(s,a,b,utf8("version"))){return 2;}
+        if(equal_source(s,a,b,utf8("lang"))){return 3;}if(equal_source(s,a,b,utf8("level"))){return 4;}
+        if(equal_source(s,a,b,utf8("id"))){return 5;}if(equal_source(s,a,b,utf8("class"))){return 6;}
+        if(equal_source(s,a,b,utf8("hidden"))){return 7;}if(equal_source(s,a,b,utf8("disabled"))){return 8;}
+        if(equal_source(s,a,b,utf8("action"))){return 9;}if(equal_source(s,a,b,utf8("a11y-label"))){return 10;}return 0;
+    }
+    private fn classes(borrow mut self,start:int,end:int):void{
+        let read:int=16;let write:int=16;
+        while(read<self.used && self.code==0){
+            while(read<self.used && space(int(self.scratch[read]))){read++;}if(read==self.used){break;}
+            val begin:int=read;
+            if(!identifier_start(int(self.scratch[read]))){self.fail(206,start,end);return;}read++;
+            while(read<self.used && !space(int(self.scratch[read]))){
+                if(!identifier_char(int(self.scratch[read]))){self.fail(206,start,end);return;}read++;
+            }
+            let previous:int=16;let duplicate:bool=false;
+            while(previous<write){
+                self.work++;if(self.work>8000000){self.fail(401,start,end);return;}
+                let stop:int=previous;while(stop<write && self.scratch[stop]!=32){
+                    stop++;self.work++;if(self.work>8000000){self.fail(401,start,end);return;}}
+                if(stop-previous==read-begin){let same:bool=true;for(let i:int=0;i<read-begin;i++){
+                    self.work++;if(self.work>8000000){self.fail(401,start,end);return;}
+                    if(self.scratch[previous+i]!=self.scratch[begin+i]){same=false;break;}
+                }if(same){duplicate=true;break;}}previous=stop+1;
+            }
+            if(!duplicate){if(write>16){self.scratch[write]=byte(32);write++;}
+                for(let i:int=begin;i<read;i++){self.scratch[write]=self.scratch[i];write++;}}
+        }
+        self.used=write;
+    }
+    private fn opening(borrow mut self,borrow mut d:documents::Document,borrow s:slice<byte>,parent:doctree::NodeId):doctree::NodeId{
+        val begin:int=self.cursor;
+        if(!self.starts(s,utf8("<div"))){self.fail(102,begin,begin+1);return new doctree::NodeId();}
+        self.cursor+=4;
+        if(self.cursor==len(s) || (!space(int(s[self.cursor])) && s[self.cursor]!=62)){self.fail(102,begin,self.cursor);return new doctree::NodeId();}
+        self.used=16;val node:doctree::NodeId=self.append(d,parent,1,begin,begin);
+        let attrs:int=0;
+        while(self.code==0 && self.cursor<len(s) && s[self.cursor]!=62){
+            val before:int=self.cursor;self.skip_space(s);
+            if(self.cursor<len(s) && s[self.cursor]==62){break;}
+            if(before==self.cursor || self.cursor==len(s) || !letter(int(s[self.cursor]))){self.fail(102,self.cursor,self.cursor);break;}
+            val a:int=self.cursor;self.cursor++;
+            while(self.cursor<len(s) && name_char(int(s[self.cursor]))){self.cursor++;}
+            val k:int=self.key(s,a,self.cursor);self.skip_space(s);
+            if(self.cursor==len(s) || s[self.cursor]!=61){self.fail(102,a,self.cursor);break;}self.cursor++;self.skip_space(s);
+            if(self.cursor==len(s)){self.fail(102,a,self.cursor);break;}
+            let quote:int=-1;if(s[self.cursor]==34 || s[self.cursor]==39){quote=int(s[self.cursor]);self.cursor++;}
+            val value_start:int=self.cursor;self.decode(s,quote);
+            if(self.code!=0){break;}
+            if(quote>0){if(self.cursor==len(s)){self.fail(102,a,self.cursor);break;}self.cursor++;}
+            else if(self.cursor==value_start){self.fail(102,a,self.cursor);break;}
+            attrs++;if(attrs>64){self.fail(401,a,self.cursor);break;}
+            if(k==0){self.fail(203,a,self.cursor);break;}
+            if(!doctree::absent(attribute(d.nodes(),node,k))){self.fail(202,a,self.cursor);break;}
+            if(k==6){self.classes(a,self.cursor);if(self.code!=0){break;}}
+            val id:doctree::NodeId=self.append(d,node,100+k,a,self.cursor);
+            if(k==5 && self.code==0){self.ids[self.id_count]=id.slot;self.id_count++;}
+        }
+        if(self.code!=0){return node;}
+        if(self.cursor==len(s)){self.fail(102,begin,self.cursor);return node;}self.cursor++;
+        return node;
+    }
+    private fn has_text(borrow self,borrow tree:doctree::Tree,node:doctree::NodeId,accessible:bool):bool{
+        let c:doctree::NodeId=tree.first_child(node);
+        while(!doctree::absent(c)){
+            if(tree.kind(c)==2){for(let i:int=0;i<value_size(tree,c);i++){if(!space(int(value_byte(tree,c,i)))){return true;}}}
+            if(tree.kind(c)==1 && (!accessible || !value_equals(tree,attribute(tree,c,7),utf8("true")))){
+                val child:doctree::NodeId=tree.first_child(c);if(!doctree::absent(child)){c=child;continue;}}
+            while(true){
+                val sibling:doctree::NodeId=tree.next_sibling(c);if(!doctree::absent(sibling)){c=sibling;break;}
+                c=tree.parent(c);if(c.slot==node.slot || doctree::absent(c)){return false;}
+            }
+        }return false;
+    }
+    private fn invalid(borrow mut self,borrow t:doctree::Tree,n:doctree::NodeId,code:int):void{self.fail(code,span_start(t,n),span_end(t,n));}
+    private fn validate(borrow mut self,borrow t:doctree::Tree,n:doctree::NodeId,parent_kind:int):void{
+        val type:doctree::NodeId=attribute(t,n,1);
+        if(doctree::absent(type)){self.invalid(t,n,201);return;}
+        val k:int=kind(t,n);if(k==0){self.invalid(t,type,203);return;}
+        if((parent_kind==0 && k!=1) || (parent_kind!=0 && k==1)){self.invalid(t,n,204);return;}
+        let a:doctree::NodeId=t.first_child(n);
+        while(!doctree::absent(a) && self.code==0){
+            val key:int=t.kind(a)-100;
+            if(key>1){
+                val allowed:bool=(k==1 && (key==2 || key==3)) || (k>=4 && key>=5 && key<=7) || (k==8 && key==4) || (k==9 && key>=8 && key<=10);
+                if(!allowed){self.invalid(t,a,203);return;}
+                if((key==7 || key==8) && !value_equals(t,a,utf8("true")) && !value_equals(t,a,utf8("false"))){self.invalid(t,a,206);return;}
+                if(key==9 && !value_equals(t,a,utf8("button"))){self.invalid(t,a,206);return;}
+                if(key==5){
+                    if(value_size(t,a)==0 || !identifier_start(int(value_byte(t,a,0)))){self.invalid(t,a,206);return;}
+                    for(let i:int=1;i<value_size(t,a);i++){if(!identifier_char(int(value_byte(t,a,i)))){self.invalid(t,a,206);return;}}
+                }
+                if(key==10){let nonempty:bool=false;for(let i:int=0;i<value_size(t,a);i++){if(!space(int(value_byte(t,a,i)))){nonempty=true;}}
+                    if(!nonempty){self.invalid(t,a,206);return;}}
+            }
+            a=t.next_sibling(a);
+        }
+        if(k==1){
+            if(!value_equals(t,attribute(t,n,2),utf8("0.1"))){self.invalid(t,n,200);return;}
+            val lang:doctree::NodeId=attribute(t,n,3);let nonempty:bool=false;
+            if(!doctree::absent(lang)){for(let i:int=0;i<value_size(t,lang);i++){if(!space(int(value_byte(t,lang,i)))){nonempty=true;}}}
+            if(!nonempty){self.invalid(t,n,206);return;}
+        }
+        if(k==8){val level:doctree::NodeId=attribute(t,n,4);
+            if(doctree::absent(level) || value_size(t,level)!=1 || value_byte(t,level,0)<49 || value_byte(t,level,0)>54){self.invalid(t,n,206);return;}}
+        if((k==3 || k==8 || (k==9 && doctree::absent(attribute(t,n,10)))) && !self.has_text(t,n,k==9)){self.invalid(t,n,206);return;}
+        let elements:int=0;let child:doctree::NodeId=t.first_child(n);
+        while(!doctree::absent(child) && self.code==0){
+            if(t.kind(child)==1){
+                val ck:int=kind(t,child);elements++;
+                if((k==1 && !((elements==1 && ck==2) || (elements==2 && ck==4))) ||
+                   (k==2 && !(elements==1 && ck==3)) || k==3 || k==7 ||
+                   ((k==4 || k==5) && !(ck==5 || ck==6 || ck==8 || ck==9)) ||
+                   ((k==6 || k==8 || k==9) && ck!=7)){
+                    // Missing/unknown type has its own diagnostic before content-model errors.
+                    if(doctree::absent(attribute(t,child,1))){self.invalid(t,child,201);}
+                    else if(ck==0){self.invalid(t,attribute(t,child,1),203);}else{self.invalid(t,child,204);}return;
+                }
+            }else if(t.kind(child)==2 && (k==1 || k==2 || k==4 || k==5)){
+                for(let i:int=0;i<value_size(t,child);i++){if(!space(int(value_byte(t,child,i)))){self.invalid(t,child,204);return;}}
+            }
+            child=t.next_sibling(child);
+        }
+        if((k==1 && elements!=2) || (k==2 && elements!=1)){self.invalid(t,n,204);}
+    }
+    private fn compare_id(borrow self,borrow t:doctree::Tree,a:int,b:int):int{
+        val x:doctree::NodeId=new doctree::NodeId(t.root().instance,a,1);
+        val y:doctree::NodeId=new doctree::NodeId(t.root().instance,b,1);
+        let size:int=value_size(t,x);if(value_size(t,y)<size){size=value_size(t,y);}
+        for(let i:int=0;i<size;i++){val d:int=int(value_byte(t,x,i))-int(value_byte(t,y,i));if(d!=0){return d;}}
+        return value_size(t,x)-value_size(t,y);
+    }
+    private fn sift(borrow mut self,borrow t:doctree::Tree,start:int,count:int):void{
+        let root:int=start;
+        while(root*2+1<count){let child:int=root*2+1;
+            if(child+1<count && self.compare_id(t,self.ids[child],self.ids[child+1])<0){child++;}
+            if(self.compare_id(t,self.ids[root],self.ids[child])>=0){return;}
+            val v:int=self.ids[root];self.ids[root]=self.ids[child];self.ids[child]=v;root=child;
+        }
+    }
+    private fn check_ids(borrow mut self,borrow t:doctree::Tree):void{
+        // Heapsort gives O(n log n) comparisons without hash-collision attacks.
+        for(let i:int=self.id_count/2-1;i>=0;i--){self.sift(t,i,self.id_count);}
+        for(let end:int=self.id_count-1;end>0;end--){val v:int=self.ids[0];self.ids[0]=self.ids[end];self.ids[end]=v;self.sift(t,0,end);}
+        let duplicate:int=-1;let i:int=0;
+        while(i<self.id_count){
+            let first:int=self.ids[i];let second:int=-1;let j:int=i+1;
+            while(j<self.id_count && self.compare_id(t,self.ids[i],self.ids[j])==0){
+                val slot:int=self.ids[j];
+                if(slot<first){second=first;first=slot;}
+                else if(second<0 || slot<second){second=slot;}j++;
+            }
+            if(second>=0 && (duplicate<0 || second<duplicate)){duplicate=second;}i=j;
+        }
+        if(duplicate>=0){self.invalid(t,new doctree::NodeId(t.root().instance,duplicate,1),205);}
+    }
+    fn run(borrow mut self,borrow mut d:documents::Document,borrow s:slice<byte>):Diagnostic{
+        if(!self.ready){return diagnostic(s,401,0,0);}
+        if(len(s)>=3 && s[0]==239 && s[1]==187 && s[2]==191){self.cursor=3;}
+        while(self.code==0){self.skip_space(s);if(self.starts(s,utf8("<!--"))){self.comment(s);}else{break;}}
+        if(self.code==0){
+            let node:doctree::NodeId=self.opening(d,s,new doctree::NodeId());let depth:int=1;
+            while(self.code==0 && depth>0 && self.cursor<len(s)){
+                if(self.starts(s,utf8("</div>"))){
+                    self.cursor+=6;val start:int=span_start(d.nodes(),node);self.prefix(start,self.cursor);
+                    if(!d.try_set_text(node,slice_of(self.scratch,0,16))){self.fail(401,start,self.cursor);}
+                    node=d.nodes().parent(node);depth--;
+                }else if(self.starts(s,utf8("<!--"))){self.comment(s);}
+                else if(s[self.cursor]==60){
+                    if(depth>=256){self.fail(401,self.cursor,self.cursor);}
+                    else{node=self.opening(d,s,node);depth++;}
+                }else{val start:int=self.cursor;self.decode(s,0);if(self.code==0){self.append(d,node,2,start,self.cursor);}}
+            }
+            if(self.code==0 && depth!=0){self.fail(102,span_start(d.nodes(),node),self.cursor);}
+        }
+        while(self.code==0){self.skip_space(s);if(self.starts(s,utf8("<!--"))){self.comment(s);}else{break;}}
+        if(self.code==0 && self.cursor!=len(s)){self.fail(102,self.cursor,self.cursor+1);}
+        if(self.code==0){
+            let node:doctree::NodeId=d.nodes().root();
+            while(self.code==0 && !doctree::absent(node)){
+                if(d.nodes().kind(node)==1){val parent:doctree::NodeId=d.nodes().parent(node);let pk:int=0;
+                    if(!doctree::absent(parent)){pk=kind(d.nodes(),parent);}self.validate(d.nodes(),node,pk);}
+                node=next_node(d.nodes(),node);
+            }
+        }
+        if(self.code==0){self.check_ids(d.nodes());}
+        return diagnostic(s,self.code,self.first,self.last);
+    }
+}
+
+/// Native v1 object body (confirmed against IR allocationBytes by the suite).
+public pure fn parser_bytes():int{return 96;}
+public safe fn workspace_bytes(source_bytes:int):int{
+    if(source_bytes<0 || source_bytes>1048576){return -1;}
+    let ids:int=source_bytes/11+1;if(ids>20000){ids=20000;}
+    return parser_bytes()+source_bytes+16+ids*8;
+}
+/// Parse/validate before atomic activation. Any failure aborts only our candidate.
+/// Store/instance failures use H401; diagnostic spans remain in the input source.
+public safe fn load(borrow mut store:documents::Store,instance:int,borrow source:slice<byte>):Diagnostic{
+    if(len(source)>1048576){return diagnostic(source,401,0,len(source));}
+    val bad:int=unicode::error(source);if(bad>=0){return diagnostic(source,101,bad,bad+1);}
+    for(let i:int=0;i<len(source);i++){val c:int=int(source[i]);if(c<32 && c!=9 && c!=10 && c!=13){return diagnostic(source,101,i,i+1);}}
+    val reserved:int=workspace_bytes(len(source));
+    val begin:int=store.begin_reserved(instance,source,reserved);
+    if(begin!=0){return diagnostic(source,401,0,0);}
+    let result:Diagnostic=new Diagnostic();
+    {
+        let ids:int=len(source)/11+1;if(ids>20000){ids=20000;}
+        own parser:Parser=try_new Parser(len(source)+16,ids);
+        if(parser==null){result=diagnostic(source,401,0,0);}
+        else{borrow mut d:documents::Document=store.candidate();result=parser.run(d,source);}
+    }
+    if(result.code!=0){assert(store.abort(instance));return result;}
+    assert(store.commit(instance));return result;
+}

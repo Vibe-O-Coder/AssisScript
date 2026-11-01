@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-01",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "partial-native-retest-m1-document-memory",
+  "assessment": "partial-native-retest-m3-htdl-parser",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -52,11 +52,14 @@
         {
           "id": "E00-04",
           "name": "Driver e matriz de conformidade",
-          "level": 0,
+          "level": 2,
           "acceptance": "Executar corpus por perfil e sistema; distinguir pass/fail/not-run/unsupported, com hashes, versões e resultados sem depender de inspeção manual de exemplos.",
-          "baseline": "Corpus declarativo ainda sem motor/driver executável.",
+          "baseline": "Driver nativo do perfil bootstrap com corpus declarativo, diagnóstico e árvore, oráculo XML independente na sintaxe em comum e execução Windows/Linux x64. Matriz distingue formatos gerados de execução e produto not-run; FS/SSC e catálogo completo não têm driver integrado.",
           "evidence": [
-            "local:htdl/docs/19-conformidade-e-cenarios.md"
+            "local:htdl/docs/19-conformidade-e-cenarios.md",
+            "docs/relatorios/2026-11-01-m3-parser-htdl.md",
+            "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/summary.json",
+            "tests/fixtures/htdl-bootstrap-corpus.json"
           ]
         },
         {
@@ -81,7 +84,9 @@
             "docs/ecossistema/evidencias/m1-document-tree-2026-11-01/windows.json",
             "docs/ecossistema/evidencias/m1-document-tree-2026-11-01/linux.json",
             "docs/relatorios/2026-11-01-m1-documento-candidato.md",
-            "docs/ecossistema/evidencias/m1-document-memory-2026-11-01/summary.json"
+            "docs/ecossistema/evidencias/m1-document-memory-2026-11-01/summary.json",
+            "docs/relatorios/2026-11-01-m3-parser-htdl.md",
+            "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/summary.json"
           ]
         }
       ]
@@ -239,7 +244,9 @@
             "docs/ecossistema/evidencias/m1-document-tree-2026-11-01/windows.json",
             "docs/ecossistema/evidencias/m1-document-tree-2026-11-01/linux.json",
             "docs/relatorios/2026-11-01-m1-documento-candidato.md",
-            "docs/ecossistema/evidencias/m1-document-memory-2026-11-01/summary.json"
+            "docs/ecossistema/evidencias/m1-document-memory-2026-11-01/summary.json",
+            "docs/relatorios/2026-11-01-m3-parser-htdl.md",
+            "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/summary.json"
           ]
         },
         {
@@ -551,25 +558,31 @@
         {
           "id": "E07-01",
           "name": "Parser e diagnóstico HTDL real",
-          "level": 1,
+          "level": 2,
           "acceptance": "Implementar gramática versionada com atributos, comentários, entidades, semântica, spans e recuperação; executar corpus real, limites e entradas hostis sem recursão não limitada.",
-          "baseline": "Microparser local aceita somente div/texto sem atributos; não é HTDL.",
+          "baseline": "Parser real do perfil viewer-local-bootstrap-v1 em AssisScript, com atributos/entidades/comentários, modelos de conteúdo, UTF-8/UTF-16, spans, limites, IDs e corpus adverso nativo. Catálogo HTDL completo e recuperação de editor permanecem abertos.",
           "evidence": [
             "local:assis/docs/AUDITORIA-HTDL.md",
             "local:htdl/docs/02-htdl-0.1.md",
             "docs/relatorios/2026-10-29-m0-microparser.md",
             "tests/fixtures/htdl-core.assis",
-            "tests/test-htdl-readiness.py"
+            "tests/test-htdl-readiness.py",
+            "docs/relatorios/2026-11-01-m3-parser-htdl.md",
+            "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/summary.json",
+            "tests/fixtures/htdl-bootstrap-corpus.json"
           ]
         },
         {
           "id": "E07-02",
           "name": "Árvore, seletores e mutações",
-          "level": 0,
+          "level": 1,
           "acceptance": "Oferecer criação/remoção/consulta, hierarquia ordenada, atributos/tipos semânticos e invalidação; manter identidade geracional, foco e acessibilidade coerentes após transações.",
-          "baseline": "Coleções são fundação; ainda não há árvore HTDL de produto.",
+          "baseline": "Fundação de árvore HTDL tipada, atributos cobrados, consulta por ID e navegação ordenada somente leitura, com identidade por instância. Seletores gerais, mutação HTDL validada, foco/acessibilidade e transações semânticas continuam abertos.",
           "evidence": [
-            "local:htdl/docs/17-execucao-transacoes-e-layout.md"
+            "local:htdl/docs/17-execucao-transacoes-e-layout.md",
+            "docs/relatorios/2026-11-01-m3-parser-htdl.md",
+            "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/summary.json",
+            "tests/fixtures/htdl-bootstrap-corpus.json"
           ]
         },
         {
@@ -596,11 +609,14 @@
         {
           "id": "E07-05",
           "name": "Loader e ativação atômica",
-          "level": 0,
+          "level": 1,
           "acceptance": "Carregar HTDL, código, FS/SSC e recursos locais/remotos sob política; resolver versões/dependências, validar antes de ativar e descartar resultados atrasados; cache somente de artefato imutável.",
-          "baseline": "Há contrato documental de carregamento.",
+          "baseline": "Fonte HTDL local fornecida pelo host é validada antes do commit; falha aborta candidato completo e preserva ativo/vizinho, candidato externo ocupado e IDs antigos. Resolução de arquivos/origem, código, recursos, FS/SSC, rede e resposta assíncrona tardia não implementados.",
           "evidence": [
-            "local:htdl/docs/15-htdl-0.2-e-carregamento.md"
+            "local:htdl/docs/15-htdl-0.2-e-carregamento.md",
+            "docs/relatorios/2026-11-01-m3-parser-htdl.md",
+            "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/summary.json",
+            "tests/fixtures/htdl-bootstrap-corpus.json"
           ]
         }
       ]
@@ -1976,7 +1992,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-01",
+      "rubric_version": 1,
+      "label": "M3 parcial: parser HTDL real bootstrap, driver/corpus e ativação validada; 0/5 gates",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 1,
+        "E00-03": 1,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 1,
+        "E03-03": 2,
+        "E03-04": 2,
+        "E03-05": 0,
+        "E04-01": 2,
+        "E04-02": 1,
+        "E04-03": 1,
+        "E04-04": 0,
+        "E04-05": 0,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 0,
+        "E06-02": 0,
+        "E06-03": 0,
+        "E06-04": 0,
+        "E06-05": 0,
+        "E07-01": 2,
+        "E07-02": 1,
+        "E07-03": 0,
+        "E07-04": 0,
+        "E07-05": 1,
+        "E08-01": 0,
+        "E08-02": 0,
+        "E08-03": 0,
+        "E08-04": 0,
+        "E08-05": 0,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 1,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Fonte própria, controladores, slots, índice e árvore/texto cobrados como corpos nativos solicitados, com candidato/ativo no mesmo teto e rollback completo por abort. Novos testes nativos, modelos independentes e OOM por fronteira; detalhes por host no relatório de documento candidato. E02-03/E02-02 permanecem em 2: overhead/RSS, atributos/demais recursos e integração HTDL ainda pendentes. Nenhum gate aprovado."
+  "assessment_note": "Parser HTDL real do perfil bootstrap, atributos/spans cobrados, percursos iterativos, corpus com oráculo independente e ativação validada. E07-01=2; fundações E07-02/E07-05=1; driver E00-04=2. A meta pedida de 30% não foi atingida: catálogo completo, recuperação de edição, interface/acessibilidade, executor e demais integrações continuam abertos. Nenhum gate aprovado."
 }

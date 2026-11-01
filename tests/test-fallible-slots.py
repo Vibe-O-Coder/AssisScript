@@ -136,8 +136,12 @@ class FallibleSlots(base.Evolution):
         text = header + text.replace('FAULT_ENABLE', 'unsafe{assert(fault_enable()==i32(0));}')
         text = text.replace('FAULT_CHECK', 'unsafe{assert(fault_hits()>i32(0));}' if is_windows else '')
         source = self.source(text)
+        # A method can call this fixture repeatedly. Windows can still hold an
+        # executed image briefly after process exit; never overwrite that path.
+        sequence = getattr(self, '_fault_sequence', 0) + 1
+        self._fault_sequence = sequence
         for flags in [[], ['--no-opt']]:
-            binary = self.temp / ('fault-reference.exe' if flags else 'fault.exe')
+            binary = self.temp / (f'fault-{sequence}-reference.exe' if flags else f'fault-{sequence}.exe')
             result = self.invoke('build', source, '--debug', '-o', binary, *flags)
             self.assertEqual(result.returncode, 0, result.stderr)
             result = subprocess.run([str(binary)], cwd=self.temp, capture_output=True,

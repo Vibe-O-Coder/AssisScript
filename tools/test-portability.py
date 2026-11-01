@@ -121,6 +121,11 @@ def main():
          'assert(s.begin(2,utf8("x"))==4 && s.begin(2,utf8(""))==0);'
          'assert(!s.commit(2) && s.abort(2));print(s.storage_bytes());s.close();print(s.storage_bytes());',
          0, '544\n72\n'),
+        ('htdl-parser', 'import "std/htdl.assis";',
+         'own s:documents::Store=try_new documents::Store(100000,1000,100);'
+         'val r:htdl::Diagnostic=htdl::load(s,1,utf8("<div type=document version=\'0.1\' lang=en><div type=head><div type=title>T</div></div><div type=body><div type=paragraph id=p>ok &amp; x</div></div></div>"));'
+         'assert(r.code==0);borrow t:doctree::Tree=s.active_document().nodes();'
+         'print(htdl::kind(t,htdl::find_id(t,utf8("p"))));', 0, '6\n'),
         ('trap', '', 'let z:int=0;print(1/z);', 70, ''),
         ('fallible-slots', 'import "std/arena.assis";struct Item{let n:int;own data:*byte;}',
          'own a:arena::Arena<Item>=try_new arena::Arena<Item>(1,2,4,8);assert(a!=null);'

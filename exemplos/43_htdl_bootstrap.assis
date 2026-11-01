@@ -1,0 +1,14 @@
+import "std/htdl.assis";
+
+safe fn main():int{
+    own documents:documents::Store=try_new documents::Store(1000000,1000,1000);
+    assert(documents!=null);
+    val result:htdl::Diagnostic=htdl::load(documents,1,utf8(
+        "<div type=document version='0.1' lang=pt-BR><div type=head><div type=title>Primeiro HTDL</div></div><div type=body><div type=heading level=1>Olá!</div><div type=paragraph id=intro>AssisScript &amp; HTDL</div><div type=button disabled=false>Continuar</div></div></div>"));
+    if(result.code!=0){print(result.code,result.line,result.column);return 1;}
+    borrow tree:doctree::Tree=documents.active_document().nodes();
+    val paragraph:doctree::NodeId=htdl::find_id(tree,utf8("intro"));
+    assert(!doctree::absent(paragraph));
+    print(htdl::kind(tree,tree.root()),htdl::kind(tree,paragraph));
+    return 0;
+}

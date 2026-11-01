@@ -96,3 +96,14 @@ links, bytes e cobrança. Commit/abort/close não alocam pela biblioteca.
 
 Testes e limitações por sistema no
 [relatório desta unidade](relatorios/2026-11-01-m1-documento-candidato.md).
+## Reserva temporária para consumidores
+
+`begin_reserved(instance, source, temporary_bytes)` conserva as condições e
+retornos de begin, mas retira do teto disponível a reserva de corpos nativos
+temporários do consumidor antes de construir candidato. Valor negativo ou
+maior que o saldo retorna 4 sem consumir instância. O consumidor deve limitar
+suas próprias alocações a essa reserva; Store não observa alocações externas.
+A reserva permanece retirada do teto do documento mesmo após sua liberação.
+`begin` equivale a `begin_reserved(..., 0)`. A biblioteca
+[htdl](BIBLIOTECA-htdl.md) usa isso para Parser/scratch/índice, sob o mesmo teto
+do ativo e candidato. Não altera a definição de armazenamento/RSS.
