@@ -7,9 +7,11 @@ confirmada aberta, em rascunho e sem merge pelo conector nesta sessão.
 Continuação isolada: `AssisScript/work/document-memory-20261101`, branch
 `work/m1-document-memory-2026-11-01`. Revisão, testes e publicação no
 [relatório de documento candidato](../relatorios/2026-11-01-m1-documento-candidato.md).
-Implementação/testes no commit local `90aa240`; envio dos 57 arquivos bloqueado
-pela revisão automática até autorização direta para payload/destino públicos.
-Nenhuma nova PR/publicação confirmada. Na cópia original, consulte o
+Implementação/testes em `90aa240`; após autorização direta do usuário, os
+57 arquivos até `3f0882890f7a0b2bf48d1a6748eae451ed5b1289` foram publicados,
+com SHA e inventário remoto conferidos. [PR de rascunho #16](https://github.com/Vibe-O-Coder/AssisScript/pull/16)
+sobre #15, vinculada à conversa. Adendo documental posterior registra a
+confirmação, sem merge/release/CI aprovada declarados. Na cópia original, consulte o
 [relatório local](<C:/Users/babus/Desktop/AssisScript/work/document-memory-20261101/docs/relatorios/2026-11-01-m1-documento-candidato.md>).
 
 ## Encontrar a revisão que deve continuar

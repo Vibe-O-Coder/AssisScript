@@ -11,9 +11,12 @@ publicada `b8b89803b8e89fe1cbe3096ae97e0b4bfd06d55d`, branch
 A unidade atual fica em `AssisScript/work/document-memory-20261101`, branch
 `work/m1-document-memory-2026-11-01`; publicação e revisão exata no
 [relatório de documento candidato](../relatorios/2026-11-01-m1-documento-candidato.md).
-Implementação/testes no commit local `90aa24042726e26ab274d946e97e3ebc2eab5d54`.
-A revisão automática bloqueou o envio dos 57 arquivos por exigir autorização
-direta do usuário para o conjunto/destino públicos. Não há nova PR/publicação.
+Implementação/testes em `90aa24042726e26ab274d946e97e3ebc2eab5d54`; após
+autorização direta do usuário, os 57 arquivos até
+`3f0882890f7a0b2bf48d1a6748eae451ed5b1289` foram publicados, com SHA e
+inventário remoto conferidos. [PR de rascunho #16](https://github.com/Vibe-O-Coder/AssisScript/pull/16),
+sobre #15, vinculada à conversa. Adendo documental posterior registra a
+confirmação; o SHA final é obtido pelo histórico, sem hash autorreferente.
 Ao ler a cópia original, abra o [relatório local](<C:/Users/babus/Desktop/AssisScript/work/document-memory-20261101/docs/relatorios/2026-11-01-m1-documento-candidato.md>).
 Confira o SHA remoto e a PR; publicação de branch não significa merge no master.
 
