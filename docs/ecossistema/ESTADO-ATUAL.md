@@ -1,18 +1,18 @@
 # Continuidade verificada — AssisScript e ecossistema
 
-Atualização: **01/11/2026**. Régua v1: **22,30/100, 0/5 gates**.
-Base publicada: `b8b89803b8e89fe1cbe3096ae97e0b4bfd06d55d`, branch
-`work/m1-document-store-2026-11-01`, [PR #15](https://github.com/Vibe-O-Coder/AssisScript/pull/15),
-confirmada aberta, em rascunho e sem merge pelo conector nesta sessão.
-Continuação isolada: `AssisScript/work/document-memory-20261101`, branch
-`work/m1-document-memory-2026-11-01`. Revisão, testes e publicação no
-[relatório de documento candidato](../relatorios/2026-11-01-m1-documento-candidato.md).
-Implementação/testes em `90aa240`; após autorização direta do usuário, os
-57 arquivos até `3f0882890f7a0b2bf48d1a6748eae451ed5b1289` foram publicados,
-com SHA e inventário remoto conferidos. [PR de rascunho #16](https://github.com/Vibe-O-Coder/AssisScript/pull/16)
-sobre #15, vinculada à conversa. Adendo documental posterior registra a
-confirmação, sem merge/release/CI aprovada declarados. Na cópia original, consulte o
-[relatório local](<C:/Users/babus/Desktop/AssisScript/work/document-memory-20261101/docs/relatorios/2026-11-01-m1-documento-candidato.md>).
+Atualização: **01/11/2026**. Régua v1: **23,90/100, 0/5 gates**.
+Base publicada e conferida: `8bec8933a6a179b07bfc6ce96ab145030e4dcaa1`,
+branch `work/m1-document-memory-2026-11-01`,
+[PR #16](https://github.com/Vibe-O-Coder/AssisScript/pull/16), aberta/em rascunho/sem merge.
+Continuação: `AssisScript/work/htdl-parser-20261101`, branch
+`work/m3-htdl-parser-2026-11-01`. Parser/atributos/spans, corpus e ativação
+validada no [relatório M3](../relatorios/2026-11-01-m3-parser-htdl.md).
+O adendo desse relatório confirma ou registra impedimento de publicação.
+Confira o SHA remoto antes de continuar. A pasta original é histórica/suja.
+
+Parser bootstrap real não aprova visualizador ou HTDL completo. A meta de 30%
+segue não atingida, sem remover requisitos ou alterar pesos. M0-EXEC/M1/M2/M3
+e todos os gates permanecem abertos. Easy continua a última etapa.
 
 ## Encontrar a revisão que deve continuar
 
@@ -27,7 +27,7 @@ linhagem escolhida e confirme seu SHA remoto. Trabalhe em cópia isolada limpa
 quando houver fontes locais antigas; não publique novamente essas fontes.
 Branches podem divergir: ancestralidade e contratos precisam ser comparados.
 
-Esta unidade usa a cópia `AssisScript/work/document-memory-20261101`.
+Esta unidade usa a cópia `AssisScript/work/htdl-parser-20261101`.
 O [masterprompt](MASTERPROMPT.md) também é atualizado no caminho original
 solicitado pelo usuário, para que ele conduza à linhagem atual.
 
@@ -51,9 +51,10 @@ próprias unidades, não testes reexecutados nesta.
 | M1: quota conjunta e transitória de payload | [a77f3d6 — orçamento e publicação confirmada](https://github.com/Vibe-O-Coder/AssisScript/blob/a77f3d6d377d233886f586d11a676c2554062ceb/docs/relatorios/2026-11-01-m1-orcamento-buffers.md) |
 | M1: preparação de metadados e continuidade | [ee852b1 — metadados](https://github.com/Vibe-O-Coder/AssisScript/blob/ee852b13721f81553169d716dd803e9fc36d96ad/docs/relatorios/2026-11-01-m1-reserva-metadados.md) |
 | M1: árvore e texto no orçamento de payload | [relatório atual](https://github.com/Vibe-O-Coder/AssisScript/blob/work/m1-document-store-2026-11-01/docs/relatorios/2026-11-01-m1-arvore-orcamento.md) — publicação confirmada, PR #15 |
-| Esta unidade: metadados, fonte própria e candidato/ativo | [relatório atual](../relatorios/2026-11-01-m1-documento-candidato.md) |
+| M1: metadados, fonte própria e candidato/ativo | [relatório](../relatorios/2026-11-01-m1-documento-candidato.md) — PR #16 |
+| M3: parser bootstrap, atributos/spans e ativação validada | [relatório atual](../relatorios/2026-11-01-m3-parser-htdl.md) |
 
-## Contratos e limites atuais
+## Contratos e limites da base M1
 
 Na revisão atual, consulte [fila operacional](FILA-M0-M1.md),
 [perfil do visualizador](PERFIL-VISUALIZADOR-V1.md),
@@ -98,3 +99,15 @@ Metadados e fonte própria entram na cobrança de corpos nativos solicitados;
 headers/alinhamento/slabs/cache/RSS, pilha e recursos ainda não implementados
 continuam fora. Parser HTDL M3 deve integrar atributos e corpus reais antes de
 ativação. Executor M0-EXEC e experiência visual M2 continuam na fila.
+
+## Continuação M3 — parser HTDL bootstrap
+
+`std/htdl.assis` faz parsing/validação iterativos, guarda atributos e spans
+na árvore cobrada e ativa somente após validação. Erros/quota/OOM abortam
+candidato inteiro; consultas são somente leitura. Perfil de nove tipos;
+sem janela/acessibilidade, código, rede, FS/SSC ou conformidade completa 0.1.
+[Contrato](../BIBLIOTECA-htdl.md), [relatório](../relatorios/2026-11-01-m3-parser-htdl.md)
+e [evidência atual](evidencias/m3-htdl-parser-2026-11-01/summary.json).
+Próximo: M2-WINDOW e apresentação/interação M3, mantendo executor VM/Wasm,
+catálogo completo, recuperação de editor e mutações na fila. Os parágrafos
+anteriores sobre ausência de parser descrevem suas respectivas entregas M1.

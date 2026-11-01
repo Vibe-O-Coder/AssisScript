@@ -192,3 +192,9 @@ test-document-memory: bin/assis
 	python3 tests/test-document-memory.py
 
 test-alpha15: test-document-memory
+
+.PHONY: test-htdl-parser
+test-htdl-parser: bin/assis
+	python3 tests/test-htdl-parser.py
+
+test-alpha15: test-htdl-parser

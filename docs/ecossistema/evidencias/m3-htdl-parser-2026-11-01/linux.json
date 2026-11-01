@@ -1,0 +1,142 @@
+{
+  "schema": "assisscript-htdl-parser-host-v1",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler": "assis-htdl-linux",
+  "compiler_sha256": "41a04975b09f2ef12441e6f20e2d6c5f0f839aa75b5c527064ce4ed999bd5325",
+  "passed": true,
+  "checks": [
+    {
+      "name": "htdl-parser",
+      "command": [
+        "python",
+        "tests/test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "registered": 16,
+      "not_run": 0,
+      "executed": 16,
+      "seconds": 50.000851848000025,
+      "log": "linux-htdl-parser.log"
+    },
+    {
+      "name": "document-memory",
+      "command": [
+        "python",
+        "tests/test-document-memory.py"
+      ],
+      "returncode": 0,
+      "registered": 12,
+      "not_run": 0,
+      "executed": 12,
+      "seconds": 16.35628445900005,
+      "log": "linux-document-memory.log"
+    },
+    {
+      "name": "document-tree",
+      "command": [
+        "python",
+        "tests/test-document-tree.py"
+      ],
+      "returncode": 0,
+      "registered": 9,
+      "not_run": 0,
+      "executed": 9,
+      "seconds": 15.073345739999993,
+      "log": "linux-document-tree.log"
+    },
+    {
+      "name": "buffer-preallocation",
+      "command": [
+        "python",
+        "tests/test-buffer-preallocation.py"
+      ],
+      "returncode": 0,
+      "registered": 6,
+      "not_run": 0,
+      "executed": 6,
+      "seconds": 3.6877147210000203,
+      "log": "linux-buffer-preallocation.log"
+    },
+    {
+      "name": "english-api",
+      "command": [
+        "python",
+        "tests/test-english-api.py"
+      ],
+      "returncode": 0,
+      "registered": 4,
+      "not_run": 0,
+      "executed": 4,
+      "seconds": 2.3998217629999914,
+      "log": "linux-english-api.log"
+    },
+    {
+      "name": "packages",
+      "command": [
+        "python",
+        "tests/test-packages.py"
+      ],
+      "returncode": 0,
+      "registered": 13,
+      "not_run": 1,
+      "executed": 12,
+      "seconds": 1.4282564109999925,
+      "log": "linux-packages.log"
+    },
+    {
+      "name": "complete-ir",
+      "command": [
+        "python",
+        "tests/test-complete-ir.py"
+      ],
+      "returncode": 0,
+      "registered": 7,
+      "not_run": 0,
+      "executed": 7,
+      "seconds": 0.9955185700000015,
+      "log": "linux-complete-ir.log"
+    },
+    {
+      "name": "optimization",
+      "command": [
+        "python",
+        "tests/test-optimization.py"
+      ],
+      "returncode": 0,
+      "registered": 6,
+      "not_run": 0,
+      "executed": 6,
+      "seconds": 2.423456311999999,
+      "log": "linux-optimization.log"
+    },
+    {
+      "name": "portability",
+      "command": [
+        "python",
+        "tools/test-portability.py",
+        "--expect-host",
+        "x86_64",
+        "--output",
+        "linux-portability.json"
+      ],
+      "returncode": 0,
+      "registered": null,
+      "not_run": 0,
+      "executed": null,
+      "seconds": 9.543692795999988,
+      "log": "linux-portability.log"
+    }
+  ],
+  "other_native_targets": {
+    "macos-x64": "not-run",
+    "linux-arm64": "not-run",
+    "macos-arm64": "not-run"
+  },
+  "product": {
+    "window": "not-run",
+    "accessibility": "not-run",
+    "remote-page": "unsupported",
+    "full-htdl-0.1": "unsupported"
+  }
+}

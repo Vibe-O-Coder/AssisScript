@@ -211,6 +211,13 @@
       "doc": "BIBLIOTECA-documents.md",
       "description": "Fonte e árvore com metadados cobrados e substituição transacional de candidato; sem parser HTDL ou quota de RSS.",
       "dependencies": ["doctree"]
+    },
+    {
+      "name": "htdl",
+      "required": false,
+      "doc": "BIBLIOTECA-htdl.md",
+      "description": "Parser HTDL do perfil viewer-local-bootstrap-v1, atributos e spans cobrados, diagnóstico e ativação validada; sem visualizador ou execução de página.",
+      "dependencies": ["documents"]
     }
   ]
 }

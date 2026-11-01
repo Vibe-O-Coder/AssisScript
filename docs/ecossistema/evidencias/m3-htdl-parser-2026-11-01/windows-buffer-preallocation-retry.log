@@ -1,0 +1,31 @@
+test_borrow_conflicts_and_private_inventory_are_rejected (__main__.BufferPreallocation.test_borrow_conflicts_and_private_inventory_are_rejected) ... ok
+test_example_ir_and_five_output_formats (__main__.BufferPreallocation.test_example_ir_and_five_output_formats) ... ok
+test_inventory_limits_and_lifecycle (__main__.BufferPreallocation.test_inventory_limits_and_lifecycle) ... ok
+test_partial_os_refusal_retains_exactly_reported_spares (__main__.BufferPreallocation.test_partial_os_refusal_retains_exactly_reported_spares) ... FAIL
+test_prepared_slots_are_consumed_and_recycled_under_os_refusal (__main__.BufferPreallocation.test_prepared_slots_are_consumed_and_recycled_under_os_refusal) ... ok
+test_ready_inventory_against_independent_resource_model (__main__.BufferPreallocation.test_ready_inventory_against_independent_resource_model) ... ok
+
+======================================================================
+FAIL: test_partial_os_refusal_retains_exactly_reported_spares (__main__.BufferPreallocation.test_partial_os_refusal_retains_exactly_reported_spares)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>\tests\test-buffer-preallocation.py", line 131, in test_partial_os_refusal_retains_exactly_reported_spares
+    self.fault_program(PREFIX + main(
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+        'own p:buffers::BufferPool=try_new buffers::BufferPool(1,0,64,100);unsafe{' + setup + drain +
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+        'for(let i:int=0;i<ready;i++){val id:buffers::BufferId=create(p,0);assert(p.contains(id));}'
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        'assert(p.ready_slots()==0 && p.size()==ready);p.close();' + cleanup + '}'), '')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>\tests\test-fallible-slots.py", line 142, in fault_program
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : assis: não foi possível criar <temp>\assis-evolution-cehtooq_\fault.exe: Permission denied
+
+
+----------------------------------------------------------------------
+Ran 6 tests in 6.001s
+
+FAILED (failures=1)

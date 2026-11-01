@@ -10,14 +10,14 @@ primeiro spike de cada área, sem prazo de entrega global.
 | Tarefa | Entrada → saída | Dependência | Aceite | Estimativa inicial / risco |
 | --- | --- | --- | --- | --- |
 | M0-REF | Rascunhos locais → snapshot público com hashes | Nenhuma | Integridade de arquivos e corpus; execução marcada not-run | Entregue nesta unidade; não ratifica os rascunhos |
-| M0-PROFILE | HTDL 0.1 → perfil bootstrap e diagnósticos fixados | M0-REF | Contrato do subconjunto e casos positivos/negativos planejados | Contrato entregue; implementação em tarefa própria |
+| M0-PROFILE | HTDL 0.1 → perfil bootstrap e diagnósticos fixados | M0-REF | Contrato do subconjunto e casos positivos/negativos planejados | Contrato e parser bootstrap entregues; visualizador pendente |
 | M0-ABI | FFI escalar → contrato assis_platform_v1 | E01 | Interface/ownership/thread/falhas e inventário | Contrato entregue; risco de provider e texto permanece |
 | M0-EXEC | ADR-0001 → dois spikes e escolha fundamentada | E01/E03 | Semântica e autoridade medidas | 2 sessões para spikes, mais decisão; sandbox separada |
 | M1-ARENA | OwnedArray → handles de categoria/instância/geração | E02-01/M0-REF | Modelo independente, reciclagem, geração esgotada, drops e empréstimos | Entregue como subconjunto; arena genérica sem quota integral |
 | M1-ALLOC | Runtime → reserve/alocação fallível e quotas | E01/E02 | OOM injetado preserva estado e vizinhos | Entregues try_alloc/try_new, slots/remoção, BufferPool/preparação e doctree com registro/texto cobrados; quota integral pendente |
 | M1-SHIM | Contrato ABI → provider Windows mínimo | M0-ABI | Oráculo C/AssisScript, falhas e recursos contados | Prova Windows entregue; outros sistemas e integração visual pendentes |
 | M2-WINDOW | Shim → janela com texto/eventos/redimensionamento | M1-SHIM | Execução nativa, loop responsivo e fechamento | Reestimar após spike; acessibilidade não implícita |
-| M3-PARSER | Perfil bootstrap → parser real e árvore | M1-ARENA/M0-PROFILE | Corpus real com atributos/entidades/estrutura e diagnósticos | Reestimar após arena; microformato não serve como parser |
+| M3-PARSER | Perfil bootstrap → parser real e árvore | M1-ARENA/M0-PROFILE | Corpus real com atributos/entidades/estrutura e diagnósticos | Parser bootstrap entregue; catálogo completo e recuperação de editor pendentes |
 
 Atualização M1: arena entregue no commit 6208ecb; provider Windows entregue
 como prova parcial com módulo window, exemplo, oráculo C, falhas e recursos
@@ -26,11 +26,12 @@ contados (relatório 2026-10-29-m1-plataforma-windows.md). Alocação de buffers
 continuam pendentes. M2 exige ampliar teclado/ponteiro,
 texto/DPI e acessibilidade, além de verificar a experiência visual.
 
-Ordem imediata: implementar o parser HTDL real do perfil bootstrap usando
-fonte/árvore candidatas e integrar atributos à cobrança; spikes do executor em paralelo
-conceitual, sem depender de fechar toda a frente de memória. O parser M3 pode
-usar a árvore recuperável com seus limites explícitos. Nenhuma delegação
-automática é requerida. Não pontuar hipóteses ou marcar not-run como pass.
+Ordem imediata: M2-WINDOW usando a árvore HTDL validada, com texto/eventos,
+recursos contados e prova visual; seguir com apresentação textual, foco,
+seleção/scroll e ponte acessível do M3. Parser bootstrap já entregue abaixo;
+não repetir. Catálogo completo HTDL, recuperação de editor e mutações
+semânticas permanecem pendentes. M0-EXEC exige os spikes VM/Wasm e decisão,
+sem depender de fechar toda memória. Nenhuma delegação automática requerida.
 
 Continuação de 30/10/2026: try_new e inserções recuperáveis de OwnedArray/Arena
 entregues no [relatório de slots](../relatorios/2026-10-30-m1-slots-falliveis.md).
@@ -79,3 +80,11 @@ e commit sem alocação. [Relatório](../relatorios/2026-11-01-m1-documento-cand
 Quota de RSS/processo permanece fora do contrato. Próxima unidade M3-PARSER:
 sintaxe/semântica HTDL real, atributos cobrados, corpus e diagnósticos do perfil;
 ativar só após validação. Spikes M0-EXEC e aceite visual M2 continuam abertos.
+
+Continuação M3-PARSER: `std/htdl.assis` implementa sintaxe/semântica do perfil
+bootstrap, atributos/spans cobrados, consultas somente leitura, limites,
+corpus e diagnósticos H101–H401, ativação validada e rollback completo.
+[Relatório M3](../relatorios/2026-11-01-m3-parser-htdl.md). E07-01=2;
+fundações E07-02/E07-05=1; driver E00-04=2. **23,90%, 0/5 gates**.
+Parser completo/recuperação/editor, mutações/foco e loader de recursos não
+estão concluídos. Próximo M2-WINDOW/M3 visual; M0-EXEC e quota RSS continuam.

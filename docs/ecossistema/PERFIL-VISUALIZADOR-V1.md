@@ -1,6 +1,7 @@
 # Perfil viewer-local-bootstrap-v1 — contrato de desenvolvimento
 
-Data de congelamento deste contrato: 29/10/2026. Estado: **não implementado**.
+Data de congelamento deste contrato: 29/10/2026. Estado em 01/11/2026:
+**parser bootstrap implementado; visualizador/integração ainda pendentes**.
 Destino inicial: prova Windows x64; Linux/macOS continuam alvos a validar.
 Nenhuma promessa de suporte nativo é ampliada por este documento.
 
@@ -44,7 +45,14 @@ Aceite de parser: corpus positivo/negativo da sintaxe real, Unicode, entidades,
 modelos de conteúdo e limites; comparação de árvore/diagnósticos com oráculo.
 Aceite de janela: abrir, texto, redimensionar, teclado/ponteiro e fechar com
 contagem de recursos. Aceite de integração: leitura longa e botão acessível,
-sem estado/handle tardio após navegação. Todos estão **not-run** neste contrato.
+sem estado/handle tardio após navegação. O parser foi executado em Windows/Linux
+x64; evidência no [relatório M3](../relatorios/2026-11-01-m3-parser-htdl.md).
+Janela e integração continuam **not-run** para este perfil.
+
+Limite operacional adicional: normalização de classes tem guarda de oito
+milhões de unidades de comparação/varredura, retornando H401. Não altera a
+gramática. O parser representa level por um dígito 1..6; recuperação de editor,
+catálogo completo e apresentação ficam fora desta entrega.
 
 O perfil completo document-local-0.1 e G1 continuam exigindo o catálogo completo,
 recursos, controles e acessibilidade do plano. Este subconjunto não aprova G1.

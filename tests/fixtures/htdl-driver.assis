@@ -1,0 +1,35 @@
+import "std/htdl.assis";
+
+safe fn main():int{
+    // Trusted corpus driver. Its I/O buffers are outside the document budget.
+    own source:*byte=try_alloc<byte>(2097152);
+    own chunk:*byte=try_alloc<byte>(4096);assert(source!=null && chunk!=null);
+    let count:int=0;
+    while(true){val n:int=read_bytes(chunk,4096);assert(n>=0);if(n==0){break;}
+        assert(n<=2097152-count);for(let i:int=0;i<n;i++){source[count+i]=chunk[i];}count+=n;}
+    own store:documents::Store=try_new documents::Store(64000000,200000,1000000);assert(store!=null);
+    val result:htdl::Diagnostic=htdl::load(store,1,slice_of(source,0,count));
+    print(result.code,result.start,result.end,result.line,result.column,result.end_line,result.end_column);
+    if(result.code!=0){assert(!store.has_active() && !store.has_candidate() && store.storage_bytes()==72);return 0;}
+    if(count>8192){return 0;}
+    own encoded:*byte=try_alloc<byte>(count*2+32);assert(encoded!=null);
+    borrow tree:doctree::Tree=store.active_document().nodes();
+    let node:doctree::NodeId=tree.root();
+    while(!doctree::absent(node)){
+        val parent:doctree::NodeId=tree.parent(node);
+        print(node.slot,tree.kind(node),parent.instance,parent.slot,htdl::span_start(tree,node),htdl::span_end(tree,node),htdl::value_size(tree,node));
+        for(let i:int=0;i<htdl::value_size(tree,node);i++){
+            val c:int=int(htdl::value_byte(tree,node,i));let a:int=c/16;let b:int=c%16;
+            if(a<10){a+=48;}else{a+=87;}if(b<10){b+=48;}else{b+=87;}
+            encoded[i*2]=byte(a);encoded[i*2+1]=byte(b);
+        }
+        print(slice_of(encoded,0,htdl::value_size(tree,node)*2));
+        val child:doctree::NodeId=tree.first_child(node);
+        if(!doctree::absent(child)){node=child;continue;}
+        while(!doctree::absent(node)){
+            val sibling:doctree::NodeId=tree.next_sibling(node);
+            if(!doctree::absent(sibling)){node=sibling;break;}node=tree.parent(node);
+        }
+    }
+    return 0;
+}
