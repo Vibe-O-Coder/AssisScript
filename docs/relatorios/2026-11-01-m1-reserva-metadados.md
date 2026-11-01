@@ -155,3 +155,32 @@ Próximo M1-ALLOC: orçamento por documento integrado com arena/árvore/texto,
 com cobrança e rollback explícitos. Executor M0-EXEC, verificação visual M2 e
 parser M3 continuam tarefas próprias. Esta entrega não anuncia prontidão do
 navegador nem fecha qualquer gate.
+
+## Adendo — publicação bloqueada pela revisão automática
+
+Implementação, testes e relatório registrados no commit local
+`b5d5ce2891815fc8054805ceadf5b0f53e9dd7d4`, com **39 arquivos**. Os 96 hashes
+foram conferidos contra os blobs desse commit. Este adendo e a nota de acesso
+do masterprompt recebem commit posterior, sem alterar a implementação testada.
+
+A revisão automática rejeitou o push **antes de executá-lo**, classificando
+o envio do payload ao repositório público como exportação externa sem
+autorização explícita do usuário para o conjunto/destino exatos. Não considerou
+suficiente a autorização do masterprompt referenciado. Não foi tentada outra
+rota para contornar essa recusa.
+
+Uma chamada antecipada e incompleta de criação de PR também foi rejeitada por
+omitir destino/branches/conteúdo; ela não criou PR. Nenhuma publicação, PR,
+CI, merge ou release desta unidade é declarada concluída.
+
+Pendente após aprovação específica do usuário: enviar a branch
+`work/ecosystem-current-2026-11-01` para
+`https://github.com/Vibe-O-Coder/AssisScript.git`, conferir o SHA remoto e abrir
+PR de rascunho sobre `work/m1-shared-budget-2026-11-01` (#13), com os 39
+arquivos revisados de código, teste, evidência e documentação. Comando:
+`git push -u origin work/ecosystem-current-2026-11-01`.
+
+O código e a verificação nativa permanecem completos localmente. O masterprompt
+do caminho original aponta também para a cópia local, pois o link da nova
+branch pública ainda não está disponível. O SHA final é recuperado por
+`git log -1 -- docs/relatorios/2026-11-01-m1-reserva-metadados.md`.
