@@ -1,0 +1,20 @@
+import "std/buffers.assis";
+
+safe fn create(borrow mut pool:buffers::BufferPool,size:int):buffers::BufferId{
+    val result:buffers::Creation=pool.try_create(size);
+    match(result){Created(id){return id;}Rejected(code){assert(false);return new buffers::BufferId();}}
+}
+safe fn main():int{
+    own pool:buffers::BufferPool=try_new buffers::BufferPool(1,16,8,0x7fff_ffff_ffff_ffff);
+    if(pool==null || !pool.is_open()){return 1;}
+    val content:buffers::BufferId=create(pool,4);
+    val image:buffers::BufferId=create(pool,8);
+    pool.set(content,3,byte(42));
+    assert(!pool.try_reserve(content,8)); // 12 live + 8 candidate exceeds 16.
+    assert(pool.release(image));
+    assert(pool.try_reserve(content,8));
+    print(pool.used_bytes(),int(pool.get(content,3))); // 8 42
+    assert(pool.erase(content));assert(!pool.try_resize(content,1));
+    print(pool.used_bytes(),pool.size()); // 0 1 (empty image remains present)
+    pool.close();return 0;
+}

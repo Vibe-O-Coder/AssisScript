@@ -185,6 +185,13 @@
       }
     },
     {
+      "name": "buffers",
+      "required": false,
+      "doc": "BIBLIOTECA-buffers.md",
+      "description": "Pool de buffers com orçamento conjunto de payload, IDs geracionais e reservas recuperáveis.",
+      "dependencies": ["owned"]
+    },
+    {
       "name": "random",
       "required": false,
       "description": "Deterministic random generator for simulations and games",

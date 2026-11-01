@@ -168,3 +168,9 @@ test-arena-removal: bin/assis
 	python3 tests/test-arena-removal.py
 
 test-alpha15: test-arena-removal
+
+.PHONY: test-shared-buffer-budget
+test-shared-buffer-budget: bin/assis
+	python3 tests/test-shared-buffer-budget.py
+
+test-alpha15: test-shared-buffer-budget

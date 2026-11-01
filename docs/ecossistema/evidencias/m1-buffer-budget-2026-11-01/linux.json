@@ -1,0 +1,290 @@
+{
+  "platform": "linux",
+  "compilerSha256": "034d61bfe7b1106f53b4e5dadec1100faffaa4292688adfc5cd5a4f2ff9ae78c",
+  "testEnvironment": {
+    "tlsTimeoutMilliseconds": "native defaults"
+  },
+  "passed": true,
+  "suites": [
+    {
+      "suite": "evolution",
+      "returnCode": 0,
+      "tests": 12,
+      "seconds": 6.708664626000001,
+      "log": "linux-evolution.log"
+    },
+    {
+      "suite": "generics",
+      "returnCode": 0,
+      "tests": 13,
+      "seconds": 4.851596755999992,
+      "log": "linux-generics.log"
+    },
+    {
+      "suite": "functions",
+      "returnCode": 0,
+      "tests": 19,
+      "seconds": 5.393888769,
+      "log": "linux-functions.log"
+    },
+    {
+      "suite": "generic-classes",
+      "returnCode": 0,
+      "tests": 17,
+      "seconds": 8.409900616999991,
+      "log": "linux-generic-classes.log"
+    },
+    {
+      "suite": "collections-ast",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 4.997524403,
+      "log": "linux-collections-ast.log"
+    },
+    {
+      "suite": "ownership-functions",
+      "returnCode": 0,
+      "tests": 26,
+      "seconds": 7.952559363999995,
+      "log": "linux-ownership-functions.log"
+    },
+    {
+      "suite": "values",
+      "returnCode": 0,
+      "tests": 21,
+      "seconds": 5.771752934999995,
+      "log": "linux-values.log"
+    },
+    {
+      "suite": "files",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 1.5205568310000075,
+      "log": "linux-files.log"
+    },
+    {
+      "suite": "text-bytes",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 1.639058214000002,
+      "log": "linux-text-bytes.log"
+    },
+    {
+      "suite": "cli",
+      "returnCode": 0,
+      "tests": 1,
+      "seconds": 0.9040363449999944,
+      "log": "linux-cli.log"
+    },
+    {
+      "suite": "numbers",
+      "returnCode": 0,
+      "tests": 11,
+      "seconds": 1.6208415960000053,
+      "log": "linux-numbers.log"
+    },
+    {
+      "suite": "packages",
+      "returnCode": 0,
+      "tests": 13,
+      "seconds": 1.473496554999997,
+      "log": "linux-packages.log"
+    },
+    {
+      "suite": "json",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 1.6574165270000094,
+      "log": "linux-json.log"
+    },
+    {
+      "suite": "system",
+      "returnCode": 0,
+      "tests": 8,
+      "seconds": 2.075900292,
+      "log": "linux-system.log"
+    },
+    {
+      "suite": "tooling",
+      "returnCode": 0,
+      "tests": 5,
+      "seconds": 0.9658214210000153,
+      "log": "linux-tooling.log"
+    },
+    {
+      "suite": "slices",
+      "returnCode": 0,
+      "tests": 5,
+      "seconds": 1.5680420040000058,
+      "log": "linux-slices.log"
+    },
+    {
+      "suite": "managed-classes",
+      "returnCode": 0,
+      "tests": 9,
+      "seconds": 3.1320630129999927,
+      "log": "linux-managed-classes.log"
+    },
+    {
+      "suite": "backend-alpha9",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 0.9238158940000005,
+      "log": "linux-backend-alpha9.log"
+    },
+    {
+      "suite": "optimization",
+      "returnCode": 0,
+      "tests": 6,
+      "seconds": 2.95886669799998,
+      "log": "linux-optimization.log"
+    },
+    {
+      "suite": "english-api",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 2.3300604990000124,
+      "log": "linux-english-api.log"
+    },
+    {
+      "suite": "release-policy",
+      "returnCode": 0,
+      "tests": 2,
+      "seconds": 1.0740820990000088,
+      "log": "linux-release-policy.log"
+    },
+    {
+      "suite": "ffi",
+      "returnCode": 0,
+      "tests": 9,
+      "seconds": 5.241094258000004,
+      "log": "linux-ffi.log"
+    },
+    {
+      "suite": "http",
+      "returnCode": 0,
+      "tests": 5,
+      "seconds": 5.650740373000019,
+      "log": "linux-http.log"
+    },
+    {
+      "suite": "process",
+      "returnCode": 0,
+      "tests": 4,
+      "seconds": 2.1117860349999944,
+      "log": "linux-process.log"
+    },
+    {
+      "suite": "applications-bc",
+      "returnCode": 0,
+      "tests": 3,
+      "seconds": 1.2251571879999972,
+      "log": "linux-applications-bc.log"
+    },
+    {
+      "suite": "safe-default",
+      "returnCode": 0,
+      "tests": 5,
+      "seconds": 1.9249697809999873,
+      "log": "linux-safe-default.log"
+    },
+    {
+      "suite": "net",
+      "returnCode": 0,
+      "tests": 8,
+      "seconds": 11.333786986000007,
+      "log": "linux-net.log"
+    },
+    {
+      "suite": "move-enums",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 2.457653854,
+      "log": "linux-move-enums.log"
+    },
+    {
+      "suite": "closures",
+      "returnCode": 0,
+      "tests": 15,
+      "seconds": 3.712795995999983,
+      "log": "linux-closures.log"
+    },
+    {
+      "suite": "usability",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 4.579403982999992,
+      "log": "linux-usability.log"
+    },
+    {
+      "suite": "backend-evolution",
+      "returnCode": 0,
+      "tests": 16,
+      "seconds": 3.8538424850000013,
+      "log": "linux-backend-evolution.log"
+    },
+    {
+      "suite": "complete-ir",
+      "returnCode": 0,
+      "tests": 7,
+      "seconds": 1.0352967890000002,
+      "log": "linux-complete-ir.log"
+    },
+    {
+      "suite": "increment",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 2.570672744999996,
+      "log": "linux-increment.log"
+    },
+    {
+      "suite": "owned-mutation",
+      "returnCode": 0,
+      "tests": 12,
+      "seconds": 8.134290794000009,
+      "log": "linux-owned-mutation.log"
+    },
+    {
+      "suite": "htdl-readiness",
+      "returnCode": 0,
+      "tests": 8,
+      "seconds": 2.679433472999989,
+      "log": "linux-htdl-readiness.log"
+    },
+    {
+      "suite": "arena",
+      "returnCode": 0,
+      "tests": 13,
+      "seconds": 21.051180235999993,
+      "log": "linux-arena.log"
+    },
+    {
+      "suite": "fallible-allocation",
+      "returnCode": 0,
+      "tests": 12,
+      "seconds": 3.3265459290000194,
+      "log": "linux-fallible-allocation.log"
+    },
+    {
+      "suite": "fallible-slots",
+      "returnCode": 0,
+      "tests": 11,
+      "seconds": 9.903193501999993,
+      "log": "linux-fallible-slots.log"
+    },
+    {
+      "suite": "arena-removal",
+      "returnCode": 0,
+      "tests": 10,
+      "seconds": 6.638432044000012,
+      "log": "linux-arena-removal.log"
+    },
+    {
+      "suite": "shared-buffer-budget",
+      "returnCode": 0,
+      "tests": 11,
+      "seconds": 9.40498735700001,
+      "log": "linux-shared-buffer-budget.log"
+    }
+  ]
+}

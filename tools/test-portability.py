@@ -92,6 +92,12 @@ def main():
          'own zero:*u16=try_alloc<u16>(0);assert(zero!=null && len(zero)==0);'
          'print(b.size(),b.capacity(),int(b.get(3)));b.release();assert(b.try_resize(12));',
          0, '4 8 42\n'),
+        ('shared-buffer-budget', 'import "std/buffers.assis";',
+         'own p:buffers::BufferPool=try_new buffers::BufferPool(1,12,2,8);assert(p!=null && p.is_open());'
+         'val r:buffers::Creation=p.try_create(4);'
+         'match(r){Created(h){p.set(h,3,byte(42));assert(!p.try_reserve(h,9));'
+         'assert(p.try_reserve(h,8));print(p.used_bytes(),int(p.get(h,3)));'
+         'assert(p.erase(h) && !p.contains(h) && p.used_bytes()==0);}Rejected(code){assert(false);}}', 0, '8 42\n'),
         ('trap', '', 'let z:int=0;print(1/z);', 70, ''),
         ('fallible-slots', 'import "std/arena.assis";struct Item{let n:int;own data:*byte;}',
          'own a:arena::Arena<Item>=try_new arena::Arena<Item>(1,2,4,8);assert(a!=null);'

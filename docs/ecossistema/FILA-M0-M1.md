@@ -43,3 +43,11 @@ Há liberação/transferência sem alocar resultado, inclusive sob recusa do OS.
 remove antigo conserva o resultado own fatal. Quota compartilhada por documento,
 reserva antecipada e construção de controladores continuam sendo o próximo
 incremento M1-ALLOC. Esta entrega não encerra M1 nem aprova gates.
+
+Continuação de 01/11/2026: pool de buffers com quota conjunta de payload,
+crescimento transitório, IDs geracionais e controladores fallíveis no
+[relatório de orçamento](../relatorios/2026-11-01-m1-orcamento-buffers.md).
+A quota cobre somente buffers desse pool, com teto adicional de slots.
+Próximo M1-ALLOC: reserva antecipada de metadados e integração do orçamento
+com arena/árvore/texto por documento; contabilizar overhead/RSS exige contrato
+próprio. M0-EXEC, M2 e todos os gates permanecem abertos.

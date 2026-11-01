@@ -1,0 +1,53 @@
+{
+  "execution": "qemu-aarch64",
+  "native": false,
+  "compiler_sha256": "034d61bfe7b1106f53b4e5dadec1100faffaa4292688adfc5cd5a4f2ff9ae78c",
+  "source_sha256": "14452e3925e34f9d959a4dae66a6be332678970cff8e34e9bcca7371170550fb",
+  "cases": [
+    {
+      "build_command": [
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/shared-budget-20261101/build/assis-budget-linux",
+        "build",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/shared-budget-20261101/exemplos/39_shared_buffer_budget.assis",
+        "--target",
+        "linux-arm64",
+        "--debug",
+        "-o",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/shared-budget-20261101/build/buffer-budget-arm64"
+      ],
+      "run_command": [
+        "qemu-aarch64",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/shared-budget-20261101/build/buffer-budget-arm64"
+      ],
+      "flags": [],
+      "binary_sha256": "5f05c8b3c51c5e3a28434842ef8ab1fd9580e5a6517a8d9ee74dee4a607cc75f",
+      "returnCode": 0,
+      "stdout": "8 42\n0 1\n",
+      "stderr": ""
+    },
+    {
+      "build_command": [
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/shared-budget-20261101/build/assis-budget-linux",
+        "build",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/shared-budget-20261101/exemplos/39_shared_buffer_budget.assis",
+        "--target",
+        "linux-arm64",
+        "--debug",
+        "-o",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/shared-budget-20261101/build/buffer-budget-arm64-reference",
+        "--no-opt"
+      ],
+      "run_command": [
+        "qemu-aarch64",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/shared-budget-20261101/build/buffer-budget-arm64-reference"
+      ],
+      "flags": [
+        "--no-opt"
+      ],
+      "binary_sha256": "191e83cadb51d076e96870234fc18c0774b9cac67ef5f4e38ff481e85ce5193a",
+      "returnCode": 0,
+      "stdout": "8 42\n0 1\n",
+      "stderr": ""
+    }
+  ]
+}
