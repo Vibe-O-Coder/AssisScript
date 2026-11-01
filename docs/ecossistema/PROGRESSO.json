@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-01",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "partial-native-retest-m3-htdl-parser",
+  "assessment": "partial-native-retest-m2-htdl-viewer",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -371,35 +371,41 @@
         {
           "id": "E04-02",
           "name": "Janela, monitores e eventos",
-          "level": 1,
+          "level": 2,
           "acceptance": "Abrir/redimensionar/fechar janela, integrar DPI, múltiplos monitores, foco, teclado/ponteiro/touch e suspensão; testar loop nativo sem espera ocupada e liberação de recursos.",
-          "baseline": "Prova Windows x64: criação/resize/close, eventos nativos em janelas ocultas, fila limitada e recursos contados; inspeção visual, monitores/200%, touch e suspensão permanecem abertos.",
+          "baseline": "Janela Windows x64 integrada a HTDL local: teclado/clique/roda/resize/close e recursos contados. Captura desktop, monitores/200%, touch e suspensão seguem pendentes.",
           "evidence": [
             "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md",
             "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
-            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json"
+            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json",
+            "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
+            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json"
           ]
         },
         {
           "id": "E04-03",
           "name": "Desenho, imagens e composição",
-          "level": 1,
+          "level": 2,
           "acceptance": "Implementar superfícies, clipping, transforms e snapshots imutáveis com fallback de renderização; decodificar imagens sob limites e isolamento, testar perda/recriação de recursos e hit testing consistente.",
-          "baseline": "Superfície por software, máscara GDI de texto e source-over contra oráculo independente; sem imagens, transforms, snapshots imutáveis ou motor HTDL integrado.",
+          "baseline": "Composição software de texto/retângulos e clipping integrados ao snapshot, modelo independente por pixel e superfícies equivalentes. Imagens/transforms e perda de dispositivo completa faltam.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
-            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json"
+            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json",
+            "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
+            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json"
           ]
         },
         {
           "id": "E04-04",
           "name": "Fontes, edição e entrada de texto",
-          "level": 0,
+          "level": 1,
           "acceptance": "Integrar shaping/fallback/bidi, medição e quebra, seleção, clipboard e IME; validar edição com graphemes, escala 200%, RTL e navegação por teclado em providers de cada OS.",
-          "baseline": "Texto de terminal não prova edição ou shaping gráfico.",
+          "baseline": "Medição de fonte do sistema comparada a GDI direto e texto UTF-8 integrado. Sem shaping/bidi/segmentação por grafema, seleção, clipboard, IME ou aceite de 200%.",
           "evidence": [
-            "docs/BIBLIOTECA-unicode.md"
+            "docs/BIBLIOTECA-unicode.md",
+            "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
+            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json"
           ]
         },
         {
@@ -599,11 +605,13 @@
         {
           "id": "E07-04",
           "name": "Estado, eventos e transações",
-          "level": 0,
+          "level": 2,
           "acceptance": "Implementar células por página/nó, inscrição/desinscrição, snapshot e fila determinística; cobrir teclado/ponteiro, disabled/hidden, remoção e falhas sem handlers tardios.",
-          "baseline": "Eventos cooperativos da stdlib não são eventos de documento.",
+          "baseline": "Estado de foco/gestos/scroll por documento e eventos determinísticos com identidade/seq, hidden/disabled e fechamento. Sem células/inscrições, handlers de página, mutação ou transações completas.",
           "evidence": [
-            "local:htdl/docs/17-execucao-transacoes-e-layout.md"
+            "local:htdl/docs/17-execucao-transacoes-e-layout.md",
+            "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
+            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json"
           ]
         },
         {
@@ -646,12 +654,14 @@
         {
           "id": "E08-02",
           "name": "Layout e snapshots coerentes",
-          "level": 0,
+          "level": 1,
           "acceptance": "Definir constraints, distribuição row/column, texto, overflow/scroll e invalidações; provar ausência de ciclo geométrico e uso do mesmo snapshot por desenho, hit test e acessibilidade.",
-          "baseline": "Questões de row e dimensões grandes seguem abertas no rascunho.",
+          "baseline": "Fundação AssisScript de layout textual medido, snapshot próprio e mesma geometria para desenho/hit test/scroll; resize transacional. Sem constraints row/column, FS/SSC ou árvore acessível.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
-            "local:htdl/docs/19-conformidade-e-cenarios.md"
+            "local:htdl/docs/19-conformidade-e-cenarios.md",
+            "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
+            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json"
           ]
         },
         {
@@ -678,11 +688,13 @@
         {
           "id": "E08-05",
           "name": "Corpus visual e inspeção",
-          "level": 0,
+          "level": 1,
           "acceptance": "Executar contador, leitura e dois painéis com screenshots controladas, árvores/eventos e leitor de tela; inspecionar grafo, custos e versões com diagnóstico de origem.",
-          "baseline": "Cenários especificados, não executados por motor nativo.",
+          "baseline": "Artigo HTDL em três dumps reais da superfície Windows, inspecionados e iguais entre modos, com entrada nativa. Captura de desktop falhou; contador/dois painéis/leitor de tela/grafo permanecem pendentes.",
           "evidence": [
-            "local:htdl/docs/19-conformidade-e-cenarios.md"
+            "local:htdl/docs/19-conformidade-e-cenarios.md",
+            "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
+            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json"
           ]
         }
       ]
@@ -2066,7 +2078,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-01",
+      "rubric_version": 1,
+      "label": "M2/M3 parcial: janela HTDL, apresentação textual, foco/eventos/scroll e superfícies; 27,00%, 0/5 gates",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 1,
+        "E00-03": 1,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 1,
+        "E03-03": 2,
+        "E03-04": 2,
+        "E03-05": 0,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 1,
+        "E04-05": 0,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 0,
+        "E06-02": 0,
+        "E06-03": 0,
+        "E06-04": 0,
+        "E06-05": 0,
+        "E07-01": 2,
+        "E07-02": 1,
+        "E07-03": 0,
+        "E07-04": 2,
+        "E07-05": 1,
+        "E08-01": 0,
+        "E08-02": 1,
+        "E08-03": 0,
+        "E08-04": 0,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 1,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Parser HTDL real do perfil bootstrap, atributos/spans cobrados, percursos iterativos, corpus com oráculo independente e ativação validada. E07-01=2; fundações E07-02/E07-05=1; driver E00-04=2. A meta pedida de 30% não foi atingida: catálogo completo, recuperação de edição, interface/acessibilidade, executor e demais integrações continuam abertos. Nenhum gate aprovado."
+  "assessment_note": "Continuação M2/M3: apresentação HTDL local em AssisScript, janela Windows x64 e biblioteca/fallback Linux x64 testados na revisão; 106/85 métodos executados e 1/3 not-run respectivamente. Superfícies nativas foram inspecionadas, mas a captura desktop falhou. Seleção/IME/acessibilidade/200%, outros providers, FS/SSC, sandbox e CI global permanecem sem aceite. Relatório e hashes próprios não aprovam gates."
 }

@@ -16,7 +16,7 @@ primeiro spike de cada área, sem prazo de entrega global.
 | M1-ARENA | OwnedArray → handles de categoria/instância/geração | E02-01/M0-REF | Modelo independente, reciclagem, geração esgotada, drops e empréstimos | Entregue como subconjunto; arena genérica sem quota integral |
 | M1-ALLOC | Runtime → reserve/alocação fallível e quotas | E01/E02 | OOM injetado preserva estado e vizinhos | Entregues try_alloc/try_new, slots/remoção, BufferPool/preparação e doctree com registro/texto cobrados; quota integral pendente |
 | M1-SHIM | Contrato ABI → provider Windows mínimo | M0-ABI | Oráculo C/AssisScript, falhas e recursos contados | Prova Windows entregue; outros sistemas e integração visual pendentes |
-| M2-WINDOW | Shim → janela com texto/eventos/redimensionamento | M1-SHIM | Execução nativa, loop responsivo e fechamento | Reestimar após spike; acessibilidade não implícita |
+| M2-WINDOW | Shim → janela com texto/eventos/redimensionamento | M1-SHIM | Execução nativa, loop responsivo e fechamento | Integração HTDL Windows entregue; captura desktop/aceite visual pendentes |
 | M3-PARSER | Perfil bootstrap → parser real e árvore | M1-ARENA/M0-PROFILE | Corpus real com atributos/entidades/estrutura e diagnósticos | Parser bootstrap entregue; catálogo completo e recuperação de editor pendentes |
 
 Atualização M1: arena entregue no commit 6208ecb; provider Windows entregue
@@ -26,11 +26,11 @@ contados (relatório 2026-10-29-m1-plataforma-windows.md). Alocação de buffers
 continuam pendentes. M2 exige ampliar teclado/ponteiro,
 texto/DPI e acessibilidade, além de verificar a experiência visual.
 
-Ordem imediata: M2-WINDOW usando a árvore HTDL validada, com texto/eventos,
-recursos contados e prova visual; seguir com apresentação textual, foco,
-seleção/scroll e ponte acessível do M3. Parser bootstrap já entregue abaixo;
-não repetir. Catálogo completo HTDL, recuperação de editor e mutações
-semânticas permanecem pendentes. M0-EXEC exige os spikes VM/Wasm e decisão,
+Ordem imediata: seleção de texto e ponte acessível M3; aceite real de
+200%/monitores/leitor de tela e captura do desktop para M2/M3. Janela integrada
+com foco/teclado/clique/scroll/resize já entregue na continuação abaixo; parser
+bootstrap também já existe. Catálogo completo HTDL, recuperação de editor e
+mutações semânticas permanecem abertos. M0-EXEC exige spikes VM/Wasm/decisão,
 sem depender de fechar toda memória. Nenhuma delegação automática requerida.
 
 Continuação de 30/10/2026: try_new e inserções recuperáveis de OwnedArray/Arena
@@ -88,3 +88,12 @@ corpus e diagnósticos H101–H401, ativação validada e rollback completo.
 fundações E07-02/E07-05=1; driver E00-04=2. **23,90%, 0/5 gates**.
 Parser completo/recuperação/editor, mutações/foco e loader de recursos não
 estão concluídos. Próximo M2-WINDOW/M3 visual; M0-EXEC e quota RSS continuam.
+
+
+Continuação M2/M3: [janela e apresentação HTDL local](../relatorios/2026-11-01-m2-visualizador-htdl.md)
+entregam texto medido, foco/teclado/clique/roda/scroll, snapshot próprio,
+resize sem substituir em falha e descarte de eventos semânticos antigos.
+106 métodos Windows/85 Linux executados; 1/3 not-run. Dumps reais inspecionados,
+captura desktop falhou. E04-02/E04-03=2, E04-04=1, E07-04=2, E08-02/E08-05=1.
+**27,00%, 0/5 gates**; M2/M3 parciais. Próximo: seleção, acessibilidade e
+aceite real 200%/leitor/monitores; não omitir catálogo/mutações/M0-EXEC/M1 RSS.

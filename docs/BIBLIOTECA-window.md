@@ -46,12 +46,14 @@ opened indica criação; error informa o último resultado de provider/abertura.
 clear(rgba), draw_text(x,y,slice,rgba), present e close retornam o código da
 [ABI](ecossistema/ABI-PLATAFORMA-V1.md). O título e os bytes de texto são
 copiados durante a chamada; nenhum ponteiro emprestado fica retido no provider.
-O buffer temporário e a classe AssisScript usam a alocação atual do runtime:
-OOM nesse lado **ainda é fatal**. OOM recuperável do shim não encerra E02-03.
+Na continuação M2, words e cópias de título/texto usam try_alloc; recusa retorna
+-4. O chamador deve construir Window com try_new para recuperar também seu
+objeto. Isso não encerra E02-03 nem cobre todos os recursos da aplicação.
 
 close no adaptador é idempotente e zera o token após sucesso ou revogação.
-drop chama close; empréstimos impedem consumo concorrente. O token é privado,
-não é HWND e não pode ser passado entre processos. Chamadas de C permanecem
+drop chama close; empréstimos impedem consumo concorrente. O registro é privado;
+platform_token expõe o token opaco somente para extensões do host confiável.
+Não é HWND, ponteiro ou concessão de página e não atravessa processos. Chamadas de C permanecem
 unsafe internamente. Todas as operações pertencem à thread da primeira chamada
 à ABI; não mova a instância para outra thread. Nenhum callback AssisScript é
 registrado no Windows. Falha fatal do runtime não garante execução de drop.
@@ -65,8 +67,9 @@ janela até o fechamento explícito/drop.
 
 Eventos iniciais: close=1; resize=2, largura/altura; key=3, virtual key e
 pressionado; pointer=4, posição do movimento; focus=5; scale=6, milésimos.
-Tab/Enter/Escape/Espaço têm códigos 9/13/27/32. Ainda não há evento separado
-de botão do ponteiro, roda/touch, texto composto, IME ou API assistiva.
+Tab/Enter/Escape/Espaço têm códigos 9/13/27/32. A extensão M2 acrescenta
+7=botão esquerdo down (x/y), 8=up (x/y), 9=roda vertical (delta/0),
+10=captura perdida (0/0). Touch, texto composto, IME e API assistiva faltam.
 
 ## Provider Windows e limites
 

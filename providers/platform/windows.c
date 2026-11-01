@@ -146,6 +146,14 @@ static LRESULT CALLBACK procedure(HWND hwnd, UINT message, WPARAM wp, LPARAM lp)
     }
     case WM_KEYDOWN: case WM_KEYUP: enqueue(w, 3, (int64_t)wp, message == WM_KEYDOWN); return 0;
     case WM_MOUSEMOVE: enqueue(w, 4, GET_X_LPARAM(lp), GET_Y_LPARAM(lp)); return 0;
+    case WM_LBUTTONDOWN:
+        SetCapture(hwnd); enqueue(w, 7, GET_X_LPARAM(lp), GET_Y_LPARAM(lp)); return 0;
+    case WM_LBUTTONUP:
+        enqueue(w, 8, GET_X_LPARAM(lp), GET_Y_LPARAM(lp));
+        if (GetCapture() == hwnd) ReleaseCapture();
+        return 0;
+    case WM_MOUSEWHEEL: enqueue(w, 9, GET_WHEEL_DELTA_WPARAM(wp), 0); return 0;
+    case WM_CAPTURECHANGED: enqueue(w, 10, 0, 0); return 0;
     case WM_SETFOCUS: case WM_KILLFOCUS: enqueue(w, 5, message == WM_SETFOCUS, 0); return 0;
     case WM_DPICHANGED: enqueue(w, 6, ((int64_t)HIWORD(wp) * 1000 + 48) / 96, 0); return 0;
     case WM_ERASEBKGND: return 1;
@@ -254,6 +262,38 @@ static uint32_t over(uint32_t rgba, uint32_t bgra, unsigned coverage) {
     return 0xff000000u | blend(rgba >> 24, (bgra >> 16) & 255u, a) << 16 |
         blend((rgba >> 16) & 255u, (bgra >> 8) & 255u, a) << 8 | blend((rgba >> 8) & 255u, bgra & 255u, a);
 }
+int64_t assisp_view_version(void) {return on_owner() ? 1 : -5;}
+int64_t assisp_measure_utf8(const uint8_t *text, int64_t length) {
+    if (!on_owner()) return -5;
+    wchar_t *wide = NULL; int count = 0;
+    int code = wide_text(text, length, 4096, &wide, &count);
+    if (code) return code;
+    HDC dc = resource_allowed() ? CreateCompatibleDC(NULL) : NULL;
+    if (!dc) {free(wide); return -4;}
+    HGDIOBJ previous = SelectObject(dc, GetStockObject(DEFAULT_GUI_FONT));
+    SIZE extent = {0};
+    if (!previous || previous == HGDI_ERROR || !GetTextExtentPoint32W(dc, wide, count, &extent)) code = -6;
+    if (previous && previous != HGDI_ERROR) SelectObject(dc, previous);
+    DeleteDC(dc); free(wide);
+    if (code) return code;
+    return ((int64_t)extent.cy << 32) | (uint32_t)extent.cx;
+}
+int32_t assisp_rect(int64_t token, int32_t x, int32_t y, int32_t width, int32_t height, uint32_t rgba) {
+    Window *w = NULL; int code = access_window(token, &w); if (code) return code;
+    if (width < 0 || height < 0) return -1;
+    /* Widen before addition, then clip. Extreme coordinates cannot wrap. */
+    int64_t left = x < 0 ? 0 : x, top = y < 0 ? 0 : y;
+    int64_t right = (int64_t)x + width, bottom = (int64_t)y + height;
+    if (right > w->surface.width) right = w->surface.width;
+    if (bottom > w->surface.height) bottom = w->surface.height;
+    GdiFlush();
+    for (int64_t row = top; row < bottom; row++)
+        for (int64_t col = left; col < right; col++) {
+            size_t at = (size_t)row * w->surface.width + (size_t)col;
+            w->surface.pixels[at] = over(rgba, w->surface.pixels[at], 255);
+        }
+    return 0;
+}
 int32_t assisp_clear(int64_t token, uint32_t rgba) {
     Window *w = NULL; int code = access_window(token, &w); if (code) return code;
     GdiFlush(); size_t count = (size_t)w->surface.width * w->surface.height;
@@ -316,6 +356,10 @@ ASSISP_API int64_t assisp_test_control(int64_t operation, int64_t value) {
     if (operation == 2) {unavailable = value != 0; return 0;}
     if (operation == 3) return (int64_t)total_pixels;
     if (operation == 7) {fail_destroy = value != 0; return 0;}
+    if (operation == 8) {
+        for (unsigned i = 0; i < WINDOWS; i++) if (windows[i].active) return windows[i].token;
+        return -2;
+    }
     Window *w = lookup(value); if (!w) return -2;
     if (operation == 4) return (int64_t)(uintptr_t)w->hwnd;
     if (operation == 5) {w->request = INT64_MAX; return 0;}
@@ -327,5 +371,11 @@ ASSISP_API int64_t assisp_test_pixel(int64_t token, int32_t x, int32_t y) {
     Window *w = lookup(token); if (!w) return -2;
     if (x < 0 || y < 0 || x >= w->surface.width || y >= w->surface.height) return -1;
     GdiFlush(); return w->surface.pixels[(size_t)y * w->surface.width + x];
+}
+ASSISP_API int64_t assisp_test_snapshot(int64_t token, uint8_t *bytes, int64_t capacity) {
+    Window *w = NULL; int code = access_window(token, &w); if (code) return code;
+    int64_t size = (int64_t)w->surface.width * w->surface.height * 4;
+    if (!bytes || capacity < size) return -1;
+    GdiFlush(); memcpy(bytes, w->surface.pixels, (size_t)size); return size;
 }
 #endif

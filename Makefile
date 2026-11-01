@@ -134,6 +134,10 @@ test-arena: bin/assis
 test-platform-window:
 	python3 tools/validate-platform.py --output build/platform-validation/host.json
 
+.PHONY: test-htdl-viewer
+test-htdl-viewer: bin/assis
+	python3 tests/test-htdl-viewer.py
+
 test-htdl-readiness: bin/assis
 	python3 tests/test-htdl-readiness.py
 

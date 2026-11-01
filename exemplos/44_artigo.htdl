@@ -1,0 +1,21 @@
+<div type="document" version="0.1" lang="pt-BR">
+  <div type="head"><div type="title">Leitura local em HTDL</div></div>
+  <div type="body">
+    <div type="heading" level="1">AssisScript · leitura local</div>
+    <div type="paragraph">Este documento HTDL foi analisado e validado antes de aparecer nesta janela. A árvore, a quebra de texto e as decisões de interação são implementadas em AssisScript.</div>
+    <div type="paragraph">Ação, coração, café e informação: o texto preserva os caracteres UTF-8 e decodifica entidades como &amp; e &#xE7;. O conteúdo é local, sem rede e sem executar programas da página.</div>
+    <div type="button" id="continue">Continuar leitura</div>
+    <div type="button" disabled="true">Indisponível neste exemplo</div>
+    <div type="container" hidden="true"><div type="paragraph">Este texto oculto não deve aparecer.</div></div>
+    <div type="heading" level="2">Navegação por teclado</div>
+    <div type="paragraph">Tab e Shift+Tab movem o foco entre botões disponíveis. Enter ativa uma vez no pressionamento; Espaço ativa na liberação. A repetição automática não dispara ativações extras. Escape fecha a janela.</div>
+    <div type="paragraph">Use as setas, Page Down, Page Up, Home, End ou a roda do mouse para percorrer o artigo. O foco traz o botão para a área visível. Redimensionar reconstrói a apresentação a partir da mesma árvore validada.</div>
+    <div type="heading" level="2">Um passo verificável</div>
+    <div type="paragraph">O visualizador é uma prova de integração do perfil bootstrap. Seleção de texto, IME, leitores de tela, escala de 200%, catálogo HTDL completo e estilos FluxStyle/SSC permanecem na fila de desenvolvimento.</div>
+    <div type="paragraph">Uma falha de construção da nova apresentação conserva a anterior. Eventos carregam identidade de janela e sequência; a apresentação também recusa eventos marcados com outra instância de documento.</div>
+    <div type="paragraph">O provider do Windows adapta desenho, medição e mensagens nativas. Ele não decide a ordem de leitura, os controles elegíveis, a quebra de linhas, a rolagem ou o significado dos eventos.</div>
+    <div type="heading" level="2">Fim do artigo</div>
+    <div type="paragraph">Chegar ao fim confirma que o conteúdo longo pode ser percorrido. O botão abaixo continua alcançável pela navegação sequencial e pelo ponteiro.</div>
+    <div type="button" id="finish">Concluir</div>
+  </div>
+</div>

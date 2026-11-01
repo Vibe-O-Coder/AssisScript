@@ -2,17 +2,14 @@
 
 Versão da régua: **1**. Data: **29/10/2026**. Base nativa inspecionada: **3.3.0-alpha.15**, commit `e9183e7f98447e97feb2f2e7f1953c035e24f7e6`, com continuação local ainda não publicada. Este documento planeja evolução; não declara novas capacidades implementadas.
 
-**Atualização de continuidade em 01/11/2026:** o diagnóstico acima e a primeira
-fila abaixo são históricos. Reconciliações M0, contratos, arena, provider
-Windows e caminhos recuperáveis de alocação/remoção já têm entregas publicadas.
-Nesta continuação, `std/doctree.assis` integra registros de nós e texto UTF-8
-no orçamento do BufferPool; [relatório de árvore](../relatorios/2026-11-01-m1-arvore-orcamento.md).
-A continuação [documento candidato](../relatorios/2026-11-01-m1-documento-candidato.md)
-cobra também controladores/índice/slots e fonte própria, com abort/commit
-transacionais. Overhead/RSS e recursos ainda ausentes permanecem fora; não há parser HTDL real.
-Consulte o [estado atual e índice de relatórios](ESTADO-ATUAL.md) e a
-[fila operacional](FILA-M0-M1.md) na branch efetiva antes de escolher trabalho.
-A régua evoluiu para 22,30%, com 0/5 gates; isso não encerra M0/M1.
+**Atualização de continuidade em 01/11/2026:** diagnóstico e primeira fila
+abaixo são históricos. Reconciliações M0, contratos, arena, provider Windows,
+memória/candidato e parser HTDL bootstrap já têm entregas na linhagem publicada.
+A continuação M2/M3 acrescenta apresentação textual local, foco/eventos/scroll
+e janela integrada, com [relatório](../relatorios/2026-11-01-m2-visualizador-htdl.md).
+Consulte [índice](ESTADO-ATUAL.md) e [fila efetiva](FILA-M0-M1.md).
+Régua **27,00%, 0/5 gates**. M2/M3 seguem parciais por seleção/acessibilidade/
+aceite visual de desktop/200%; M0-EXEC e M1 RSS permanecem abertos.
 
 O objetivo é tornar o AssisScript capaz de implementar o navegador e seu motor, o buscador e seus serviços, além das ferramentas e APIs necessárias ao ecossistema HTDL, FluxStyle e SSC. A conclusão exige programas de referência funcionais escritos em AssisScript. Uma lista de recursos ou uma janela hospedada por outro aplicativo não basta para comprovar o objetivo.
 

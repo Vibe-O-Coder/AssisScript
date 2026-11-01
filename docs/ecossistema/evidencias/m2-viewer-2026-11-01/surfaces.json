@@ -1,0 +1,33 @@
+{
+  "kind": "native provider surface dump; not desktop screenshot",
+  "width": 780,
+  "height": 520,
+  "compiler_sha256": "afe1ddf458764f67362ac6285e4d907c036307cebdd1cdc3a1a533b502b8db42",
+  "provider_testing_sha256": "4e18bb43c5163b705073268616d040fa9364f650452a8ce1c63caf40fbfa10bc",
+  "document_sha256": "e61c7b63cdaf4dd17d1f86b9fdf62d76facffb90a57209f5c59c2bdedb3b154e",
+  "scenarios": [
+    {
+      "name": "top",
+      "source_sha256": "3928772fc21fc95aca4faa0b72e0c4f3c856be529e0602d080e324d3f02c7a10",
+      "png_sha256": "f3027f617f16872d864a5d97c6dbe2240d64e7e7ba3ab456c247ceb2e943c0d6",
+      "pixels_sha256": "751206df7d597045fbc601628eb6b7f8c113ed1a8f75e58e42c842b49e93dbee",
+      "optimized_reference_equal": true
+    },
+    {
+      "name": "focused",
+      "source_sha256": "c27b06b58dcfa96fe4bb4c6c26cf69bd43ee02cc59c58cac647d355b2e76c56a",
+      "png_sha256": "8814066fa9c34acb5895666a10a9386a558bd88e96e6aef61f1bae5766ad89ae",
+      "pixels_sha256": "e497f06d53ce9c44557c6892b4650c62d3ec00f0e7b034c38797f3782eb32f3e",
+      "optimized_reference_equal": true
+    },
+    {
+      "name": "bottom",
+      "source_sha256": "a291e99457fc5305626d14eb42cceb4574dade9bed354e8addc5c5aac2d02ea3",
+      "png_sha256": "2aff51fc1b9b72f30e876e865bc850f7fa9dceaa0c2e6aae49fce6cabfb1c357",
+      "pixels_sha256": "cb28b0365ae6a5e6fc87c3fc17a2d503ac43e507365b39d1e9e1b869df146976",
+      "optimized_reference_equal": true
+    }
+  ],
+  "production_diagnostic_exports": false,
+  "visual_gate": false
+}

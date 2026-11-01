@@ -1,0 +1,272 @@
+namespace viewer;
+import "std/htdl.assis";
+import "std/window.assis";
+
+// Keep extension imports out of std/window: old base-v1 providers still load.
+platform("windows-x64"){
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_view_version") fn native_version():int;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_measure_utf8") fn native_measure(borrow data:*byte,length:int):int;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_rect") fn native_rect(handle:int,x:i32,y:i32,width:i32,height:i32,rgba:u32):i32;
+}
+platform("linux"){
+pure fn native_version():int{return -3;}
+safe fn native_measure(borrow data:*byte,length:int):int{return -3;}
+pure fn native_rect(handle:int,x:i32,y:i32,width:i32,height:i32,rgba:u32):i32{return i32(-3);}
+}
+platform("macos"){
+pure fn native_version():int{return -3;}
+safe fn native_measure(borrow data:*byte,length:int):int{return -3;}
+pure fn native_rect(handle:int,x:i32,y:i32,width:i32,height:i32,rgba:u32):i32{return i32(-3);}
+}
+public safe fn available():bool{unsafe{return window::available() && native_version()==1;}}
+/// Negative status or packed height/width, using the provider's stock font.
+public safe fn measure(borrow content:slice<byte>):int{
+    if(len(content)>4096){return -1;}
+    own data:*byte=try_alloc<byte>(len(content));if(data==null){return -4;}
+    for(let i:int=0;i<len(content);i++){data[i]=content[i];}
+    unsafe{return native_measure(data,len(content));}
+}
+public safe fn text_width(borrow content:slice<byte>):int{
+    val result:int=measure(content);if(result<0){return result;}return result%4294967296;
+}
+public safe fn rect(borrow window:window::Window,x:int,y:int,width:int,height:int,rgba:u32):int{
+    if(!window.opened()){return -2;}
+    if(x< -2147483648 || x>2147483647 || y< -2147483648 || y>2147483647 ||
+       width<0 || width>2147483647 || height<0 || height>2147483647){return -1;}
+    unsafe{return int(native_rect(window.platform_token(),i32(x),i32(y),i32(width),i32(height),rgba));}
+}
+
+public value struct Line{
+    let node:doctree::NodeId;let start:int;let size:int;let y:int;
+    let width:int;let kind:int;let disabled:int;
+}
+/// 0 ignored, 1 repaint, 2 local button activation, 3 close requested.
+public value struct Change{let kind:int;let node:doctree::NodeId;}
+public pure fn same(a:doctree::NodeId,b:doctree::NodeId):bool{
+    return a.instance==b.instance && a.slot==b.slot && a.generation==b.generation;
+}
+safe fn after(borrow tree:doctree::Tree,node:doctree::NodeId):doctree::NodeId{
+    let n:doctree::NodeId=node;
+    while(!doctree::absent(n)){
+        val sibling:doctree::NodeId=tree.next_sibling(n);
+        if(!doctree::absent(sibling)){return sibling;}n=tree.parent(n);
+    }return new doctree::NodeId();
+}
+safe fn next(borrow tree:doctree::Tree,node:doctree::NodeId):doctree::NodeId{
+    val child:doctree::NodeId=tree.first_child(node);if(!doctree::absent(child)){return child;}
+    return after(tree,node);
+}
+safe fn hidden(borrow tree:doctree::Tree,node:doctree::NodeId):bool{
+    return tree.kind(node)==1 && htdl::value_equals(tree,htdl::attribute(tree,node,7),utf8("true"));
+}
+
+/// Bounded, owned presentation of a validated document. No tree pointers escape.
+/// Build a fresh View and replace the old owner only after is_open succeeds.
+public final class View{
+    private own data:*byte;private own lines:*Line;
+    private let used:int;private let count:int;private let bottom:int;
+    private let width:int;private let height:int;private let row:int;
+    private let instance_id:int;private let window_instance:int;
+    private let focus:int;private let pressed:int;private let offset:int;
+    private let last_request:int;private let work:int;
+    private let shift:bool;private let enter:bool;private let space:bool;
+    private let active:bool;
+
+    fn init(borrow mut self,borrow document:documents::Document,window_instance:int,width:int,height:int,
+            row_height:int,measure:safe fn(borrow slice<byte>):int):void{
+        self.focus=-1;self.pressed=-1;
+        if(window_instance<=0 || width<96 || width>16384 || height<64 || height>16384 ||
+           row_height<1 || row_height>256 || !document.has_root()){return;}
+        self.width=width;self.height=height;self.row=row_height;
+        self.instance_id=document.instance();self.window_instance=window_instance;self.bottom=24;
+        self.data=try_alloc<byte>(document.source_size());if(self.data==null){return;}
+        let capacity:int=document.source_size()+document.nodes().size()+1;
+        if(capacity>32768){capacity=32768;}
+        self.lines=try_alloc<viewer::Line>(capacity);if(self.lines==null){return;}
+        borrow tree:doctree::Tree=document.nodes();let node:doctree::NodeId=tree.root();
+        while(!doctree::absent(node)){
+            val kind:int=htdl::kind(tree,node);
+            if(kind==2 || hidden(tree,node)){node=after(tree,node);continue;}
+            if(kind==6 || kind==8 || kind==9){
+                if(!self.block(tree,node,kind,measure)){return;}node=after(tree,node);
+            }else{node=next(tree,node);}
+        }
+        self.active=true;
+    }
+    private fn put(borrow mut self,c:byte):bool{
+        if(self.used==len(self.data)){return false;}self.data[self.used]=c;self.used++;return true;
+    }
+    private fn block(borrow mut self,borrow tree:doctree::Tree,node:doctree::NodeId,kind:int,
+            measure:safe fn(borrow slice<byte>):int):bool{
+        val start:int=self.used;let pending:bool=false;
+        let n:doctree::NodeId=tree.first_child(node);val stop:doctree::NodeId=after(tree,node);
+        while(!doctree::absent(n) && !same(n,stop)){
+            if(hidden(tree,n)){n=after(tree,n);continue;}
+            if(tree.kind(n)==2){
+                for(let i:int=0;i<htdl::value_size(tree,n);i++){
+                    val c:byte=htdl::value_byte(tree,n,i);
+                    if(htdl::space(int(c))){pending=self.used>start;}
+                    else{
+                        if(pending){if(!self.put(byte(32))){return false;}pending=false;}
+                        if(!self.put(c)){return false;}
+                    }
+                }
+            }n=next(tree,n);
+        }
+        if(kind==9 && self.used==start){
+            val label:doctree::NodeId=htdl::attribute(tree,node,10);
+            if(!doctree::absent(label)){
+                for(let i:int=0;i<htdl::value_size(tree,label);i++){
+                    if(!self.put(htdl::value_byte(tree,label,i))){return false;}
+                }
+            }
+        }
+        val end:int=self.used;let cursor:int=start;
+        val disabled:int=int(htdl::value_equals(tree,htdl::attribute(tree,node,8),utf8("true")));
+        while(cursor<end){
+            let scan:int=cursor;let fit:int=cursor;let boundary:int=cursor;let measured:int=0;
+            while(scan<end){
+                val c:int=int(self.data[scan]);let size:int=1;
+                if(c>=240){size=4;}else if(c>=224){size=3;}else if(c>=192){size=2;}
+                if(scan+size-cursor>4096){break;}
+                self.work+=scan+size-cursor;if(self.work>8000000){return false;}
+                val w:int=measure(slice_of(self.data,cursor,scan+size-cursor));
+                if(w<0 || w>2147483647){return false;}
+                if(w>self.width-72){break;}
+                fit=scan+size;measured=w;
+                if(c==32){boundary=scan;}
+                scan=fit;
+            }
+            // Reject a scalar wider than the viewport instead of clipping it silently.
+            if(fit==cursor){return false;}
+            if(fit<end && self.data[fit]!=32 && boundary>cursor){
+                let word_end:int=boundary+1;
+                while(word_end<end && self.data[word_end]!=32){word_end++;}
+                // A word that fits on its own moves intact to the next row.
+                // Oversized words may fill the current row before splitting.
+                if(word_end-boundary-1<=4096){
+                    val word_width:int=measure(slice_of(self.data,boundary+1,word_end-boundary-1));
+                    if(word_width<0){return false;}
+                    if(word_width<=self.width-72){fit=boundary;}
+                }
+            }
+            while(fit>cursor && self.data[fit-1]==32){fit--;}
+            measured=measure(slice_of(self.data,cursor,fit-cursor));
+            if(measured<0 || self.count==len(self.lines)){return false;}
+            self.lines[self.count]=new Line(node,cursor,fit-cursor,self.bottom,measured,kind,disabled);
+            self.count++;self.bottom+=self.row+8;cursor=fit;
+            while(cursor<end && self.data[cursor]==32){cursor++;}
+        }
+        self.bottom+=12;return true;
+    }
+    fn is_open(borrow self):bool{return self.active;}
+    fn instance(borrow self):int{return self.instance_id;}
+    fn line_count(borrow self):int{return self.count;}
+    fn line(borrow self,index:int):Line{assert(index>=0 && index<self.count);return self.lines[index];}
+    fn line_text(borrow self,index:int):borrow(self) slice<byte>{
+        assert(index>=0 && index<self.count);val l:Line=self.lines[index];return slice_of(self.data,l.start,l.size);
+    }
+    fn viewport_width(borrow self):int{return self.width;}
+    fn viewport_height(borrow self):int{return self.height;}
+    fn row_height(borrow self):int{return self.row;}
+    fn scroll(borrow self):int{return self.offset;}
+    fn max_scroll(borrow self):int{if(self.bottom+24>self.height){return self.bottom+24-self.height;}return 0;}
+    fn focus_node(borrow self):doctree::NodeId{
+        if(self.focus<0){return new doctree::NodeId();}return self.lines[self.focus].node;
+    }
+    fn scroll_to(borrow mut self,position:int):void{
+        self.offset=position;if(self.offset<0){self.offset=0;}if(self.offset>self.max_scroll()){self.offset=self.max_scroll();}
+    }
+    /// Restore stable focus/scroll on resize; cancel any in-progress gesture.
+    fn restore(borrow mut self,borrow previous:View):void{
+        if(!self.active || !previous.is_open() || self.instance_id!=previous.instance()){return;}
+        self.scroll_to(previous.scroll());self.last_request=previous.last_request;
+        self.enter=previous.enter;self.shift=previous.shift;
+        val focused:doctree::NodeId=previous.focus_node();
+        for(let i:int=0;i<self.count;i++){
+            if(self.eligible(i) && same(self.lines[i].node,focused)){self.focus=i;return;}
+        }
+    }
+    private fn eligible(borrow self,index:int):bool{return self.lines[index].kind==9 && self.lines[index].disabled==0;}
+    private fn focus_next(borrow mut self,backward:bool):void{
+        val old:doctree::NodeId=self.focus_node();let at:int=self.focus;
+        if(at<0 && backward){at=0;}
+        for(let i:int=0;i<self.count;i++){
+            if(backward){at--;}else{at++;}
+            if(at<0){at=self.count-1;}if(at>=self.count){at=0;}
+            if(self.eligible(at) && (!same(self.lines[at].node,old) || i==self.count-1)){
+                self.focus=at;
+                val y:int=self.lines[at].y;
+                if(y<self.offset+16){self.scroll_to(y-16);}
+                else if(y+self.row+16>self.offset+self.height){self.scroll_to(y+self.row+16-self.height);}
+                return;
+            }
+        }
+    }
+    private fn hit(borrow self,x:int,y:int):int{
+        if(x<24 || x>=self.width-24 || y<0 || y>=self.height){return -1;}
+        for(let i:int=0;i<self.count;i++){
+            val l:Line=self.lines[i];
+            if(self.eligible(i) && l.y-self.offset>=4 && l.y-self.offset+self.row+4<=self.height &&
+               y+self.offset>=l.y-4 && y+self.offset<l.y+self.row+4){return i;}
+        }return -1;
+    }
+    fn close(borrow mut self):void{
+        self.active=false;self.focus=-1;self.pressed=-1;self.enter=false;self.space=false;self.shift=false;
+    }
+    /// The shell tags the event with the document instance current when polled.
+    fn dispatch(borrow mut self,document_instance:int,event:window::Event):Change{
+        val ignored:Change=new Change();
+        if(!self.active || document_instance!=self.instance_id || event.instance!=self.window_instance ||
+           event.status!=0 || event.request_id<=self.last_request){return ignored;}
+        self.last_request=event.request_id;
+        if(event.kind==1){self.close();return new Change(3,new doctree::NodeId());}
+        if(event.kind==5 || event.kind==10){
+            self.pressed=-1;self.enter=false;self.space=false;self.shift=false;return new Change(1,new doctree::NodeId());
+        }
+        if(event.kind==7){self.space=false;self.enter=false;self.pressed=self.hit(event.arg0,event.arg1);
+            if(self.pressed>=0){self.focus=self.pressed;}return new Change(1,new doctree::NodeId());}
+        if(event.kind==8){val hit:int=self.hit(event.arg0,event.arg1);val pressed:int=self.pressed;self.pressed=-1;
+            if(hit>=0 && pressed>=0 && same(self.lines[hit].node,self.lines[pressed].node)){
+                return new Change(2,self.lines[hit].node);}return ignored;}
+        if(event.kind==9){
+            if(event.arg0< -32768 || event.arg0>32767){return ignored;}
+            self.scroll_to(self.offset-event.arg0/120*(self.row+8)*3);return new Change(1,new doctree::NodeId());
+        }
+        if(event.kind!=3 || (event.arg1!=0 && event.arg1!=1)){return ignored;}
+        val down:bool=event.arg1==1;val key:int=event.arg0;
+        if(key==16){self.shift=down;return ignored;}
+        if(key==13){val repeat:bool=self.enter;self.enter=down;
+            if(down && !repeat && self.focus>=0){return new Change(2,self.focus_node());}return ignored;}
+        if(key==32){val armed:bool=self.space;
+            if(!down){self.space=false;if(armed && self.focus>=0){return new Change(2,self.focus_node());}}
+            else if(self.focus>=0){self.space=true;}else{self.scroll_to(self.offset+self.height-32);}
+            return new Change(1,new doctree::NodeId());
+        }
+        if(!down){return ignored;}
+        if(key==9){self.space=false;self.pressed=-1;self.focus_next(self.shift);return new Change(1,new doctree::NodeId());}
+        if(key==27){self.close();return new Change(3,new doctree::NodeId());}
+        if(key==36){self.scroll_to(0);}else if(key==35){self.scroll_to(self.max_scroll());}
+        else if(key==34){self.scroll_to(self.offset+self.height-32);}else if(key==33){self.scroll_to(self.offset-self.height+32);}
+        else if(key==40){self.scroll_to(self.offset+self.row+8);}else if(key==38){self.scroll_to(self.offset-self.row-8);}
+        else{return ignored;}
+        return new Change(1,new doctree::NodeId());
+    }
+}
+
+/// Render only complete visible rows. Geometry and hit testing share the snapshot.
+public safe fn paint(borrow view:View,borrow mut window:window::Window):bool{
+    if(!view.is_open() || window.clear(u32(0xf4f1eaff))!=0){return false;}
+    for(let i:int=0;i<view.line_count();i++){
+        val l:Line=view.line(i);val y:int=l.y-view.scroll();
+        if(y<4 || y+view.row_height()+4>view.viewport_height()){continue;}
+        let color:u32=u32(0x223143ff);
+        if(l.kind==8){color=u32(0x006d77ff);}
+        if(l.kind==9){
+            let background:u32=u32(0xd9e6e4ff);if(l.disabled==1){background=u32(0xe2e0daff);color=u32(0x777777ff);}
+            if(same(l.node,view.focus_node())){background=u32(0x006d77ff);color=u32(0xffffffff);}
+            if(rect(window,24,y-4,view.viewport_width()-48,view.row_height()+8,background)!=0){return false;}
+        }
+        if(window.draw_text(36,y,view.line_text(i),color)!=0){return false;}
+    }return window.present()==0;
+}

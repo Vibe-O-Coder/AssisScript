@@ -216,8 +216,15 @@
       "name": "htdl",
       "required": false,
       "doc": "BIBLIOTECA-htdl.md",
-      "description": "Parser HTDL do perfil viewer-local-bootstrap-v1, atributos e spans cobrados, diagnóstico e ativação validada; sem visualizador ou execução de página.",
+      "description": "Parser HTDL do perfil viewer-local-bootstrap-v1, atributos e spans cobrados, diagnóstico e ativação validada; sem execução de página.",
       "dependencies": ["documents"]
+    },
+    {
+      "name": "viewer",
+      "required": false,
+      "doc": "BIBLIOTECA-viewer.md",
+      "description": "Apresentação HTDL local com texto medido, foco, scroll e eventos em AssisScript; provider Windows opcional, sem seleção/IME/acessibilidade.",
+      "dependencies": ["htdl", "window"]
     }
   ]
 }
