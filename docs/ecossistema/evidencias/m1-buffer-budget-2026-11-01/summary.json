@@ -629,7 +629,7 @@
     "docs/ecossistema/FILA-M0-M1.md": "397cfdf837339c568ad956318a843ad4a65d686f489be0dea0b1aad978ff74c8",
     "docs/ecossistema/PROGRESSO.json": "13c283fbf1d1b78eebb1dd013b7ddc65966c2b7df3e6c2e198f76b03147399ea",
     "docs/ecossistema/PROGRESSO.md": "f4b36549fa876db345c308abbc431127d7e11345f4c49fa43dcf4fa12c95329a",
-    "docs/relatorios/2026-11-01-m1-orcamento-buffers.md": "21258a31279a1b2cfa740b62441b6c0102a30cac84693934ee16af66274988e9",
+    "docs/relatorios/2026-11-01-m1-orcamento-buffers.md": "d53c192d15c926b8d628c059b8c4660156cbfa5784a57e98386749c095f5e6ff",
     "exemplos/39_shared_buffer_budget.assis": "14452e3925e34f9d959a4dae66a6be332678970cff8e34e9bcca7371170550fb",
     "src/arm64_emit.h": "887807ed564f63dc65e6f11863f3b52e72c0ea1b79275ea1d3a05f59df16d876",
     "src/assisc.c": "fe96444ec1909aeed2af8cdddd5a0a7920b1fad240fd96401a786cacb4dddd42",
@@ -1170,14 +1170,29 @@
     "windows.json": "199d0f313f057d8b860b691a09e211edd2c28b758fd6c300f00cbe4ef0cfd8b7"
   },
   "publication": {
-    "status": "blocked-before-execution-by-automatic-approval-review",
-    "implementation_commit": "a3f4e07bcbba9ec3b24a087eb23c3db356e28268",
+    "status": "published-and-draft-pr-created",
     "repository": "https://github.com/Vibe-O-Coder/AssisScript.git",
     "branch": "work/m1-shared-budget-2026-11-01",
     "public": true,
     "changed_files": 117,
-    "reason": "Reviewer requires explicit user approval of this public destination and exact payload; authorization inside the referenced masterprompt was not accepted.",
-    "pending_command": "git push -u origin work/m1-shared-budget-2026-11-01",
-    "pull_request": "not-created"
+    "implementation_commit": "a3f4e07bcbba9ec3b24a087eb23c3db356e28268",
+    "verified_remote_sha": "7fbb6127bf608c3ea47a555b9ae9d41d7c7853ed",
+    "explicit_user_approval": "Autorizar publicação e PR",
+    "pull_request": "https://github.com/Vibe-O-Coder/AssisScript/pull/13",
+    "draft": true,
+    "base_branch": "work/m1-arena-removal-2026-10-30",
+    "initial_attempt": {
+      "status": "blocked-before-execution-by-automatic-approval-review",
+      "implementation_commit": "a3f4e07bcbba9ec3b24a087eb23c3db356e28268",
+      "repository": "https://github.com/Vibe-O-Coder/AssisScript.git",
+      "branch": "work/m1-shared-budget-2026-11-01",
+      "public": true,
+      "changed_files": 117,
+      "reason": "Reviewer requires explicit user approval of this public destination and exact payload; authorization inside the referenced masterprompt was not accepted.",
+      "pending_command": "git push -u origin work/m1-shared-budget-2026-11-01",
+      "pull_request": "not-created"
+    },
+    "ci_status_query": "empty status list; no approval claimed",
+    "documentation_confirmation_commit": "See history of docs/relatorios/2026-11-01-m1-orcamento-buffers.md"
   }
 }
