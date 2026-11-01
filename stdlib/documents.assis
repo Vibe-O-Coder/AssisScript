@@ -1,0 +1,121 @@
+namespace documents;
+import "std/doctree.assis";
+
+/// Requested object bodies in native v1; allocator overhead and RSS are separate.
+public pure fn document_bytes():int{return 64+doctree::controller_bytes();}
+public pure fn store_bytes():int{return 72;}
+safe fn source_storage(size:int):own *byte{
+    if(size==0){return try_alloc<byte>(-1);}return try_alloc<byte>(size);
+}
+
+/// Owned source and generic tree. Construction is recoverable; no HTDL semantics.
+public final class Document{
+    private own tree:doctree::Tree;
+    private own source:*byte;
+    private let instance_id:int;
+    private let limit:int;
+    private let source_count:int;
+    private let active:bool;
+    private let initialized:bool;
+
+    fn init(borrow mut self,instance:int,max_bytes:int,max_nodes:int,generation_limit:int,borrow input:slice<byte>):void{
+        assert(!self.initialized);self.initialized=true;
+        assert(instance>0 && max_bytes>=0 && max_nodes>=0 && generation_limit>0);
+        self.instance_id=instance;self.limit=max_bytes;
+        if(max_bytes<document_bytes() || len(input)>max_bytes-document_bytes()){return;}
+        if(unicode::error(input)>=0){return;}
+        own source:*byte=source_storage(len(input));
+        if(len(input)>0 && source==null){return;}
+        own tree:doctree::Tree=try_new doctree::Tree(instance,max_bytes,max_nodes,generation_limit);
+        if(tree==null || !tree.is_open()){return;}
+        if(!tree.try_limit_storage(max_bytes-64-len(input))){return;}
+        for(let i:int=0;i<len(input);i++){source[i]=input[i];}
+        self.source=move(source);self.tree=move(tree);self.source_count=len(input);self.active=true;
+    }
+    fn is_open(borrow self):bool{return self.active;}
+    fn instance(borrow self):int{return self.instance_id;}
+    fn storage_bytes(borrow self):int{
+        if(self.tree==null){return 64;}return 64+self.source_count+self.tree.storage_bytes();
+    }
+    fn source_size(borrow self):int{return self.source_count;}
+    fn has_root(borrow self):bool{return self.active && !doctree::absent(self.tree.root());}
+    fn source_byte(borrow self,index:int):byte{
+        assert(self.active && index>=0 && index<self.source_count);return self.source[index];
+    }
+    /// Read-only view; mutation cannot bypass this document's storage limit.
+    fn nodes(borrow self):borrow(self) doctree::Tree{assert(self.active);return self.tree;}
+    fn try_append(borrow mut self,parent:doctree::NodeId,kind:int,borrow input:slice<byte>):doctree::Append{
+        if(!self.active){return new doctree::Append.Rejected(1);}
+        return self.tree.try_append(parent,kind,input);
+    }
+    fn try_set_text(borrow mut self,id:doctree::NodeId,borrow input:slice<byte>):bool{
+        return self.active && self.tree.try_set_text(id,input);
+    }
+    fn try_reparent(borrow mut self,id:doctree::NodeId,parent:doctree::NodeId):bool{
+        return self.active && self.tree.try_reparent(id,parent);
+    }
+    fn erase_subtree(borrow mut self,id:doctree::NodeId):bool{
+        return self.active && self.tree.erase_subtree(id);
+    }
+    fn prepare_nodes(borrow mut self,count:int):buffers::Preparation{
+        if(!self.active){return new buffers::Preparation.Incomplete(1,0);}
+        return self.tree.prepare_nodes(count);
+    }
+    fn close(borrow mut self):void{
+        self.active=false;self.source_count=0;
+        own tree:doctree::Tree=move(self.tree);own source:*byte=move(self.source);
+    }
+}
+
+/// Active + staged documents share one storage ceiling. No page execution.
+public final class Store{
+    private own current:Document;
+    private own pending:Document;
+    private let limit:int;
+    private let node_limit:int;
+    private let generation_limit:int;
+    private let last_instance:int;
+    private let initialized:bool;
+    private let active:bool;
+
+    fn init(borrow mut self,max_bytes:int,max_nodes:int,generation_limit:int):void{
+        assert(!self.initialized);self.initialized=true;
+        assert(max_bytes>=store_bytes() && max_nodes>=0 && generation_limit>0);
+        self.limit=max_bytes;self.node_limit=max_nodes;self.generation_limit=generation_limit;self.active=true;
+    }
+    fn is_open(borrow self):bool{return self.active;}
+    fn has_active(borrow self):bool{return self.current!=null;}
+    fn has_candidate(borrow self):bool{return self.pending!=null;}
+    fn storage_bytes(borrow self):int{
+        let total:int=store_bytes();
+        if(self.current!=null){total+=self.current.storage_bytes();}
+        if(self.pending!=null){total+=self.pending.storage_bytes();}
+        return total;
+    }
+    fn active_document(borrow self):borrow(self) Document{assert(self.current!=null);return self.current;}
+    fn candidate(borrow mut self):borrow mut(self) Document{assert(self.pending!=null);return self.pending;}
+    /// 0 success; 1 closed, 3 allocator, 4 storage, 5 instance, 6 UTF-8, 7 busy.
+    fn begin(borrow mut self,instance:int,borrow source:slice<byte>):int{
+        if(!self.active){return 1;}if(self.pending!=null){return 7;}
+        if(instance<=self.last_instance){return 5;}
+        val available:int=self.limit-self.storage_bytes();
+        if(available<document_bytes() || len(source)>available-document_bytes()){return 4;}
+        if(unicode::error(source)>=0){return 6;}
+        own candidate:Document=try_new Document(instance,available,self.node_limit,self.generation_limit,source);
+        if(candidate==null || !candidate.is_open()){return 3;}
+        self.pending=move(candidate);self.last_instance=instance;return 0;
+    }
+    /// Requires a root and the matching instance. Caller validates its own format.
+    fn commit(borrow mut self,instance:int):bool{
+        if(self.pending==null || !self.pending.is_open() || self.pending.instance()!=instance){return false;}
+        if(!self.pending.has_root()){return false;}
+        own next:Document=move(self.pending);self.current=move(next);return true;
+    }
+    fn abort(borrow mut self,instance:int):bool{
+        if(self.pending==null || self.pending.instance()!=instance){return false;}
+        own discarded:Document=move(self.pending);return true;
+    }
+    fn close(borrow mut self):void{
+        self.active=false;own current:Document=move(self.current);own pending:Document=move(self.pending);
+    }
+}

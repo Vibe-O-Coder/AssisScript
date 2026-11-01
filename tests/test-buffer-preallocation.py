@@ -25,6 +25,9 @@ def exhaustion(allowance=0):
     # plus ten 16 KiB ledgers. There is no system-OOM stress loop.
     setup, drain, restore, cleanup = '', '', '', ''
     for i, size in enumerate([1, 33, 97, 225, 481, 993, 2017, 4065, 8161, 16353]):
+        # Supply must not depend on which classes library controllers happened
+        # to warm. Their layouts can legitimately move to another slab class.
+        setup += f'{{let warm:*byte=alloc<byte>({size});free(warm);}}'
         setup += f'let keep{i}:**byte=alloc<*byte>(2048);let n{i}:int=0;'
         drain += (f'for(let attempt:int=0;attempt<2048;attempt++){{'
                   f'let v:*byte=try_alloc<byte>({size});if(v==null){{break;}}'

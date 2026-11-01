@@ -1,0 +1,13 @@
+{
+  "base_commit": "b8b89803b8e89fe1cbe3096ae97e0b4bfd06d55d",
+  "command": [
+    "C:\\Users\\babus\\Desktop\\AssisScript\\work\\document-store-20261101\\build\\assis-document.exe",
+    "check",
+    "C:\\Users\\babus\\Desktop\\AssisScript\\work\\document-memory-20261101\\exemplos\\42_document_candidate.assis",
+    "--safe"
+  ],
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "C:\\Users\\babus\\Desktop\\AssisScript\\work\\document-memory-20261101\\exemplos\\42_document_candidate.assis:1:8: A001: módulo não encontrado: std/documents.assis (use caminho relativo, -I ou ASSIS_PATH)\n  import \"std/documents.assis\";\n         ^\n  Ajuda: Confira o caminho relativo ao arquivo importador e as bibliotecas instaladas. Use -I pasta para bibliotecas externas.\n",
+  "execution": "frontend rejection; no native execution"
+}

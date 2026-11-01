@@ -283,6 +283,7 @@ static void print_backend_ir(void){
         if(v->scalar)fprintf(stdout,",\"scalarValue\":%d",v->scalar->id);if(v->local){fputs(",\"local\":",stdout);json_string(stdout,v->local->t->text);}if(v->callee){fputs(",\"callee\":",stdout);json_string(stdout,v->callee->t->text);}
         if(v->kind==BV_ADDR_INDEX)fprintf(stdout,",\"checked\":%s,\"memoryMode\":%d",v->checked?"true":"false",v->mode);
         if(v->kind==BV_ADDR_FIELD)fprintf(stdout,",\"offset\":%d,\"nonnull\":%s",v->offset,v->nonnull?"true":"false");
+        if(v->kind==BV_CONSTRUCT){fputs(",\"layout\":",stdout);json_string(stdout,v->layout->t->text);fprintf(stdout,",\"allocationBytes\":%d",v->layout->value?0:v->layout->size);}
         if(v->kind==BV_CALL)fprintf(stdout,",\"dispatch\":%d",v->mode);fputc('}',stdout);
     }
     fputs("],\"emission\":[",stdout);

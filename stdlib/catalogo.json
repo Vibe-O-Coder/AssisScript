@@ -204,6 +204,13 @@
       "description": "Deterministic random generator for simulations and games",
       "dependencies": [],
       "doc": "BIBLIOTECA-random.md"
+    },
+    {
+      "name": "documents",
+      "required": false,
+      "doc": "BIBLIOTECA-documents.md",
+      "description": "Fonte e árvore com metadados cobrados e substituição transacional de candidato; sem parser HTDL ou quota de RSS.",
+      "dependencies": ["doctree"]
     }
   ]
 }

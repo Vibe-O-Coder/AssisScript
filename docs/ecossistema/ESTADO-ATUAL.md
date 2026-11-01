@@ -1,17 +1,12 @@
 # Continuidade verificada — AssisScript e ecossistema
 
 Atualização: **01/11/2026**. Régua v1: **22,30/100, 0/5 gates**.
-Base desta unidade: `ee852b13721f81553169d716dd803e9fc36d96ad`,
-branch `work/ecosystem-current-2026-11-01`,
-[PR #14](https://github.com/Vibe-O-Coder/AssisScript/pull/14), confirmada aberta
-e em rascunho nesta sessão pelo conector GitHub, com o mesmo SHA local/remoto.
-A nova continuação é `work/m1-document-store-2026-11-01`, baseada nela.
-Publicação e revisão exata no [relatório da árvore](../relatorios/2026-11-01-m1-arvore-orcamento.md).
-O código testado está em `2dd09ef`. Após autorização direta do usuário, os
-44 arquivos até `27d6ff329f2e87e5e8d148d837d947d300224fd5` foram publicados,
-com SHA remoto e inventário conferidos. Criada a [PR de rascunho #15](https://github.com/Vibe-O-Coder/AssisScript/pull/15),
-sobre #14, e vinculada à conversa. O adendo documental posterior registra a
-confirmação. Não há merge, release ou aprovação de CI declarada nesta unidade.
+Base publicada: `b8b89803b8e89fe1cbe3096ae97e0b4bfd06d55d`, branch
+`work/m1-document-store-2026-11-01`, [PR #15](https://github.com/Vibe-O-Coder/AssisScript/pull/15),
+confirmada aberta, em rascunho e sem merge pelo conector nesta sessão.
+Continuação isolada: `AssisScript/work/document-memory-20261101`, branch
+`work/m1-document-memory-2026-11-01`. Revisão, testes e publicação no
+[relatório de documento candidato](../relatorios/2026-11-01-m1-documento-candidato.md).
 
 ## Encontrar a revisão que deve continuar
 
@@ -26,7 +21,7 @@ linhagem escolhida e confirme seu SHA remoto. Trabalhe em cópia isolada limpa
 quando houver fontes locais antigas; não publique novamente essas fontes.
 Branches podem divergir: ancestralidade e contratos precisam ser comparados.
 
-Esta unidade usa a cópia `AssisScript/work/document-store-20261101`.
+Esta unidade usa a cópia `AssisScript/work/document-memory-20261101`.
 O [masterprompt](MASTERPROMPT.md) também é atualizado no caminho original
 solicitado pelo usuário, para que ele conduza à linhagem atual.
 
@@ -49,7 +44,8 @@ próprias unidades, não testes reexecutados nesta.
 | M1: transferência/remoção sem alocação de resultado | [52c8bb1 — remoção](https://github.com/Vibe-O-Coder/AssisScript/blob/52c8bb1f1d7482865660580941637a3074329167/docs/relatorios/2026-10-30-m1-remocao-sem-alocacao.md) |
 | M1: quota conjunta e transitória de payload | [a77f3d6 — orçamento e publicação confirmada](https://github.com/Vibe-O-Coder/AssisScript/blob/a77f3d6d377d233886f586d11a676c2554062ceb/docs/relatorios/2026-11-01-m1-orcamento-buffers.md) |
 | M1: preparação de metadados e continuidade | [ee852b1 — metadados](https://github.com/Vibe-O-Coder/AssisScript/blob/ee852b13721f81553169d716dd803e9fc36d96ad/docs/relatorios/2026-11-01-m1-reserva-metadados.md) |
-| Esta unidade: árvore e texto no orçamento de payload | [relatório atual](https://github.com/Vibe-O-Coder/AssisScript/blob/work/m1-document-store-2026-11-01/docs/relatorios/2026-11-01-m1-arvore-orcamento.md) — publicação confirmada, PR #15 |
+| M1: árvore e texto no orçamento de payload | [relatório atual](https://github.com/Vibe-O-Coder/AssisScript/blob/work/m1-document-store-2026-11-01/docs/relatorios/2026-11-01-m1-arvore-orcamento.md) — publicação confirmada, PR #15 |
+| Esta unidade: metadados, fonte própria e candidato/ativo | [relatório atual](../relatorios/2026-11-01-m1-documento-candidato.md) |
 
 ## Contratos e limites atuais
 
@@ -73,11 +69,26 @@ Reparent sem ciclos e remoção iterativa não alocam pela biblioteca. A árvore
 [BIBLIOTECA-doctree.md](../BIBLIOTECA-doctree.md).
 
 A preparação de slots reserva metadados reutilizáveis, com progresso parcial.
-Metadados do índice, controladores, overhead/RSS, fonte, atributos e outros
-recursos futuros continuam fora da quota. M0/M1 e G1–G5 permanecem abertos.
+O teto adicional de armazenamento cobra índice/slots/controladores; documents
+inclui fonte própria e candidato/ativo. Overhead/RSS, pilha e recursos futuros
+continuam fora do contrato. M0/M1 e G1–G5 permanecem abertos.
 Os 100/100 antigos continuam restritos às fases 0–6.
 
-Próximo M1-ALLOC: contabilizar metadados/demais recursos e preparar candidato
-completo com rollback. Parser M3 deve consumir a árvore recuperável e tem
+Próximo: parser M3 e atributos cobrados. Deve consumir a árvore recuperável e tem
 contrato de conformidade próprio. Executor M0-EXEC e validação visual M2
 seguem independentes. Web/Easy continuam no registro futuro; Easy é a última etapa.
+
+## Continuação: armazenamento e candidato completo
+
+`BufferPool.try_limit_storage` cobra controladores/slots/índice e payload;
+`used_bytes` conserva o contrato de payload. A árvore expõe o mesmo teto
+adicional. `documents::Store` acrescenta fonte própria e candidato/ativo sob
+um teto compartilhado, abort completo e commit sem alocação após raiz e
+instância correspondentes. O formato ainda é validado pelo chamador.
+Contrato: [documents](../BIBLIOTECA-documents.md). Evidência/limites:
+[relatório atual](../relatorios/2026-11-01-m1-documento-candidato.md).
+
+Metadados e fonte própria entram na cobrança de corpos nativos solicitados;
+headers/alinhamento/slabs/cache/RSS, pilha e recursos ainda não implementados
+continuam fora. Parser HTDL M3 deve integrar atributos e corpus reais antes de
+ativação. Executor M0-EXEC e experiência visual M2 continuam na fila.

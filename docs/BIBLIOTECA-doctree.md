@@ -1,5 +1,13 @@
 # std/doctree.assis — árvore de documento com orçamento
 
+Continuação de 01/11/2026: `storage_bytes()` inclui o controlador Tree (48),
+os controladores/índice/slots do pool e payload. `try_limit_storage(n)` ativa
+o teto adicional antes de preparar slots, descontando o controlador da árvore;
+false preserva estado. Os valores são corpos nativos solicitados, sem overhead
+do alocador/RSS. O contrato de `used_bytes()` e da preparação de payload abaixo
+permanece. [documents](BIBLIOTECA-documents.md) integra essa cobrança à fonte
+própria e à substituição completa de candidato, conservando o documento ativo.
+
 Unidade M1-ALLOC / E02-03 de 01/11/2026. Lógica inteiramente em AssisScript,
 sem sintaxe nova, provider ou alteração de compilador. Dependências: buffers,
 unicode e, transitivamente, owned. Exemplo: [41_document_tree_budget.assis](../exemplos/41_document_tree_budget.assis).

@@ -21,6 +21,12 @@ separada. Não é fallback automático para algum recurso da linguagem.
 
 ## Operações cobertas
 
+Nas construções, a saída `ir` também informa `layout` e `allocationBytes`:
+o tamanho do corpo passado ao alocador nativo, ou zero para valores inline.
+Isso permite auditar a cobrança de controladores/índice da biblioteca documents;
+cabeçalhos/slabs/RSS não fazem parte desse número. O campo usa o mesmo layout
+consultado pelos emissores x64/ARM64; não altera a semântica do programa.
+
 - Endereços locais, campos, índices e desreferência; leituras e escritas tipadas.
 - Provas/checks de limites, slices, texto/UTF-8, alocação e cópias de temporários.
 - Chamadas diretas, virtuais, super, indiretas, closures e ABI C já resolvida.

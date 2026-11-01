@@ -113,6 +113,14 @@ def main():
          'assert(!tree.try_reparent(root,child) && tree.erase_subtree(child));'
          'print(tree.size(),tree.used_bytes());}Rejected(code){assert(false);}}'
          '}Rejected(code){assert(false);}}tree.close();', 0, '2 258\n1 128\n'),
+        ('document-memory', 'import "std/documents.assis";',
+         'own s:documents::Store=try_new documents::Store(800,8,100);assert(s.begin(1,utf8(""))==0);'
+         '{borrow mut d:documents::Document=s.candidate();val r:doctree::Append=d.try_append(new doctree::NodeId(),1,utf8(""));'
+         'match(r){Appended(id){}Rejected(c){assert(false);}}}'
+         'assert(s.commit(1) && s.storage_bytes()==544);'
+         'assert(s.begin(2,utf8("x"))==4 && s.begin(2,utf8(""))==0);'
+         'assert(!s.commit(2) && s.abort(2));print(s.storage_bytes());s.close();print(s.storage_bytes());',
+         0, '544\n72\n'),
         ('trap', '', 'let z:int=0;print(1/z);', 70, ''),
         ('fallible-slots', 'import "std/arena.assis";struct Item{let n:int;own data:*byte;}',
          'own a:arena::Arena<Item>=try_new arena::Arena<Item>(1,2,4,8);assert(a!=null);'
