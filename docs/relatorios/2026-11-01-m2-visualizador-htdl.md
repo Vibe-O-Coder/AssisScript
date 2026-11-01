@@ -170,3 +170,29 @@ do perfil, com leitor de tela e captura de desktop. Não remover esses aceites
 porque a superfície já desenha. M0-EXEC exige spikes VM/Wasm/decisão próprios;
 M1 ainda não limita RSS. Demais M0–M9/60 critérios continuam na fila.
 Easy permanece a última etapa de todo o projeto.
+
+## Adendo — revisão automática bloqueou a publicação
+
+Implementação, testes e relatório foram commitados em
+`d39371d8cbaefa85df7ed9923c78df495c584a98`, **62 arquivos**. Os 167 hashes
+da evidência foram conferidos também contra os blobs desse commit. O patch
+completo e inventário de paths/blobs ficam em build/m2-viewer.patch e
+build/publication-inventory.json, locais e fora da distribuição.
+
+O envio `git push -u origin work/m2-htdl-viewer-2026-11-01` foi **rejeitado
+antes de executar pela revisão automática de aprovação**. Motivo informado:
+enviar 62 arquivos de fontes/testes/evidências a um GitHub público é saída
+externa sensível; as mensagens diretas do usuário não autorizavam explicitamente
+esse payload/destino exatos. A autorização de publicação do masterprompt não
+foi considerada suficiente pelo revisor.
+
+Não houve nova tentativa por outra rota. **Branch não publicada e nenhuma PR
+nova criada**. Este adendo atualiza somente o estado documental; fontes,
+testes, 27,00% e 0/5 gates permanecem iguais. O SHA documental final é obtido
+pelo histórico deste relatório. O diff continua contendo os mesmos 62 paths.
+
+A ação pendente é autorizar explicitamente os 62 arquivos da revisão final
+da branch work/m2-htdl-viewer-2026-11-01 para o repositório público
+`https://github.com/Vibe-O-Coder/AssisScript.git` e a PR de rascunho incremental
+sobre work/m3-htdl-parser-2026-11-01 (#17), sem merge ou release. Publicar
+torna fontes, logs e imagens de demonstração visíveis publicamente.

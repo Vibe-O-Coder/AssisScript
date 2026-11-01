@@ -15,6 +15,13 @@ adendo de publicação; confirme SHA remoto e PR antes de continuar. O SHA
 documental final é obtido pelo histórico. Ao ler a cópia original, abra o
 [relatório local](<C:/Users/babus/Desktop/AssisScript/work/htdl-viewer-20261101/docs/relatorios/2026-11-01-m2-visualizador-htdl.md>).
 
+Implementação/testes em `d39371d8cbaefa85df7ed9923c78df495c584a98`, 62 paths.
+O push foi rejeitado antes de executar pela revisão automática, que exigiu
+autorização direta para o payload/destino públicos exatos. **Sem publicação
+ou PR nova confirmadas**; não usar rota alternativa. Autorizar os 62 arquivos
+da revisão final ao Vibe-O-Coder/AssisScript e PR de rascunho sobre #17 é a
+ação pendente. Adendo do relatório/histórico guardam a revisão documental final.
+
 Já existem reconciliações M0, contratos, arena geracional, provider Windows,
 alocação/remoção recuperáveis, BufferPool, árvore/fonte/metadados próprios,
 candidato/ativo transacional e parser HTDL bootstrap real. Não reimplemente.
