@@ -1,5 +1,28 @@
 # std/buffers.assis — orçamento compartilhado de payload
 
+## Teto adicional de armazenamento nativo — 01/11/2026
+
+O contrato de payload abaixo permanece o padrão. `storage_bytes()` também
+informa os corpos dos controladores (BufferPool 112 + OwnedArray 32), slots
+(56 cada), nós reais do índice (32 cada) e payload. Retém metadados após
+erase/aposentadoria; close/reset liberam índice/slots e conservam os dois
+controladores. Um índice cuja construção falhou cobra só BufferPool (112).
+
+`try_limit_storage(n)` ativa um teto adicional antes do primeiro slot, se o
+pool está aberto e n cobre os controladores. False preserva a configuração.
+Criação e preparação verificam o custo inteiro de Slot + caminho novo do
+índice antes de alocar; crescimento cobra todos os buffers antigos e o
+candidato inteiro. Recusa de quota: Creation.Rejected(4) ou
+Preparation.Incomplete(4,ready); preparação continua incremental. O teto
+permanece em reset. `used_bytes()` continua contando somente payload.
+
+Os valores são corpos solicitados no layout nativo v1, incluindo vtable;
+não incluem cabeçalhos/alinhamento/slabs/cache/RSS ou pilha. A suíte verifica
+os tamanhos contra `allocationBytes` emitidos no IR. Para fonte própria,
+árvore e candidato/ativo juntos, use [documents](BIBLIOTECA-documents.md).
+
+## Contrato de payload
+
 Continuação M1-ALLOC de 01/11/2026, E02-03. Implementação em AssisScript,
 dependência `owned`; não requer provider ou alteração de sintaxe/runtime.
 

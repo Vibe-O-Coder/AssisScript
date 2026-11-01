@@ -9,11 +9,13 @@ public enum Append{Appended(NodeId);Rejected(int);}
 safe fn buffer(id:NodeId):buffers::BufferId{return new buffers::BufferId(id.instance,id.slot,id.generation);}
 safe fn node(id:buffers::BufferId):NodeId{return new NodeId(id.instance,id.slot,id.generation);}
 public pure fn absent(id:NodeId):bool{return id.instance==0 && id.slot==0 && id.generation==0;}
+public pure fn controller_bytes():int{return 48+buffers::controller_bytes();}
 pure fn same(a:NodeId,b:NodeId):bool{return a.instance==b.instance && a.slot==b.slot && a.generation==b.generation;}
 
 /// One rooted, ordered tree. Each arena slot owns a 128-byte node record plus
 /// UTF-8 input. Both share BufferPool's payload and transient-growth budget.
-/// Index metadata, controller, allocator overhead/RSS and source are excluded.
+/// An optional storage ceiling adds controllers/index metadata. Allocator
+/// overhead/RSS and source remain separate; documents adds owned source.
 public final class Tree{
     private own pool:buffers::BufferPool;
     private let root_id:NodeId;
@@ -28,6 +30,11 @@ public final class Tree{
     fn size(borrow self):int{if(self.pool==null){return 0;}return self.pool.size();}
     fn used_bytes(borrow self):int{if(self.pool==null){return 0;}return self.pool.used_bytes();}
     fn slots_used(borrow self):int{if(self.pool==null){return 0;}return self.pool.slots_used();}
+    fn storage_bytes(borrow self):int{if(self.pool==null){return 48;}return 48+self.pool.storage_bytes();}
+    fn try_limit_storage(borrow mut self,max_bytes:int):bool{
+        if(!self.is_open() || max_bytes<48){return false;}
+        return self.pool.try_limit_storage(max_bytes-48);
+    }
     fn root(borrow self):NodeId{return self.root_id;}
     fn contains(borrow self,id:NodeId):bool{return self.is_open() && self.pool.contains(buffer(id));}
     fn prepare_nodes(borrow mut self,count:int):buffers::Preparation{

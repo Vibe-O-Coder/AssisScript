@@ -1,0 +1,152 @@
+{
+  "schema": "assisscript-document-memory-host-v1",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "compiler": "C:\\Users\\babus\\Desktop\\AssisScript\\work\\document-memory-20261101\\build\\assis-memory.exe",
+  "compiler_sha256": "afe1ddf458764f67362ac6285e4d907c036307cebdd1cdc3a1a533b502b8db42",
+  "passed": true,
+  "checks": [
+    {
+      "name": "document-memory",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests/test-document-memory.py"
+      ],
+      "returncode": 0,
+      "registered": 12,
+      "not_run": 0,
+      "executed": 12,
+      "seconds": 13.309154000000035,
+      "log": "windows-document-memory.log"
+    },
+    {
+      "name": "document-tree",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests/test-document-tree.py"
+      ],
+      "returncode": 0,
+      "registered": 9,
+      "not_run": 0,
+      "executed": 9,
+      "seconds": 16.38248379999999,
+      "log": "windows-document-tree.log"
+    },
+    {
+      "name": "buffer-preallocation",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests/test-buffer-preallocation.py"
+      ],
+      "returncode": 0,
+      "registered": 6,
+      "not_run": 0,
+      "executed": 6,
+      "seconds": 6.718349799999999,
+      "log": "windows-buffer-preallocation.log"
+    },
+    {
+      "name": "shared-buffer-budget-selected",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests/test-shared-buffer-budget.py",
+        "SharedBufferBudget.test_shared_and_transient_limits_and_return_of_quota",
+        "SharedBufferBudget.test_zero_limits_negative_extreme_and_exact_boundaries",
+        "SharedBufferBudget.test_stale_forged_cross_instance_reset_and_closed_ids",
+        "SharedBufferBudget.test_retirement_and_ten_thousand_recycles",
+        "SharedBufferBudget.test_operations_against_independent_bytearray_model",
+        "SharedBufferBudget.test_private_storage_and_borrow_conflicts_are_rejected",
+        "SharedBufferBudget.test_invalid_access_and_constructor_contracts_trap",
+        "SharedBufferBudget.test_example_ir_and_all_five_formats"
+      ],
+      "returncode": 0,
+      "registered": 8,
+      "not_run": 0,
+      "executed": 8,
+      "seconds": 14.293131999998877,
+      "log": "windows-shared-buffer-budget-selected.log"
+    },
+    {
+      "name": "owned-mutation",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests/test-owned-mutation.py"
+      ],
+      "returncode": 0,
+      "registered": 12,
+      "not_run": 0,
+      "executed": 12,
+      "seconds": 21.618572600000334,
+      "log": "windows-owned-mutation.log"
+    },
+    {
+      "name": "english-api",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests/test-english-api.py"
+      ],
+      "returncode": 0,
+      "registered": 4,
+      "not_run": 0,
+      "executed": 4,
+      "seconds": 4.760526000001846,
+      "log": "windows-english-api.log"
+    },
+    {
+      "name": "packages",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests/test-packages.py"
+      ],
+      "returncode": 0,
+      "registered": 13,
+      "not_run": 1,
+      "executed": 12,
+      "seconds": 6.000514499999554,
+      "log": "windows-packages.log"
+    },
+    {
+      "name": "complete-ir",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests/test-complete-ir.py"
+      ],
+      "returncode": 0,
+      "registered": 7,
+      "not_run": 0,
+      "executed": 7,
+      "seconds": 3.8603250999985903,
+      "log": "windows-complete-ir.log"
+    },
+    {
+      "name": "optimization",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests/test-optimization.py"
+      ],
+      "returncode": 0,
+      "registered": 6,
+      "not_run": 0,
+      "executed": 6,
+      "seconds": 17.353342300000804,
+      "log": "windows-optimization.log"
+    },
+    {
+      "name": "portability",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tools/test-portability.py",
+        "--expect-host",
+        "x86_64",
+        "--output",
+        "C:\\Users\\babus\\Desktop\\AssisScript\\work\\document-memory-20261101\\docs\\ecossistema\\evidencias\\m1-document-memory-2026-11-01\\windows-portability.json"
+      ],
+      "returncode": 0,
+      "registered": null,
+      "not_run": 0,
+      "executed": null,
+      "seconds": 13.602724300002592,
+      "log": "windows-portability.log"
+    }
+  ]
+}

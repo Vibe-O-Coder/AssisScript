@@ -186,3 +186,9 @@ test-document-tree: bin/assis
 	python3 tests/test-document-tree.py
 
 test-alpha15: test-document-tree
+
+.PHONY: test-document-memory
+test-document-memory: bin/assis
+	python3 tests/test-document-memory.py
+
+test-alpha15: test-document-memory

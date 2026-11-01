@@ -4,11 +4,44 @@ Você vai continuar o desenvolvimento real do AssisScript para que a linguagem, 
 
 ## Estado de continuidade — 01/11/2026
 
-A pasta original continua no planejamento `1ed22f5`, com fontes locais antigas. **Ela não é a ponta do desenvolvimento.** Leia o [índice de evolução e relatórios](ESTADO-ATUAL.md). A continuação desta unidade fica em `AssisScript/work/document-store-20261101`, branch `work/m1-document-store-2026-11-01`, sobre a revisão publicada `ee852b13721f81553169d716dd803e9fc36d96ad` da [PR #14](https://github.com/Vibe-O-Coder/AssisScript/pull/14). Implementação e testes em `2dd09ef7c1d75ab80f8aafbd7663f0e02bbb217f`; publicação dos 44 arquivos até `27d6ff329f2e87e5e8d148d837d947d300224fd5` confirmada no GitHub após autorização direta do usuário, com [PR de rascunho #15](https://github.com/Vibe-O-Coder/AssisScript/pull/15) sobre #14. Este registro recebe adendo documental posterior, cujo SHA é obtido pelo histórico. Consulte o [relatório de árvore e orçamento](https://github.com/Vibe-O-Coder/AssisScript/blob/work/m1-document-store-2026-11-01/docs/relatorios/2026-11-01-m1-arvore-orcamento.md) e o [índice canônico publicado](https://github.com/Vibe-O-Coder/AssisScript/blob/work/m1-document-store-2026-11-01/docs/ecossistema/ESTADO-ATUAL.md). Confira branches, worktrees e remoto: uma branch de trabalho publicada não significa merge no master.
+A pasta original está no planejamento `1ed22f5`, com fontes antigas. Leia o
+[índice de evolução](ESTADO-ATUAL.md). A base desta continuação é a revisão
+publicada `b8b89803b8e89fe1cbe3096ae97e0b4bfd06d55d`, branch
+`work/m1-document-store-2026-11-01`, [PR de rascunho #15](https://github.com/Vibe-O-Coder/AssisScript/pull/15).
+A unidade atual fica em `AssisScript/work/document-memory-20261101`, branch
+`work/m1-document-memory-2026-11-01`; publicação e revisão exata no
+[relatório de documento candidato](../relatorios/2026-11-01-m1-documento-candidato.md).
+Implementação/testes em `90aa24042726e26ab274d946e97e3ebc2eab5d54`; após
+autorização direta do usuário, os 57 arquivos até
+`3f0882890f7a0b2bf48d1a6748eae451ed5b1289` foram publicados, com SHA e
+inventário remoto conferidos. [PR de rascunho #16](https://github.com/Vibe-O-Coder/AssisScript/pull/16),
+sobre #15, vinculada à conversa. Adendo documental posterior registra a
+confirmação; o SHA final é obtido pelo histórico, sem hash autorreferente.
+Ao ler a cópia original, abra o [relatório local](<C:/Users/babus/Desktop/AssisScript/work/document-memory-20261101/docs/relatorios/2026-11-01-m1-documento-candidato.md>).
+Confira o SHA remoto e a PR; publicação de branch não significa merge no master.
 
-Já há reconciliações M0, contratos bootstrap, arena geracional, provider Windows, `try_alloc`/`try_new`, inserção/remoção recuperáveis, pool com quota conjunta de payload e [preparação antecipada de slots](https://github.com/Vibe-O-Coder/AssisScript/blob/ee852b13721f81553169d716dd803e9fc36d96ad/docs/relatorios/2026-11-01-m1-reserva-metadados.md). Esta continuação acrescenta `std/doctree.assis`: árvore ordenada de raiz única, IDs geracionais, texto UTF-8 e registros reais de 128 bytes no mesmo orçamento, crescimento transitório, reparent sem ciclos e remoção iterativa de subárvore. Não reimplemente essas entregas como se estivessem ausentes. A arena de bytes do BufferPool sustenta a árvore; `arena::Arena<T>` mantém contrato separado.
+Já existem reconciliações M0, contratos bootstrap, arena geracional, provider
+Windows, alocação/construção/remoção recuperáveis, BufferPool com quota de
+payload, preparação de slots e árvore ordenada com registro/texto cobrados.
+Não reimplemente essas entregas. Esta unidade acrescenta teto opcional de
+corpos nativos solicitados: controladores, slots e índice, além de payload.
+`std/documents.assis` cobra fonte própria e árvore, preparando candidato sob
+o mesmo teto do documento ativo. Abort libera o candidato completo; commit
+exige raiz e instância correspondente, transfere sem alocação e libera o ativo
+anterior. O chamador ainda valida o formato. Não há parser/semântica HTDL.
 
-Régua: **22,30/100, 0/5 gates**, sem promoção nesta unidade. M0/M1 permanecem abertos. A quota agora inclui registros dos nós e texto da árvore, mas exclui metadados do índice, controladores, overhead/RSS, fonte/atributos e outros recursos. Append e alteração de texto recusados preservam a árvore; a preparação de metadados continua parcial. Próximo M1-ALLOC: delimitar e cobrar metadados e demais recursos, com reserva/rollback do candidato completo. O parser HTDL real (M3) deve usar armazenamento recuperável sem confundir árvore genérica com semântica HTDL. Spikes do executor (M0-EXEC) e experiência visual M2 continuam pendentes. Use sempre o JSON e a fila da revisão efetiva, sem congelar esta nota como estado eterno.
+Régua: **22,30/100, 0/5 gates**, sem promoção. M0/M1 permanecem abertos.
+Os tamanhos nativos v1 são confrontados com `allocationBytes` emitidos no IR.
+O teto exclui cabeçalhos/alinhamento/slabs/cache/RSS, pilha, entrada emprestada
+e recursos não implementados (atributos, imagens/fontes gráficas etc.). Não
+há quota total de processo. Preparação interna continua incremental; abort
+faz rollback do candidato completo. IDs são locais, não capacidades.
+
+Próximo: parser HTDL real M3 do perfil congelado consumindo esse armazenamento,
+com corpus/diagnósticos e ativação só após validação; integrar atributos e
+outros recursos à cobrança conforme forem implementados. M0-EXEC (spikes
+VM/Wasm) e experiência visual M2 continuam pendentes com aceites próprios.
+Use o JSON/fila da revisão efetiva; Easy permanece a última etapa.
 
 ## 1. Localize e leia o estado real antes de alterar
 

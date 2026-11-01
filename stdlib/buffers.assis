@@ -14,8 +14,22 @@ safe fn payload(size:int):own *byte{
     return try_alloc<byte>(size);
 }
 
+// Native v1 layouts: vtable word + fields, rounded individually to eight bytes.
+// The document-memory suite checks these charges against emitted allocations.
+public pure fn controller_bytes():int{return 144;} // BufferPool 112 + OwnedArray 32.
+safe fn next_metadata_bytes(count:int):int{
+    if(count==0){return 88;} // Slot 56 + one ArrayNode 32.
+    let n:int=count;let depth:int=0;
+    while(n>1){n/=2;depth++;}
+    n=count;let nodes:int=1;
+    while(n%2==0){nodes++;n/=2;}
+    if(n==1){nodes=depth+2;} // A new root plus a complete right path.
+    return 56+32*nodes;
+}
+
 /// Shared payload budget, including old + candidate during growth.
-/// Metadata, allocator overhead/caches, stack and other objects are excluded.
+/// Metadata is included by the optional storage ceiling; allocator overhead,
+/// caches, stack and unrelated objects remain outside both ceilings.
 public final class BufferPool{
     private own slots:owned::OwnedArray<Slot>;
     private let instance:int;
@@ -27,6 +41,9 @@ public final class BufferPool{
     private let free_head:int;
     private let ready:int;
     private let active:bool;
+    private let storage_limit:int;
+    private let metadata:int;
+    private let bounded:bool;
 
     fn init(borrow mut self,instance:int,max_bytes:int,max_buffers:int,generation_limit:int):void{
         assert(self.instance==0);
@@ -41,19 +58,36 @@ public final class BufferPool{
     fn max_bytes(borrow self):int{return self.limit;}
     fn slots_used(borrow self):int{if(self.slots==null){return 0;}return self.slots.size();}
     fn ready_slots(borrow self):int{return self.ready;}
+    /// Requested native object bodies + payload, excluding allocator overhead/RSS.
+    fn storage_bytes(borrow self):int{
+        let controls:int=112;if(self.slots!=null){controls+=32;}
+        return controls+self.metadata+self.used;
+    }
+    /// Configure before any slot is prepared. Payload-only callers keep their API.
+    fn try_limit_storage(borrow mut self,max_bytes:int):bool{
+        if(!self.active || self.slots.size()!=0 || max_bytes<self.storage_bytes()){return false;}
+        self.storage_limit=max_bytes;self.bounded=true;return true;
+    }
+    private fn fits_storage(borrow self,payload:int,metadata:int):bool{
+        if(!self.bounded){return true;}
+        val available:int=self.storage_limit-self.storage_bytes();
+        return payload<=available && metadata<=available-payload;
+    }
     /// Ensures at least count recyclable slots, without publishing buffer IDs.
     /// Incomplete(code,ready) retains completed slots: 1 closed, 2 slot limit,
-    /// 3 allocator refusal, 4 invalid count. Existing buffers/quota never change.
+    /// 3 allocator refusal, 4 invalid count/storage ceiling. Live buffers never change.
     fn prepare_slots(borrow mut self,count:int):Preparation{
         if(!self.active){return new Preparation.Incomplete(1,self.ready);}
         if(count<0 || count>self.slot_limit){return new Preparation.Incomplete(4,self.ready);}
         while(self.ready<count){
             if(self.slots.size()>=self.slot_limit){return new Preparation.Incomplete(2,self.ready);}
+            val charge:int=next_metadata_bytes(self.slots.size());
+            if(!self.fits_storage(0,charge)){return new Preparation.Incomplete(4,self.ready);}
             own slot:Slot=try_new Slot();
             if(slot==null){return new Preparation.Incomplete(3,self.ready);}
             val index:int=self.slots.size();slot.generation=1;slot.next=self.free_head;
             if(!self.slots.try_push(move(slot))){return new Preparation.Incomplete(3,self.ready);}
-            self.free_head=index;self.ready+=1;
+            self.free_head=index;self.ready+=1;self.metadata+=charge;
         }
         return new Preparation.Ready(self.ready);
     }
@@ -70,6 +104,8 @@ public final class BufferPool{
         if(size<0 || size>self.limit-self.used){return new Creation.Rejected(4);}
         let index:int=self.free_head;let generation:int=1;
         if(index<0 && self.slots.size()>=self.slot_limit){return new Creation.Rejected(2);}
+        let charge:int=0;if(index<0){charge=next_metadata_bytes(self.slots.size());}
+        if(!self.fits_storage(size,charge)){return new Creation.Rejected(4);}
         own data:*byte=payload(size);
         if(size>0 && data==null){return new Creation.Rejected(3);}
         if(index>=0){
@@ -85,7 +121,7 @@ public final class BufferPool{
             slot.generation=1;slot.occupied=true;slot.next=-1;
             if(!self.slots.try_push(move(slot))){return new Creation.Rejected(3);}
         }
-        self.used+=size;self.count+=1;
+        self.used+=size;self.count+=1;self.metadata+=charge;
         return new Creation.Created(new BufferId(self.instance,index,generation));
     }
     fn byte_size(borrow self,id:BufferId):int{assert(self.contains(id));return self.slots.get(id.slot).count;}
@@ -98,6 +134,7 @@ public final class BufferPool{
         if(capacity<=previous){return true;}
         // Existing payload remains charged until the replacement is committed.
         if(capacity>self.limit-self.used){return false;}
+        if(!self.fits_storage(capacity,0)){return false;}
         own candidate:*byte=try_alloc<byte>(capacity);
         if(candidate==null){return false;}
         {borrow mut slot:Slot=self.slots.get_mut(id.slot);
@@ -137,7 +174,7 @@ public final class BufferPool{
         self.count-=1;return true;
     }
     fn close(borrow mut self):void{
-        self.active=false;self.used=0;self.count=0;self.free_head=-1;self.ready=0;
+        self.active=false;self.used=0;self.count=0;self.free_head=-1;self.ready=0;self.metadata=0;
         if(self.slots!=null){self.slots.clear();}
     }
     /// A newer host-assigned instance invalidates every previous identity.

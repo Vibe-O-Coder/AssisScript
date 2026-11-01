@@ -1,0 +1,24 @@
+import "std/documents.assis";
+safe fn main():int{
+    own store:documents::Store=try_new documents::Store(4096,16,1000);
+    if(store==null || !store.is_open()){return 1;}
+    assert(store.begin(1,utf8("first source"))==0);
+    {borrow mut doc:documents::Document=store.candidate();
+     val result:doctree::Append=doc.try_append(new doctree::NodeId(),1,utf8("first"));
+     match(result){Appended(id){assert(doc.nodes().contains(id));}Rejected(code){return 2;}}}
+    assert(store.commit(1));
+    val old:doctree::NodeId=store.active_document().nodes().root();
+    assert(store.begin(2,utf8("replacement source"))==0);
+    {borrow mut doc:documents::Document=store.candidate();
+     val result:doctree::Append=doc.try_append(new doctree::NodeId(),1,utf8("replacement"));
+     match(result){Appended(id){assert(!doc.nodes().contains(old));}Rejected(code){return 3;}}}
+    assert(store.active_document().nodes().contains(old));
+    assert(store.abort(2) && store.active_document().nodes().contains(old));
+    assert(store.begin(3,utf8("final source"))==0);
+    {borrow mut doc:documents::Document=store.candidate();
+     val result:doctree::Append=doc.try_append(new doctree::NodeId(),1,utf8("final"));
+     match(result){Appended(id){}Rejected(code){return 4;}}}
+    assert(store.commit(3) && !store.active_document().nodes().contains(old));
+    print(store.active_document().instance(),store.active_document().nodes().size());
+    store.close();assert(store.storage_bytes()==documents::store_bytes());return 0;
+}

@@ -3,7 +3,7 @@
 Planejamento de 29/10/2026, com continuidade atualizada em 01/11/2026:
 
 - [Estado atual, branches e índice de relatórios](docs/ecossistema/ESTADO-ATUAL.md).
-- [Última unidade: árvore e texto com orçamento compartilhado](docs/relatorios/2026-11-01-m1-arvore-orcamento.md).
+- [Última unidade: armazenamento e documento candidato](docs/relatorios/2026-11-01-m1-documento-candidato.md).
 
 - [Plano mestre completo](docs/ecossistema/PLANO-MESTRE.md).
 - [Régua de conclusão e diagnóstico inicial](docs/ecossistema/PROGRESSO.md).

@@ -26,8 +26,8 @@ contados (relatório 2026-10-29-m1-plataforma-windows.md). Alocação de buffers
 continuam pendentes. M2 exige ampliar teclado/ponteiro,
 texto/DPI e acessibilidade, além de verificar a experiência visual.
 
-Ordem imediata: completar o contrato de cobrança de metadados/demais recursos
-por documento e preparar candidato completo; spikes do executor em paralelo
+Ordem imediata: implementar o parser HTDL real do perfil bootstrap usando
+fonte/árvore candidatas e integrar atributos à cobrança; spikes do executor em paralelo
 conceitual, sem depender de fechar toda a frente de memória. O parser M3 pode
 usar a árvore recuperável com seus limites explícitos. Nenhuma delegação
 automática é requerida. Não pontuar hipóteses ou marcar not-run como pass.
@@ -71,3 +71,11 @@ subárvore é iterativo e sem alocação. Não implementa parser/semântica HTDL
 não encerra quota integral. Consulte o [relatório de árvore e orçamento](../relatorios/2026-11-01-m1-arvore-orcamento.md).
 Próximo: metadados e recursos fora do pool, candidato completo transacional,
 parser M3 pelo perfil congelado; M0-EXEC/M2 continuam com aceites próprios.
+
+Continuação M1-ALLOC: teto opcional de corpos nativos solicitados cobre
+controladores/slots/índice além de payload. `std/documents.assis` integra
+fonte própria, árvore e dois documentos (ativo/candidato), com abort completo
+e commit sem alocação. [Relatório](../relatorios/2026-11-01-m1-documento-candidato.md).
+Quota de RSS/processo permanece fora do contrato. Próxima unidade M3-PARSER:
+sintaxe/semântica HTDL real, atributos cobrados, corpus e diagnósticos do perfil;
+ativar só após validação. Spikes M0-EXEC e aceite visual M2 continuam abertos.
