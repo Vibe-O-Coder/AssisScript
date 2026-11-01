@@ -184,3 +184,24 @@ O código e a verificação nativa permanecem completos localmente. O masterprom
 do caminho original aponta também para a cópia local, pois o link da nova
 branch pública ainda não está disponível. O SHA final é recuperado por
 `git log -1 -- docs/relatorios/2026-11-01-m1-reserva-metadados.md`.
+
+## Adendo — autorização recebida e publicação confirmada
+
+O usuário respondeu **“Autorizar publicação e PR”** à pergunta que identificou
+os 39 arquivos, o commit `787a20c`, o repositório público, a branch e a base
+#13. A publicação seguinte foi aceita: o push de
+`787a20cfcac559f8f7173300c4dcdf344c1e59f7` foi concluído, e o mesmo SHA foi
+confirmado por `git ls-remote` e consulta do commit pelo conector GitHub.
+
+Criada a [PR de rascunho #14](https://github.com/Vibe-O-Coder/AssisScript/pull/14),
+base `work/m1-shared-budget-2026-11-01` (#13), e vinculada a esta conversa.
+O conector retornou 403 na criação; a mesma operação autorizada foi concluída
+pela API GitHub com a autenticação local do Git, sem exibir credenciais.
+A consulta posterior do conector confirmou título, base, draft e SHA da PR;
+a lista remota contém os 39 arquivos esperados. O masterprompt foi consultado
+diretamente no GitHub na revisão publicada.
+
+Este adendo, o índice e o masterprompt atualizam somente a confirmação de
+publicação. O código testado não mudou. A verificação de hashes é repetida
+contra o commit documental final, cujo SHA é obtido pelo histórico do relatório.
+Nenhum merge, release ou aprovação de CI é anunciado por publicar esta unidade.

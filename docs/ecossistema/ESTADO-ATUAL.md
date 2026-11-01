@@ -5,7 +5,11 @@ Base desta unidade: `a77f3d6d377d233886f586d11a676c2554062ceb`,
 branch `work/m1-shared-budget-2026-11-01`,
 [PR #13](https://github.com/Vibe-O-Coder/AssisScript/pull/13), consultada aberta
 e em rascunho nesta sessão. A nova continuação é
-`work/ecosystem-current-2026-11-01`, baseada nela, sem merge automático.
+`work/ecosystem-current-2026-11-01`, baseada nela,
+[PR de rascunho #14](https://github.com/Vibe-O-Coder/AssisScript/pull/14).
+O usuário autorizou a publicação; o SHA `787a20c` e os 39 arquivos foram
+confirmados no GitHub. O adendo documental posterior registra essa confirmação.
+Não houve merge automático.
 
 ## Encontrar a revisão que deve continuar
 
