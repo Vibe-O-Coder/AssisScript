@@ -2,6 +2,13 @@
 
 Versão da régua: **1**. Data: **29/10/2026**. Base nativa inspecionada: **3.3.0-alpha.15**, commit `e9183e7f98447e97feb2f2e7f1953c035e24f7e6`, com continuação local ainda não publicada. Este documento planeja evolução; não declara novas capacidades implementadas.
 
+**Atualização de continuidade em 01/11/2026:** o diagnóstico acima e a primeira
+fila abaixo são históricos. Reconciliações M0, contratos, arena, provider
+Windows e caminhos recuperáveis de alocação/remoção já têm entregas publicadas.
+Consulte o [estado atual e índice de relatórios](ESTADO-ATUAL.md) e a
+[fila operacional](FILA-M0-M1.md) na branch efetiva antes de escolher trabalho.
+A régua evoluiu para 22,30%, com 0/5 gates; isso não encerra M0/M1.
+
 O objetivo é tornar o AssisScript capaz de implementar o navegador e seu motor, o buscador e seus serviços, além das ferramentas e APIs necessárias ao ecossistema HTDL, FluxStyle e SSC. A conclusão exige programas de referência funcionais escritos em AssisScript. Uma lista de recursos ou uma janela hospedada por outro aplicativo não basta para comprovar o objetivo.
 
 Este é o plano da **capacidade da plataforma AssisScript**. Os produtos conservarão seus próprios backlogs de experiência, conteúdo, expansão e operação. Sua implementação mínima integrada entra aqui como prova de que a plataforma atende à finalidade. Não se promete indexar toda a internet nem compatibilidade universal com a web existente.

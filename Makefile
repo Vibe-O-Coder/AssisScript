@@ -174,3 +174,9 @@ test-shared-buffer-budget: bin/assis
 	python3 tests/test-shared-buffer-budget.py
 
 test-alpha15: test-shared-buffer-budget
+
+.PHONY: test-buffer-preallocation
+test-buffer-preallocation: bin/assis
+	python3 tests/test-buffer-preallocation.py
+
+test-alpha15: test-buffer-preallocation

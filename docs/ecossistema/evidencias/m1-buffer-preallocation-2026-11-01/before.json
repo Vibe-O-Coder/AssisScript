@@ -1,0 +1,12 @@
+{
+  "base": "a77f3d6d377d233886f586d11a676c2554062ceb",
+  "command": [
+    "C:\\Users\\babus\\Desktop\\AssisScript\\work\\ecosystem-current-20261101\\build\\assis-current.exe",
+    "check",
+    "C:\\Users\\babus\\Desktop\\AssisScript\\work\\ecosystem-current-20261101\\build\\before-preallocation.assis",
+    "--diagnostics=json"
+  ],
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "{\"file\":\"C:\\\\Users\\\\babus\\\\Desktop\\\\AssisScript\\\\work\\\\ecosystem-current-20261101\\\\build\\\\before-preallocation.assis\",\"line\":1,\"column\":117,\"code\":\"A001\",\"message\":\"tipo desconhecido: buffers::Preparation\",\"endColumn\":118,\"severity\":\"error\",\"hint\":\"Confira o trecho indicado e consulte o manual offline e a documenta\u00e7\u00e3o da biblioteca no VS Code.\"}\n"
+}

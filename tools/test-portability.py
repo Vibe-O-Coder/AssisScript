@@ -98,6 +98,13 @@ def main():
          'match(r){Created(h){p.set(h,3,byte(42));assert(!p.try_reserve(h,9));'
          'assert(p.try_reserve(h,8));print(p.used_bytes(),int(p.get(h,3)));'
          'assert(p.erase(h) && !p.contains(h) && p.used_bytes()==0);}Rejected(code){assert(false);}}', 0, '8 42\n'),
+        ('buffer-preallocation', 'import "std/buffers.assis";',
+         'own p:buffers::BufferPool=try_new buffers::BufferPool(1,0,4,2);'
+         'val r:buffers::Preparation=p.prepare_slots(4);'
+         'match(r){Ready(n){assert(n==4);}Incomplete(c,n){assert(false);}}'
+         'val s:buffers::Creation=p.try_create(0);'
+         'match(s){Created(id){print(p.ready_slots(),p.slots_used());assert(p.erase(id));}'
+         'Rejected(c){assert(false);}}print(p.ready_slots(),p.used_bytes());', 0, '3 4\n4 0\n'),
         ('trap', '', 'let z:int=0;print(1/z);', 70, ''),
         ('fallible-slots', 'import "std/arena.assis";struct Item{let n:int;own data:*byte;}',
          'own a:arena::Arena<Item>=try_new arena::Arena<Item>(1,2,4,8);assert(a!=null);'

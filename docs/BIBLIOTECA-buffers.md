@@ -60,10 +60,40 @@ em dois pools viola esse contrato e pode produzir IDs iguais. Não é token de
 autorização, segredo, ponteiro serializado ou sandbox. Não há sincronização
 entre threads. Empréstimos do controlador obedecem exclusividade normal.
 
+## Preparação antecipada de metadados — 01/11/2026
+
+`prepare_slots(count): Preparation` assegura **ao menos count slots livres
+recicláveis**, além dos buffers vivos. Não altera `size`, `used_bytes`, dados
+ou IDs existentes, nem publica IDs novos. `ready_slots()` conta esse estoque.
+`slots_used()` inclui slots preparados, ocupados e aposentados. Preparar não
+reserva payload; os limites de slots e de payload continuam independentes.
+
+O resultado Copy, sem alocação, é `Ready(ready)` ou
+`Incomplete(code,ready)`. Códigos: 1 pool fechado; 2 teto de slots atingido;
+3 recusa do alocador; 4 quantidade negativa ou maior que `max_buffers`.
+Valida fechado antes de quantidade. **A preparação é incremental**: cada slot
+completo fica disponível imediatamente; Incomplete preserva os slots já
+preparados e informa o estoque total exato. Pode-se consumir esse estoque ou
+tentar de novo. O candidato incompleto é destruído sem publicar índice livre.
+Não há rollback integral da reserva; buffers vivos e quota permanecem intactos.
+
+Criar buffer vazio a partir desse estoque e reciclar/liberar slots não aloca
+pela biblioteca. Criar payload não vazio ainda pode falhar; nesse caso o
+estoque permanece intacto. `release` conserva ocupação e não devolve um slot;
+`erase` o devolve somente se a geração não estiver esgotada. Slots aposentados
+continuam contando no teto; `close`/`reset` descartam o estoque e invalidam IDs.
+
+Preparar k slots novos custa O(k log slots), além das alocações do índice.
+O estoque pertence ao pool, segue ownership/exclusividade e é liberado em
+close/reset/drop. Exemplo: [40_prepared_buffer_slots.assis](../exemplos/40_prepared_buffer_slots.assis).
+Teste: `tests/test-buffer-preallocation.py`, modelo lógico independente,
+recusa local do OS com laços limitados, consumo/reciclagem sem novas reservas,
+progresso parcial e vizinho intacto. [Relatório](relatorios/2026-11-01-m1-reserva-metadados.md).
+
 Lookup/remoção custam O(log slots); criação inclui caminho do índice e zeragem
 de payload; crescimento copia o tamanho visível, resize zera o trecho novo.
-Destruição visita os slots retidos e buffers. Não há reserva antecipada dos
-metadados nem quota geral para arenas, texto, árvore ou documento.
+Destruição visita os slots retidos e buffers. A preparação acima reserva
+metadados; quota geral para arenas, texto, árvore ou documento permanece aberta.
 
 Teste: `tests/test-shared-buffer-budget.py`, modelo Python de bytes/capacidades,
 260 operações, seed 20261101, 10.000 reciclagens, quotas conjuntas/transitórias,
