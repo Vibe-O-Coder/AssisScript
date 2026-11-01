@@ -182,3 +182,25 @@ ZIP/VSIX e instaladores publicados anteriormente mantêm sua identidade.
 Próximo M1-ALLOC: reserva antecipada de metadados e integração do orçamento
 com arena/árvore/texto do documento, definindo cobrança e rollback de cada
 recurso. M0-EXEC e validação visual M2 permanecem tarefas independentes.
+
+## Adendo — publicação bloqueada pela revisão automática
+
+Implementação e evidências commitadas localmente em
+**a3f4e07bcbba9ec3b24a087eb23c3db356e28268**. Os 545 hashes de fontes e
+artefatos foram conferidos contra os blobs desse commit. O diretório original,
+branch/HEAD e os 31 arquivos preexistentes permanecem preservados.
+
+A tentativa de push foi rejeitada **antes de executar** pela revisão automática
+de autorização. Ela classificou o envio dos 117 arquivos ao repositório público
+como divulgação externa/mutação remota sem aprovação explícita do usuário para
+o destino e payload exatos; não considerou suficiente a autorização contida
+no masterprompt referenciado. Nenhuma rota alternativa foi usada.
+
+**Publicação pendente:** enviar esta unidade e este adendo à branch
+work/m1-shared-budget-2026-11-01 em
+https://github.com/Vibe-O-Coder/AssisScript.git, conferir SHA remoto e abrir
+PR de rascunho sobre work/m1-arena-removal-2026-10-30 (#12).
+Comando pendente: `git push -u origin work/m1-shared-budget-2026-11-01`.
+Requer aprovação específica do usuário por causa desse bloqueio automático.
+Nenhuma PR desta unidade foi criada; não se declara push, CI, merge ou release.
+Commits e patch locais preservam a entrega revisável enquanto isso.
