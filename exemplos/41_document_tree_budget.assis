@@ -1,0 +1,21 @@
+import "std/doctree.assis";
+
+safe fn append(borrow mut tree:doctree::Tree,parent:doctree::NodeId,kind:int,borrow input:slice<byte>):doctree::NodeId{
+    val result:doctree::Append=tree.try_append(parent,kind,input);
+    match(result){Appended(id){return id;}Rejected(code){print(code);assert(false);return new doctree::NodeId();}}
+}
+safe fn main():int{
+    own tree:doctree::Tree=try_new doctree::Tree(1,1024,8,100);
+    if(tree==null || !tree.is_open()){return 1;}
+    val root:doctree::NodeId=append(tree,new doctree::NodeId(),1,utf8(""));
+    val first:doctree::NodeId=append(tree,root,2,utf8("Olá"));
+    val second:doctree::NodeId=append(tree,root,2,utf8("Mundo"));
+    print(tree.size(),tree.used_bytes(),tree.text_size(first));
+    assert(tree.try_reparent(second,first));
+    assert(tree.try_set_text(first,utf8("Texto")));
+    print(tree.size(),tree.used_bytes(),tree.text_size(first));
+    assert(tree.erase_subtree(first));
+    print(tree.size(),tree.used_bytes());
+    assert(!tree.contains(first) && !tree.contains(second));
+    tree.close();return 0;
+}

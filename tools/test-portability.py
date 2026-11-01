@@ -105,6 +105,14 @@ def main():
          'val s:buffers::Creation=p.try_create(0);'
          'match(s){Created(id){print(p.ready_slots(),p.slots_used());assert(p.erase(id));}'
          'Rejected(c){assert(false);}}print(p.ready_slots(),p.used_bytes());', 0, '3 4\n4 0\n'),
+        ('document-tree', 'import "std/doctree.assis";',
+         'own tree:doctree::Tree=try_new doctree::Tree(1,1024,8,100);assert(tree!=null && tree.is_open());'
+         'val first:doctree::Append=tree.try_append(new doctree::NodeId(),1,utf8(""));'
+         'match(first){Appended(root){val second:doctree::Append=tree.try_append(root,2,utf8("ok"));'
+         'match(second){Appended(child){print(tree.size(),tree.used_bytes());'
+         'assert(!tree.try_reparent(root,child) && tree.erase_subtree(child));'
+         'print(tree.size(),tree.used_bytes());}Rejected(code){assert(false);}}'
+         '}Rejected(code){assert(false);}}tree.close();', 0, '2 258\n1 128\n'),
         ('trap', '', 'let z:int=0;print(1/z);', 70, ''),
         ('fallible-slots', 'import "std/arena.assis";struct Item{let n:int;own data:*byte;}',
          'own a:arena::Arena<Item>=try_new arena::Arena<Item>(1,2,4,8);assert(a!=null);'

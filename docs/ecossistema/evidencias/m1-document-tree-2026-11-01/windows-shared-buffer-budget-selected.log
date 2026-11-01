@@ -1,0 +1,13 @@
+test_shared_and_transient_limits_and_return_of_quota (__main__.SharedBufferBudget.test_shared_and_transient_limits_and_return_of_quota) ... ok
+test_zero_limits_negative_extreme_and_exact_boundaries (__main__.SharedBufferBudget.test_zero_limits_negative_extreme_and_exact_boundaries) ... ok
+test_stale_forged_cross_instance_reset_and_closed_ids (__main__.SharedBufferBudget.test_stale_forged_cross_instance_reset_and_closed_ids) ... ok
+test_retirement_and_ten_thousand_recycles (__main__.SharedBufferBudget.test_retirement_and_ten_thousand_recycles) ... ok
+test_operations_against_independent_bytearray_model (__main__.SharedBufferBudget.test_operations_against_independent_bytearray_model) ... ok
+test_private_storage_and_borrow_conflicts_are_rejected (__main__.SharedBufferBudget.test_private_storage_and_borrow_conflicts_are_rejected) ... ok
+test_invalid_access_and_constructor_contracts_trap (__main__.SharedBufferBudget.test_invalid_access_and_constructor_contracts_trap) ... ok
+test_example_ir_and_all_five_formats (__main__.SharedBufferBudget.test_example_ir_and_all_five_formats) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 9.215s
+
+OK

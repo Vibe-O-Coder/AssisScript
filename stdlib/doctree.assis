@@ -1,0 +1,134 @@
+namespace doctree;
+import "std/buffers.assis";
+import "std/unicode.assis";
+
+/// Local document identity; the all-zero value denotes no node.
+public value struct NodeId{let instance:int;let slot:int;let generation:int;}
+public enum Append{Appended(NodeId);Rejected(int);}
+
+safe fn buffer(id:NodeId):buffers::BufferId{return new buffers::BufferId(id.instance,id.slot,id.generation);}
+safe fn node(id:buffers::BufferId):NodeId{return new NodeId(id.instance,id.slot,id.generation);}
+public pure fn absent(id:NodeId):bool{return id.instance==0 && id.slot==0 && id.generation==0;}
+pure fn same(a:NodeId,b:NodeId):bool{return a.instance==b.instance && a.slot==b.slot && a.generation==b.generation;}
+
+/// One rooted, ordered tree. Each arena slot owns a 128-byte node record plus
+/// UTF-8 input. Both share BufferPool's payload and transient-growth budget.
+/// Index metadata, controller, allocator overhead/RSS and source are excluded.
+public final class Tree{
+    private own pool:buffers::BufferPool;
+    private let root_id:NodeId;
+    private let initialized:bool;
+
+    fn init(borrow mut self,instance:int,max_bytes:int,max_nodes:int,generation_limit:int):void{
+        assert(!self.initialized);self.initialized=true;
+        assert(instance>0 && max_bytes>=0 && max_nodes>=0 && generation_limit>0);
+        self.pool=try_new buffers::BufferPool(instance,max_bytes,max_nodes,generation_limit);
+    }
+    fn is_open(borrow self):bool{return self.pool!=null && self.pool.is_open();}
+    fn size(borrow self):int{if(self.pool==null){return 0;}return self.pool.size();}
+    fn used_bytes(borrow self):int{if(self.pool==null){return 0;}return self.pool.used_bytes();}
+    fn slots_used(borrow self):int{if(self.pool==null){return 0;}return self.pool.slots_used();}
+    fn root(borrow self):NodeId{return self.root_id;}
+    fn contains(borrow self,id:NodeId):bool{return self.is_open() && self.pool.contains(buffer(id));}
+    fn prepare_nodes(borrow mut self,count:int):buffers::Preparation{
+        if(!self.is_open()){return new buffers::Preparation.Incomplete(1,0);}
+        return self.pool.prepare_slots(count);
+    }
+    // Private little-endian nonnegative words; this is not a persistence/IPC ABI.
+    private fn read_word(borrow self,id:NodeId,offset:int):int{
+        let result:int=0;
+        for(let i:int=7;i>=0;i--){result=result*256+int(self.pool.get(buffer(id),offset+i));}
+        return result;
+    }
+    private fn write_word(borrow mut self,id:NodeId,offset:int,value:int):void{
+        let rest:int=value;
+        for(let i:int=0;i<8;i++){self.pool.set(buffer(id),offset+i,byte(rest%256));rest/=256;}
+    }
+    private fn read_link(borrow self,id:NodeId,offset:int):NodeId{
+        return new NodeId(self.read_word(id,offset),self.read_word(id,offset+8),self.read_word(id,offset+16));
+    }
+    private fn write_link(borrow mut self,id:NodeId,offset:int,value:NodeId):void{
+        self.write_word(id,offset,value.instance);self.write_word(id,offset+8,value.slot);self.write_word(id,offset+16,value.generation);
+    }
+    fn parent(borrow self,id:NodeId):NodeId{assert(self.contains(id));return self.read_link(id,0);}
+    fn first_child(borrow self,id:NodeId):NodeId{assert(self.contains(id));return self.read_link(id,24);}
+    fn last_child(borrow self,id:NodeId):NodeId{assert(self.contains(id));return self.read_link(id,48);}
+    fn previous_sibling(borrow self,id:NodeId):NodeId{assert(self.contains(id));return self.read_link(id,72);}
+    fn next_sibling(borrow self,id:NodeId):NodeId{assert(self.contains(id));return self.read_link(id,96);}
+    fn kind(borrow self,id:NodeId):int{assert(self.contains(id));return self.read_word(id,120);}
+    fn text_size(borrow self,id:NodeId):int{assert(self.contains(id));return self.pool.byte_size(buffer(id))-128;}
+    fn node_capacity(borrow self,id:NodeId):int{assert(self.contains(id));return self.pool.capacity(buffer(id));}
+    fn text_byte(borrow self,id:NodeId,index:int):byte{
+        assert(index>=0 && index<self.text_size(id));return self.pool.get(buffer(id),128+index);
+    }
+    private fn attach(borrow mut self,id:NodeId,parent:NodeId):void{
+        val last:NodeId=self.last_child(parent);
+        self.write_link(id,0,parent);self.write_link(id,72,last);
+        if(absent(last)){self.write_link(parent,24,id);}else{self.write_link(last,96,id);}
+        self.write_link(parent,48,id);
+    }
+    private fn detach(borrow mut self,id:NodeId):void{
+        val parent:NodeId=self.parent(id);val previous:NodeId=self.previous_sibling(id);val next:NodeId=self.next_sibling(id);
+        if(absent(previous)){self.write_link(parent,24,next);}else{self.write_link(previous,96,next);}
+        if(absent(next)){self.write_link(parent,48,previous);}else{self.write_link(next,72,previous);}
+        self.write_link(id,0,new NodeId());self.write_link(id,72,new NodeId());self.write_link(id,96,new NodeId());
+    }
+    /// Codes: 1 closed, 2 node slots, 3 allocator refusal, 4 quota/length,
+    /// 5 invalid parent/root/kind, 6 invalid UTF-8. Failure preserves live tree.
+    fn try_append(borrow mut self,parent:NodeId,kind:int,borrow input:slice<byte>):Append{
+        if(!self.is_open()){return new Append.Rejected(1);}
+        if(kind<=0 || (self.size()==0 && !absent(parent)) ||
+           (self.size()>0 && !self.contains(parent))){return new Append.Rejected(5);}
+        if(len(input)>self.pool.max_bytes()-self.pool.used_bytes()-128){return new Append.Rejected(4);}
+        if(unicode::error(input)>=0){return new Append.Rejected(6);}
+        val result:buffers::Creation=self.pool.try_create(128+len(input));
+        match(result){
+            Rejected(code){return new Append.Rejected(code);}
+            Created(value){
+                val id:NodeId=node(value);
+                self.write_word(id,120,kind);
+                for(let i:int=0;i<len(input);i++){self.pool.set(value,128+i,input[i]);}
+                if(absent(parent)){self.root_id=id;}else{self.attach(id,parent);}
+                return new Append.Appended(id);
+            }
+        }
+    }
+    /// No borrowed storage escapes, so input cannot alias the tree's payload.
+    /// Growth charges the entire candidate record alongside all old records.
+    fn try_set_text(borrow mut self,id:NodeId,borrow input:slice<byte>):bool{
+        if(!self.contains(id)){return false;}
+        if(len(input)>self.pool.max_bytes()-128){return false;}
+        if(unicode::error(input)>=0){return false;}
+        if(!self.pool.try_resize(buffer(id),128+len(input))){return false;}
+        for(let i:int=0;i<len(input);i++){self.pool.set(buffer(id),128+i,input[i]);}
+        return true;
+    }
+    /// Root cannot move. A same-parent request preserves sibling order.
+    /// Walking ancestors rejects cycles before any link is changed.
+    fn try_reparent(borrow mut self,id:NodeId,parent:NodeId):bool{
+        if(!self.contains(id) || !self.contains(parent) || same(id,self.root_id)){return false;}
+        let cursor:NodeId=parent;
+        while(!absent(cursor)){if(same(cursor,id)){return false;}cursor=self.parent(cursor);}
+        if(same(self.parent(id),parent)){return true;}
+        self.detach(id);self.attach(id,parent);return true;
+    }
+    /// Iterative postorder: no recursive document stack or allocation.
+    fn erase_subtree(borrow mut self,id:NodeId):bool{
+        if(!self.contains(id)){return false;}
+        let cursor:NodeId=id;
+        while(true){
+            val child:NodeId=self.first_child(cursor);
+            if(!absent(child)){cursor=child;continue;}
+            val parent:NodeId=self.parent(cursor);val done:bool=same(cursor,id);
+            if(!absent(parent)){self.detach(cursor);}else{self.root_id=new NodeId();}
+            assert(self.pool.erase(buffer(cursor)));
+            if(done){return true;}cursor=parent;
+        }
+    }
+    fn close(borrow mut self):void{self.root_id=new NodeId();if(self.pool!=null){self.pool.close();}}
+    fn reset(borrow mut self,instance:int):bool{
+        if(self.pool==null){return false;}
+        if(!self.pool.reset(instance)){return false;}
+        self.root_id=new NodeId();return true;
+    }
+}

@@ -1,0 +1,15 @@
+{
+  "base_commit": "ee852b13721f81553169d716dd803e9fc36d96ad",
+  "command": [
+    "C:\\Users\\babus\\Desktop\\AssisScript\\work\\ecosystem-current-20261101\\build\\assis-current.exe",
+    "check",
+    "C:\\Users\\babus\\Desktop\\AssisScript\\work\\document-store-20261101\\exemplos\\41_document_tree_budget.assis",
+    "--safe",
+    "--diagnostics=json"
+  ],
+  "compiler_sha256": "0970dfaeee0710a2106b4e0c3661ff8165346ca299b4d39a5c6335457630ee62",
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "{\"file\":\"C:\\\\Users\\\\babus\\\\Desktop\\\\AssisScript\\\\work\\\\document-store-20261101\\\\exemplos\\\\41_document_tree_budget.assis\",\"line\":1,\"column\":8,\"code\":\"A001\",\"message\":\"módulo não encontrado: std/doctree.assis (use caminho relativo, -I ou ASSIS_PATH)\",\"endColumn\":9,\"severity\":\"error\",\"hint\":\"Confira o caminho relativo ao arquivo importador e as bibliotecas instaladas. Use -I pasta para bibliotecas externas.\"}\n",
+  "classification": "frontend-rejection-not-native-execution"
+}

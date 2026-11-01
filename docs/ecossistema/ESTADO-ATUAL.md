@@ -1,15 +1,13 @@
 # Continuidade verificada — AssisScript e ecossistema
 
 Atualização: **01/11/2026**. Régua v1: **22,30/100, 0/5 gates**.
-Base desta unidade: `a77f3d6d377d233886f586d11a676c2554062ceb`,
-branch `work/m1-shared-budget-2026-11-01`,
-[PR #13](https://github.com/Vibe-O-Coder/AssisScript/pull/13), consultada aberta
-e em rascunho nesta sessão. A nova continuação é
-`work/ecosystem-current-2026-11-01`, baseada nela,
-[PR de rascunho #14](https://github.com/Vibe-O-Coder/AssisScript/pull/14).
-O usuário autorizou a publicação; o SHA `787a20c` e os 39 arquivos foram
-confirmados no GitHub. O adendo documental posterior registra essa confirmação.
-Não houve merge automático.
+Base desta unidade: `ee852b13721f81553169d716dd803e9fc36d96ad`,
+branch `work/ecosystem-current-2026-11-01`,
+[PR #14](https://github.com/Vibe-O-Coder/AssisScript/pull/14), confirmada aberta
+e em rascunho nesta sessão pelo conector GitHub, com o mesmo SHA local/remoto.
+A nova continuação é `work/m1-document-store-2026-11-01`, baseada nela.
+Publicação e revisão exata no [relatório da árvore](../relatorios/2026-11-01-m1-arvore-orcamento.md).
+Não há merge automático nem release nesta unidade.
 
 ## Encontrar a revisão que deve continuar
 
@@ -24,7 +22,7 @@ linhagem escolhida e confirme seu SHA remoto. Trabalhe em cópia isolada limpa
 quando houver fontes locais antigas; não publique novamente essas fontes.
 Branches podem divergir: ancestralidade e contratos precisam ser comparados.
 
-Esta unidade usa a cópia `AssisScript/work/ecosystem-current-20261101`.
+Esta unidade usa a cópia `AssisScript/work/document-store-20261101`.
 O [masterprompt](MASTERPROMPT.md) também é atualizado no caminho original
 solicitado pelo usuário, para que ele conduza à linhagem atual.
 
@@ -46,7 +44,8 @@ próprias unidades, não testes reexecutados nesta.
 | M1: `try_new` e inserções fallíveis | [795d899 — slots](https://github.com/Vibe-O-Coder/AssisScript/blob/795d899394f0444381999dcb0fef7c011f4b99f7/docs/relatorios/2026-10-30-m1-slots-falliveis.md) |
 | M1: transferência/remoção sem alocação de resultado | [52c8bb1 — remoção](https://github.com/Vibe-O-Coder/AssisScript/blob/52c8bb1f1d7482865660580941637a3074329167/docs/relatorios/2026-10-30-m1-remocao-sem-alocacao.md) |
 | M1: quota conjunta e transitória de payload | [a77f3d6 — orçamento e publicação confirmada](https://github.com/Vibe-O-Coder/AssisScript/blob/a77f3d6d377d233886f586d11a676c2554062ceb/docs/relatorios/2026-11-01-m1-orcamento-buffers.md) |
-| Esta unidade: preparação de metadados e continuidade | [relatório atual](https://github.com/Vibe-O-Coder/AssisScript/blob/work/ecosystem-current-2026-11-01/docs/relatorios/2026-11-01-m1-reserva-metadados.md) |
+| M1: preparação de metadados e continuidade | [ee852b1 — metadados](https://github.com/Vibe-O-Coder/AssisScript/blob/ee852b13721f81553169d716dd803e9fc36d96ad/docs/relatorios/2026-11-01-m1-reserva-metadados.md) |
+| Esta unidade: árvore e texto no orçamento de payload | [relatório atual](https://github.com/Vibe-O-Coder/AssisScript/blob/work/m1-document-store-2026-11-01/docs/relatorios/2026-11-01-m1-arvore-orcamento.md) |
 
 ## Contratos e limites atuais
 
@@ -62,12 +61,19 @@ implementa HTDL. O provider Windows é prova parcial, sem visualizador completo,
 IME/acessibilidade ou aceite visual M2. Arena e BufferId dependem de instâncias
 atribuídas pelo host e não são capacidades de segurança.
 
-BufferPool cobra somente payload; a preparação de slots reserva metadados
-reutilizáveis, com progresso parcial informado quando há recusa. Metadados,
-overhead/RSS, arena, árvore e texto continuam fora da quota. M0/M1 e G1–G5
-permanecem abertos. Os 100/100 antigos continuam restritos às fases 0–6.
+BufferPool cobra payload; `doctree::Tree` usa essa arena de bytes para cobrar
+os registros reais de 128 bytes e o texto UTF-8 no mesmo teto, incluindo
+candidato inteiro durante crescimento. Recusa preserva conteúdo/links/IDs.
+Reparent sem ciclos e remoção iterativa não alocam pela biblioteca. A árvore
+é genérica, sem parser ou modelos de conteúdo HTDL. Contrato em
+[BIBLIOTECA-doctree.md](../BIBLIOTECA-doctree.md).
 
-Próximo incremento: integrar orçamento por documento com arena/árvore/texto,
-fixando cobrança, transferência e rollback. Executor M0-EXEC, validação visual
-M2 e parser M3 têm testes próprios. Web/Easy continuam no registro futuro;
-Easy é a última etapa.
+A preparação de slots reserva metadados reutilizáveis, com progresso parcial.
+Metadados do índice, controladores, overhead/RSS, fonte, atributos e outros
+recursos futuros continuam fora da quota. M0/M1 e G1–G5 permanecem abertos.
+Os 100/100 antigos continuam restritos às fases 0–6.
+
+Próximo M1-ALLOC: contabilizar metadados/demais recursos e preparar candidato
+completo com rollback. Parser M3 deve consumir a árvore recuperável e tem
+contrato de conformidade próprio. Executor M0-EXEC e validação visual M2
+seguem independentes. Web/Easy continuam no registro futuro; Easy é a última etapa.

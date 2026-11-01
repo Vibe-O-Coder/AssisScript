@@ -1,0 +1,11 @@
+test_borrow_conflicts_and_private_inventory_are_rejected (__main__.BufferPreallocation.test_borrow_conflicts_and_private_inventory_are_rejected) ... ok
+test_example_ir_and_five_output_formats (__main__.BufferPreallocation.test_example_ir_and_five_output_formats) ... ok
+test_inventory_limits_and_lifecycle (__main__.BufferPreallocation.test_inventory_limits_and_lifecycle) ... ok
+test_partial_os_refusal_retains_exactly_reported_spares (__main__.BufferPreallocation.test_partial_os_refusal_retains_exactly_reported_spares) ... ok
+test_prepared_slots_are_consumed_and_recycled_under_os_refusal (__main__.BufferPreallocation.test_prepared_slots_are_consumed_and_recycled_under_os_refusal) ... ok
+test_ready_inventory_against_independent_resource_model (__main__.BufferPreallocation.test_ready_inventory_against_independent_resource_model) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.817s
+
+OK

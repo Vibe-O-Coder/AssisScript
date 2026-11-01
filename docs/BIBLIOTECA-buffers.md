@@ -3,6 +3,10 @@
 Continuação M1-ALLOC de 01/11/2026, E02-03. Implementação em AssisScript,
 dependência `owned`; não requer provider ou alteração de sintaxe/runtime.
 
+A [biblioteca doctree](BIBLIOTECA-doctree.md) usa este pool como arena de bytes
+para cobrar registros de nós e texto UTF-8 juntos. O contrato do pool continua
+restrito a payload; isso não acrescenta quota de metadados/RSS.
+
 `BufferPool(instance,max_bytes,max_buffers,generation_limit)` possui todos os
 buffers e cobra a soma de suas capacidades. Um crescimento exige espaço para
 **todos os buffers vivos mais a capacidade candidata inteira**, antes de
