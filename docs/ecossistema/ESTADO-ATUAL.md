@@ -8,8 +8,11 @@ Continuação: `AssisScript/work/htdl-parser-20261101`, branch
 `work/m3-htdl-parser-2026-11-01`. Parser/atributos/spans, corpus e ativação
 validada no [relatório M3](../relatorios/2026-11-01-m3-parser-htdl.md).
 Implementação/testes em `d8af5d1940698452e408b7d88e13724b4bce1941`, 53 arquivos.
-**Publicação bloqueada pela revisão automática**, aguardando autorização direta
-para esse payload e destino público; sem PR nova. Detalhes no adendo do relatório.
+Após autorização direta do usuário, os 53 arquivos até
+`ff2997322995ce797ddc47ae6c600785eb2014ea` foram publicados, com SHA e hashes
+do inventário remoto conferidos. [PR de rascunho #17](https://github.com/Vibe-O-Coder/AssisScript/pull/17),
+aberta/sem merge sobre #16, vinculada à conversa. Confirmação no adendo do
+relatório; o SHA documental final é obtido pelo histórico.
 Confira o SHA remoto antes de continuar. A pasta original é histórica/suja.
 
 Parser bootstrap real não aprova visualizador ou HTDL completo. A meta de 30%

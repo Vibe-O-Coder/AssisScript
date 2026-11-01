@@ -36,16 +36,16 @@
     "docs/ecossistema/ABI-PLATAFORMA-V1.md": "a953c0b5fbfbf73c68aa746d1b5d80cc7dd31eb480480ccddffef1f04e03ca1d",
     "docs/ecossistema/ADR-0001-EXECUCAO-PAGINA.md": "a7a5059d4a2bdc7c38fb7a98945ded96d85c7de1a4ea04bb2b827f1053f8ec32",
     "docs/ecossistema/BASELINE-2026-10-29.json": "ddef99086b2adfd355ba2c6680842f0582e57ea3f6f23986fe4389d120276246",
-    "docs/ecossistema/ESTADO-ATUAL.md": "83422a576128b4a8853c4aee6b9408d0d890c4ff87ef76cd47cbdfb1ad4c1dd3",
+    "docs/ecossistema/ESTADO-ATUAL.md": "88d51041161861d97c1f2775ab3482a65525ad62781961440712b04a4f586715",
     "docs/ecossistema/FILA-M0-M1.md": "fdbfe9c9fadbec0f35e8146ae25e4b5b256fc2f841e62820e168b715d91c6f2a",
-    "docs/ecossistema/MASTERPROMPT.md": "e9b0d6e3140670db1f742746fc0decdb0f56d82a0ed784c43cc64223ddc35bcf",
+    "docs/ecossistema/MASTERPROMPT.md": "20234f87b223f9db3047f46495874789f9dae745e9cded54850286fe822bd378",
     "docs/ecossistema/PERFIL-VISUALIZADOR-V1.md": "024b5436215d231e657d03d83ea67e9855536e235fe35a0c785f59cc3a5cc2a7",
     "docs/ecossistema/PROGRESSO.json": "8e595fec6b62ecb6cbb7488f2882b33cb35243d5f11e723b6dfb8233a50ca72b",
     "docs/ecossistema/PROGRESSO.md": "098609be3e44cf3ec3c16eee0cd939ba47e9c4d20ca37d4601c0b90103c16ede",
     "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/run.py": "054dc80303948da9eb166767d4a514085c96ece6085536635ac88206dc51ffd5",
     "docs/ecossistema/referencias/htdl-drafts-2026-10-29/PROVENANCE.json": "48eee73edd2bcfaa03dfc5874bdea8d5ab603c3a077c6bf72cb6374e9f63fde7",
     "docs/ecossistema/referencias/htdl-drafts-2026-10-29/docs/02-htdl-0.1.md": "d5e0edde6be27aa76cad2792b4503fd643aa29d8e751b30785ac6706c86ed8f6",
-    "docs/relatorios/2026-11-01-m3-parser-htdl.md": "aa5d6626342468dae394626d7640db29960fc4a46aceca61553a7cd5777fd8af",
+    "docs/relatorios/2026-11-01-m3-parser-htdl.md": "0f787a978eedff11822ba070d51a70134bddd90e6a1436ae9d8d5ff65b9a8a85",
     "exemplos/43_htdl_bootstrap.assis": "ab835e753c56cb459e1c698209d4d07fe01b05c34016b65f77be2f418ed69df9",
     "src/arm64_emit.h": "887807ed564f63dc65e6f11863f3b52e72c0ea1b79275ea1d3a05f59df16d876",
     "src/assisc.c": "fe96444ec1909aeed2af8cdddd5a0a7920b1fad240fd96401a786cacb4dddd42",
@@ -155,5 +155,15 @@
     "macOS/ARM64 native not-run"
   ],
   "initial_failure": "Two Windows temporary-image write refusals; shared fixture now uses distinct image paths. Failed logs retained with user paths redacted; affected suites rerun.",
-  "publication": "blocked-by-automatic-approval-review-awaiting-direct-user-authorization"
+  "publication": "published-and-verified-after-direct-user-authorization",
+  "verified_publication": {
+    "authorized_head": "ff2997322995ce797ddc47ae6c600785eb2014ea",
+    "remote_files": 53,
+    "remote_blob_inventory_matches": true,
+    "pr": "https://github.com/Vibe-O-Coder/AssisScript/pull/17",
+    "draft": true,
+    "merged": false,
+    "base": "work/m1-document-memory-2026-11-01",
+    "documentation_head": "Obtain from Git history of the report"
+  }
 }
