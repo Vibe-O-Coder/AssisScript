@@ -196,3 +196,26 @@ da branch work/m2-htdl-viewer-2026-11-01 para o repositório público
 `https://github.com/Vibe-O-Coder/AssisScript.git` e a PR de rascunho incremental
 sobre work/m3-htdl-parser-2026-11-01 (#17), sem merge ou release. Publicar
 torna fontes, logs e imagens de demonstração visíveis publicamente.
+
+## Adendo — autorização direta e publicação confirmada
+
+O usuário autorizou diretamente publicar os **62 arquivos** do commit
+`3b09a2a15e7cb75915a9e78448ea0eff9c2ffc93` no repositório público
+Vibe-O-Coder/AssisScript e abrir a PR de rascunho, sem merge ou release.
+O push da branch work/m2-htdl-viewer-2026-11-01 foi concluído; ls-remote
+confirmou o SHA autorizado e a API compare conferiu os 62 paths e hashes de
+blob contra o inventário Git local. Os 167 hashes de evidência também foram
+conferidos contra os blobs commitados antes do envio.
+
+[PR de rascunho #18](https://github.com/Vibe-O-Coder/AssisScript/pull/18),
+incremental sobre work/m3-htdl-parser-2026-11-01 (#17), criada e vinculada à
+conversa. O conector confirmou state=open, draft=true, merged=false,
+head=3b09a2a15e7cb75915a9e78448ea0eff9c2ffc93 e changed_files=62.
+O conector retornou 403 na criação; a operação autorizada foi concluída
+pela autenticação Git existente, sem expor credenciais.
+
+Este adendo e as correções de continuidade são documentais. Código, testes,
+27,00% e 0/5 gates permanecem iguais. Não se declara merge, release ou CI
+global aprovada. A revisão documental final é localizada pelo histórico deste
+relatório, sem autorreferência. O bloqueio descrito no adendo anterior é
+histórico e foi resolvido pela autorização direta e publicação conferida.

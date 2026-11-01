@@ -16,11 +16,12 @@ documental final é obtido pelo histórico. Ao ler a cópia original, abra o
 [relatório local](<C:/Users/babus/Desktop/AssisScript/work/htdl-viewer-20261101/docs/relatorios/2026-11-01-m2-visualizador-htdl.md>).
 
 Implementação/testes em `d39371d8cbaefa85df7ed9923c78df495c584a98`, 62 paths.
-O push foi rejeitado antes de executar pela revisão automática, que exigiu
-autorização direta para o payload/destino públicos exatos. **Sem publicação
-ou PR nova confirmadas**; não usar rota alternativa. Autorizar os 62 arquivos
-da revisão final ao Vibe-O-Coder/AssisScript e PR de rascunho sobre #17 é a
-ação pendente. Adendo do relatório/histórico guardam a revisão documental final.
+Após autorização direta do usuário, os 62 arquivos até
+`3b09a2a15e7cb75915a9e78448ea0eff9c2ffc93` foram publicados, com SHA e hashes
+do inventário remoto conferidos. [PR de rascunho #18](https://github.com/Vibe-O-Coder/AssisScript/pull/18),
+aberta/sem merge sobre #17 e vinculada à conversa. O adendo do relatório
+confirma a publicação; o histórico guarda a revisão documental final.
+O bloqueio inicial da revisão automática está resolvido pela autorização.
 
 Já existem reconciliações M0, contratos, arena geracional, provider Windows,
 alocação/remoção recuperáveis, BufferPool, árvore/fonte/metadados próprios,
