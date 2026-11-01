@@ -1,23 +1,48 @@
 # Continuidade verificada — AssisScript e ecossistema
 
-Atualização: **01/11/2026**. Régua v1: **23,90/100, 0/5 gates**.
-Base publicada e conferida: `8bec8933a6a179b07bfc6ce96ab145030e4dcaa1`,
-branch `work/m1-document-memory-2026-11-01`,
-[PR #16](https://github.com/Vibe-O-Coder/AssisScript/pull/16), aberta/em rascunho/sem merge.
-Continuação: `AssisScript/work/htdl-parser-20261101`, branch
-`work/m3-htdl-parser-2026-11-01`. Parser/atributos/spans, corpus e ativação
-validada no [relatório M3](../relatorios/2026-11-01-m3-parser-htdl.md).
-Implementação/testes em `d8af5d1940698452e408b7d88e13724b4bce1941`, 53 arquivos.
-Após autorização direta do usuário, os 53 arquivos até
-`ff2997322995ce797ddc47ae6c600785eb2014ea` foram publicados, com SHA e hashes
-do inventário remoto conferidos. [PR de rascunho #17](https://github.com/Vibe-O-Coder/AssisScript/pull/17),
-aberta/sem merge sobre #16, vinculada à conversa. Confirmação no adendo do
-relatório; o SHA documental final é obtido pelo histórico.
-Confira o SHA remoto antes de continuar. A pasta original é histórica/suja.
+## Estado de continuidade — 01/11/2026
 
-Parser bootstrap real não aprova visualizador ou HTDL completo. A meta de 30%
-segue não atingida, sem remover requisitos ou alterar pesos. M0-EXEC/M1/M2/M3
-e todos os gates permanecem abertos. Easy continua a última etapa.
+Leia o [índice atual](ESTADO-ATUAL.md). A pasta original ainda está no
+planejamento `1ed22f5`, com alterações alheias preservadas. Base desta unidade:
+`ebd3185ae952a85c64cb2a83cd014ac07c0e8c7f`, branch
+`work/m3-htdl-parser-2026-11-01`, PR de rascunho #17 aberta/sem merge,
+com SHA remoto conferido pelo conector/API antes do desenvolvimento.
+
+Continuação em `AssisScript/work/htdl-viewer-20261101`, branch
+`work/m2-htdl-viewer-2026-11-01`. Consulte o
+[relatório M2/M3](../relatorios/2026-11-01-m2-visualizador-htdl.md) e seu
+adendo de publicação; confirme SHA remoto e PR antes de continuar. O SHA
+documental final é obtido pelo histórico. Ao ler a cópia original, abra o
+[relatório local](<C:/Users/babus/Desktop/AssisScript/work/htdl-viewer-20261101/docs/relatorios/2026-11-01-m2-visualizador-htdl.md>).
+
+Já existem reconciliações M0, contratos, arena geracional, provider Windows,
+alocação/remoção recuperáveis, BufferPool, árvore/fonte/metadados próprios,
+candidato/ativo transacional e parser HTDL bootstrap real. Não reimplemente.
+`std/viewer.assis` apresenta a árvore validada com texto medido, quebra,
+foco/teclado/clique/scroll e snapshot próprio. O exemplo 44 abre arquivo local,
+redimensiona e fecha. Extensão viewer 1 preserva imports/ABI do window base.
+São lógica de produto em AssisScript e adaptação User32/GDI pequena.
+
+Régua: **27,00/100, 0/5 gates**; meta de 30% ainda não atingida. E04-02/E04-03=2,
+E04-04=1, E07-04=2, E08-02/E08-05=1; demais estados preservados. M2/M3 parciais.
+Windows: 106 métodos executados/1 not-run; Linux: 85/3, sem provider gráfico.
+Geração dos cinco formatos não é execução ARM/macOS. Três dumps de superfície
+foram inspecionados e têm bytes iguais nos dois modos; captura real da janela
+via Computer Use falhou duas vezes, sem aceite visual de desktop/200%/leitor.
+
+O workspace de View é adicional ao Store; não é quota de RSS/processo. O File
+legado do exemplo conserva alocação fatal limitada de caminho. IDs não são
+capacidades. O envelope de documento recusa eventos semânticos antigos, mas
+não cancela mensagens do OS ainda não obtidas antes de navegação. Não há
+seleção/IME/acessibilidade, rede, programa de página, FS/SSC ou HTDL 0.1 completo.
+
+Próximo: seleção de texto, ponte acessível e aceite real 200%/monitores/leitor
+de tela/captura do desktop. Catálogo completo, recuperação de editor e mutações
+semânticas seguem abertos. M0-EXEC exige spikes VM/Wasm/decisão independentes;
+M1 ainda não fecha RSS. Use o JSON e a fila efetivos. Easy permanece a última
+etapa de todo o projeto. Publicar branch não significa merge, release ou CI.
+
+As seções e entregas M1/M3 abaixo preservam seus estados históricos. A continuação efetiva é a M2/M3 acima.
 
 ## Encontrar a revisão que deve continuar
 
@@ -116,3 +141,15 @@ e [evidência atual](evidencias/m3-htdl-parser-2026-11-01/summary.json).
 Próximo: M2-WINDOW e apresentação/interação M3, mantendo executor VM/Wasm,
 catálogo completo, recuperação de editor e mutações na fila. Os parágrafos
 anteriores sobre ausência de parser descrevem suas respectivas entregas M1.
+
+
+## Continuação M2/M3 — apresentação HTDL local
+
+[Relatório](../relatorios/2026-11-01-m2-visualizador-htdl.md),
+[contrato](../BIBLIOTECA-viewer.md),
+[evidência](evidencias/m2-viewer-2026-11-01/summary.json).
+Texto medido, snapshots próprios, hidden/disabled, foco, teclado/clique/roda,
+scroll e resize integram a árvore validada. Não há seleção/árvore assistiva/IME
+ou aceite 200%; a captura desktop falhou. Não repetir parser ou memória.
+Próximo: seleção/acessibilidade e verificação real de desktop, mantendo
+M0-EXEC, catálogo completo, mutações e demais marcos na fila. 27,00%, 0/5 gates.

@@ -5,45 +5,44 @@ Você vai continuar o desenvolvimento real do AssisScript para que a linguagem, 
 ## Estado de continuidade — 01/11/2026
 
 Leia o [índice atual](ESTADO-ATUAL.md). A pasta original ainda está no
-planejamento `1ed22f5`, com fontes antigas e alterações alheias; preserve-as.
-A base publicada desta continuação é `8bec8933a6a179b07bfc6ce96ab145030e4dcaa1`,
-branch `work/m1-document-memory-2026-11-01`, PR de rascunho #16 aberta, sem merge.
-A unidade nova fica em `AssisScript/work/htdl-parser-20261101`, branch
-`work/m3-htdl-parser-2026-11-01`; estado de publicação e evidências no
-[relatório M3](../relatorios/2026-11-01-m3-parser-htdl.md). Confira SHA remoto/PR
-antes de continuar; envio de branch não significa merge no master.
-Implementação/testes em `d8af5d1940698452e408b7d88e13724b4bce1941`, 53 arquivos.
-Após autorização direta do usuário, os 53 arquivos até
-`ff2997322995ce797ddc47ae6c600785eb2014ea` foram publicados, com SHA/inventário
-remoto conferidos. [PR de rascunho #17](https://github.com/Vibe-O-Coder/AssisScript/pull/17),
-aberta/sem merge sobre #16 e vinculada à conversa. O adendo do relatório
-confirma a publicação; o SHA documental final é obtido pelo histórico.
-Ao ler a cópia original, abra o
-[relatório local](<C:/Users/babus/Desktop/AssisScript/work/htdl-parser-20261101/docs/relatorios/2026-11-01-m3-parser-htdl.md>).
+planejamento `1ed22f5`, com alterações alheias preservadas. Base desta unidade:
+`ebd3185ae952a85c64cb2a83cd014ac07c0e8c7f`, branch
+`work/m3-htdl-parser-2026-11-01`, PR de rascunho #17 aberta/sem merge,
+com SHA remoto conferido pelo conector/API antes do desenvolvimento.
 
-Já existem reconciliações M0, contratos bootstrap, arena geracional, provider
-Windows, alocação/construção/remoção recuperáveis, BufferPool, árvore com texto,
-metadados/fonte próprios e candidato/ativo transacional. Não reimplemente.
-`std/htdl.assis` agora implementa parser real do perfil viewer-local-bootstrap-v1:
-UTF-8, comentários/entidades/atributos, estrutura/valores/IDs/classes, spans,
-diagnósticos e limites, com parsing/validação iterativos. Atributos e spans
-usam a mesma árvore cobrada. load só ativa após validar; erro aborta o candidato
-completo e preserva ativo/vizinho. Há consultas somente leitura, sem mutação
-HTDL validada, janela, acessibilidade, rede, script ou catálogo completo 0.1.
+Continuação em `AssisScript/work/htdl-viewer-20261101`, branch
+`work/m2-htdl-viewer-2026-11-01`. Consulte o
+[relatório M2/M3](../relatorios/2026-11-01-m2-visualizador-htdl.md) e seu
+adendo de publicação; confirme SHA remoto e PR antes de continuar. O SHA
+documental final é obtido pelo histórico. Ao ler a cópia original, abra o
+[relatório local](<C:/Users/babus/Desktop/AssisScript/work/htdl-viewer-20261101/docs/relatorios/2026-11-01-m2-visualizador-htdl.md>).
 
-Régua: **23,90/100, 0/5 gates**. A meta solicitada de 30% não foi atingida nesta
-unidade. E07-01=2, E07-02/E07-05=1, E00-04=2; demais estados preservados.
-M0/M1/M2/M3 permanecem abertos. O teto é de corpos nativos solicitados, inclui
-reserva temporária conservadora do parser, mas exclui overhead/RSS, pilha,
-entrada emprestada/I/O do chamador e recursos futuros. IDs não são capacidades.
-As evidências distinguem execução Windows/Linux x64 de geração nos cinco
-formatos e produto not-run; nenhum gate ou CI global foi aprovado por inferência.
+Já existem reconciliações M0, contratos, arena geracional, provider Windows,
+alocação/remoção recuperáveis, BufferPool, árvore/fonte/metadados próprios,
+candidato/ativo transacional e parser HTDL bootstrap real. Não reimplemente.
+`std/viewer.assis` apresenta a árvore validada com texto medido, quebra,
+foco/teclado/clique/scroll e snapshot próprio. O exemplo 44 abre arquivo local,
+redimensiona e fecha. Extensão viewer 1 preserva imports/ABI do window base.
+São lógica de produto em AssisScript e adaptação User32/GDI pequena.
 
-Próximo: M2-WINDOW integrado à fonte/árvore HTDL validada, com texto/eventos e
-prova visual; seguir com foco, seleção, scroll e acessibilidade do M3. O catálogo
-completo, recuperação de editor e mutações semânticas têm aceites pendentes.
-M0-EXEC exige spikes VM/Wasm/decisão, sem depender de fechar toda memória.
-Use o JSON/fila efetivos. Easy permanece a última etapa de todo o projeto.
+Régua: **27,00/100, 0/5 gates**; meta de 30% ainda não atingida. E04-02/E04-03=2,
+E04-04=1, E07-04=2, E08-02/E08-05=1; demais estados preservados. M2/M3 parciais.
+Windows: 106 métodos executados/1 not-run; Linux: 85/3, sem provider gráfico.
+Geração dos cinco formatos não é execução ARM/macOS. Três dumps de superfície
+foram inspecionados e têm bytes iguais nos dois modos; captura real da janela
+via Computer Use falhou duas vezes, sem aceite visual de desktop/200%/leitor.
+
+O workspace de View é adicional ao Store; não é quota de RSS/processo. O File
+legado do exemplo conserva alocação fatal limitada de caminho. IDs não são
+capacidades. O envelope de documento recusa eventos semânticos antigos, mas
+não cancela mensagens do OS ainda não obtidas antes de navegação. Não há
+seleção/IME/acessibilidade, rede, programa de página, FS/SSC ou HTDL 0.1 completo.
+
+Próximo: seleção de texto, ponte acessível e aceite real 200%/monitores/leitor
+de tela/captura do desktop. Catálogo completo, recuperação de editor e mutações
+semânticas seguem abertos. M0-EXEC exige spikes VM/Wasm/decisão independentes;
+M1 ainda não fecha RSS. Use o JSON e a fila efetivos. Easy permanece a última
+etapa de todo o projeto. Publicar branch não significa merge, release ou CI.
 
 ## 1. Localize e leia o estado real antes de alterar
 

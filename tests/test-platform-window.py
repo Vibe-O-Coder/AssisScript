@@ -48,6 +48,8 @@ class PlatformWindow(base.Evolution):
             'clear': (C.c_int32, [I, C.c_uint32]),
             'text_utf8': (C.c_int32, [I, C.c_int32, C.c_int32, C.c_void_p, I, C.c_uint32]),
             'present': (C.c_int32, [I]), 'close': (C.c_int32, [I]),
+            'view_version': (I, []), 'measure_utf8': (I, [C.c_void_p, I]),
+            'rect': (C.c_int32, [I, C.c_int32, C.c_int32, C.c_int32, C.c_int32, C.c_uint32]),
             'test_control': (I, [I, I]),
             'test_pixel': (I, [I, C.c_int32, C.c_int32]),
         }
@@ -245,11 +247,12 @@ class PlatformWindow(base.Evolution):
             out = I(999); words = (I * 8)(*([999]*8))
             results.extend([self.dll.assisp_abi_version(), self.dll.assisp_open(100000,1,1,None,0,C.byref(out)),
                 self.dll.assisp_poll(live,0,words,8), self.dll.assisp_clear(live,0),
-                self.dll.assisp_text_utf8(live,0,0,None,0,0), self.dll.assisp_present(live), self.dll.assisp_close(live)])
+                self.dll.assisp_text_utf8(live,0,0,None,0,0), self.dll.assisp_present(live), self.dll.assisp_close(live),
+                self.dll.assisp_view_version(),self.dll.assisp_measure_utf8(b'a',1),self.dll.assisp_rect(live,0,0,1,1,0)])
             results.append(out.value); results.extend(words)
         thread = threading.Thread(target=worker); thread.start(); thread.join(5)
         self.assertFalse(thread.is_alive())
-        self.assertEqual(results, [-5]*7 + [0]*9)
+        self.assertEqual(results, [-5]*10 + [0]*9)
         self.assertEqual(self.dll.assisp_present(live), 0)
 
     def test_injected_oom_every_open_boundary_text_resize_and_neighbor(self):
@@ -421,7 +424,7 @@ class PlatformWindow(base.Evolution):
         production = C.CDLL(str(self.production))
         try:
             self.assertEqual(production.assisp_abi_version(), ABI)
-            for name in ['assisp_test_control','assisp_test_pixel']:
+            for name in ['assisp_test_control','assisp_test_pixel','assisp_test_snapshot']:
                 with self.assertRaises(AttributeError): getattr(production,name)
         finally:
             self.kernel.FreeLibrary(production._handle)
@@ -436,6 +439,55 @@ class PlatformWindow(base.Evolution):
         self.dll.assisp_test_control(7, 0)
         self.assertEqual(self.dll.assisp_close(live), 0)
         self.assertEqual(self.dll.assisp_test_control(3, 0), 0)
+
+    def test_viewer_rectangles_match_independent_clipped_pixel_model(self):
+        live = self.opened(80, 60)
+        self.assertEqual(self.dll.assisp_view_version(), 1)
+        self.assertEqual(self.dll.assisp_clear(live, 0x000000ff), 0)
+        for x, y, width, height in [(-3, -5, 12, 14), (75, 55, 20, 20),
+                (-2147483648, 0, 2147483647, 60), (2147483647, 0, 2147483647, 60)]:
+            self.assertEqual(self.dll.assisp_clear(live, 0x000000ff), 0)
+            self.assertEqual(self.dll.assisp_rect(live,x,y,width,height,0xff0000ff),0)
+            for py in range(60):
+                for px in range(80):
+                    expected = 0xffff0000 if x <= px < x+width and y <= py < y+height else 0xff000000
+                    self.assertEqual(self.dll.assisp_test_pixel(live,px,py), expected)
+        self.assertEqual(self.dll.assisp_rect(live,0,0,-1,1,0),-1)
+        self.assertEqual(self.dll.assisp_rect(0,0,0,1,1,0),-2)
+
+    def test_viewer_measurement_matches_direct_gdi_and_fails_cleanly(self):
+        gdi = C.WinDLL('gdi32')
+        gdi.CreateCompatibleDC.argtypes=[W.HDC];gdi.CreateCompatibleDC.restype=W.HDC
+        gdi.GetStockObject.argtypes=[C.c_int];gdi.GetStockObject.restype=W.HANDLE
+        gdi.SelectObject.argtypes=[W.HDC,W.HANDLE];gdi.SelectObject.restype=W.HANDLE
+        gdi.GetTextExtentPoint32W.argtypes=[W.HDC,W.LPCWSTR,C.c_int,C.POINTER(W.SIZE)]
+        gdi.DeleteDC.argtypes=[W.HDC]
+        dc=gdi.CreateCompatibleDC(None);previous=gdi.SelectObject(dc,gdi.GetStockObject(17))
+        try:
+            for value in ['ação', 'A\0B', 'cafe\u0301', '😀', 'long '*100]:
+                size=W.SIZE(); wide=C.create_unicode_buffer(value)
+                count=len(value.encode('utf-16-le'))//2
+                self.assertTrue(gdi.GetTextExtentPoint32W(dc,wide,count,C.byref(size)))
+                encoded=value.encode()
+                self.assertEqual(self.dll.assisp_measure_utf8(encoded,len(encoded)),size.cx|(size.cy<<32))
+        finally:
+            gdi.SelectObject(dc,previous);gdi.DeleteDC(dc)
+        for data, size in [(b'\x80',1),(None,1),(b'a',-1),(b'a',4097)]:
+            self.assertEqual(self.dll.assisp_measure_utf8(data,size),-1)
+        self.dll.assisp_test_control(0,0)
+        self.assertEqual(self.dll.assisp_measure_utf8(b'a',1),-4)
+        self.dll.assisp_test_control(0,-1)
+
+    def test_viewer_native_button_wheel_and_capture_events(self):
+        live=self.opened();self.drain(live);hwnd=self.hwnd(live)
+        self.user.SendMessageW(hwnd,0x0201,1,21|(22<<16))
+        self.user.SendMessageW(hwnd,0x0202,0,21|(22<<16))
+        self.user.SendMessageW(hwnd,0x020a,120<<16,0)
+        self.user.SendMessageW(hwnd,0x0215,0,0)
+        events=self.drain(live)
+        self.assertEqual([(e[1],e[5],e[6]) for e in events if e[1]!=10],
+                         [(7,21,22),(8,21,22),(9,120,0)])
+        self.assertTrue(any(e[1]==10 for e in events))
 
 if __name__ == '__main__':
     for name in list(vars(base.Evolution)):

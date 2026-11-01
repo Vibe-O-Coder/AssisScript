@@ -1,6 +1,7 @@
 # assis_platform_v1 — contrato inicial da ponte nativa
 
-Estado em 29/10/2026: **provider Windows x64 implementado e validado como prova parcial**.
+Estado em 01/11/2026: **provider Windows x64 e extensão de apresentação local,
+validados como prova parcial**.
 Contrato do módulo em [BIBLIOTECA-window.md](../BIBLIOTECA-window.md), implementação
 em providers/platform/windows.c e relatório em
 [M1 plataforma](../relatorios/2026-10-29-m1-plataforma-windows.md).
@@ -81,3 +82,36 @@ DLL ausente falha no loader; -3 foi injetado somente no backend opcional de
 teste já carregado. A produção não expõe os mecanismos de injeção/inspeção.
 Execução de providers em outros sistemas, IME, leitores de tela, 200%/monitores,
 soak integrado e visualizador HTDL continuam **not-run**; nenhum gate aprovado.
+
+## Extensão viewer 1 — 01/11/2026
+
+As entradas v1 e assisp_abi_version=0x00010000 são preservadas. Somente
+std/viewer importa os novos símbolos; std/window continua carregável contra
+um provider v1 antigo, comprovado pela fixture de negociação original.
+Um executável que importa viewer exige a DLL reconstruída; símbolo ausente
+falha no loader antes de main, não é convertido em -3.
+
+```c
+int64_t assisp_view_version(void); /* 1 ou -5 */
+int64_t assisp_measure_utf8(const uint8_t *text, int64_t length);
+int32_t assisp_rect(int64_t window, int32_t x, int32_t y,
+                   int32_t width, int32_t height, uint32_t rgba);
+```
+
+measure aceita até 4096 bytes, NUL explícito e UTF-8 estrito, retorna
+(height << 32) | width ou erro negativo. Mede DEFAULT_GUI_FONT do sistema;
+não mantém bytes/fontes do chamador, cria/libera seu DC durante a chamada.
+rect exige width/height não negativos, calcula extremos em 64 bits, recorta
+à superfície e usa a composição source-over existente. Falha de medida não
+muda a superfície. Contratos de thread/identidade/ownership/falhas v1 se aplicam.
+
+poll pode produzir ainda 7 left-down (x/y), 8 left-up (x/y), 9 wheel
+(delta vertical/0), 10 capture-lost (0/0). Down toma captura, up a libera;
+perder captura gera cancelamento. Não há coalescimento desses eventos.
+O host conserva a interpretação/foco/scroll. O adaptador aceita 1..10;
+programas antigos que ignoram os novos eventos mantêm seu comportamento.
+
+Na unidade M2 há janela HTDL local real, testes de entradas/resize/fechamento
+e dumps da superfície. A captura Computer Use falhou; IME/leitor de tela/
+200%/outros providers permanecem sem aceite. O parágrafo not-run anterior
+descreve a evidência histórica M1. Nenhum gate foi aprovado.

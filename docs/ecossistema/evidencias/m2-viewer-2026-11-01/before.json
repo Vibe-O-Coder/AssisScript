@@ -1,0 +1,15 @@
+{
+  "base": "ebd3185ae952a85c64cb2a83cd014ac07c0e8c7f",
+  "standard_library": "git archive of exact base",
+  "compiler_sha256": "afe1ddf458764f67362ac6285e4d907c036307cebdd1cdc3a1a533b502b8db42",
+  "compiler": "current build; compiler sources unchanged from base",
+  "command": [
+    "assis",
+    "check",
+    "probe.assis",
+    "--safe"
+  ],
+  "returncode": 1,
+  "stderr": "<workspace>\\build\\before\\probe.assis:1:8: A001: m\u00f3dulo n\u00e3o encontrado: std/viewer.assis (use caminho relativo, -I ou ASSIS_PATH)\n  import \"std/viewer.assis\";safe fn main():int{return 0;}\n         ^\n  Ajuda: Confira o caminho relativo ao arquivo importador e as bibliotecas instaladas. Use -I pasta para bibliotecas externas.\n",
+  "execution": "not-run; frontend rejection"
+}

@@ -1,0 +1,145 @@
+{
+  "schema": "assisscript-viewer-native-v1",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler_sha256": "41a04975b09f2ef12441e6f20e2d6c5f0f839aa75b5c527064ce4ed999bd5325",
+  "checks": [
+    {
+      "name": "htdl-viewer",
+      "command": [
+        "python",
+        "tests/test-htdl-viewer.py"
+      ],
+      "returncode": 0,
+      "registered": 12,
+      "executed": 10,
+      "not_run": 2,
+      "seconds": 26.037561915999998,
+      "log": "linux-htdl-viewer.log",
+      "log_sha256": "9686399fa4d8b80c99af3791d763882dcce1476581cc51d95102cd76cc70c2ca"
+    },
+    {
+      "name": "htdl-parser",
+      "command": [
+        "python",
+        "tests/test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "registered": 16,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 57.645824673999996,
+      "log": "linux-htdl-parser.log",
+      "log_sha256": "965b86fcb73386935affdc12cc5b1dc0206a1655e994f2263698d66b15130ba9"
+    },
+    {
+      "name": "document-memory",
+      "command": [
+        "python",
+        "tests/test-document-memory.py"
+      ],
+      "returncode": 0,
+      "registered": 12,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 23.071104348000006,
+      "log": "linux-document-memory.log",
+      "log_sha256": "bb1af78c577b0b32b6d436650752dcdbe3245411fcc7322d32dabf35d91f2e42"
+    },
+    {
+      "name": "document-tree",
+      "command": [
+        "python",
+        "tests/test-document-tree.py"
+      ],
+      "returncode": 0,
+      "registered": 9,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 21.779734329000007,
+      "log": "linux-document-tree.log",
+      "log_sha256": "2170c9c85e22b9102c09673a45f22ddaf7731a3848047f92ee2e401ddb7c18b1"
+    },
+    {
+      "name": "ffi",
+      "command": [
+        "python",
+        "tests/test-ffi.py"
+      ],
+      "returncode": 0,
+      "registered": 9,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 6.463119481999996,
+      "log": "linux-ffi.log",
+      "log_sha256": "e7b4053bed06860063ce4545cd9da5fbbbf571093b91d8a30843f3b814aed75f"
+    },
+    {
+      "name": "english-api",
+      "command": [
+        "python",
+        "tests/test-english-api.py"
+      ],
+      "returncode": 0,
+      "registered": 4,
+      "executed": 4,
+      "not_run": 0,
+      "seconds": 3.4628357929999822,
+      "log": "linux-english-api.log",
+      "log_sha256": "2871f901ef5cc63800a90150b1918bb67a05d53eaa8cf61ba07f89b8085b598e"
+    },
+    {
+      "name": "packages",
+      "command": [
+        "python",
+        "tests/test-packages.py"
+      ],
+      "returncode": 0,
+      "registered": 13,
+      "executed": 12,
+      "not_run": 1,
+      "seconds": 1.8033887899999854,
+      "log": "linux-packages.log",
+      "log_sha256": "92ec5ccaa0594960b2e6d3c98ae58aea2e64e1103a1ee1df61a7a784016fe486"
+    },
+    {
+      "name": "complete-ir",
+      "command": [
+        "python",
+        "tests/test-complete-ir.py"
+      ],
+      "returncode": 0,
+      "registered": 7,
+      "executed": 7,
+      "not_run": 0,
+      "seconds": 1.6094704719999982,
+      "log": "linux-complete-ir.log",
+      "log_sha256": "0df2c5809e40b27a51b2e44fbb40f7a6dde583018ffdd9cf6eeab05f08c688e1"
+    },
+    {
+      "name": "optimization",
+      "command": [
+        "python",
+        "tests/test-optimization.py"
+      ],
+      "returncode": 0,
+      "registered": 6,
+      "executed": 6,
+      "not_run": 0,
+      "seconds": 4.836124414000011,
+      "log": "linux-optimization.log",
+      "log_sha256": "667239ab7066ce71867b0e4eca557914b9eee09b392405c019c4327883ef4931"
+    }
+  ],
+  "passed": true,
+  "native_provider": "unsupported",
+  "visual_inspection": "not-run: Computer Use frame capture timed out twice",
+  "accessibility": "not-run",
+  "scale_200": "not-run",
+  "selection_ime": "unsupported",
+  "other_native_targets": {
+    "macos-x64": "not-run",
+    "macos-arm64": "not-run",
+    "linux-arm64": "not-run"
+  }
+}

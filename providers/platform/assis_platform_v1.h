@@ -18,4 +18,10 @@ ASSISP_API int32_t assisp_text_utf8(int64_t window, int32_t x, int32_t y,
     const uint8_t *text, int64_t length, uint32_t rgba);
 ASSISP_API int32_t assisp_present(int64_t window);
 ASSISP_API int32_t assisp_close(int64_t window);
+/* Additive viewer extension 1. Base ABI and old entry points are unchanged. */
+ASSISP_API int64_t assisp_view_version(void);
+/* Packed (height << 32) | width, or a negative status. DEFAULT_GUI_FONT. */
+ASSISP_API int64_t assisp_measure_utf8(const uint8_t *text, int64_t length);
+ASSISP_API int32_t assisp_rect(int64_t window, int32_t x, int32_t y,
+    int32_t width, int32_t height, uint32_t rgba);
 #endif

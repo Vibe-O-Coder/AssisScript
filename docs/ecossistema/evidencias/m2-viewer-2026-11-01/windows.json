@@ -1,0 +1,159 @@
+{
+  "schema": "assisscript-viewer-native-v1",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "compiler_sha256": "afe1ddf458764f67362ac6285e4d907c036307cebdd1cdc3a1a533b502b8db42",
+  "checks": [
+    {
+      "name": "htdl-viewer",
+      "command": [
+        "python",
+        "tests/test-htdl-viewer.py"
+      ],
+      "returncode": 0,
+      "registered": 12,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 33.85958980000032,
+      "log": "windows-htdl-viewer.log",
+      "log_sha256": "d8513e98269b4c8aad1b8ac68b985583f42be0dc2714b30efb9080c194b4f959"
+    },
+    {
+      "name": "platform-window",
+      "command": [
+        "python",
+        "tests/test-platform-window.py"
+      ],
+      "returncode": 0,
+      "registered": 19,
+      "executed": 19,
+      "not_run": 0,
+      "seconds": 14.760799300000144,
+      "log": "windows-platform-window.log",
+      "log_sha256": "f684ead7c241ee0dca71acb20659261a01ac9c9875c5ae3f603cc535b42b318c"
+    },
+    {
+      "name": "htdl-parser",
+      "command": [
+        "python",
+        "tests/test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "registered": 16,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 71.03692820000015,
+      "log": "windows-htdl-parser.log",
+      "log_sha256": "457b6352e2fc5afc87957885f4c0feddc43f3b25ba95f05a2a7d9254afd366ef"
+    },
+    {
+      "name": "document-memory",
+      "command": [
+        "python",
+        "tests/test-document-memory.py"
+      ],
+      "returncode": 0,
+      "registered": 12,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 22.654817899999216,
+      "log": "windows-document-memory.log",
+      "log_sha256": "85d63a0e02af678ee15700e883dddc98f5c9cdd786e2976ada354e5dcc47a00d"
+    },
+    {
+      "name": "document-tree",
+      "command": [
+        "python",
+        "tests/test-document-tree.py"
+      ],
+      "returncode": 0,
+      "registered": 9,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 18.26349459999983,
+      "log": "windows-document-tree.log",
+      "log_sha256": "911ad6defb5c08f20f456de96c4868c2d8885eb60e3e5affb99cc07b9461b1f2"
+    },
+    {
+      "name": "ffi",
+      "command": [
+        "python",
+        "tests/test-ffi.py"
+      ],
+      "returncode": 0,
+      "registered": 9,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 6.571522299999742,
+      "log": "windows-ffi.log",
+      "log_sha256": "66968035bcbe8cfe7e7dc261823e5620b0038829dd3e1fbe0ad7d1d6070ceb82"
+    },
+    {
+      "name": "english-api",
+      "command": [
+        "python",
+        "tests/test-english-api.py"
+      ],
+      "returncode": 0,
+      "registered": 4,
+      "executed": 4,
+      "not_run": 0,
+      "seconds": 2.6322791000002326,
+      "log": "windows-english-api.log",
+      "log_sha256": "7f1dfb3370c41d13e7c0a0f658a7894385f8aa2f38f8bdc9f86228a4a354192a"
+    },
+    {
+      "name": "packages",
+      "command": [
+        "python",
+        "tests/test-packages.py"
+      ],
+      "returncode": 0,
+      "registered": 13,
+      "executed": 12,
+      "not_run": 1,
+      "seconds": 3.602274999999281,
+      "log": "windows-packages.log",
+      "log_sha256": "786536a7626d868573f8fe50b00cc2835654b94b205737bbe69907340b2689a4"
+    },
+    {
+      "name": "complete-ir",
+      "command": [
+        "python",
+        "tests/test-complete-ir.py"
+      ],
+      "returncode": 0,
+      "registered": 7,
+      "executed": 7,
+      "not_run": 0,
+      "seconds": 2.9717493999996805,
+      "log": "windows-complete-ir.log",
+      "log_sha256": "58ea501d225b11a0b74502b97fdadda9c89ea8df278fda0e92907359333d8461"
+    },
+    {
+      "name": "optimization",
+      "command": [
+        "python",
+        "tests/test-optimization.py"
+      ],
+      "returncode": 0,
+      "registered": 6,
+      "executed": 6,
+      "not_run": 0,
+      "seconds": 13.638193700000556,
+      "log": "windows-optimization.log",
+      "log_sha256": "b0627a2de37cd2f4af484bce31c175c0a392c8ab604da8cf6f97f04d02617c5f"
+    }
+  ],
+  "passed": true,
+  "native_provider": "tested",
+  "visual_inspection": "not-run: Computer Use frame capture timed out twice",
+  "accessibility": "not-run",
+  "scale_200": "not-run",
+  "selection_ime": "unsupported",
+  "other_native_targets": {
+    "macos-x64": "not-run",
+    "macos-arm64": "not-run",
+    "linux-arm64": "not-run"
+  }
+}

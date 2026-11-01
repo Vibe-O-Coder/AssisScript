@@ -1,0 +1,52 @@
+// Trusted local viewer. Pass an explicitly granted HTDL path on the command line.
+// Build assis_platform_v1.dll beside the executable. No network or page code.
+import "std/viewer.assis";
+struct Display{own view:viewer::View;}
+// Legacy File accepts a NUL-terminated raw path. Its bounded allocation is
+// still fatal on OOM; document/view/provider allocations below are fallible.
+safe fn open_argument():own File{unsafe{
+    val size:int=arg_size(1);if(size<1 || size>32767){return file_open("",9);}
+    let path:*byte=alloc<byte>(size+1);defer free(path);
+    if(arg_copy(1,path,size+1)!=size){return file_open("",9);}
+    return file_open(text(path),0);
+}}
+
+safe fn main():int{
+    if(arg_count()!=2){print("Uso: htdl-viewer <documento.htdl>");return 1;}
+    own input:File=open_argument();if(input==null){print("Falha ao abrir documento");return 2;}
+    own data:*byte=try_alloc<byte>(1048577);own chunk:*byte=try_alloc<byte>(4096);
+    if(data==null || chunk==null){return 2;}
+    let size:int=0;
+    while(true){
+        val read:int=file_read(input,chunk,4096);if(read<0){return 2;}if(read==0){break;}
+        if(read>1048576-size){print("H401: documento maior que 1 MiB");return 3;}
+        for(let i:int=0;i<read;i++){data[size+i]=chunk[i];}size+=read;
+    }
+    if(file_close(input)!=0){return 2;}
+    own store:documents::Store=try_new documents::Store(32000000,250000,1000);if(store==null){return 2;}
+    val parsed:htdl::Diagnostic=htdl::load(store,1,slice_of(data,0,size));
+    if(parsed.code!=0){print("HTDL",parsed.code,parsed.line,parsed.column);return 3;}
+    if(!viewer::available()){print("Provider de visualizacao indisponivel");return 4;}
+    val metrics:int=viewer::measure(utf8("M"));if(metrics<0){return 4;}
+    val row:int=metrics/4294967296;
+    own display:Display=try_new Display(try_new viewer::View(store.active_document(),1,780,520,row,viewer::text_width));
+    if(display==null || display.view==null || !display.view.is_open()){print("Limite ou falha de layout");return 5;}
+    own window:window::Window=try_new window::Window(1,780,520,"AssisScript — visualizador HTDL local");
+    if(window==null || !window.opened()){return 4;}
+    if(!viewer::paint(display.view,window)){return 4;}
+    print("VIEW",display.view.instance(),display.view.line_count());
+    while(display.view.is_open()){
+        val event:window::Event=window.poll(50);if(event.status<0){return 4;}if(event.status==1){continue;}
+        if(event.kind==2){
+            // Build separately; OOM/unsupported dimensions preserve the previous snapshot.
+            own resized:viewer::View=try_new viewer::View(store.active_document(),1,event.arg0,event.arg1,row,viewer::text_width);
+            if(resized!=null && resized.is_open()){resized.restore(display.view);display.view=move(resized);}
+            if(!viewer::paint(display.view,window)){return 4;}continue;
+        }
+        val change:viewer::Change=display.view.dispatch(display.view.instance(),event);
+        if(change.kind==3){break;}
+        if(change.kind==2){print("ACTIVATE",change.node.instance,change.node.slot,change.node.generation);}
+        if(change.kind==1 || change.kind==2){if(!viewer::paint(display.view,window)){return 4;}}
+    }
+    display.view.close();return int(window.close()!=0);
+}
