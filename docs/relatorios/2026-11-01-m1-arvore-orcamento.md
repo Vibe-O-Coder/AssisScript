@@ -213,3 +213,27 @@ O masterprompt no caminho original aponta ao relatório local para evitar
 depender do link remoto ainda inexistente. O SHA do adendo é localizado pelo
 histórico deste relatório, sem hash autorreferente. Não se declara publicação,
 CI ou PR concluída desta unidade.
+
+## Adendo — autorização recebida e publicação confirmada
+
+O usuário respondeu **“Autorizar publicação e PR”** à solicitação que
+identificou os 44 arquivos revisados, o commit `27d6ff3`, a branch, o
+repositório público e a PR de rascunho sobre #14. O push foi aceito;
+`git ls-remote` confirmou
+`27d6ff329f2e87e5e8d148d837d947d300224fd5` na branch
+`work/m1-document-store-2026-11-01`.
+
+Criada a [PR de rascunho #15](https://github.com/Vibe-O-Coder/AssisScript/pull/15),
+base `work/ecosystem-current-2026-11-01` (#14), e vinculada a esta conversa.
+O conector GitHub retornou 403 por permissão insuficiente ao criar a PR;
+a mesma operação autorizada foi concluída pela API GitHub usando a
+autenticação local do Git, sem exibir credenciais. A consulta posterior pelo
+conector confirmou draft, título, base, SHA e estado aberto/sem merge. Os
+44 nomes de arquivos retornados pelo GitHub coincidem exatamente com o diff
+local desde a base `ee852b1`.
+
+Este adendo, o índice, o masterprompt e seus hashes documentais registram
+somente a confirmação de publicação. O código testado não mudou. Os 95 hashes
+são novamente conferidos contra o commit documental final, cujo SHA se obtém
+pelo histórico deste relatório. O masterprompt no caminho original também é
+atualizado. Publicação não implica CI aprovada, merge, release ou novo pacote.
