@@ -51,3 +51,12 @@ A quota cobre somente buffers desse pool, com teto adicional de slots.
 Próximo M1-ALLOC: reserva antecipada de metadados e integração do orçamento
 com arena/árvore/texto por documento; contabilizar overhead/RSS exige contrato
 próprio. M0-EXEC, M2 e todos os gates permanecem abertos.
+
+Continuação de 01/11/2026: preparação antecipada de slots do BufferPool,
+com resultado Copy e progresso parcial explícito, no
+[relatório de metadados](../relatorios/2026-11-01-m1-reserva-metadados.md).
+O estoque permite criar buffers vazios e reciclar identidades sem novas
+alocações. Payload não vazio continua dependente do alocador e a quota exclui
+metadados. Próximo M1-ALLOC: integração do orçamento com arena/árvore/texto
+por documento, cobrança e rollback. Estado/relatórios da linhagem estão no
+[índice de continuidade](ESTADO-ATUAL.md); não repetir as reconciliações M0.

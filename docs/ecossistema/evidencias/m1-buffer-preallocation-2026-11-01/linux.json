@@ -1,0 +1,100 @@
+{
+  "schema": "assisscript-buffer-preallocation-host-v1",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler": "/mnt/c/Users/babus/Desktop/AssisScript/work/ecosystem-current-20261101/build/assis-current-linux",
+  "compiler_sha256": "034d61bfe7b1106f53b4e5dadec1100faffaa4292688adfc5cd5a4f2ff9ae78c",
+  "passed": true,
+  "checks": [
+    {
+      "name": "buffer-preallocation",
+      "command": [
+        "/usr/bin/python3",
+        "tests/test-buffer-preallocation.py"
+      ],
+      "returncode": 0,
+      "registered": 6,
+      "not_run": 0,
+      "executed": 6,
+      "seconds": 4.211056599999999,
+      "log": "linux-buffer-preallocation.log"
+    },
+    {
+      "name": "shared-buffer-budget-selected",
+      "command": [
+        "/usr/bin/python3",
+        "tests/test-shared-buffer-budget.py",
+        "SharedBufferBudget.test_shared_and_transient_limits_and_return_of_quota",
+        "SharedBufferBudget.test_zero_limits_negative_extreme_and_exact_boundaries",
+        "SharedBufferBudget.test_stale_forged_cross_instance_reset_and_closed_ids",
+        "SharedBufferBudget.test_retirement_and_ten_thousand_recycles",
+        "SharedBufferBudget.test_operations_against_independent_bytearray_model",
+        "SharedBufferBudget.test_private_storage_and_borrow_conflicts_are_rejected",
+        "SharedBufferBudget.test_invalid_access_and_constructor_contracts_trap",
+        "SharedBufferBudget.test_example_ir_and_all_five_formats"
+      ],
+      "returncode": 0,
+      "registered": 8,
+      "not_run": 0,
+      "executed": 8,
+      "seconds": 7.042585299999999,
+      "log": "linux-shared-buffer-budget-selected.log"
+    },
+    {
+      "name": "owned-mutation",
+      "command": [
+        "/usr/bin/python3",
+        "tests/test-owned-mutation.py"
+      ],
+      "returncode": 0,
+      "registered": 12,
+      "not_run": 0,
+      "executed": 12,
+      "seconds": 6.3301365579999995,
+      "log": "linux-owned-mutation.log"
+    },
+    {
+      "name": "english-api",
+      "command": [
+        "/usr/bin/python3",
+        "tests/test-english-api.py"
+      ],
+      "returncode": 0,
+      "registered": 4,
+      "not_run": 0,
+      "executed": 4,
+      "seconds": 2.061241109000001,
+      "log": "linux-english-api.log"
+    },
+    {
+      "name": "packages",
+      "command": [
+        "/usr/bin/python3",
+        "tests/test-packages.py"
+      ],
+      "returncode": 0,
+      "registered": 13,
+      "not_run": 1,
+      "executed": 12,
+      "seconds": 1.4127959939999997,
+      "log": "linux-packages.log"
+    },
+    {
+      "name": "portability",
+      "command": [
+        "/usr/bin/python3",
+        "tools/test-portability.py",
+        "--expect-host",
+        "x86_64",
+        "--output",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/ecosystem-current-20261101/docs/ecossistema/evidencias/m1-buffer-preallocation-2026-11-01/linux-portability.json"
+      ],
+      "returncode": 0,
+      "registered": null,
+      "not_run": 0,
+      "executed": null,
+      "seconds": 5.268649142000001,
+      "log": "linux-portability.log"
+    }
+  ]
+}

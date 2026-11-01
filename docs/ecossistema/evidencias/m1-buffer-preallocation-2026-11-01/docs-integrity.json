@@ -1,0 +1,190 @@
+{
+  "checked_links": 37,
+  "checks": [
+    {
+      "source": "PLANO-ECOSSISTEMA.md",
+      "target": "docs/ecossistema/ESTADO-ATUAL.md",
+      "passed": true
+    },
+    {
+      "source": "PLANO-ECOSSISTEMA.md",
+      "target": "docs/ecossistema/PLANO-MESTRE.md",
+      "passed": true
+    },
+    {
+      "source": "PLANO-ECOSSISTEMA.md",
+      "target": "docs/ecossistema/PROGRESSO.md",
+      "passed": true
+    },
+    {
+      "source": "PLANO-ECOSSISTEMA.md",
+      "target": "docs/ecossistema/MASTERPROMPT.md",
+      "passed": true
+    },
+    {
+      "source": "PLANO-ECOSSISTEMA.md",
+      "target": "docs/relatorios/2026-10-29-planejamento-ecossistema.md",
+      "passed": true
+    },
+    {
+      "source": "PLANO-ECOSSISTEMA.md",
+      "target": "docs/ecossistema/browser/IMPLEMENTACOES-FUTURAS.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/MASTERPROMPT.md",
+      "target": "ESTADO-ATUAL.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "MASTERPROMPT.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "https://github.com/Vibe-O-Coder/AssisScript/blob/1ed22f5c898f21f06c429774992469177bdfd3d9/docs/relatorios/2026-10-29-planejamento-ecossistema.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "https://github.com/Vibe-O-Coder/AssisScript/blob/67695a55a2df2a9db624676b990c6d907f5a8e6c/docs/relatorios/2026-10-29-m0-incremento.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "https://github.com/Vibe-O-Coder/AssisScript/blob/9c09baf934eb2ae6a73dd7a15df4d8fa3c30717f/docs/relatorios/2026-10-29-m0-owned.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "https://github.com/Vibe-O-Coder/AssisScript/blob/d842f98702a3321bf33f649eb300b2466f7b2009/docs/relatorios/2026-10-29-m0-microparser.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "https://github.com/Vibe-O-Coder/AssisScript/blob/ebe5928999d8e01e5b224a2c211ba1b575dee783/docs/relatorios/2026-10-29-m0-contratos.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "https://github.com/Vibe-O-Coder/AssisScript/blob/6208ecb5bd5801defcd9c0e6b1809ba731a942db/docs/relatorios/2026-10-29-m1-arena.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "https://github.com/Vibe-O-Coder/AssisScript/blob/038f00d83ef1c413cb3031e5ad59cb4675f4b534/docs/relatorios/2026-10-29-m1-plataforma-windows.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "https://github.com/Vibe-O-Coder/AssisScript/blob/085fb4109b5389742be8d562cdab34de69747e6f/docs/relatorios/2026-10-29-m1-alocacao.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "https://github.com/Vibe-O-Coder/AssisScript/blob/795d899394f0444381999dcb0fef7c011f4b99f7/docs/relatorios/2026-10-30-m1-slots-falliveis.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "https://github.com/Vibe-O-Coder/AssisScript/blob/52c8bb1f1d7482865660580941637a3074329167/docs/relatorios/2026-10-30-m1-remocao-sem-alocacao.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "https://github.com/Vibe-O-Coder/AssisScript/blob/a77f3d6d377d233886f586d11a676c2554062ceb/docs/relatorios/2026-11-01-m1-orcamento-buffers.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "FILA-M0-M1.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "PERFIL-VISUALIZADOR-V1.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "ABI-PLATAFORMA-V1.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "ADR-0001-EXECUCAO-PAGINA.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "referencias/htdl-drafts-2026-10-29/PROVENANCE.json",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/ESTADO-ATUAL.md",
+      "target": "PROGRESSO.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/FILA-M0-M1.md",
+      "target": "../relatorios/2026-10-30-m1-slots-falliveis.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/FILA-M0-M1.md",
+      "target": "../relatorios/2026-10-30-m1-remocao-sem-alocacao.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/FILA-M0-M1.md",
+      "target": "../relatorios/2026-11-01-m1-orcamento-buffers.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/FILA-M0-M1.md",
+      "target": "../relatorios/2026-11-01-m1-reserva-metadados.md",
+      "passed": true
+    },
+    {
+      "source": "docs/ecossistema/FILA-M0-M1.md",
+      "target": "ESTADO-ATUAL.md",
+      "passed": true
+    },
+    {
+      "source": "docs/BIBLIOTECA-buffers.md",
+      "target": "../exemplos/40_prepared_buffer_slots.assis",
+      "passed": true
+    },
+    {
+      "source": "docs/BIBLIOTECA-buffers.md",
+      "target": "relatorios/2026-11-01-m1-reserva-metadados.md",
+      "passed": true
+    },
+    {
+      "source": "docs/BIBLIOTECA-buffers.md",
+      "target": "relatorios/2026-11-01-m1-orcamento-buffers.md",
+      "passed": true
+    },
+    {
+      "source": "docs/BIBLIOTECA-buffers.md",
+      "target": "../exemplos/39_shared_buffer_budget.assis",
+      "passed": true
+    },
+    {
+      "source": "docs/relatorios/2026-11-01-m1-reserva-metadados.md",
+      "target": "../ecossistema/evidencias/m1-buffer-preallocation-2026-11-01/before.json",
+      "passed": true
+    },
+    {
+      "source": "docs/relatorios/2026-11-01-m1-reserva-metadados.md",
+      "target": "../ecossistema/ESTADO-ATUAL.md",
+      "passed": true
+    },
+    {
+      "source": "docs/relatorios/2026-11-01-m1-reserva-metadados.md",
+      "target": "../ecossistema/evidencias/m1-buffer-preallocation-2026-11-01/summary.json",
+      "passed": true
+    }
+  ]
+}

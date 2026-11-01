@@ -1,6 +1,8 @@
 # Evolução do AssisScript para o ecossistema web
 
-Entrada do novo planejamento de 29/10/2026:
+Planejamento de 29/10/2026, com continuidade atualizada em 01/11/2026:
+
+- [Estado atual, branches e índice de relatórios](docs/ecossistema/ESTADO-ATUAL.md).
 
 - [Plano mestre completo](docs/ecossistema/PLANO-MESTRE.md).
 - [Régua de conclusão e diagnóstico inicial](docs/ecossistema/PROGRESSO.md).

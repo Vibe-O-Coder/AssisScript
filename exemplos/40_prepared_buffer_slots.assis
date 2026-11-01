@@ -1,0 +1,22 @@
+// Metadata preparation does not allocate payload or publish buffer identities.
+import "std/buffers.assis";
+
+safe fn main():int{
+    own pool:buffers::BufferPool=try_new buffers::BufferPool(1,32,8,100);
+    if(pool==null || !pool.is_open()){return 1;}
+    val preparation:buffers::Preparation=pool.prepare_slots(4);
+    match(preparation){
+        Ready(count){print(pool.size(),count);}
+        Incomplete(code,count){print(code,count);return 1;}
+    }
+    val result:buffers::Creation=pool.try_create(4);
+    match(result){
+        Created(id){
+            pool.set(id,0,byte(42));
+            print(pool.size(),pool.ready_slots(),pool.used_bytes());
+            assert(pool.erase(id) && !pool.contains(id));
+        }
+        Rejected(code){print(code);return 1;}
+    }
+    print(pool.used_bytes(),pool.ready_slots());return 0;
+}

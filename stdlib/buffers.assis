@@ -5,6 +5,8 @@ import "std/owned.assis";
 public value struct BufferId{let instance:int;let slot:int;let generation:int;}
 /// Copy result: no allocation is needed to report rejection.
 public enum Creation{Created(BufferId);Rejected(int);}
+/// Metadata preparation commits one spare slot at a time; no payload is reserved.
+public enum Preparation{Ready(int);Incomplete(int,int);}
 struct Slot{own data:*byte;let count:int;let capacity:int;let generation:int;let occupied:bool;let next:int;}
 
 safe fn payload(size:int):own *byte{
@@ -23,6 +25,7 @@ public final class BufferPool{
     private let used:int;
     private let count:int;
     private let free_head:int;
+    private let ready:int;
     private let active:bool;
 
     fn init(borrow mut self,instance:int,max_bytes:int,max_buffers:int,generation_limit:int):void{
@@ -37,6 +40,23 @@ public final class BufferPool{
     fn used_bytes(borrow self):int{return self.used;}
     fn max_bytes(borrow self):int{return self.limit;}
     fn slots_used(borrow self):int{if(self.slots==null){return 0;}return self.slots.size();}
+    fn ready_slots(borrow self):int{return self.ready;}
+    /// Ensures at least count recyclable slots, without publishing buffer IDs.
+    /// Incomplete(code,ready) retains completed slots: 1 closed, 2 slot limit,
+    /// 3 allocator refusal, 4 invalid count. Existing buffers/quota never change.
+    fn prepare_slots(borrow mut self,count:int):Preparation{
+        if(!self.active){return new Preparation.Incomplete(1,self.ready);}
+        if(count<0 || count>self.slot_limit){return new Preparation.Incomplete(4,self.ready);}
+        while(self.ready<count){
+            if(self.slots.size()>=self.slot_limit){return new Preparation.Incomplete(2,self.ready);}
+            own slot:Slot=try_new Slot();
+            if(slot==null){return new Preparation.Incomplete(3,self.ready);}
+            val index:int=self.slots.size();slot.generation=1;slot.next=self.free_head;
+            if(!self.slots.try_push(move(slot))){return new Preparation.Incomplete(3,self.ready);}
+            self.free_head=index;self.ready+=1;
+        }
+        return new Preparation.Ready(self.ready);
+    }
     fn contains(borrow self,id:BufferId):bool{
         if(!self.active || id.instance!=self.instance || id.slot<0 ||
            id.slot>=self.slots.size() || id.generation<=0){return false;}
@@ -57,7 +77,7 @@ public final class BufferPool{
             {borrow mut slot:Slot=self.slots.get_mut(index);
              next=slot.next;generation=slot.generation;slot.data=move(data);
              slot.count=size;slot.capacity=size;slot.occupied=true;slot.next=-1;}
-            self.free_head=next;
+            self.free_head=next;self.ready-=1;
         }else{
             index=self.slots.size();own slot:Slot=try_new Slot();
             if(slot==null){return new Creation.Rejected(3);}
@@ -113,11 +133,11 @@ public final class BufferPool{
         val head:int=self.free_head;val recycle:bool=id.generation<self.generation_limit;
         {borrow mut slot:Slot=self.slots.get_mut(id.slot);slot.occupied=false;
          if(recycle){slot.generation=id.generation+1;slot.next=head;}}
-        if(recycle){self.free_head=id.slot;}
+        if(recycle){self.free_head=id.slot;self.ready+=1;}
         self.count-=1;return true;
     }
     fn close(borrow mut self):void{
-        self.active=false;self.used=0;self.count=0;self.free_head=-1;
+        self.active=false;self.used=0;self.count=0;self.free_head=-1;self.ready=0;
         if(self.slots!=null){self.slots.clear();}
     }
     /// A newer host-assigned instance invalidates every previous identity.
