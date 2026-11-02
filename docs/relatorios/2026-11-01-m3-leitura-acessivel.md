@@ -203,3 +203,13 @@ texto com graphemes/shaping/bidi/IME requer provider e corpus próprios. M0-EXEC
 continua exigindo spikes VM/Wasm/decisão independentes; M1 ainda não fecha RSS;
 catálogo/mutações/loader e todos os demais M0–M9 continuam na fila. Easy permanece
 a última etapa do projeto. **30% continua pendente**, sem remover aceites.
+
+## Adendo — preparação do inventário de publicação
+
+Implementação e matriz foram registradas em `47604fc` (73 paths). A conferência
+pré-publicação identificou dois arquivos novos que o Git normalizava de CRLF
+para LF; foram normalizados também na cópia de trabalho e os hashes foram
+recalculados. Correção documental de evidência, sem mudança de comportamento,
+assertions, 28,90% ou gates. O inventário de publicação confere os 183 hashes
+contra os blobs do commit final, não só contra a cópia de trabalho. Patch e
+inventário ficam em build/m3-reader.patch e build/publication-inventory.json.
