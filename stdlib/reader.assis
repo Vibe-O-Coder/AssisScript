@@ -4,12 +4,14 @@ import "std/viewer.assis";
 // Additive reader extension; neither window nor viewer imports these symbols.
 platform("windows-x64"){
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_reader_version") fn version():int;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_preferences") fn native_preferences(window:int,borrow mut words:*int,capacity:int):i32;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_measure_scaled") fn native_measure(borrow data:*byte,size:int,scale:i32):int;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_text_scaled") fn native_text(window:int,x:i32,y:i32,borrow data:*byte,size:int,color:u32,scale:i32):i32;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_clipboard_utf8") fn native_copy(window:int,borrow data:*byte,size:int):i32;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_accessibility") fn native_access(window:int,document:int,borrow words:*int,count:int,borrow names:*byte,size:int):i32;
 }
 platform("linux"){
+safe fn native_preferences(window:int,borrow mut words:*int,capacity:int):i32{return i32(-3);}
 pure fn version():int{return -3;}
 safe fn native_measure(borrow data:*byte,size:int,scale:i32):int{return -3;}
 safe fn native_text(window:int,x:i32,y:i32,borrow data:*byte,size:int,color:u32,scale:i32):i32{return i32(-3);}
@@ -17,6 +19,7 @@ safe fn native_copy(window:int,borrow data:*byte,size:int):i32{return i32(-3);}
 safe fn native_access(window:int,document:int,borrow words:*int,count:int,borrow names:*byte,size:int):i32{return i32(-3);}
 }
 platform("macos"){
+safe fn native_preferences(window:int,borrow mut words:*int,capacity:int):i32{return i32(-3);}
 pure fn version():int{return -3;}
 safe fn native_measure(borrow data:*byte,size:int,scale:i32):int{return -3;}
 safe fn native_text(window:int,x:i32,y:i32,borrow data:*byte,size:int,color:u32,scale:i32):i32{return i32(-3);}
@@ -24,6 +27,29 @@ safe fn native_copy(window:int,borrow data:*byte,size:int):i32{return i32(-3);}
 safe fn native_access(window:int,document:int,borrow words:*int,count:int,borrow names:*byte,size:int):i32{return i32(-3);}
 }
 public safe fn available():bool{unsafe{return viewer::available() && version()==1;}}
+public value struct Preferences{
+    let status:int;let high_contrast:bool;let reduced_motion:bool;
+    let background:u32;let foreground:u32;let button:u32;let button_text:u32;
+    let disabled_text:u32;let selection:u32;let selection_text:u32;
+}
+public pure fn default_preferences():Preferences{
+    return new Preferences(0,false,true,u32(0xf4f1eaff),u32(0x223143ff),u32(0xd9e6e4ff),
+        u32(0x223143ff),u32(0x777777ff),u32(0xadd8f0ff),u32(0x223143ff));
+}
+public safe fn preferences(borrow window:window::Window):Preferences{
+    if(!window.opened()){return preferences_error(-2);}
+    own words:*int=try_alloc<int>(10);if(words==null){return preferences_error(-4);}
+    let status:int=0;unsafe{status=int(native_preferences(window.platform_token(),words,10));}
+    if(status!=0){return preferences_error(status);}
+    if(words[0]!=1 || words[1]<0 || words[1]>1 || words[2]<0 || words[2]>1){return preferences_error(-1);}
+    for(let i:int=3;i<10;i++){if(words[i]<0 || words[i]>4294967295 || words[i]%256!=255){return preferences_error(-1);}}
+    return new Preferences(0,words[1]==1,words[2]==1,u32(words[3]),u32(words[4]),u32(words[5]),
+        u32(words[6]),u32(words[7]),u32(words[8]),u32(words[9]));
+}
+pure fn preferences_error(status:int):Preferences{
+    val p:Preferences=default_preferences();return new Preferences(status,p.high_contrast,p.reduced_motion,
+        p.background,p.foreground,p.button,p.button_text,p.disabled_text,p.selection,p.selection_text);
+}
 public safe fn measure(borrow content:slice<byte>,scale:int):int{
     if(len(content)>4096 || (scale!=1000 && scale!=2000)){return -1;}
     own data:*byte=try_alloc<byte>(len(content));if(data==null){return -4;}
@@ -154,6 +180,13 @@ public final class Reader{
         self.last_request=previous.last_request;
         // Reflow cancels gestures/modifiers; no implicit activation or copying.
     }
+    /// A new document cancels selection/gestures; only an explicit validated ID
+    /// mapping may restore focus. Raw node slots are never reused across versions.
+    fn inherit(borrow mut self,borrow previous:Reader,focus:doctree::NodeId):void{
+        if(!self.is_open() || !previous.is_open()){return;}
+        self.view.scroll_to(previous.snapshot().scroll());self.view.focus_on(focus);
+        self.last_request=previous.last_request;
+    }
     fn close(borrow mut self):void{self.active=false;self.dragging=false;if(self.view!=null){self.view.close();}}
     fn drop(borrow mut self):void{self.close();}
     /// Changes 4 = explicit copy request; 5/6 = 200%/100% zoom request.
@@ -235,34 +268,50 @@ public final class Reader{
         unsafe{return int(native_access(window.platform_token(),self.view.instance(),self.words,self.count+1,self.names,self.names_used));}
     }
     fn paint(borrow self,borrow mut window:window::Window,scale:int):bool{
-        if(!self.is_open() || (scale!=1000 && scale!=2000) || window.clear(u32(0xf4f1eaff))!=0){return false;}
+        return self.paint_with(window,scale,default_preferences());
+    }
+    private fn draw_run(borrow self,borrow window:window::Window,x:int,y:int,borrow content:slice<byte>,color:u32,scale:int):bool{
+        own buffer:*byte=try_alloc<byte>(len(content));if(buffer==null){return false;}
+        for(let j:int=0;j<len(content);j++){buffer[j]=content[j];}
+        unsafe{return native_text(window.platform_token(),i32(x),i32(y),buffer,len(buffer),color,i32(scale))==i32(0);}
+    }
+    fn paint_with(borrow self,borrow mut window:window::Window,scale:int,p:Preferences):bool{
+        if(!self.is_open() || p.status!=0 || (scale!=1000 && scale!=2000)){return false;}
+        let palette:Preferences=default_preferences();if(p.high_contrast){palette=p;}
+        if(window.clear(palette.background)!=0){return false;}
         for(let i:int=0;i<self.view.line_count();i++){
             val l:viewer::Line=self.view.line(i);val y:int=l.y-self.view.scroll();
             if(y<4 || y+self.view.row_height()+4>self.view.viewport_height()){continue;}
-            let color:u32=u32(0x223143ff);if(l.kind==8){color=u32(0x006d77ff);}
+            let color:u32=palette.foreground;if(l.kind==8 && !p.high_contrast){color=u32(0x006d77ff);}
             val selected:bool=self.selection_start()<l.start+l.size && self.selection_end()>l.start;
             if(l.kind==9){
-                let bg:u32=u32(0xd9e6e4ff);if(l.disabled==1){bg=u32(0xe2e0daff);color=u32(0x777777ff);}
-                if(viewer::same(l.node,self.view.focus_node()) && !selected){bg=u32(0x006d77ff);color=u32(0xffffffff);}
+                let bg:u32=palette.button;color=palette.button_text;
+                if(l.disabled==1){color=palette.disabled_text;if(!p.high_contrast){bg=u32(0xe2e0daff);}}
+                let focus_color:u32=u32(0x006d77ff);if(p.high_contrast){focus_color=palette.foreground;}
+                if(viewer::same(l.node,self.view.focus_node()) && !selected){
+                    bg=palette.selection;color=palette.selection_text;
+                    if(!p.high_contrast){bg=u32(0x006d77ff);color=u32(0xffffffff);}
+                }
                 if(viewer::rect(window,24,y-4,self.view.viewport_width()-48,self.view.row_height()+8,bg)!=0){return false;}
                 // Keep focus visible without white text on a pale selection.
                 if(viewer::same(l.node,self.view.focus_node()) && selected){
-                    if(viewer::rect(window,24,y-4,self.view.viewport_width()-48,2,u32(0x006d77ff))!=0 ||
-                       viewer::rect(window,24,y+self.view.row_height()+2,self.view.viewport_width()-48,2,u32(0x006d77ff))!=0 ||
-                       viewer::rect(window,24,y-4,2,self.view.row_height()+8,u32(0x006d77ff))!=0 ||
-                       viewer::rect(window,self.view.viewport_width()-26,y-4,2,self.view.row_height()+8,u32(0x006d77ff))!=0){return false;}
+                    if(viewer::rect(window,24,y-4,self.view.viewport_width()-48,2,focus_color)!=0 ||
+                       viewer::rect(window,24,y+self.view.row_height()+2,self.view.viewport_width()-48,2,focus_color)!=0 ||
+                       viewer::rect(window,24,y-4,2,self.view.row_height()+8,focus_color)!=0 ||
+                       viewer::rect(window,self.view.viewport_width()-26,y-4,2,self.view.row_height()+8,focus_color)!=0){return false;}
                 }
             }
             let a:int=self.selection_start();let b:int=self.selection_end();
             if(a<l.start){a=l.start;}if(b>l.start+l.size){b=l.start+l.size;}
             if(a<b){
                 val x:int=self.advances[a];let end:int=l.width;if(b<l.start+l.size){end=self.advances[b];}
-                if(x<0 || end<x || viewer::rect(window,36+x,y,end-x,self.view.row_height(),u32(0xadd8f0ff))!=0){return false;}
+                if(x<0 || end<x || viewer::rect(window,36+x,y,end-x,self.view.row_height(),palette.selection)!=0){return false;}
             }
-            borrow content:slice<byte>=self.view.line_text(i);own buffer:*byte=try_alloc<byte>(len(content));if(buffer==null){return false;}
-            for(let j:int=0;j<len(content);j++){buffer[j]=content[j];}
-            let result:int=0;unsafe{result=int(native_text(window.platform_token(),i32(36),i32(y),buffer,len(buffer),color,i32(scale)));}
-            if(result!=0){return false;}
+            if(a<b){
+                if(a>l.start && !self.draw_run(window,36,y,slice_of(self.view.text_bytes(),l.start,a-l.start),color,scale)){return false;}
+                if(!self.draw_run(window,36+self.advances[a],y,slice_of(self.view.text_bytes(),a,b-a),palette.selection_text,scale)){return false;}
+                if(b<l.start+l.size && !self.draw_run(window,36+self.advances[b],y,slice_of(self.view.text_bytes(),b,l.start+l.size-b),color,scale)){return false;}
+            }else if(!self.draw_run(window,36,y,self.view.line_text(i),color,scale)){return false;}
         }return window.present()==0;
     }
 }
@@ -272,4 +321,115 @@ public safe fn create(borrow document:documents::Document,window_instance:int,wi
     val metrics:int=measure(utf8("M"),scale);if(metrics<0){return try_new Reader(document,window_instance,0,0,0,width_100);}
     if(scale==2000){return try_new Reader(document,window_instance,width,height,metrics/4294967296,width_200);}
     return try_new Reader(document,window_instance,width,height,metrics/4294967296,width_100);
+}
+
+/// Trusted local document transaction. Candidate semantics, layout and accessible
+/// names are prepared before publication. No page code, FFI authority or FS/SSC.
+public final class Session{
+    private own store:documents::Store;private own current:Reader;private own pending:Reader;
+    private let window_instance:int;private let pending_instance:int;
+    fn init(borrow mut self,max_bytes:int,max_nodes:int,window_instance:int):void{
+        if(max_bytes<documents::store_bytes() || max_nodes<0 || window_instance<=0){return;}
+        self.store=try_new documents::Store(max_bytes,max_nodes,1000);self.window_instance=window_instance;
+    }
+    fn is_open(borrow self):bool{return self.store!=null && self.store.is_open();}
+    fn has_active(borrow self):bool{return self.current!=null;}
+    fn has_pending(borrow self):bool{return self.pending!=null;}
+    fn document(borrow self):borrow(self) documents::Document{assert(self.has_active());return self.store.active_document();}
+    fn active_reader(borrow self):borrow(self) Reader{assert(self.has_active());return self.current;}
+    /// 0 prepared; Hxxx parser errors; -1 invalid/session; -4 layout/OOM; -7 busy.
+    fn prepare(borrow mut self,instance:int,borrow source:slice<byte>,width:int,height:int,row:int,
+            metric:safe fn(borrow slice<byte>):int):int{
+        return self.prepare_reserved(instance,source,width,height,row,metric,0);
+    }
+    private fn prepare_reserved(borrow mut self,instance:int,borrow source:slice<byte>,width:int,height:int,row:int,
+            metric:safe fn(borrow slice<byte>):int,temporary_bytes:int):int{
+        if(!self.is_open()){return -1;}if(self.pending!=null || self.store.has_candidate()){return -7;}
+        // Copy a semantic ID before taking the mutable Store borrow.
+        let key_size:int=0;let key_id:doctree::NodeId=new doctree::NodeId();
+        if(self.current!=null){
+            val focus:doctree::NodeId=self.current.snapshot().focus_node();
+            if(!doctree::absent(focus)){
+                key_id=htdl::attribute(self.store.active_document().nodes(),focus,5);
+                if(!doctree::absent(key_id)){
+                    key_size=htdl::value_size(self.store.active_document().nodes(),key_id);
+                }
+            }
+        }
+        own key:*byte=try_alloc<byte>(key_size);if(key_size>0 && key==null){return -4;}
+        for(let i:int=0;i<key_size;i++){key[i]=htdl::value_byte(self.store.active_document().nodes(),key_id,i);}
+        val result:htdl::Diagnostic=htdl::stage(self.store,instance,source,temporary_bytes+key_size);
+        if(result.code!=0){return result.code;}
+        own candidate:Reader=try_new Reader(self.store.candidate(),self.window_instance,width,height,row,metric);
+        if(candidate==null || !candidate.is_open()){assert(self.store.abort(instance));return -4;}
+        if(self.current!=null){
+            let focus:doctree::NodeId=new doctree::NodeId();
+            if(key_size>0){focus=htdl::find_id(self.store.candidate().nodes(),slice_of(key,0,key_size));}
+            candidate.inherit(self.current,focus);
+        }
+        self.pending=move(candidate);self.pending_instance=instance;return 0;
+    }
+    fn prepare_patch(borrow mut self,instance:int,borrow patch:htdl::Patch,width:int,height:int,row:int,
+            metric:safe fn(borrow slice<byte>):int):int{
+        if(!self.has_active() || !patch.is_open() || patch.instance()!=self.document().instance()){return -1;}
+        return self.prepare_reserved(instance,patch.source(),width,height,row,metric,len(patch.source()));
+    }
+    /// Headless commit. Native hosts use publish, which commits only after MSAA.
+    fn commit(borrow mut self):bool{
+        if(self.pending==null){return false;}assert(self.store.commit(self.pending_instance));
+        own next:Reader=move(self.pending);self.current=move(next);self.pending_instance=0;return true;
+    }
+    fn abort(borrow mut self):void{
+        if(self.pending!=null){assert(self.store.abort(self.pending_instance));own discarded:Reader=move(self.pending);}
+        self.pending_instance=0;
+    }
+    fn publish(borrow mut self,borrow window:window::Window):int{
+        if(self.pending==null){return -1;}val result:int=self.pending.publish(window);
+        if(result==0){assert(self.commit());}return result;
+    }
+    fn dispatch(borrow mut self,document:int,event:window::Event):viewer::Change{
+        // Freeze actions while a candidate is awaiting publication/abort.
+        if(self.current==null || self.pending!=null){return new viewer::Change();}
+        return self.current.dispatch(document,event);
+    }
+    fn reflow(borrow mut self,borrow window:window::Window,width:int,height:int,row:int,
+            metric:safe fn(borrow slice<byte>):int):int{
+        if(!self.has_active()){return -1;}if(self.has_pending()){return -7;}
+        own next:Reader=try_new Reader(self.store.active_document(),self.window_instance,width,height,row,metric);
+        if(next==null || !next.is_open()){return -4;}next.restore(self.current);
+        val status:int=next.publish(window);if(status!=0){return status;}
+        self.current=move(next);return 0;
+    }
+    fn paint(borrow self,borrow mut window:window::Window,scale:int):bool{
+        return self.current!=null && self.current.paint(window,scale);
+    }
+    fn paint_with(borrow self,borrow mut window:window::Window,scale:int,p:Preferences):bool{
+        return self.current!=null && self.current.paint_with(window,scale,p);
+    }
+    fn close(borrow mut self):void{
+        if(self.store!=null){self.store.close();}
+        own current:Reader=move(self.current);own pending:Reader=move(self.pending);
+    }
+}
+
+/// Integer transition clock. Hidden/editing intervals are discarded at every
+/// sample; reduced motion snaps to the target and stores no physical backlog.
+public final class Motion{
+    private let last:int;private let elapsed:int;private let duration:int;private let active:bool;
+    private let running:bool;
+    fn start(borrow mut self,now_ms:int,duration_ms:int):bool{
+        if(now_ms<0 || duration_ms<1 || duration_ms>60000){return false;}
+        self.last=now_ms;self.elapsed=0;self.duration=duration_ms;self.active=true;self.running=true;return true;
+    }
+    fn sample(borrow mut self,now_ms:int,visible:bool,editing:bool,reduced:bool):int{
+        if(!self.active){return 1000;}
+        if(now_ms<self.last){return self.elapsed*1000/self.duration;}
+        val delta:int=now_ms-self.last;self.last=now_ms;
+        if(reduced){self.elapsed=self.duration;}
+        else if(self.running && visible && !editing){
+            if(delta>=self.duration-self.elapsed){self.elapsed=self.duration;}else{self.elapsed+=delta;}
+        }
+        self.running=visible && !editing;
+        return self.elapsed*1000/self.duration;
+    }
 }

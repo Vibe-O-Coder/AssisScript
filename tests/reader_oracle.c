@@ -25,6 +25,27 @@ static DWORD WINAPI wrong_thread(void *pointer) {
 }
 int main(int argc,char **argv) {
     CHECK(argc>=2);
+    if(argc==3 && !strcmp(argv[1],"--transaction-client")) {
+        CHECK(SUCCEEDED(OleInitialize(NULL)));
+        HWND target=(HWND)(uintptr_t)strtoull(argv[2],NULL,10);
+        for(int phase=0;phase<3;phase++) {
+            IAccessible *a=NULL;LONG total=0;
+            CHECK(AccessibleObjectFromWindow(target,OBJID_CLIENT,&IID_IAccessible,(void **)&a)==S_OK);
+            CHECK(IAccessible_get_accChildCount(a,&total)==S_OK && total==(phase==1 ? 4 : 3));
+            BSTR name=NULL;CHECK(IAccessible_get_accName(a,child(3),&name)==S_OK);
+            CHECK(wcscmp(name,L"Mostrar ou ocultar detalhes")==0);SysFreeString(name);
+            if(phase<2) {
+                CHECK(IAccessible_accDoDefaultAction(a,child(3))==S_OK);
+                HRESULT result=S_OK;
+                for(int wait=0;wait<200 && SUCCEEDED(result);wait++) {
+                    Sleep(10);result=IAccessible_get_accChildCount(a,&total);
+                }
+                CHECK(FAILED(result)); /* old remote COM reference is revoked */
+            }
+            IAccessible_Release(a);
+        }
+        OleUninitialize();puts("PASS transactional external MSAA client");return 0;
+    }
     if(argc==3 && !strcmp(argv[1],"--client")) {
         CHECK(SUCCEEDED(OleInitialize(NULL)));IAccessible *a=NULL;
         HWND target=(HWND)(uintptr_t)strtoull(argv[2],NULL,10);

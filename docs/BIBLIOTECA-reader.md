@@ -97,5 +97,73 @@ ABI C continuam confiáveis e locais, sem validação de ponteiros arbitrários.
 [relatório](relatorios/2026-11-01-m3-leitura-acessivel.md).
 Execução Windows/Linux x64 é registrada separadamente de geração de formatos.
 MSAA automatizado não comprova experiência auditiva em leitor de tela.
-Captura desktop, monitores/escala do OS, leitor real, contraste/movimento do
-usuário e IME seguem sem aceite. Nenhum gate é fechado por esta biblioteca.
+Captura desktop, monitores/escala do OS, leitor real e IME seguem sem aceite.
+Contraste/movimento têm a continuação parcial abaixo. Nenhum gate é fechado.
+
+## Sessão, foco e atualização semântica
+
+`try_new reader::Session(max_bytes,max_nodes,window_instance)` controla Store e
+Readers ativo/candidato; consulte proprietário e `is_open()`. `prepare(instance,
+source,width,height,row,metric)` valida HTDL e constrói texto, layout e nomes
+acessíveis. Sucesso 0 deixa `has_pending()` sem mudar `document()`/`active_reader()`.
+`prepare_patch` exige Patch aberto da instância ativa e reserva também seu buffer
+no teto do Store. Uma fonte emprestada em prepare continua responsabilidade do
+chamador. A reserva conservadora fica retirada do teto do documento depois do
+commit, como ocorre com o parser anterior. Não é quota de RSS.
+
+Retornos: Hxxx de sintaxe/semântica/Store; -1 sessão/edição inválida; -4
+layout/medida/alocação; -7 candidato pendente. Tentativa que abriu candidato
+consome a instância mesmo quando abortada: mantenha contador separado da ativa.
+Falhas preservam documento, seleção, foco e Reader anterior. `abort()` cancela
+o candidato. `commit()` serve integração sem provider; o host Windows usa
+`publish(window)`: somente após a cópia MSAA inteira ser aceita ele faz commit
+do Store e troca Reader, sem novas alocações. Publicação recusada mantém o
+candidato para retry/abort e bloqueia ações até resolver a transação.
+
+Foco é mapeado pelo atributo id único entre documentos; só botão visível e
+habilitado no novo snapshot aceita a restauração. Remover/ocultar/desabilitar
+o focado limpa foco, sem acionar outro botão. Scroll é limitado ao novo tamanho.
+Seleção e gestos são cancelados na mudança de fonte. Todos os NodeIds e
+referências MSAA anteriores são invalidados; ações MSAA carregam instância e
+são recusadas se antigas. Mensagens brutas do OS ainda não obtidas antes da
+transação não têm versão de documento: esse limite anterior permanece aberto.
+
+`dispatch(document,event)` e `paint/paint_with` operam somente sobre o ativo.
+`reflow(window,width,height,row,metric)` preserva a mesma instância, foco e
+seleção; constrói/publica antes de trocar. Recusa conserva anterior. Uma
+falha de paint pode deixar frame parcial e não desfaz commit já publicado.
+As chamadas são síncronas, sem callbacks retidos ou trabalho de página.
+
+## Preferências e relógio de apresentação
+
+`preferences(window):Preferences` consulta contraste, animação de área cliente
+e cores do Windows. Não altera preferências do usuário. Resultado tem status,
+high_contrast/reduced_motion e sete cores RGBA opacas. Em falha, o host conserva
+a última consulta válida; defaults usam movimento reduzido. Chamadas exigem
+thread proprietária e janela viva. Linux/macOS retornam status -3.
+
+Após consulta nativa bem-sucedida, somente essa janela recebe eventos 12
+(preferências mudaram) e 13 (visível=arg0). Reconsultar em 12. Minimização e
+show/hide alimentam 13; o primeiro estado visível é responsabilidade do shell.
+Visibilidade aqui não detecta oclusão por outra janela ou aba de navegador.
+Imports base/viewer e versão Reader 1 permanecem; o novo Reader requer a DLL
+com assisp_preferences. DLL antiga sem símbolo falha no loader antes de main.
+
+`paint_with(window,scale,p)` usa a paleta de sistema quando high_contrast está
+ativo, inclusive texto de seleção/foco/disabled. Fora desse modo conserva a
+paleta padrão. O provider não escolhe semântica ou estilos de produto.
+Segmentos selecionados e não selecionados são desenhados uma vez cada. Não há
+certificação universal de contraste nem teste de mudança real do tema do OS:
+testes comparam a consulta ao OS e usam paleta controlada sem mudar o sistema.
+
+`Motion::start(now_ms,duration_ms)` aceita relógio não negativo e duração
+1..60000 ms; `sample(now,visible,editing,reduced)` retorna progresso inteiro
+0..1000. Tempo reverso é ignorado. Amostras em estado oculto/edição descartam
+intervalos; a primeira após retomar também descarta o intervalo de transição.
+Movimento reduzido conclui imediatamente; não há fila de passos físicos a
+reproduzir. O chamador deve amostrar mudanças de política/visibilidade. Isso é
+relógio linear de apresentação, sem parser/equações/perfil temporal SSC, FS,
+editor ou scheduler de abas. O exemplo usa apenas indicador local de alteração.
+
+[Relatório desta unidade](relatorios/2026-11-01-m3-transacoes-preferencias.md),
+[testes e oráculos](../tests/test-reader-transactions.py).

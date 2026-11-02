@@ -178,6 +178,13 @@ public final class View{
     fn focus_node(borrow self):doctree::NodeId{
         if(self.focus<0){return new doctree::NodeId();}return self.lines[self.focus].node;
     }
+    /// Transaction restoration only accepts an eligible node in this snapshot.
+    fn focus_on(borrow mut self,node:doctree::NodeId):bool{
+        self.focus=-1;self.pressed=-1;self.enter=false;self.space=false;self.shift=false;
+        for(let i:int=0;i<self.count;i++){
+            if(self.eligible(i) && same(self.lines[i].node,node)){self.focus=i;return true;}
+        }return false;
+    }
     fn scroll_to(borrow mut self,position:int):void{
         self.offset=position;if(self.offset<0){self.offset=0;}if(self.offset>self.max_scroll()){self.offset=self.max_scroll();}
     }

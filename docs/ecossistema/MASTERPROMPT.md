@@ -1,3 +1,19 @@
+> **Continuação atual — transações e preferências (01/11/2026): 30,10%, 0/5 gates.**
+> Publicada: [PR de rascunho #20](https://github.com/Vibe-O-Coder/AssisScript/pull/20),
+> aberta/sem merge sobre #19; 64 paths/blobs conferidos em 312116efce613c8c5cdb2eaf6b14dcb99bafc5ef.
+> O adendo do relatório confirma a publicação; SHA documental final pelo histórico.
+> Use `C:/Users/babus/Desktop/AssisScript/work/reader-transactions-20261101`,
+> branch `work/m3-reader-transactions-2026-11-01`, base #19/4ba27b3.
+> [Relatório](../relatorios/2026-11-01-m3-transacoes-preferencias.md), resumo de
+> evidências e adendo identificam publicação/SHA/PR. Confirme remoto antes de
+> continuar. A régua mudou somente E07-02 1→2 e E08-04 0→2; meta 30% atingida.
+> 131 métodos Windows/103 Linux executados; 1/10 not-run. Transações de fonte/
+> semântica/apresentação, foco por id, MSAA externo, contraste e relógio local
+> sem backlog estão demonstrados. Desktop Computer Use falhou em app approval
+> timed out. Leitor real/DPI/monitores/IME, catálogo/editor HTDL, FS/SSC,
+> M0-EXEC/VM/Wasm, M1 RSS e M4–M9 continuam na fila. Easy segue por último.
+> Textos abaixo preservam o histórico; não republicar a base antiga.
+>
 > **Reader publicado após autorização direta:** 73 paths/blobs e SHA
 > `722d7cda89859ad08cfdef4191b5f54e0dc97786` conferidos no remoto.
 > [PR #19](https://github.com/Vibe-O-Coder/AssisScript/pull/19), aberta/em

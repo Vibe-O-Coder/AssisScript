@@ -1,0 +1,53 @@
+// Trusted local shell: transactional semantic changes, OS preferences, no page code.
+import "std/reader.assis";
+safe fn main():int{
+    if(!reader::available()){return 4;}
+    own session:reader::Session=try_new reader::Session(32000000,250000,1);
+    if(session==null || !session.is_open()){return 2;}
+    borrow source:slice<byte>=utf8("<div type=document version=\"0.1\" lang=\"pt-BR\"><div type=head><div type=title>Leitura transacional</div></div><div type=body><div type=heading level=1>Documento com atualizações atômicas</div><div type=paragraph>Use Tab e Enter ou clique para mostrar e ocultar os detalhes. O foco acompanha o ID do botão. Contraste e movimento seguem as preferências do Windows.</div><div type=button id=toggle a11y-label=\"Mostrar ou ocultar detalhes\">Mostrar ou ocultar detalhes</div><div type=container id=details hidden=true><div type=paragraph>Este conteúdo foi validado e apresentado junto com sua árvore acessível. Falhas preservam a versão anterior.</div></div></div></div>");
+    val metrics:int=reader::measure(utf8("M"),1000);if(metrics<0){return 4;}
+    let width:int=780;let height:int=520;let instance:int=1;let revision:int=1;let shown:bool=false;let visible:bool=true;
+    if(session.prepare(instance,source,width,height,metrics/4294967296,reader::width_100)!=0){return 3;}
+    own w:window::Window=try_new window::Window(1,width,height,"AssisScript — documento transacional");
+    if(w==null || !w.opened()){return 4;}
+    let preferences:reader::Preferences=reader::preferences(w);if(preferences.status!=0){return 4;}
+    own motion:reader::Motion=try_new reader::Motion();if(motion==null){return 2;}
+    if(session.publish(w)!=0 || !session.paint_with(w,1000,preferences)){return 4;}
+    print("TRANSACTION",instance,session.active_reader().item_count());let last_progress:int=1000;
+    while(session.has_active()){
+        val event:window::Event=w.poll(50);if(event.status<0){return 4;}
+        if(event.status==0){
+            if(event.kind==1){break;}
+            if(event.kind==12){val next:reader::Preferences=reader::preferences(w);if(next.status==0){preferences=next;}}
+            if(event.kind==13){visible=event.arg0==1;}
+            val change:viewer::Change=session.dispatch(instance,event);
+            if(change.kind==4){val copied:int=session.active_reader().copy(w);print("COPY",copied);}
+            if(change.kind==2){
+                let accepted:bool=false;
+                {val details:doctree::NodeId=htdl::find_id(session.document().nodes(),utf8("details"));
+                 own patch:htdl::Patch=htdl::set_boolean(session.document(),details,7,shown);revision++;
+                 if(patch!=null && patch.is_open()){
+                    val prepared:int=session.prepare_patch(revision,patch,width,height,metrics/4294967296,reader::width_100);
+                    if(prepared==0 && session.publish(w)==0){accepted=true;shown=!shown;}
+                    else{session.abort();}
+                 }}
+                instance=session.document().instance();
+                if(accepted){motion.start(monotonic_ms(),350);print("TRANSACTION",instance,session.active_reader().item_count());}
+            }
+            if(event.kind==2){
+                width=event.arg0;height=event.arg1;
+                val resized:int=session.reflow(w,width,height,metrics/4294967296,reader::width_100);
+                if(resized!=0){print("REFLOW-REFUSED",resized);}
+            }
+            if(visible && !session.paint_with(w,1000,preferences)){return 4;}
+        }
+        val progress:int=motion.sample(monotonic_ms(),visible,session.has_pending(),preferences.reduced_motion);
+        if(visible && progress!=last_progress){
+            last_progress=progress;
+            if(!session.paint_with(w,1000,preferences)){return 4;}
+            let color:u32=u32(0x006d77ff);if(preferences.high_contrast){color=preferences.foreground;}
+            if(viewer::rect(w,24,height-8,(width-48)*progress/1000,3,color)!=0 || w.present()!=0){return 4;}
+        }
+    }
+    session.close();return int(w.close()!=0);
+}

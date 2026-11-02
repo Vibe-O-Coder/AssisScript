@@ -91,6 +91,31 @@ public safe fn find_id(borrow tree:doctree::Tree,borrow id:slice<byte>):doctree:
     while(!doctree::absent(n)){if(tree.kind(n)==1 && value_equals(tree,attribute(tree,n,5),id)){return n;}n=next_node(tree,n);}
     return new doctree::NodeId();
 }
+/// Ordered local selector: semantic type (0=any), one exact normalized class
+/// token (empty=any), and an optional live cursor. No CSS or authority lookup.
+public safe fn query(borrow tree:doctree::Tree,type_id:int,borrow token:slice<byte>,after:doctree::NodeId):doctree::NodeId{
+    if(type_id<0 || type_id>9 || len(token)>65536){return new doctree::NodeId();}
+    for(let i:int=0;i<len(token);i++){if(space(int(token[i]))){return new doctree::NodeId();}}
+    let n:doctree::NodeId=tree.root();
+    if(!doctree::absent(after)){if(!tree.contains(after)){return new doctree::NodeId();}n=next_node(tree,after);}
+    let work:int=0;
+    while(!doctree::absent(n)){
+        if(tree.kind(n)==1 && (type_id==0 || kind(tree,n)==type_id)){
+            if(len(token)==0){return n;}
+            val a:doctree::NodeId=attribute(tree,n,6);
+            if(!doctree::absent(a)){
+                let at:int=0;while(at<value_size(tree,a)){
+                    let end:int=at;while(end<value_size(tree,a) && value_byte(tree,a,end)!=32){end++;work++;if(work>8000000){return new doctree::NodeId();}}
+                    if(end-at==len(token)){let equal:bool=true;for(let i:int=0;i<len(token);i++){
+                        work++;if(work>8000000){return new doctree::NodeId();}
+                        if(value_byte(tree,a,at+i)!=token[i]){equal=false;break;}}
+                        if(equal){return n;}}
+                    at=end+1;
+                }
+            }
+        }n=next_node(tree,n);
+    }return new doctree::NodeId();
+}
 
 /// Parser temporary storage is reserved before allocation and never escapes.
 final class Parser{
@@ -377,11 +402,12 @@ public safe fn workspace_bytes(source_bytes:int):int{
 }
 /// Parse/validate before atomic activation. Any failure aborts only our candidate.
 /// Store/instance failures use H401; diagnostic spans remain in the input source.
-public safe fn load(borrow mut store:documents::Store,instance:int,borrow source:slice<byte>):Diagnostic{
+public safe fn stage(borrow mut store:documents::Store,instance:int,borrow source:slice<byte>,temporary_bytes:int):Diagnostic{
     if(len(source)>1048576){return diagnostic(source,401,0,len(source));}
     val bad:int=unicode::error(source);if(bad>=0){return diagnostic(source,101,bad,bad+1);}
     for(let i:int=0;i<len(source);i++){val c:int=int(source[i]);if(c<32 && c!=9 && c!=10 && c!=13){return diagnostic(source,101,i,i+1);}}
-    val reserved:int=workspace_bytes(len(source));
+    if(temporary_bytes<0 || temporary_bytes>2097152){return diagnostic(source,401,0,0);}
+    val reserved:int=workspace_bytes(len(source))+temporary_bytes;
     val begin:int=store.begin_reserved(instance,source,reserved);
     if(begin!=0){return diagnostic(source,401,0,0);}
     let result:Diagnostic=new Diagnostic();
@@ -392,5 +418,46 @@ public safe fn load(borrow mut store:documents::Store,instance:int,borrow source
         else{borrow mut d:documents::Document=store.candidate();result=parser.run(d,source);}
     }
     if(result.code!=0){assert(store.abort(instance));return result;}
-    assert(store.commit(instance));return result;
+    return result;
+}
+
+/// Existing load contract: validate then activate, without exposing a candidate.
+public safe fn load(borrow mut store:documents::Store,instance:int,borrow source:slice<byte>):Diagnostic{
+    val result:Diagnostic=stage(store,instance,source,0);
+    if(result.code==0){assert(store.commit(instance));}return result;
+}
+
+/// Bounded source edit. It never mutates a live tree; stage reparses all semantics.
+/// The output body is additional temporary storage, reserved by Session::prepare_patch.
+public final class Patch{
+    private own data:*byte;private let active:bool;private let instance_id:int;
+    fn init(borrow mut self,borrow document:documents::Document,start:int,end:int,borrow replacement:slice<byte>):void{
+        if(!document.is_open() || start<0 || end<start || end>document.source_size() || len(replacement)>1048576){return;}
+        val base:int=document.source_size()-(end-start);
+        if(base>1048576-len(replacement)){return;}
+        self.data=try_alloc<byte>(base+len(replacement));if(self.data==null){return;}
+        for(let i:int=0;i<start;i++){self.data[i]=document.source_byte(i);}
+        for(let i:int=0;i<len(replacement);i++){self.data[start+i]=replacement[i];}
+        for(let i:int=end;i<document.source_size();i++){self.data[start+len(replacement)+i-end]=document.source_byte(i);}
+        if(unicode::error(slice_of(self.data,0,len(self.data)))>=0){return;}
+        self.instance_id=document.instance();self.active=true;
+    }
+    fn is_open(borrow self):bool{return self.active;}
+    fn instance(borrow self):int{return self.instance_id;}
+    fn source(borrow self):borrow(self) slice<byte>{assert(self.active);return slice_of(self.data,0,len(self.data));}
+}
+/// Only boolean semantic attributes; missing attributes are inserted after '<div'.
+public safe fn set_boolean(borrow document:documents::Document,node:doctree::NodeId,key:int,value:bool):own Patch{
+    let start:int= -1;let end:int= -1;
+    if(document.is_open() && document.nodes().contains(node) && document.nodes().kind(node)==1 && (key==7 || key==8)){
+        val a:doctree::NodeId=attribute(document.nodes(),node,key);
+        start=span_start(document.nodes(),node)+4;end=start;
+        if(!doctree::absent(a)){start=span_start(document.nodes(),a);end=span_end(document.nodes(),a);}
+    }
+    if(key==7){
+        if(value){return try_new Patch(document,start,end,utf8(" hidden=\"true\" "));}
+        return try_new Patch(document,start,end,utf8(" hidden=\"false\" "));
+    }
+    if(value){return try_new Patch(document,start,end,utf8(" disabled=\"true\" "));}
+    return try_new Patch(document,start,end,utf8(" disabled=\"false\" "));
 }

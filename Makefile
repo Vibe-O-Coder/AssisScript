@@ -206,3 +206,7 @@ test-alpha15: test-htdl-parser
 .PHONY: test-htdl-reader
 test-htdl-reader: bin/assis
 	python3 tests/test-htdl-reader.py
+
+.PHONY: test-reader-transactions
+test-reader-transactions: bin/assis
+	python3 tests/test-reader-transactions.py

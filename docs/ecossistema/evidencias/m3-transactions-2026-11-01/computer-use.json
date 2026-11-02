@@ -1,0 +1,10 @@
+{
+  "skill": "computer-use:computer-use",
+  "real_screen_reader": "not-run",
+  "desktop_screenshot": "not-run",
+  "production_demo_build": "success",
+  "initialization": "success",
+  "launch_app": "Computer Use app approval timed out",
+  "os_dpi_multimonitor": "not-run",
+  "window_inventory": "success; target absent"
+}
