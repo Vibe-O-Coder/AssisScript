@@ -203,3 +203,30 @@ https://github.com/Vibe-O-Coder/AssisScript.git, sem merge, force push ou releas
 O prompt autoriza publicação normal. O adendo registrará o resultado real e
 a conferência de SHA/árvore/arquivos; até essa confirmação não se afirma envio.
 O SHA deste relatório é localizado pelo histórico, evitando hash autorreferente.
+
+
+## Adendo — publicação bloqueada pela revisão automática
+
+Implementação concluída em **828d051ecc6478202002fa3af0da63d79e409b84**,
+63 arquivos de código/testes/documentação/evidências, todos com bytes do índice
+conferidos contra o workspace antes do commit. Régua local 45,30%, 0/5 gates.
+
+O envio a Vibe-O-Coder/AssisScript, branch work/m5-page-presentation-2026-11-02,
+foi recusado pela revisão automática antes de executar o comando. A revisão
+considerou que o pedido de desenvolver rumo a 50% não autorizava especificamente
+exportar esses 63 arquivos ao destino. A autorização geral de publicação do
+masterprompt não foi considerada suficiente por esse mecanismo.
+
+**Não há publicação, PR, merge ou release deste incremento.** Não houve tentativa
+de contornar o bloqueio por API, credencial ou outro transporte. A base f274c9f
+continua confirmada pública; o novo commit não deve ser descrito como remoto.
+
+Commit, inventário e patch estão preservados nesta cópia. Artefatos locais:
+build/page-styles-delivery.json, build/page-styles-828d051.patch e patch do
+adendo documental. O histórico identifica o SHA deste adendo sem autorreferência.
+
+Ação pendente: autorização explícita do usuário para publicar os 63 arquivos
+desta entrega, implementação 828d051 e o adendo documental de bloqueio/publicação,
+na branch indicada de Vibe-O-Coder/AssisScript, sem merge/force push/release.
+Depois, conferir SHA, árvore e paths/blobs/modos no remoto. A fila integral e
+os aceites continuam preservados; Easy permanece por último.

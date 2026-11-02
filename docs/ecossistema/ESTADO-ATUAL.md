@@ -1,6 +1,7 @@
-> **Continuação validada — 45,30%, 02/11/2026, 0/5 gates; meta 50% pendente.**
+> **Entrega local — 45,30%, 02/11/2026, 0/5 gates; publicação bloqueada.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/page-presentation-20261102`,
-> branch `work/m5-page-presentation-2026-11-02`, base pública f274c9f conferida.
+> branch `work/m5-page-presentation-2026-11-02`, implementação local 828d051.
+> Revisão automática exige autorização para os 63 arquivos/destino; base f274c9f pública.
 > Transações FS de até 256 elementos e cache exato por nó; falha conserva o
 > conjunto autoral anterior com semântica atual. Retry limitado de remoção Windows.
 > Windows 125/0 nativos, Linux 116/5 executados/not-run; 23 Node Windows e
