@@ -1,5 +1,8 @@
 # Relatório — transações FS de página inteira e dirtiness por nó
 
+> Publicação confirmada após autorização explícita; implementação 828d051 e
+> adendo d6d0798 no remoto. A seção final registra verificação e PR indisponível.
+
 02/11/2026, America/Fortaleza. Base pública f274c9f7d4dda1e1d9a7bfe92b172354b89a4203,
 branch work/m5-page-presentation-2026-11-02, cópia isolada
 C:/Users/babus/Desktop/AssisScript/work/page-presentation-20261102.
@@ -230,3 +233,31 @@ desta entrega, implementação 828d051 e o adendo documental de bloqueio/publica
 na branch indicada de Vibe-O-Coder/AssisScript, sem merge/force push/release.
 Depois, conferir SHA, árvore e paths/blobs/modos no remoto. A fila integral e
 os aceites continuam preservados; Easy permanece por último.
+
+
+## Adendo final — autorização recebida e publicação confirmada
+
+O usuário autorizou expressamente os 63 arquivos, commits 828d051/d6d0798 e
+este adendo de confirmação, no destino/branch indicados, sem merge, force push
+ou release. Essa autorização resolveu o bloqueio automático anterior.
+
+O push foi concluído. O conector GitHub confirmou a cabeça remota
+**d6d0798aada40d54c35c1b1f026c94cd8f7a5e6b**, árvore
+**32921399fc1b35e80e8540544567761ac9b2824c**. A árvore recursiva completa tem
+2533 entradas, incluindo 2446 blobs; todos os **63 paths/blobs/modos/tipos**
+da diferença contra f274c9f coincidem com o Git local. A evidência textual
+preserva logs brutos com -text/-whitespace; seus bytes no índice foram
+conferidos antes do commit. Este adendo documental recebe SHA pelo histórico.
+
+[Branch publicada](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m5-page-presentation-2026-11-02).
+[Implementação 828d051](https://github.com/Vibe-O-Coder/AssisScript/commit/828d051ecc6478202002fa3af0da63d79e409b84).
+
+PR de rascunho foi solicitada pelo conector, sobre work/m3-presentation-core-2026-11-02,
+mas não foi criada: GitHub 403 Resource not accessible by integration. Não houve
+contorno por credencial/API, merge, release nem nova CI remota afirmada.
+O envio deste adendo também integra a autorização recebida; a confirmação do
+seu SHA/árvore final é feita após push e localizada no histórico da branch.
+
+Resultado: **45,30%, 0/5 gates; meta 50% pendente**. A fila integral e os aceites
+listados acima permanecem válidos, com Easy por último. A próxima unidade é
+layout/snapshot comum e SSC agregado, seguida da integração ao Reader.

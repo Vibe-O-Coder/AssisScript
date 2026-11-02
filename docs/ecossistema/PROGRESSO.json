@@ -3188,5 +3188,5 @@
       }
     }
   ],
-  "assessment_note": "45,30%, 0/5 gates; meta 50% pendente. Transação FS de página inteira e dirtiness exato por nó, com testes Windows/Linux e instalação isolada. Base FS/SSC f274c9f confirmada pública pelo conector. Publicação dos 63 arquivos de 828d051 bloqueada pela revisão automática, que exige autorização explícita para conteúdo/destino; commit/patch/relatório preservados. Layout/Reader/catálogo/desktop/leitor/DPI/IME, SSC agregado, SDK/loader/recursos, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h e aceites continuam na fila. Easy por último."
+  "assessment_note": "45,30%, 0/5 gates; meta 50% pendente. Transação FS de página inteira e dirtiness exato por nó, com testes Windows/Linux e instalação isolada. Base FS/SSC f274c9f confirmada pública pelo conector. Publicação dos 63 arquivos de 828d051/d6d0798 confirmada após autorização explícita, com SHA/árvore/paths/blobs/modos remotos conferidos. PR não criada: conector 403. O adendo documenta a confirmação. Layout/Reader/catálogo/desktop/leitor/DPI/IME, SSC agregado, SDK/loader/recursos, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h e aceites continuam na fila. Easy por último."
 }

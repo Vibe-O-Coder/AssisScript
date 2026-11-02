@@ -1,11 +1,11 @@
-> **Entrega local — 45,30%, 02/11/2026, 0/5 gates; publicação bloqueada.**
+> **Publicação confirmada — 45,30%, 02/11/2026, 0/5 gates.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/page-presentation-20261102`,
-> branch `work/m5-page-presentation-2026-11-02`, implementação local 828d051.
-> Revisão automática exige autorização para os 63 arquivos/destino; base f274c9f pública.
-> Transações FS de até 256 elementos e cache exato por nó; falha conserva o
-> conjunto autoral anterior com semântica atual. Retry limitado de remoção Windows.
-> Windows 125/0 nativos, Linux 116/5 executados/not-run; 23 Node Windows e
-> 57 exemplos por host. [Relatório e publicação no adendo](../relatorios/2026-11-02-m5-page-styles.md).
+> branch `work/m5-page-presentation-2026-11-02`, implementação 828d051 publicada.
+> Autorização explícita resolveu o bloqueio; d6d0798 e 63 paths/blobs/modos
+> conferidos no remoto. PR não criada: conector 403. [Relatório e confirmação](../relatorios/2026-11-02-m5-page-styles.md).
+> FS transacional para até 256 elementos, cache exato por nó e remoção Windows
+> com retry limitado. Windows 125/0 nativos, Linux 116/5 executados/not-run;
+> 23 Node Windows e 57 exemplos por host. Meta 50% pendente.
 > Layout/snapshot comum e SSC agregado/Reader continuam próximos. Catálogo/editor,
 > desktop/leitor/DPI/IME, SDK/loader/recursos, RSS/disco/órfãos, macOS/ARM,
 > rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites seguem na
