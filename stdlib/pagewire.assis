@@ -1,0 +1,40 @@
+namespace pagewire;
+
+/// ASIP/1 uses explicit little-endian bytes, never native structs/pointers.
+public pure fn maximum():int{return 196708;}
+public safe fn get(borrow data:slice<byte>,at:int):int{
+    let value:int=0;for(let i:int=0;i<8;i++){value|=int(data[at+i])<<(8*i);}return value;
+}
+public safe fn put(borrow mut data:*byte,at:int,value:int):void{
+    for(let i:int=0;i<8;i++){data[at+i]=byte((value>>(8*i))&255);}
+}
+public safe fn header(borrow mut data:*byte,kind:int,payload:int,instance:int,origin:int,generation:int,request:int):void{
+    for(let i:int=0;i<80;i++){data[i]=byte(0);}data[0]=byte(65);data[1]=byte(83);data[2]=byte(73);data[3]=byte(80);data[4]=byte(1);data[6]=byte(kind);
+    put(data,8,payload);put(data,16,instance);put(data,24,origin);put(data,32,generation);put(data,40,request);
+}
+public safe fn valid(borrow data:slice<byte>):bool{
+    if(len(data)<80 || data[0]!=65 || data[1]!=83 || data[2]!=73 || data[3]!=80 || data[4]!=1 || data[5]!=0 || data[7]!=0){return false;}
+    val count:int=get(data,8);if(count<0 || count>maximum()-80 || len(data)!=80+count){return false;}
+    return true;
+}
+/// A bounded incremental stream decoder. Oversize headers fail before accepting
+/// payload. One complete frame must be consumed before another byte is fed.
+public final class Decoder{
+    private own data:*byte;private let used:int;private let target:int;private let failed:bool;
+    fn init(borrow mut self):void{self.data=try_alloc<byte>(196708);self.target=80;self.failed=self.data==null;}
+    fn is_open(borrow self):bool{return !self.failed;}
+    fn size(borrow self):int{return self.used;}
+    fn ready(borrow self):bool{return !self.failed && self.used==self.target;}
+    fn view(borrow self):borrow(self) slice<byte>{return slice_of(self.data,0,self.used);}
+    fn reset(borrow mut self):void{self.used=0;self.target=80;}
+    fn feed(borrow mut self,value:byte):bool{
+        if(self.failed || self.used==self.target){return false;}self.data[self.used]=value;self.used++;
+        if(self.used==80){
+            val length:int=get(slice_of(self.data,0,80),8);
+            if(length<0 || length>196628){self.failed=true;return false;}
+            self.target=80+length;
+            if(self.data[0]!=65 || self.data[1]!=83 || self.data[2]!=73 || self.data[3]!=80 || self.data[4]!=1 || self.data[5]!=0 || self.data[7]!=0){self.failed=true;return false;}
+        }
+        return true;
+    }
+}

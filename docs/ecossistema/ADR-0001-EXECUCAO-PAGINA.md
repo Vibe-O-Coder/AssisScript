@@ -3,6 +3,16 @@
 Data: 29/10/2026. Estado: **estratégia aceita; formato ainda não escolhido**.
 Escopo: E00-03/E06-01, sem promoção de capacidade ou gate.
 
+## Continuação worker de 02/11/2026 — decisão VM/Wasm ainda aberta
+
+ASV2/HTDL/SDK agora têm worker separado, ASIP/1 e navegação transacional em
+AssisScript, com restrições Linux x64 verificadas e Windows explicitamente
+sem sandbox de autoridade. [Perfil](PERFIL-WORKER-LOCAL-V1.md),
+[relatório](../relatorios/2026-11-02-m0-page-worker.md). Isso não escolhe o
+executor geral nem dispensa a alternativa Wasm comparável. G2 continua aberto.
+Compilação/RSS, sandbox Windows/macOS, broker/perfis e Reader/loader conjunto
+continuam pendentes. As seções anteriores de entrega abaixo são históricas.
+
 ## Continuação de 02/11/2026 — backend escalar e host local, escolha geral aberta
 
 O destino `page-asv2` agora emite bytes a partir de IR tipada, sem AST na emissão.

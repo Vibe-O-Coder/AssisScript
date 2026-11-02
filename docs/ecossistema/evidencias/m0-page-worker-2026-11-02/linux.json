@@ -1,0 +1,158 @@
+{
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler_sha256": "ce366104a9832226d6cf6ac3d26690812992096c1d55cd8c49f2ff3627563541",
+  "checks": [
+    {
+      "name": "page-host",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-page-host.py"
+      ],
+      "returncode": 0,
+      "executed": 13,
+      "not_run": 0,
+      "seconds": 19.224,
+      "log": "linux-page-host-both.log",
+      "log_sha256": "69c14a1fec889ac2d90c720d34ba03f351a12b37161e6596246f73792ba5dbc7"
+    },
+    {
+      "name": "pagevm",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-pagevm.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 4.568,
+      "log": "linux-pagevm-both.log",
+      "log_sha256": "a1b0a4fa11bba1954c0cbd54961c88a3da82da13c8657307466e41b450ee77c0"
+    },
+    {
+      "name": "page-backend",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-page-backend.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 5.391,
+      "log": "linux-page-backend-both.log",
+      "log_sha256": "374a8e33c6ada5ca2e577a7b3513c9e6e7f9f1afc998d1f41edd6469dcdcb233"
+    },
+    {
+      "name": "htdl-parser",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 53.429,
+      "log": "linux-htdl-parser-both.log",
+      "log_sha256": "103ac3be5e4f11db091638b705f61fa8e3fce6c3f64a4ecf1a3d07e89f04a14c"
+    },
+    {
+      "name": "process",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-process.py"
+      ],
+      "returncode": 0,
+      "executed": 4,
+      "not_run": 0,
+      "seconds": 1.867,
+      "log": "linux-process-both.log",
+      "log_sha256": "ed3bdb57b40d444673bc26605ee46151febd4daaf0728e5751b83de3422eaceb"
+    },
+    {
+      "name": "ffi",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-ffi.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 4.374,
+      "log": "linux-ffi-both.log",
+      "log_sha256": "fd3b4cc79ec6b16c6c4108050c45e64025253143e82f5bf5ca78b4c9a5b6b008"
+    },
+    {
+      "name": "safe-default",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-safe-default.py"
+      ],
+      "returncode": 0,
+      "executed": 5,
+      "not_run": 0,
+      "seconds": 1.638,
+      "log": "linux-safe-default-both.log",
+      "log_sha256": "29969102ce70d1ffa72c0943fe8de76ac7b23fc41d2b82a33f25d3bf87447e01"
+    },
+    {
+      "name": "ownership-functions",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-ownership-functions.py"
+      ],
+      "returncode": 0,
+      "executed": 26,
+      "not_run": 0,
+      "seconds": 7.055,
+      "log": "linux-ownership-functions-both.log",
+      "log_sha256": "2eff89c5ef0558e3f25979d57a90ada459da7262e0b035cae5d8bbf0dbac3771"
+    },
+    {
+      "name": "page-worker",
+      "mode": "optimized",
+      "command": [
+        "python3",
+        "tests/test-page-worker.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 2,
+      "seconds": 10.504,
+      "log": "linux-page-worker-optimized.log",
+      "log_sha256": "0d2a984ece01840a23373728294e5ea390e127a95340fcf187917e05258eb768",
+      "candidates": {
+        "worker_sha256": "903a097d3a2f42a13c0815a51b84d7c8b298011aa0c19b8b2cc9f5132b43388d",
+        "provider_sha256": "7e8874cdc7ff7ab4da7461a84a4a66bccc54b6ecb6e511b826e8e3f12ebe1016",
+        "mode": "optimized"
+      }
+    },
+    {
+      "name": "page-worker",
+      "mode": "reference",
+      "command": [
+        "python3",
+        "tests/test-page-worker.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 2,
+      "seconds": 10.153,
+      "log": "linux-page-worker-reference.log",
+      "log_sha256": "f1c22728e00c0d371bc41944d918a92781baf3307d234b389b14af08008eae7b",
+      "candidates": {
+        "worker_sha256": "ada5146d98bb08b3fa699fd324cccda851de2d5b2b9e5335112f2cecb98cda27",
+        "provider_sha256": "7e8874cdc7ff7ab4da7461a84a4a66bccc54b6ecb6e511b826e8e3f12ebe1016",
+        "mode": "reference"
+      }
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,25 @@
+{
+  "windows": {
+    "gcc": "15.2.0 Rev13 MSYS2 UCRT64",
+    "python": "3.14.6",
+    "node": "24.17.0",
+    "compiler_flags": [
+      "-O2",
+      "-std=c11",
+      "-municode",
+      "-static",
+      "-static-libgcc",
+      "-s"
+    ]
+  },
+  "linux": {
+    "gcc": "13.3.0 Ubuntu 24.04",
+    "glibc": "2.39",
+    "kernel": "6.18.54.1-microsoft-standard-WSL2 x86_64",
+    "compiler_flags": [
+      "-O2",
+      "-std=c11"
+    ]
+  },
+  "provider_build": "tools/build-page-worker.py; C11, warnings as errors; no redistributed dependencies"
+}

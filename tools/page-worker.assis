@@ -1,0 +1,61 @@
+import "std/pagehost.assis";
+import "std/pagewire.assis";
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_child_read") fn read_native(borrow mut data:*byte,length:int):int;
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_child_write") fn write_native(borrow data:*byte,length:int):int;
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_restrict") fn restrict_native():int;
+
+safe fn emit(borrow mut data:*byte,borrow mut scratch:*byte):bool{
+    let position:int=0;while(position<144){for(let i:int=0;i<144-position;i++){scratch[i]=data[position+i];}
+        let count:int=0;unsafe{count=write_native(scratch,144-position);}if(count<=0){return false;}position+=count;}return true;
+}
+final class State{own page:pagehost::Page;}
+safe fn main():int{
+    // Load trusted code/provider first, then restrict before reading a byte.
+    let isolation:int=0;unsafe{isolation=restrict_native();}if(isolation<0){return 70;}
+    own decoder:pagewire::Decoder=try_new pagewire::Decoder();own chunk:*byte=try_alloc<byte>(4096);
+    own response:*byte=try_alloc<byte>(144);own scratch:*byte=try_alloc<byte>(144);
+    if(decoder==null || !decoder.is_open() || chunk==null || response==null || scratch==null){return 71;}
+    pagewire::header(response,128,64,0,0,0,0);pagewire::put(response,128,isolation);if(!emit(response,scratch)){return 74;}
+    own state:State=try_new State();if(state==null){return 71;}let instance:int=0;let origin:int=0;let epoch:int=0;let request:int=0;
+    while(true){
+        let count:int=0;unsafe{count=read_native(chunk,4096);}if(count<0){if(decoder.size()==0){return 0;}return 65;}if(count==0){continue;}
+        for(let i:int=0;i<count;i++){
+            if(!decoder.feed(chunk[i])){return 65;}if(!decoder.ready()){continue;}
+            {borrow data:slice<byte>=decoder.view();if(!pagewire::valid(data)){return 65;}
+            val kind:int=int(data[6]);val next:int=pagewire::get(data,40);val a:int=pagewire::get(data,48);val b:int=pagewire::get(data,56);
+            val c:int=pagewire::get(data,64);val d:int=pagewire::get(data,72);let result:int=0;
+            if(state.page==null){
+                if(kind!=1 || next!=1 || pagewire::get(data,16)<=0 || pagewire::get(data,24)<=0 || pagewire::get(data,32)<=0 || len(data)<100){return 65;}
+                instance=pagewire::get(data,16);origin=pagewire::get(data,24);epoch=pagewire::get(data,32);
+            }else if(pagewire::get(data,16)!=instance || pagewire::get(data,24)!=origin || pagewire::get(data,32)!=epoch || next<=request){return 65;}
+            request=next;
+            if(kind==1){
+                if(state.page!=null){return 65;}let source_length:int=0;for(let j:int=0;j<4;j++){source_length|=int(data[80+j])<<(8*j);}
+                if(source_length>65536 || source_length>len(data)-100 || a<0 || a>65536 || b<1 || b>128 || c<1 || c>1000000 || d<0 || d>10000){return 65;}
+                own store:documents::Store=try_new documents::Store(33554432,250000,1000);
+                own candidate:pagehost::Page=try_new pagehost::Page(instance,origin);
+                if(store==null || candidate==null || !candidate.is_open()){result=-4;}
+                else{
+                    val parsed:htdl::Diagnostic=htdl::load(store,1,slice_of(data,84,source_length));
+                    if(parsed.code!=0){result= -1000-parsed.code;}
+                    else{result=candidate.prepare(store.active_document(),slice_of(data,84+source_length,len(data)-84-source_length),a,b,c,d);if(result==0){assert(candidate.commit());state.page=move(candidate);}}
+                }
+            }else{
+                if(len(data)!=80 || c!=0 || d!=0 || kind<2 || kind>8){return 65;}
+                if(kind==2){if(a<1 || a>10000 || b!=0){return 65;}result=state.page.tick(a);}
+                else if(kind==5){if(a<2 || a>3){return 65;}result=state.page.post(instance,origin,1,1,request,a,b);}
+                else{
+                    if(a!=0 || b!=0){return 65;}
+                    if(kind==3){if(!state.page.grant_counter(instance,origin,1)){result=-2;}}
+                    else if(kind==4){if(!state.page.grant_document(instance,origin,1,1)){result=-2;}}
+                    else if(kind==6){state.page.revoke();}else if(kind==7){state.page.close();}
+                }
+            }
+            pagewire::header(response,128+kind,64,instance,origin,epoch,request);pagewire::put(response,48,result);
+            for(let j:int=80;j<144;j++){response[j]=byte(0);}
+            if(state.page!=null){pagewire::put(response,80,state.page.status());pagewire::put(response,88,state.page.result());pagewire::put(response,96,state.page.steps());
+                pagewire::put(response,104,state.page.counter());pagewire::put(response,112,state.page.state_get(0));pagewire::put(response,120,state.page.queue_size());}
+            pagewire::put(response,128,isolation);if(!emit(response,scratch)){return 74;}if(kind==7 || (kind==1 && result!=0)){return 0;}}decoder.reset();
+        }
+    }
+}

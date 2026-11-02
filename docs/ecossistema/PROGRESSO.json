@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-02",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "partial-native-retest-page-runtime",
+  "assessment": "partial-native-retest-page-worker",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -322,34 +322,46 @@
         {
           "id": "E03-03",
           "name": "Workers, IPC e supervisão",
-          "level": 2,
+          "level": 3,
           "acceptance": "Evoluir processos/pipes para protocolo binário versionado, framing, tamanho máximo, transferências e encerramento; recuperar worker travado/derrubado sem deadlock ou mensagem tardia.",
-          "baseline": "Processos, pipes e supervisão delimitados disponíveis.",
+          "baseline": "ASIP/1 e supervisor em AssisScript executados Windows/Linux, framing limitado, fragmentação/coalescência, replay/epoch/origem, EOF parcial, backpressure e recuperação de worker travado/derrubado sem afetar vizinha. Protocolos de broker e transferências gerais permanecem abertos.",
           "evidence": [
             "docs/BIBLIOTECA-process.md",
-            "docs/FFI-C.md"
+            "docs/FFI-C.md",
+            "docs/relatorios/2026-11-02-m0-page-worker.md",
+            "docs/ecossistema/evidencias/m0-page-worker-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-WORKER-LOCAL-V1.md",
+            "tests/test-page-worker.py"
           ]
         },
         {
           "id": "E03-04",
           "name": "Ciclo de vida de recursos e assinaturas",
-          "level": 2,
+          "level": 3,
           "acceptance": "Cancelar árvore de tarefas, revogar subscriptions, fechar handles e drenar trabalho ao fechar aba/perfil; definir reentrada e impedimento de callback após drop.",
-          "baseline": "Recursos own e cancelamento básicos existem; ainda sem ciclo de vida de aba.",
+          "baseline": "Workers e Session em AssisScript: close/drop, filas canceladas, afinidade de thread e navegação candidato/ativo com epoch monotônico, abort/falha preservando ativo, reload e fim inesperado ocioso validados Windows/Linux nos dois modos. Subscriptions gerais e integração com aba/perfil visual continuam pendentes.",
           "evidence": [
             "docs/OWNERSHIP-FUNCOES.md",
             "docs/BIBLIOTECA-eventos.md",
-            "docs/BIBLIOTECA-process.md"
+            "docs/BIBLIOTECA-process.md",
+            "docs/relatorios/2026-11-02-m0-page-worker.md",
+            "docs/ecossistema/evidencias/m0-page-worker-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-WORKER-LOCAL-V1.md",
+            "tests/test-page-worker.py"
           ]
         },
         {
           "id": "E03-05",
           "name": "Paralelismo com contrato seguro",
-          "level": 0,
+          "level": 3,
           "acceptance": "Adotar primeiro processos e mensagens; demonstrar CPU/I/O em segundo plano. Se threads forem necessárias, especificar envio/compartilhamento, atomics, modelo de memória e análise de corridas antes de expor heap compartilhado.",
-          "baseline": "Sem contrato de threads ou integração paralela do motor.",
+          "baseline": "CPU e IO de página em processos reais separados, streams sem espera no host, pressão de retorno/deadlines e vizinha responsiva sob stall/carga/crash, validados Windows/Linux e otimizado/referência. Não há heap compartilhado ou threads expostas; integração no produto visual permanece aberta.",
           "evidence": [
-            "docs/EVENTOS-E-PERSISTENCIA.md"
+            "docs/EVENTOS-E-PERSISTENCIA.md",
+            "docs/relatorios/2026-11-02-m0-page-worker.md",
+            "docs/ecossistema/evidencias/m0-page-worker-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-WORKER-LOCAL-V1.md",
+            "tests/test-page-worker.py"
           ]
         }
       ]
@@ -566,24 +578,32 @@
         {
           "id": "E06-04",
           "name": "Sandbox de processo por OS",
-          "level": 0,
+          "level": 2,
           "acceptance": "Implementar restrições nativas de conteúdo/broker em Windows/Linux/macOS, herança mínima e filtros apropriados; testar tentativa real de acesso a rede, perfil, arquivos e processos sem concessão.",
-          "baseline": "Criar processo por si só não isola autoridade.",
+          "baseline": "Perfil Linux x64 entra em no_new_privs/seccomp antes de ler dados, nega arquivos/rede/exec/fork/ptrace/kill e memória executável; herança mínima e limites de processo testados por oráculo C. Windows tem somente supervisão/Job e recusa isolamento obrigatório; macOS/ARM64 e broker completo permanecem abertos.",
           "evidence": [
             "docs/BIBLIOTECA-process.md",
-            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md"
+            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md",
+            "docs/relatorios/2026-11-02-m0-page-worker.md",
+            "docs/ecossistema/evidencias/m0-page-worker-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-WORKER-LOCAL-V1.md",
+            "tests/test-page-worker.py"
           ]
         },
         {
           "id": "E06-05",
           "name": "Ciclo de vida e recuperação de aba",
-          "level": 2,
+          "level": 3,
           "acceptance": "Inicializar/eventuar/descartar instância, invalidar callbacks e interromper conteúdo travado; validar reload, navegação, falha e rollback de ativação com isolamento entre abas.",
-          "baseline": "Page integra prepare/commit/abort, eventos/células, replay/reload/close, projeção imutável e Group com quanta/deadline; OOM preserva ativo/vizinha. Sem proteção de crash nativo por worker/sandbox ou integração visual de aba.",
+          "baseline": "Instâncias ASV2/SDK/HTDL em workers: init/eventos, concessões/revogação, candidato inválido e abort conservam ativo, reload válido substitui owner/epoch, close/drop/deadline/crash cancelam trabalho e vizinha segue viva. Evidência adversa Windows/Linux nos dois modos; Reader/loader completo e sandbox dos demais OS permanecem abertos.",
           "evidence": [
             "local:htdl/docs/15-htdl-0.2-e-carregamento.md",
             "docs/relatorios/2026-11-02-m0-page-runtime.md",
-            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-02-m0-page-worker.md",
+            "docs/ecossistema/evidencias/m0-page-worker-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-WORKER-LOCAL-V1.md",
+            "tests/test-page-worker.py"
           ]
         }
       ]
@@ -2503,7 +2523,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-02",
+      "rubric_version": 1,
+      "label": "Worker/IPC e isolamento local delimitado: 40,20%, 0/5 gates",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 2,
+        "E00-03": 2,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 2,
+        "E06-02": 2,
+        "E06-03": 2,
+        "E06-04": 2,
+        "E06-05": 3,
+        "E07-01": 2,
+        "E07-02": 2,
+        "E07-03": 2,
+        "E07-04": 2,
+        "E07-05": 2,
+        "E08-01": 0,
+        "E08-02": 2,
+        "E08-03": 0,
+        "E08-04": 2,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 1,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Backend escalar ASV2 por IR tipada, SDK htdl_v1/read-only-1, projeção HTDL e ciclo de eventos/células/concessões em AssisScript; Group cooperativo com quanta/deadlines. 238 métodos Windows e 210 Linux executados, 1/29 not-run; 50 exemplos por host. Escolha VM/Wasm geral, sandbox/worker/IPC, compilação/RSS, integração visual e loader completo permanecem abertos. Desktop/leitor/DPI/IME, HTDL completo/editor, FS/SSC, M4–M9 e aceites preservados; Easy por último. 36,20%, 0/5 gates; meta 40% não atingida. Publicação desta unidade bloqueada pela revisão automática antes do push; implementação e evidências permanecem locais até autorização explícita do destino/payload."
+  "assessment_note": "Worker ASV2/HTDL/SDK e ASIP/1 em AssisScript, supervisor e navegação transacional com processos Windows/Linux; restrições Linux x64 verificadas e Windows explicitamente sem sandbox de autoridade. 40,20%, 0/5 gates; evidência própria e limites no relatório. Sem redução de escopo: decisão VM/Wasm, compilação/RSS, sandbox Windows/macOS, Reader/loader, desktop/leitor/DPI/IME, HTDL completo/editor, FS/SSC, M4–M9 e aceites permanecem na fila; Easy por último."
 }

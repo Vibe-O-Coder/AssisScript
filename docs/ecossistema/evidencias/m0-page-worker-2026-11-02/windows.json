@@ -1,0 +1,158 @@
+{
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "compiler_sha256": "f8cbebecd91ecc7d98e9adb455ac4049798e025c50be5cf57b55e222c87f2689",
+  "checks": [
+    {
+      "name": "page-host",
+      "mode": "both",
+      "command": [
+        "python.exe",
+        "tests/test-page-host.py"
+      ],
+      "returncode": 0,
+      "executed": 13,
+      "not_run": 0,
+      "seconds": 20.49,
+      "log": "windows-page-host-both.log",
+      "log_sha256": "64884bf23c86c5ce7a9b90444c6a8eb14743a398ef843c372fdcb6e0372665ca"
+    },
+    {
+      "name": "pagevm",
+      "mode": "both",
+      "command": [
+        "python.exe",
+        "tests/test-pagevm.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 10.966,
+      "log": "windows-pagevm-both.log",
+      "log_sha256": "d02adb30625cc91c973baa2638245cef20c58f9ad93075e5e4a582f8dec3e9aa"
+    },
+    {
+      "name": "page-backend",
+      "mode": "both",
+      "command": [
+        "python.exe",
+        "tests/test-page-backend.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 12.03,
+      "log": "windows-page-backend-both.log",
+      "log_sha256": "1c27718637dc180043c5b275595d93d8ad7bc265a0fd915620b8c685ddf32b88"
+    },
+    {
+      "name": "process",
+      "mode": "both",
+      "command": [
+        "python.exe",
+        "tests/test-process.py"
+      ],
+      "returncode": 0,
+      "executed": 4,
+      "not_run": 0,
+      "seconds": 7.046,
+      "log": "windows-process-both.log",
+      "log_sha256": "79cb04805564fdb1eb900762712e3d68956d83744991ce79a04f28a05cb2d1f0"
+    },
+    {
+      "name": "ffi",
+      "mode": "both",
+      "command": [
+        "python.exe",
+        "tests/test-ffi.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 5.831,
+      "log": "windows-ffi-both.log",
+      "log_sha256": "94b84c5accbbd998a8bc18eccbc72c2979f5f8ab939c672d7bc7fb885c769780"
+    },
+    {
+      "name": "safe-default",
+      "mode": "both",
+      "command": [
+        "python.exe",
+        "tests/test-safe-default.py"
+      ],
+      "returncode": 0,
+      "executed": 5,
+      "not_run": 0,
+      "seconds": 2.523,
+      "log": "windows-safe-default-both.log",
+      "log_sha256": "91755c7baa441548ffea869dfe1bfaa190ee9da6431339b5aa57e3e2d30e911f"
+    },
+    {
+      "name": "ownership-functions",
+      "mode": "both",
+      "command": [
+        "python.exe",
+        "tests/test-ownership-functions.py"
+      ],
+      "returncode": 0,
+      "executed": 26,
+      "not_run": 0,
+      "seconds": 12.227,
+      "log": "windows-ownership-functions-both.log",
+      "log_sha256": "bfa122236770736140590c697b1ab36be21af74e1a6ccf8f35ff81533abaae95"
+    },
+    {
+      "name": "htdl-parser",
+      "mode": "both",
+      "command": [
+        "python.exe",
+        "tests/test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 59.049,
+      "log": "windows-htdl-parser-both.log",
+      "log_sha256": "8334c4b241f767f9ef94c27a8707073229183905d4e5c25d1c963d5e770a9413"
+    },
+    {
+      "name": "page-worker",
+      "mode": "optimized",
+      "command": [
+        "python.exe",
+        "tests/test-page-worker.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 2,
+      "seconds": 24.913,
+      "log": "windows-page-worker-optimized.log",
+      "log_sha256": "dbc6dcbed2091805a763772ac75cfa78f6114cf601d9895b9e9600ba6a9bf179",
+      "candidates": {
+        "worker_sha256": "7967696b8a4e87ef63de93bae4cc46dd6fc31ff22eddfcc8bc2057cfde8a93bb",
+        "provider_sha256": "3d9bd88fd8a36d387115e85aeb4b9d6c26a5341de4b69509e0414c32f725ec8c",
+        "mode": "optimized"
+      }
+    },
+    {
+      "name": "page-worker",
+      "mode": "reference",
+      "command": [
+        "python.exe",
+        "tests/test-page-worker.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 2,
+      "seconds": 22.007,
+      "log": "windows-page-worker-reference.log",
+      "log_sha256": "d8564f144308fcf6e318a3e1fffe1483ab0d9be12c1abab0501124045edd6048",
+      "candidates": {
+        "worker_sha256": "5531ba1190f61f170eda647ff97f346521788638d368e3442fd11fee3621c58a",
+        "provider_sha256": "86012f0a4771e3244afd7855d8874074f9637331894f41827ca4d6a915919131",
+        "mode": "reference"
+      }
+    }
+  ],
+  "passed": true
+}
