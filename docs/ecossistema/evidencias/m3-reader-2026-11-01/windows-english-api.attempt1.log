@@ -1,0 +1,19 @@
+test_canonical_catalog_and_every_module (__main__.English.test_canonical_catalog_and_every_module) ... FAIL
+test_english_builtin_aliases_remain_compatible (__main__.English.test_english_builtin_aliases_remain_compatible) ... ok
+test_entry_constructor_import_and_callbacks (__main__.English.test_entry_constructor_import_and_callbacks) ... ok
+test_managed_english_libraries (__main__.English.test_managed_english_libraries) ... ok
+
+======================================================================
+FAIL: test_canonical_catalog_and_every_module (__main__.English.test_canonical_catalog_and_every_module)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\Desktop\AssisScript\work\viewer-accessibility-20261101\tests\test-english-api.py", line 14, in test_canonical_catalog_and_every_module
+    self.assertEqual({x['name'] for x in catalog['libraries']},{'math','strings','memory','errors','convert','algorithms','csv','encoding','cli','json','time','log','iterators','events','unicode','owned','arena','http','process','net','window','buffers','doctree','documents','htdl','viewer','random'})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the first set but not the second:
+'reader'
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.752s
+
+FAILED (failures=1)

@@ -1,0 +1,17 @@
+test_accounting_against_interval_tree_and_bytearray_model (__main__.DocumentMemory.test_accounting_against_interval_tree_and_bytearray_model) ... ok
+test_active_candidate_combined_limit_and_invalid_source (__main__.DocumentMemory.test_active_candidate_combined_limit_and_invalid_source) ... ok
+test_commit_abort_and_close_allocate_nothing_under_os_refusal (__main__.DocumentMemory.test_commit_abort_and_close_allocate_nothing_under_os_refusal) ... ok
+test_complete_candidate_abort_commit_and_stale_instances (__main__.DocumentMemory.test_complete_candidate_abort_commit_and_stale_instances) ... ok
+test_document_versions_against_independent_snapshot_model (__main__.DocumentMemory.test_document_versions_against_independent_snapshot_model) ... ok
+test_growth_counts_metadata_old_payload_and_entire_candidate (__main__.DocumentMemory.test_growth_counts_metadata_old_payload_and_entire_candidate) ... ok
+test_invalid_constructor_and_access_contracts_trap (__main__.DocumentMemory.test_invalid_constructor_and_access_contracts_trap) ... ok
+test_ir_allocation_layouts_and_all_five_formats (__main__.DocumentMemory.test_ir_allocation_layouts_and_all_five_formats) ... ok
+test_metadata_admission_exact_limit_preparation_and_retirement (__main__.DocumentMemory.test_metadata_admission_exact_limit_preparation_and_retirement) ... ok
+test_os_refusal_rolls_back_source_and_each_construction_stage (__main__.DocumentMemory.test_os_refusal_rolls_back_source_and_each_construction_stage) ... ok
+test_private_storage_and_borrows_block_mutation_and_navigation (__main__.DocumentMemory.test_private_storage_and_borrows_block_mutation_and_navigation) ... ok
+test_source_copy_utf8_exact_budget_and_tree_metadata (__main__.DocumentMemory.test_source_copy_utf8_exact_budget_and_tree_metadata) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 18.089s
+
+OK

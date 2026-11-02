@@ -1,6 +1,7 @@
 # Bibliotecas — alpha.14
 
-São 25 módulos nos fontes de desenvolvimento, incluindo a [arena geracional](BIBLIOTECA-arena.md), o [pool com orçamento conjunto de buffers](BIBLIOTECA-buffers.md), a [árvore ordenada](BIBLIOTECA-doctree.md), os [documentos candidatos](BIBLIOTECA-documents.md) e a [janela nativa Windows](BIBLIOTECA-window.md). O provider da janela é opcional e ainda exige build separado; os pacotes anteriores não o contêm.
+São 28 módulos nos fontes de desenvolvimento, incluindo a [arena geracional](BIBLIOTECA-arena.md), o [pool com orçamento conjunto de buffers](BIBLIOTECA-buffers.md), a [árvore ordenada](BIBLIOTECA-doctree.md), os [documentos candidatos](BIBLIOTECA-documents.md) e a [janela nativa Windows](BIBLIOTECA-window.md). O provider da janela é opcional e ainda exige build separado; os pacotes anteriores não o contêm.
+O [Reader HTDL](BIBLIOTECA-reader.md) acrescenta seleção/cópia de leitura, zoom 100/200% e projeção MSAA Windows; não foi promovido a release.
 O caminho recomendado para novos programas é unicode, own/borrow
 e slices. A revisão acrescenta random, o builder Unicode, sort safe e
 owned::OwnedArray de recursos Move. Consulte [o manual atual](LINGUAGEM.md).

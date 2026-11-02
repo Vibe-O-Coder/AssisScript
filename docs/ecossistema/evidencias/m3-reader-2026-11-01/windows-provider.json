@@ -1,0 +1,73 @@
+{
+  "metrics": {
+    "c_oracle_sha256": "8996740a9ff79970f5fdb0ec757a07d9e016ae9dc779f6a3031cb47e571ab6c9",
+    "open_oom_boundaries": 6,
+    "generated_formats": {
+      "windows-x64:optimized": "85b43bbcf126023d86207a9cff73e0b2246c70a92c70b6ed15b74577d0f231fc",
+      "windows-x64:reference": "b80cd6f7e9583d28724f5b36e5217157f70c4d3520fa929cedd729a331c87666",
+      "linux-x64:optimized": "535f4513f92d0b1f4fdea2a23b2709555f2368fed7cdff18feaba2ec9b48ab8c",
+      "linux-x64:reference": "a7f64e5ab157504edd59c2539ea5eb650f25311741c2a0159c7469b5c72e54d3",
+      "linux-arm64:optimized": "6494f272b861a50bbdbd6b153b62e20a7df02bc6d605765f4fce5e69ae100f1d",
+      "linux-arm64:reference": "0d9628dba4d3747f65e45ba9b6c30e345ca786bbc3a9c1523ca40b5a98704c5a",
+      "macos-x64:optimized": "ff9f3bf4de80892c7cb5378f5a5f925de4e4b2cc0356c7f19c04da5cdf985e02",
+      "macos-x64:reference": "76359dd65b2eef1ca03c55a3b94774751813f27aa733b6558d4e65efd50c0ab3",
+      "macos-arm64:optimized": "012673f124ea46344e7b7a786e789a78392f8978a803cbb3f7faec1351a2686f",
+      "macos-arm64:reference": "86c3a14aaef5b69a475e5902eac23238109f2d49481753de97a470abe739196e"
+    },
+    "resource_cycles": {
+      "count": 1000,
+      "before": [
+        172,
+        2,
+        1
+      ],
+      "after": [
+        172,
+        2,
+        1
+      ],
+      "count_order": [
+        "process_handles",
+        "GDI",
+        "USER"
+      ],
+      "seconds": 4.871
+    },
+    "poll_25ms_elapsed_ms": 31.65
+  },
+  "toolchain": "gcc.EXE (Rev13, Built by MSYS2 project) 15.2.0",
+  "provider_production_sha256": "1b1cdbcf61e19433eb11a554d8da8ca1049ae89e97b79914b6beaf03518f4c3b",
+  "provider_testing_sha256": "f55794d0ec45ad2cc7aafbd9daf26d8722efb8df85730b5ece3311216fa6ecfd",
+  "production_bytes": 205868,
+  "production_imports": [
+    "GDI32.dll",
+    "KERNEL32.dll",
+    "api-ms-win-crt-heap-l1-1-0.dll",
+    "api-ms-win-crt-private-l1-1-0.dll",
+    "api-ms-win-crt-runtime-l1-1-0.dll",
+    "api-ms-win-crt-stdio-l1-1-0.dll",
+    "api-ms-win-crt-string-l1-1-0.dll",
+    "ole32.dll",
+    "OLEACC.dll",
+    "OLEAUT32.dll",
+    "USER32.dll"
+  ],
+  "build_flags": [
+    "-O2",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror",
+    "-shared",
+    "-static-libgcc",
+    "-Wl,--no-insert-timestamp",
+    "-DASSISP_TESTING",
+    "C:\\Users\\babus\\Desktop\\AssisScript\\work\\viewer-accessibility-20261101\\providers\\platform\\windows.c",
+    "-o",
+    "C:\\Users\\babus\\AppData\\Local\\Temp\\assis-platform-86ee185o\\assis_platform_v1.dll",
+    "-luser32"
+  ],
+  "testing_windows": "hidden; real User32/GDI resources",
+  "visual_inspection": "not-run; separate Computer Use attempt timed out waiting for application approval"
+}

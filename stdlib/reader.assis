@@ -1,0 +1,275 @@
+namespace reader;
+import "std/viewer.assis";
+
+// Additive reader extension; neither window nor viewer imports these symbols.
+platform("windows-x64"){
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_reader_version") fn version():int;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_measure_scaled") fn native_measure(borrow data:*byte,size:int,scale:i32):int;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_text_scaled") fn native_text(window:int,x:i32,y:i32,borrow data:*byte,size:int,color:u32,scale:i32):i32;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_clipboard_utf8") fn native_copy(window:int,borrow data:*byte,size:int):i32;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_accessibility") fn native_access(window:int,document:int,borrow words:*int,count:int,borrow names:*byte,size:int):i32;
+}
+platform("linux"){
+pure fn version():int{return -3;}
+safe fn native_measure(borrow data:*byte,size:int,scale:i32):int{return -3;}
+safe fn native_text(window:int,x:i32,y:i32,borrow data:*byte,size:int,color:u32,scale:i32):i32{return i32(-3);}
+safe fn native_copy(window:int,borrow data:*byte,size:int):i32{return i32(-3);}
+safe fn native_access(window:int,document:int,borrow words:*int,count:int,borrow names:*byte,size:int):i32{return i32(-3);}
+}
+platform("macos"){
+pure fn version():int{return -3;}
+safe fn native_measure(borrow data:*byte,size:int,scale:i32):int{return -3;}
+safe fn native_text(window:int,x:i32,y:i32,borrow data:*byte,size:int,color:u32,scale:i32):i32{return i32(-3);}
+safe fn native_copy(window:int,borrow data:*byte,size:int):i32{return i32(-3);}
+safe fn native_access(window:int,document:int,borrow words:*int,count:int,borrow names:*byte,size:int):i32{return i32(-3);}
+}
+public safe fn available():bool{unsafe{return viewer::available() && version()==1;}}
+public safe fn measure(borrow content:slice<byte>,scale:int):int{
+    if(len(content)>4096 || (scale!=1000 && scale!=2000)){return -1;}
+    own data:*byte=try_alloc<byte>(len(content));if(data==null){return -4;}
+    for(let i:int=0;i<len(content);i++){data[i]=content[i];}
+    unsafe{return native_measure(data,len(content),i32(scale));}
+}
+public safe fn width_100(borrow content:slice<byte>):int{
+    val m:int=measure(content,1000);if(m<0){return m;}return m%4294967296;
+}
+public safe fn width_200(borrow content:slice<byte>):int{
+    val m:int=measure(content,2000);if(m<0){return m;}return m%4294967296;
+}
+public value struct Item{
+    let node:doctree::NodeId;let first:int;let last:int;let role:int;let disabled:int;
+    let name_start:int;let name_size:int;
+}
+/// Read-only content selection uses UTF-8 scalar boundaries, not grapheme editing.
+/// Names and MSAA projection are owned independently of the source/Store.
+public final class Reader{
+    private own view:viewer::View;
+    private own items:*Item;private own names:*byte;private own words:*int;
+    private own advances:*int;
+    private let count:int;private let names_used:int;private let window_instance:int;
+    private let anchor:int;private let caret:int;private let last_request:int;
+    private let control:bool;private let shift:bool;private let dragging:bool;
+    private let active:bool;
+    fn init(borrow mut self,borrow document:documents::Document,window_instance:int,width:int,height:int,
+            row:int,metric:safe fn(borrow slice<byte>):int):void{
+        self.window_instance=window_instance;
+        self.view=try_new viewer::View(document,window_instance,width,height,row,metric);
+        if(self.view==null || !self.view.is_open()){return;}
+        self.items=try_alloc<reader::Item>(self.view.line_count());
+        self.names=try_alloc<byte>(document.source_size()+32);
+        self.words=try_alloc<int>((self.view.line_count()+1)*8);
+        self.advances=try_alloc<int>(self.view.text_size()+1);
+        if(self.items==null || self.names==null || self.words==null || self.advances==null){return;}
+        let work:int=0;
+        for(let row_index:int=0;row_index<self.view.line_count();row_index++){
+            val line:viewer::Line=self.view.line(row_index);let offset:int=0;
+            while(offset<line.size){
+                work+=offset;if(work>8000000){return;}
+                val advance:int=metric(slice_of(self.view.line_text(row_index),0,offset));
+                if(advance<0 || advance>2147483647){return;}self.advances[line.start+offset]=advance;
+                offset++;while(offset<line.size && !self.boundary(line.start+offset)){offset++;}
+            }
+        }
+        // Root name is the validated document title, including its decoded content.
+        borrow tree:doctree::Tree=document.nodes();
+        val head:doctree::NodeId=htdl::first_element(tree,tree.root());
+        val title:doctree::NodeId=htdl::first_element(tree,head);
+        let t:doctree::NodeId=tree.first_child(title);
+        while(!doctree::absent(t)){
+            if(tree.kind(t)==2){for(let i:int=0;i<htdl::value_size(tree,t);i++){
+                if(!self.append_name(htdl::value_byte(tree,t,i))){return;}
+            }}t=tree.next_sibling(t);
+        }
+        self.words[6]=0;self.words[7]=self.names_used;
+        let at:int=0;
+        while(at<self.view.line_count()){
+            val first:int=at;val line:viewer::Line=self.view.line(at);
+            while(at+1<self.view.line_count() && viewer::same(self.view.line(at+1).node,line.node)){at++;}
+            val start:int=self.names_used;val label:doctree::NodeId=htdl::attribute(tree,line.node,10);
+            if(line.kind==9 && !doctree::absent(label)){
+                for(let i:int=0;i<htdl::value_size(tree,label);i++){
+                    if(!self.append_name(htdl::value_byte(tree,label,i))){return;}
+                }
+            }else{
+                val last:viewer::Line=self.view.line(at);
+                for(let i:int=line.start;i<last.start+last.size;i++){
+                    if(!self.append_name(self.view.text_bytes()[i])){return;}
+                }
+            }
+            self.items[self.count]=new Item(line.node,first,at,line.kind,line.disabled,start,self.names_used-start);
+            self.count++;at++;
+        }
+        self.active=true;
+    }
+    private fn append_name(borrow mut self,c:byte):bool{
+        if(self.names_used==len(self.names)){return false;}self.names[self.names_used]=c;self.names_used++;return true;
+    }
+    fn is_open(borrow self):bool{return self.active && self.view.is_open();}
+    fn snapshot(borrow self):borrow(self) viewer::View{return self.view;}
+    fn item_count(borrow self):int{return self.count;}
+    fn item(borrow self,index:int):Item{assert(index>=0 && index<self.count);return self.items[index];}
+    fn item_name(borrow self,index:int):borrow(self) slice<byte>{
+        val item:Item=self.item(index);return slice_of(self.names,item.name_start,item.name_size);
+    }
+    fn selection_start(borrow self):int{if(self.anchor<self.caret){return self.anchor;}return self.caret;}
+    fn selection_end(borrow self):int{if(self.anchor>self.caret){return self.anchor;}return self.caret;}
+    fn selected_text(borrow self):borrow(self) slice<byte>{
+        borrow content:slice<byte>=self.view.text_bytes();
+        return slice_of(content,self.selection_start(),self.selection_end()-self.selection_start());
+    }
+    private fn boundary(borrow self,at:int):bool{
+        if(at<0 || at>self.view.text_size()){return false;}
+        if(at==self.view.text_size()){return true;}
+        val b:byte=self.view.text_bytes()[at];return b<128 || b>=192;
+    }
+    fn select(borrow mut self,anchor:int,caret:int):bool{
+        if(!self.is_open() || !self.boundary(anchor) || !self.boundary(caret)){return false;}
+        self.anchor=anchor;self.caret=caret;return true;
+    }
+    private fn step(borrow self,at:int,back:bool):int{
+        let result:int=at;
+        if(back){if(result==0){return 0;}result--;while(!self.boundary(result)){result--;}}
+        else{if(result==self.view.text_size()){return result;}result++;while(!self.boundary(result)){result++;}}
+        return result;
+    }
+    private fn point(borrow self,x:int,y:int):int{
+        // All native coordinates are i32; hostile synthetic inputs are bounded.
+        if(x< -2147483648 || x>2147483647 || y<0 || y>=self.view.viewport_height()){return -1;}
+        for(let i:int=0;i<self.view.line_count();i++){
+            val l:viewer::Line=self.view.line(i);val top:int=l.y-self.view.scroll();
+            if(top<4 || top+self.view.row_height()+4>self.view.viewport_height()){continue;}
+            if(y<top-4 || y>=top+self.view.row_height()+4){continue;}
+            let offset:int=0;let prior:int=0;
+            while(offset<l.size){
+                val end:int=self.step(l.start+offset,false)-l.start;
+                let width:int=l.width;if(end<l.size){width=self.advances[l.start+end];}
+                if(x-36<prior+(width-prior)/2){return l.start+offset;}
+                prior=width;offset=end;
+            }return l.start+l.size;
+        }return -1;
+    }
+    fn restore(borrow mut self,borrow previous:Reader):void{
+        if(!self.is_open() || !previous.is_open() || self.view.instance()!=previous.snapshot().instance()){return;}
+        self.view.restore(previous.snapshot());self.select(previous.anchor,previous.caret);
+        self.last_request=previous.last_request;
+        // Reflow cancels gestures/modifiers; no implicit activation or copying.
+    }
+    fn close(borrow mut self):void{self.active=false;self.dragging=false;if(self.view!=null){self.view.close();}}
+    fn drop(borrow mut self):void{self.close();}
+    /// Changes 4 = explicit copy request; 5/6 = 200%/100% zoom request.
+    fn dispatch(borrow mut self,document:int,event:window::Event):viewer::Change{
+        val none:viewer::Change=new viewer::Change();
+        if(!self.is_open() || document!=self.view.instance() || event.instance!=self.window_instance ||
+           event.status!=0 || event.request_id<=self.last_request){return none;}
+        self.last_request=event.request_id;
+        if(event.kind==11){
+            if(event.arg0!=document || event.arg1<1 || event.arg1>self.count){return none;}
+            val item:Item=self.items[event.arg1-1];
+            if(item.role!=9 || item.disabled!=0){return none;}
+            return new viewer::Change(2,item.node);
+        }
+        if(event.kind==5 || event.kind==10){self.dragging=false;self.control=false;self.shift=false;}
+        if(event.kind==3 && (event.arg1==0 || event.arg1==1)){
+            val down:bool=event.arg1==1;
+            if(event.arg0==17){self.control=down;}
+            if(event.arg0==16){self.shift=down;}
+            if(self.control && down){
+                if(event.arg0==65){self.select(0,self.view.text_size());return new viewer::Change(1,new doctree::NodeId());}
+                if(event.arg0==67){return new viewer::Change(4,new doctree::NodeId());}
+                if(event.arg0==187 || event.arg0==107){return new viewer::Change(5,new doctree::NodeId());}
+                if(event.arg0==189 || event.arg0==109 || event.arg0==48){return new viewer::Change(6,new doctree::NodeId());}
+            }
+            if(down && self.shift && (event.arg0==37 || event.arg0==39)){
+                self.caret=self.step(self.caret,event.arg0==37);return new viewer::Change(1,new doctree::NodeId());
+            }
+        }
+        if(event.kind==7){
+            self.dragging=false;
+            val at:int=self.point(event.arg0,event.arg1);
+            if(at>=0){
+                // Buttons retain native press/release semantics; content starts a drag.
+                let button:bool=false;
+                for(let i:int=0;i<self.count;i++){
+                    val item:Item=self.items[i];val first:viewer::Line=self.view.line(item.first);val last:viewer::Line=self.view.line(item.last);
+                    if(item.role==9 && at>=first.start && at<=last.start+last.size){button=true;}
+                }
+                if(!button){if(!self.shift){self.anchor=at;}self.caret=at;self.dragging=true;}
+            }
+        }
+        if((event.kind==4 || event.kind==8) && self.dragging){
+            val at:int=self.point(event.arg0,event.arg1);if(at>=0){self.caret=at;}
+            if(event.kind==8){self.dragging=false;}return new viewer::Change(1,new doctree::NodeId());
+        }
+        val change:viewer::Change=self.view.dispatch(document,event);
+        if(change.kind==3){self.close();}return change;
+    }
+    fn copy(borrow self,borrow window:window::Window):int{
+        if(!self.is_open() || !window.opened()){return -2;}
+        borrow content:slice<byte>=self.selected_text();if(len(content)==0){return 0;}
+        own buffer:*byte=try_alloc<byte>(len(content));if(buffer==null){return -4;}
+        for(let i:int=0;i<len(content);i++){buffer[i]=content[i];}
+        unsafe{return int(native_copy(window.platform_token(),buffer,len(buffer)));}
+    }
+    /// Publish a flat document/semantic-block MSAA projection, never page pointers.
+    fn publish(borrow mut self,borrow window:window::Window):int{
+        if(!self.is_open() || !window.opened()){return -2;}
+        self.words[0]=1;self.words[1]=0;self.words[2]=0;self.words[3]=0;
+        self.words[4]=self.view.viewport_width();self.words[5]=self.view.viewport_height();
+        for(let i:int=0;i<self.count;i++){
+            val item:Item=self.items[i];val at:int=(i+1)*8;
+            self.words[at]=item.role;self.words[at+1]=item.disabled;
+            if(viewer::same(item.node,self.view.focus_node())){self.words[at+1]+=2;}
+            // Partially drawn rows are omitted, just as in paint/hit testing.
+            let visible_top:int= -1;let visible_bottom:int=0;
+            for(let row:int=item.first;row<=item.last;row++){
+                val y:int=self.view.line(row).y-self.view.scroll();
+                if(y>=4 && y+self.view.row_height()+4<=self.view.viewport_height()){
+                    if(visible_top<0){visible_top=y-4;}visible_bottom=y+self.view.row_height()+4;
+                }
+            }
+            self.words[at+2]=24;self.words[at+3]=visible_top;
+            self.words[at+4]=self.view.viewport_width()-48;self.words[at+5]=visible_bottom-visible_top;
+            if(visible_top<0){self.words[at+1]+=4;self.words[at+3]=0;self.words[at+5]=0;}
+            self.words[at+6]=item.name_start;self.words[at+7]=item.name_size;
+        }
+        unsafe{return int(native_access(window.platform_token(),self.view.instance(),self.words,self.count+1,self.names,self.names_used));}
+    }
+    fn paint(borrow self,borrow mut window:window::Window,scale:int):bool{
+        if(!self.is_open() || (scale!=1000 && scale!=2000) || window.clear(u32(0xf4f1eaff))!=0){return false;}
+        for(let i:int=0;i<self.view.line_count();i++){
+            val l:viewer::Line=self.view.line(i);val y:int=l.y-self.view.scroll();
+            if(y<4 || y+self.view.row_height()+4>self.view.viewport_height()){continue;}
+            let color:u32=u32(0x223143ff);if(l.kind==8){color=u32(0x006d77ff);}
+            val selected:bool=self.selection_start()<l.start+l.size && self.selection_end()>l.start;
+            if(l.kind==9){
+                let bg:u32=u32(0xd9e6e4ff);if(l.disabled==1){bg=u32(0xe2e0daff);color=u32(0x777777ff);}
+                if(viewer::same(l.node,self.view.focus_node()) && !selected){bg=u32(0x006d77ff);color=u32(0xffffffff);}
+                if(viewer::rect(window,24,y-4,self.view.viewport_width()-48,self.view.row_height()+8,bg)!=0){return false;}
+                // Keep focus visible without white text on a pale selection.
+                if(viewer::same(l.node,self.view.focus_node()) && selected){
+                    if(viewer::rect(window,24,y-4,self.view.viewport_width()-48,2,u32(0x006d77ff))!=0 ||
+                       viewer::rect(window,24,y+self.view.row_height()+2,self.view.viewport_width()-48,2,u32(0x006d77ff))!=0 ||
+                       viewer::rect(window,24,y-4,2,self.view.row_height()+8,u32(0x006d77ff))!=0 ||
+                       viewer::rect(window,self.view.viewport_width()-26,y-4,2,self.view.row_height()+8,u32(0x006d77ff))!=0){return false;}
+                }
+            }
+            let a:int=self.selection_start();let b:int=self.selection_end();
+            if(a<l.start){a=l.start;}if(b>l.start+l.size){b=l.start+l.size;}
+            if(a<b){
+                val x:int=self.advances[a];let end:int=l.width;if(b<l.start+l.size){end=self.advances[b];}
+                if(x<0 || end<x || viewer::rect(window,36+x,y,end-x,self.view.row_height(),u32(0xadd8f0ff))!=0){return false;}
+            }
+            borrow content:slice<byte>=self.view.line_text(i);own buffer:*byte=try_alloc<byte>(len(content));if(buffer==null){return false;}
+            for(let j:int=0;j<len(content);j++){buffer[j]=content[j];}
+            let result:int=0;unsafe{result=int(native_text(window.platform_token(),i32(36),i32(y),buffer,len(buffer),color,i32(scale)));}
+            if(result!=0){return false;}
+        }return window.present()==0;
+    }
+}
+
+/// Build a fresh reader with matching font metrics. Failed candidates stay closed.
+public safe fn create(borrow document:documents::Document,window_instance:int,width:int,height:int,scale:int):own Reader{
+    val metrics:int=measure(utf8("M"),scale);if(metrics<0){return try_new Reader(document,window_instance,0,0,0,width_100);}
+    if(scale==2000){return try_new Reader(document,window_instance,width,height,metrics/4294967296,width_200);}
+    return try_new Reader(document,window_instance,width,height,metrics/4294967296,width_100);
+}

@@ -26,8 +26,9 @@ contados (relatório 2026-10-29-m1-plataforma-windows.md). Alocação de buffers
 continuam pendentes. M2 exige ampliar teclado/ponteiro,
 texto/DPI e acessibilidade, além de verificar a experiência visual.
 
-Ordem imediata: seleção de texto e ponte acessível M3; aceite real de
-200%/monitores/leitor de tela e captura do desktop para M2/M3. Janela integrada
+Ordem imediata: aceite de leitor de tela real/desktop, políticas de contraste/
+movimento e DPI/monitores; texto por grafemas/shaping/bidi/IME. Seleção de leitura,
+projeção MSAA e zoom de fonte 100/200% estão entregues na unidade Reader. Janela integrada
 com foco/teclado/clique/scroll/resize já entregue na continuação abaixo; parser
 bootstrap também já existe. Catálogo completo HTDL, recuperação de editor e
 mutações semânticas permanecem abertos. M0-EXEC exige spikes VM/Wasm/decisão,
@@ -97,3 +98,12 @@ resize sem substituir em falha e descarte de eventos semânticos antigos.
 captura desktop falhou. E04-02/E04-03=2, E04-04=1, E07-04=2, E08-02/E08-05=1.
 **27,00%, 0/5 gates**; M2/M3 parciais. Próximo: seleção, acessibilidade e
 aceite real 200%/leitor/monitores; não omitir catálogo/mutações/M0-EXEC/M1 RSS.
+
+Continuação Reader M3: [relatório](../relatorios/2026-11-01-m3-leitura-acessivel.md),
+seleção/cópia, reflow 100/200% e MSAA com cliente externo. Construção/publicação
+fallíveis preservam anterior, referências COM e ações recebem instância de
+conteúdo. 116/92 métodos Windows/Linux executados; 1/6 not-run. **28,90%, 0/5**.
+Desktop Computer Use parou em app approval timed out; leitor real, grafemas,
+IME, contraste/movimento e DPI/monitores continuam abertos. O zoom é da fonte.
+Projeção plana não encerra DOM/HTDL completo. M0-EXEC/M1 RSS/FS/SSC/M4–M9 e
+Easy (último) permanecem na fila sem promoção. Não repetir as fundações já feitas.

@@ -3,7 +3,7 @@
 Planejamento de 29/10/2026, com continuidade atualizada em 01/11/2026:
 
 - [Estado atual, branches e índice de relatórios](docs/ecossistema/ESTADO-ATUAL.md).
-- [Última unidade: janela e apresentação HTDL local](docs/relatorios/2026-11-01-m2-visualizador-htdl.md).
+- [Última unidade: seleção, zoom e acessibilidade HTDL local](docs/relatorios/2026-11-01-m3-leitura-acessivel.md).
 
 - [Plano mestre completo](docs/ecossistema/PLANO-MESTRE.md).
 - [Régua de conclusão e diagnóstico inicial](docs/ecossistema/PROGRESSO.md).

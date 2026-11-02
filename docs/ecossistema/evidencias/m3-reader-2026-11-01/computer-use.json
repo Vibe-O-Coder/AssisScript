@@ -1,0 +1,9 @@
+{
+  "tool": "node_repl @oai/sky",
+  "target": "build/interactive/htdl-reader-demo.exe",
+  "result": "not-run",
+  "error": "Computer Use app approval timed out",
+  "desktop_capture": false,
+  "screen_reader": "not-run",
+  "fallback": "native surfaces are identified separately; no desktop capture acceptance inferred"
+}

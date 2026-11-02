@@ -1,0 +1,5 @@
+import "std/reader.assis";
+safe fn main():int{
+ assert(!reader::available());assert(reader::measure(utf8("M"),1000)== -3);
+ assert(reader::measure(utf8("M"),2000)== -3);assert(reader::measure(utf8("M"),1500)== -1);
+ print("reader provider unavailable");return 0;}

@@ -20,7 +20,8 @@ def build(output, testing=False, cc=None):
                '-shared', '-static-libgcc', '-Wl,--no-insert-timestamp']
     if testing:
         command.append('-DASSISP_TESTING')
-    command += [str(ROOT / 'providers/platform/windows.c'), '-o', str(output), '-luser32', '-lgdi32']
+    command += [str(ROOT / 'providers/platform/windows.c'), '-o', str(output), '-luser32', '-lgdi32',
+                '-loleacc', '-loleaut32', '-lole32', '-luuid']
     environment = dict(os.environ, PATH=str(Path(compiler).parent) + os.pathsep + os.environ.get('PATH', ''))
     subprocess.run(command, cwd=ROOT, env=environment, check=True)
     return command

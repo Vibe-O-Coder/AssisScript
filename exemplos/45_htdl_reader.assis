@@ -1,0 +1,50 @@
+// Trusted local reader: Ctrl+A/C, Shift+Left/Right, drag, Ctrl+plus/minus/0.
+import "std/reader.assis";
+struct Reading{own reader:reader::Reader;}
+safe fn open_argument():own File{unsafe{
+    val size:int=arg_size(1);if(size<1 || size>32767){return file_open("",9);}
+    let path:*byte=alloc<byte>(size+1);defer free(path);
+    if(arg_copy(1,path,size+1)!=size){return file_open("",9);}
+    return file_open(text(path),0);
+}}
+
+safe fn main():int{
+    if(arg_count()!=2){print("Uso: htdl-reader <documento.htdl>");return 1;}
+    own input:File=open_argument();if(input==null){return 2;}
+    own data:*byte=try_alloc<byte>(1048577);own chunk:*byte=try_alloc<byte>(4096);
+    if(data==null || chunk==null){return 2;}let size:int=0;
+    while(true){val read:int=file_read(input,chunk,4096);if(read<0){return 2;}if(read==0){break;}
+        if(read>1048576-size){return 3;}for(let i:int=0;i<read;i++){data[size+i]=chunk[i];}size+=read;}
+    if(file_close(input)!=0){return 2;}
+    own store:documents::Store=try_new documents::Store(32000000,250000,1000);if(store==null){return 2;}
+    val parsed:htdl::Diagnostic=htdl::load(store,1,slice_of(data,0,size));
+    if(parsed.code!=0){print("HTDL",parsed.code,parsed.line,parsed.column);return 3;}
+    if(!reader::available()){return 4;}let scale:int=1000;
+    own reading:Reading=try_new Reading(reader::create(store.active_document(),1,780,520,scale));
+    if(reading==null || reading.reader==null || !reading.reader.is_open()){return 5;}
+    own window:window::Window=try_new window::Window(1,780,520,"AssisScript — leitura HTDL acessivel");
+    if(window==null || !window.opened()){return 4;}
+    if(reading.reader.publish(window)!=0 || !reading.reader.paint(window,scale)){return 4;}
+    print("READER",scale,reading.reader.item_count());
+    while(reading.reader.is_open()){
+        val event:window::Event=window.poll(50);if(event.status<0){return 4;}if(event.status==1){continue;}
+        val change:viewer::Change=reading.reader.dispatch(1,event);if(change.kind==3){break;}
+        if(event.kind==2 || change.kind==5 || change.kind==6){
+            let width:int=reading.reader.snapshot().viewport_width();let height:int=reading.reader.snapshot().viewport_height();
+            let requested:int=scale;if(event.kind==2){width=event.arg0;height=event.arg1;}
+            if(change.kind==5){requested=2000;}if(change.kind==6){requested=1000;}
+            own candidate:reader::Reader=reader::create(store.active_document(),1,width,height,requested);
+            if(candidate!=null && candidate.is_open()){
+                candidate.restore(reading.reader);
+                if(candidate.publish(window)==0){reading.reader=move(candidate);scale=requested;print("REFLOW",scale,width,height);}
+            }
+            if(!reading.reader.paint(window,scale)){return 4;}continue;
+        }
+        if(change.kind==4){val copied:int=reading.reader.copy(window);print("COPY",copied);continue;}
+        if(change.kind==2){print("ACTIVATE",change.node.instance,change.node.slot,change.node.generation);}
+        if(change.kind==1 || change.kind==2){
+            if(reading.reader.publish(window)!=0 || !reading.reader.paint(window,scale)){return 4;}
+        }
+    }
+    reading.reader.close();return int(window.close()!=0);
+}

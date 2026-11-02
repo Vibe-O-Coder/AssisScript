@@ -1,0 +1,173 @@
+{
+  "schema": "assisscript-reader-native-v1",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "compiler_sha256": "afe1ddf458764f67362ac6285e4d907c036307cebdd1cdc3a1a533b502b8db42",
+  "checks": [
+    {
+      "name": "htdl-reader",
+      "command": [
+        "python",
+        "tests/test-htdl-reader.py"
+      ],
+      "returncode": 0,
+      "registered": 10,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 26.514727100000528,
+      "log": "windows-htdl-reader.log",
+      "log_sha256": "8520671a5a6ab6f1e0a4addf8ab0b534b7161e0eeb2c5ed1dab2534161b32065"
+    },
+    {
+      "name": "platform-window",
+      "command": [
+        "python",
+        "tests/test-platform-window.py"
+      ],
+      "returncode": 0,
+      "registered": 19,
+      "executed": 19,
+      "not_run": 0,
+      "seconds": 14.170366700000159,
+      "log": "windows-platform-window.log",
+      "log_sha256": "841237880a551f55e1d43c7c0c42456c279b34222fd104ef240ff899095f30ff"
+    },
+    {
+      "name": "htdl-viewer",
+      "command": [
+        "python",
+        "tests/test-htdl-viewer.py"
+      ],
+      "returncode": 0,
+      "registered": 12,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 25.280716100000063,
+      "log": "windows-htdl-viewer.log",
+      "log_sha256": "d5849cf1c4c4c0980f50d8e201075b409dc404abf1d95006f87fee7c0dcbd89d"
+    },
+    {
+      "name": "htdl-parser",
+      "command": [
+        "python",
+        "tests/test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "registered": 16,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 69.8079232,
+      "log": "windows-htdl-parser.log",
+      "log_sha256": "144c4b7564fc125f38ffd79d3996c8bc26c9703287041df9f4940e69a436be50"
+    },
+    {
+      "name": "document-memory",
+      "command": [
+        "python",
+        "tests/test-document-memory.py"
+      ],
+      "returncode": 0,
+      "registered": 12,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 18.3525269999991,
+      "log": "windows-document-memory.log",
+      "log_sha256": "8dc5eba880c11d7e022b48382c9c32a5071f48de664aaa846f2d43394ae711dd"
+    },
+    {
+      "name": "document-tree",
+      "command": [
+        "python",
+        "tests/test-document-tree.py"
+      ],
+      "returncode": 0,
+      "registered": 9,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 17.0535519999994,
+      "log": "windows-document-tree.log",
+      "log_sha256": "90e30700faaf1da0d3d7b28443cb8414ae8db832d6f2a8db108a98ededd213a3"
+    },
+    {
+      "name": "ffi",
+      "command": [
+        "python",
+        "tests/test-ffi.py"
+      ],
+      "returncode": 0,
+      "registered": 9,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 6.527513199998793,
+      "log": "windows-ffi.log",
+      "log_sha256": "0199b19921c1ca9c4bc193fc9c2bdb9847f6bd4623488eb1e7ba8e5e3af90389"
+    },
+    {
+      "name": "english-api",
+      "command": [
+        "python",
+        "tests/test-english-api.py"
+      ],
+      "returncode": 0,
+      "registered": 4,
+      "executed": 4,
+      "not_run": 0,
+      "seconds": 2.5603860999999597,
+      "log": "windows-english-api.log",
+      "log_sha256": "2ac88d8f39279d1704d78f42260ff344520f298baaa6b790338f49998bcb946a"
+    },
+    {
+      "name": "packages",
+      "command": [
+        "python",
+        "tests/test-packages.py"
+      ],
+      "returncode": 0,
+      "registered": 13,
+      "executed": 12,
+      "not_run": 1,
+      "seconds": 3.5765019999998913,
+      "log": "windows-packages.log",
+      "log_sha256": "cc837f67957d74363145cc8a905d7515e6de55dabe55a368ea7ced4aee51e515"
+    },
+    {
+      "name": "complete-ir",
+      "command": [
+        "python",
+        "tests/test-complete-ir.py"
+      ],
+      "returncode": 0,
+      "registered": 7,
+      "executed": 7,
+      "not_run": 0,
+      "seconds": 2.688143900000796,
+      "log": "windows-complete-ir.log",
+      "log_sha256": "4f694418b1a05b5af890bee0b1ca0c4deab20b858750e2864bd84bb9e64075e4"
+    },
+    {
+      "name": "optimization",
+      "command": [
+        "python",
+        "tests/test-optimization.py"
+      ],
+      "returncode": 0,
+      "registered": 6,
+      "executed": 6,
+      "not_run": 0,
+      "seconds": 12.099527399999715,
+      "log": "windows-optimization.log",
+      "log_sha256": "d5cd3b5f6237ce4fc5fd2e663fc4b521575714086eb8e55906881710a8e18b54"
+    }
+  ],
+  "passed": true,
+  "native_provider": "tested",
+  "visual_inspection": "not-run: Computer Use app approval timed out",
+  "accessibility": "external MSAA client tested on Windows; real screen reader not-run",
+  "scale_200": "Windows font zoom and reflow tested; OS DPI/monitors not-run",
+  "selection_ime": "scalar selection tested; grapheme editing/IME unsupported",
+  "other_native_targets": {
+    "macos-x64": "not-run",
+    "macos-arm64": "not-run",
+    "linux-arm64": "not-run"
+  }
+}

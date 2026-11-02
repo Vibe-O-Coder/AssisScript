@@ -1,3 +1,19 @@
+# Continuação Reader — 01/11/2026
+
+**28,90%, 0/5 gates**. Base remota #18 conferida em
+`4e7f6b84c2e933bc7b4196f06b4af80d09c289f6`; nova cópia isolada
+`AssisScript/work/viewer-accessibility-20261101`, branch
+`work/m3-viewer-accessibility-2026-11-01`.
+[Relatório atual](../relatorios/2026-11-01-m3-leitura-acessivel.md) e
+[API Reader](../BIBLIOTECA-reader.md). Publicação final está no adendo do relatório;
+confira SHA/PR antes de continuar. O texto abaixo conserva as entregas anteriores.
+
+Seleção/cópia de leitura, zoom da fonte 100/200%, snapshot e projeção MSAA
+nativos implementados. 116 métodos Windows/92 Linux executados, 1/6 not-run;
+quatro superfícies do provider, sem captura desktop/aceite auditivo. Não há
+edição/grafemas/IME, políticas de contraste/movimento ou DPI multimonitor aceito.
+Próximos aceites e limites estão na fila e no masterprompt; meta 30% pendente.
+
 # Continuidade verificada — AssisScript e ecossistema
 
 ## Estado de continuidade — 01/11/2026

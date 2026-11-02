@@ -2,8 +2,10 @@
    are retained. Build/test diagnostics are excluded from production DLLs. */
 #define WIN32_LEAN_AND_MEAN
 #define _WIN32_WINNT 0x0A00
+#define COBJMACROS
 #include <windows.h>
 #include <windowsx.h>
+#include <oleacc.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -16,6 +18,7 @@
 #define PIXELS_TOTAL (16u * 1024u * 1024u)
 #define GENERATIONS UINT64_C(0x0000ffffffffffff)
 typedef struct {int64_t kind, a, b, request;} Event;
+typedef struct Access Access;
 typedef struct {
     HDC dc, mask_dc;
     HBITMAP bitmap, mask_bitmap;
@@ -31,6 +34,7 @@ typedef struct {
     Surface surface;
     Event events[EVENTS];
     unsigned count;
+    Access *access;
 } Window;
 static Window windows[WINDOWS];
 static volatile LONG owner;
@@ -39,6 +43,8 @@ static size_t total_pixels;
 static ATOM window_class;
 static HINSTANCE module;
 static const wchar_t class_name[] = L"AssisPlatformV1";
+static LRESULT accessible_object(Window *w, WPARAM wp);
+static void accessibility_close(Window *w);
 #ifdef ASSISP_TESTING
 static int64_t fail_after = -1;
 static int checkpoints;
@@ -144,6 +150,9 @@ static LRESULT CALLBACK procedure(HWND hwnd, UINT message, WPARAM wp, LPARAM lp)
         }
         enqueue(w, 2, width, height); return 0;
     }
+    case WM_GETOBJECT:
+        if ((LONG)lp == OBJID_CLIENT && w->access) return accessible_object(w, wp);
+        break;
     case WM_KEYDOWN: case WM_KEYUP: enqueue(w, 3, (int64_t)wp, message == WM_KEYDOWN); return 0;
     case WM_MOUSEMOVE: enqueue(w, 4, GET_X_LPARAM(lp), GET_Y_LPARAM(lp)); return 0;
     case WM_LBUTTONDOWN:
@@ -300,13 +309,23 @@ int32_t assisp_clear(int64_t token, uint32_t rgba) {
     for (size_t i = 0; i < count; i++) w->surface.pixels[i] = over(rgba, w->surface.pixels[i], 255);
     return 0;
 }
-int32_t assisp_text_utf8(int64_t token, int32_t x, int32_t y, const uint8_t *text, int64_t length, uint32_t rgba) {
+static HFONT reader_font(int scale) {
+    if (scale == 1000) return (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+    if (scale != 2000) return NULL;
+    LOGFONTW font;
+    if (!GetObjectW(GetStockObject(DEFAULT_GUI_FONT), sizeof(font), &font)) return NULL;
+    font.lfHeight *= 2; font.lfWidth *= 2;
+    return resource_allowed() ? CreateFontIndirectW(&font) : NULL;
+}
+static int32_t draw_scaled(int64_t token, int32_t x, int32_t y, const uint8_t *text, int64_t length, uint32_t rgba, int scale) {
     Window *w = NULL; int code = access_window(token, &w); if (code) return code;
+    if (scale != 1000 && scale != 2000) return -1;
     wchar_t *wide = NULL; int count = 0; code = wide_text(text, length, 1048576, &wide, &count);
     if (code) return code;
+    HFONT font = reader_font(scale); if (!font) {free(wide); return -4;}
     Surface *s = &w->surface; size_t pixels = (size_t)s->width * s->height;
     GdiFlush(); memset(s->mask, 0, pixels * sizeof(uint32_t));
-    HGDIOBJ previous = SelectObject(s->mask_dc, GetStockObject(DEFAULT_GUI_FONT));
+    HGDIOBJ previous = SelectObject(s->mask_dc, font);
     SetTextColor(s->mask_dc, RGB(255, 255, 255)); SetBkMode(s->mask_dc, TRANSPARENT);
     int64_t cursor = x;
     for (int offset = 0; offset < count && cursor < s->width;) {
@@ -317,7 +336,7 @@ int32_t assisp_text_utf8(int64_t token, int32_t x, int32_t y, const uint8_t *tex
             !TextOutW(s->mask_dc, (int)cursor, y, wide + offset, chunk)) {code = -6; break;}
         cursor += extent.cx; offset += chunk;
     }
-    SelectObject(s->mask_dc, previous); free(wide); GdiFlush();
+    SelectObject(s->mask_dc, previous); if (scale != 1000) DeleteObject(font); free(wide); GdiFlush();
     if (code) return code;
     for (size_t i = 0; i < pixels; i++) {
         uint32_t mask = s->mask[i];
@@ -325,6 +344,9 @@ int32_t assisp_text_utf8(int64_t token, int32_t x, int32_t y, const uint8_t *tex
         if (coverage) s->pixels[i] = over(rgba, s->pixels[i], coverage);
     }
     return 0;
+}
+int32_t assisp_text_utf8(int64_t token, int32_t x, int32_t y, const uint8_t *text, int64_t length, uint32_t rgba) {
+    return draw_scaled(token, x, y, text, length, rgba, 1000);
 }
 int32_t assisp_present(int64_t token) {
     Window *w = NULL; int code = access_window(token, &w); if (code) return code;
@@ -345,9 +367,11 @@ int32_t assisp_close(int64_t token) {
 #endif
         if (!destroyed) {w->active = 1; w->failure = -6; return -6;}
     }
+    accessibility_close(w);
     total_pixels -= (size_t)w->surface.width * w->surface.height;
     free_surface(&w->surface); w->failure = 0; w->token = 0; unregister_if_idle(); return 0;
 }
+#include "reader.inc"
 #ifdef ASSISP_TESTING
 ASSISP_API int64_t assisp_test_control(int64_t operation, int64_t value) {
     if (!on_owner()) return -5;
@@ -355,6 +379,7 @@ ASSISP_API int64_t assisp_test_control(int64_t operation, int64_t value) {
     if (operation == 1) return checkpoints;
     if (operation == 2) {unavailable = value != 0; return 0;}
     if (operation == 3) return (int64_t)total_pixels;
+    if (operation == 9) return access_objects;
     if (operation == 7) {fail_destroy = value != 0; return 0;}
     if (operation == 8) {
         for (unsigned i = 0; i < WINDOWS; i++) if (windows[i].active) return windows[i].token;
