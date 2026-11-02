@@ -1,4 +1,383 @@
 {
-  "status": "pending-verification",
-  "note": "Not evidence of success or publication"
+  "status": "published-and-verified",
+  "repository": "Vibe-O-Coder/AssisScript",
+  "branch": "work/m3-htdl-catalog-2026-11-02",
+  "commit": "77f83754a7a0b030c6356af28cb39a3b54eaf50e",
+  "url": "https://github.com/Vibe-O-Coder/AssisScript/commit/77f83754a7a0b030c6356af28cb39a3b54eaf50e",
+  "verified_paths": 73,
+  "pull_request": { "status": "not-created", "reason": "GitHub connector returned 403 Resource not accessible by integration" },
+  "verified_full_tree_entries": 2341,
+  "verification": [
+    "git ls-remote returned the exact published implementation SHA",
+    "git fetch returned the same SHA; complete recursive fetched/local trees matched",
+    "GitHub connector fetch_commit independently returned the exact SHA"
+  ],
+  "paths": {
+    ".gitattributes": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "58062dbd56e0ced84a7adc5c1aaa2751c40b696a"
+    },
+    "Makefile": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bee2c84b3406e65631e00809785df001f3a2ec61"
+    },
+    "PLANO-ECOSSISTEMA.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "111822e736d7fb16d0b41ddf8c5fa59c310b7deb"
+    },
+    "docs/BIBLIOTECA-htdl.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "44ac3ff45e877e86dedfa5b176e62c48a6f21bec"
+    },
+    "docs/ecossistema/ESTADO-ATUAL.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "22d7fe5a3c239bb40d59e0bd0a95f2f74ba4c7b4"
+    },
+    "docs/ecossistema/FILA-M0-M1.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "767815f1f8dac4b2c7df298c13ceb06a7e19717b"
+    },
+    "docs/ecossistema/MASTERPROMPT.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d9ac0061b1b374110407e38690b6539a6e8d213"
+    },
+    "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c61f284926792789e9551be8d5ca01d4a0f8f41"
+    },
+    "docs/ecossistema/PLANO-MESTRE.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ff6377878f0fe34ab78c853379740e97cb85e435"
+    },
+    "docs/ecossistema/PROGRESSO.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f0e87495a8fae922181a8e680b4f514f803a063f"
+    },
+    "docs/ecossistema/PROGRESSO.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de54e1088ff8b6257e6ec3743a28359b6b032c09"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/before.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "24d05a2d5c707e8f783f7322957aeafc50423799"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-environment.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6cdfef88da83af1254d4b0819d1715726de31bdb"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-example-52-optimized.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "950fb00ff82dc88e68e38fbc04c8e7be395592e2"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-example-52-reference.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "950fb00ff82dc88e68e38fbc04c8e7be395592e2"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-example-52.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7cc6eb06b23829e9545aa96294bb1181deaacf68"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-examples.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "10f0182c22cd8835398501144ba7b7e68b078a72"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-htdl-catalog-both.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3a90bf03dcae62ff84f8d98d7ee7dc99b9b33154"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-htdl-parser-both.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "455b51b55851f0c7d0a41e744a4ae7e0c75e3deb"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-htdl-reader-both.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6451029a7fe82b68256218f435a0df2959f6f2b0"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-installed-checker.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7efa88cd28020d0ab954ac4ecb16ace513e783cf"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-page-host-both.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d089d9e89531ef561c6961b554811c9ed8363eca"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-page-reader-optimized.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e93a655f1c1b1db494f63de2f7a4c604f9b499bf"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-page-reader-reference.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "337bfa208ffab128b67960e9ed85f7c2e2e12300"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux-reader-transactions-both.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "891f7cf1fe23f857a49263b53bf38401eba4f4d3"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/linux.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "800f043fd228d9c48fc52245fedf0facaef9d8c9"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/published-base.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c77d82c0af38e2fbb6ac64da488a0a012e89f3d"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/published-implementation.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "95bbc736f428ac242f8add78709057540e768f03"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/reference-integrity.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "533a06d9fc3de5d3b4376078af53bdba6056d78c"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/summary.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7d03a3b7d25dc5690f0b48db962c00c08369d7e7"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-editor.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "309e085dca8a31a0441a9f93fa4420b9d5da9bd8"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-editor.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31618fd2ce3227a147d717b8578a82930c9b67c7"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-environment.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "10980b09ced01c5bab9e5ce0050e33a03eef3958"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-example-52-optimized.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "950fb00ff82dc88e68e38fbc04c8e7be395592e2"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-example-52-reference.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "950fb00ff82dc88e68e38fbc04c8e7be395592e2"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-example-52.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dc8c4684eaafabf29061b64fff57d4df312c3566"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-examples.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c6d089e20a3de1b9db7b04ba9d990e3114c492e1"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-htdl-catalog-both.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c12c2a465e83b5bcf6f11477ac51dec367966244"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-htdl-parser-both.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "29f3846e2b650ae58363d54a79dc173de3efb3d9"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-htdl-reader-both.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d17203bf7e7d6c22fb17045676ae912e22dc2eca"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-node.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b3b485b697c0484a466e0294fdaf4017ce29f43f"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-node.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dad9abda1e5d88551b5148d93ae313a6210579db"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-page-host-both.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "43d25bffaaedf64e137b897e6eb0b8582f0703eb"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-page-reader-optimized.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5f0f26184980a7d0ff4d0b0b276d8694ad3e8cb2"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-page-reader-reference.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bd86f95804468375498b8b2250561cec2e9c967a"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows-reader-transactions-both.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "402baf842f48805a6d6cad63eb5e83faaee9925f"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/windows.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c0a98e1a62ba35f807f239645062076142f1643c"
+    },
+    "docs/relatorios/2026-11-02-m3-htdl-catalog.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3e4b5d1620ee5b9549984747eb98c2026e7e5ed6"
+    },
+    "exemplos/52_htdl_catalog.assis": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "52002e5c072d1ef2794ab757bf1fb128cb3b8684"
+    },
+    "instalar.sh": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ce08a837795e72fbbf24e6c83454b0dacd1ac26a"
+    },
+    "src/install_files.inc": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3162f26afc40d03d99f4549039180950d0c07e70"
+    },
+    "stdlib/catalogo.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9631b11388fec7a4342b5ed39c92d7c8c4ee7ecb"
+    },
+    "stdlib/htdl.assis": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9bf314ee2c9f9f349ac370aeb19162e5db0c156e"
+    },
+    "tests/fixtures/htdl-catalog-corpus.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4457ac3a21ee0c2e14b643a0429b5a13b67f57ba"
+    },
+    "tests/fixtures/htdl-catalog-driver.assis": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bcd1c4c5c34d645e86e4e5151e2f6c005e0f2857"
+    },
+    "tests/test-htdl-catalog.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "36f3bc81919f87bab157623e576ec78343184594"
+    },
+    "tests/test-htdl-editor.js": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "58a8ae5d066b7dbd7d88e5c1e75b82c74a25a8ac"
+    },
+    "tests/test-lsp.js": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b43370d089bffdacdc19f64a296a58ce393913a"
+    },
+    "tools/assis-lsp.js": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7b53a6ac224994eaa1da3568b074cb10eb1847c3"
+    },
+    "tools/collect-htdl-catalog-evidence.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "37b871f855cc2be4f40cb233c0e8e7fa8d4748e0"
+    },
+    "tools/collect-htdl-catalog-extra.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e9239e229f1d6b5962d6a41c416ec7d92360e8ce"
+    },
+    "tools/generate-install-manifest.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f510a7b504072a6174ed4981033799406ce6b785"
+    },
+    "tools/htdl-check.assis": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ed909fe11e3c90d98e7b33ebf835b0a500441d4"
+    },
+    "tools/package-vscode.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "db4f1f29822bf92805c8e594d988892286477483"
+    },
+    "tools/verify-htdl-catalog-evidence.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c977474a6f1c745a751667258df67d0102f53b3f"
+    },
+    "tools/verify-htdl-catalog-install.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "95549525c61eb3efd182621dc38d15c4d03d3be5"
+    },
+    "tools/verify-htdl-catalog-vsix.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "713dadcbd9de49411e00e12294efb7d50ca43464"
+    },
+    "vscode-assisscript/htdl-configuration.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "83fbef3fa8e309624f14dc4e66d1b61241b7e9c2"
+    },
+    "vscode-assisscript/package.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c614bf87ba9b479044e591311544948b86b0b064"
+    },
+    "vscode-assisscript/src/extension.js": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0eb1dbcfdd8ac9e7f9121663b0e0d71d12eed471"
+    },
+    "vscode-assisscript/src/htdl.js": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e48acff89ca855e872f848ddef640d0c38801c3"
+    },
+    "vscode-assisscript/syntaxes/htdl.tmLanguage.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1419cdb6b8ddea4595f65b8016ab4a2ec543d642"
+    },
+    "vscode-assisscript/test/extension.test.js": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "735a75dd572c7b8998547f083720b418b9b27774"
+    }
+  },
+  "publication_scope": "branch only; no merge, force push, release or claim of remote CI"
 }

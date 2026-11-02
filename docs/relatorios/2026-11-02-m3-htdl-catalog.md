@@ -211,3 +211,23 @@ python tools/verify-htdl-catalog-vsix.py
 # No Linux, ASSIS_BIN aponta ao compilador Linux novo:
 python3 tools/verify-htdl-catalog-install.py
 ```
+
+## Adendo — publicação confirmada
+
+Implementação **77f83754a7a0b030c6356af28cb39a3b54eaf50e** publicada em
+[work/m3-htdl-catalog-2026-11-02](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m3-htdl-catalog-2026-11-02).
+git ls-remote e fetch confirmaram o SHA. As árvores recursivas local/buscada
+foram comparadas integralmente: **2341 entradas**, e os **73 caminhos alterados**
+tiveram blobs/modos/tipos inventariados. O conector GitHub retornou o mesmo SHA
+independentemente. [Inventário da implementação publicada](../ecossistema/evidencias/m3-htdl-catalog-2026-11-02/published-implementation.json).
+
+PR não criada: o conector retornou **403 Resource not accessible by integration**.
+Não houve uso da credencial Git pela API para contornar essa restrição. A branch
+está publicada, sem merge/force push/release e sem alegação de CI remota.
+O inventário/adendo/continuidade têm commit documental posterior; o histórico
+identifica o SHA final do relatório. A publicação desse adendo é conferida pelo
+SHA remoto ao concluir. O masterprompt original recebe somente uma entrada de
+continuidade, preservando seu conteúdo e trabalho alheio.
+
+**43,30%, 0/5 gates; meta 50% pendente.** M3 estático/editor parcial entregue;
+fila integral e aceites preservados, Easy por último.

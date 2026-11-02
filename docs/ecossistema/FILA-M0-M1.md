@@ -1,6 +1,7 @@
-> **Continuação local validada — 43,30%, 02/11/2026, 0/5 gates; publicação no adendo.**
+> **Publicação confirmada — 43,30%, 02/11/2026, 0/5 gates.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/htdl-catalog-20261102`,
-> branch `work/m3-htdl-catalog-2026-11-02`, base publicada f00d1ff conferida.
+> branch `work/m3-htdl-catalog-2026-11-02`, implementação 77f8375 publicada.
+> SHA remoto e 73 paths/blobs/modos conferidos; PR não criada (conector 403).
 > Catálogo estático HTDL 0.1 de 23 tipos e recuperação semântica no editor;
 > Reader/pagereader conservam o bootstrap. Windows 90/0, Linux 81/9 executados/not-run;
 > 54 exemplos por host e 37 testes de editor. [Relatório e evidências](../relatorios/2026-11-02-m3-htdl-catalog.md).
