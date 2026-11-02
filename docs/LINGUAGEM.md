@@ -198,3 +198,10 @@ isolamento para scripts de páginas. Navegador, DOM, execução isolada,
 assincronia geral, interfaces e concorrência ficam fora desta revisão.
 
 O backend da alpha.15 acrescenta [IR escalar e liveness global](BACKEND-ALPHA15.md), sem alterar a sintaxe ou os contratos de ownership.
+
+## Perfil de página experimental
+
+`assis build fonte.assis --target page-asv2 -o programa.asv2` compila o
+subconjunto int/bool de [page-asv2](ecossistema/PERFIL-PAGINA-ASV2.md).
+Recursos fora do perfil são recusados, inclusive em código morto e unsafe.
+Não executa binário nativo como página e não oferece sandbox do OS.

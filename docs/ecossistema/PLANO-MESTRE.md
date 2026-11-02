@@ -1,3 +1,7 @@
+> Continuação de 02/11/2026: **36,20%, 0/5 gates**. Backend escalar ASV2,
+> SDK HTDL read-only-1 e ciclo local de página; [relatório](../relatorios/2026-11-02-m0-page-runtime.md).
+> Meta 40% pendente; escopo/aceites integrais preservados. Easy por último.
+
 > Continuação de 01/11/2026: **32,10%, 0/5 gates**. Grafemas/inglês e
 > spikes parciais M0-EXEC; [estado atual](ESTADO-ATUAL.md).
 > Meta 40% pendente;

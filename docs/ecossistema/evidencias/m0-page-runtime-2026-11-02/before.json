@@ -1,0 +1,18 @@
+{
+  "base": "1e574736ce33a16e442fb270e9d42c8c884d29f6",
+  "source": "git archive exact base; rebuilt C11 compiler",
+  "compiler_sha256": "2f930de50c3e6b69bfa5bf9d443a57fdab60d1c854ed1fa29d6d2d26042ed53e",
+  "checks": [
+    {
+      "case": "target",
+      "returncode": 2,
+      "stderr": "assis: destino desconhecido: page-asv2\n"
+    },
+    {
+      "case": "sdk",
+      "returncode": 1,
+      "stderr": "<workspace>\\build\\before-page-runtime\\sdk.assis:1:8: A001: módulo não encontrado: std/page.assis (use caminho relativo, -I ou ASSIS_PATH)\n  import \"std/page.assis\";safe fn main():int{return 0;}\n         ^\n  Ajuda: Confira o caminho relativo ao arquivo importador e as bibliotecas instaladas. Use -I pasta para bibliotecas externas.\n"
+    }
+  ],
+  "execution": "not-run: compile/import rejections"
+}

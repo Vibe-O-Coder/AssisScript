@@ -77,7 +77,7 @@
     "main": "Program entry with no parameters and int/void return.",
     "init": "Class constructor returning void.",
     "extern": "extern(\"linux-library\",\"windows-dll\",\"symbol\") fn name(...): scalar; ABI C com fronteira unsafe e dependências explícitas.",
-    "platform": "platform(\"windows-x64\") { declarações } seleciona declarações antes da resolução; linux-x64 também é suportado.",
+    "platform": "platform(\"windows-x64\") { declarações } seleciona declarações antes da resolução. page-asv2 seleciona somente o perfil escalar experimental de página; consulte PERFIL-PAGINA-ASV2.md.",
     "c_callback": "c_callback(global_function): u64 cria ponte C para função global sem captura. Exige unsafe e callback síncrono na thread principal.",
     "drop": "fn drop(borrow mut self): void em final class é chamado automaticamente antes dos campos own. Chamadas manuais são rejeitadas.",
     "closure": "Closure safe com capturas explícitas val/own/borrow. Tipo closure(args): retorno; closure mut exige acesso exclusivo. Ambiente own com destruição determinística; capturas borrow são lexicais e não escapam por move/retorno.",

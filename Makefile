@@ -216,5 +216,10 @@ test-graphemes: bin/assis
 	python3 tests/test-graphemes.py
 test-pagevm: bin/assis
 	python3 tests/test-pagevm.py
+
+.PHONY: test-page-runtime
+test-page-runtime: bin/assis
+	python3 tests/test-page-backend.py
+	python3 tests/test-page-host.py
 test-wasm-spike:
 	python3 tests/test-wasm-spike.py

@@ -1,0 +1,9 @@
+import "std/page.assis";
+
+// Compile explicitly with --target page-asv2; this is not a native program.
+safe fn main():int{
+    val kind:int=htdl_v1::event_get(0);
+    val previous:int=htdl_v1::state_get(0);
+    if(kind==2){return htdl_v1::state_set(0,previous+htdl_v1::event_get(1));}
+    return previous;
+}

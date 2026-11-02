@@ -1,3 +1,26 @@
+# Continuação ASV2 e SDK local — 02/11/2026
+
+**36,20%, 0/5 gates; meta 40% pendente.**
+[Relatório](../relatorios/2026-11-02-m0-page-runtime.md),
+[perfil](PERFIL-PAGINA-ASV2.md), [autoridade/falhas](AMEACAS-PAGINA-LOCAL-V1.md).
+Não repetir backend escalar, SDK read-only-1, projeção, células, fila ou Group.
+
+M0-EXEC: fonte real int/bool agora compila por IR para ASV2. Imports/operandos,
+memória/fuel/frames/calls, respostas e envelope de eventos têm testes nativos.
+Host local valida/copia antes de commit e invalida concessões/handles/fila;
+Group alterna páginas e aplica deadline. Isso não fecha escolha geral VM/Wasm,
+objetos/ownership, budget completo de compilação/RSS ou sandbox de processo.
+Próximo: alternativa Wasm sob restrições equivalentes e medição comparável;
+worker/IPC/restrições nativas e SDK mutável/strings/eventos gerais são separados.
+
+M3: SDK compila e consulta projeção HTDL local imutável, não o Reader visual.
+Integrar SDK/Reader e loader HTDL/código/FS/SSC/recursos antes de ativar juntos.
+No eixo visual, desktop/leitor real/DPI/monitores e shaping/bidi/IME continuam
+na ordem anterior. Catálogo/recuperação HTDL, FS/SSC, rede/persistência/busca,
+M1 RSS, M4–M9 e distribuição/aceite continuam sem dispensa. Easy por último.
+
+As entradas seguintes conservam o histórico e não autorizam republicar bases antigas.
+
 # Continuação Unicode e M0-EXEC — 01/11/2026
 
 **32,10%, 0/5 gates; meta 40% pendente.**

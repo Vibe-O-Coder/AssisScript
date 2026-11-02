@@ -1,4 +1,25 @@
-# std/pagevm — spike ASV1
+# std/pagevm — ASV1 e perfil escalar ASV2
+
+Continuação de 02/11/2026: o destino experimental `page-asv2` compila fonte
+real com IR tipada para a extensão ASV2. [Contrato e layout completos](ecossistema/PERFIL-PAGINA-ASV2.md),
+[SDK](BIBLIOTECA-page.md) e [host/escalonador](BIBLIOTECA-pagehost.md).
+ASV1 e version()=1 são preservados; format_version()=2 anuncia a extensão.
+ASV2 admite até quatro argumentos, constantes i64 completas, bitwise/shift/
+resto, imports htdl_v1 1..8 e trap explícito. -11 indica deslocamento inválido
+e -12 saída inalcançável. Unknown versions/imports continuam recusados.
+
+Status 3 significa resposta SDK pendente, não erro terminal. waiting_import,
+waiting_argument, waiting_second e waiting_call expõem somente escalares ao
+host. reply exige instance/origin/generation/event request/call exatos, escreve
+o destino e retoma estado 0 uma única vez. begin_event com request crescente
+reentra main depois de halt, limpa frames e preserva fuel/calls cumulativos.
+Fechar/revogar impede resposta ou novo evento. run limita uma fatia; imports
+não despacham IO ou código C da página. O contador só pode ser concedido
+quando status=0, antes de executar ou enquanto retomável, como na API ASV1.
+
+O contrato abaixo é o histórico ASV1 e o comparativo anterior; sua ausência
+de backend/SDK foi superada somente pelo perfil escalar delimitado acima.
+Escolha geral VM/Wasm, sandbox nativa e gates permanecem abertos.
 
 Biblioteca opcional experimental escrita em AssisScript. Serve ao comparativo
 M0-EXEC; não é backend de página do compilador, SDK htdl_v1, runtime completo

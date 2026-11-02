@@ -3,6 +3,30 @@
 Data: 29/10/2026. Estado: **estratégia aceita; formato ainda não escolhido**.
 Escopo: E00-03/E06-01, sem promoção de capacidade ou gate.
 
+## Continuação de 02/11/2026 — backend escalar e host local, escolha geral aberta
+
+O destino `page-asv2` agora emite bytes a partir de IR tipada, sem AST na emissão.
+O [perfil versionado](PERFIL-PAGINA-ASV2.md) define representação i64/bool,
+rejeições, layout, imports, limites e ciclo de evento. Execução é AssisScript,
+com SDK read-only-1, células, concessões e projeção HTDL imutável. O host copia
+antes de commit, rejeita respostas antigas e alterna Pages com quanta/deadlines.
+O modelo de [autoridade e falhas](AMEACAS-PAGINA-LOCAL-V1.md) liga os casos aos
+testes, sem equiparar confinamento de bytecode à proteção do OS.
+
+ASV2 é decisão de implementação **experimental desse perfil local**, não escolha
+final do runtime geral. Não se usou a falha do spike Wasm como dispensa de
+implementá-lo sob limites comparáveis. O comparativo Wasm anterior permanece
+evidência histórica; não foi reexecutado nesta unidade. A especificação de
+[operações inteiras Wasm](https://webassembly.github.io/spec/core/exec/numerics.html)
+é referência primária para a diferença de divisão com sinal descrita abaixo.
+Não há backend Wasm restrito novo, objetos/ownership de página, tradução geral,
+budget completo de compilação/RSS, host bloqueante, processo isolado ou G2.
+
+Próxima decisão: alternativa Wasm com validação/imports/fuel equivalentes,
+medição comparável e extensão explícita de valores/ownership. SDK mutável,
+broker/IPC, isolamento Windows/Linux/macOS e integração com Reader seguem
+separados. [Relatório desta unidade](../relatorios/2026-11-02-m0-page-runtime.md).
+
 ## Continuação de 01/11/2026 — dois spikes parciais, escolha aberta
 
 `std/pagevm.assis` executa ASV1 em AssisScript, com validação estrutural,

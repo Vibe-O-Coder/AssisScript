@@ -1,5 +1,7 @@
 # AssisScript
 
+Perfil experimental de desenvolvimento: `--target page-asv2` compila páginas escalares int/bool para o [SDK/host HTDL local](docs/BIBLIOTECA-page.md). Consulte o [progresso do ecossistema](docs/ecossistema/PROGRESSO.md); esta continuação não é release ou sandbox do OS.
+
 [English](README.md) · [Español](README.es.md)
 
 AssisScript é uma linguagem nativa experimental e a base de um projeto de **novo ecossistema Web**. Compila diretamente para Linux x86_64, Windows x64 e macOS x86_64 experimental. Navegador, HTDL, estilos e motor de busca são projetos futuros.

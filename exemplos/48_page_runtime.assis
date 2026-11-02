@@ -1,0 +1,32 @@
+// Trusted local host: pass the explicitly compiled counter.asv2 path.
+// No remote loading or OS sandbox. File's legacy path allocation stays bounded
+// and fatal on OOM; all page/queue/projection allocations below are fallible.
+import "std/pagehost.assis";
+safe fn open_argument():own File{unsafe{
+    val size:int=arg_size(1);if(size<1 || size>4096){return file_open("",9);}
+    let path:*byte=alloc<byte>(size+1);defer free(path);
+    if(arg_copy(1,path,size+1)!=size){return file_open("",9);}
+    return file_open(text(path),0);
+}}
+safe fn main():int{
+    own file:File=open_argument();if(file==null){print("Passe o caminho do programa ASV2 compilado");return 2;}
+    own code:*byte=try_alloc<byte>(131089);own block:*byte=try_alloc<byte>(4096);
+    if(code==null || block==null){return 4;}let size:int=0;
+    while(true){val n:int=file_read(file,block,4096);if(n<0 || n>131088-size){return 3;}if(n==0){break;}
+        for(let i:int=0;i<n;i++){code[size+i]=block[i];}size+=n;}
+    own store:documents::Store=try_new documents::Store(32000000,250000,1000);if(store==null){return 4;}
+    val parsed:htdl::Diagnostic=htdl::load(store,1,utf8("<div type=document version=\"0.1\" lang=\"pt-BR\"><div type=head><div type=title>Counter</div></div><div type=body><div type=button>Increment</div></div></div>"));
+    if(parsed.code!=0){return 3;}
+    own page:pagehost::Page=try_new pagehost::Page(7,11);own group:pagehost::Group=try_new pagehost::Group();
+    if(page==null || !page.is_open() || group==null || !group.is_open()){return 4;}
+    if(page.prepare(store.active_document(),slice_of(code,0,size),0,16,100000,1000)!=0 || !page.commit()){return 3;}
+    val generation:int=page.generation();val deadline:int=monotonic_ms()+1000;
+    if(group.add(move(page),deadline)!=0){return 4;}
+    let request:int=2;let completed:int=0;
+    while(completed<3){
+        val polled:pagehost::Poll=group.poll(monotonic_ms(),1,32);if(polled.failed>0 || polled.visited<0){return 5;}
+        if(polled.completed>0){completed++;if(completed<3){
+            if(group.page_mut(0).post(7,11,generation,1,request,2,1)!=0){return 5;}request++;}}
+    }
+    print("PAGE",group.page(0).result(),"STATE",group.page(0).state_get(0));group.close();return 0;
+}

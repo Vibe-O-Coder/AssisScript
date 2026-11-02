@@ -1,3 +1,38 @@
+> **Publicação confirmada — PR #22, 02/11/2026: 36,20%, 0/5 gates.**
+> [PR de rascunho #22](https://github.com/Vibe-O-Coder/AssisScript/pull/22), aberta/sem merge,
+> base #21; implementação 5549c330ab06a8f8f4798f023f4718b12b5cad03.
+> Revisão publicada 6b2ece0ba5a28b7775e9da90adade5a36c8a29bc: 98 paths
+> e 2068 blobs conferidos na API. Autorização explícita resolveu o bloqueio anterior.
+> Cópia atual: `C:/Users/babus/Desktop/AssisScript/work/page-runtime-20261101`,
+> branch `work/m0-page-runtime-2026-11-01`. Adendo documental pelo histórico.
+> [Relatório](../relatorios/2026-11-02-m0-page-runtime.md). Meta 40% pendente;
+> fila e aceites integrais preservados, Easy por último. Entradas abaixo são históricas.
+
+> **Entrega local — 36,20%, 02/11/2026; publicação bloqueada.**
+> Implementação 5549c330ab06a8f8f4798f023f4718b12b5cad03, branch
+> `work/m0-page-runtime-2026-11-01`, cópia `C:/Users/babus/Desktop/AssisScript/work/page-runtime-20261101`.
+> Revisão automática recusou o push antes da execução por falta de autorização
+> explícita na conversa para o destino/payload. Não há PR/publicação desta unidade.
+> [Relatório e bloqueio](../relatorios/2026-11-02-m0-page-runtime.md).
+> Autorização necessária: publicar os 98 arquivos de código/testes/documentação
+> desta branch em `Vibe-O-Coder/AssisScript`, sem merge/force push.
+> Testes locais completos; 0/5 gates e meta 40% pendente. Preserve a fila integral.
+
+> **Continuação ASV2 — 02/11/2026: 36,20%, 0/5 gates.**
+> Cópia atual: `C:/Users/babus/Desktop/AssisScript/work/page-runtime-20261101`,
+> branch `work/m0-page-runtime-2026-11-01`, base publicada #21/1e574736.
+> [Relatório atual](../relatorios/2026-11-02-m0-page-runtime.md) e
+> [evidências](evidencias/m0-page-runtime-2026-11-02/summary.json).
+> Backend escalar ASV2 por IR, SDK htdl_v1/read-only-1, projeção HTDL,
+> células/eventos/concessões, fila limitada e Group cooperativo com deadlines.
+> 238 métodos Windows/210 Linux executados, 1/29 not-run; 50 exemplos por host.
+> Publicação/SHA/PR são confirmados no adendo do relatório; confira-o antes
+> de continuar. Meta 40% não atingida; nenhum gate aprovado.
+> Escolha VM/Wasm geral, compilação/RSS, worker/IPC/sandbox por OS, Reader
+> integrado ao SDK e loader completo seguem na fila. Desktop/leitor/DPI/IME,
+> HTDL completo/editor, FS/SSC, M4–M9 e distribuição/aceites preservados.
+> Easy por último. As entradas anteriores abaixo são históricas.
+
 > **Publicação confirmada — PR #21, 01/11/2026: 32,10%, 0/5 gates.**
 > [PR de rascunho #21](https://github.com/Vibe-O-Coder/AssisScript/pull/21), aberta/sem merge,
 > base #20; implementação f53313320dd5b6a65174d4d43728fe85d43532ca.
