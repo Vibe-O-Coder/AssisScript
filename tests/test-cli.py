@@ -83,7 +83,7 @@ class Cli(base.Evolution):
                 self.temp.chmod(0o755); entry.chmod(0o644); binary.chmod(0o755); output.chmod(0o600)
                 p = subprocess.run(['runuser', '-u', 'nobody', '--', binary, entry, output], capture_output=True, timeout=30)
                 self.assertEqual(p.returncode, 1, (p.stdout, p.stderr))
-                self.assertIn(b'Erro ao abrir saida', p.stdout)
+                self.assertIn(b'Erro ao abrir write_output', p.stdout)
 
 
 if __name__ == '__main__':

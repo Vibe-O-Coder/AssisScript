@@ -6,10 +6,10 @@ import "std/memory";
 fn main(): int {
     let AssisAssis: Assis_Fodase = new Assis_Fodase(21);
     print(AssisAssis.AssisFodase());
-    print(Assis_fodase_fodase(99, 0, 10));
-    print(Fodase_assis_fodase("ação", "aç"), Fodase_fodase_assis("ação", "ão"));
+    print(legacy_clamp(99, 0, 10));
+    print(legacy_starts_with("ação", "aç"), legacy_ends_with("ação", "ão"));
     let AssisFodase: *byte = alloc<byte>(2);
-    Assis_Assis_Fodase(AssisFodase, 2, byte(255));
+    legacy_fill(AssisFodase, 2, byte(255));
     print(AssisFodase[1]);
     free(AssisFodase);
     free(AssisAssis);

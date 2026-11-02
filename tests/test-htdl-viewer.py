@@ -62,9 +62,11 @@ class HtdlViewer(base.Evolution):
     def execute(self, body, expected='', prefix=PREFIX):
         self.accepted(prefix + 'safe fn main():int{' + body + 'return 0;}', expected)
 
-    def test_wrapping_against_python_textwrap_and_unicode_scalars(self):
+    def test_wrapping_against_python_textwrap_for_atomic_characters(self):
         rng = random.Random(20261101)
-        words = ['ação', 'coração', 'cafe\u0301', '😀', 'abcdefghijklmnopqrstuvwx', 'fim']
+        # textwrap counts Python code points; use one-code-point clusters here.
+        # Decomposed/ZWJ clusters have explicit byte-boundary tests in graphemes.
+        words = ['ação', 'coração', 'café', '😀', 'abcdefghijklmnopqrstuvwx', 'fim']
         content = '  ' + ' \n '.join(rng.choice(words) for _ in range(60)) + '  '
         for width in (96, 120, 240, 780):
             # Python 3.10 and 3.14 differ in trailing spaces after splitting a

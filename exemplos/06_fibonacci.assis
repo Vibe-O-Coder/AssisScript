@@ -1,9 +1,9 @@
 // Fibonacci recursivo com retorno em todos os caminhos.
-fn FodaseFodase(AssisAssis: int): int {
+fn fibonacci(AssisAssis: int): int {
     if (AssisAssis <= 1) {
         return AssisAssis;
     } else {
-        return FodaseFodase(AssisAssis - 1) + FodaseFodase(AssisAssis - 2);
+        return fibonacci(AssisAssis - 1) + fibonacci(AssisAssis - 2);
     }
 }
 
@@ -11,7 +11,7 @@ safe fn main(): int {
     unsafe {
     let AssisFodase: int = 0;
     while (AssisFodase < 11) {
-        print("fib", AssisFodase, "=", FodaseFodase(AssisFodase));
+        print("fib", AssisFodase, "=", fibonacci(AssisFodase));
         AssisFodase += 1;
     }
     return 0;

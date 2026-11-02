@@ -1,0 +1,20 @@
+{
+  "skill": "computer-use",
+  "application": "own freshly built Reader example 46",
+  "launch": "success",
+  "target": "one window returned by list_windows",
+  "capture_attempts": [
+    {
+      "text": true,
+      "image": true,
+      "result": "window capture timed out: timed out waiting on channel"
+    },
+    {
+      "text": false,
+      "image": true,
+      "result": "window capture timed out: timed out waiting on channel"
+    }
+  ],
+  "desktop_acceptance": "not-run",
+  "screen_reader": "not-run"
+}

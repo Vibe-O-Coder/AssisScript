@@ -47,3 +47,8 @@ MinGW runtime notices.
   rebuild commands are included in the source package.
 
 Review and primary license/source references: [PROCEDENCIA-V1.md](docs/PROCEDENCIA-V1.md).
+
+Unicode 17.0.0 UCD properties and GraphemeBreakTest, and derived property
+lookup code in stdlib/graphemes.assis, are distributed under Unicode License
+V3. Copyright and permission notice: [UNICODE-LICENSE.txt](docs/licenses/UNICODE-LICENSE.txt).
+Exact sources and SHA-256 are pinned in tests/fixtures/unicode-17.0.0/PROVENANCE.json.

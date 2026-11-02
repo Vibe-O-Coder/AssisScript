@@ -1,3 +1,8 @@
+> Continuação de 01/11/2026: **32,10%, 0/5 gates**. Grafemas/inglês e
+> spikes parciais M0-EXEC; [estado atual](docs/ecossistema/ESTADO-ATUAL.md)
+> Meta 40% pendente;
+> aceites e escopo integral preservados. Relatório 2026-11-01-m3-unicode-m0-vm.
+
 # Evolução do AssisScript para o ecossistema web
 
 Planejamento de 29/10/2026, com continuidade atualizada em 01/11/2026:

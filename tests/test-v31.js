@@ -32,11 +32,11 @@ let b: IntResult = checked_add(-0x8000_0000_0000_0000, -1); assert(!b.ok); free(
 let c: IntResult = checked_div(1, 0); assert(!c.ok && c.code == 4); free(c);
 let d: IntResult = checked_div(-0x8000_0000_0000_0000, -1); assert(!d.ok); free(d);
 let e: IntResult = checked_add(-40, 82); assert(e.ok && e.value == 42); free(e);
-let arr: Array<int> = [42]; let saida: int = 77;
-assert(!arr.try_get(-1, &saida) && saida == 77); assert(!arr.try_get(1, &saida)); assert(!arr.try_pop(null) && len(arr) == 1);
-assert(arr.try_get(0, &saida) && saida == 42); assert(arr.try_pop(&saida)); assert(!arr.try_pop(&saida) && saida == 42); free(arr);
+let arr: Array<int> = [42]; let write_output: int = 77;
+assert(!arr.try_get(-1, &write_output) && write_output == 77); assert(!arr.try_get(1, &write_output)); assert(!arr.try_pop(null) && len(arr) == 1);
+assert(arr.try_get(0, &write_output) && write_output == 42); assert(arr.try_pop(&write_output)); assert(!arr.try_pop(&write_output) && write_output == 42); free(arr);
 let mapa: HashMap<text, int> = new HashMap<text, int>(); mapa.set("ação", 19);
-assert(!mapa.try_get("ausente", &saida) && saida == 42); assert(!mapa.try_get("ação", null)); assert(mapa.try_get("ação", &saida) && saida == 19); free(mapa);`);
+assert(!mapa.try_get("ausente", &write_output) && write_output == 42); assert(!mapa.try_get("ação", null)); assert(mapa.try_get("ação", &write_output) && write_output == 19); free(mapa);`);
 });
 test('String: autoacréscimo com/sem realocação, vida própria, UTF-8 e KMP', () => {
     execute(['strings'], String.raw`let t: String = new String(); assert(t.view() == "");
@@ -110,9 +110,9 @@ test('exemplos de aplicação produzem relatório e transporte binário corretos
     const binary = run(['run', path.join(root, 'exemplos/13_codificacao.assis')]); assert.equal(binary.status, 0, binary.stderr); assert.equal(binary.stdout, 'Base64: AAH+/w==\nHex: 0001feff\n');
 });
 test('instalação: núcleo obrigatório, seleção de opcionais e remoção isolada', {skip: process.platform !== 'win32'}, () => {
-    const setup = path.join(root, 'bin/assis-setup.exe');
+    const setup = process.env.ASSIS_SETUP_BIN || path.join(root, 'bin/assis-setup.exe');
     function setupRun(args) { const r = spawnSync(setup, args, {encoding:'utf8', timeout:20000, windowsHide:true}); assert.ifError(r.error); return r; }
-    for (const [name, flags, optional] of [['minimal', ['--minimal'], []], ['selected', ['--with', 'csv,algorithms'], ['csv','algorithms']], ['full', [], JSON.parse(fs.readFileSync(path.join(root,'stdlib/catalogo.json'))).libraries.filter(lib=>!lib.required).map(lib=>lib.name)], ['log', ['--with','log'], ['log','cli']]]) {
+    for (const [name, flags, optional] of [['minimal', ['--minimal'], []], ['selected', ['--with', 'csv,algorithms'], ['csv','algorithms']], ['full', [], JSON.parse(fs.readFileSync(path.join(root,'stdlib/catalogo.json'))).libraries.filter(lib=>!lib.required).map(lib=>lib.name)], ['log', ['--with','log'], ['log','cli']], ['reader', ['--with','reader'], ['reader','viewer','htdl','window','graphemes','unicode','documents','doctree','buffers','owned']]]) {
         const prefix = path.join(temp, 'instalacao-' + name);
         const result = setupRun(['install', '--prefix', prefix, '--no-path', '--no-associations', ...flags]); assert.equal(result.status, 0, result.stderr);
         const catalog = JSON.parse(fs.readFileSync(path.join(prefix, 'stdlib/catalogo.json')));
@@ -122,6 +122,13 @@ test('instalação: núcleo obrigatório, seleção de opcionais e remoção iso
         }
         const app = source('import "std/convert.assis";\nfn main(): int { let r: IntResult = parse_int("42"); assert(r.ok && r.value == 42); free(r); return 0; }');
         const checked = spawnSync(path.join(prefix, 'bin/assis.exe'), ['run', app, '--legacy'], {encoding:'utf8', timeout:20000, windowsHide:true}); assert.ifError(checked.error); assert.equal(checked.status, 0, checked.stderr);
+        if (optional.includes('graphemes')) {
+            const graphemes = source('import "std/graphemes.assis";safe fn main():int{own index:graphemes::Index=try_new graphemes::Index(utf8("é"));assert(index!=null && index.status()==0 && index.count()==1);return 0;}');
+            const ran = spawnSync(path.join(prefix, 'bin/assis.exe'), ['run', graphemes, '--safe'], {encoding:'utf8',timeout:20000,windowsHide:true}); assert.ifError(ran.error); assert.equal(ran.status,0,ran.stderr);
+        }
+        if (optional.includes('pagevm')) {
+            const ran = spawnSync(path.join(prefix, 'bin/assis.exe'), ['run', path.join(root,'exemplos/47_pagevm_counter.assis'), '--safe'], {encoding:'utf8',timeout:20000,windowsHide:true}); assert.ifError(ran.error); assert.equal(ran.status,0,ran.stderr); assert.equal(ran.stdout,'42\n');
+        }
         fs.writeFileSync(path.join(prefix, 'pessoal.txt'), 'preservar');
         assert.equal(setupRun(['uninstall', '--prefix', prefix, '--no-path', '--no-associations']).status, 0);
         assert(fs.existsSync(path.join(prefix, 'pessoal.txt'))); assert(!fs.existsSync(path.join(prefix, 'stdlib')));

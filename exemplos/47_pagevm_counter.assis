@@ -1,0 +1,16 @@
+import "std/pagevm.assis";
+
+// Trusted host loads experimental ASV1 bytes; it never executes a native page.
+safe fn main():int{
+    own code:*byte=try_alloc<byte>(40);if(code==null){return 1;}
+    code[0]=byte(65);code[1]=byte(83);code[2]=byte(86);code[3]=byte(49);
+    code[4]=byte(3); // three instructions, entry zero, no linear memory
+    code[16]=byte(1);code[20]=byte(42); // r0 = 42
+    code[24]=byte(12);code[25]=byte(1);code[28]=byte(1); // r1 = counter.add_v1(r0)
+    code[32]=byte(0);code[33]=byte(1); // halt r1
+    own page:pagevm::Instance=try_new pagevm::Instance(1,7,1,slice_of(code,0,40),0,4,100,1);
+    if(page==null || page.status()!=0){return 2;}
+    if(!page.grant_counter(1,7,1)){return 2;}
+    if(page.run(10)!=2){return 3;}
+    print(page.result());page.close();return 0;
+}

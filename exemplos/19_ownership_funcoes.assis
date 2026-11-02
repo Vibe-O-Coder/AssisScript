@@ -4,26 +4,26 @@ struct Relatorio {
     let total: int;
 }
 
-pure fn dobro(n: int): int { return n * 2; }
-pure fn par(n: int): bool { return n % 2 == 0; }
-pure fn somar(a: int, b: int): int { return a + b; }
+pure fn double(n: int): int { return n * 2; }
+pure fn is_even(n: int): bool { return n % 2 == 0; }
+pure fn add(a: int, b: int): int { return a + b; }
 
-safe fn resumir(borrow entrada: Array<int>): own Relatorio {
-    own filtrados: Array<int> = filter_own::<int>(entrada, par);
-    own valores: Array<int> = map_own::<int, int>(filtrados, dobro);
-    val total: int = fold_borrow::<int, int>(valores, 0, somar);
+safe fn summarize(borrow entrada: Array<int>): own Relatorio {
+    own filtrados: Array<int> = filter_own::<int>(entrada, is_even);
+    own valores: Array<int> = map_own::<int, int>(filtrados, double);
+    val total: int = fold_borrow::<int, int>(valores, 0, add);
     return new Relatorio(move(valores), total);
 }
 
-safe fn ver_valores(borrow r: Relatorio): borrow(r) Array<int> {
+safe fn inspect_values(borrow r: Relatorio): borrow(r) Array<int> {
     return r.valores;
 }
 
 safe fn main(): int {
     own entrada: Array<int> = [1, 2, 3, 4, 5, 6];
-    own relatorio: Relatorio = resumir(entrada);
+    own relatorio: Relatorio = summarize(entrada);
     {
-        borrow valores: Array<int> = ver_valores(relatorio);
+        borrow valores: Array<int> = inspect_values(relatorio);
         print(len(entrada), len(valores), relatorio.total);
     }
     own extraidos: Array<int> = move(relatorio.valores);

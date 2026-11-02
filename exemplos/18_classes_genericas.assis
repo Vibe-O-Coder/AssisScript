@@ -1,16 +1,16 @@
 // Classes genéricas conservam memória legada e métodos com efeitos.
 // As funções de cálculo podem continuar puras.
-pure fn dobro(value: int): int { return value * 2; }
+pure fn double(value: int): int { return value * 2; }
 
 class Caixa<T> {
     private let value: T;
     fn init(value: T): void { self.value = value; }
-    fn ler(): T { return self.value; }
+    fn read(): T { return self.value; }
 }
 
 class Transformacao<T> extends Caixa<T> {
-    fn aplicar(funcao: pure fn(T): T): T {
-        return funcao(self.ler());
+    fn apply(funcao: pure fn(T): T): T {
+        return funcao(self.read());
     }
 }
 
@@ -18,7 +18,7 @@ safe fn main(): int {
     unsafe {
     let caixa: Transformacao<int> = new Transformacao<int>(21);
     let base: Caixa<int> = caixa;
-    print(base.ler(), caixa.aplicar(dobro));
+    print(base.read(), caixa.apply(double));
     free(caixa);
     return 0;
 

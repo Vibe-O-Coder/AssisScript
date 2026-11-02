@@ -1,5 +1,15 @@
 # Perfil viewer-local-bootstrap-v1 — contrato de desenvolvimento
 
+Continuação Unicode em 01/11/2026: seleção, navegação por setas, hit test e
+quebra agora preservam grafemas estendidos Unicode 17/UAX29 rev47. Índice e
+cursor são AssisScript, com tabelas/corpus oficial versionados e licença.
+Assinaturas preservadas; offsets dentro de grafema passam a ser recusados.
+Grafema acima do viewport/4096 bytes recusa o candidato. Não acrescenta
+normalização, palavras, shaping/bidi, edição ou IME. Contratos atuais em
+[graphemes](../BIBLIOTECA-graphemes.md), [Reader](../BIBLIOTECA-reader.md) e
+[relatório](../relatorios/2026-11-01-m3-unicode-m0-vm.md). Catálogo bootstrap,
+ABI nativa e requisitos de aceite desktop/leitor/DPI/G1 continuam iguais.
+
 Continuação de 01/11/2026: `reader::Session` oferece mudanças validadas da
 fonte/árvore e apresentação com publicação MSAA antes de commit. Seletores
 locais por tipo/classe e patches de hidden/disabled estão no

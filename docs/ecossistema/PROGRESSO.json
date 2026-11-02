@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-01",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "partial-native-retest-m3-transactions",
+  "assessment": "partial-native-retest-unicode-pagevm",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -257,7 +257,10 @@
           "baseline": "String UTF-8 com vida/comprimento existe; processamento linguístico completo não existe.",
           "evidence": [
             "docs/BIBLIOTECA-unicode.md",
-            "docs/BIBLIOTECA-texto.md"
+            "docs/BIBLIOTECA-texto.md",
+            "docs/relatorios/2026-11-01-m3-unicode-m0-vm.md",
+            "docs/ecossistema/evidencias/m3-unicode-vm-2026-11-01/summary.json",
+            "docs/BIBLIOTECA-graphemes.md"
           ]
         },
         {
@@ -409,7 +412,10 @@
             "docs/relatorios/2026-11-01-m3-leitura-acessivel.md",
             "docs/ecossistema/evidencias/m3-reader-2026-11-01/summary.json",
             "tests/test-htdl-reader.py",
-            "tests/reader_oracle.c"
+            "tests/reader_oracle.c",
+            "docs/relatorios/2026-11-01-m3-unicode-m0-vm.md",
+            "docs/ecossistema/evidencias/m3-unicode-vm-2026-11-01/summary.json",
+            "docs/BIBLIOTECA-graphemes.md"
           ]
         },
         {
@@ -506,33 +512,45 @@
         {
           "id": "E06-01",
           "name": "Formato de execução de página",
-          "level": 0,
+          "level": 1,
           "acceptance": "Escolher VM/Wasm com ADR e prova; implementar layout, validação, loader e imports permitidos; preservar semântica declarada e comparar execução com referência nativa ou oráculo.",
           "baseline": "browser-wasm32 é proposta, não alvo existente.",
           "evidence": [
             "local:htdl/docs/03-assisscript-no-navegador.md",
-            "docs/ARM64-NATIVO.md"
+            "docs/ARM64-NATIVO.md",
+            "docs/relatorios/2026-11-01-m3-unicode-m0-vm.md",
+            "docs/ecossistema/evidencias/m3-unicode-vm-2026-11-01/summary.json",
+            "docs/BIBLIOTECA-pagevm.md",
+            "docs/ecossistema/ADR-0001-EXECUCAO-PAGINA.md"
           ]
         },
         {
           "id": "E06-02",
           "name": "Memória, CPU e interrupção",
-          "level": 0,
+          "level": 2,
           "acceptance": "Limitar heap, pilha, instruções/tempo, compilação, mensagens e chamadas hospedeiras; interromper loop, recursão e host bloqueante sem prejudicar shell ou outra aba.",
           "baseline": "safe e timeout externo não demonstram essas garantias.",
           "evidence": [
             "docs/SAFE-DEFAULT.md",
-            "local:assis/docs/AUDITORIA-HTDL.md"
+            "local:assis/docs/AUDITORIA-HTDL.md",
+            "docs/relatorios/2026-11-01-m3-unicode-m0-vm.md",
+            "docs/ecossistema/evidencias/m3-unicode-vm-2026-11-01/summary.json",
+            "docs/BIBLIOTECA-pagevm.md",
+            "docs/ecossistema/ADR-0001-EXECUCAO-PAGINA.md"
           ]
         },
         {
           "id": "E06-03",
           "name": "Capacidades e API hospedeira",
-          "level": 0,
+          "level": 1,
           "acceptance": "Negar arquivos/processos/FFI/rede/relógio por padrão; expor somente imports versionados e tokens revogáveis por origem/instância/geração; testar forja, replay e confused deputy.",
           "baseline": "Modelo descrito, sem enforcement executável.",
           "evidence": [
-            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md"
+            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md",
+            "docs/relatorios/2026-11-01-m3-unicode-m0-vm.md",
+            "docs/ecossistema/evidencias/m3-unicode-vm-2026-11-01/summary.json",
+            "docs/BIBLIOTECA-pagevm.md",
+            "docs/ecossistema/ADR-0001-EXECUCAO-PAGINA.md"
           ]
         },
         {
@@ -2321,7 +2339,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-01",
+      "rubric_version": 1,
+      "label": "Grafemas/nomes em inglês e spikes M0-EXEC parciais: 32,10%, 0/5 gates",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 1,
+        "E00-03": 1,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 1,
+        "E03-03": 2,
+        "E03-04": 2,
+        "E03-05": 0,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 1,
+        "E06-02": 2,
+        "E06-03": 1,
+        "E06-04": 0,
+        "E06-05": 0,
+        "E07-01": 2,
+        "E07-02": 2,
+        "E07-03": 0,
+        "E07-04": 2,
+        "E07-05": 1,
+        "E08-01": 0,
+        "E08-02": 2,
+        "E08-03": 0,
+        "E08-04": 2,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 1,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Unidade local de transações HTDL, foco por ID, consultas/edições validadas, preferências de contraste/animação Windows e relógio de apresentação sem backlog. Execução própria Windows/Linux x64 e cliente MSAA externo; formatos estrangeiros somente gerados. Captura Computer Use falhou em app approval timed out. Leitor real, DPI/monitores, IME/grafemas, catálogo completo/recuperação de editor, FS/SSC, VM/Wasm/sandbox, quota RSS, M4–M9 e aceite integrado continuam abertos; Easy permanece a última etapa. Nenhum gate aprovado."
+  "assessment_note": "Grafemas estendidos Unicode 17 com corpus oficial, seleção/quebra integradas e funções de biblioteca/exemplos em inglês; sem promoção adicional de Unicode por faltarem normalização/palavras/bidi/IME. Spikes ASV1 em AssisScript e Wasm/V8 confiável; ASV1 tem limites de fuel/memória/calls e contador revogável local. E06-01/E06-03=1 e E06-02=2. A escolha VM/Wasm permanece aberta, sem backend de página ou sandbox. Desktop/leitor real/DPI/monitores, HTDL completo/editor/loader, FS/SSC, quota RSS, M4–M9 e aceite integrado permanecem na fila; Easy por último. 32,10%, 0/5 gates; meta de 40% não atingida."
 }

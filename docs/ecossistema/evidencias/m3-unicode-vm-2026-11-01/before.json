@@ -1,0 +1,18 @@
+{
+  "base": "a542aff0f6ace008e6558c1cb1553c9ea05cc2eb",
+  "standard_library": "git archive exact published base",
+  "compiler_sha256": "afe1ddf458764f67362ac6285e4d907c036307cebdd1cdc3a1a533b502b8db42",
+  "checks": [
+    {
+      "module": "graphemes",
+      "returncode": 1,
+      "stderr": "<workspace>\\build\\before-unicode-vm\\graphemes.assis:1:8: A001: m\u00f3dulo n\u00e3o encontrado: std/graphemes.assis (use caminho relativo, -I ou ASSIS_PATH)\n  import \"std/graphemes.assis\";safe fn main():int{return 0;}\n         ^\n  Ajuda: Confira o caminho relativo ao arquivo importador e as bibliotecas instaladas. Use -I pasta para bibliotecas externas.\n"
+    },
+    {
+      "module": "pagevm",
+      "returncode": 1,
+      "stderr": "<workspace>\\build\\before-unicode-vm\\pagevm.assis:1:8: A001: m\u00f3dulo n\u00e3o encontrado: std/pagevm.assis (use caminho relativo, -I ou ASSIS_PATH)\n  import \"std/pagevm.assis\";safe fn main():int{return 0;}\n         ^\n  Ajuda: Confira o caminho relativo ao arquivo importador e as bibliotecas instaladas. Use -I pasta para bibliotecas externas.\n"
+    }
+  ],
+  "execution": "not-run: frontend import rejection"
+}

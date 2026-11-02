@@ -235,17 +235,34 @@
       "description": "Apresentação HTDL local com texto medido, foco, scroll e eventos em AssisScript; provider Windows opcional, sem seleção/IME/acessibilidade.",
       "dependencies": [
         "htdl",
-        "window"
+        "window",
+        "graphemes"
       ]
     },
     {
       "name": "reader",
       "required": false,
       "doc": "BIBLIOTECA-reader.md",
-      "description": "Leitura HTDL local com seleção UTF-8, cópia concedida pelo usuário, zoom 100/200%, transações semânticas, preferências/contraste, relógio de movimento e projeção MSAA Windows; sem edição/IME/UIA TextPattern.",
+      "description": "Leitura HTDL local com grafemas Unicode 17, cópia concedida, zoom 100/200%, transações, preferências/contraste e MSAA Windows; sem edição/IME/UIA TextPattern.",
       "dependencies": [
         "viewer"
       ]
+    },
+    {
+      "name": "graphemes",
+      "required": false,
+      "doc": "BIBLIOTECA-graphemes.md",
+      "description": "Unicode 17: grafemas estendidos UAX #29, cursor e índice recuperável.",
+      "dependencies": [
+        "unicode"
+      ]
+    },
+    {
+      "name": "pagevm",
+      "required": false,
+      "doc": "BIBLIOTECA-pagevm.md",
+      "description": "Spike ASV1: verificador, fuel, memória e contador revogável; não é sandbox de processo.",
+      "dependencies": []
     }
   ]
 }

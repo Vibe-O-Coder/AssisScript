@@ -14,7 +14,7 @@ Não há thread, captura de referência ou ambiente oculto no callback. O empré
 - `file_replace(origem,destino)` solicita rename/MoveFileExW(REPLACE_EXISTING|WRITE_THROUGH). Zero ou -1; exige mesmo filesystem para a garantia de substituição atômica. Não usa fallback copiar/apagar.
 - `file_remove(caminho)` retorna zero ou -1. As APIs de caminho usam text C, com a mesma fronteira legada da alpha.7; Windows converte UTF-8 estritamente e libera temporários.
 
-`cli::write_all`, `cli::saida` e `cli::read_bounded` tratam operações parciais/EOF com bloco auxiliar fixo. `cli::argument` oferece cópia own com comprimento; `cli::parse_integer` faz conversão estrita de bytes, sem depender de NUL.
+`cli::write_all`, `cli::write_output` e `cli::read_bounded` tratam operações parciais/EOF com bloco auxiliar fixo. `cli::argument` oferece cópia own com comprimento; `cli::parse_integer` faz conversão estrita de bytes, sem depender de NUL.
 
 O [exemplo 24](../exemplos/24_config_json.assis) valida configuração JSON de até 1 MiB antes de tocar a saída, cria temporário exclusivo, escreve completamente, sincroniza, fecha e substitui. Remove o temporário criado quando a operação normal falha. A conversão de caminhos dos argumentos fica em helpers com `unsafe` explícito. O temporário é informado pelo chamador e deve ser novo, no mesmo filesystem do destino. Há testes de reinício do processo, entrada inválida/grande, temporário preexistente, alvo diretório e erros de handle.
 

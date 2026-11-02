@@ -1,0 +1,9 @@
+test_host_quota_and_fixed_memory_fixture (__main__.WasmSpike.test_host_quota_and_fixed_memory_fixture) ... ok
+test_i64_semantics_effects_and_boolean_control_against_native_values (__main__.WasmSpike.test_i64_semantics_effects_and_boolean_control_against_native_values) ... ok
+test_infinite_loop_requires_process_termination_no_instruction_fuel (__main__.WasmSpike.test_infinite_loop_requires_process_termination_no_instruction_fuel) ... ok
+test_malformed_and_import_default_deny (__main__.WasmSpike.test_malformed_and_import_default_deny) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.787s
+
+OK

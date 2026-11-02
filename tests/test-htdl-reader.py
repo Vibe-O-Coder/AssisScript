@@ -55,10 +55,13 @@ class HtdlReader(base.Evolution):
         self.assertEqual(built.returncode,0,built.stderr)
         return oracle
 
-    def test_selection_against_independent_utf8_byte_ranges_and_reverse(self):
+    def test_selection_against_independent_grapheme_byte_ranges_and_reverse(self):
         content='Ação cafe\u0301 😀 fim'
         model=(content+'\n').encode()
-        boundaries=[i for i,b in enumerate(model) if b<128 or b>=192]+[len(model)]
+        clusters=['A','ç','ã','o',' ','c','a','f','e\u0301',' ','😀',' ','f','i','m','\n']
+        self.assertEqual(''.join(clusters).encode(),model)
+        boundaries=[0]
+        for cluster in clusters:boundaries.append(boundaries[-1]+len(cluster.encode()))
         rng=random.Random(20261101)
         body=setup('<div type=paragraph>'+content+'</div>',width=120)
         output=''

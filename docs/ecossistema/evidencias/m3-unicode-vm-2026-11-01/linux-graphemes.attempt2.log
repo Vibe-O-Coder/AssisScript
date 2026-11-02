@@ -1,0 +1,13 @@
+test_all_official_extended_grapheme_cases_both_modes (__main__.Graphemes.test_all_official_extended_grapheme_cases_both_modes) ... ok
+test_invalid_utf8_offsets_empty_nul_limit_and_cursor_reset (__main__.Graphemes.test_invalid_utf8_offsets_empty_nul_limit_and_cursor_reset) ... ok
+test_long_regional_emoji_and_indic_context_is_linear_and_bounded (__main__.Graphemes.test_long_regional_emoji_and_indic_context_is_linear_and_bounded) ... ok
+test_pinned_provenance_and_reproducible_properties (__main__.Graphemes.test_pinned_provenance_and_reproducible_properties) ... ok
+test_grapheme_keyboard_pointer_wrap_and_reflow (__main__.Integrated.test_grapheme_keyboard_pointer_wrap_and_reflow) ... ok
+test_narrow_wrap_keeps_combining_marks_with_their_base (__main__.Integrated.test_narrow_wrap_keeps_combining_marks_with_their_base) ... ok
+test_oom_in_boundary_index_is_recoverable (__main__.Integrated.test_oom_in_boundary_index_is_recoverable) ... ok
+test_oversized_cluster_refusal_preserves_transaction_and_neighbor (__main__.Integrated.test_oversized_cluster_refusal_preserves_transaction_and_neighbor) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 18.211s
+
+OK

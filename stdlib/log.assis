@@ -13,6 +13,6 @@ public safe fn write(nivel: int, min: int, borrow mensagem: *byte, size: int): i
     val n: int = format_int_buffer(instant, numero);prefixo[0] = byte(91);
     for (let i: int = 0; i < n; i += 1) { prefixo[i + 1] = numero[i]; }
     prefixo[n + 1] = byte(32);prefixo[n + 2] = byte(48 + nivel);prefixo[n + 3] = byte(93);prefixo[n + 4] = byte(32);
-    if (cli::saida(2, prefixo, n + 5) < 0 || cli::saida(2, mensagem, size) < 0) { return -1; }
-    prefixo[0] = byte(10);if (cli::saida(2, prefixo, 1) < 0) { return -1; }return 1;
+    if (cli::write_output(2, prefixo, n + 5) < 0 || cli::write_output(2, mensagem, size) < 0) { return -1; }
+    prefixo[0] = byte(10);if (cli::write_output(2, prefixo, 1) < 0) { return -1; }return 1;
 }

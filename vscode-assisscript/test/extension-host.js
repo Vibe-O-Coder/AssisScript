@@ -13,7 +13,7 @@ import "std/math";
 fn main(): int {
     let AssisAssis: FodaseAssis = new FodaseAssis();
     print(AssisAssis.AssisFodase());
-    print(Assis_fodase_fodase(99, 0, 10));
+    print(legacy_clamp(99, 0, 10));
     let AssisFodase: int = Assis_Assis(); print(AssisFodase);
     free(AssisAssis);
     return 0;
@@ -28,13 +28,13 @@ fn main(): int {
     try {
         const extension = vscode.extensions.getExtension('assisscript-local.assisscript'); assert(extension, 'Extensão registrada'); await extension.activate(); checks.push('ativação');
         document = await vscode.workspace.openTextDocument(file); await vscode.window.showTextDocument(document); assert.equal(document.languageId, 'assisscript'); checks.push('associação .assis');
-        const global = await vscode.commands.executeCommand('vscode.executeCompletionItemProvider', document.uri, document.positionAt(source.indexOf('Assis_fodase_fodase')));
-        assert(global.items.some(i => i.label === 'Assis_assis_fodase'), 'Sugestões da biblioteca padrão'); checks.push('completar imports');
+        const global = await vscode.commands.executeCommand('vscode.executeCompletionItemProvider', document.uri, document.positionAt(source.indexOf('legacy_clamp')));
+        assert(global.items.some(i => i.label === 'legacy_min'), 'Sugestões da biblioteca padrão'); checks.push('completar imports');
         const member = await vscode.commands.executeCommand('vscode.executeCompletionItemProvider', document.uri, document.positionAt(source.indexOf('AssisAssis.AssisFodase') + 'AssisAssis.'.length), '.');
         assert(member.items.some(i => i.label === 'AssisFodase'), 'Sugestões de método herdado'); checks.push('membros herdados');
         const definition = await vscode.commands.executeCommand('vscode.executeDefinitionProvider', document.uri, document.positionAt(source.indexOf('AssisAssis.AssisFodase') + 'AssisAssis.'.length));
         assert(definition.some(d => (d.uri || d.targetUri).fsPath === library), 'Definição em outro arquivo'); checks.push('F12 entre arquivos');
-        const hover = await vscode.commands.executeCommand('vscode.executeHoverProvider', document.uri, document.positionAt(source.indexOf('Assis_fodase_fodase') + 2)); assert(hover.length); checks.push('hover');
+        const hover = await vscode.commands.executeCommand('vscode.executeHoverProvider', document.uri, document.positionAt(source.indexOf('legacy_clamp') + 2)); assert(hover.length); checks.push('hover');
         const signature = await vscode.commands.executeCommand('vscode.executeSignatureHelpProvider', document.uri, document.positionAt(source.indexOf('99, 0') + 5), ',', undefined);
         assert(signature?.signatures.length); assert.equal(signature.activeParameter, 1); checks.push('assinatura');
         const symbols = await vscode.commands.executeCommand('vscode.executeDocumentSymbolProvider', document.uri); assert(symbols.some(s => s.name === 'main')); checks.push('estrutura');
@@ -84,7 +84,7 @@ fn main(): int {
         await vscode.commands.executeCommand('assisscript.documentation'); checks.push('manual offline abre no editor');
         assert(commands.includes('assisscript.libraries'));
         await vscode.commands.executeCommand('assisscript.libraries', 'csv'); checks.push('manual individual CSV abre offline');
-        const v31 = 'import "std/convert.assis";\nfn main(): int { let value: IntResult = parse_int("42"); let a: Array<int> = [42]; let saida: int = 0; a.try_get(0, &saida); free(a); free(value); return 0; }';
+        const v31 = 'import "std/convert.assis";\nfn main(): int { let value: IntResult = parse_int("42"); let a: Array<int> = [42]; let write_output: int = 0; a.try_get(0, &write_output); free(a); free(value); return 0; }';
         await replace(document, v31); await document.save();
         const converted = await vscode.commands.executeCommand('vscode.executeHoverProvider', document.uri, document.positionAt(v31.indexOf('parse_int') + 2));
         assert.match(hoverText(converted), /overflow/); checks.push('hover da conversão segura transitiva');

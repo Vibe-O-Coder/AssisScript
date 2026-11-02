@@ -1,0 +1,207 @@
+{
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "compiler_sha256": "afe1ddf458764f67362ac6285e4d907c036307cebdd1cdc3a1a533b502b8db42",
+  "checks": [
+    {
+      "name": "graphemes",
+      "returncode": 0,
+      "executed": 8,
+      "not_run": 0,
+      "seconds": 24.985620400002517,
+      "log": "windows-graphemes.log",
+      "log_sha256": "418d672f2ad9e1f19fa3121eda0f9f894440c87d59764aa704afcb240caab6f7"
+    },
+    {
+      "name": "pagevm",
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 12.871977999999217,
+      "log": "windows-pagevm.log",
+      "log_sha256": "8b671a4cfc71d1c093229f5f072e6dc2b6be1bc497d8a7036165de30301a29b5"
+    },
+    {
+      "name": "reader-transactions",
+      "returncode": 0,
+      "executed": 15,
+      "not_run": 0,
+      "seconds": 40.52076269999816,
+      "log": "windows-reader-transactions.log",
+      "log_sha256": "14c4e1f961739102519db3e7a07aa44190a0e2e1fceaaf3e22bda2d8005990a4"
+    },
+    {
+      "name": "htdl-reader",
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 30.50539209999988,
+      "log": "windows-htdl-reader.log",
+      "log_sha256": "4d2914f08bd32a12033b771334d168aa1773be806bec3c86857d4f4247414f47"
+    },
+    {
+      "name": "htdl-viewer",
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 28.329708400000527,
+      "log": "windows-htdl-viewer.log",
+      "log_sha256": "c53fad005a2d092b325a2cd5cafd8fdffac1f7ee5d1080f415235559ce2cc403"
+    },
+    {
+      "name": "htdl-parser",
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 70.62444710000273,
+      "log": "windows-htdl-parser.log",
+      "log_sha256": "4be0d06553d15a9221f90f557ed08a506bcab435ea432cd84d61d02100983033"
+    },
+    {
+      "name": "document-memory",
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 18.145839400000114,
+      "log": "windows-document-memory.log",
+      "log_sha256": "b9cffbfab7c5bbbd288d477302b2d11229302a6b245cdd54fc3a523421e5e88d"
+    },
+    {
+      "name": "document-tree",
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 18.429652099999657,
+      "log": "windows-document-tree.log",
+      "log_sha256": "b39b175a629d7954a8a8eafe13b4ebbd9598cc64150f91c89cbe72388d9de475"
+    },
+    {
+      "name": "english-api",
+      "returncode": 0,
+      "executed": 5,
+      "not_run": 0,
+      "seconds": 3.135055499998998,
+      "log": "windows-english-api.log",
+      "log_sha256": "d8e51000b254163eb269b359dddbb202b0f3cbfcb4dc42deaed186287bde9dd7"
+    },
+    {
+      "name": "ffi",
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 6.304638999998133,
+      "log": "windows-ffi.log",
+      "log_sha256": "0c52c318ac03adb5ad0df4671f60b6348425d280f5b4dfac0dbea8210f8043dd"
+    },
+    {
+      "name": "cli",
+      "returncode": 0,
+      "executed": 1,
+      "not_run": 0,
+      "seconds": 1.975503400000889,
+      "log": "windows-cli.log",
+      "log_sha256": "407e4fa7bd0821a9d9b76a50b98ab3173a9d326fc22bf594f8c51e331ee63f45"
+    },
+    {
+      "name": "system",
+      "returncode": 0,
+      "executed": 8,
+      "not_run": 0,
+      "seconds": 3.7963770999995177,
+      "log": "windows-system.log",
+      "log_sha256": "3dc3375e2032a3152b0a9f280460c12834a5f3a99bcb5f4cc05d0941591e82a2"
+    },
+    {
+      "name": "packages",
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 1,
+      "seconds": 4.316807300001528,
+      "log": "windows-packages.log",
+      "log_sha256": "27265557a2e266f40455dfc5f7f7ae8ec83b75e22e7535a45d3757d679827264"
+    },
+    {
+      "name": "optimization",
+      "returncode": 0,
+      "executed": 6,
+      "not_run": 0,
+      "seconds": 14.373108299998421,
+      "log": "windows-optimization.log",
+      "log_sha256": "f088f58884686779ed8975dac7c086fc3e6bf40579fd3685e73a4747f68b129c"
+    },
+    {
+      "name": "complete-ir",
+      "returncode": 0,
+      "executed": 7,
+      "not_run": 0,
+      "seconds": 2.618333700000221,
+      "log": "windows-complete-ir.log",
+      "log_sha256": "4a1f547c53a1d9b77168009075ad78b09691d5edc8a8957a3e1cf24a879dda89"
+    },
+    {
+      "name": "functions",
+      "returncode": 0,
+      "executed": 19,
+      "not_run": 0,
+      "seconds": 9.959466600001178,
+      "log": "windows-functions.log",
+      "log_sha256": "f41efe15c2422615b73648afa81af16207808fa880be36ec77e2ea2f1fa17705"
+    },
+    {
+      "name": "ownership-functions",
+      "returncode": 0,
+      "executed": 26,
+      "not_run": 0,
+      "seconds": 12.97878000000128,
+      "log": "windows-ownership-functions.log",
+      "log_sha256": "2287ab7fc8a1d3fd28688b08f02041c2e67fc6957e6dd1179adb4774c84f4231"
+    },
+    {
+      "name": "generic-classes",
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 10.827553099999932,
+      "log": "windows-generic-classes.log",
+      "log_sha256": "27c2a599140a0ffa8cb4a14908256f9bcc95fe217af156b320c43e2ed5d80bc1"
+    },
+    {
+      "name": "collections-ast",
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 7.963638599998376,
+      "log": "windows-collections-ast.log",
+      "log_sha256": "a432ee00e9dc65cb85a7cab578cadf2d3fcadf3dabc28c47a6c505b989da7a8b"
+    },
+    {
+      "name": "platform-window",
+      "returncode": 0,
+      "executed": 19,
+      "not_run": 0,
+      "seconds": 16.49504529999831,
+      "log": "windows-platform-window.log",
+      "log_sha256": "823c3e3f0af565ac1a9249179e2f4f4d11733a1f3b1810d4271551ef0ff391ac"
+    },
+    {
+      "name": "wasm-spike",
+      "returncode": 0,
+      "executed": 4,
+      "not_run": 0,
+      "seconds": 2.0935109999991255,
+      "log": "windows-wasm-spike.log",
+      "log_sha256": "d0f4888da4a75a039830633ca8c405775727e551865eb3256e4082d4faa50e3b"
+    }
+  ],
+  "passed": true,
+  "native_provider": "tested",
+  "wasm": "Node/V8 trusted fixtures, coarse process timeout; no general fuel verifier",
+  "targets_generated": [
+    "windows-x64",
+    "linux-x64",
+    "linux-arm64",
+    "macos-x64",
+    "macos-arm64"
+  ],
+  "other_native_targets": "ARM64/macOS not-run; generation is not execution"
+}

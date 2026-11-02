@@ -125,7 +125,16 @@
     "acoes": "actions",
     "estados": "states",
     "prazos": "deadlines",
-    "quantidade": "count"
+    "quantidade": "count",
+    "saida": "write_output",
+    "Assis_assis_fodase": "legacy_min",
+    "Assis_fodase_assis": "legacy_max",
+    "Assis_fodase_fodase": "legacy_clamp",
+    "Assis_assis_assis": "legacy_abs",
+    "Assis_Assis_Fodase": "legacy_fill",
+    "Assis_Fodase_Assis": "legacy_copy",
+    "Fodase_assis_fodase": "legacy_starts_with",
+    "Fodase_fodase_assis": "legacy_ends_with"
   },
   "builtins": {
     "fatia": "slice_of",
@@ -146,5 +155,13 @@
     "argumentos": "arg_count",
     "argumento_tamanho": "arg_size",
     "argumento_copiar": "arg_copy"
-  }
+  },
+  "updates": [
+    {
+      "date": "2026-11-01",
+      "status": "unreleased continuation",
+      "note": "English names for cli output, 2.x library helpers and example functions; historical evidence preserved.",
+      "inventory": "FUNCTION-NAMES-2026-11-01.json"
+    }
+  ]
 }

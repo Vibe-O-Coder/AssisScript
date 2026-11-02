@@ -8,3 +8,6 @@ bin/assis -text
 *.vsix -text
 # Preserve imported historical snapshots byte-for-byte.
 historical/** -text
+# Pinned external Unicode data and raw diagnostic logs retain original bytes.
+tests/fixtures/unicode-17.0.0/** -text -whitespace
+docs/ecossistema/evidencias/m3-unicode-vm-2026-11-01/*.log -whitespace

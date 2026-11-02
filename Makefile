@@ -210,3 +210,11 @@ test-htdl-reader: bin/assis
 .PHONY: test-reader-transactions
 test-reader-transactions: bin/assis
 	python3 tests/test-reader-transactions.py
+
+.PHONY: test-graphemes test-pagevm test-wasm-spike
+test-graphemes: bin/assis
+	python3 tests/test-graphemes.py
+test-pagevm: bin/assis
+	python3 tests/test-pagevm.py
+test-wasm-spike:
+	python3 tests/test-wasm-spike.py
