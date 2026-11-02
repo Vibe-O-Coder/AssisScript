@@ -1,3 +1,15 @@
+> **Continuação validada — 45,30%, 02/11/2026, 0/5 gates; meta 50% pendente.**
+> Cópia `C:/Users/babus/Desktop/AssisScript/work/page-presentation-20261102`,
+> branch `work/m5-page-presentation-2026-11-02`, base pública f274c9f conferida.
+> Transações FS de até 256 elementos e cache exato por nó; falha conserva o
+> conjunto autoral anterior com semântica atual. Retry limitado de remoção Windows.
+> Windows 125/0 nativos, Linux 116/5 executados/not-run; 23 Node Windows e
+> 57 exemplos por host. [Relatório e publicação no adendo](../relatorios/2026-11-02-m5-page-styles.md).
+> Layout/snapshot comum e SSC agregado/Reader continuam próximos. Catálogo/editor,
+> desktop/leitor/DPI/IME, SDK/loader/recursos, RSS/disco/órfãos, macOS/ARM,
+> rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites seguem na
+> fila integral. Easy por último. Entradas abaixo são históricas; não repetir bases.
+
 > **Entrega local validada — 44,90%, 02/11/2026, 0/5 gates; publicação FS/SSC pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/htdl-recovery-20261102`,
 > branch `work/m3-presentation-core-2026-11-02`, base pública 6701d1b conferida.

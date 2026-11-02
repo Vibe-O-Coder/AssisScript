@@ -1,5 +1,11 @@
 # std/documents.assis — documentos candidatos com armazenamento cobrado
 
+Continuação 02/11/2026: `Document.semantic_version()` incrementa somente após
+append/texto/reparent/remoção aceitos; falha ou reserva de slots não incrementam.
+No-op aceito pode incrementar. Esgotamento recusa mutações, sem wrap. O corpo
+do controlador continua com 64 bytes; a quota permanece na Tree. O contador
+permite invalidar candidatos/cache de [flowpage](BIBLIOTECA-flowpage.md).
+
 M1-ALLOC / E02-03, 01/11/2026. Implementação em AssisScript, dependência
 `doctree` (transitivamente `buffers`, `owned`, `unicode`). Exemplo executável:
 [42_document_candidate.assis](../exemplos/42_document_candidate.assis).

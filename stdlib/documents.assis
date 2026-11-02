@@ -13,7 +13,7 @@ public final class Document{
     private own tree:doctree::Tree;
     private own source:*byte;
     private let instance_id:int;
-    private let limit:int;
+    private let semantic_revision:int;
     private let source_count:int;
     private let active:bool;
     private let initialized:bool;
@@ -21,7 +21,7 @@ public final class Document{
     fn init(borrow mut self,instance:int,max_bytes:int,max_nodes:int,generation_limit:int,borrow input:slice<byte>):void{
         assert(!self.initialized);self.initialized=true;
         assert(instance>0 && max_bytes>=0 && max_nodes>=0 && generation_limit>0);
-        self.instance_id=instance;self.limit=max_bytes;
+        self.instance_id=instance;
         if(max_bytes<document_bytes() || len(input)>max_bytes-document_bytes()){return;}
         if(unicode::error(input)>=0){return;}
         own source:*byte=source_storage(len(input));
@@ -34,6 +34,8 @@ public final class Document{
     }
     fn is_open(borrow self):bool{return self.active;}
     fn instance(borrow self):int{return self.instance_id;}
+    /// Changes only after a successful semantic mutation; never wraps.
+    fn semantic_version(borrow self):int{return self.semantic_revision;}
     fn storage_bytes(borrow self):int{
         if(self.tree==null){return 64;}return 64+self.source_count+self.tree.storage_bytes();
     }
@@ -46,16 +48,22 @@ public final class Document{
     fn nodes(borrow self):borrow(self) doctree::Tree{assert(self.active);return self.tree;}
     fn try_append(borrow mut self,parent:doctree::NodeId,kind:int,borrow input:slice<byte>):doctree::Append{
         if(!self.active){return new doctree::Append.Rejected(1);}
-        return self.tree.try_append(parent,kind,input);
+        if(self.semantic_revision==9223372036854775807){return new doctree::Append.Rejected(5);}
+        val result:doctree::Append=self.tree.try_append(parent,kind,input);
+        match(result){Appended(id){self.semantic_revision++;}Rejected(code){}}
+        return result;
     }
     fn try_set_text(borrow mut self,id:doctree::NodeId,borrow input:slice<byte>):bool{
-        return self.active && self.tree.try_set_text(id,input);
+        if(!self.active || self.semantic_revision==9223372036854775807 || !self.tree.try_set_text(id,input)){return false;}
+        self.semantic_revision++;return true;
     }
     fn try_reparent(borrow mut self,id:doctree::NodeId,parent:doctree::NodeId):bool{
-        return self.active && self.tree.try_reparent(id,parent);
+        if(!self.active || self.semantic_revision==9223372036854775807 || !self.tree.try_reparent(id,parent)){return false;}
+        self.semantic_revision++;return true;
     }
     fn erase_subtree(borrow mut self,id:doctree::NodeId):bool{
-        return self.active && self.tree.erase_subtree(id);
+        if(!self.active || self.semantic_revision==9223372036854775807 || !self.tree.erase_subtree(id)){return false;}
+        self.semantic_revision++;return true;
     }
     fn prepare_nodes(borrow mut self,count:int):buffers::Preparation{
         if(!self.active){return new buffers::Preparation.Incomplete(1,0);}

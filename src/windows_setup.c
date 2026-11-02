@@ -108,16 +108,32 @@ static void install(int change_path,int file_icons){
     if(change_path)wprintf(L"Feche e reabra o terminal. Depois execute: assis version\n");
     else wprintf(L"O PATH foi preservado. Use o caminho completo ou adicione a pasta bin ao PATH.\n");
 }
+/* Brief image/scanner locks can outlive a completed child process. Retry only
+   bounded sharing/access failures; never change permissions, kill a process,
+   or schedule a deletion after reboot. Preserve the final OS error. */
+static int delete_managed(const wchar_t *path){
+    ULONGLONG deadline=GetTickCount64()+1000;
+    for(;;){
+        if(DeleteFileW(path))return 1;
+        DWORD error=GetLastError();
+        if(error==ERROR_FILE_NOT_FOUND||error==ERROR_PATH_NOT_FOUND)return 1;
+        if(error!=ERROR_ACCESS_DENIED&&error!=ERROR_SHARING_VIOLATION&&error!=ERROR_LOCK_VIOLATION){SetLastError(error);return 0;}
+        DWORD attributes=GetFileAttributesW(path);
+        if((attributes!=INVALID_FILE_ATTRIBUTES&&(attributes&(FILE_ATTRIBUTE_READONLY|FILE_ATTRIBUTE_DIRECTORY)))||GetTickCount64()>=deadline){SetLastError(error);return 0;}
+        Sleep(25);
+    }
+}
 static void uninstall(int change_path,int file_icons){
     wchar_t path[CAP];join(path,prefix,L"INSTALADO");FILE *marker=_wfopen(path,L"rb");char text[64]={0};
     if(!marker)die(L"Instalação AssisScript não encontrada nesse destino");size_t got=fread(text,1,sizeof(text)-1,marker);fclose(marker);
     if(got<11||strncmp(text,"AssisScript",11))die(L"Marcador de instalação inválido");
     if(file_icons)association(1);
     /* O executável é removido primeiro para detectar bloqueio antes de alterar o PATH. */
+    join(path,prefix,L"bin\\assis.exe");if(!delete_managed(path))die(L"Não foi possível remover arquivo; encerre processos AssisScript abertos");
     for(size_t i=0;i<sizeof(files)/sizeof(files[0]);i++){
-        join(path,prefix,files[i]);if(!DeleteFileW(path)&&GetLastError()!=ERROR_FILE_NOT_FOUND&&GetLastError()!=ERROR_PATH_NOT_FOUND)die(L"Não foi possível remover arquivo; encerre processos AssisScript abertos");
+        join(path,prefix,files[i]);if(!delete_managed(path))die(L"Não foi possível remover arquivo; encerre processos AssisScript abertos");
     }
-    for(unsigned i=0;i<OPTIONAL_COUNT;i++){join(path,prefix,optional_files[i]);if(!DeleteFileW(path)&&GetLastError()!=ERROR_FILE_NOT_FOUND&&GetLastError()!=ERROR_PATH_NOT_FOUND)die(L"Não foi possível remover biblioteca opcional");}
+    for(unsigned i=0;i<OPTIONAL_COUNT;i++){join(path,prefix,optional_files[i]);if(!delete_managed(path))die(L"Não foi possível remover biblioteca opcional");}
     if(change_path)edit_path(0);join(path,prefix,L"INSTALADO");DeleteFileW(path);
     join(path,prefix,L"bin");RemoveDirectoryW(path);join(path,prefix,L"docs");RemoveDirectoryW(path);
     join(path,prefix,L"benchmarks\\resultados");RemoveDirectoryW(path);join(path,prefix,L"benchmarks");RemoveDirectoryW(path);

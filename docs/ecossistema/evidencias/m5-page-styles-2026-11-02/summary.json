@@ -1,0 +1,66 @@
+{
+  "schema": "flowpage-summary-v1",
+  "base": "f274c9f7d4dda1e1d9a7bfe92b172354b89a4203",
+  "base_publication": {
+    "url": "https://api.github.com/repos/Vibe-O-Coder/AssisScript/git/commits/f274c9f7d4dda1e1d9a7bfe92b172354b89a4203",
+    "sha": "f274c9f7d4dda1e1d9a7bfe92b172354b89a4203",
+    "tree": "c761d1e31e54f7606d51788ac1bb01860c0008ca",
+    "verified_by": "GitHub connector GET; local Git tree SHA matches"
+  },
+  "counts": {
+    "windows": {
+      "native_methods": 125,
+      "not_run": 0,
+      "examples": 57
+    },
+    "linux": {
+      "native_methods": 116,
+      "not_run": 5,
+      "examples": 57
+    }
+  },
+  "windows_distribution_node": 23,
+  "windows_installer_methods": 4,
+  "windows_installer_linux": "not-run: Windows-specific tests; excluded from applicable Linux method count",
+  "points_before": "44.90",
+  "points_after": "45.30",
+  "gates_passed": 0,
+  "source_sha256": {
+    ".gitattributes": "ffa44ed6f26c2191e375fc3a92da63d4a6ce5cb436c8310c6805cc8b65a71430",
+    "stdlib/documents.assis": "1013f4c1874338cdcb75d7b378ec1f6f90f3f4f04ce8a1f842b53301fa150b03",
+    "stdlib/fluxstyle.assis": "6f989259e6d811afaeacecb0c36d3388494cade71c51a5dcc84616c25e2fc55a",
+    "stdlib/flowpage.assis": "67a0e12f867e5265f1901308c926a30203eea5c63e4a4f3cc2d9543dbd3c5919",
+    "stdlib/catalogo.json": "94c64e921aa51882178a1cbd0476964262810bf77f7276827641c07a6cc6cf95",
+    "stdlib/catalogo.sh": "348193334a30c89e1f0ede69be96acd72293f03c3e4abf4fafca6657b962000e",
+    "src/windows_setup.c": "b43ab0d004ffbdf88f9ee1e61bfe7a9ff6bc13bfba7f33aeda7e0aa07f9e45d5",
+    "src/install_files.inc": "eb676901936646db0e865dd6bf09a3c4c3237f70e5990546b56a051349a7652d",
+    "src/install_optional.inc": "6390d6e2ad4a6d524a2015ae6a12649a68d1a6a679d37be3f85a76782de67454",
+    ".github/workflows/ci.yml": "874f0fbb22930e87ddf04b68baa83cc7203a83b5c842741a68462585fece6740",
+    "Makefile": "37ad3c0813595f94bac633774ac7b83e215d09117b84af4a6f5b3c779b79888f",
+    "tests/test-flowpage.py": "2000e23621189450235e1250b3184bd2e9067aa806e7522c04905b0aeb8f8ad4",
+    "tests/test-installer-retry.py": "673f6f05b978002fdb64b657df013cc95faf94985a6ee5e87413cea1feb6bd86",
+    "exemplos/55_page_styles.assis": "03e60e6af5e3bd461854c2242757533724cc1af2b39f5474c6ef351dd950fb44",
+    "tools/collect-flowpage-evidence.py": "4bf9fbc341a44c1475a607d3b66a89c0b2681b0e5cfa0f20d7758c8bfeb6c4d8",
+    "tools/verify-flowpage-install.py": "8c699d30ca7ea17d6350925979cc6a289f7dcec5ce5035b5467cf15f82e9d733",
+    "tools/verify-flowpage-evidence.py": "a7a81b275e6e196c6bae4eaf327f2a4959a678982823366e99c2b8feaf34f411",
+    "docs/BIBLIOTECA-flowpage.md": "59224a5c51ac8bc5c569f47f8dde2f22b2fb94222282a378c7bf97ae314b4d47",
+    "docs/BIBLIOTECA-fluxstyle.md": "6836f082d5fa0398cfa6f2cd3698dd1f31f6b177f1905138a19424019dc072b6",
+    "docs/BIBLIOTECA-documents.md": "74c466e344e967a37dd311f98d0add2edfdb6657ebeca333d142db86cdce169e",
+    "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md": "6a12434468b7cd61a998404507a84d1a2e81ba23e081319d45fba91b08299b10"
+  },
+  "development_logs_sha256": {
+    "windows-distribution-node-initial.log": "cfeab572c47ddcaf157ca8e7f28648ca37944ff684c3caa0b4302c1077c69345",
+    "windows-installer-before.log": "1840fd9492d95c4ef133bf06206523cf78c53acd0e5ed8353db450b4822c3174",
+    "windows-installer-after.log": "6d53fb0d550d34b0cb62bafc34b252851a0c303ea667c16735a1bdc2096f6b9f"
+  },
+  "limitations": [
+    "At most 256 styled elements; exact node-level context cache, not per-expression DAG invalidation",
+    "Author outputs only; no geometry, drawing, hit-test or accessibility snapshot integration",
+    "SSC remains per-node with finite 42-pair profile; no aggregate channel/RSS quota",
+    "Reader catalog, loader, SDK general values and desktop/DPI/IME acceptance remain open",
+    "Five Linux graphical integration methods not-run; Windows installer tests not applicable to Linux",
+    "ARM/macOS format generation only; native execution not-run",
+    "Windows retry is bounded to one second per blocked file; persistent lock still fails; no transactional uninstall guarantee",
+    "No remote CI, release, merge, new 24h run or user acceptance is asserted"
+  ]
+}

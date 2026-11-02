@@ -128,3 +128,9 @@ acrescentam ASIP/1, supervisão e navegação transacional em processo separado.
 separadamente no repositório, sem promessa de distribuição binária automática.
 Linux x64 tem restrições nativas delimitadas; Windows exige opt-in local e
 recusa isolamento obrigatório. G2 permanece aberto.
+
+Continuação de apresentação local: catálogo com 34 opcionais e cinco
+obrigatórias. [fluxstyle](BIBLIOTECA-fluxstyle.md),
+[sanscript](BIBLIOTECA-sanscript.md) e [flowpage](BIBLIOTECA-flowpage.md)
+oferecem FS tipado, SSC finito e transações de saídas por página.
+`--with flowpage` inclui o fechamento de dependências do FS.

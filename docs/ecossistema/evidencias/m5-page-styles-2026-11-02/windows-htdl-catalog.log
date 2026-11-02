@@ -1,0 +1,21 @@
+test_all_23_types_with_independent_xml_tree (__main__.Catalog.test_all_23_types_with_independent_xml_tree) ... ok
+test_body_content_models_and_ancestor_constraints (__main__.Catalog.test_body_content_models_and_ancestor_constraints) ... ok
+test_catalog_quota_rollback_queries_and_caller_owned_diagnostics (__main__.Catalog.test_catalog_quota_rollback_queries_and_caller_owned_diagnostics) ... ok
+test_cross_references_forward_labels_and_form_names (__main__.Catalog.test_cross_references_forward_labels_and_form_names) ... ok
+test_declarative_catalog_cases (__main__.Catalog.test_declarative_catalog_cases) ... ok
+test_dynamic_data_attributes_and_duplicates (__main__.Catalog.test_dynamic_data_attributes_and_duplicates) ... ok
+test_editor_hostile_semantic_roots_and_truncated_unicode (__main__.Catalog.test_editor_hostile_semantic_roots_and_truncated_unicode) ... ok
+test_events_require_script_and_references_are_identifiers (__main__.Catalog.test_events_require_script_and_references_are_identifiers) ... ok
+test_head_cardinality_order_and_empty_models (__main__.Catalog.test_head_cardinality_order_and_empty_models) ... ok
+test_inspector_cap_work_and_truncation_never_activate (__main__.Catalog.test_inspector_cap_work_and_truncation_never_activate) ... ok
+test_inspector_recovers_semantic_errors_and_preserves_utf16_spans (__main__.Catalog.test_inspector_recovers_semantic_errors_and_preserves_utf16_spans) ... ok
+test_ir_layout_and_five_generated_formats (__main__.Catalog.test_ir_layout_and_five_generated_formats) ... ok
+test_os_allocation_refusal_retains_active_and_neighbor (__main__.Catalog.test_os_allocation_refusal_retains_active_and_neighbor) ... ok
+test_random_structural_documents_against_xml (__main__.Catalog.test_random_structural_documents_against_xml) ... ok
+test_required_attributes_enums_and_accessible_names (__main__.Catalog.test_required_attributes_enums_and_accessible_names) ... ok
+test_resource_references_are_data_with_no_execution_schemes (__main__.Catalog.test_resource_references_are_data_with_no_execution_schemes) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 24.514s
+
+OK

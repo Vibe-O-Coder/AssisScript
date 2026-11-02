@@ -1,0 +1,23 @@
+import "std/flowpage.assis";
+
+safe fn main():int{
+    own store:documents::Store=try_new documents::Store(2000000,2000,100);
+    own page:flowpage::Page=try_new flowpage::Page(utf8("flow Card { input open: bool = state(\"open\", false, scope: node); choose(open, -8px, 0px) -> target.offsetY; } bind .card to Card;"),8,2048,2000000);
+    own input:fluxstyle::Inputs=try_new fluxstyle::Inputs(2048);
+    if(store==null || page==null || input==null || !page.is_open() || !input.is_ready()){return 2;}
+    assert(htdl::load_catalog(store,1,utf8("<div type=document version=\"0.1\" lang=en><div type=head><div type=title>Two independent panels</div></div><div type=body><div type=container id=left class=card></div><div type=container id=right class=card></div></div></div>")).code==0);
+    val left:doctree::NodeId=htdl::find_id(store.active_document().nodes(),utf8("left"));
+    val right:doctree::NodeId=htdl::find_id(store.active_document().nodes(),utf8("right"));
+    assert(page.refresh(store.active_document(),input)==0);
+    assert(page.begin(store.active_document())==0);
+    val open:int=page.input_index(utf8("Card"),utf8("open"));
+    for(let i:int=0;i<page.size();i++){
+        val node:doctree::NodeId=page.node_at(i);input.clear();
+        if(node.slot==left.slot){assert(input.set(open,1,1));}
+        assert(page.stage(store.active_document(),node,input)==0);
+    }
+    assert(page.commit(store.active_document())==0);
+    print("PANELS",page.value(store.active_document(),left,15).value,page.value(store.active_document(),right,15).value);
+    print("WORK",page.evaluations(),page.cache_hits());
+    page.close();return 0;
+}

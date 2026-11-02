@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "setup_sha256": null,
+  "selected_libraries": [
+    "buffers",
+    "doctree",
+    "documents",
+    "flowpage",
+    "fluxstyle",
+    "htdl",
+    "owned",
+    "unicode"
+  ],
+  "checks": [
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/instalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces",
+        "--no-path",
+        "--with",
+        "flowpage"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em /tmp/assis-presentation-install-lzcolut_/prefix with spaces/bin/assis\nInclua /tmp/assis-presentation-install-lzcolut_/prefix with spaces/bin no PATH ou use o caminho completo.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/prefix with spaces/bin/assis",
+        "run",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/55_page_styles.assis",
+        "--safe",
+        "--debug"
+      ],
+      "returncode": 0,
+      "stdout": "PANELS -524288 0\nWORK 1 2\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/desinstalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: compilador desinstalado. Seus projetos foram preservados.\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Fresh candidate and isolated offline prefix, optional index 33 and transitive closure; installed whole-page FS demo, uninstall and user file preservation; no PATH, associations or release changes"
+}

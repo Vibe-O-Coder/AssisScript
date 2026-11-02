@@ -1,0 +1,21 @@
+test_adversarial_truncations_and_mutations_are_bounded (__main__.HTDLParser.test_adversarial_truncations_and_mutations_are_bounded) ... ok
+test_attribute_order_quote_forms_and_random_trees_against_xml (__main__.HTDLParser.test_attribute_order_quote_forms_and_random_trees_against_xml) ... ok
+test_attribute_value_and_node_limits (__main__.HTDLParser.test_attribute_value_and_node_limits) ... ok
+test_class_normalization_work_is_bounded (__main__.HTDLParser.test_class_normalization_work_is_bounded) ... ok
+test_depth_and_source_size_exact_boundaries (__main__.HTDLParser.test_depth_and_source_size_exact_boundaries) ... ok
+test_every_unicode_scalar_boundary_and_invalid_entity (__main__.HTDLParser.test_every_unicode_scalar_boundary_and_invalid_entity) ... ok
+test_failed_reload_preserves_active_and_neighbors_and_busy_candidate (__main__.HTDLParser.test_failed_reload_preserves_active_and_neighbors_and_busy_candidate) ... ok
+test_frozen_declarative_corpus (__main__.HTDLParser.test_frozen_declarative_corpus) ... ok
+test_ids_sort_without_hash_collisions_and_report_second_occurrence (__main__.HTDLParser.test_ids_sort_without_hash_collisions_and_report_second_occurrence) ... ok
+test_invalid_utf8_controls_and_exact_utf16_diagnostics (__main__.HTDLParser.test_invalid_utf8_controls_and_exact_utf16_diagnostics) ... ok
+test_ir_layout_and_all_five_formats (__main__.HTDLParser.test_ir_layout_and_all_five_formats) ... ok
+test_original_source_spans_attributes_and_decoded_values (__main__.HTDLParser.test_original_source_spans_attributes_and_decoded_values) ... ok
+test_os_refusal_at_controller_scratch_index_and_tree_preserves_active (__main__.HTDLParser.test_os_refusal_at_controller_scratch_index_and_tree_preserves_active) ... ok
+test_quota_sweep_reserves_workspace_and_rolls_back_complete_candidate (__main__.HTDLParser.test_quota_sweep_reserves_workspace_and_rolls_back_complete_candidate) ... ok
+test_read_only_queries_and_borrowed_views_block_reload (__main__.HTDLParser.test_read_only_queries_and_borrowed_views_block_reload) ... ok
+test_unicode_entities_comments_and_single_decoding (__main__.HTDLParser.test_unicode_entities_comments_and_single_decoding) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 57.700s
+
+OK

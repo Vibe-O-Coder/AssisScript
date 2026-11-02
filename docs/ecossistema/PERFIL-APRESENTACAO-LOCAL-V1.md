@@ -1,3 +1,8 @@
+Continuação 02/11/2026: [flowpage](../BIBLIOTECA-flowpage.md) oferece
+transação das saídas FS de até 256 elementos e cache exato por nó, mantendo
+semântica atual após falha. Não acrescenta geometria/SSC/Reader ou gate.
+As limitações por nó descritas abaixo são o contrato histórico do núcleo.
+
 # Apresentação local FS/SSC — contrato de desenvolvimento v1
 
 02/11/2026. E08-01/E08-03, fundações M3/M4, sem conformidade visual ou gate.

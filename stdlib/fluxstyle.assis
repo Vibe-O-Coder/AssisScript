@@ -63,6 +63,7 @@ public final class Inputs{
         if(self.data!=null){self.count=capacity;}
     }
     fn is_ready(borrow self):bool{return self.data!=null;}
+    fn capacity(borrow self):int{return self.count;}
     fn has(borrow self,index:int):bool{return index>=0 && index<self.count && self.data[index*3]!=0;}
     fn type(borrow self,index:int):int{if(!self.has(index)){return 0;}return self.data[index*3+1];}
     fn value(borrow self,index:int):int{assert(self.has(index));return self.data[index*3+2];}
@@ -440,6 +441,21 @@ public final class Program{
     }
     fn flow_index(borrow self,borrow name:slice<byte>):int{
         if(!self.active){return -1;}for(let i:int=0;i<self.flow_count;i++){if(self.eq(self.flows[i*2],self.flows[i*2+1],name)){return i;}}return -1;
+    }
+    /// Trusted host inspection of effective page-scoped state. Code 1 means
+    /// this index is not a shared cell; aliases resolve by the compiled schema.
+    fn shared_state(borrow self,index:int,borrow input:Inputs):Number{
+        if(!self.active || index<0 || index>=self.count){return new Number(1,0);}
+        val p:int=index*16;
+        if(self.nodes[p]!=3 || self.nodes[p+1]!=12 || self.nodes[p+15]!=0){return new Number(1,0);}
+        let value:int=self.nodes[p+4];let provided:bool=false;
+        for(let i:int=0;i<self.definition_count;i++){val other:int=self.definitions[i];val q:int=other*16;
+            if(self.nodes[q]==3 && self.nodes[q+1]==12 && self.nodes[q+15]==0 &&
+               self.same(self.nodes[p+13],self.nodes[p+14],self.nodes[q+13],self.nodes[q+14]) && input.has(other)){
+                if(input.type(other)!=self.nodes[p+5]){return new Number(201,0);}
+                if(provided && value!=input.value(other)){return new Number(304,0);}
+                value=input.value(other);provided=true;}}
+        if(self.nodes[p+5]==2 && value%65536!=0){return new Number(201,0);}return new Number(0,value);
     }
     private fn matches(borrow mut self,borrow tree:doctree::Tree,node:doctree::NodeId,index:int):bool{
         val p:int=index*6;val start:int=self.bindings[p+1];val end:int=self.bindings[p+2];

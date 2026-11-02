@@ -334,6 +334,15 @@
       "dependencies": [
         "fluxstyle"
       ]
+    },
+    {
+      "name": "flowpage",
+      "required": false,
+      "doc": "BIBLIOTECA-flowpage.md",
+      "description": "Transacoes FS de pagina inteira, contextos exatos por no e ultimo conjunto valido.",
+      "dependencies": [
+        "fluxstyle"
+      ]
     }
   ]
 }

@@ -59,6 +59,14 @@ test-presentation-core:
 	python3 tests/test-sanscript.py
 	python3 tests/test-install-mask.py
 
+.PHONY: test-flowpage
+test-flowpage:
+	python3 tests/test-flowpage.py
+
+.PHONY: test-installer-retry
+test-installer-retry:
+	python3 tests/test-installer-retry.py
+
 test-evolution: bin/assis
 	python3 tests/test-evolution.py
 

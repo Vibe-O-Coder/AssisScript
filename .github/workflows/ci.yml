@@ -26,6 +26,7 @@ jobs:
           python3 tests/test-htdl-recovery.py
           python3 tests/test-htdl-catalog.py
           python3 tests/test-fluxstyle.py
+          python3 tests/test-flowpage.py
           python3 tests/test-sanscript.py
           python3 tests/test-install-mask.py
           python3 tools/generate-ssc-coefficients.py --check
@@ -114,10 +115,13 @@ jobs:
           $env:ASSIS_BIN = (Resolve-Path bin/assis.exe).Path
           $env:CC = Join-Path $env:ASSIS_TOOLCHAIN_BIN 'gcc.exe'
           $env:PYTHONUTF8 = '1'
-          foreach ($suite in @('htdl-recovery','htdl-catalog','fluxstyle','sanscript','install-mask')) {
+          foreach ($suite in @('htdl-recovery','htdl-catalog','fluxstyle','flowpage','sanscript','install-mask')) {
             python "tests/test-$suite.py"
             if ($LASTEXITCODE -ne 0) { throw "Local presentation profile failed: $suite" }
           }
+          $env:ASSIS_SETUP_BIN = (Resolve-Path bin/assis-setup.exe).Path
+          python tests/test-installer-retry.py
+          if ($LASTEXITCODE -ne 0) { throw 'Installer lock recovery failed' }
           python tools/generate-ssc-coefficients.py --check
           if ($LASTEXITCODE -ne 0) { throw 'SSC coefficients changed' }
           python tools/report-ecosystem-progress.py --check

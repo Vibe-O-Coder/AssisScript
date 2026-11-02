@@ -1,0 +1,154 @@
+namespace flowpage;
+import "std/fluxstyle.assis";
+
+/// Conservative reservation of requested bodies, including both banks and FS.
+/// Allocator headers, RSS, Document and caller-owned Inputs are separate.
+public pure fn reservation(source_bytes:int,nodes:int,inputs:int):int{
+    if(source_bytes<0 || source_bytes>65536 || nodes<1 || nodes>256 || inputs<1 || inputs>2048){return -1;}
+    return 401000+source_bytes+2*nodes*(20+4*inputs)*8;
+}
+
+/// One immutable FS program and two preallocated page output/context banks.
+/// This is a trusted local host API, not a page capability or geometry engine.
+public final class Page{
+    private own program:fluxstyle::Program;
+    private own data:*int;private let offset:int;
+    private let capacity:int;private let inputs:int;private let stride:int;private let reserved:int;
+    private let count:int;private let staged:int;private let instance:int;private let semantic:int;
+    private let next_instance:int;private let next_semantic:int;private let revision:int;
+    private let evaluated:int;private let reused:int;private let begun:bool;private let active:bool;
+    private let error:htdl::Diagnostic;private let failed_node:doctree::NodeId;
+
+    fn init(borrow mut self,borrow source:slice<byte>,max_nodes:int,input_capacity:int,max_bytes:int):void{
+        self.error=new htdl::Diagnostic(401,0,0,1,1,1,1);
+        val need:int=reservation(len(source),max_nodes,input_capacity);
+        if(need<0 || max_bytes<need){return;}
+        self.program=try_new fluxstyle::Program(source,400000+len(source));
+        if(self.program==null){return;}if(!self.program.is_open()){self.error=self.program.diagnostic();return;}
+        self.stride=20+4*input_capacity;
+        self.data=try_alloc<int>(2*max_nodes*self.stride);
+        if(self.data==null){return;}
+        self.capacity=max_nodes;self.inputs=input_capacity;self.reserved=need;self.active=true;
+        self.error=new htdl::Diagnostic(0,0,0,1,1,1,1);
+    }
+    fn is_open(borrow self):bool{return self.active;}
+    fn storage_reservation(borrow self):int{return self.reserved;}
+    fn version(borrow self):int{return self.revision;}
+    fn semantic_version(borrow self):int{return self.semantic;}
+    fn size(borrow self):int{return self.count;}
+    fn evaluations(borrow self):int{return self.evaluated;}
+    fn cache_hits(borrow self):int{return self.reused;}
+    fn diagnostic(borrow self):htdl::Diagnostic{return self.error;}
+    fn diagnostic_node(borrow self):doctree::NodeId{return self.failed_node;}
+    fn input_index(borrow self,borrow flow:slice<byte>,borrow name:slice<byte>):int{
+        if(!self.active){return -1;}return self.program.input_index(self.program.flow_index(flow),name);
+    }
+    private fn fail(borrow mut self,code:int,node:doctree::NodeId):int{
+        if(self.error.code==0){self.error=new htdl::Diagnostic(code,0,0,1,1,1,1);self.failed_node=node;}
+        return self.error.code;
+    }
+    private fn valid(borrow self,borrow document:documents::Document):bool{
+        return self.active && self.begun && document.is_open() && document.instance()==self.next_instance &&
+            document.semantic_version()==self.next_semantic;
+    }
+    private fn pending_node(borrow self,index:int):doctree::NodeId{
+        val p:int=index*self.stride;return new doctree::NodeId(self.data[self.capacity*self.stride-self.offset+p],self.data[self.capacity*self.stride-self.offset+p+1],self.data[self.capacity*self.stride-self.offset+p+2]);
+    }
+    fn node_at(borrow self,index:int):doctree::NodeId{
+        if(!self.active || index<0 || index>=self.count){return new doctree::NodeId();}
+        val p:int=index*self.stride;return new doctree::NodeId(self.data[self.offset+p],self.data[self.offset+p+1],self.data[self.offset+p+2]);
+    }
+    private fn find(borrow self,node:doctree::NodeId):int{
+        for(let i:int=0;i<self.count;i++){val p:int=i*self.stride;
+            if(self.data[self.offset+p]==node.instance && self.data[self.offset+p+1]==node.slot && self.data[self.offset+p+2]==node.generation){return i;}}
+        return -1;
+    }
+    /// Enumerates every eligible element, including hidden descendants, in order.
+    /// No output becomes visible until commit; a full bank rejects the candidate.
+    fn begin(borrow mut self,borrow document:documents::Document):int{
+        if(!self.active || self.begun){return 204;}
+        self.error=new htdl::Diagnostic(0,0,0,1,1,1,1);self.failed_node=new doctree::NodeId();
+        self.evaluated=0;self.reused=0;self.staged=0;
+        if(!document.is_open() || !document.has_root() || self.revision==9223372036854775807){return self.fail(204,new doctree::NodeId());}
+        self.next_instance=document.instance();self.next_semantic=document.semantic_version();
+        let node:doctree::NodeId=htdl::query(document.nodes(),0,utf8(""),new doctree::NodeId());
+        while(!doctree::absent(node)){
+            val kind:int=htdl::kind(document.nodes(),node);
+            if(kind>=4 && kind!=10 && kind!=11){
+                if(self.staged==self.capacity){return self.fail(401,node);}
+                val p:int=self.staged*self.stride;
+                self.data[self.capacity*self.stride-self.offset+p]=node.instance;self.data[self.capacity*self.stride-self.offset+p+1]=node.slot;self.data[self.capacity*self.stride-self.offset+p+2]=node.generation;self.data[self.capacity*self.stride-self.offset+p+19]=0;self.staged++;
+            }
+            node=htdl::query(document.nodes(),0,utf8(""),node);
+        }
+        self.begun=true;return 0;
+    }
+    /// Exact context comparison: no hash collisions or caller-supplied dirty flags.
+    /// Any successful semantic mutation conservatively dirties all nodes.
+    fn stage(borrow mut self,borrow document:documents::Document,node:doctree::NodeId,borrow input:fluxstyle::Inputs):int{
+        if(self.error.code!=0){return self.error.code;}
+        if(!self.valid(document) || !input.is_ready() || input.capacity()!=self.inputs){return self.fail(204,node);}
+        let index:int=-1;for(let i:int=0;i<self.staged;i++){val n:doctree::NodeId=self.pending_node(i);
+            if(n.instance==node.instance && n.slot==node.slot && n.generation==node.generation){index=i;break;}}
+        if(index<0){return self.fail(204,node);}val p:int=index*self.stride;
+        if(self.data[self.capacity*self.stride-self.offset+p+19]!=0){return self.fail(204,node);}
+        let witness:int=-1;for(let i:int=0;i<self.staged;i++){
+            if(self.data[self.capacity*self.stride-self.offset+i*self.stride+19]!=0){witness=i;break;}}
+        val previous:int=self.find(node);let clean:bool=previous>=0 && self.instance==document.instance() && self.semantic==document.semantic_version();
+        val q:int=previous*self.stride;
+        for(let i:int=0;i<self.inputs;i++){
+            let present:int=0;let type:int=0;let value:int=0;
+            if(input.has(i)){present=1;type=input.type(i);value=input.value(i);}
+            val at:int=20+i*3;
+            if(clean && (self.data[self.offset+q+at]!=present || self.data[self.offset+q+at+1]!=type || self.data[self.offset+q+at+2]!=value)){clean=false;}
+            self.data[self.capacity*self.stride-self.offset+p+at]=present;self.data[self.capacity*self.stride-self.offset+p+at+1]=type;self.data[self.capacity*self.stride-self.offset+p+at+2]=value;
+            val shared:fluxstyle::Number=self.program.shared_state(i,input);
+            if(shared.code!=0 && shared.code!=1){return self.fail(shared.code,node);}
+            if(shared.code==0){val cell:int=20+3*self.inputs+i;
+                if(witness>=0 && self.data[self.capacity*self.stride-self.offset+witness*self.stride+cell]!=shared.value){return self.fail(304,node);}
+                self.data[self.capacity*self.stride-self.offset+p+cell]=shared.value;}
+        }
+        if(clean){for(let i:int=3;i<19;i++){self.data[self.capacity*self.stride-self.offset+p+i]=self.data[self.offset+q+i];}self.reused++;}
+        else{
+            own scratch:fluxstyle::Style=try_new fluxstyle::Style();
+            if(scratch==null || !scratch.is_ready()){return self.fail(401,node);}self.evaluated++;
+            val diagnostic:htdl::Diagnostic=self.program.evaluate(document,node,input,self.revision+1,scratch);
+            if(diagnostic.code!=0){self.error=diagnostic;self.failed_node=node;return diagnostic.code;}
+            let mask:int=0;for(let property:int=1;property<=15;property++){
+                self.data[self.capacity*self.stride-self.offset+p+3+property]=0;
+                if(scratch.has(property)){mask|=1<<(property-1);self.data[self.capacity*self.stride-self.offset+p+3+property]=scratch.value(property);}}
+            self.data[self.capacity*self.stride-self.offset+p+3]=mask;
+        }
+        self.data[self.capacity*self.stride-self.offset+p+19]=1;return 0;
+    }
+    /// Validates completeness and the unchanged semantic revision, then swaps banks.
+    fn commit(borrow mut self,borrow document:documents::Document):int{
+        if(self.error.code!=0){return self.error.code;}
+        if(!self.valid(document)){return self.fail(204,new doctree::NodeId());}
+        for(let i:int=0;i<self.staged;i++){if(self.data[self.capacity*self.stride-self.offset+i*self.stride+19]!=1){return self.fail(204,self.pending_node(i));}}
+        self.offset=self.capacity*self.stride-self.offset;
+        self.count=self.staged;self.instance=self.next_instance;self.semantic=self.next_semantic;self.revision++;self.begun=false;return 0;
+    }
+    fn abort(borrow mut self):void{self.begun=false;self.staged=0;}
+    /// Convenience for a page whose nodes receive the same host input set.
+    fn refresh(borrow mut self,borrow document:documents::Document,borrow input:fluxstyle::Inputs):int{
+        val started:int=self.begin(document);if(started!=0){return started;}
+        for(let i:int=0;i<self.staged;i++){val node:doctree::NodeId=self.pending_node(i);val result:int=self.stage(document,node,input);
+            if(result!=0){self.abort();return result;}}
+        val result:int=self.commit(document);if(result!=0){self.abort();}return result;
+    }
+    /// Removed/replaced nodes are rejected immediately, even after failed FS.
+    fn has(borrow self,borrow document:documents::Document,node:doctree::NodeId,property:int):bool{
+        if(!self.active || property<1 || property>15 || !document.is_open() || document.instance()!=self.instance || !document.nodes().contains(node)){return false;}
+        val index:int=self.find(node);return index>=0 && (self.data[self.offset+index*self.stride+3]&(1<<(property-1)))!=0;
+    }
+    fn value(borrow self,borrow document:documents::Document,node:doctree::NodeId,property:int):fluxstyle::Number{
+        if(!self.has(document,node,property)){return new fluxstyle::Number(204,0);}
+        return new fluxstyle::Number(0,self.data[self.offset+self.find(node)*self.stride+3+property]);
+    }
+    fn close(borrow mut self):void{
+        self.active=false;self.begun=false;self.count=0;
+        own data:*int=move(self.data);
+        own program:fluxstyle::Program=move(self.program);
+    }
+}

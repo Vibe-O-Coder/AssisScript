@@ -45,8 +45,11 @@ decimal admite até nove casas, sinal externo, multiplicador 1/1000 e divisor
 1/100/1000; devolve ainda magnitude positiva 2147483648 para o parser poder
 aplicar o sinal do limite negativo. O avaliador recusa essa magnitude positiva.
 
-Há memoização dentro de uma transação e reavaliação em cada chamada; não há
-dirtiness entre transações, layout/desenho, loader HTDL 0.2, integração Reader,
-inspector de UI ou análise FS no LSP. O host ainda deve coordenar todos os nós
-da página e aplicar políticas antes de publicar um snapshot visual. Chamar a
-API por nó não demonstra transação visual da página inteira. M3/M4 parciais.
+Há memoização dentro da avaliação por nó. [flowpage](BIBLIOTECA-flowpage.md)
+coordena saídas da página inteira e cache exato de contexto por nó entre
+transações; não é invalidação por vértice. `Inputs.capacity()` informa o
+tamanho do contexto. `Program.shared_state(index,inputs)` permite comparar
+células page efetivas: Number(1,0) indica índice não compartilhado; código 0
+é valor resolvido, 201/304 indicam tipo/conflito. São operações do host.
+Layout/desenho, loader HTDL 0.2, Reader, inspector e FS no LSP seguem abertos.
+O host aplica políticas/semântica atual antes de publicar geometria.
