@@ -29,7 +29,7 @@ test('LSP independente: framing, UTF-16, overlays, navegação e correção de e
     const request=(method,params={})=>new Promise((resolve,reject)=>{const number=++id;const timer=setTimeout(()=>reject(new Error('Timeout '+method)),15000);waiting.set(number,{resolve,reject,timer});send({id:number,method,params});});
     const until=predicate=>new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('Diagnostic timeout '+JSON.stringify(notifications))),15000);const check=()=>{const value=notifications.find(predicate);if(value){clearTimeout(timer);events.splice(events.indexOf(check),1);resolve(value);}};events.push(check);check();});
     try {
-        const result=await request('initialize',{rootUri:pathToFileURL(folder).href});assert.equal(result.capabilities.textDocumentSync.change,2);
+        const result=await request('initialize',{rootUri:pathToFileURL(folder).href,initializationOptions:process.env.ASSIS_BIN?{compilerPath:process.env.ASSIS_BIN}:{}});assert.equal(result.capabilities.textDocumentSync.change,2);
         send({method:'initialized'});send({method:'textDocument/didOpen',params:{textDocument:{uri,languageId:'assisscript',version:1,text:original}}});
         const callPosition={line:1,character:original.split('\n')[1].indexOf('dobro')+2};
         const definition=await request('textDocument/definition',{textDocument:{uri},position:callPosition});assert.equal(definition?.uri,uri);
@@ -49,11 +49,24 @@ test('LSP independente: framing, UTF-16, overlays, navegação e correção de e
         fs.writeFileSync(path.join(core,'api.assis'),'namespace core;public pure fn answer():int{return 42;}');
         const utilText='import "pkg/core/api.assis";\nnamespace util;public pure fn answer():int{return core::answer();}';fs.writeFileSync(path.join(util,'api.assis'),utilText);
         fs.writeFileSync(file,'import "pkg/util/api.assis";\nsafe fn main():int{print(util::answer());return 0;}');
-        const locked=spawnSync(path.resolve(__dirname,'../bin',process.platform==='win32'?'assis.exe':'assis'),['lock',file],{encoding:'utf8',windowsHide:true});assert.equal(locked.status,0,locked.stderr);
+        const locked=spawnSync(process.env.ASSIS_BIN||path.resolve(__dirname,'../bin',process.platform==='win32'?'assis.exe':'assis'),['lock',file],{encoding:'utf8',windowsHide:true});assert.equal(locked.status,0,locked.stderr);
         const utilUri=pathToFileURL(path.join(util,'api.assis')).href;send({method:'textDocument/didOpen',params:{textDocument:{uri:utilUri,languageId:'assisscript',version:1,text:utilText}}});
         await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===utilUri&&m.params.version===1&&m.params.diagnostics.length===0);
         send({method:'textDocument/didChange',params:{textDocument:{uri:utilUri,version:2},contentChanges:[{text:utilText.replace('core::answer()','7')}]}});
         const lockedError=await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===utilUri&&m.params.version===2&&m.params.diagnostics.length>0);assert.match(lockedError.params.diagnostics[0].message,/lockfile divergente/);
+        const htdlUri=pathToFileURL(path.join(folder,'draft.htdl')).href;
+        const htdlDocument=body=>`<div type=document version="0.1" lang=en><div type=head><div type=title>🙂</div></div><div type=body>${body}</div></div>`;
+        const invalidHTDL=htdlDocument('<div type=heading>Missing level</div>\r\n<div type=image src="./not-found.png"></div>');
+        send({method:'textDocument/didOpen',params:{textDocument:{uri:htdlUri,languageId:'htdl',version:1,text:invalidHTDL}}});
+        const htdlError=await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===htdlUri&&m.params.version===1);
+        assert.deepEqual(htdlError.params.diagnostics.map(d=>d.code),['H206','H206']);assert.equal(htdlError.params.diagnostics[1].range.start.line,1);
+        assert.ok((await request('textDocument/completion',{textDocument:{uri:htdlUri},position:{line:0,character:0}})).some(i=>i.label==='image'));
+        assert.deepEqual(await request('textDocument/formatting',{textDocument:{uri:htdlUri},options:{tabSize:4,insertSpaces:true}}),[]);
+        for(const version of [2,3,4])send({method:'textDocument/didChange',params:{textDocument:{uri:htdlUri,version},contentChanges:[{text:version===4?htdlDocument(''):invalidHTDL}]}});
+        await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===htdlUri&&m.params.version===4&&m.params.diagnostics.length===0);
+        assert.ok(!notifications.some(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===htdlUri&&[2,3].includes(m.params.version)));
+        send({method:'textDocument/didClose',params:{textDocument:{uri:htdlUri}}});
+        await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===htdlUri&&m.params.version===undefined&&m.params.diagnostics.length===0);
         await assert.rejects(request('unknownMethod'),/não suportado/);
         await request('shutdown');send({method:'exit'});child.stdin.end();await new Promise(resolve=>child.on('exit',()=>{closed=true;resolve();}));assert.equal(child.exitCode,0);assert.equal(stderr,'');
     } finally {if(!closed)child.kill();for(const w of waiting.values())clearTimeout(w.timer);fs.rmSync(folder,{recursive:true,force:true});}

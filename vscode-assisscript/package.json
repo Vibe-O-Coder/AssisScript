@@ -14,7 +14,8 @@
   "activationEvents": [
     "onLanguage:assisscript",
     "onTaskType:assisscript",
-    "onLanguage:assisscript-package"
+    "onLanguage:assisscript-package",
+    "onLanguage:htdl"
   ],
   "capabilities": {
     "untrustedWorkspaces": {
@@ -53,6 +54,16 @@
           "light": "./icons/source.png",
           "dark": "./icons/source.png"
         }
+      },
+      {
+        "id": "htdl",
+        "aliases": [
+          "HTDL"
+        ],
+        "extensions": [
+          ".htdl"
+        ],
+        "configuration": "./htdl-configuration.json"
       }
     ],
     "grammars": [
@@ -65,6 +76,11 @@
         "language": "assisscript-package",
         "scopeName": "source.pillow",
         "path": "./syntaxes/pillow.tmLanguage.json"
+      },
+      {
+        "language": "htdl",
+        "scopeName": "text.htdl",
+        "path": "./syntaxes/htdl.tmLanguage.json"
       }
     ],
     "snippets": [

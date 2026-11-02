@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+  "checks": [
+    {
+      "mode": "optimized",
+      "passed": true,
+      "log": "windows-example-52-optimized.log",
+      "log_sha256": "46974c0852181b536fe49f0f1f0f12c8f6f4faef57295302988ae305b2b42bf8"
+    },
+    {
+      "mode": "reference",
+      "passed": true,
+      "log": "windows-example-52-reference.log",
+      "log_sha256": "46974c0852181b536fe49f0f1f0f12c8f6f4faef57295302988ae305b2b42bf8"
+    }
+  ]
+}

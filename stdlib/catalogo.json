@@ -223,7 +223,7 @@
       "name": "htdl",
       "required": false,
       "doc": "BIBLIOTECA-htdl.md",
-      "description": "Parser HTDL do perfil viewer-local-bootstrap-v1, atributos e spans cobrados, diagnóstico e ativação validada; sem execução de página.",
+      "description": "Parser HTDL bootstrap e catálogo estático 0.1, referências e diagnóstico recuperável de editor, com memória limitada e ativação transacional.",
       "dependencies": [
         "documents"
       ]

@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-02",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "native-windows-lpac-worker-compiler-reader",
+  "assessment": "native-htdl-static-catalog-editor-windows-linux",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -17,14 +17,17 @@
         {
           "id": "E00-01",
           "name": "Especificações versionadas",
-          "level": 1,
+          "level": 2,
           "acceptance": "Fixar gramáticas e catálogos HTDL/FS/SSC, versões, subconjuntos, diagnósticos e negociação; ligar cada requisito a cenários positivos e negativos executáveis.",
-          "baseline": "Há rascunhos no projeto irmão; não foram congelados nem certificados.",
+          "baseline": "Contrato versionado static-catalog-0.1-v1, 23 tipos, atributos/referências/limites/diagnósticos e corpus declarativo positivo/negativo executado em Windows/Linux x64. Subconjunto estático explícito; FS/SSC, loader e conformidade de execução/presentação continuam abertos.",
           "evidence": [
             "local:htdl/docs/14-fundamentos-e-perfis.md",
             "local:htdl/docs/19-conformidade-e-cenarios.md",
             "docs/relatorios/2026-10-29-m0-contratos.md",
-            "docs/ecossistema/referencias/htdl-drafts-2026-10-29/PROVENANCE.json"
+            "docs/ecossistema/referencias/htdl-drafts-2026-10-29/PROVENANCE.json",
+            "docs/relatorios/2026-11-02-m3-htdl-catalog.md",
+            "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md"
           ]
         },
         {
@@ -60,12 +63,15 @@
           "name": "Driver e matriz de conformidade",
           "level": 2,
           "acceptance": "Executar corpus por perfil e sistema; distinguir pass/fail/not-run/unsupported, com hashes, versões e resultados sem depender de inspeção manual de exemplos.",
-          "baseline": "Driver nativo do perfil bootstrap com corpus declarativo, diagnóstico e árvore, oráculo XML independente na sintaxe em comum e execução Windows/Linux x64. Matriz distingue formatos gerados de execução e produto not-run; FS/SSC e catálogo completo não têm driver integrado.",
+          "baseline": "Drivers nativos dos perfis bootstrap e catálogo estático com corpus declarativo, diagnósticos/árvores, XML independente na sintaxe em comum e Windows/Linux x64. Geração dos cinco formatos é separada de execução; FS/SSC e produto integrado permanecem sem driver completo.",
           "evidence": [
             "local:htdl/docs/19-conformidade-e-cenarios.md",
             "docs/relatorios/2026-11-01-m3-parser-htdl.md",
             "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/summary.json",
-            "tests/fixtures/htdl-bootstrap-corpus.json"
+            "tests/fixtures/htdl-bootstrap-corpus.json",
+            "docs/relatorios/2026-11-02-m3-htdl-catalog.md",
+            "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md"
           ]
         },
         {
@@ -637,9 +643,9 @@
         {
           "id": "E07-01",
           "name": "Parser e diagnóstico HTDL real",
-          "level": 2,
+          "level": 3,
           "acceptance": "Implementar gramática versionada com atributos, comentários, entidades, semântica, spans e recuperação; executar corpus real, limites e entradas hostis sem recursão não limitada.",
-          "baseline": "Parser real do perfil viewer-local-bootstrap-v1 em AssisScript, com atributos/entidades/comentários, modelos de conteúdo, UTF-8/UTF-16, spans, limites, IDs e corpus adverso nativo. Catálogo HTDL completo e recuperação de editor permanecem abertos.",
+          "baseline": "Catálogo estático dos 23 tipos HTDL 0.1 em AssisScript: sintaxe, modelos/atributos, metadados, formulários/rótulos, nomes acessíveis e eventos sem execução. Editor recupera múltiplos erros semânticos, mantém spans UTF-16 e sempre aborta o rascunho. Corpus/XML, adversos, quotas/OOM, bootstrap preservado e integração Reader executados Windows/Linux x64. Recuperação de múltiplos erros de sintaxe, sugestões, vinculação de funções/recursos e controles visuais ainda abertos; não é conformidade integral 0.1.",
           "evidence": [
             "local:assis/docs/AUDITORIA-HTDL.md",
             "local:htdl/docs/02-htdl-0.1.md",
@@ -648,7 +654,10 @@
             "tests/test-htdl-readiness.py",
             "docs/relatorios/2026-11-01-m3-parser-htdl.md",
             "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/summary.json",
-            "tests/fixtures/htdl-bootstrap-corpus.json"
+            "tests/fixtures/htdl-bootstrap-corpus.json",
+            "docs/relatorios/2026-11-02-m3-htdl-catalog.md",
+            "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md"
           ]
         },
         {
@@ -656,7 +665,7 @@
           "name": "Árvore, seletores e mutações",
           "level": 2,
           "acceptance": "Oferecer criação/remoção/consulta, hierarquia ordenada, atributos/tipos semânticos e invalidação; manter identidade geracional, foco e acessibilidade coerentes após transações.",
-          "baseline": "Subconjunto HTDL local útil: consulta ordenada por tipo/classe e id, criação/remoção/substituição por spans e atributos hidden/disabled, revalidação completa antes de commit, IDs de instância renovados e foco por id semântico. Windows/Linux x64 contra XML e testes adversos; publicação MSAA externa revoga referências antigas. Seletores gerais, identidade persistente entre versões e catálogo completo permanecem abertos.",
+          "baseline": "Árvore/consultas bootstrap e catálogo estático de 23 tipos, classes/IDs e data-* com spans preservados. Patches de fonte/hidden/disabled e transações continuam revalidando antes de commit; NodeIds são revogados por instância. Identidade incremental, seletores gerais, controles completos e catálogo no Reader permanecem abertos.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "docs/relatorios/2026-11-01-m3-parser-htdl.md",
@@ -665,7 +674,10 @@
             "docs/relatorios/2026-11-01-m3-transacoes-preferencias.md",
             "docs/ecossistema/evidencias/m3-transactions-2026-11-01/summary.json",
             "tests/test-reader-transactions.py",
-            "stdlib/htdl.assis"
+            "stdlib/htdl.assis",
+            "docs/relatorios/2026-11-02-m3-htdl-catalog.md",
+            "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md"
           ]
         },
         {
@@ -946,10 +958,13 @@
           "name": "Editor, debugger e ferramentas web",
           "level": 2,
           "acceptance": "Ampliar LSP/fmt/check/test/doc com DSLs, source maps e depuração de página/host; mostrar erro de import/quota/handle com span e origem; integrar inspector local sem dar autoridade à página.",
-          "baseline": "LSP e ferramentas da linguagem disponíveis, ferramentas web pendentes.",
+          "baseline": "Ferramentas da linguagem e SDK escalar existentes; LSP/VS Code agora analisam rascunhos HTDL pelo parser AssisScript, com UTF-16, recuperação semântica, limites e cancelamento por versão, sem executar script/recurso. Editor de FS/SSC, sugestões completas, inspector e depuração de página/host continuam abertos.",
           "evidence": [
             "docs/FERRAMENTAS-ALPHA.8.md",
-            "docs/VSCODE.md"
+            "docs/VSCODE.md",
+            "docs/relatorios/2026-11-02-m3-htdl-catalog.md",
+            "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md"
           ]
         },
         {
@@ -2836,7 +2851,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-02",
+      "rubric_version": 1,
+      "label": "Catálogo estático HTDL 0.1 e editor: 43,30%, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 2,
+        "E07-03": 2,
+        "E07-04": 2,
+        "E07-05": 2,
+        "E08-01": 0,
+        "E08-02": 2,
+        "E08-03": 0,
+        "E08-04": 2,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Windows x64 worker e compilador em LPAC sem capabilities, com perfis/identidades exclusivos e recusas nativas demonstradas; Linux seccomp reexecutado. 42,70%, 0/5 gates; meta 50% pendente. Sandbox macOS/ARM, quota agregada shell/Reader/RSS, disco/órfãos de perfil, SDK/HTDL/editor/FS/SSC/recursos, desktop/leitor/DPI/IME, rede/persistência/busca, M4–M9, 24h e aceites preservados. Easy por último."
+  "assessment_note": "Catálogo estático HTDL 0.1 de 23 tipos, editor com recuperação semântica/UTF-16/cancelamento e entradas bootstrap preservadas, com execução própria Windows/Linux x64. 43,30%, 0/5 gates; meta 50% pendente. Reader completo/desktop/leitor/DPI/IME, recuperação sintática/editor incremental, SDK/loader/FS/SSC/recursos, quota agregada/RSS, disco/órfãos, macOS/ARM, rede/persistência/busca, M4–M9, 24h e aceites continuam na fila. Easy por último."
 }

@@ -1,0 +1,17 @@
+ASSIS: executável nativo gerado em C:\Users\babus\AppData\Local\Temp\assis-page-reader-fsqvcftw\page-worker.exe
+PAGE_READER_CANDIDATE {"worker_sha256": "02d6df0544491f6fcaa8ffc814a09ff346706e864122b3c1314068a0c309f50e", "mode": "reference"}
+test_counter_grant_is_explicit_and_both_grant_steps_can_complete (__main__.PageReader.test_counter_grant_is_explicit_and_both_grant_steps_can_complete) ... ok
+test_denied_document_grant_never_becomes_authority_from_source (__main__.PageReader.test_denied_document_grant_never_becomes_authority_from_source) ... ok
+test_failed_parse_layout_worker_load_and_abort_keep_active_and_fresh_ids (__main__.PageReader.test_failed_parse_layout_worker_load_and_abort_keep_active_and_fresh_ids) ... ok
+test_hidden_disabled_stale_document_request_and_forged_window_do_not_post (__main__.PageReader.test_hidden_disabled_stale_document_request_and_forged_window_do_not_post) ... ok
+test_keyboard_accessible_and_pointer_actions_use_same_sdk_projection (__main__.PageReader.test_keyboard_accessible_and_pointer_actions_use_same_sdk_projection) ... ok
+test_native_accessibility_publication_failure_keeps_both_active (__main__.PageReader.test_native_accessibility_publication_failure_keeps_both_active) ... ok
+test_navigation_freezes_actions_and_drops_queued_old_events (__main__.PageReader.test_navigation_freezes_actions_and_drops_queued_old_events) ... ok
+test_prepare_copies_mutable_input_before_async_load (__main__.PageReader.test_prepare_copies_mutable_input_before_async_load) ... ok
+test_queue_backpressure_is_explicit_and_close_cancels_both_generations (__main__.PageReader.test_queue_backpressure_is_explicit_and_close_cancels_both_generations) ... ok
+test_worker_fuel_failure_preserves_reader_and_independent_neighbor (__main__.PageReader.test_worker_fuel_failure_preserves_reader_and_independent_neighbor) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 34.261s
+
+OK

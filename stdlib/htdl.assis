@@ -1,12 +1,35 @@
 namespace htdl;
 import "std/documents.assis";
 
-/// viewer-local-bootstrap-v1. Codes are the numeric suffix of H101..H401.
+/// Versioned bootstrap and static-catalog-0.1-v1; codes are suffixes of Hxxx.
 public value struct Diagnostic{
     let code:int;let start:int;let end:int;
     let line:int;let column:int;let end_line:int;let end_column:int;
 }
 public value struct Position{let line:int;let column:int;}
+/// Caller-owned editor output, capped at 64 copied diagnostics. No tree/source escapes.
+public final class Diagnostics{
+    private own words:*int;private let capacity:int;private let count:int;private let overflow:bool;
+    fn init(borrow mut self,capacity:int):void{
+        if(capacity<1 || capacity>64){return;}self.words=try_alloc<int>(capacity*7);
+        if(self.words!=null){self.capacity=capacity;}
+    }
+    fn is_ready(borrow self):bool{return self.words!=null;}
+    fn size(borrow self):int{return self.count;}
+    fn truncated(borrow self):bool{return self.overflow;}
+    fn reset(borrow mut self):void{self.count=0;self.overflow=false;}
+    fn add(borrow mut self,d:Diagnostic):void{
+        for(let i:int=0;i<self.count;i++){val p:int=i*7;
+            if(self.words[p]==d.code && self.words[p+1]==d.start && self.words[p+2]==d.end){return;}}
+        if(self.count==self.capacity){self.overflow=true;return;}
+        val p:int=self.count*7;self.words[p]=d.code;self.words[p+1]=d.start;self.words[p+2]=d.end;
+        self.words[p+3]=d.line;self.words[p+4]=d.column;self.words[p+5]=d.end_line;self.words[p+6]=d.end_column;self.count++;
+    }
+    fn get(borrow self,index:int):Diagnostic{
+        assert(index>=0 && index<self.count);val p:int=index*7;
+        return new Diagnostic(self.words[p],self.words[p+1],self.words[p+2],self.words[p+3],self.words[p+4],self.words[p+5],self.words[p+6]);
+    }
+}
 public pure fn space(c:int):bool{return c==32 || c==9 || c==10 || c==13;}
 pure fn letter(c:int):bool{return (c>=65 && c<=90) || (c>=97 && c<=122);}
 pure fn digit(c:int):bool{return c>=48 && c<=57;}
@@ -53,23 +76,44 @@ public safe fn value_equals(borrow tree:doctree::Tree,id:doctree::NodeId,borrow 
     if(doctree::absent(id) || value_size(tree,id)!=len(value)){return false;}
     for(let i:int=0;i<len(value);i++){if(value_byte(tree,id,i)!=value[i]){return false;}}return true;
 }
-/// Attribute keys: type=1, version=2, lang=3, level=4, id=5, class=6,
-/// hidden=7, disabled=8, action=9, a11y-label=10.
+/// Fixed attribute keys 1..30: see PERFIL-HTDL-CATALOGO-V1.md. Dynamic data-*
+/// records use kind=200 and data_attribute, never an ambiguous numeric lookup.
 public safe fn attribute(borrow tree:doctree::Tree,node:doctree::NodeId,key:int):doctree::NodeId{
-    if(key<1 || key>10){return new doctree::NodeId();}
+    if(key<1 || key>30){return new doctree::NodeId();}
     let child:doctree::NodeId=tree.first_child(node);
     while(!doctree::absent(child)){if(tree.kind(child)==100+key){return child;}child=tree.next_sibling(child);}
     return new doctree::NodeId();
 }
+/// Dynamic data-* attributes keep their original name span and decoded value.
+public safe fn data_attribute(borrow document:documents::Document,node:doctree::NodeId,borrow name:slice<byte>):doctree::NodeId{
+    if(!document.is_open() || !document.nodes().contains(node)){return new doctree::NodeId();}
+    let a:doctree::NodeId=document.nodes().first_child(node);
+    while(!doctree::absent(a)){
+        if(document.nodes().kind(a)==200){val start:int=span_start(document.nodes(),a);let end:int=start;
+            while(end<document.source_size() && name_char(int(document.source_byte(end)))){end++;}
+            if(end-start==len(name)){let same:bool=true;
+                for(let i:int=0;i<len(name);i++){if(document.source_byte(start+i)!=name[i]){same=false;break;}}
+                if(same){return a;}}}
+        a=document.nodes().next_sibling(a);
+    }return new doctree::NodeId();
+}
 /// Semantic types: document=1, head=2, title=3, body=4, container=5,
-/// paragraph=6, text=7, heading=8, button=9; 0 denotes a non-element.
+/// paragraph=6, text=7, heading=8, button=9; catalog extends 10..23 without
+/// renumbering bootstrap IDs. 0 denotes an unknown type or non-element.
 public safe fn kind(borrow tree:doctree::Tree,node:doctree::NodeId):int{
     if(tree.kind(node)!=1){return 0;}val t:doctree::NodeId=attribute(tree,node,1);
     if(value_equals(tree,t,utf8("document"))){return 1;}if(value_equals(tree,t,utf8("head"))){return 2;}
     if(value_equals(tree,t,utf8("title"))){return 3;}if(value_equals(tree,t,utf8("body"))){return 4;}
     if(value_equals(tree,t,utf8("container"))){return 5;}if(value_equals(tree,t,utf8("paragraph"))){return 6;}
     if(value_equals(tree,t,utf8("text"))){return 7;}if(value_equals(tree,t,utf8("heading"))){return 8;}
-    if(value_equals(tree,t,utf8("button"))){return 9;}return 0;
+    if(value_equals(tree,t,utf8("button"))){return 9;}
+    if(value_equals(tree,t,utf8("meta"))){return 10;}if(value_equals(tree,t,utf8("script"))){return 11;}
+    if(value_equals(tree,t,utf8("main"))){return 12;}if(value_equals(tree,t,utf8("section"))){return 13;}
+    if(value_equals(tree,t,utf8("header"))){return 14;}if(value_equals(tree,t,utf8("footer"))){return 15;}
+    if(value_equals(tree,t,utf8("nav"))){return 16;}if(value_equals(tree,t,utf8("link"))){return 17;}
+    if(value_equals(tree,t,utf8("list"))){return 18;}if(value_equals(tree,t,utf8("item"))){return 19;}
+    if(value_equals(tree,t,utf8("label"))){return 20;}if(value_equals(tree,t,utf8("input"))){return 21;}
+    if(value_equals(tree,t,utf8("form"))){return 22;}if(value_equals(tree,t,utf8("image"))){return 23;}return 0;
 }
 public safe fn first_element(borrow tree:doctree::Tree,node:doctree::NodeId):doctree::NodeId{
     let c:doctree::NodeId=tree.first_child(node);
@@ -94,7 +138,7 @@ public safe fn find_id(borrow tree:doctree::Tree,borrow id:slice<byte>):doctree:
 /// Ordered local selector: semantic type (0=any), one exact normalized class
 /// token (empty=any), and an optional live cursor. No CSS or authority lookup.
 public safe fn query(borrow tree:doctree::Tree,type_id:int,borrow token:slice<byte>,after:doctree::NodeId):doctree::NodeId{
-    if(type_id<0 || type_id>9 || len(token)>65536){return new doctree::NodeId();}
+    if(type_id<0 || type_id>23 || len(token)>65536){return new doctree::NodeId();}
     for(let i:int=0;i<len(token);i++){if(space(int(token[i]))){return new doctree::NodeId();}}
     let n:doctree::NodeId=tree.root();
     if(!doctree::absent(after)){if(!tree.contains(after)){return new doctree::NodeId();}n=next_node(tree,after);}
@@ -207,7 +251,32 @@ final class Parser{
         if(equal_source(s,a,b,utf8("lang"))){return 3;}if(equal_source(s,a,b,utf8("level"))){return 4;}
         if(equal_source(s,a,b,utf8("id"))){return 5;}if(equal_source(s,a,b,utf8("class"))){return 6;}
         if(equal_source(s,a,b,utf8("hidden"))){return 7;}if(equal_source(s,a,b,utf8("disabled"))){return 8;}
-        if(equal_source(s,a,b,utf8("action"))){return 9;}if(equal_source(s,a,b,utf8("a11y-label"))){return 10;}return 0;
+        if(equal_source(s,a,b,utf8("action"))){return 9;}if(equal_source(s,a,b,utf8("a11y-label"))){return 10;}
+        if(equal_source(s,a,b,utf8("name"))){return 11;}
+        if(equal_source(s,a,b,utf8("content"))){return 12;}
+        if(equal_source(s,a,b,utf8("src"))){return 13;}
+        if(equal_source(s,a,b,utf8("format"))){return 14;}
+        if(equal_source(s,a,b,utf8("href"))){return 15;}
+        if(equal_source(s,a,b,utf8("ordered"))){return 16;}
+        if(equal_source(s,a,b,utf8("for"))){return 17;}
+        if(equal_source(s,a,b,utf8("kind"))){return 18;}
+        if(equal_source(s,a,b,utf8("value"))){return 19;}
+        if(equal_source(s,a,b,utf8("placeholder"))){return 20;}
+        if(equal_source(s,a,b,utf8("required"))){return 21;}
+        if(equal_source(s,a,b,utf8("checked"))){return 22;}
+        if(equal_source(s,a,b,utf8("alt"))){return 23;}
+        if(equal_source(s,a,b,utf8("a11y-live"))){return 24;}
+        if(equal_source(s,a,b,utf8("on:click"))){return 25;}
+        if(equal_source(s,a,b,utf8("on:input"))){return 26;}
+        if(equal_source(s,a,b,utf8("on:change"))){return 27;}
+        if(equal_source(s,a,b,utf8("on:submit"))){return 28;}
+        if(equal_source(s,a,b,utf8("on:focus"))){return 29;}
+        if(equal_source(s,a,b,utf8("on:blur"))){return 30;}
+        if(b-a>=6 && s[a]==100 && s[a+1]==97 && s[a+2]==116 && s[a+3]==97 && s[a+4]==45){
+            if(s[a+5]<97 || s[a+5]>122){return 0;}
+            for(let i:int=a+6;i<b;i++){val c:int=int(s[i]);if(!(c>=97 && c<=122) && !digit(c) && c!=45){return 0;}}
+            return 100;
+        }return 0;
     }
     private fn classes(borrow mut self,start:int,end:int):void{
         let read:int=16;let write:int=16;
@@ -233,7 +302,7 @@ final class Parser{
         }
         self.used=write;
     }
-    private fn opening(borrow mut self,borrow mut d:documents::Document,borrow s:slice<byte>,parent:doctree::NodeId):doctree::NodeId{
+    private fn opening(borrow mut self,borrow mut d:documents::Document,borrow s:slice<byte>,parent:doctree::NodeId,catalog:bool):doctree::NodeId{
         val begin:int=self.cursor;
         if(!self.starts(s,utf8("<div"))){self.fail(102,begin,begin+1);return new doctree::NodeId();}
         self.cursor+=4;
@@ -246,7 +315,7 @@ final class Parser{
             if(before==self.cursor || self.cursor==len(s) || !letter(int(s[self.cursor]))){self.fail(102,self.cursor,self.cursor);break;}
             val a:int=self.cursor;self.cursor++;
             while(self.cursor<len(s) && name_char(int(s[self.cursor]))){self.cursor++;}
-            val k:int=self.key(s,a,self.cursor);self.skip_space(s);
+            val name_end:int=self.cursor;val k:int=self.key(s,a,name_end);self.skip_space(s);
             if(self.cursor==len(s) || s[self.cursor]!=61){self.fail(102,a,self.cursor);break;}self.cursor++;self.skip_space(s);
             if(self.cursor==len(s)){self.fail(102,a,self.cursor);break;}
             let quote:int=-1;if(s[self.cursor]==34 || s[self.cursor]==39){quote=int(s[self.cursor]);self.cursor++;}
@@ -255,8 +324,16 @@ final class Parser{
             if(quote>0){if(self.cursor==len(s)){self.fail(102,a,self.cursor);break;}self.cursor++;}
             else if(self.cursor==value_start){self.fail(102,a,self.cursor);break;}
             attrs++;if(attrs>64){self.fail(401,a,self.cursor);break;}
-            if(k==0){self.fail(203,a,self.cursor);break;}
-            if(!doctree::absent(attribute(d.nodes(),node,k))){self.fail(202,a,self.cursor);break;}
+            if(k==0 || (!catalog && k>10)){self.fail(203,a,self.cursor);break;}
+            if(k==100){
+                let previous:doctree::NodeId=d.nodes().first_child(node);
+                while(!doctree::absent(previous)){
+                    if(d.nodes().kind(previous)==200){val start:int=span_start(d.nodes(),previous);let stop:int=start;
+                        while(stop<len(s) && name_char(int(s[stop]))){stop++;}
+                        if(equal_source(s,start,stop,slice_of(s,a,name_end-a))){self.fail(202,a,self.cursor);break;}}
+                    previous=d.nodes().next_sibling(previous);
+                }if(self.code!=0){break;}
+            }else if(!doctree::absent(attribute(d.nodes(),node,k))){self.fail(202,a,self.cursor);break;}
             if(k==6){self.classes(a,self.cursor);if(self.code!=0){break;}}
             val id:doctree::NodeId=self.append(d,node,100+k,a,self.cursor);
             if(k==5 && self.code==0){self.ids[self.id_count]=id.slot;self.id_count++;}
@@ -281,7 +358,7 @@ final class Parser{
     private fn validate(borrow mut self,borrow t:doctree::Tree,n:doctree::NodeId,parent_kind:int):void{
         val type:doctree::NodeId=attribute(t,n,1);
         if(doctree::absent(type)){self.invalid(t,n,201);return;}
-        val k:int=kind(t,n);if(k==0){self.invalid(t,type,203);return;}
+        val k:int=kind(t,n);if(k==0 || k>9){self.invalid(t,type,203);return;}
         if((parent_kind==0 && k!=1) || (parent_kind!=0 && k==1)){self.invalid(t,n,204);return;}
         let a:doctree::NodeId=t.first_child(n);
         while(!doctree::absent(a) && self.code==0){
@@ -319,7 +396,7 @@ final class Parser{
                    ((k==6 || k==8 || k==9) && ck!=7)){
                     // Missing/unknown type has its own diagnostic before content-model errors.
                     if(doctree::absent(attribute(t,child,1))){self.invalid(t,child,201);}
-                    else if(ck==0){self.invalid(t,attribute(t,child,1),203);}else{self.invalid(t,child,204);}return;
+                    else if(ck==0 || ck>9){self.invalid(t,attribute(t,child,1),203);}else{self.invalid(t,child,204);}return;
                 }
             }else if(t.kind(child)==2 && (k==1 || k==2 || k==4 || k==5)){
                 for(let i:int=0;i<value_size(t,child);i++){if(!space(int(value_byte(t,child,i)))){self.invalid(t,child,204);return;}}
@@ -327,6 +404,142 @@ final class Parser{
             child=t.next_sibling(child);
         }
         if((k==1 && elements!=2) || (k==2 && elements!=1)){self.invalid(t,n,204);}
+    }
+    private fn spend(borrow mut self,borrow t:doctree::Tree,n:doctree::NodeId):bool{
+        self.work++;if(self.work>8000000){self.invalid(t,n,401);return false;}return true;
+    }
+    private fn nonempty(borrow mut self,borrow t:doctree::Tree,a:doctree::NodeId):bool{
+        if(doctree::absent(a)){return false;}
+        for(let i:int=0;i<value_size(t,a);i++){if(!self.spend(t,a)){return false;}if(!space(int(value_byte(t,a,i)))){return true;}}return false;
+    }
+    private fn same_value(borrow mut self,borrow t:doctree::Tree,a:doctree::NodeId,b:doctree::NodeId):bool{
+        if(doctree::absent(a) || doctree::absent(b) || value_size(t,a)!=value_size(t,b)){return false;}
+        for(let i:int=0;i<value_size(t,a);i++){if(!self.spend(t,a)){return false;}if(value_byte(t,a,i)!=value_byte(t,b,i)){return false;}}return true;
+    }
+    private fn identifier(borrow mut self,borrow t:doctree::Tree,a:doctree::NodeId,function_name:bool):bool{
+        if(doctree::absent(a) || value_size(t,a)==0 || !identifier_start(int(value_byte(t,a,0)))){return false;}
+        for(let i:int=1;i<value_size(t,a);i++){
+            if(!self.spend(t,a)){return false;}val c:int=int(value_byte(t,a,i));
+            if(!identifier_char(c) || (function_name && c==45)){return false;}}
+        return true;
+    }
+    private fn ancestor(borrow mut self,borrow t:doctree::Tree,n:doctree::NodeId,type_id:int):doctree::NodeId{
+        let p:doctree::NodeId=t.parent(n);while(!doctree::absent(p)){
+            if(!self.spend(t,n)){return new doctree::NodeId();}if(kind(t,p)==type_id){return p;}p=t.parent(p);}
+        return new doctree::NodeId();
+    }
+    private fn address(borrow mut self,borrow t:doctree::Tree,a:doctree::NodeId,fragment:bool):bool{
+        if(!self.nonempty(t,a)){return false;}
+        if(value_byte(t,a,0)==35){
+            if(!fragment || value_size(t,a)<2 || !identifier_start(int(value_byte(t,a,1)))){return false;}
+            for(let i:int=2;i<value_size(t,a);i++){if(!self.spend(t,a) || !identifier_char(int(value_byte(t,a,i)))){return false;}}return true;}
+        // Only relative application references and lowercase HTTPS. Resolution,
+        // traversal/symlinks, DNS and grants belong to the loader, never this parser.
+        let colon:int=-1;let head:bool=true;
+        for(let i:int=0;i<value_size(t,a);i++){
+            if(!self.spend(t,a)){return false;}val c:int=int(value_byte(t,a,i));
+            if(c<=32 || c==92 || c==127){return false;}
+            if(c==58 && colon<0 && head){colon=i;}
+            if(c==47 || c==63 || c==35){head=false;}}
+        if(colon<0){return value_byte(t,a,0)!=47;}
+        if(colon!=5 || value_size(t,a)<=8){return false;}
+        borrow prefix:slice<byte>=utf8("https://");
+        for(let i:int=0;i<8;i++){if(value_byte(t,a,i)!=prefix[i]){return false;}}
+        return value_byte(t,a,8)!=47 && value_byte(t,a,8)!=63 && value_byte(t,a,8)!=35;
+    }
+    private fn validate_catalog(borrow mut self,borrow t:doctree::Tree,n:doctree::NodeId,parent_kind:int):void{
+        val type:doctree::NodeId=attribute(t,n,1);val k:int=kind(t,n);
+        if(doctree::absent(type)){self.invalid(t,n,201);return;}
+        if(k==0){self.invalid(t,type,203);return;}
+        if((parent_kind==0 && k!=1) || (parent_kind!=0 && k==1)){self.invalid(t,n,204);return;}
+        let a:doctree::NodeId=t.first_child(n);
+        while(!doctree::absent(a) && self.code==0){
+            val key:int=t.kind(a)-100;
+            if(key>1){
+                val body:bool=k>=4 && k!=10 && k!=11;
+                val interactive:bool=k==9 || k==17 || k==21;
+                val allowed:bool=(k==1 && (key==2 || key==3)) || (body && ((key>=5 && key<=7) || key==100)) ||
+                    (k==8 && key==4) || ((k==9 || k==21) && key==8) || (k==9 && key==9) ||
+                    ((interactive || k==13 || k==16 || k==22) && key==10) ||
+                    ((k==10 || k==21) && key==11) || (k==10 && key==12) || ((k==11 || k==23) && key==13) ||
+                    (k==11 && key==14) || (k==17 && key==15) || (k==18 && key==16) || (k==20 && key==17) ||
+                    (k==21 && key>=18 && key<=22) || (k==23 && key==23) ||
+                    ((k==6 || k==5 || k==13) && key==24) || ((k==9 || k==17) && key==25) ||
+                    (k==21 && (key==26 || key==27)) || (k==22 && key==28) || (interactive && (key==29 || key==30));
+                if(!allowed){self.invalid(t,a,203);return;}
+                if((key==7 || key==8 || key==16 || key==21 || key==22) && !value_equals(t,a,utf8("true")) && !value_equals(t,a,utf8("false"))){self.invalid(t,a,206);return;}
+                if(key==5 && !self.identifier(t,a,false)){self.invalid(t,a,206);return;}
+                if(key==9 && !value_equals(t,a,utf8("button")) && !value_equals(t,a,utf8("submit"))){self.invalid(t,a,206);return;}
+                if(key==10 && !self.nonempty(t,a)){self.invalid(t,a,206);return;}
+                if(key==18 && !value_equals(t,a,utf8("text")) && !value_equals(t,a,utf8("number")) && !value_equals(t,a,utf8("checkbox"))){self.invalid(t,a,206);return;}
+                if(key==24 && !value_equals(t,a,utf8("off")) && !value_equals(t,a,utf8("polite")) && !value_equals(t,a,utf8("assertive"))){self.invalid(t,a,206);return;}
+                if(key>=25 && key<=30 && !self.identifier(t,a,true)){self.invalid(t,a,206);return;}
+            }a=t.next_sibling(a);
+        }
+        if(k==1){
+            if(!value_equals(t,attribute(t,n,2),utf8("0.1"))){self.invalid(t,n,200);return;}
+            if(!self.nonempty(t,attribute(t,n,3))){self.invalid(t,n,206);return;}}
+        if(k==8){val level:doctree::NodeId=attribute(t,n,4);
+            if(doctree::absent(level) || value_size(t,level)!=1 || value_byte(t,level,0)<49 || value_byte(t,level,0)>54){self.invalid(t,n,206);return;}}
+        if((k==3 || k==8 || k==20 || ((k==9 || k==17) && doctree::absent(attribute(t,n,10)))) && !self.has_text(t,n,k==9 || k==17)){self.invalid(t,n,206);return;}
+        if(k==10 && (!value_equals(t,attribute(t,n,11),utf8("description")) || doctree::absent(attribute(t,n,12)))){self.invalid(t,n,206);return;}
+        if((k==11 || k==23) && !self.address(t,attribute(t,n,13),false)){self.invalid(t,n,206);return;}
+        if(k==11 && !value_equals(t,attribute(t,n,14),utf8("source")) && !value_equals(t,attribute(t,n,14),utf8("wasm"))){self.invalid(t,n,206);return;}
+        if(k==17 && !self.address(t,attribute(t,n,15),true)){self.invalid(t,n,206);return;}
+        if(k==20 && !self.identifier(t,attribute(t,n,17),false)){self.invalid(t,n,206);return;}
+        if(k==21 && !doctree::absent(attribute(t,n,22)) && !value_equals(t,attribute(t,n,18),utf8("checkbox"))){self.invalid(t,n,206);return;}
+        if(k==23 && doctree::absent(attribute(t,n,23))){self.invalid(t,n,206);return;}
+        if(k==22 && !doctree::absent(self.ancestor(t,n,22))){self.invalid(t,n,204);return;}
+        if(k==9 && value_equals(t,attribute(t,n,9),utf8("submit")) && doctree::absent(self.ancestor(t,n,22))){self.invalid(t,n,204);return;}
+        if(k==12 && (!doctree::absent(self.ancestor(t,n,14)) || !doctree::absent(self.ancestor(t,n,15)) || !doctree::absent(self.ancestor(t,n,16)))){self.invalid(t,n,204);return;}
+        let elements:int=0;let titles:int=0;let metas:int=0;let scripts:int=0;let child:doctree::NodeId=t.first_child(n);
+        while(!doctree::absent(child) && self.code==0){
+            if(!self.spend(t,n)){return;}
+            if(t.kind(child)==1){
+                val ck:int=kind(t,child);elements++;if(ck==3){titles++;}if(ck==10){metas++;}if(ck==11){scripts++;}
+                val structural:bool=k==4 || k==5 || (k>=12 && k<=16) || k==19 || k==22;
+                val body_child:bool=ck==5 || ck==6 || ck==8 || ck==9 || (ck>=12 && ck<=18) || (ck>=20 && ck<=23);
+                if((k==1 && !((elements==1 && ck==2) || (elements==2 && ck==4))) ||
+                   (k==2 && !(ck==3 || ck==10 || ck==11)) || k==3 || k==7 || k==10 || k==11 || k==21 || k==23 ||
+                   (structural && !body_child) || (k==18 && ck!=19) ||
+                   ((k==6 || k==8 || k==9 || k==17 || k==20) && ck!=7)){
+                    if(doctree::absent(attribute(t,child,1))){self.invalid(t,child,201);}
+                    else if(ck==0){self.invalid(t,attribute(t,child,1),203);}else{self.invalid(t,child,204);}return;}
+            }else if(t.kind(child)==2 && !(k==3 || k==6 || k==7 || k==8 || k==9 || k==17 || k==20)){
+                if(self.nonempty(t,child)){self.invalid(t,child,204);return;}}
+            child=t.next_sibling(child);
+        }
+        if((k==1 && elements!=2) || (k==2 && (titles!=1 || metas>1 || scripts>1))){self.invalid(t,n,204);}
+    }
+    private fn references(borrow mut self,borrow t:doctree::Tree,n:doctree::NodeId):void{
+        val k:int=kind(t,n);let events:bool=false;
+        for(let key:int=25;key<=30;key++){if(!doctree::absent(attribute(t,n,key))){events=true;}}
+        if(events){
+            let script:bool=false;val head:doctree::NodeId=first_element(t,t.root());let c:doctree::NodeId=new doctree::NodeId();
+            if(!doctree::absent(head)){c=first_element(t,head);}
+            while(!doctree::absent(c)){if(kind(t,c)==11){script=true;}c=next_element(t,c);}
+            if(!script){self.invalid(t,n,301);return;}}
+        if(!(k==12 || k==20 || k==21)){return;}
+        val name:doctree::NodeId=attribute(t,n,11);val id:doctree::NodeId=attribute(t,n,5);val target:doctree::NodeId=attribute(t,n,17);
+        val form:doctree::NodeId=self.ancestor(t,n,22);
+        val needs_label:bool=k==21 && doctree::absent(attribute(t,n,10));
+        val check_name:bool=k==21 && !doctree::absent(name) && !doctree::absent(form);
+        if(k==21 && !needs_label && !check_name){return;}
+        let labelled:bool=false;let found:bool=false;
+        let p:doctree::NodeId=t.root();
+        while(!doctree::absent(p) && self.code==0){
+            // A record visit includes several generational/attribute lookups.
+            self.work+=127;if(!self.spend(t,n)){return;}
+            if(t.kind(p)==1){val pk:int=kind(t,p);
+                if(k==12 && pk==12 && p.slot<n.slot){self.invalid(t,n,204);return;}
+                if(k==20 && self.same_value(t,target,attribute(t,p,5))){if(pk!=21){self.invalid(t,n,207);return;}found=true;}
+                if(needs_label && pk==20 && self.same_value(t,id,attribute(t,p,17))){labelled=true;}
+                if(check_name && pk==21 && p.slot<n.slot && self.same_value(t,name,attribute(t,p,11))){
+                    val other:doctree::NodeId=self.ancestor(t,p,22);if(other.instance==form.instance && other.slot==form.slot){self.invalid(t,name,205);return;}}
+            }p=next_node(t,p);
+        }
+        if(k==20 && !found){if(doctree::absent(target)){self.invalid(t,n,207);}else{self.invalid(t,target,207);}return;}
+        if(k==21 && doctree::absent(attribute(t,n,10)) && !labelled){self.invalid(t,n,207);}
     }
     private fn compare_id(borrow self,borrow t:doctree::Tree,a:int,b:int):int{
         val x:doctree::NodeId=new doctree::NodeId(t.root().instance,a,1);
@@ -359,12 +572,12 @@ final class Parser{
         }
         if(duplicate>=0){self.invalid(t,new doctree::NodeId(t.root().instance,duplicate,1),205);}
     }
-    fn run(borrow mut self,borrow mut d:documents::Document,borrow s:slice<byte>):Diagnostic{
-        if(!self.ready){return diagnostic(s,401,0,0);}
+    private fn parse_tree(borrow mut self,borrow mut d:documents::Document,borrow s:slice<byte>,catalog:bool):void{
+        if(!self.ready){self.fail(401,0,0);return;}
         if(len(s)>=3 && s[0]==239 && s[1]==187 && s[2]==191){self.cursor=3;}
         while(self.code==0){self.skip_space(s);if(self.starts(s,utf8("<!--"))){self.comment(s);}else{break;}}
         if(self.code==0){
-            let node:doctree::NodeId=self.opening(d,s,new doctree::NodeId());let depth:int=1;
+            let node:doctree::NodeId=self.opening(d,s,new doctree::NodeId(),catalog);let depth:int=1;
             while(self.code==0 && depth>0 && self.cursor<len(s)){
                 if(self.starts(s,utf8("</div>"))){
                     self.cursor+=6;val start:int=span_start(d.nodes(),node);self.prefix(start,self.cursor);
@@ -373,23 +586,50 @@ final class Parser{
                 }else if(self.starts(s,utf8("<!--"))){self.comment(s);}
                 else if(s[self.cursor]==60){
                     if(depth>=256){self.fail(401,self.cursor,self.cursor);}
-                    else{node=self.opening(d,s,node);depth++;}
+                    else{node=self.opening(d,s,node,catalog);depth++;}
                 }else{val start:int=self.cursor;self.decode(s,0);if(self.code==0){self.append(d,node,2,start,self.cursor);}}
             }
             if(self.code==0 && depth!=0){self.fail(102,span_start(d.nodes(),node),self.cursor);}
         }
         while(self.code==0){self.skip_space(s);if(self.starts(s,utf8("<!--"))){self.comment(s);}else{break;}}
         if(self.code==0 && self.cursor!=len(s)){self.fail(102,self.cursor,self.cursor+1);}
+    }
+    fn run(borrow mut self,borrow mut d:documents::Document,borrow s:slice<byte>,catalog:bool):Diagnostic{
+        self.parse_tree(d,s,catalog);
         if(self.code==0){
             let node:doctree::NodeId=d.nodes().root();
             while(self.code==0 && !doctree::absent(node)){
                 if(d.nodes().kind(node)==1){val parent:doctree::NodeId=d.nodes().parent(node);let pk:int=0;
-                    if(!doctree::absent(parent)){pk=kind(d.nodes(),parent);}self.validate(d.nodes(),node,pk);}
+                    if(!doctree::absent(parent)){pk=kind(d.nodes(),parent);}if(catalog){self.validate_catalog(d.nodes(),node,pk);}else{self.validate(d.nodes(),node,pk);}}
                 node=next_node(d.nodes(),node);
             }
         }
         if(self.code==0){self.check_ids(d.nodes());}
+        if(self.code==0 && catalog){
+            let node:doctree::NodeId=d.nodes().root();while(self.code==0 && !doctree::absent(node)){
+                if(d.nodes().kind(node)==1){self.references(d.nodes(),node);}node=next_node(d.nodes(),node);}}
         return diagnostic(s,self.code,self.first,self.last);
+    }
+    fn analyze(borrow mut self,borrow mut d:documents::Document,borrow s:slice<byte>,borrow mut output:Diagnostics):void{
+        self.parse_tree(d,s,true);
+        // A malformed token/structure is not repaired or made executable.
+        if(self.code!=0){output.add(diagnostic(s,self.code,self.first,self.last));return;}
+        let node:doctree::NodeId=d.nodes().root();
+        while(!doctree::absent(node) && !output.truncated()){
+            if(d.nodes().kind(node)==1){
+                self.code=0;val parent:doctree::NodeId=d.nodes().parent(node);let pk:int=0;
+                if(!doctree::absent(parent)){pk=kind(d.nodes(),parent);}
+                self.validate_catalog(d.nodes(),node,pk);
+                if(self.code!=0){output.add(diagnostic(s,self.code,self.first,self.last));if(self.code==401){return;}}
+            }node=next_node(d.nodes(),node);
+        }
+        self.code=0;self.check_ids(d.nodes());if(self.code!=0){output.add(diagnostic(s,self.code,self.first,self.last));}
+        node=d.nodes().root();
+        while(!doctree::absent(node) && !output.truncated()){
+            if(d.nodes().kind(node)==1){self.code=0;self.references(d.nodes(),node);
+                if(self.code!=0){output.add(diagnostic(s,self.code,self.first,self.last));if(self.code==401){return;}}}
+            node=next_node(d.nodes(),node);
+        }
     }
 }
 
@@ -402,7 +642,7 @@ public safe fn workspace_bytes(source_bytes:int):int{
 }
 /// Parse/validate before atomic activation. Any failure aborts only our candidate.
 /// Store/instance failures use H401; diagnostic spans remain in the input source.
-public safe fn stage(borrow mut store:documents::Store,instance:int,borrow source:slice<byte>,temporary_bytes:int):Diagnostic{
+safe fn stage_profile(borrow mut store:documents::Store,instance:int,borrow source:slice<byte>,temporary_bytes:int,catalog:bool):Diagnostic{
     if(len(source)>1048576){return diagnostic(source,401,0,len(source));}
     val bad:int=unicode::error(source);if(bad>=0){return diagnostic(source,101,bad,bad+1);}
     for(let i:int=0;i<len(source);i++){val c:int=int(source[i]);if(c<32 && c!=9 && c!=10 && c!=13){return diagnostic(source,101,i,i+1);}}
@@ -415,10 +655,39 @@ public safe fn stage(borrow mut store:documents::Store,instance:int,borrow sourc
         let ids:int=len(source)/11+1;if(ids>20000){ids=20000;}
         own parser:Parser=try_new Parser(len(source)+16,ids);
         if(parser==null){result=diagnostic(source,401,0,0);}
-        else{borrow mut d:documents::Document=store.candidate();result=parser.run(d,source);}
+        else{borrow mut d:documents::Document=store.candidate();result=parser.run(d,source,catalog);}
     }
     if(result.code!=0){assert(store.abort(instance));return result;}
     return result;
+}
+
+/// Frozen bootstrap entry point, including rejection of unsupported catalog types.
+public safe fn stage(borrow mut store:documents::Store,instance:int,borrow source:slice<byte>,temporary_bytes:int):Diagnostic{
+    return stage_profile(store,instance,source,temporary_bytes,false);
+}
+/// Catalog syntax/static semantics only. This grants no resource or execution authority.
+public safe fn stage_catalog(borrow mut store:documents::Store,instance:int,borrow source:slice<byte>,temporary_bytes:int):Diagnostic{
+    return stage_profile(store,instance,source,temporary_bytes,true);
+}
+public safe fn load_catalog(borrow mut store:documents::Store,instance:int,borrow source:slice<byte>):Diagnostic{
+    val result:Diagnostic=stage_catalog(store,instance,source,0);
+    if(result.code==0){assert(store.commit(instance));}return result;
+}
+/// Editor-only semantic recovery. Candidate is ALWAYS aborted, even for valid text.
+/// Output is external caller memory (40+capacity*56 bytes), not document storage.
+public safe fn inspect(borrow mut store:documents::Store,instance:int,borrow source:slice<byte>,borrow mut output:Diagnostics):bool{
+    output.reset();if(!output.is_ready()){return false;}
+    if(len(source)>1048576){output.add(diagnostic(source,401,0,len(source)));return true;}
+    val bad:int=unicode::error(source);if(bad>=0){output.add(diagnostic(source,101,bad,bad+1));return true;}
+    for(let i:int=0;i<len(source);i++){val c:int=int(source[i]);if(c<32 && c!=9 && c!=10 && c!=13){output.add(diagnostic(source,101,i,i+1));return true;}}
+    if(store.begin_reserved(instance,source,workspace_bytes(len(source)))!=0){output.add(diagnostic(source,401,0,0));return true;}
+    {
+        let ids:int=len(source)/11+1;if(ids>20000){ids=20000;}
+        own parser:Parser=try_new Parser(len(source)+16,ids);
+        if(parser==null){output.add(diagnostic(source,401,0,0));}
+        else{borrow mut d:documents::Document=store.candidate();parser.analyze(d,source,output);}
+    }
+    assert(store.abort(instance));return true;
 }
 
 /// Existing load contract: validate then activate, without exposing a candidate.

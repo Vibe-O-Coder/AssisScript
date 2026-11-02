@@ -1,0 +1,16 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-isolation=none",
+    "tests/test-lsp.js",
+    "tests/test-htdl-editor.js",
+    "vscode-assisscript/test/extension.test.js",
+    "vscode-assisscript/test/language.test.js"
+  ],
+  "passed": true,
+  "executed": 37,
+  "returncode": 0,
+  "log_sha256": "7d7fd0a1d04a322cb4a4c790c6168c9c2f4012715ff4e24cda141ecb17935295",
+  "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f"
+}

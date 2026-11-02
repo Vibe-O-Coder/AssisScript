@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "checks": [
+    {
+      "mode": "optimized",
+      "passed": true,
+      "log": "linux-example-52-optimized.log",
+      "log_sha256": "46974c0852181b536fe49f0f1f0f12c8f6f4faef57295302988ae305b2b42bf8"
+    },
+    {
+      "mode": "reference",
+      "passed": true,
+      "log": "linux-example-52-reference.log",
+      "log_sha256": "46974c0852181b536fe49f0f1f0f12c8f6f4faef57295302988ae305b2b42bf8"
+    }
+  ]
+}

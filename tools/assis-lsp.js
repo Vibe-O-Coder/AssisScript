@@ -9,6 +9,7 @@ const { fileURLToPath, pathToFileURL } = require('node:url');
 const { spawn } = require('node:child_process');
 const language = require(fs.existsSync(path.resolve(__dirname, '../vscode-assisscript/src/language.js')) ? '../vscode-assisscript/src/language' : '../src/language');
 const packageInfo = require(fs.existsSync(path.resolve(__dirname, '../vscode-assisscript/package.json')) ? '../vscode-assisscript/package.json' : '../package.json');
+const htdl = require(fs.existsSync(path.resolve(__dirname, '../vscode-assisscript/src/htdl.js')) ? '../vscode-assisscript/src/htdl' : '../src/htdl');
 let input = Buffer.alloc(0), root = process.cwd(), options = {}, shutdown = false;
 const documents = new Map(), pending = new Map(), generations = new Map(), timers = new Map(), children = new Set(), published = new Set();
 const MAX = 16 * 1024 * 1024;
@@ -41,12 +42,17 @@ async function diagnostics(uri) {
     const controller = new AbortController(); pending.get(uri)?.abort(); pending.set(uri, controller);
     const folder = await fsp.mkdtemp(path.join(os.tmpdir(), 'assis-lsp-'));
     try {
+        if (fileURLToPath(uri).toLowerCase().endsWith('.htdl')) {
+            const items = await htdl.check(compiler(),doc.text,{signal:controller.signal});
+            if (generations.get(uri) === generation && documents.has(uri) && !shutdown) notify('textDocument/publishDiagnostics',{uri,version:doc.version,diagnostics:items});
+            return;
+        }
         const context=project(uri), useEntry=context.entry!==fileURLToPath(uri)&&fs.existsSync(path.join(path.dirname(context.entry),'assis.pkg'));
         const args = ['check', useEntry?context.entry:fileURLToPath(uri), '--diagnostics=json'];
         if (options.legacyMode === true) args.push('--legacy');
         if (!useEntry&&!language.analyze(doc.text, fileURLToPath(uri)).symbols.some(s => s.kind === 'function' && s.name === 'main')) args.push('--library');
         for (const include of options.includePaths || []) args.push('-I', include);
-        let i = 0; for (const [u, d] of documents) { const snapshot = path.join(folder, `${i++}.assis`); await fsp.writeFile(snapshot, d.text, 'utf8'); args.push('--overlay', fileURLToPath(u), snapshot); }
+        let i = 0; for (const [u, d] of documents) { if(fileURLToPath(u).toLowerCase().endsWith('.htdl')) continue; const snapshot = path.join(folder, `${i++}.assis`); await fsp.writeFile(snapshot, d.text, 'utf8'); args.push('--overlay', fileURLToPath(u), snapshot); }
         const result = await execute(args, controller.signal);
         if (generations.get(uri) !== generation || !documents.has(uri) || shutdown) return;
         const groups = new Map([[uri, []]]);
@@ -57,10 +63,13 @@ async function diagnostics(uri) {
             if (!groups.has(target)) groups.set(target, []); groups.get(target).push(item);
         }
         if (result.code && ![...groups.values()].some(items => items.length)) groups.get(uri).push({ range: { start: { line: 0, character: 0 }, end: { line: 0, character: 1 } }, severity: 1, source: 'AssisScript', message: result.stderr || 'O compilador não concluiu a análise.' });
-        for (const old of published) if (!groups.has(old)) notify('textDocument/publishDiagnostics', { uri: old, diagnostics: [] });
+        for (const old of published) if (!groups.has(old) && !fileURLToPath(old).toLowerCase().endsWith('.htdl')) notify('textDocument/publishDiagnostics', { uri: old, diagnostics: [] });
         published.clear(); for (const [target, items] of groups) { notify('textDocument/publishDiagnostics', { uri: target, version: target === uri ? doc.version : undefined, diagnostics: items }); published.add(target); }
     } catch (error) {
-        if (error.name !== 'AbortError' && generations.get(uri) === generation) notify('window/logMessage', { type: 1, message: `AssisScript: ${error.message}` });
+        if (error.name !== 'AbortError' && generations.get(uri) === generation) {
+            notify('window/logMessage', { type: 1, message: `AssisScript: ${error.message}` });
+            if(fileURLToPath(uri).toLowerCase().endsWith('.htdl') && documents.has(uri) && !shutdown)notify('textDocument/publishDiagnostics',{uri,version:doc.version,diagnostics:[{severity:2,source:'HTDL',message:`Verificação indisponível: ${error.message}`,range:{start:{line:0,character:0},end:{line:0,character:0}}}]});
+        }
     } finally { if (pending.get(uri) === controller) pending.delete(uri); await fsp.rm(folder, { recursive: true, force: true }); }
 }
 function schedule(uri) { clearTimeout(timers.get(uri)); timers.set(uri, setTimeout(() => { timers.delete(uri); diagnostics(uri); }, 80)); }
@@ -84,6 +93,11 @@ async function handle(method, params) {
     if (method === 'textDocument/didSave') { if (params.text !== undefined && documents.has(uri)) documents.get(uri).text = params.text; schedule(uri); return; }
     if (method === 'textDocument/didClose') { documents.delete(uri); clearTimeout(timers.get(uri)); timers.delete(uri); pending.get(uri)?.abort(); generations.set(uri, (generations.get(uri) || 0) + 1); notify('textDocument/publishDiagnostics', { uri, diagnostics: [] }); return; }
     if (!uri) throw Object.assign(new Error(`Método não suportado: ${method}`), { code: -32601 });
+    if (fileURLToPath(uri).toLowerCase().endsWith('.htdl')) {
+        if (method === 'textDocument/completion') return [...htdl.types,...htdl.attributes].map(label=>({label,kind:14,detail:'HTDL 0.1 — validação estática'}));
+        if (method === 'textDocument/formatting' || method === 'textDocument/documentSymbol') return [];
+        if (['textDocument/hover','textDocument/definition','textDocument/signatureHelp'].includes(method)) return null;
+    }
     const { model, models } = project(uri), at = params.position ? offset(model.text, params.position) : 0;
     if (method === 'textDocument/completion') return language.visibleSymbols(model, at, models).map(s => ({ label: s.name, kind: s.kind === 'class' ? 7 : s.kind === 'function' ? 3 : 6, detail: s.label || s.type, documentation: s.documentation }));
     if (method === 'textDocument/hover') { const s = language.resolveSymbol(model, at, models); return s ? { contents: { kind: 'markdown', value: '```assis\n' + (s.label || s.name + ': ' + s.type) + '\n```\n\n' + (s.documentation || '') } } : null; }

@@ -63,6 +63,8 @@ cp "$root/benchmarks/resultados/"*.md "$root/benchmarks/resultados/"*.json "$pre
 for lib in $ASSIS_REQUIRED $optional; do cp "$root/stdlib/$lib.assis" "$prefix/share/assisscript/stdlib/"; done
 mkdir -p "$prefix/share/assisscript/tools" "$prefix/share/assisscript/vscode-assisscript/src"
 cp "$root/tools/assis-lsp.js" "$prefix/share/assisscript/tools/"
+cp "$root/tools/htdl-check.assis" "$prefix/share/assisscript/tools/"
+cp "$root/vscode-assisscript/src/htdl.js" "$prefix/share/assisscript/vscode-assisscript/src/"
 cp "$root/vscode-assisscript/src/language.js" "$root/vscode-assisscript/src/reference.json" "$prefix/share/assisscript/vscode-assisscript/src/"
 cp "$root/vscode-assisscript/package.json" "$prefix/share/assisscript/vscode-assisscript/"
 cp "$root/stdlib/catalogo.sh" "$prefix/share/assisscript/stdlib/"
@@ -76,7 +78,7 @@ cp "$root/docs/third-party/"*.txt "$prefix/share/assisscript/docs/third-party/"
 printf 'AssisScript %s\n' "$ASSIS_VERSION" > "$prefix/share/assisscript/INSTALADO"
 manifest="$prefix/share/assisscript/INSTALADOS.txt"
 {
-    printf '%s\n' assets/IDENTIDADE-V1.json assets/propostas/source-v1.svg assets/propostas/compiled-v1.svg README.md README.en.md README.pt-BR.md README.es.md LICENSE THIRD_PARTY_NOTICES.md docs/LICENSE stdlib/catalogo.json stdlib/catalogo.sh INSTALADO tools/assis-lsp.js vscode-assisscript/src/language.js vscode-assisscript/src/reference.json vscode-assisscript/package.json
+    printf '%s\n' assets/IDENTIDADE-V1.json assets/propostas/source-v1.svg assets/propostas/compiled-v1.svg README.md README.en.md README.pt-BR.md README.es.md LICENSE THIRD_PARTY_NOTICES.md docs/LICENSE stdlib/catalogo.json stdlib/catalogo.sh INSTALADO tools/assis-lsp.js tools/htdl-check.assis vscode-assisscript/src/htdl.js vscode-assisscript/src/language.js vscode-assisscript/src/reference.json vscode-assisscript/package.json
     for notice in "$root/docs/third-party/"*.txt; do printf '%s\n' "${notice#"$root/"}"; done
     find "$root/exemplos" -type f | while IFS= read -r example; do printf '%s\n' "${example#"$root/"}"; done
     for lib in $ASSIS_REQUIRED $optional; do printf 'stdlib/%s.assis\n' "$lib"; done

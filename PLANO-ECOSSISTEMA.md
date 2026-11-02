@@ -1,3 +1,15 @@
+> **Continuação local validada — 43,30%, 02/11/2026, 0/5 gates; publicação no adendo.**
+> Cópia `C:/Users/babus/Desktop/AssisScript/work/htdl-catalog-20261102`,
+> branch `work/m3-htdl-catalog-2026-11-02`, base publicada f00d1ff conferida.
+> Catálogo estático HTDL 0.1 de 23 tipos e recuperação semântica no editor;
+> Reader/pagereader conservam o bootstrap. Windows 90/0, Linux 81/9 executados/not-run;
+> 54 exemplos por host e 37 testes de editor. [Relatório e evidências](docs/relatorios/2026-11-02-m3-htdl-catalog.md).
+> Meta 50% pendente; nenhuma conformidade visual/execução 0.1 ou gate aprovado.
+> Recuperação sintática/identidade incremental, catálogo no Reader, SDK/loader/FS/SSC,
+> desktop/leitor/DPI/IME, quota agregada/RSS/disco/órfãos, macOS/ARM, rede/perfis,
+> persistência/busca, M4–M9, 24h e aceites continuam na fila. Easy por último.
+> As entradas seguintes são históricas; não repetir fundações ou publicar a base antiga.
+
 > **Publicação confirmada — 42,70%, 02/11/2026, 0/5 gates.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/windows-isolation-20261102`,
 > branch `work/m0-windows-isolation-2026-11-02`, implementação 667d161 publicada.

@@ -1,0 +1,20 @@
+import "std/htdl.assis";
+
+/// Trusted editor adapter. Input is data only; no script/resource is opened.
+safe fn main():int{
+    own source:*byte=try_alloc<byte>(1048577);own chunk:*byte=try_alloc<byte>(4096);
+    own output:htdl::Diagnostics=try_new htdl::Diagnostics(64);
+    own store:documents::Store=try_new documents::Store(64000000,200000,1000000);
+    if(source==null || chunk==null || output==null || store==null || !output.is_ready()){return 2;}
+    let count:int=0;
+    while(true){val n:int=read_bytes(chunk,4096);if(n<0){return 2;}if(n==0){break;}
+        if(n>1048576-count){print(1,0);print(401,0,0,1,1,1,1);return 0;}
+        for(let i:int=0;i<n;i++){source[count+i]=chunk[i];}count+=n;
+    }
+    if(!htdl::inspect(store,1,slice_of(source,0,count),output)){return 2;}
+    assert(!store.has_active() && !store.has_candidate() && store.storage_bytes()==72);
+    let truncated:int=0;if(output.truncated()){truncated=1;}print(output.size(),truncated);
+    for(let i:int=0;i<output.size();i++){val d:htdl::Diagnostic=output.get(i);
+        print(d.code,d.start,d.end,d.line,d.column,d.end_line,d.end_column);}
+    return 0;
+}

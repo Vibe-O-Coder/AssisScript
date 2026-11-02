@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "checks": [
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/instalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces",
+        "--no-path",
+        "--with",
+        "htdl"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em /tmp/assis-htdl-install-t66qv6uw/prefix with spaces/bin/assis\nInclua /tmp/assis-htdl-install-t66qv6uw/prefix with spaces/bin no PATH ou use o caminho completo.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/prefix with spaces/bin/assis",
+        "build",
+        "<TEMP>/prefix with spaces/share/assisscript/tools/htdl-check.assis",
+        "--safe",
+        "--debug",
+        "-o",
+        "<TEMP>/native-checker"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: execut\u00e1vel nativo gerado em /tmp/assis-htdl-install-t66qv6uw/native-checker\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/native-checker"
+      ],
+      "returncode": 0,
+      "stdout": "0 0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/desinstalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: compilador desinstalado. Seus projetos foram preservados.\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Fresh isolated Linux offline distribution, optional htdl dependency closure, installed native checker, managed-file removal and user-file preservation; no PATH or profile changes"
+}

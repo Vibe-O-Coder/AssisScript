@@ -1,0 +1,32 @@
+{
+  "base": "f00d1ff95694dd312f90ec46d563606bda258356",
+  "baseline_path": "C:\\Users\\babus\\Desktop\\AssisScript\\work\\windows-isolation-20261102",
+  "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"input\" id=\"x\"></div><div type=\"label\" for=\"x\">Name</div></div></div>",
+  "checks": [
+    {
+      "profile": "published-bootstrap",
+      "code": 203,
+      "compiler_sha256": "4c0118bf65c6327fd6b013f99ce0d7d023e192b3024768781fcf4fca2bb9ed4c",
+      "fixture_sha256": "c0bce1ea11d864969553ad915083aa1b7f71df7fb7d13bce980a219b06c0eb12",
+      "binary_sha256": "566ca8ad6bbacb6a3884ac034920f0406aa622965297cbef9a8224f4eff920ae",
+      "stdout_sha256": "e693f1cc05b4340f66117eb09a0b6b9a27104c34d35f103e817b2c4a0739f20d"
+    },
+    {
+      "profile": "current-bootstrap",
+      "code": 203,
+      "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+      "fixture_sha256": "c0bce1ea11d864969553ad915083aa1b7f71df7fb7d13bce980a219b06c0eb12",
+      "binary_sha256": "5f67915e6e11898a60e34c0f24147d189e3d4c2a765a2aa526a1fe57072315e9",
+      "stdout_sha256": "e693f1cc05b4340f66117eb09a0b6b9a27104c34d35f103e817b2c4a0739f20d"
+    },
+    {
+      "profile": "current-catalog",
+      "code": 0,
+      "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+      "fixture_sha256": "02b274ba859d6920cd7eee65dacbc6d499160c748154da30c35031fbf5243a82",
+      "binary_sha256": "463cf27f1b217b90860850eaa7801eb3dc42bdbf97951d54abdf0bc1fee88947",
+      "stdout_sha256": "9d25f7298200269f544278bed654082fcad626c5a1236011eaaa6bea92f53fe1"
+    }
+  ],
+  "scope": "Native observation of the published bootstrap boundary, preserved in current bootstrap; new catalog is an explicit separate API. Baseline binary is used only for this reproduction."
+}

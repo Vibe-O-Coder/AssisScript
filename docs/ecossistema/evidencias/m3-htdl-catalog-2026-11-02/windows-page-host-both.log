@@ -1,0 +1,18 @@
+test_document_projection_matches_xml_semantics_and_default_deny (__main__.PageHost.test_document_projection_matches_xml_semantics_and_default_deny) ... ok
+test_four_arguments_left_to_right_nested_calls_and_counter_authority (__main__.PageHost.test_four_arguments_left_to_right_nested_calls_and_counter_authority) ... ok
+test_group_round_robin_deadlines_and_non_reused_slots (__main__.PageHost.test_group_round_robin_deadlines_and_non_reused_slots) ... ok
+test_invalid_sdk_ranges_host_quota_and_abort_preserve_live_instance (__main__.PageHost.test_invalid_sdk_ranges_host_quota_and_abort_preserve_live_instance) ... ok
+test_loop_fuel_and_revocation_do_not_starve_neighbor (__main__.PageHost.test_loop_fuel_and_revocation_do_not_starve_neighbor) ... ok
+test_old_node_tokens_fail_after_reload_and_revocation (__main__.PageHost.test_old_node_tokens_fail_after_reload_and_revocation) ... ok
+test_oom_prepare_rollback_and_allocation_free_commit (__main__.PageHost.test_oom_prepare_rollback_and_allocation_free_commit) ... ok
+test_pending_reply_requires_full_identity_event_call_and_no_replay (__main__.PageHost.test_pending_reply_requires_full_identity_event_call_and_no_replay) ... ok
+test_projection_is_immutable_and_never_addresses_another_page (__main__.PageHost.test_projection_is_immutable_and_never_addresses_another_page) ... ok
+test_queue_backpressure_request_replay_and_navigation_epoch (__main__.PageHost.test_queue_backpressure_request_replay_and_navigation_epoch) ... ok
+test_sdk_error_channel_distinguishes_negative_values_and_invalid_slots (__main__.PageHost.test_sdk_error_channel_distinguishes_negative_values_and_invalid_slots) ... ok
+test_sdk_events_state_and_queue_against_independent_model (__main__.PageHost.test_sdk_events_state_and_queue_against_independent_model) ... ok
+test_shipped_page_and_local_native_host (__main__.PageHost.test_shipped_page_and_local_native_host) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 22.745s
+
+OK

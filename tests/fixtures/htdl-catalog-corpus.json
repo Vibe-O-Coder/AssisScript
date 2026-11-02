@@ -1,0 +1,188 @@
+{
+  "schema": "htdl-static-catalog-corpus-v1",
+  "profile": "static-catalog-0.1-v1",
+  "cases": [
+    {
+      "id": "C01",
+      "requirement": "head-order",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"meta\" name=\"description\" content=\"\"></div><div type=\"title\">Title</div></div><div type=\"body\"></div></div>",
+      "code": 0,
+      "xml_oracle": true
+    },
+    {
+      "id": "C02",
+      "requirement": "all-regions",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"main\"><div type=\"header\"></div><div type=\"section\"><div type=\"paragraph\">X</div></div><div type=\"nav\"></div><div type=\"footer\"></div></div></div></div>",
+      "code": 0,
+      "xml_oracle": true
+    },
+    {
+      "id": "C03",
+      "requirement": "list-items",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"list\" ordered=\"true\"><div type=\"item\"><div type=\"paragraph\">One</div></div></div></div></div>",
+      "code": 0,
+      "xml_oracle": true
+    },
+    {
+      "id": "C04",
+      "requirement": "label-forward",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"input\" id=\"x\"></div><div type=\"label\" for=\"x\">Name</div></div></div>",
+      "code": 0,
+      "xml_oracle": true
+    },
+    {
+      "id": "C05",
+      "requirement": "form-submit",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"form\"><div type=\"input\" kind=\"checkbox\" a11y-label=\"Yes\" checked=\"false\" name=\"x\"></div><div type=\"button\" action=\"submit\">Send</div></div></div></div>",
+      "code": 0,
+      "xml_oracle": true
+    },
+    {
+      "id": "C06",
+      "requirement": "image-alt-empty",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"image\" src=\"./not-found.png\" alt=\"\"></div></div></div>",
+      "code": 0,
+      "xml_oracle": true
+    },
+    {
+      "id": "C07",
+      "requirement": "data-names",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"paragraph\" data-a=\"1\" data-b=\"2\" a11y-live=\"polite\">&amp;lt;</div></div></div>",
+      "code": 0,
+      "xml_oracle": true
+    },
+    {
+      "id": "C08",
+      "requirement": "input-value-is-text",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"input\" kind=\"number\" value=\"not yet a number\" a11y-label=\"Number\"></div></div></div>",
+      "code": 0,
+      "xml_oracle": true
+    },
+    {
+      "id": "N01",
+      "requirement": "list-content",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"list\"><div type=\"paragraph\">X</div></div></div></div>",
+      "code": 204,
+      "xml_oracle": false
+    },
+    {
+      "id": "N02",
+      "requirement": "item-parent",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"item\"></div></div></div>",
+      "code": 204,
+      "xml_oracle": false
+    },
+    {
+      "id": "N03",
+      "requirement": "main-unique",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"main\"></div><div type=\"main\"></div></div></div>",
+      "code": 204,
+      "xml_oracle": false
+    },
+    {
+      "id": "N04",
+      "requirement": "main-ancestor",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"nav\"><div type=\"main\"></div></div></div></div>",
+      "code": 204,
+      "xml_oracle": false
+    },
+    {
+      "id": "N05",
+      "requirement": "form-nesting",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"form\"><div type=\"form\"></div></div></div></div>",
+      "code": 204,
+      "xml_oracle": false
+    },
+    {
+      "id": "N06",
+      "requirement": "submit-ancestor",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"button\" action=\"submit\">Send</div></div></div>",
+      "code": 204,
+      "xml_oracle": false
+    },
+    {
+      "id": "N07",
+      "requirement": "accessible-input",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"input\" placeholder=\"Name\"></div></div></div>",
+      "code": 207,
+      "xml_oracle": false
+    },
+    {
+      "id": "N08",
+      "requirement": "label-reference",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"label\" for=\"missing\">X</div></div></div>",
+      "code": 207,
+      "xml_oracle": false
+    },
+    {
+      "id": "N09",
+      "requirement": "execution-scheme-denied",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"link\" href=\"javascript:run\">X</div></div></div>",
+      "code": 206,
+      "xml_oracle": false
+    },
+    {
+      "id": "N10",
+      "requirement": "fragment-identifier",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"link\" href=\"#bad name\">X</div></div></div>",
+      "code": 206,
+      "xml_oracle": false
+    },
+    {
+      "id": "N11",
+      "requirement": "alt-required",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"image\" src=\"./x.png\"></div></div></div>",
+      "code": 206,
+      "xml_oracle": false
+    },
+    {
+      "id": "N12",
+      "requirement": "checked-kind",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"input\" a11y-label=\"X\" checked=\"false\"></div></div></div>",
+      "code": 206,
+      "xml_oracle": false
+    },
+    {
+      "id": "N13",
+      "requirement": "event-type",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"paragraph\" on:click=\"run\">X</div></div></div>",
+      "code": 203,
+      "xml_oracle": false
+    },
+    {
+      "id": "N14",
+      "requirement": "event-script",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"button\" on:click=\"run\">X</div></div></div>",
+      "code": 301,
+      "xml_oracle": false
+    },
+    {
+      "id": "N15",
+      "requirement": "dynamic-duplicate",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"paragraph\" data-a=\"1\" data-a=\"2\">X</div></div></div>",
+      "code": 202,
+      "xml_oracle": false
+    },
+    {
+      "id": "N16",
+      "requirement": "dynamic-name",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"paragraph\" data-X=\"1\">X</div></div></div>",
+      "code": 203,
+      "xml_oracle": false
+    },
+    {
+      "id": "N17",
+      "requirement": "boolean",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"input\" a11y-label=\"X\" required=\"yes\"></div></div></div>",
+      "code": 206,
+      "xml_oracle": false
+    },
+    {
+      "id": "N18",
+      "requirement": "structural-text",
+      "source": "<div type=\"document\" version=\"0.1\" lang=\"pt-BR\"><div type=\"head\"><div type=\"title\">Title</div></div><div type=\"body\"><div type=\"section\">text</div></div></div>",
+      "code": 204,
+      "xml_oracle": false
+    }
+  ]
+}

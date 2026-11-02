@@ -1,0 +1,11 @@
+{
+  "platform": "Windows-10-10.0.19045-SP0",
+  "machine": "AMD64",
+  "python": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+  "compiler_source_sha256": "0659d7ccc42071a2e8b0ab99cf0379c20c4519679e477abb4e8064a958f7ef63",
+  "c_compiler": "C:/msys64/ucrt64/bin/gcc.exe",
+  "c_compiler_version": "gcc.exe (Rev13, Built by MSYS2 project) 15.2.0",
+  "node_status": "available",
+  "node_version": "v24.17.0"
+}

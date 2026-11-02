@@ -1,0 +1,9 @@
+{
+  "status": "published-base-verified",
+  "repository": "Vibe-O-Coder/AssisScript",
+  "branch": "work/m0-windows-isolation-2026-11-02",
+  "commit": "f00d1ff95694dd312f90ec46d563606bda258356",
+  "url": "https://github.com/Vibe-O-Coder/AssisScript/commit/f00d1ff95694dd312f90ec46d563606bda258356",
+  "verification": ["GitHub connector fetch_commit returned the exact SHA before development and again after final tests", "git ls-remote returned the exact branch SHA before development"],
+  "date": "2026-11-02"
+}

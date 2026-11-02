@@ -1,0 +1,108 @@
+{
+  "schema": "htdl-catalog-native-v1",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "base": "f00d1ff95694dd312f90ec46d563606bda258356",
+  "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+  "checks": [
+    {
+      "name": "htdl-parser",
+      "mode": "both",
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "command": [
+        "python",
+        "tests/test-htdl-parser.py"
+      ],
+      "seconds": 60.338,
+      "log": "windows-htdl-parser-both.log",
+      "log_sha256": "ab972baad006d933854b2933c1dbd04dc3e5f790c7c26c8ff428be8e6d0f0f3b"
+    },
+    {
+      "name": "reader-transactions",
+      "mode": "both",
+      "returncode": 0,
+      "executed": 15,
+      "not_run": 0,
+      "command": [
+        "python",
+        "tests/test-reader-transactions.py"
+      ],
+      "seconds": 40.83,
+      "log": "windows-reader-transactions-both.log",
+      "log_sha256": "10f37666768057f9bc440efb807e4139c26c227cfe0aaa6b3806563a5aa68859"
+    },
+    {
+      "name": "htdl-reader",
+      "mode": "both",
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "command": [
+        "python",
+        "tests/test-htdl-reader.py"
+      ],
+      "seconds": 29.265,
+      "log": "windows-htdl-reader-both.log",
+      "log_sha256": "99fed2d2a1a6521eda4aa7e1a678628bed49eb552433b57249f92a21380eac1e"
+    },
+    {
+      "name": "page-host",
+      "mode": "both",
+      "returncode": 0,
+      "executed": 13,
+      "not_run": 0,
+      "command": [
+        "python",
+        "tests/test-page-host.py"
+      ],
+      "seconds": 23.091,
+      "log": "windows-page-host-both.log",
+      "log_sha256": "d1bbf57886889ba95048584fd420fc9ca404019c46c4ac18b61b9ddeab0d18fb"
+    },
+    {
+      "name": "page-reader",
+      "mode": "optimized",
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "command": [
+        "python",
+        "tests/test-page-reader.py"
+      ],
+      "seconds": 34.275,
+      "log": "windows-page-reader-optimized.log",
+      "log_sha256": "d519f112d9d9561ccb8699f54c8ed2ea5926a1ad733876e44eeb7e3edced8505"
+    },
+    {
+      "name": "page-reader",
+      "mode": "reference",
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "command": [
+        "python",
+        "tests/test-page-reader.py"
+      ],
+      "seconds": 34.572,
+      "log": "windows-page-reader-reference.log",
+      "log_sha256": "3cf0d4734823aee2d8713ebbc8eba06565910f2bc780811591f5dba0c5689b7e"
+    },
+    {
+      "name": "htdl-catalog",
+      "mode": "both",
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "command": [
+        "python",
+        "tests/test-htdl-catalog.py"
+      ],
+      "seconds": 20.098,
+      "log": "windows-htdl-catalog-both.log",
+      "log_sha256": "a5d81c66b30bfadef5c975a51fd6b2104cb831463ee8681d53e2b306e9f8a6db"
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,18 @@
+import "std/htdl.assis";
+
+safe fn main():int{
+    own store:documents::Store=try_new documents::Store(1000000,10000,10000);
+    own diagnostics:htdl::Diagnostics=try_new htdl::Diagnostics(64);
+    assert(store!=null && diagnostics!=null && diagnostics.is_ready());
+    borrow source:slice<byte>=utf8("<div type=document version='0.1' lang=en><div type=head><div type=title>Catalog</div></div><div type=body><div type=main><div type=form><div type=label for=field>Name</div><div type=input id=field name=user data-note='static only'></div><div type=button action=submit>Save</div></div><div type=image src='./missing.png' alt='Example'></div></div></div></div>");
+    assert(htdl::load_catalog(store,1,source).code==0);
+    val root:doctree::NodeId=store.active_document().nodes().root();
+    assert(htdl::inspect(store,2,source,diagnostics) && diagnostics.size()==0);
+    assert(store.active_document().nodes().contains(root) && !store.has_candidate());
+    print("HTDL-CATALOG",htdl::kind(store.active_document().nodes(),htdl::find_id(store.active_document().nodes(),utf8("field"))));
+    // Editor recovery never activates this invalid revision.
+    borrow draft:slice<byte>=utf8("<div type=document version='0.1' lang=en><div type=head><div type=title>Draft</div></div><div type=body><div type=heading>Level missing</div><div type=image src='./missing.png'></div></div></div>");
+    assert(htdl::inspect(store,3,draft,diagnostics) && diagnostics.size()==2);
+    assert(store.active_document().nodes().contains(root));
+    print("EDITOR-DIAGNOSTICS",diagnostics.size());return 0;
+}

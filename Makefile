@@ -47,7 +47,7 @@ test-pe: bin/assis build/pe_probe
 	sh tests/test-pe.sh
 
 test-dev:
-	node --test --test-isolation=none tests/test-development.js tests/test-v3.js tests/test-v31.js tests/test-v32.js tests/test-lsp.js vscode-assisscript/test/language.test.js vscode-assisscript/test/extension.test.js
+	node --test --test-isolation=none tests/test-development.js tests/test-v3.js tests/test-v31.js tests/test-v32.js tests/test-lsp.js tests/test-htdl-editor.js vscode-assisscript/test/language.test.js vscode-assisscript/test/extension.test.js
 
 test-evolution: bin/assis
 	python3 tests/test-evolution.py
@@ -202,6 +202,12 @@ test-htdl-parser: bin/assis
 	python3 tests/test-htdl-parser.py
 
 test-alpha15: test-htdl-parser
+
+.PHONY: test-htdl-catalog
+test-htdl-catalog: bin/assis
+	python3 tests/test-htdl-catalog.py
+
+test-alpha15: test-htdl-catalog
 
 .PHONY: test-htdl-reader
 test-htdl-reader: bin/assis

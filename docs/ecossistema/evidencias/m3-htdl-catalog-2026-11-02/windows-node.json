@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "returncode": 0,
+  "tests": 23,
+  "log_sha256": "857ff667678241230c742a308f7b6a7c34691ed7086fedfec30621ac51299fce",
+  "setup_sha256": "1db29dd95c6081dbd8507adfad731eb91c1381aac1db2f1fc64dc281cf445c68",
+  "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+  "scope": "Fresh isolated setup/current distribution/compiler; temporary prefixes; no PATH, associations, release or tracked binary writes",
+  "vsix": {
+    "passed": true,
+    "archive_sha256": "31245473bd5584248def8bc73ffdb0c5baab23c552d13b602e4132da76e48ea8",
+    "entries": {
+      "extension/tools/htdl-check.assis": "cdd11d2c522179915249042944896dfe9a44cdd549fefe3f10c2e721fe1d4f44",
+      "extension/src/htdl.js": "58e118479eff55d1e9b18ad081558b8629687d0e43eb65c8b0942658e67ba171",
+      "extension/stdlib/htdl.assis": "f16c5367129656f4e503cf3c54d43c86102de34c12e915c248b9005df95238a9",
+      "extension/src/extension.js": "7b12cd5cdb79047f78507b35ce20b84285a7b0f42e94e74befbdc1fbb6713d33",
+      "extension/htdl-configuration.json": "8fdb21d5e70b2d6187178da576a76f68d72e183d714b9f6d204d36e67a1f67f2",
+      "extension/syntaxes/htdl.tmLanguage.json": "3584e504be51db57ca9492dfb0c440a1f2fc62738eaa995d7a1ab36f432c2b6b"
+    },
+    "windows_compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+    "linux_compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+    "native_checker_stdout": "0 0\n",
+    "adapter_stdout": "[]\n",
+    "scope": "Isolated VSIX with fresh Windows/Linux compilers; archive contents, extracted native HTDL checker and its own JS adapter executed on Windows. No publication or interactive VS Code acceptance."
+  }
+}

@@ -10,7 +10,7 @@ parser.add_argument('--check', action='store_true')
 args = parser.parse_args()
 catalog = json.loads((ROOT/'stdlib/catalogo.json').read_text(encoding='utf-8'))
 files = {'bin/assis.exe', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'README.md', 'README.en.md', 'README.pt-BR.md', 'README.es.md', 'docs/LICENSE', 'stdlib/catalogo.json', 'stdlib/catalogo.sh',
-         'tools/assis-lsp.js', 'vscode-assisscript/src/language.js', 'vscode-assisscript/src/reference.json', 'vscode-assisscript/package.json'}
+         'tools/assis-lsp.js', 'tools/htdl-check.assis', 'vscode-assisscript/src/htdl.js', 'vscode-assisscript/src/language.js', 'vscode-assisscript/src/reference.json', 'vscode-assisscript/package.json'}
 files.update('stdlib/'+item['name']+'.assis' for item in catalog['libraries'] if item['required'])
 for name, suffixes in [('docs', {'.md', '.json', '.ebnf', '.txt', '.htdl', '.fxs', '.sscr', '.assis', '.py'}), ('exemplos', {'.assis', '.pillow', '.pkg', '.lock', '.htdl'}),
                        ('assets', {'.ico', '.png', '.icns', '.svg', '.json'}), ('benchmarks/resultados', {'.md', '.json'})]:

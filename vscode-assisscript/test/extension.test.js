@@ -21,7 +21,7 @@ function harness(documents, settings = {}) {
     const commands = new Map(), providers = {}, diagnostics = new Map(), calls = [], events = {};
     const watch = { ...disposable(), onDidChange: disposable, onDidCreate: disposable, onDidDelete: disposable };
     const workspace = {
-        textDocuments: documents, isTrusted: true, workspaceFolders: [], getWorkspaceFolder: () => ({ uri: uri(temp) }),
+        textDocuments: documents, isTrusted: settings.trusted ?? true, workspaceFolders: [], getWorkspaceFolder: () => ({ uri: uri(temp) }),
         getConfiguration: () => ({ get(name, fallback) { return ({ validationDelay: 100000, ...settings })[name] ?? fallback; } }),
         createFileSystemWatcher: () => watch,
         onDidOpenTextDocument: callback => { events.open = callback; return disposable(); },
@@ -60,7 +60,7 @@ function harness(documents, settings = {}) {
         return child;
     };
     const context = { extensionPath, subscriptions: [] };
-    const sandbox = { require(name) { if (name === 'vscode') return vscode; if (name === 'node:child_process') return { spawn }; if (name === './language') return language; return require(name); }, module: { exports: {} }, setTimeout, clearTimeout, queueMicrotask, process };
+    const sandbox = { require(name) { if (name === 'vscode') return vscode; if (name === 'node:child_process') return { spawn }; if (name === './language') return language; if(name === './htdl') return settings.htdlCheck?{check:settings.htdlCheck}:require('../src/htdl'); return require(name); }, module: { exports: {} }, setTimeout, clearTimeout, queueMicrotask, process, AbortController };
     vm.runInNewContext(fs.readFileSync(path.join(extensionPath, 'src/extension.js'), 'utf8'), sandbox);
     sandbox.module.exports.activate(context);
     return { commands, providers, diagnostics, calls, dispose() { for (const item of context.subscriptions) item.dispose(); } };
@@ -90,6 +90,17 @@ test('catálogo abre manual individual offline de cada biblioteca', async () => 
             assert(h.calls.some(c => c.command === 'markdown.showPreview' && c.target.fsPath.endsWith(library.doc) && fs.existsSync(c.target.fsPath)));
         }
     } finally { h.dispose(); }
+});
+
+test('HTDL no VS Code usa analisador de dados e respeita confiança',async()=>{
+    const entry=doc(path.join(temp,'draft.htdl'),'<div type=heading>Draft</div>','htdl',true);let calls=0;
+    const htdlCheck=async(bin,text,{signal})=>{calls++;assert.equal(text,entry.getText());assert.equal(signal.aborted,false);return [{code:'H206',message:'Level obrigatório',source:'HTDL',severity:1,range:{start:{line:1,character:2},end:{line:3,character:4}}}];};
+    const h=harness([entry],{htdlCheck});
+    try{await h.commands.get('assisscript.check')();const d=h.diagnostics.get(entry.uri.fsPath)[0];assert.equal(d.code,'H206');assert.deepEqual(d.range.values,[1,2,3,4]);assert.equal(h.calls.filter(c=>c.bin).length,0);assert.equal(calls,1);}
+    finally{h.dispose();}
+    const untrusted=harness([entry],{htdlCheck,trusted:false});
+    try{await untrusted.commands.get('assisscript.check')();assert.equal(calls,1);assert.equal(untrusted.diagnostics.size,0);}
+    finally{untrusted.dispose();}
 });
 
 test('diagnóstico de dependência usa entrada e lockfile do projeto', async () => {

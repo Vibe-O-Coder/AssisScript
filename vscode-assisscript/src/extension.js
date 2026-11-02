@@ -6,6 +6,7 @@ const path = require('node:path');
 const os = require('node:os');
 const { spawn } = require('node:child_process');
 const language = require('./language');
+const htdl = require('./htdl');
 const selector = [{ language: 'assisscript', scheme: 'file' }, { language: 'assisscript-package', scheme: 'file' }];
 
 function activate(context) {
@@ -62,6 +63,15 @@ function activate(context) {
         running.get(key)?.kill();
         let temporary;
         try {
+            if (document.languageId === 'htdl') {
+                const controller=new AbortController(), handle={kill:()=>controller.abort()};running.set(key,handle);
+                try {
+                    const items=await htdl.check(compiler(document.uri),document.getText(),{signal:controller.signal});
+                    if(generations.get(key)!==generation || document.isClosed)return false;
+                    const converted=items.map(item=>{const r=item.range,d=new vscode.Diagnostic(new vscode.Range(r.start.line,r.start.character,r.end.line,r.end.character),item.message,item.severity===2?vscode.DiagnosticSeverity.Warning:vscode.DiagnosticSeverity.Error);d.code=item.code;d.source=item.source;return d;});
+                    reports.set(key,new Map([[document.uri.fsPath,converted]]));publishReports();return true;
+                } finally {if(running.get(key)===handle)running.delete(key);}
+            }
             const text = document.getText(), opts = options(document), model = language.analyze(text, document.uri.fsPath);
             const entry = path.resolve(workspace(document.uri), config(document.uri).get('entryFile', 'assis.assis'));
             const useEntry=document.uri.fsPath!==entry&&fs.existsSync(path.join(path.dirname(entry),'assis.pkg'))&&language.collectProject(entry,opts).some(m=>m.file===document.uri.fsPath);
@@ -114,7 +124,7 @@ function activate(context) {
         } finally { if (temporary) await fsp.rm(temporary, { recursive: true, force: true }); }
     }
     function schedule(document) {
-        if (!['assisscript', 'assisscript-package'].includes(document.languageId) || document.uri.scheme !== 'file') return;
+        if (!['assisscript', 'assisscript-package', 'htdl'].includes(document.languageId) || document.uri.scheme !== 'file') return;
         const key = document.uri.toString(); generations.set(key, (generations.get(key) || 0) + 1); running.get(key)?.kill(); clearTimeout(timers.get(key));
         timers.set(key, setTimeout(() => validate(document), config(document.uri).get('validationDelay', 350)));
     }
@@ -182,7 +192,7 @@ function activate(context) {
         vscode.workspace.onDidGrantWorkspaceTrust(refresh),
         { dispose() { for (const timer of timers.values()) clearTimeout(timer); for (const child of running.values()) child.kill(); } }
     );
-    const watcher = vscode.workspace.createFileSystemWatcher('**/*.{assis,pillow,pkg,lock}');
+    const watcher = vscode.workspace.createFileSystemWatcher('**/*.{assis,pillow,pkg,lock,htdl}');
     context.subscriptions.push(watcher, watcher.onDidChange(refresh), watcher.onDidCreate(refresh), watcher.onDidDelete(refresh));
     function task(command, uri, supplied = {}) {
         const folder = vscode.workspace.getWorkspaceFolder(uri), root = workspace(uri);
@@ -198,7 +208,7 @@ function activate(context) {
     }
     for (const command of ['check', 'build', 'run', 'fmt', 'test', 'doc']) context.subscriptions.push(vscode.commands.registerCommand(`assisscript.${command}`, async () => {
         const document = vscode.window.activeTextEditor?.document;
-        if (!document || document.languageId !== 'assisscript' || document.uri.scheme !== 'file') { vscode.window.showInformationMessage('Abra um arquivo .assis salvo no disco.'); return; }
+        if (!document || !(document.languageId === 'assisscript' || (document.languageId === 'htdl' && command === 'check')) || document.uri.scheme !== 'file') { vscode.window.showInformationMessage('Abra um arquivo compatível com este comando salvo no disco.'); return; }
         if (!vscode.workspace.isTrusted) { vscode.window.showWarningMessage('Confie nesta pasta para usar o compilador AssisScript.'); return; }
         if (command === 'check') { for (let attempt = 0; attempt < 3; attempt++) if (await validate(document, true) !== false) break; }
         else {

@@ -1,4 +1,16 @@
-# htdl — parser HTDL bootstrap
+# htdl — parser HTDL e catálogo estático
+
+Continuação de 02/11/2026: `stage_catalog`/`load_catalog` validam os 23 tipos
+do catálogo 0.1 e suas relações estáticas. `inspect` e `Diagnostics` oferecem
+recuperação de erros semânticos para LSP/VS Code sem ativar a fonte analisada.
+`stage`/`load` continuam no perfil bootstrap usado por Reader/pagereader.
+O [contrato completo](ecossistema/PERFIL-HTDL-CATALOGO-V1.md) especifica IDs,
+atributos, memória, limites de trabalho, diagnósticos e integração no editor.
+O [exemplo 52](../exemplos/52_htdl_catalog.assis) consulta input e preserva a
+árvore ativa durante análise de rascunho inválido. Não abre recursos nem executa
+script. Para usar a ferramenta de editor em instalação mínima, inclua a biblioteca
+opcional htdl e suas dependências; no instalador shell, use `--with htdl`.
+O VSIX contém o adaptador fixo e as bibliotecas; usa o compilador configurado.
 
 `import "std/htdl.assis";` depende de documents/doctree/buffers/owned/unicode.
 Implementação em AssisScript, sem provider adicional ou sintaxe nova.
@@ -91,7 +103,7 @@ Unicode U+FFFF usa o escalar Python, pois XML o proíbe e HTDL o permite.
 ## Consultas e alterações transacionais
 
 `query(tree,type_id,token,after)` percorre elementos em pré-ordem. Tipo 0 e
-token vazio são curingas; tipos 1..9 e uma classe exata são suportados.
+token vazio são curingas; tipos 1..23 e uma classe exata são suportados.
 `after` nulo inicia o percurso; cursor expirado é recusado. Não há seletores
 CSS compostos. Retorna NodeId ausente tanto em fim/argumento inválido como na
 guarda de oito milhões de comparações de classes; não promete busca indexada.

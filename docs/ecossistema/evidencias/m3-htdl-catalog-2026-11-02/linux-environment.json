@@ -1,0 +1,10 @@
+{
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "compiler_source_sha256": "0659d7ccc42071a2e8b0ab99cf0379c20c4519679e477abb4e8064a958f7ef63",
+  "c_compiler": "cc",
+  "c_compiler_version": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "node_status": "not-run/unavailable"
+}

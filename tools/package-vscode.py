@@ -20,6 +20,7 @@ manifest = f'''<?xml version="1.0" encoding="utf-8"?>
 content_types = '''<?xml version="1.0" encoding="utf-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="json" ContentType="application/json"/><Default Extension="js" ContentType="application/javascript"/><Default Extension="md" ContentType="text/markdown"/><Default Extension="assis" ContentType="text/plain"/><Default Extension="pillow" ContentType="text/plain"/><Default Extension="png" ContentType="image/png"/><Default Extension="ico" ContentType="image/x-icon"/><Default Extension="ebnf" ContentType="text/plain"/><Default Extension="exe" ContentType="application/octet-stream"/><Default Extension="vsixmanifest" ContentType="text/xml"/><Override PartName="/extension/bin/assis" ContentType="application/octet-stream"/></Types>'''
 content_types = content_types.replace('</Types>', '<Default Extension="txt" ContentType="text/plain"/><Default Extension="sh" ContentType="text/plain"/><Default Extension="pkg" ContentType="text/plain"/><Default Extension="lock" ContentType="text/plain"/><Override PartName="/extension/LICENSE" ContentType="text/plain"/><Override PartName="/extension/docs/LICENSE" ContentType="text/plain"/></Types>')
 with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
+    archive.write(root/'tools/htdl-check.assis','extension/tools/htdl-check.assis')
     archive.writestr("extension.vsixmanifest", manifest)
     archive.writestr("[Content_Types].xml", content_types)
     for file in sorted(extension.rglob("*")):
