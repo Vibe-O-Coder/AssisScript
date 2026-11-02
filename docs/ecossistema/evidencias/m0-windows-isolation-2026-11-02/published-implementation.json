@@ -1,5 +1,451 @@
 {
-  "status": "pending-verification",
+  "status": "published-and-verified",
   "branch": "work/m0-windows-isolation-2026-11-02",
-  "note": "Filled only after tests/remote verification; not evidence of publication"
+  "commit": "667d161b4e5476c8e072a848084f3f3d4df20424",
+  "remote": "https://github.com/Vibe-O-Coder/AssisScript",
+  "verification": "git ls-remote matched commit; GitHub Git tree API matched every changed path/blob/mode/type",
+  "verified_paths": 87,
+  "remote_tree_truncated": false,
+  "paths": {
+    ".gitattributes": {
+      "mode": "100644",
+      "sha": "6dc87646b4ac2d0422fb0fa88ecb469abfcb2ea0",
+      "type": "blob"
+    },
+    "Makefile": {
+      "mode": "100644",
+      "sha": "656d16955a39d15822402d28b724ed126aeca4b1",
+      "type": "blob"
+    },
+    "PLANO-ECOSSISTEMA.md": {
+      "mode": "100644",
+      "sha": "30756896179ac1950aa40480c8a58b5eeff97275",
+      "type": "blob"
+    },
+    "THIRD_PARTY_NOTICES.md": {
+      "mode": "100644",
+      "sha": "e5162aefb78e4df3750d3981b55cab06c70de42b",
+      "type": "blob"
+    },
+    "docs/BIBLIOTECA-pagecompiler.md": {
+      "mode": "100644",
+      "sha": "e03ce2643880d4771503ef33549e462b19d7cbf6",
+      "type": "blob"
+    },
+    "docs/BIBLIOTECA-pagereader.md": {
+      "mode": "100644",
+      "sha": "cb0e42b200cb4a22f89a52053a948258c56b342c",
+      "type": "blob"
+    },
+    "docs/BIBLIOTECA-pageworker.md": {
+      "mode": "100644",
+      "sha": "fc5cfe91cd4a4dcdbd683e1444282c48ffd7881a",
+      "type": "blob"
+    },
+    "docs/ecossistema/ADR-0001-EXECUCAO-PAGINA.md": {
+      "mode": "100644",
+      "sha": "00eeecab44f02ae35d778bbccd44b844a747da2b",
+      "type": "blob"
+    },
+    "docs/ecossistema/AMEACAS-PAGINA-LOCAL-V1.md": {
+      "mode": "100644",
+      "sha": "10d247b281b567308ff0f19d6026c6b490321f00",
+      "type": "blob"
+    },
+    "docs/ecossistema/ESTADO-ATUAL.md": {
+      "mode": "100644",
+      "sha": "582d54f225d4de80d2b4a6a2a28ac3ada237ed09",
+      "type": "blob"
+    },
+    "docs/ecossistema/FILA-M0-M1.md": {
+      "mode": "100644",
+      "sha": "c528829260ac55a7895f37a06931ccd3cf89ce2b",
+      "type": "blob"
+    },
+    "docs/ecossistema/MASTERPROMPT.md": {
+      "mode": "100644",
+      "sha": "11d1588ecddacff31252fb6b7aa99fc7d9b93b96",
+      "type": "blob"
+    },
+    "docs/ecossistema/PERFIL-WINDOWS-ISOLATION-V1.md": {
+      "mode": "100644",
+      "sha": "30ea2678eb87636dafd8e6ee955e271568d276d6",
+      "type": "blob"
+    },
+    "docs/ecossistema/PERFIL-WORKER-LOCAL-V1.md": {
+      "mode": "100644",
+      "sha": "16abeebe0561a7165717fc9de60b31b428f85784",
+      "type": "blob"
+    },
+    "docs/ecossistema/PLANO-MESTRE.md": {
+      "mode": "100644",
+      "sha": "413a8810bb441a80dd853393fc311cc72b9aee61",
+      "type": "blob"
+    },
+    "docs/ecossistema/PROGRESSO.json": {
+      "mode": "100644",
+      "sha": "095db1e17473e48c5d9d53b46121a8a937421a69",
+      "type": "blob"
+    },
+    "docs/ecossistema/PROGRESSO.md": {
+      "mode": "100644",
+      "sha": "18e735a5ee81224b21c488ce5c039a72a38254dc",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/before.json": {
+      "mode": "100644",
+      "sha": "31443688e3425483a52943977b94aeda2066e925",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-environment.json": {
+      "mode": "100644",
+      "sha": "241441a6d723c097764f76f5f86ca660827e9164",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-example-51.json": {
+      "mode": "100644",
+      "sha": "2c855f04145e38712d2a7a37925290338933db46",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-example-51.log": {
+      "mode": "100644",
+      "sha": "a3ea0ce47fef5dc6c425d9a66040ba1a38a5abf1",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-examples.json": {
+      "mode": "100644",
+      "sha": "593d2cdd4c9feb14934963e8bfc17ac7aa242bbf",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-functions-both.log": {
+      "mode": "100644",
+      "sha": "621022f158631d3e48fe79fcb3492ba5c7ef8b83",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-htdl-parser-both.log": {
+      "mode": "100644",
+      "sha": "39f8e97947fa393b488f689097000c51fa48eceb",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-ownership-functions-both.log": {
+      "mode": "100644",
+      "sha": "a99cbabc9ac138b609240e6630debae11ac3f2d7",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-page-backend-both.log": {
+      "mode": "100644",
+      "sha": "7fc49162bc4a95bb36c8ee26574087cb5bbfc330",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-page-compiler-optimized.log": {
+      "mode": "100644",
+      "sha": "cdeeecfcb268d7986cbcb0cb651c46030519ecaa",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-page-compiler-reference.log": {
+      "mode": "100644",
+      "sha": "430718715a5e4de52c6358ff6353ac40c35a9960",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-page-host-both.log": {
+      "mode": "100644",
+      "sha": "d266939ecdf55eaa328c51fffbcb712e4425c54f",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-page-reader-optimized.log": {
+      "mode": "100644",
+      "sha": "230ba14bef373555f26cb7fe2051c8d75ef30ac1",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-page-reader-reference.log": {
+      "mode": "100644",
+      "sha": "c20b1cf7140a8f886461f405bd02fde1a0697f2a",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-page-worker-optimized.log": {
+      "mode": "100644",
+      "sha": "0242cdb07f09394f27040364a420ef0ae5e0b7f0",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-page-worker-reference.log": {
+      "mode": "100644",
+      "sha": "6a404cd64472dcd20f527dbf76ebfda994b57374",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-pagevm-both.log": {
+      "mode": "100644",
+      "sha": "84b43ccea16de934e4290dd1d25b205d44b3a2ed",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-reader-transactions-both.log": {
+      "mode": "100644",
+      "sha": "306f6d17036aa1c502abd56faa9973dd9cc1da35",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-safe-default-both.log": {
+      "mode": "100644",
+      "sha": "91eea62765d233ba7ca839371c2daced629c3a2c",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-windows-isolation-optimized.log": {
+      "mode": "100644",
+      "sha": "47b3f5cb3f5160afd4d2c52347df024c22e84ef0",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux-windows-isolation-reference.log": {
+      "mode": "100644",
+      "sha": "47b3f5cb3f5160afd4d2c52347df024c22e84ef0",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/linux.json": {
+      "mode": "100644",
+      "sha": "4a6ce44384881afd0d833e3db267780d3755ae76",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/published-base.json": {
+      "mode": "100644",
+      "sha": "a91379ecd03dbb0e1b77258015fbd969a3a1ec4f",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/published-implementation.json": {
+      "mode": "100644",
+      "sha": "aec6b17192595ba06aaa7c005d8f8cd10ac6bdce",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/summary.json": {
+      "mode": "100644",
+      "sha": "4c3f14066c58e4888bb71b0b66b13c5676287635",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-environment.json": {
+      "mode": "100644",
+      "sha": "77b0362282f1b36f9cca9b5ca23076ebce588510",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-example-51.json": {
+      "mode": "100644",
+      "sha": "3007a080f3076ec7e97663697f7563da6853db2e",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-example-51.log": {
+      "mode": "100644",
+      "sha": "a3ea0ce47fef5dc6c425d9a66040ba1a38a5abf1",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-examples.json": {
+      "mode": "100644",
+      "sha": "9577372e3890a3477828693bb5d12ab0e917ada3",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-functions-both.log": {
+      "mode": "100644",
+      "sha": "6580bfaa37f7e0547125f610c3672757ef89c340",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-htdl-parser-both.log": {
+      "mode": "100644",
+      "sha": "d9ccd566c9518da57e97cdd6e884b849e5b07cca",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-node.json": {
+      "mode": "100644",
+      "sha": "462210c4e1d37f5e12370c72a71f963f6b824c9c",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-node.log": {
+      "mode": "100644",
+      "sha": "47e29ed8c6551a7491236482e7326d91b4464c0c",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-ownership-functions-both.log": {
+      "mode": "100644",
+      "sha": "90cc59ea410c02677bf2e1768f464c5d7874f594",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-page-backend-both.log": {
+      "mode": "100644",
+      "sha": "a38484977faf65257576b30cabba304b42f8a441",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-page-compiler-optimized.log": {
+      "mode": "100644",
+      "sha": "8cd352f4874578b1d5a918609f8bde984dace9a4",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-page-compiler-reference.log": {
+      "mode": "100644",
+      "sha": "ef48d773def248eeca79f28349684e7ecf98914f",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-page-host-both.log": {
+      "mode": "100644",
+      "sha": "2132eaa85f90d10a560d01578673486d7b706199",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-page-reader-optimized.log": {
+      "mode": "100644",
+      "sha": "ed2acbb5d0d71b77a5dac688e06cc943bb4c1ef5",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-page-reader-reference.log": {
+      "mode": "100644",
+      "sha": "33ac02b7dec5bd06d94c3f543db6db5cda630e06",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-page-worker-optimized.log": {
+      "mode": "100644",
+      "sha": "07826846c2c1483d7a1449d075127b63f33440f3",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-page-worker-reference.log": {
+      "mode": "100644",
+      "sha": "8dac52820e7c1c9081e81d746f6f928ad7be3221",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-pagevm-both.log": {
+      "mode": "100644",
+      "sha": "fb1badc4433493d75098fd4190c36352eb62cede",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-reader-transactions-both.log": {
+      "mode": "100644",
+      "sha": "2f7bf8601f2551cbe7303c0b17ba1520c9b2851b",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-safe-default-both.log": {
+      "mode": "100644",
+      "sha": "d4278d992d9a926d2a281569df32afa82a52be98",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-windows-isolation-optimized.log": {
+      "mode": "100644",
+      "sha": "0c403c4f52a521962964a8a338ed062e609f692f",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows-windows-isolation-reference.log": {
+      "mode": "100644",
+      "sha": "fd0f2653796854373f15cbceb189c31314428191",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-windows-isolation-2026-11-02/windows.json": {
+      "mode": "100644",
+      "sha": "f227fcc3b1661949f99b819e64f98163cfd6d74a",
+      "type": "blob"
+    },
+    "docs/relatorios/2026-11-02-m0-windows-isolation.md": {
+      "mode": "100644",
+      "sha": "7030eaa5ad1dcee5e7dd0302eaab69d9cd2dae86",
+      "type": "blob"
+    },
+    "exemplos/49_page_worker.assis": {
+      "mode": "100644",
+      "sha": "f38fab250aaa924d6874a69455ea700ddda8c463",
+      "type": "blob"
+    },
+    "exemplos/50_page_reader.assis": {
+      "mode": "100644",
+      "sha": "05c6707db1c0c59a08a977014c20b35d053d0ab8",
+      "type": "blob"
+    },
+    "exemplos/51_compile_page.assis": {
+      "mode": "100644",
+      "sha": "e1d75acc3f86d14ca2b85e35a0129d0a22d89991",
+      "type": "blob"
+    },
+    "providers/worker/assis_worker_v1.h": {
+      "mode": "100644",
+      "sha": "79ba5ab4953e3bf8dac08b93c3f5943181e024cb",
+      "type": "blob"
+    },
+    "providers/worker/windows_isolation.inc": {
+      "mode": "100644",
+      "sha": "e58b1a0ab4e712500270bb847a7f615d225f5cf6",
+      "type": "blob"
+    },
+    "providers/worker/worker.c": {
+      "mode": "100644",
+      "sha": "660344e9906fde2e2c261f5ccd5e6c8b6747a278",
+      "type": "blob"
+    },
+    "src/install_files.inc": {
+      "mode": "100644",
+      "sha": "08cee411592547f35d5dacda2b545fe9775ab9ff",
+      "type": "blob"
+    },
+    "src/page_windows_token.h": {
+      "mode": "100644",
+      "sha": "ff4c60a1abd1f3abde6697a264ae0520a2ab045d",
+      "type": "blob"
+    },
+    "tests/test-page-compiler.py": {
+      "mode": "100644",
+      "sha": "1bea11c62c505b9d0f14b99d00c4d16d2a81bc17",
+      "type": "blob"
+    },
+    "tests/test-page-reader.py": {
+      "mode": "100644",
+      "sha": "fa7f851dcb041fe912c11ba4cc8f9906e638cb0d",
+      "type": "blob"
+    },
+    "tests/test-page-worker.py": {
+      "mode": "100644",
+      "sha": "03d4fe2e921e46008c1064ec0c7677dce4166ff6",
+      "type": "blob"
+    },
+    "tests/test-windows-isolation.py": {
+      "mode": "100644",
+      "sha": "87183ffad676b6c671e27d975a140ea47a437ff5",
+      "type": "blob"
+    },
+    "tests/windows-isolation-oracle.c": {
+      "mode": "100644",
+      "sha": "d1af49cb6e9a31e2dfe6a702f905497ef44f109f",
+      "type": "blob"
+    },
+    "tools/build-page-worker.py": {
+      "mode": "100644",
+      "sha": "205094e1b9e8afd644c4eec1e5c6a0a74b68bfd4",
+      "type": "blob"
+    },
+    "tools/capture-windows-isolation-before.py": {
+      "mode": "100644",
+      "sha": "ea1811e02eac41a941e984f1e9906256a8a3736f",
+      "type": "blob"
+    },
+    "tools/capture-windows-isolation-environment.py": {
+      "mode": "100644",
+      "sha": "eca4bb2fa259c61aba810f699308db991acb0ee8",
+      "type": "blob"
+    },
+    "tools/collect-windows-isolation-evidence.py": {
+      "mode": "100644",
+      "sha": "db3228a9ac5dc74fc7f36e9e1a0607f5875523be",
+      "type": "blob"
+    },
+    "tools/run-resource-budget-example.py": {
+      "mode": "100644",
+      "sha": "e95f0f655d1c8b594d5b45848e3ad647675ddbeb",
+      "type": "blob"
+    },
+    "tools/stage-resource-budget-installer.py": {
+      "mode": "100644",
+      "sha": "c97976e51070f009b9f4d5388e25388f2bd0f987",
+      "type": "blob"
+    },
+    "tools/test-native.py": {
+      "mode": "100644",
+      "sha": "3a066f5c9fd79e13d80d7dd1ac41f4fd1046f0bb",
+      "type": "blob"
+    },
+    "tools/verify-windows-isolation-evidence.py": {
+      "mode": "100644",
+      "sha": "3fb0f0115a8afee5dd77bc5d1f9879f32ac81f02",
+      "type": "blob"
+    }
+  },
+  "pull_request": {
+    "created": false,
+    "status": 403,
+    "reason": "Resource not accessible by integration; no Git credential reused via API"
+  }
 }

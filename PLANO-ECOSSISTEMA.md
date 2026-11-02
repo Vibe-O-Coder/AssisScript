@@ -1,6 +1,7 @@
-> **Continuação local validada — 42,70%, 02/11/2026, 0/5 gates; publicação no adendo.**
+> **Publicação confirmada — 42,70%, 02/11/2026, 0/5 gates.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/windows-isolation-20261102`,
-> branch `work/m0-windows-isolation-2026-11-02`, base publicada f12a1f2 conferida.
+> branch `work/m0-windows-isolation-2026-11-02`, implementação 667d161 publicada.
+> SHA remoto e 87 paths/blobs/modos conferidos; PR não criada (conector 403).
 > Worker e compilador Windows exigem LPAC sem capabilities, com perfil/SID
 > por processo, runtime read-only e teste nativo de recusas; Linux reexecutado.
 > [Relatório e evidências](docs/relatorios/2026-11-02-m0-windows-isolation.md). Meta 50% pendente; fila integral preservada.

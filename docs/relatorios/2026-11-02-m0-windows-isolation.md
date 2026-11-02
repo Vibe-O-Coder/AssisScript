@@ -155,3 +155,24 @@ Branch **work/m0-windows-isolation-2026-11-02**, destino autorizado
 **Vibe-O-Coder/AssisScript**. SHA remoto/paths/blobs e resultado da PR serão
 registrados no adendo após verificação. Commit local não prova publicação;
 push não significa CI, merge, release ou gate. Hash do relatório pelo histórico.
+
+
+## Adendo — publicação confirmada
+
+Implementação **667d161b4e5476c8e072a848084f3f3d4df20424** publicada em
+[work/m0-windows-isolation-2026-11-02](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m0-windows-isolation-2026-11-02).
+Git ls-remote confirmou o mesmo SHA. A árvore remota pelo conector GitHub
+não foi truncada: **87 paths, blobs, modos e tipos** comparados individualmente
+com a árvore local. [Inventário](../ecossistema/evidencias/m0-windows-isolation-2026-11-02/published-implementation.json).
+
+PR não criada: conector retornou **403 Resource not accessible by integration**.
+A branch está publicada; não houve uso da credencial Git pela API para criar PR.
+Não há merge, force push, release ou alegação de CI global. Os testes finais
+foram 202/4 Windows, 188/18 Linux executados/not-run, 53 exemplos por host,
+23 Node Windows e exemplo 51 restrito com PAGE-STATE 42 em ambos.
+Provider de produção também foi conferido sem símbolos assw_test_*.
+
+Inventário/adendo/continuidade recebem commit documental posterior,
+identificado pelo histórico. O masterprompt no caminho original solicitado
+foi atualizado, preservando suas entradas e alterações anteriores.
+**42,70%, 0/5 gates; meta 50% pendente; fila integral preservada; Easy por último.**
