@@ -1,5 +1,10 @@
 # HTDL static-catalog-0.1-v1
 
+Continuação de 02/11/2026: `inspect` recupera também erros independentes de
+sintaxe conforme [contrato v1](RECUPERACAO-HTDL-EDITOR-V1.md). Árvores parciais
+não recebem validação semântica nem escapam; entradas de execução continuam
+estritas. O trecho de primeiro erro sintático abaixo descreve a entrega anterior.
+
 Contrato de desenvolvimento, 02/11/2026, E00-01/E07-01/E11-02, M3 parcial.
 Referência: [rascunho HTDL 0.1 congelado](referencias/htdl-drafts-2026-10-29/docs/02-htdl-0.1.md)
 e seu [manifesto de procedência](referencias/htdl-drafts-2026-10-29/PROVENANCE.json).

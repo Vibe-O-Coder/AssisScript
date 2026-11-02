@@ -71,7 +71,9 @@
             "tests/fixtures/htdl-bootstrap-corpus.json",
             "docs/relatorios/2026-11-02-m3-htdl-catalog.md",
             "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/summary.json",
-            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md"
+            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md",
+            "docs/relatorios/2026-11-02-m3-htdl-recovery.md",
+            "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/summary.json"
           ]
         },
         {
@@ -645,7 +647,7 @@
           "name": "Parser e diagnóstico HTDL real",
           "level": 3,
           "acceptance": "Implementar gramática versionada com atributos, comentários, entidades, semântica, spans e recuperação; executar corpus real, limites e entradas hostis sem recursão não limitada.",
-          "baseline": "Catálogo estático dos 23 tipos HTDL 0.1 em AssisScript: sintaxe, modelos/atributos, metadados, formulários/rótulos, nomes acessíveis e eventos sem execução. Editor recupera múltiplos erros semânticos, mantém spans UTF-16 e sempre aborta o rascunho. Corpus/XML, adversos, quotas/OOM, bootstrap preservado e integração Reader executados Windows/Linux x64. Recuperação de múltiplos erros de sintaxe, sugestões, vinculação de funções/recursos e controles visuais ainda abertos; não é conformidade integral 0.1.",
+          "baseline": "Catálogo estático dos 23 tipos HTDL 0.1 em AssisScript: sintaxe, modelos/atributos, metadados, formulários/rótulos, nomes acessíveis e eventos sem execução. Editor recupera múltiplos erros semânticos, mantém spans UTF-16 e sempre aborta o rascunho. Corpus/XML, adversos, quotas/OOM, bootstrap preservado e integração Reader executados Windows/Linux x64. Recuperação de múltiplos erros de sintaxe, sugestões, vinculação de funções/recursos e controles visuais ainda abertos; não é conformidade integral 0.1. Recuperação sintática limitada do editor executada em Windows/Linux, sem ativação nem semântica de árvore danificada; entradas de carga permanecem estritas.",
           "evidence": [
             "local:assis/docs/AUDITORIA-HTDL.md",
             "local:htdl/docs/02-htdl-0.1.md",
@@ -657,7 +659,9 @@
             "tests/fixtures/htdl-bootstrap-corpus.json",
             "docs/relatorios/2026-11-02-m3-htdl-catalog.md",
             "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/summary.json",
-            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md"
+            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md",
+            "docs/relatorios/2026-11-02-m3-htdl-recovery.md",
+            "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/summary.json"
           ]
         },
         {
@@ -964,7 +968,9 @@
             "docs/VSCODE.md",
             "docs/relatorios/2026-11-02-m3-htdl-catalog.md",
             "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/summary.json",
-            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md"
+            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md",
+            "docs/relatorios/2026-11-02-m3-htdl-recovery.md",
+            "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/summary.json"
           ]
         },
         {
@@ -2925,7 +2931,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-02",
+      "rubric_version": 1,
+      "label": "Recuperação sintática limitada HTDL: evidência adicional, 43,30%, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 2,
+        "E07-03": 2,
+        "E07-04": 2,
+        "E07-05": 2,
+        "E08-01": 0,
+        "E08-02": 2,
+        "E08-03": 0,
+        "E08-04": 2,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Catálogo estático HTDL 0.1 de 23 tipos, editor com recuperação semântica/UTF-16/cancelamento e entradas bootstrap preservadas, com execução própria Windows/Linux x64. 43,30%, 0/5 gates; meta 50% pendente. Reader completo/desktop/leitor/DPI/IME, recuperação sintática/editor incremental, SDK/loader/FS/SSC/recursos, quota agregada/RSS, disco/órfãos, macOS/ARM, rede/persistência/busca, M4–M9, 24h e aceites continuam na fila. Easy por último."
+  "assessment_note": "Recuperação sintática limitada e não executante do editor HTDL validada em Windows/Linux x64. Níveis preservados: 43,30%, 0/5 gates; meta 50% pendente. Identidade incremental/editor, Reader completo/desktop/leitor/DPI/IME, SDK/loader/FS/SSC/recursos, quota agregada/RSS/disco/órfãos, macOS/ARM, rede/persistência/busca, M4–M9, 24h e aceites continuam na fila. Easy por último."
 }

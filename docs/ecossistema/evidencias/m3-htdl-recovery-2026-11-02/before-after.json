@@ -1,0 +1,20 @@
+{
+  "base": "5fad34e32c444574b4900f6629855cf9a2626cb0",
+  "source": "<div type=document version=\"0.1\" lang=en><div type=head><div type=title>X</div></div><div type=body><div type=paragraph>&bad;</div><div type=paragraph>&also;</div></div></div>",
+  "observations": [
+    {
+      "label": "before",
+      "tool": "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-catalog-20261102\\tools\\htdl-check.assis",
+      "stdout": "1 0\n102 120 124 1 121 1 125\n",
+      "binary_sha256": "555eccfc95f78f9721bf22aa563f5acfa8e80c64810cec6683100a4ab1149edd",
+      "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f"
+    },
+    {
+      "label": "after",
+      "tool": "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-recovery-20261102\\tools\\htdl-check.assis",
+      "stdout": "2 0\n102 120 124 1 121 1 125\n102 151 156 1 152 1 157\n",
+      "binary_sha256": "0007d4f378f73eb03765f2a399a13842ad2ef42fed3e0a6f1e001d7c7e7e9713",
+      "compiler_sha256": "4c0118bf65c6327fd6b013f99ce0d7d023e192b3024768781fcf4fca2bb9ed4c"
+    }
+  ]
+}

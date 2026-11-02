@@ -49,6 +49,10 @@ test-pe: bin/assis build/pe_probe
 test-dev:
 	node --test --test-isolation=none tests/test-development.js tests/test-v3.js tests/test-v31.js tests/test-v32.js tests/test-lsp.js tests/test-htdl-editor.js vscode-assisscript/test/language.test.js vscode-assisscript/test/extension.test.js
 
+.PHONY: test-htdl-recovery
+test-htdl-recovery:
+	python3 tests/test-htdl-recovery.py
+
 test-evolution: bin/assis
 	python3 tests/test-evolution.py
 

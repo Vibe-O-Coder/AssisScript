@@ -1,0 +1,14 @@
+test_active_neighbor_and_foreign_candidate_survive_damaged_draft (__main__.Recovery.test_active_neighbor_and_foreign_candidate_survive_damaged_draft) ... ok
+test_comment_recovery_ignores_markup_until_terminator (__main__.Recovery.test_comment_recovery_ignores_markup_until_terminator) ... ok
+test_independent_entities_and_later_siblings (__main__.Recovery.test_independent_entities_and_later_siblings) ... ok
+test_limits_saturation_and_incomplete_documents (__main__.Recovery.test_limits_saturation_and_incomplete_documents) ... ok
+test_missing_quotes_and_attribute_syntax_preserve_following_siblings (__main__.Recovery.test_missing_quotes_and_attribute_syntax_preserve_following_siblings) ... ok
+test_seeded_mutation_and_all_utf8_boundary_truncations (__main__.Recovery.test_seeded_mutation_and_all_utf8_boundary_truncations) ... ok
+test_unknown_tags_duplicate_and_unsupported_attributes (__main__.Recovery.test_unknown_tags_duplicate_and_unsupported_attributes) ... ok
+test_utf16_multiline_bom_and_crlf_positions (__main__.Recovery.test_utf16_multiline_bom_and_crlf_positions) ... ok
+test_valid_sources_have_identical_static_semantics (__main__.Recovery.test_valid_sources_have_identical_static_semantics) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 3.383s
+
+OK

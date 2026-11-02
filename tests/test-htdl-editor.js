@@ -28,3 +28,13 @@ test('HTDL: cancelamento recolhe processo e arquivos temporários',async()=>{
     const after=fs.readdirSync(os.tmpdir()).filter(n=>n.startsWith('assis-htdl-editor-')&&!before.has(n));
     assert.deepEqual(after,[]);
 });
+
+test('HTDL: recuperação sintática entrega erros posteriores com ranges Unicode',async()=>{
+    const source='<div type=document version="0.1" lang=en><div type=head><div type=title>🙂</div></div><div type=body><div type=paragraph>é &wrong;\r\n&also;</div></div></div>';
+    const errors=await htdl.check(compiler,source);
+    assert.deepEqual(errors.map(d=>d.code),['H102','H102']);
+    for(const [index,name] of ['&wrong;','&also;'].entries()){
+        const prefix=source.slice(0,source.indexOf(name)).replace(/\r\n?/g,'\n');
+        assert.deepEqual(errors[index].range.start,{line:prefix.split('\n').length-1,character:prefix.split('\n').at(-1).length});
+    }
+});

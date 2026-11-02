@@ -1,0 +1,46 @@
+✔ HTDL: protocolo limitado e ranges UTF-16 multilinha (3.3525ms)
+✔ HTDL: analisador nativo usa rascunho e não abre script ou recurso (686.6028ms)
+✔ HTDL: cancelamento recolhe processo e arquivos temporários (61.7469ms)
+✔ HTDL: recuperação sintática entrega erros posteriores com ranges Unicode (350.2466ms)
+✔ namespaces no editor conservam privacidade, tipos e navegação (5.4873ms)
+✔ LSP independente: framing, UTF-16, overlays, navegação e correção de errors (2240.2444ms)
+✔ comando check inclui pacotes e bibliotecas não salvos e publica o diagnóstico (16.9321ms)
+✔ catálogo abre manual individual offline de cada biblioteca (53.6057ms)
+✔ HTDL no VS Code usa analisador de dados e respeita confiança (5.0691ms)
+✔ diagnóstico de dependência usa entrada e lockfile do projeto (17.0383ms)
+✔ verificação manual repete quando uma edição real interrompe o processo (4.7313ms)
+✔ provedor de hover mostra assinatura concreta e abre o manual offline (4.9973ms)
+✔ try_new keeps record and Move enum signature help (1.9922ms)
+✔ constants, character braces and super use the canonical model (1.197ms)
+✔ extern declarations end parameter scope at their semicolon (0.4336ms)
+✔ block documentation survives canonical English declaration modifiers (0.4544ms)
+✔ canonical English functions, classes, constructors and imports are indexed (0.4356ms)
+✔ receptores não viram arg_count explícitos e fatias conservam o tipo (0.4103ms)
+✔ classes genéricas substituem métodos, construtores e bases antes da navegação (3.9813ms)
+✔ generics do usuário preservam navegação, campos concretos e assinaturas (1.5439ms)
+✔ val, pure e private preservam símbolos e visibilidade nominal (0.8328ms)
+✔ ownership e div têm referências e for limita a variável de inicialização (0.4964ms)
+✔ ignora strings e comentários aninhados, preservando posições UTF-16 (0.8497ms)
+✔ resolve escopos, parâmetros, herança e membros com tipos (0.561ms)
+✔ assinaturas contam arg_count sem contar chamadas internas (0.2967ms)
+✔ coleta imports transitivos e fontes não salvos (0.6048ms)
+✔ cadeias de campos e retornos de método conservam o tipo do receptor (0.4052ms)
+✔ tipos genéricos concretos, structs e membros indexados têm documentação técnica (1.7112ms)
+✔ literais, construtores genéricos e alloc não atrapalham ajuda de parâmetros (0.6416ms)
+✔ try_alloc oferece assinatura genérica e explica a falha recuperável (0.2673ms)
+✔ documentação ///, miyabi e bloco inclui parâmetros e retorno de bibliotecas (0.7219ms)
+✔ #body, #yuri e caminhos pontuados coletam docs de dependências não salvas (0.6422ms)
+✔ tipos de callback preservam parâmetros, retorno, efeitos e assinatura indireta (0.851ms)
+✔ ownership em parâmetros e retornos conserva contratos e navegação (0.6578ms)
+✔ callbacks safe preservam modos aninhados e origem da vida (0.4629ms)
+✔ valores, variantes e vínculos de match preservam tipos e escopos (1.254ms)
+✔ closures preservam assinatura, capturas e escopo dos parâmetros (0.5406ms)
+✔ enum Move e match consumidor mantêm o tipo do recurso extraído (0.6696ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3527.2384

@@ -1,0 +1,39 @@
+{
+  "schema": "htdl-recovery-summary-v1",
+  "base": "5fad34e32c444574b4900f6629855cf9a2626cb0",
+  "counts": {
+    "windows": {
+      "executed": 104,
+      "not_run": 0
+    },
+    "linux": {
+      "executed": 59,
+      "not_run": 7
+    }
+  },
+  "points_before": "43.30",
+  "points_after": "43.30",
+  "gates_passed": 0,
+  "source_sha256": {
+    "stdlib/htdl.assis": "1b56b8fa7d9e8fcc0c2de4acad14d2c041521832e1e5782400f01ea77e5c756d",
+    "tools/htdl-check.assis": "cdd11d2c522179915249042944896dfe9a44cdd549fefe3f10c2e721fe1d4f44",
+    "tests/test-htdl-recovery.py": "0a61faf98c1fd4338674befcc64a5fac5d118b00d50120f3f41927c2221f37c1",
+    "tests/test-htdl-catalog.py": "a21956a0470bc86f07e573237f39d94b85519308f646eb0c490a4969199090a1",
+    "tests/test-htdl-parser.py": "e9b35add5e8799f8c4f899422e45f3bc05762b2d5f3db94050f187a9aa651531",
+    "tests/test-htdl-editor.js": "d97e2eea004e7274b6af7e28546790682f766802c8dcc456da04cf30f541085e",
+    "tests/test-lsp.js": "e9bd66719928b5a534bcdd415ac443bc585b3cf423955d8e944610d3f859d13a",
+    "exemplos/53_htdl_editor_recovery.assis": "9e71205431303f7a209beee7d290d2d51492ba2e7261e8142536f43b27e5089f",
+    "tools/collect-htdl-recovery-evidence.py": "fc331625dbea63fc87ac2b1c91d8c076861b2747cc5e0fcaa1d1bdc71ad6e87e",
+    "tools/verify-htdl-recovery-evidence.py": "c4e14b9283061e020898a6254bd45a382d6a56868871cf8d64548edc74c3ec7f",
+    "docs/ecossistema/RECUPERACAO-HTDL-EDITOR-V1.md": "676a5367153e827658de33ea193557e468faa7a4d7d36b3aac48cf804da6f73e"
+  },
+  "limitations": [
+    "Second root stops recovery",
+    "Invalid UTF-8 stops before parsing",
+    "No semantics on syntax-damaged tree",
+    "No editor incremental identity",
+    "No desktop/screen reader/DPI/IME acceptance",
+    "ARM/macOS not-run",
+    "No FS/SSC/resource loader or remote navigation acceptance"
+  ]
+}

@@ -1,0 +1,17 @@
+import "std/htdl.assis";
+
+/// Analyze a damaged draft without replacing the published document.
+safe fn main():int{
+    own store:documents::Store=try_new documents::Store(1000000,1000,100);
+    own output:htdl::Diagnostics=try_new htdl::Diagnostics(64);
+    if(store==null || output==null || !output.is_ready()){return 2;}
+    borrow source:slice<byte>=utf8("<div type=document version=\"0.1\" lang=en><div type=head><div type=title>Editor</div></div><div type=body><div type=paragraph>&first; &second;</div></div></div>");
+    assert(htdl::inspect(store,1,source,output));
+    assert(output.size()==2 && !output.truncated());
+    assert(!store.has_active() && !store.has_candidate() && store.storage_bytes()==72);
+    print("EDITOR-RECOVERY",output.size());
+    for(let i:int=0;i<output.size();i++){
+        val d:htdl::Diagnostic=output.get(i);print(d.code,d.line,d.column);
+    }
+    return 0;
+}

@@ -2,7 +2,9 @@
 
 Continuação de 02/11/2026: `stage_catalog`/`load_catalog` validam os 23 tipos
 do catálogo 0.1 e suas relações estáticas. `inspect` e `Diagnostics` oferecem
-recuperação de erros semânticos para LSP/VS Code sem ativar a fonte analisada.
+recuperação de erros semânticos e sintáticos para LSP/VS Code sem ativar a fonte
+analisada; [contrato de recuperação](ecossistema/RECUPERACAO-HTDL-EDITOR-V1.md)
+e [exemplo 53](../exemplos/53_htdl_editor_recovery.assis).
 `stage`/`load` continuam no perfil bootstrap usado por Reader/pagereader.
 O [contrato completo](ecossistema/PERFIL-HTDL-CATALOGO-V1.md) especifica IDs,
 atributos, memória, limites de trabalho, diagnósticos e integração no editor.
@@ -47,8 +49,8 @@ hidden/disabled são atributos validados, sem interação nativa nesta bibliotec
 
 `Diagnostic` é Copy: code, start/end em bytes; line/column e
 end_line/end_column UTF-16 base 1, fim exclusivo. Códigos numéricos correspondem
-a H101, H102, H200–H206 e H401 do perfil. Retorna o primeiro erro; não há
-recuperação para edição de documento inválido. Falhas de Store/instância,
+a H101, H102, H200–H206 e H401 do perfil bootstrap. As entradas de carregamento
+retornam o primeiro erro; `inspect` tem recuperação limitada. Falhas de Store/instância,
 quota ou alocador retornam H401. Esse código não distingue OOM de quota.
 
 Antes do parsing: fonte até 1 MiB. Durante parsing: até 20.000 nós semânticos
@@ -127,7 +129,8 @@ inserindo o atributo se ausente. Exige nó vivo de elemento; aplicar disabled a
 paragraph continua produzindo erro semântico, sem ativação. `Patch::instance()`
 impede reaplicar uma edição derivada de documento antigo. Cada transação muda
 a instância de todos os NodeIds: igualdade de ID textual não preserva slots.
-Não é edição incremental nem recuperação de fonte inválida para editor.
+Não é edição incremental. Para rascunhos inválidos, `inspect` tem recuperação
+limitada descrita no [contrato de editor](ecossistema/RECUPERACAO-HTDL-EDITOR-V1.md).
 
 Para coordenar árvore, foco e acessibilidade, use `reader::Session` conforme
 [contrato](BIBLIOTECA-reader.md), [exemplo 46](../exemplos/46_reader_transactions.assis)

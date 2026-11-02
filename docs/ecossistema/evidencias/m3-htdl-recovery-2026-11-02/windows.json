@@ -1,0 +1,98 @@
+{
+  "schema": "htdl-recovery-evidence-v1",
+  "base": "5fad34e32c444574b4900f6629855cf9a2626cb0",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "machine": "AMD64",
+  "python": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "compiler_sha256": "4c0118bf65c6327fd6b013f99ce0d7d023e192b3024768781fcf4fca2bb9ed4c",
+  "checks": [
+    {
+      "name": "htdl-catalog",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests\\test-htdl-catalog.py"
+      ],
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "log": "windows-htdl-catalog.log",
+      "sha256": "183d23e56df755ce32da8aced16a7e01cae355c59a9a8407ff82c0a4674d02d9",
+      "seconds": null,
+      "reconstructed_from_completed_log": true
+    },
+    {
+      "name": "htdl-parser",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests\\test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "log": "windows-htdl-parser.log",
+      "sha256": "e2d768c0178facad619d1f2ffb6007c02dee81c38fb0fdbcc714e13f4ebc6c11",
+      "seconds": null,
+      "reconstructed_from_completed_log": true
+    },
+    {
+      "name": "reader-transactions",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests\\test-reader-transactions.py"
+      ],
+      "returncode": 0,
+      "executed": 15,
+      "not_run": 0,
+      "log": "windows-reader-transactions.log",
+      "sha256": "70da03b9dff01a1bf71495def295fa72d441c3d9d125a82106d75bde5269b127",
+      "seconds": null,
+      "reconstructed_from_completed_log": true
+    },
+    {
+      "name": "htdl-reader",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "tests\\test-htdl-reader.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "log": "windows-htdl-reader.log",
+      "sha256": "defbbde0fa0bf1a1a37e3a2092bf1e8ec5d090ca5de687418084d33b8a57648e",
+      "seconds": null,
+      "reconstructed_from_completed_log": true
+    },
+    {
+      "name": "htdl-recovery",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-recovery-20261102\\tests\\test-htdl-recovery.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "log": "windows-htdl-recovery.log",
+      "sha256": "118b66cadf3081b8118a32add122cbae5f02961e27417a997143befd67d1caf4",
+      "seconds": 7.431
+    },
+    {
+      "name": "editor",
+      "command": [
+        "node",
+        "--test",
+        "--test-isolation=none",
+        "tests/test-htdl-editor.js",
+        "tests/test-lsp.js",
+        "vscode-assisscript/test/language.test.js",
+        "vscode-assisscript/test/extension.test.js"
+      ],
+      "returncode": 0,
+      "executed": 38,
+      "not_run": 0,
+      "log": "windows-editor.log",
+      "sha256": "a56d575b0f44e1bb0c179fbc770578929df3f09eef3425e59f4516b4f49dcf85",
+      "seconds": 3.636
+    }
+  ],
+  "passed": true
+}

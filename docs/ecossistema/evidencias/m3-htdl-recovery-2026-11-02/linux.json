@@ -1,0 +1,76 @@
+{
+  "schema": "htdl-recovery-evidence-v1",
+  "base": "5fad34e32c444574b4900f6629855cf9a2626cb0",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "checks": [
+    {
+      "name": "htdl-recovery",
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/htdl-recovery-20261102/tests/test-htdl-recovery.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "log": "linux-htdl-recovery.log",
+      "sha256": "267ce5ef39aaff129077cde6ec01046013b2ff8270bde7a240a004a632700001",
+      "seconds": 3.757
+    },
+    {
+      "name": "htdl-catalog",
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/htdl-recovery-20261102/tests/test-htdl-catalog.py"
+      ],
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "log": "linux-htdl-catalog.log",
+      "sha256": "3e89a0baca070577c40181425dde430578bf2c3d369202dc5c8c9bdd7cb7f9c1",
+      "seconds": 15.001
+    },
+    {
+      "name": "htdl-parser",
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/htdl-recovery-20261102/tests/test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "log": "linux-htdl-parser.log",
+      "sha256": "387668a722d0a19319beef30d68198902a013b5a529a4fe7fdaf4137c451ecf5",
+      "seconds": 52.979
+    },
+    {
+      "name": "reader-transactions",
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/htdl-recovery-20261102/tests/test-reader-transactions.py"
+      ],
+      "returncode": 0,
+      "executed": 11,
+      "not_run": 4,
+      "log": "linux-reader-transactions.log",
+      "sha256": "5555f8c28722a432471b4150cddf6bc4a300c488f2445fa5b64a6b04f38c5f81",
+      "seconds": 28.435
+    },
+    {
+      "name": "htdl-reader",
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/htdl-recovery-20261102/tests/test-htdl-reader.py"
+      ],
+      "returncode": 0,
+      "executed": 7,
+      "not_run": 3,
+      "log": "linux-htdl-reader.log",
+      "sha256": "96eed1cfb0c4c43e848b9164ec557c3ea3fcba2e78fcc658d9483539e87c8a31",
+      "seconds": 18.605
+    }
+  ],
+  "passed": true
+}

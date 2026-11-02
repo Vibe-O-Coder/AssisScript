@@ -1,3 +1,13 @@
+> **Continuação validada — recuperação sintática de editor, 43,30%, 02/11/2026, 0/5 gates.**
+> Cópia `C:/Users/babus/Desktop/AssisScript/work/htdl-recovery-20261102`,
+> branch `work/m3-htdl-recovery-2026-11-02`, base publicada 5fad34e conferida.
+> Erros independentes de sintaxe/UTF-16 no editor; carga permanece estrita.
+> Windows 66 nativos + 38 editor; Linux 59/7 executados/not-run; 55 exemplos por host.
+> [Relatório e publicação no adendo](../relatorios/2026-11-02-m3-htdl-recovery.md). Níveis preservados; meta 50% pendente.
+> Identidade incremental, catálogo no Reader, desktop/leitor/DPI/IME, SDK/loader/FS/SSC,
+> quota agregada/RSS/disco/órfãos, macOS/ARM, rede/persistência/busca, M4–M9,
+> 24h e aceites seguem na fila integral. Easy por último. Entradas abaixo históricas.
+
 > **Publicação confirmada — 43,30%, 02/11/2026, 0/5 gates.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/htdl-catalog-20261102`,
 > branch `work/m3-htdl-catalog-2026-11-02`, implementação 77f8375 publicada.

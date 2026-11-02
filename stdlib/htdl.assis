@@ -610,10 +610,67 @@ final class Parser{
                 if(d.nodes().kind(node)==1){self.references(d.nodes(),node);}node=next_node(d.nodes(),node);}}
         return diagnostic(s,self.code,self.first,self.last);
     }
+    /// Editor synchronization never invents bytes or exports the partial tree.
+    /// It stops before '<', so a missing quote/terminator cannot swallow the
+    /// next sibling. A broken comment instead consumes to its own terminator.
+    private fn synchronize(borrow mut self,borrow s:slice<byte>,comment:bool):void{
+        while(self.cursor<len(s)){
+            if(comment){if(self.starts(s,utf8("-->"))){self.cursor+=3;return;}}
+            else{if(s[self.cursor]==60){return;}if(s[self.cursor]==62){self.cursor++;return;}}
+            self.cursor++;
+        }
+    }
+    private fn report(borrow mut self,borrow s:slice<byte>,borrow mut output:Diagnostics):bool{
+        if(self.code==0){return true;}
+        output.add(diagnostic(s,self.code,self.first,self.last));
+        if(self.code==401 || output.truncated()){return false;}self.code=0;return true;
+    }
+    private fn parse_editor(borrow mut self,borrow mut d:documents::Document,borrow s:slice<byte>,borrow mut output:Diagnostics):void{
+        if(!self.ready){output.add(diagnostic(s,401,0,0));return;}
+        if(len(s)>=3 && s[0]==239 && s[1]==187 && s[2]==191){self.cursor=3;}
+        let node:doctree::NodeId=new doctree::NodeId();let depth:int=0;
+        while(self.cursor<len(s) && !output.truncated()){
+            val before:int=self.cursor;
+            if(self.starts(s,utf8("<!--"))){
+                self.comment(s);if(self.code!=0){if(!self.report(s,output)){return;}self.synchronize(s,true);}
+            }else if(self.starts(s,utf8("</div>"))){
+                self.cursor+=6;
+                if(depth==0){output.add(diagnostic(s,102,before,self.cursor));}
+                else{val start:int=span_start(d.nodes(),node);self.prefix(start,self.cursor);
+                    if(!d.try_set_text(node,slice_of(self.scratch,0,16))){output.add(diagnostic(s,401,start,self.cursor));return;}
+                    node=d.nodes().parent(node);depth--;}
+            }else if(s[self.cursor]==60){
+                if(depth>=256){output.add(diagnostic(s,401,before,before));return;}
+                if(depth==0 && !doctree::absent(d.nodes().root())){
+                    // Multiple roots are ambiguous: retain the first diagnostic,
+                    // do not turn a second root into a fictitious child.
+                    output.add(diagnostic(s,102,before,before+1));return;
+                }
+                val child:doctree::NodeId=self.opening(d,s,node,true);
+                if(!doctree::absent(child)){node=child;depth++;}
+                if(self.code!=0){if(!self.report(s,output)){return;}
+                    if(self.cursor==before){self.cursor++;}self.synchronize(s,false);}
+            }else if(depth==0){
+                self.skip_space(s);
+                if(self.cursor==before){self.fail(102,before,before+1);if(!self.report(s,output)){return;}
+                    while(self.cursor<len(s) && s[self.cursor]!=60){self.cursor++;}}
+            }else{
+                self.decode(s,0);
+                if(self.code==0){self.append(d,node,2,before,self.cursor);if(!self.report(s,output)){return;}}
+                else{if(!self.report(s,output)){return;}
+                    // An invalid entity does not hide the rest of this text.
+                    // Consuming one offending byte guarantees forward progress.
+                    if(self.cursor<len(s) && s[self.cursor]!=60){self.cursor++;}}
+            }
+            if(self.cursor<=before){output.add(diagnostic(s,102,before,before+1));self.cursor=before+1;}
+        }
+        if(depth!=0 && !output.truncated()){output.add(diagnostic(s,102,span_start(d.nodes(),node),self.cursor));}
+        if(doctree::absent(d.nodes().root()) && output.size()==0){output.add(diagnostic(s,102,self.cursor,self.cursor));}
+    }
     fn analyze(borrow mut self,borrow mut d:documents::Document,borrow s:slice<byte>,borrow mut output:Diagnostics):void{
-        self.parse_tree(d,s,true);
-        // A malformed token/structure is not repaired or made executable.
-        if(self.code!=0){output.add(diagnostic(s,self.code,self.first,self.last));return;}
+        self.parse_editor(d,s,output);
+        // Syntax-damaged trees have no semantic meaning. They are always aborted.
+        if(output.size()!=0){return;}
         let node:doctree::NodeId=d.nodes().root();
         while(!doctree::absent(node) && !output.truncated()){
             if(d.nodes().kind(node)==1){
@@ -673,7 +730,7 @@ public safe fn load_catalog(borrow mut store:documents::Store,instance:int,borro
     val result:Diagnostic=stage_catalog(store,instance,source,0);
     if(result.code==0){assert(store.commit(instance));}return result;
 }
-/// Editor-only semantic recovery. Candidate is ALWAYS aborted, even for valid text.
+/// Editor-only bounded syntax/semantic recovery. ALWAYS aborts its candidate.
 /// Output is external caller memory (40+capacity*56 bytes), not document storage.
 public safe fn inspect(borrow mut store:documents::Store,instance:int,borrow source:slice<byte>,borrow mut output:Diagnostics):bool{
     output.reset();if(!output.is_ready()){return false;}

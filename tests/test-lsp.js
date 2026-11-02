@@ -62,9 +62,14 @@ test('LSP independente: framing, UTF-16, overlays, navegação e correção de e
         assert.deepEqual(htdlError.params.diagnostics.map(d=>d.code),['H206','H206']);assert.equal(htdlError.params.diagnostics[1].range.start.line,1);
         assert.ok((await request('textDocument/completion',{textDocument:{uri:htdlUri},position:{line:0,character:0}})).some(i=>i.label==='image'));
         assert.deepEqual(await request('textDocument/formatting',{textDocument:{uri:htdlUri},options:{tabSize:4,insertSpaces:true}}),[]);
-        for(const version of [2,3,4])send({method:'textDocument/didChange',params:{textDocument:{uri:htdlUri,version},contentChanges:[{text:version===4?htdlDocument(''):invalidHTDL}]}});
-        await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===htdlUri&&m.params.version===4&&m.params.diagnostics.length===0);
-        assert.ok(!notifications.some(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===htdlUri&&[2,3].includes(m.params.version)));
+        const syntaxHTDL=htdlDocument('<div type=paragraph>&first;</div>\r\n<div type=paragraph>&second;</div>');
+        send({method:'textDocument/didChange',params:{textDocument:{uri:htdlUri,version:2},contentChanges:[{text:syntaxHTDL}]}});
+        const recovered=await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===htdlUri&&m.params.version===2);
+        assert.deepEqual(recovered.params.diagnostics.map(d=>d.code),['H102','H102']);
+        assert.equal(recovered.params.diagnostics[1].range.start.line,1);
+        for(const version of [3,4,5])send({method:'textDocument/didChange',params:{textDocument:{uri:htdlUri,version},contentChanges:[{text:version===5?htdlDocument(''):invalidHTDL}]}});
+        await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===htdlUri&&m.params.version===5&&m.params.diagnostics.length===0);
+        assert.ok(!notifications.some(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===htdlUri&&[3,4].includes(m.params.version)));
         send({method:'textDocument/didClose',params:{textDocument:{uri:htdlUri}}});
         await until(m=>m.method==='textDocument/publishDiagnostics'&&m.params.uri===htdlUri&&m.params.version===undefined&&m.params.diagnostics.length===0);
         await assert.rejects(request('unknownMethod'),/não suportado/);
