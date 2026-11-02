@@ -1,3 +1,13 @@
+> **Publicação confirmada — PR #22, 02/11/2026: 36,20%, 0/5 gates.**
+> [PR de rascunho #22](https://github.com/Vibe-O-Coder/AssisScript/pull/22), aberta/sem merge,
+> base #21; implementação 5549c330ab06a8f8f4798f023f4718b12b5cad03.
+> Revisão publicada 6b2ece0ba5a28b7775e9da90adade5a36c8a29bc: 98 paths
+> e 2068 blobs conferidos na API. Autorização explícita resolveu o bloqueio anterior.
+> Cópia atual: `C:/Users/babus/Desktop/AssisScript/work/page-runtime-20261101`,
+> branch `work/m0-page-runtime-2026-11-01`. Adendo documental pelo histórico.
+> [Relatório](../relatorios/2026-11-02-m0-page-runtime.md). Meta 40% pendente;
+> fila e aceites integrais preservados, Easy por último. Entradas abaixo são históricas.
+
 > **Entrega local — 36,20%, 02/11/2026; publicação bloqueada.**
 > Implementação 5549c330ab06a8f8f4798f023f4718b12b5cad03, branch
 > `work/m0-page-runtime-2026-11-01`, cópia `C:/Users/babus/Desktop/AssisScript/work/page-runtime-20261101`.
