@@ -1,0 +1,45 @@
+{
+  "kind": "native provider surface dumps; not desktop screenshots",
+  "width": 780,
+  "height": 520,
+  "compiler_sha256": "afe1ddf458764f67362ac6285e4d907c036307cebdd1cdc3a1a533b502b8db42",
+  "provider_testing_sha256": "353236c9ab12b1c6dc2d6aa5da02c36ba39e4a532468d0153eaae5dcd2334029",
+  "document_sha256": "cd65adc0dbacc5334f4bba7787b396df9831be085c0b28348ef900a29f685cd0",
+  "scenarios": [
+    {
+      "name": "reading-100",
+      "scale": 1000,
+      "optimized_reference_equal": true,
+      "source_sha256": "11ea8a388a2f719b5c8941d36dba28e4e1ae521b6ae5d0b4060792c0163c757f",
+      "pixels_sha256": "30a84fc8d580832dc28ba954bc50b18ae9f12b46e0b37c49262027c423d46e6b",
+      "png_sha256": "6fef77d5a0e9c8576fe84a8d797e661a78f86935dbffe41fb5a6438d825925de"
+    },
+    {
+      "name": "selection-100",
+      "scale": 1000,
+      "optimized_reference_equal": true,
+      "source_sha256": "89112cdbe7880cdba87291b345c8d5b1f9ef194b824f4ff1d4e2b44251a0183e",
+      "pixels_sha256": "3e2dbe0b9974a152e8351998f37433cd045271049aa3acf572ad9b1bb6f67085",
+      "png_sha256": "01b2e4504183ec49f399804b86e802d271ce64d7295bd15324422e22506ae74c"
+    },
+    {
+      "name": "reading-200",
+      "scale": 2000,
+      "optimized_reference_equal": true,
+      "source_sha256": "ce03d6b049e828e05917a80e1c58beba36e79aef1b411d566bfbcd938940f52c",
+      "pixels_sha256": "ba871cef83e628aeb0c4d19f21e5b67df04c95dda87c4e56f78dd8dfbfa5cd8a",
+      "png_sha256": "0e84f77bfc560970f46bba38d79e9787c842f1381241afd3bb143085f98271a8"
+    },
+    {
+      "name": "focus-200",
+      "scale": 2000,
+      "optimized_reference_equal": true,
+      "source_sha256": "ec0dfb7bc7de2603dfe8328d487a13e576a252d012f28fc05aad426f7bb87d5a",
+      "pixels_sha256": "782675a53437c7ed8cd028fe40fd4f4e46c77d7344b42ab7fed7211adbc8afc8",
+      "png_sha256": "b7434078d97a7bb0a7bd682a948b09de0cd6c99e9078339b1daa2a39ddfa5d1e"
+    }
+  ],
+  "production_diagnostic_exports": false,
+  "desktop_acceptance": false,
+  "real_screen_reader": "not-run"
+}

@@ -1,0 +1,15 @@
+test_disabled_invalid_document_and_zoom_requests (__main__.HtdlReader.test_disabled_invalid_document_and_zoom_requests) ... ok
+test_integrated_reader_publish_paint_200_and_failure_cleanup (__main__.HtdlReader.test_integrated_reader_publish_paint_200_and_failure_cleanup) ... ok
+test_native_msaa_oracle_and_isolated_clipboard (__main__.HtdlReader.test_native_msaa_oracle_and_isolated_clipboard) ... ok
+test_os_refusal_preserves_reader_selection_and_neighbor (__main__.HtdlReader.test_os_refusal_preserves_reader_selection_and_neighbor) ... ok
+test_pointer_drag_keyboard_scalar_navigation_copy_request_and_cancel (__main__.HtdlReader.test_pointer_drag_keyboard_scalar_navigation_copy_request_and_cancel) ... ok
+test_reader_five_formats_and_native_execution (__main__.HtdlReader.test_reader_five_formats_and_native_execution) ... ok
+test_real_reader_external_accessible_client_zoom_resize_and_close (__main__.HtdlReader.test_real_reader_external_accessible_client_zoom_resize_and_close) ... ok
+test_reflow_keeps_selection_focus_and_rejects_old_events_and_actions (__main__.HtdlReader.test_reflow_keeps_selection_focus_and_rejects_old_events_and_actions) ... ok
+test_selection_against_independent_utf8_byte_ranges_and_reverse (__main__.HtdlReader.test_selection_against_independent_utf8_byte_ranges_and_reverse) ... ok
+test_semantic_boundaries_soft_wraps_hidden_and_owned_accessible_names (__main__.HtdlReader.test_semantic_boundaries_soft_wraps_hidden_and_owned_accessible_names) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 26.208s
+
+OK

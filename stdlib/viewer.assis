@@ -157,6 +157,8 @@ public final class View{
             self.count++;self.bottom+=self.row+8;cursor=fit;
             while(cursor<end && self.data[cursor]==32){cursor++;}
         }
+        // A semantic block boundary survives reflow; soft wraps add no bytes.
+        if(self.used>start && !self.put(byte(10))){return false;}
         self.bottom+=12;return true;
     }
     fn is_open(borrow self):bool{return self.active;}
@@ -169,6 +171,8 @@ public final class View{
     fn viewport_width(borrow self):int{return self.width;}
     fn viewport_height(borrow self):int{return self.height;}
     fn row_height(borrow self):int{return self.row;}
+    fn text_size(borrow self):int{return self.used;}
+    fn text_bytes(borrow self):borrow(self) slice<byte>{return slice_of(self.data,0,self.used);}
     fn scroll(borrow self):int{return self.offset;}
     fn max_scroll(borrow self):int{if(self.bottom+24>self.height){return self.bottom+24-self.height;}return 0;}
     fn focus_node(borrow self):doctree::NodeId{

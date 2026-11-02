@@ -11,6 +11,12 @@ Consulte [índice](ESTADO-ATUAL.md) e [fila efetiva](FILA-M0-M1.md).
 Régua **27,00%, 0/5 gates**. M2/M3 seguem parciais por seleção/acessibilidade/
 aceite visual de desktop/200%; M0-EXEC e M1 RSS permanecem abertos.
 
+**Continuação Reader (01/11/2026): 28,90%, 0/5 gates**, com seleção/cópia,
+zoom de fonte/reflow 100/200% e MSAA Windows testado por cliente externo.
+[Relatório](../relatorios/2026-11-01-m3-leitura-acessivel.md). M2/M3 permanecem
+parciais; captura desktop/leitor real, políticas e DPI do OS continuam pendentes.
+Os diagnósticos históricos abaixo e a baseline congelada são preservados.
+
 O objetivo é tornar o AssisScript capaz de implementar o navegador e seu motor, o buscador e seus serviços, além das ferramentas e APIs necessárias ao ecossistema HTDL, FluxStyle e SSC. A conclusão exige programas de referência funcionais escritos em AssisScript. Uma lista de recursos ou uma janela hospedada por outro aplicativo não basta para comprovar o objetivo.
 
 Este é o plano da **capacidade da plataforma AssisScript**. Os produtos conservarão seus próprios backlogs de experiência, conteúdo, expansão e operação. Sua implementação mínima integrada entra aqui como prova de que a plataforma atende à finalidade. Não se promete indexar toda a internet nem compatibilidade universal com a web existente.

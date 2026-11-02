@@ -1,0 +1,159 @@
+{
+  "schema": "assisscript-reader-native-v1",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler_sha256": "41a04975b09f2ef12441e6f20e2d6c5f0f839aa75b5c527064ce4ed999bd5325",
+  "checks": [
+    {
+      "name": "htdl-reader",
+      "command": [
+        "python",
+        "tests/test-htdl-reader.py"
+      ],
+      "returncode": 0,
+      "registered": 10,
+      "executed": 7,
+      "not_run": 3,
+      "seconds": 13.617323500000001,
+      "log": "linux-htdl-reader.log",
+      "log_sha256": "3d39cf8649acbcb40b686cc438c81905c17aa533efa93817b9dbaceed6d515b1"
+    },
+    {
+      "name": "htdl-viewer",
+      "command": [
+        "python",
+        "tests/test-htdl-viewer.py"
+      ],
+      "returncode": 0,
+      "registered": 12,
+      "executed": 10,
+      "not_run": 2,
+      "seconds": 22.380179533000003,
+      "log": "linux-htdl-viewer.log",
+      "log_sha256": "300bc248c3b5c3a4f8f8f543306d6a98bed67b92bf19c6f92f259f735cc4e81b"
+    },
+    {
+      "name": "htdl-parser",
+      "command": [
+        "python",
+        "tests/test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "registered": 16,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 55.135469678,
+      "log": "linux-htdl-parser.log",
+      "log_sha256": "687dac08e3d4f81c74d96041455e6b14a819950fd4a10d5a9f02580fbb218e42"
+    },
+    {
+      "name": "document-memory",
+      "command": [
+        "python",
+        "tests/test-document-memory.py"
+      ],
+      "returncode": 0,
+      "registered": 12,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 18.35768143999998,
+      "log": "linux-document-memory.log",
+      "log_sha256": "e65aaba09d2a6e0e828029d280c6b34ad34099c7c8055e34c6026e5ee0bcc572"
+    },
+    {
+      "name": "document-tree",
+      "command": [
+        "python",
+        "tests/test-document-tree.py"
+      ],
+      "returncode": 0,
+      "registered": 9,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 16.319967249,
+      "log": "linux-document-tree.log",
+      "log_sha256": "eed55308f95efaea94de9209d078c0b70e0bfa707f1d87bb2b0dd2c6c4558865"
+    },
+    {
+      "name": "ffi",
+      "command": [
+        "python",
+        "tests/test-ffi.py"
+      ],
+      "returncode": 0,
+      "registered": 9,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 4.756816716999992,
+      "log": "linux-ffi.log",
+      "log_sha256": "fb96154fc407aaa00b581e39205d6cc6e826bbee9f30f4f679da0a995d5ef342"
+    },
+    {
+      "name": "english-api",
+      "command": [
+        "python",
+        "tests/test-english-api.py"
+      ],
+      "returncode": 0,
+      "registered": 4,
+      "executed": 4,
+      "not_run": 0,
+      "seconds": 2.7643359,
+      "log": "linux-english-api.log",
+      "log_sha256": "c5064fd9f25332dfd7d1c499603ff4f39e7cd67c3fde92d48b10141e142702fc"
+    },
+    {
+      "name": "packages",
+      "command": [
+        "python",
+        "tests/test-packages.py"
+      ],
+      "returncode": 0,
+      "registered": 13,
+      "executed": 12,
+      "not_run": 1,
+      "seconds": 1.4776388209999993,
+      "log": "linux-packages.log",
+      "log_sha256": "cac5291f90f1ead4ad7a266c4311d92e2a2d2282f10744bc46bc3179b3b22964"
+    },
+    {
+      "name": "complete-ir",
+      "command": [
+        "python",
+        "tests/test-complete-ir.py"
+      ],
+      "returncode": 0,
+      "registered": 7,
+      "executed": 7,
+      "not_run": 0,
+      "seconds": 1.1612492209999914,
+      "log": "linux-complete-ir.log",
+      "log_sha256": "4be9b21aabedcd95ddf59d9f0fdd0ebe7bea55ec95350496b098b7e72d87603a"
+    },
+    {
+      "name": "optimization",
+      "command": [
+        "python",
+        "tests/test-optimization.py"
+      ],
+      "returncode": 0,
+      "registered": 6,
+      "executed": 6,
+      "not_run": 0,
+      "seconds": 2.7893434679999984,
+      "log": "linux-optimization.log",
+      "log_sha256": "4ad8175328bd62193112f46104376355b5b967135591d64690683dc3abfeb70f"
+    }
+  ],
+  "passed": true,
+  "native_provider": "unsupported",
+  "visual_inspection": "not-run: Computer Use app approval timed out",
+  "accessibility": "external MSAA client tested on Windows; real screen reader not-run",
+  "scale_200": "Windows font zoom and reflow tested; OS DPI/monitors not-run",
+  "selection_ime": "scalar selection tested; grapheme editing/IME unsupported",
+  "other_native_targets": {
+    "macos-x64": "not-run",
+    "macos-arm64": "not-run",
+    "linux-arm64": "not-run"
+  }
+}

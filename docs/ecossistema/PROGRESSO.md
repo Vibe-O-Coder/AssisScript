@@ -1,10 +1,10 @@
 # Progresso — capacidade do AssisScript para o ecossistema web
 
-Data: 2026-11-01. Régua v1. **27,00/100 pontos (27,00%)**, com **0/5 gates aprovados**.
+Data: 2026-11-01. Régua v1. **28,90/100 pontos (28,90%)**, com **0/5 gates aprovados**.
 
-Estado da avaliação: `partial-native-retest-m2-htdl-viewer`. Escopo: Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.
+Estado da avaliação: `partial-native-retest-m3-reader`. Escopo: Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.
 
-Continuação M2/M3: apresentação HTDL local em AssisScript, janela Windows x64 e biblioteca/fallback Linux x64 testados na revisão; 106/85 métodos executados e 1/3 not-run respectivamente. Superfícies nativas foram inspecionadas, mas a captura desktop falhou. Seleção/IME/acessibilidade/200%, outros providers, FS/SSC, sandbox e CI global permanecem sem aceite. Relatório e hashes próprios não aprovam gates. O número não mede prazo, esforço restante ou prontidão para produção. Casas decimais tornam a soma auditável; não significam precisão de previsão.
+Unidade Reader: seleção de escalares e cópia, zoom da fonte/reflow 100/200%, projeção acessível MSAA e cliente externo Windows; biblioteca e fallback Linux x64 têm resultados próprios. Geração estrangeira não é execução. Captura Computer Use falhou em app approval timed out; leitor de tela real, IME/grafemas, monitores/DPI do OS, contraste/movimento, layout FS/SSC, sandbox e CI global continuam abertos. Detalhes e contagens exatas no relatório da unidade; nenhum gate aprovado. O número não mede prazo, esforço restante ou prontidão para produção. Casas decimais tornam a soma auditável; não significam precisão de previsão.
 
 Os 100/100 das antigas fases 0–6 medem outro escopo e permanecem preservados. Esta régua tem 60 critérios em 12 frentes; cinco critérios dividem igualmente o peso de cada frente. Níveis 0–4 rendem 0%, 25%, 50%, 75% e 100% do crédito. Fórmula: `Σ peso × soma(níveis) / 20`. Só há conclusão com todos os critérios em 4 e os cinco gates aprovados.
 
@@ -18,15 +18,15 @@ Os 100/100 das antigas fases 0–6 medem outro escopo e permanecem preservados. 
 | E01 — Linguagem, compilador e garantias semânticas | 14 | 2, 3, 2, 2, 3 | 8,40 |
 | E02 — Memória, coleções, texto e dados grandes | 8 | 2, 2, 2, 2, 1 | 3,60 |
 | E03 — Sistema, tarefas, processos e integração de eventos | 10 | 1, 1, 2, 2, 0 | 3,00 |
-| E04 — Plataforma gráfica, entrada e acessibilidade | 10 | 2, 2, 2, 1, 0 | 3,50 |
+| E04 — Plataforma gráfica, entrada e acessibilidade | 10 | 2, 2, 2, 2, 2 | 5,00 |
 | E05 — Rede, URLs e serviços web | 8 | 1, 0, 0, 0, 0 | 0,40 |
 | E06 — Executor restrito, capacidades e isolamento | 10 | 0, 0, 0, 0, 0 | 0,00 |
 | E07 — HTDL, árvore semântica e SDK de documentos | 8 | 2, 1, 0, 2, 1 | 2,40 |
-| E08 — FluxStyle, SSC, layout e integração visual | 8 | 0, 1, 0, 0, 1 | 0,80 |
+| E08 — FluxStyle, SSC, layout e integração visual | 8 | 0, 2, 0, 0, 1 | 1,20 |
 | E09 — Persistência, perfil e formatos de armazenamento | 8 | 1, 1, 0, 0, 0 | 0,80 |
 | E10 — Rastreamento, indexação e consulta do buscador | 6 | 1, 0, 0, 0, 0 | 0,30 |
 | E11 — Ferramentas, distribuição e aceite integrado | 6 | 2, 2, 2, 1, 1 | 2,40 |
-| **Total** | **100** | **60 critérios** | **27,00** |
+| **Total** | **100** | **60 critérios** | **28,90** |
 
 ## Gates de integração
 
@@ -60,6 +60,7 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 | 2026-11-01 | M1: metadados/fonte cobrados e candidato completo transacional; níveis/gates preservados | 22,30 | 0/5 |
 | 2026-11-01 | M3 parcial: parser HTDL real bootstrap, driver/corpus e ativação validada; 0/5 gates | 23,90 | 0/5 |
 | 2026-11-01 | M2/M3 parcial: janela HTDL, apresentação textual, foco/eventos/scroll e superfícies; 27,00%, 0/5 gates | 27,00 | 0/5 |
+| 2026-11-01 | M3 parcial: seleção/cópia, zoom 100/200% e MSAA externo pelo mesmo snapshot; 28,90%, 0/5 gates | 28,90 | 0/5 |
 
 ## Estado e evidência dos 60 critérios
 
@@ -110,8 +111,8 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 | E04-01 — Ponte nativa segura e versionada | 2/4 | ABI C escalar e callbacks síncronos existem; bibliotecas gráficas não integradas. [FFI-C.md](../../docs/FFI-C.md); [ARM64-NATIVO.md](../../docs/ARM64-NATIVO.md); [2026-10-29-m1-plataforma-windows.md](../../docs/relatorios/2026-10-29-m1-plataforma-windows.md); [windows-x64.json](../../docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json) |
 | E04-02 — Janela, monitores e eventos | 2/4 | Janela Windows x64 integrada a HTDL local: teclado/clique/roda/resize/close e recursos contados. Captura desktop, monitores/200%, touch e suspensão seguem pendentes. `local:htdl/docs/18-arquitetura-nativa-e-capacidades.md`; [2026-10-29-m1-plataforma-windows.md](../../docs/relatorios/2026-10-29-m1-plataforma-windows.md); [windows-x64.json](../../docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json); [2026-11-01-m2-visualizador-htdl.md](../../docs/relatorios/2026-11-01-m2-visualizador-htdl.md); [summary.json](../../docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json) |
 | E04-03 — Desenho, imagens e composição | 2/4 | Composição software de texto/retângulos e clipping integrados ao snapshot, modelo independente por pixel e superfícies equivalentes. Imagens/transforms e perda de dispositivo completa faltam. `local:htdl/docs/17-execucao-transacoes-e-layout.md`; [2026-10-29-m1-plataforma-windows.md](../../docs/relatorios/2026-10-29-m1-plataforma-windows.md); [windows-x64.json](../../docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json); [2026-11-01-m2-visualizador-htdl.md](../../docs/relatorios/2026-11-01-m2-visualizador-htdl.md); [summary.json](../../docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json) |
-| E04-04 — Fontes, edição e entrada de texto | 1/4 | Medição de fonte do sistema comparada a GDI direto e texto UTF-8 integrado. Sem shaping/bidi/segmentação por grafema, seleção, clipboard, IME ou aceite de 200%. [BIBLIOTECA-unicode.md](../../docs/BIBLIOTECA-unicode.md); [2026-11-01-m2-visualizador-htdl.md](../../docs/relatorios/2026-11-01-m2-visualizador-htdl.md); [summary.json](../../docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json) |
-| E04-05 — Acessibilidade e políticas do usuário | 0/4 | Há proposta semântica, sem ponte nativa verificada. `local:htdl/docs/14-fundamentos-e-perfis.md`; `local:htdl/docs/19-conformidade-e-cenarios.md` |
+| E04-04 — Fontes, edição e entrada de texto | 2/4 | Seleção de leitura em fronteiras UTF-8, clipboard isolado e fonte 100/200% com reflow demonstrados no Reader Windows x64, além da medição anterior. Graphemes, shaping/bidi completos, edição/IME e DPI/monitores do OS permanecem abertos. [BIBLIOTECA-unicode.md](../../docs/BIBLIOTECA-unicode.md); [2026-11-01-m2-visualizador-htdl.md](../../docs/relatorios/2026-11-01-m2-visualizador-htdl.md); [summary.json](../../docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json); [2026-11-01-m3-leitura-acessivel.md](../../docs/relatorios/2026-11-01-m3-leitura-acessivel.md); [summary.json](../../docs/ecossistema/evidencias/m3-reader-2026-11-01/summary.json); [test-htdl-reader.py](../../tests/test-htdl-reader.py); [reader_oracle.c](../../tests/reader_oracle.c) |
+| E04-05 — Acessibilidade e políticas do usuário | 2/4 | Projeção MSAA nativa documento/blocos, nomes/roles/disabled/offscreen/foco/geometria e ação padrão via fila com identidade, testada por cliente externo e oráculo C com falhas/lifetime. Projeção plana; leitor de tela real, UIA TextPattern e políticas de contraste/movimento ainda sem aceite. `local:htdl/docs/14-fundamentos-e-perfis.md`; `local:htdl/docs/19-conformidade-e-cenarios.md`; [2026-11-01-m3-leitura-acessivel.md](../../docs/relatorios/2026-11-01-m3-leitura-acessivel.md); [summary.json](../../docs/ecossistema/evidencias/m3-reader-2026-11-01/summary.json); [test-htdl-reader.py](../../tests/test-htdl-reader.py); [reader_oracle.c](../../tests/reader_oracle.c) |
 
 ### E05 — Rede, URLs e serviços web
 
@@ -148,7 +149,7 @@ G2 aberto impede anunciar execução segura de páginas remotas. Pontuação alt
 | Critério | Nível | Justificativa e fontes |
 | --- | ---: | --- |
 | E08-01 — Frontend e avaliador FluxStyle | 0/4 | Rascunhos e exemplos conceituais, sem avaliador nativo demonstrado. `local:htdl/docs/16-gramaticas-fs-e-ssc.md`; `local:htdl/docs/12-contrato-fs-ssc-e-assisscript.md` |
-| E08-02 — Layout e snapshots coerentes | 1/4 | Fundação AssisScript de layout textual medido, snapshot próprio e mesma geometria para desenho/hit test/scroll; resize transacional. Sem constraints row/column, FS/SSC ou árvore acessível. `local:htdl/docs/17-execucao-transacoes-e-layout.md`; `local:htdl/docs/19-conformidade-e-cenarios.md`; [2026-11-01-m2-visualizador-htdl.md](../../docs/relatorios/2026-11-01-m2-visualizador-htdl.md); [summary.json](../../docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json) |
+| E08-02 — Layout e snapshots coerentes | 2/4 | Snapshot textual próprio agora alimenta desenho, seleção/hit testing, reflow 100/200% e geometria acessível MSAA dos mesmos blocos/linhas inteiras, com falha transacional de construção/publicação. Constraints row/column, FS/SSC e integração completa continuam abertos. `local:htdl/docs/17-execucao-transacoes-e-layout.md`; `local:htdl/docs/19-conformidade-e-cenarios.md`; [2026-11-01-m2-visualizador-htdl.md](../../docs/relatorios/2026-11-01-m2-visualizador-htdl.md); [summary.json](../../docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json); [2026-11-01-m3-leitura-acessivel.md](../../docs/relatorios/2026-11-01-m3-leitura-acessivel.md); [summary.json](../../docs/ecossistema/evidencias/m3-reader-2026-11-01/summary.json); [test-htdl-reader.py](../../tests/test-htdl-reader.py); [reader_oracle.c](../../tests/reader_oracle.c) |
 | E08-03 — Perfil numérico e temporal SSC | 0/4 | Simulador isolado não é motor SSC integrado ao navegador. `local:htdl/docs/12-contrato-fs-ssc-e-assisscript.md`; `local:htdl/docs/16-gramaticas-fs-e-ssc.md` |
 | E08-04 — Foco, movimento e falhas reativas | 0/4 | Regras propostas, ainda sem execução ponta a ponta. `local:htdl/docs/17-execucao-transacoes-e-layout.md` |
 | E08-05 — Corpus visual e inspeção | 1/4 | Artigo HTDL em três dumps reais da superfície Windows, inspecionados e iguais entre modos, com entrada nativa. Captura de desktop falhou; contador/dois painéis/leitor de tela/grafo permanecem pendentes. `local:htdl/docs/19-conformidade-e-cenarios.md`; [2026-11-01-m2-visualizador-htdl.md](../../docs/relatorios/2026-11-01-m2-visualizador-htdl.md); [summary.json](../../docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json) |

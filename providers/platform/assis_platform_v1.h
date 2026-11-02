@@ -24,4 +24,16 @@ ASSISP_API int64_t assisp_view_version(void);
 ASSISP_API int64_t assisp_measure_utf8(const uint8_t *text, int64_t length);
 ASSISP_API int32_t assisp_rect(int64_t window, int32_t x, int32_t y,
     int32_t width, int32_t height, uint32_t rgba);
+/* Additive reader extension 1. MSAA projection is copied transactionally. */
+ASSISP_API int64_t assisp_reader_version(void);
+ASSISP_API int64_t assisp_measure_scaled(const uint8_t *text, int64_t length, int32_t scale);
+ASSISP_API int32_t assisp_text_scaled(int64_t window, int32_t x, int32_t y,
+    const uint8_t *text, int64_t length, uint32_t rgba, int32_t scale);
+ASSISP_API int32_t assisp_clipboard_utf8(int64_t window, const uint8_t *text, int64_t length);
+/* count records of 8 i64: role, flags, x,y,width,height,name_offset,name_length.
+   First is document; remaining are flat semantic blocks. Document instance
+   is monotonically increasing per window. Flags disabled=1, focused=2,
+   offscreen=4. No pointers to caller memory survive the call. */
+ASSISP_API int32_t assisp_accessibility(int64_t window, int64_t document,
+    const int64_t *words, int64_t count, const uint8_t *names, int64_t length);
 #endif

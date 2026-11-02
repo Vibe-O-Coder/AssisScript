@@ -1,0 +1,30 @@
+{
+  "platform": "linux",
+  "host": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "architecture": "x86_64",
+  "compiler_sha256": "41a04975b09f2ef12441e6f20e2d6c5f0f839aa75b5c527064ce4ed999bd5325",
+  "source_sha256": "76df37daff41739f6fc3c3204a01897fb9e0c4783c1fec9235b1439074bfb987",
+  "reader_library_sha256": "2df65df51c270e6a1b612ec22d91c50341eabe4cced7af5f7959142696604b78",
+  "provider_state": "unsupported",
+  "native_fallback_execution": [
+    {
+      "mode": "optimized",
+      "build_return_code": 0,
+      "return_code": 0,
+      "stdout": "reader provider unavailable\n",
+      "stderr": "",
+      "passed": true,
+      "binary_sha256": "43d8c1d4e0567a0f45eb41f3e37ff715da8083a3f7a4ece276fd88232eff0ec6"
+    },
+    {
+      "mode": "reference",
+      "build_return_code": 0,
+      "return_code": 0,
+      "stdout": "reader provider unavailable\n",
+      "stderr": "",
+      "passed": true,
+      "binary_sha256": "57191039d8b9b6f27183f1669fb602be2c2a22293b9ff9a13ccd4cc6b9cfd637"
+    }
+  ],
+  "passed": true
+}

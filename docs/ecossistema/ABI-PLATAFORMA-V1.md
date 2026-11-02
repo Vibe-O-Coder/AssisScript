@@ -115,3 +115,26 @@ Na unidade M2 há janela HTDL local real, testes de entradas/resize/fechamento
 e dumps da superfície. A captura Computer Use falhou; IME/leitor de tela/
 200%/outros providers permanecem sem aceite. O parágrafo not-run anterior
 descreve a evidência histórica M1. Nenhum gate foi aprovado.
+
+## Continuação reader 1 — 01/11/2026
+
+Seleção de leitura por escalares UTF-8, cópia explícita, zoom de fonte/reflow
+100/200% e projeção MSAA plana documento/blocos foram implementados em
+std/reader.assis. [Contrato completo](../BIBLIOTECA-reader.md),
+[relatório e evidência](../relatorios/2026-11-01-m3-leitura-acessivel.md).
+A ABI base 0x00010000 e extensão viewer 1 permanecem; imports novos só no Reader.
+Eventos 11 carregam document_instance/child_index e são revalidados pelo host.
+Ponte copia buffers, não retém ponteiros AssisScript; referências COM antigas
+ficam desconectadas em navegação/close da Window. Novos imports/formatos estão
+no header assis_platform_v1.h e em providers/platform/reader.inc.
+A projeção usa 8 palavras i64 por registro: role,flags,x,y,width,height,
+name_offset,name_length. Registro 0 é document=1; demais 6/8/9 são paragraph/
+heading/button. Flags disabled=1, focused=2, offscreen=4. Até 32769 registros,
+1048608 bytes de nomes; ranges/UTF-8/identidade validados antes de cópia.
+
+Cliente MSAA externo, clipboard isolado, fontes GDI e casos adversos têm
+execução Windows x64; Linux tem biblioteca/fallback, sem provider. Quatro
+surfaces reais são dumps, não screenshots de desktop. Computer Use parou em
+app approval timed out. Leitor real, contraste/movimento, DPI multimonitor,
+grafemas/edição/IME e UIA TextPattern continuam sem aceite. A escala 200% da
+fonte não é escala do OS. Nenhum gate aprovado. O not-run anterior é histórico.

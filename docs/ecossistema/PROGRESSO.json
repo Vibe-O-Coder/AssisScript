@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-01",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "partial-native-retest-m2-htdl-viewer",
+  "assessment": "partial-native-retest-m3-reader",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -399,24 +399,32 @@
         {
           "id": "E04-04",
           "name": "Fontes, edição e entrada de texto",
-          "level": 1,
+          "level": 2,
           "acceptance": "Integrar shaping/fallback/bidi, medição e quebra, seleção, clipboard e IME; validar edição com graphemes, escala 200%, RTL e navegação por teclado em providers de cada OS.",
-          "baseline": "Medição de fonte do sistema comparada a GDI direto e texto UTF-8 integrado. Sem shaping/bidi/segmentação por grafema, seleção, clipboard, IME ou aceite de 200%.",
+          "baseline": "Seleção de leitura em fronteiras UTF-8, clipboard isolado e fonte 100/200% com reflow demonstrados no Reader Windows x64, além da medição anterior. Graphemes, shaping/bidi completos, edição/IME e DPI/monitores do OS permanecem abertos.",
           "evidence": [
             "docs/BIBLIOTECA-unicode.md",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
-            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json"
+            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json",
+            "docs/relatorios/2026-11-01-m3-leitura-acessivel.md",
+            "docs/ecossistema/evidencias/m3-reader-2026-11-01/summary.json",
+            "tests/test-htdl-reader.py",
+            "tests/reader_oracle.c"
           ]
         },
         {
           "id": "E04-05",
           "name": "Acessibilidade e políticas do usuário",
-          "level": 0,
+          "level": 2,
           "acceptance": "Exportar árvore semântica, nome/role/valor, foco e ações às APIs assistivas do OS; testar leitor de tela, contraste, zoom e movimento reduzido com usuário e automação.",
-          "baseline": "Há proposta semântica, sem ponte nativa verificada.",
+          "baseline": "Projeção MSAA nativa documento/blocos, nomes/roles/disabled/offscreen/foco/geometria e ação padrão via fila com identidade, testada por cliente externo e oráculo C com falhas/lifetime. Projeção plana; leitor de tela real, UIA TextPattern e políticas de contraste/movimento ainda sem aceite.",
           "evidence": [
             "local:htdl/docs/14-fundamentos-e-perfis.md",
-            "local:htdl/docs/19-conformidade-e-cenarios.md"
+            "local:htdl/docs/19-conformidade-e-cenarios.md",
+            "docs/relatorios/2026-11-01-m3-leitura-acessivel.md",
+            "docs/ecossistema/evidencias/m3-reader-2026-11-01/summary.json",
+            "tests/test-htdl-reader.py",
+            "tests/reader_oracle.c"
           ]
         }
       ]
@@ -654,14 +662,18 @@
         {
           "id": "E08-02",
           "name": "Layout e snapshots coerentes",
-          "level": 1,
+          "level": 2,
           "acceptance": "Definir constraints, distribuição row/column, texto, overflow/scroll e invalidações; provar ausência de ciclo geométrico e uso do mesmo snapshot por desenho, hit test e acessibilidade.",
-          "baseline": "Fundação AssisScript de layout textual medido, snapshot próprio e mesma geometria para desenho/hit test/scroll; resize transacional. Sem constraints row/column, FS/SSC ou árvore acessível.",
+          "baseline": "Snapshot textual próprio agora alimenta desenho, seleção/hit testing, reflow 100/200% e geometria acessível MSAA dos mesmos blocos/linhas inteiras, com falha transacional de construção/publicação. Constraints row/column, FS/SSC e integração completa continuam abertos.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "local:htdl/docs/19-conformidade-e-cenarios.md",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
-            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json"
+            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json",
+            "docs/relatorios/2026-11-01-m3-leitura-acessivel.md",
+            "docs/ecossistema/evidencias/m3-reader-2026-11-01/summary.json",
+            "tests/test-htdl-reader.py",
+            "tests/reader_oracle.c"
           ]
         },
         {
@@ -2152,7 +2164,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-01",
+      "rubric_version": 1,
+      "label": "M3 parcial: seleção/cópia, zoom 100/200% e MSAA externo pelo mesmo snapshot; 28,90%, 0/5 gates",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 1,
+        "E00-03": 1,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 1,
+        "E03-03": 2,
+        "E03-04": 2,
+        "E03-05": 0,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 0,
+        "E06-02": 0,
+        "E06-03": 0,
+        "E06-04": 0,
+        "E06-05": 0,
+        "E07-01": 2,
+        "E07-02": 1,
+        "E07-03": 0,
+        "E07-04": 2,
+        "E07-05": 1,
+        "E08-01": 0,
+        "E08-02": 2,
+        "E08-03": 0,
+        "E08-04": 0,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 1,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Continuação M2/M3: apresentação HTDL local em AssisScript, janela Windows x64 e biblioteca/fallback Linux x64 testados na revisão; 106/85 métodos executados e 1/3 not-run respectivamente. Superfícies nativas foram inspecionadas, mas a captura desktop falhou. Seleção/IME/acessibilidade/200%, outros providers, FS/SSC, sandbox e CI global permanecem sem aceite. Relatório e hashes próprios não aprovam gates."
+  "assessment_note": "Unidade Reader: seleção de escalares e cópia, zoom da fonte/reflow 100/200%, projeção acessível MSAA e cliente externo Windows; biblioteca e fallback Linux x64 têm resultados próprios. Geração estrangeira não é execução. Captura Computer Use falhou em app approval timed out; leitor de tela real, IME/grafemas, monitores/DPI do OS, contraste/movimento, layout FS/SSC, sandbox e CI global continuam abertos. Detalhes e contagens exatas no relatório da unidade; nenhum gate aprovado."
 }

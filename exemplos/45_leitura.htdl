@@ -1,0 +1,19 @@
+<div type="document" version="0.1" lang="pt-BR">
+  <div type="head"><div type="title">Leitura HTDL — seleção e zoom</div></div>
+  <div type="body">
+    <div type="heading" level="1">Leitura local</div>
+    <div type="paragraph">Abra um documento, ajuste o tamanho do texto e continue a leitura com o teclado ou o mouse. Este artigo é uma demonstração local, sem conexão de rede.</div>
+    <div type="paragraph">Ação, coração, café e informação: os acentos fazem parte do texto. As entidades &amp; e &#xE7; também são apresentadas como caracteres.</div>
+    <div type="button" a11y-label="Continuar leitura do artigo">Continuar leitura</div>
+    <div type="button" disabled="true">Indisponível neste exemplo</div>
+    <div type="heading" level="2">Navegação e seleção</div>
+    <div type="paragraph">Arraste sobre um parágrafo para selecionar texto. Ctrl+A seleciona o documento e Ctrl+C copia a seleção. Shift+Seta esquerda ou direita estende a seleção. Um acento combinado pode ser selecionado separadamente da letra.</div>
+    <div type="paragraph">Tab e Shift+Tab percorrem os botões disponíveis. Enter ativa o botão no pressionamento; Espaço ativa na liberação. A repetição da tecla não dispara ativações extras. Escape fecha a janela.</div>
+    <div type="heading" level="2">Texto maior</div>
+    <div type="paragraph">Ctrl+mais aumenta o texto para 200%. Ctrl+menos ou Ctrl+0 retorna a 100%. As linhas são reorganizadas para a largura da janela. A seleção continua no mesmo trecho após mudar o zoom ou redimensionar.</div>
+    <div type="paragraph">Use as setas, Page Down, Page Up, Home, End ou a roda do mouse para percorrer o artigo. O foco traz o botão para a área visível.</div>
+    <div type="heading" level="2">Acessibilidade em desenvolvimento</div>
+    <div type="paragraph">Nomes, texto, estado e ações dos botões são expostos ao serviço acessível do Windows. O botão indisponível não pode ser acionado. A experiência com leitor de tela real, edição de texto e IME ainda precisa de validação.</div>
+    <div type="button">Fim do artigo</div>
+  </div>
+</div>
