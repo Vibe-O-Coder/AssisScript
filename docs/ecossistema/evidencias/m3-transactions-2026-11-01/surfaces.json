@@ -1,0 +1,42 @@
+{
+  "kind": "native surface dump; not desktop screenshot",
+  "scenarios": [
+    {
+      "name": "before",
+      "scale": 1000,
+      "source_sha256": "0fd097c0c25eab0b006d1f3465272db636d82de051f4c91727c8a84220e47a7c",
+      "png_sha256": "dca986ef171052cfd4ebad6695e7968fa3a30af01fd2b8a4cc2274f717400ae5",
+      "pixels_sha256": "0d86d691f4a73d10486211c6ea009408e0e7eb25936846826df02beb798f5add",
+      "optimized_reference_equal": true
+    },
+    {
+      "name": "updated",
+      "scale": 1000,
+      "source_sha256": "1432636720d7b572360dcaf9cf1a3e274b1df29f9be51e91f3774936942febee",
+      "png_sha256": "4e15c56fc3cea78997fe804071715759fbef58f2d7f8762191464d63bde4fe82",
+      "pixels_sha256": "80aef1f884f971f5ef53bf4ef8b494af7ccd44c2572efd3d132d235cc1634037",
+      "optimized_reference_equal": true
+    },
+    {
+      "name": "contrast",
+      "scale": 1000,
+      "source_sha256": "57d0c97a2c72ebd398bfaa245822871f1631f0b0ceb40bc79076d360820f15ab",
+      "png_sha256": "845fd30811e70930811f44535171a8e1d405472f8069d5e23488451eedbc57e0",
+      "pixels_sha256": "39e4621175b75eeea75c0f55b8e863eb40c58bee9658be5365f10a63542c6531",
+      "optimized_reference_equal": true
+    },
+    {
+      "name": "contrast-200",
+      "scale": 2000,
+      "source_sha256": "99faea658199bf7e24fb87520be62bc0463b7918e76ed65483c0848829c336ac",
+      "png_sha256": "3ef41f31bcf8567e53d8414a99cdcdce555a5c3d356c93fd31808c1948c071a9",
+      "pixels_sha256": "bceada8f30b247deadad174e044ef0dfc0329b6f59037634928d41f8256e2c58",
+      "optimized_reference_equal": true
+    }
+  ],
+  "compiler_sha256": "afe1ddf458764f67362ac6285e4d907c036307cebdd1cdc3a1a533b502b8db42",
+  "provider_sha256": "cca05977d9f6c1d060cb9b3ddabc536bc08e732b2b9363361844e626b7dfce52",
+  "source": "<div type=document version=\"0.1\" lang=\"pt-BR\"><div type=head><div type=title>Transações e preferências</div></div><div type=body><div type=heading level=1>Leitura acessível</div><div type=paragraph>Ação, seleção e contraste usam o mesmo documento validado. Uma mudança só entra após preparar a apresentação.</div><div type=button id=change>Mostrar detalhes</div><div type=button disabled=true>Indisponível</div><div type=container id=details hidden=true><div type=paragraph>Detalhes da nova versão, com nomes e geometria acessíveis.</div></div></div></div>",
+  "screen_reader_acceptance": false,
+  "os_dpi_acceptance": false
+}

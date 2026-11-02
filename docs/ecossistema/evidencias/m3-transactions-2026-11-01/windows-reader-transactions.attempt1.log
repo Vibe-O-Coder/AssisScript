@@ -1,0 +1,49 @@
+test_boolean_mutations_missing_attributes_disabled_hidden_and_stale_patch (__main__.Transactions.test_boolean_mutations_missing_attributes_disabled_hidden_and_stale_patch) ... ok
+test_high_contrast_selection_focus_and_system_query (__main__.Transactions.test_high_contrast_selection_focus_and_system_query) ... ok
+test_integrated_example_toggle_preferences_visibility_resize_and_close (__main__.Transactions.test_integrated_example_toggle_preferences_visibility_resize_and_close) ... ok
+test_invalid_ranges_utf8_node_and_semantic_edit_cannot_activate (__main__.Transactions.test_invalid_ranges_utf8_node_and_semantic_edit_cannot_activate) ... ok
+test_motion_hidden_editing_reduced_and_clock_bounds_against_time_model (__main__.Transactions.test_motion_hidden_editing_reduced_and_clock_bounds_against_time_model) ... ok
+test_msaa_publication_failure_is_atomic_then_disabled_is_current (__main__.Transactions.test_msaa_publication_failure_is_atomic_then_disabled_is_current) ... ok
+test_native_preferences_oracle_subscription_capacity_thread_and_revocation (__main__.Transactions.test_native_preferences_oracle_subscription_capacity_thread_and_revocation) ... ok
+test_oom_during_candidate_construction_preserves_active_and_neighbor (__main__.Transactions.test_oom_during_candidate_construction_preserves_active_and_neighbor) ... ERROR
+test_ordered_type_class_query_matches_independent_xml (__main__.Transactions.test_ordered_type_class_query_matches_independent_xml) ... ok
+test_parse_measure_quota_failures_keep_last_document_and_allow_retry (__main__.Transactions.test_parse_measure_quota_failures_keep_last_document_and_allow_retry) ... ok
+test_patch_create_remove_and_escaped_text_against_xml (__main__.Transactions.test_patch_create_remove_and_escaped_text_against_xml) ... ok
+test_quota_and_unicode_cut_preserve_active_and_stale_query_cursor_is_refused (__main__.Transactions.test_quota_and_unicode_cut_preserve_active_and_stale_query_cursor_is_refused) ... ok
+test_staging_is_not_activation_and_busy_does_not_abort_another_candidate (__main__.Transactions.test_staging_is_not_activation_and_busy_does_not_abort_another_candidate) ... ok
+test_transaction_generation_for_five_formats_and_native_execution (__main__.Transactions.test_transaction_generation_for_five_formats_and_native_execution) ... ok
+test_transaction_maps_focus_by_semantic_id_and_cancels_old_actions (__main__.Transactions.test_transaction_maps_focus_by_semantic_id_and_cancels_old_actions) ... ok
+
+======================================================================
+ERROR: test_oom_during_candidate_construction_preserves_active_and_neighbor (__main__.Transactions.test_oom_during_candidate_construction_preserves_active_and_neighbor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 701, in _rmtree_unsafe
+    os.unlink(fullname)
+    ~~~~~~~~~^^^^^^^^^^
+PermissionError: [WinError 5] Acesso negado: 'C:\\Users\\babus\\AppData\\Local\\Temp\\assis-evolution-dugdg8d3\\fault-1.exe'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py", line 975, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py", line 955, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 852, in rmtree
+    _rmtree_impl(path, dir_fd, onexc)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 705, in _rmtree_unsafe
+    onexc(os.unlink, fullname, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py", line 930, in onexc
+    _os.unlink(path)
+    ~~~~~~~~~~^^^^^^
+PermissionError: [WinError 5] Acesso negado: 'C:\\Users\\babus\\AppData\\Local\\Temp\\assis-evolution-dugdg8d3\\fault-1.exe'
+
+----------------------------------------------------------------------
+Ran 15 tests in 32.009s
+
+FAILED (errors=1)

@@ -1,3 +1,15 @@
+> **Estado atual: 30,10%, 0/5 gates — transações e preferências.**
+> Continuação em `AssisScript/work/reader-transactions-20261101`, branch
+> `work/m3-reader-transactions-2026-11-01`, base publicada #19/4ba27b3.
+> [Relatório atual](../relatorios/2026-11-01-m3-transacoes-preferencias.md) e
+> [resumo](evidencias/m3-transactions-2026-11-01/summary.json). Verifique o adendo
+> de publicação e SHA remoto. 131 testes Windows/103 Linux executados; 1/10
+> not-run. Seletores/mutações bootstrap, sessão transacional com foco/MSAA,
+> preferências/contraste e relógio de apresentação têm evidência própria.
+> Captura desktop falhou; leitor real, DPI/monitores e IME permanecem abertos.
+> Catálogo/editor HTDL, FS/SSC, VM/Wasm/sandbox, RSS e M4–M9 continuam na fila;
+> Easy é a última etapa. O texto abaixo é histórico.
+>
 > **Reader publicado após autorização direta:** 73 paths/blobs e SHA
 > `722d7cda89859ad08cfdef4191b5f54e0dc97786` conferidos no remoto.
 > [PR #19](https://github.com/Vibe-O-Coder/AssisScript/pull/19), aberta/em

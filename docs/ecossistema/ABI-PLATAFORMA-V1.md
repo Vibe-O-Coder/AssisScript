@@ -1,5 +1,19 @@
 # assis_platform_v1 — contrato inicial da ponte nativa
 
+Continuação de 01/11/2026: extensão de preferências em `assisp_preferences`
+(header e contrato [Reader](../BIBLIOTECA-reader.md)). Copia dez i64: versão 1,
+highContrast, reducedMotion, background, foreground, button, buttonText,
+disabledText, selection, selectionText. Capacidade mínima 10; buffer é zerado
+em falha quando válido. Cores RGBA opacas de GetSysColor; flags de
+SPI_GETHIGHCONTRAST/SPI_GETCLIENTAREAANIMATION. Nenhuma configuração é escrita.
+Consulta aceita inscreve somente a janela em eventos 12 (reconsultar) e 13
+(visibilidade). Demais callers não recebem novos eventos; todos os símbolos
+anteriores e versões base/viewer/reader são conservados. Ponteiro emprestado
+não é retido, chamada fica na thread proprietária, token revogado retorna -2.
+Os novos imports exigem DLL atual; ausência de símbolo é erro do loader.
+Sem dependência redistribuída nova; User32/GDI já inventariados. Testes na
+[unidade de transações](../relatorios/2026-11-01-m3-transacoes-preferencias.md).
+
 Estado em 01/11/2026: **provider Windows x64 e extensão de apresentação local,
 validados como prova parcial**.
 Contrato do módulo em [BIBLIOTECA-window.md](../BIBLIOTECA-window.md), implementação

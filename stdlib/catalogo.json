@@ -242,7 +242,7 @@
       "name": "reader",
       "required": false,
       "doc": "BIBLIOTECA-reader.md",
-      "description": "Leitura HTDL local com seleção UTF-8, cópia concedida pelo usuário, zoom 100/200% e projeção MSAA Windows; sem edição/IME/UIA TextPattern.",
+      "description": "Leitura HTDL local com seleção UTF-8, cópia concedida pelo usuário, zoom 100/200%, transações semânticas, preferências/contraste, relógio de movimento e projeção MSAA Windows; sem edição/IME/UIA TextPattern.",
       "dependencies": [
         "viewer"
       ]

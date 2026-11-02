@@ -26,6 +26,11 @@ ASSISP_API int32_t assisp_rect(int64_t window, int32_t x, int32_t y,
     int32_t width, int32_t height, uint32_t rgba);
 /* Additive reader extension 1. MSAA projection is copied transactionally. */
 ASSISP_API int64_t assisp_reader_version(void);
+/* Preferences extension 1: ten i64 words: version, highContrast, reducedMotion,
+   background, text, button, buttonText, disabledText, selection, selectionText.
+   Colors are opaque RGBA. Successful query subscribes this window to events
+   12 (preferences changed) and 13 (visible,0); old callers never receive them. */
+ASSISP_API int32_t assisp_preferences(int64_t window, int64_t *words, int64_t capacity);
 ASSISP_API int64_t assisp_measure_scaled(const uint8_t *text, int64_t length, int32_t scale);
 ASSISP_API int32_t assisp_text_scaled(int64_t window, int32_t x, int32_t y,
     const uint8_t *text, int64_t length, uint32_t rgba, int32_t scale);

@@ -1,5 +1,23 @@
 # Fila operacional após as reconciliações M0
 
+**Continuação atual, 01/11/2026: 30,10%, 0/5 gates.**
+[Transações e preferências](../relatorios/2026-11-01-m3-transacoes-preferencias.md)
+entregam queries por tipo/classe/id, patches de fonte/hidden/disabled, revalidação
+e apresentação/MSAA antes de commit, foco por id e revogação de referências.
+Falhas conservam a versão anterior; fonte nova cancela seleção/gestos, reflow
+da mesma fonte preserva. Preferências Windows são somente leitura; paleta de
+contraste e relógio inteiro de apresentação têm testes próprios de ocultação,
+edição e movimento reduzido sem backlog. Não são FS/SSC nem editor completo.
+131/103 métodos Windows/Linux executados, 1/10 not-run; quatro superfícies
+inspecionadas, sem screenshot desktop por timeout de Computer Use.
+
+Ordem imediata: aceite desktop/leitor real/DPI/monitores; grafemas/shaping/bidi/
+IME; catálogo HTDL completo, recuperação de editor e identidade incremental.
+M0-EXEC mantém dois spikes e decisão VM/Wasm independentes; M1 RSS continua.
+FS/SSC, programa de página/sandbox, rede/persistência/busca, M4–M9 e aceite de
+distribuição continuam abertos, com Easy por último. As entradas abaixo são
+históricas e não devem fazer repetir as fundações já entregues.
+
 Atualização operacional: 01/11/2026. O histórico das entregas está abaixo da
 tabela. M0/M1 permanecem abertos. Cada tarefa produz teste, evidência, relatório
 e publicação próprios. As durações dos testes de fundação foram medidas nos

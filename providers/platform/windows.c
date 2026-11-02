@@ -28,6 +28,7 @@ typedef struct {
 } Surface;
 typedef struct {
     int active, failure;
+    int preferences;
     int64_t token, instance, request;
     uint64_t generation;
     HWND hwnd;
@@ -140,6 +141,7 @@ static LRESULT CALLBACK procedure(HWND hwnd, UINT message, WPARAM wp, LPARAM lp)
     case WM_CLOSE: enqueue(w, 1, 0, 0); return 0;
     case WM_SIZE: {
         int width = LOWORD(lp), height = HIWORD(lp);
+        if (w->preferences) enqueue(w, 13, wp != SIZE_MINIMIZED, 0);
         if (wp == SIZE_MINIMIZED || !width || !height) return 0;
         if (width != w->surface.width || height != w->surface.height) {
             Surface next = {0}; size_t previous = (size_t)w->surface.width * w->surface.height;
@@ -152,6 +154,12 @@ static LRESULT CALLBACK procedure(HWND hwnd, UINT message, WPARAM wp, LPARAM lp)
     }
     case WM_GETOBJECT:
         if ((LONG)lp == OBJID_CLIENT && w->access) return accessible_object(w, wp);
+        break;
+    case WM_SETTINGCHANGE: case WM_SYSCOLORCHANGE: case WM_THEMECHANGED:
+        if (w->preferences) enqueue(w, 12, 0, 0);
+        break;
+    case WM_SHOWWINDOW:
+        if (w->preferences) enqueue(w, 13, wp != 0 && !IsIconic(hwnd), 0);
         break;
     case WM_KEYDOWN: case WM_KEYUP: enqueue(w, 3, (int64_t)wp, message == WM_KEYDOWN); return 0;
     case WM_MOUSEMOVE: enqueue(w, 4, GET_X_LPARAM(lp), GET_Y_LPARAM(lp)); return 0;

@@ -1,5 +1,18 @@
 # Perfil viewer-local-bootstrap-v1 — contrato de desenvolvimento
 
+Continuação de 01/11/2026: `reader::Session` oferece mudanças validadas da
+fonte/árvore e apresentação com publicação MSAA antes de commit. Seletores
+locais por tipo/classe e patches de hidden/disabled estão no
+[contrato HTDL](../BIBLIOTECA-htdl.md). Foco segue id semântico somente se o
+novo controle está visível/habilitado; NodeIds/referências antigos são revogados.
+Preferências de contraste/animação são consultadas e o relógio local descarta
+intervalos ocultos/em edição. Contrato, custos e limites em
+[Reader](../BIBLIOTECA-reader.md) e no
+[relatório](../relatorios/2026-11-01-m3-transacoes-preferencias.md).
+Não amplia o catálogo bootstrap, não executa página nem implementa FS/SSC.
+Desktop/leitor real/DPI/monitores/IME e G1 continuam pendentes. As seções abaixo
+preservam o histórico e seus not-run, sem substituir a evidência desta unidade.
+
 Data de congelamento deste contrato: 29/10/2026. Estado em 01/11/2026:
 **parser e apresentação local bootstrap implementados parcialmente**.
 Destino inicial: prova Windows x64; Linux/macOS continuam alvos a validar.

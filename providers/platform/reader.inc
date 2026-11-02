@@ -8,6 +8,27 @@ struct Access {
     int64_t *words;
     uint8_t *names;
 };
+static int64_t system_rgba(int index) {
+    COLORREF c = GetSysColor(index);
+    return (int64_t)((uint32_t)GetRValue(c) << 24 | (uint32_t)GetGValue(c) << 16 |
+        (uint32_t)GetBValue(c) << 8 | 255u);
+}
+int32_t assisp_preferences(int64_t token, int64_t *words, int64_t capacity) {
+    if (words && capacity >= 10) memset(words, 0, 10 * sizeof(int64_t));
+    if (!on_owner()) return -5;
+    if (!words || capacity < 10) return -1;
+    Window *w = NULL; int code = access_window(token, &w); if (code) return code;
+    HIGHCONTRASTW contrast = {0}; contrast.cbSize = sizeof(contrast);
+    BOOL animation = FALSE;
+    if (!SystemParametersInfoW(SPI_GETHIGHCONTRAST, sizeof(contrast), &contrast, 0) ||
+        !SystemParametersInfoW(SPI_GETCLIENTAREAANIMATION, 0, &animation, 0)) return -6;
+    int64_t result[10] = {1, (contrast.dwFlags & HCF_HIGHCONTRASTON) != 0, !animation,
+        system_rgba(COLOR_WINDOW), system_rgba(COLOR_WINDOWTEXT), system_rgba(COLOR_BTNFACE),
+        system_rgba(COLOR_BTNTEXT), system_rgba(COLOR_GRAYTEXT), system_rgba(COLOR_HIGHLIGHT),
+        system_rgba(COLOR_HIGHLIGHTTEXT)};
+    memcpy(words, result, sizeof(result)); w->preferences = 1;
+    return 0;
+}
 #ifdef ASSISP_TESTING
 static LONG access_objects;
 #endif

@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-01",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "partial-native-retest-m3-reader",
+  "assessment": "partial-native-retest-m3-transactions",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -589,14 +589,18 @@
         {
           "id": "E07-02",
           "name": "Árvore, seletores e mutações",
-          "level": 1,
+          "level": 2,
           "acceptance": "Oferecer criação/remoção/consulta, hierarquia ordenada, atributos/tipos semânticos e invalidação; manter identidade geracional, foco e acessibilidade coerentes após transações.",
-          "baseline": "Fundação de árvore HTDL tipada, atributos cobrados, consulta por ID e navegação ordenada somente leitura, com identidade por instância. Seletores gerais, mutação HTDL validada, foco/acessibilidade e transações semânticas continuam abertos.",
+          "baseline": "Subconjunto HTDL local útil: consulta ordenada por tipo/classe e id, criação/remoção/substituição por spans e atributos hidden/disabled, revalidação completa antes de commit, IDs de instância renovados e foco por id semântico. Windows/Linux x64 contra XML e testes adversos; publicação MSAA externa revoga referências antigas. Seletores gerais, identidade persistente entre versões e catálogo completo permanecem abertos.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "docs/relatorios/2026-11-01-m3-parser-htdl.md",
             "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/summary.json",
-            "tests/fixtures/htdl-bootstrap-corpus.json"
+            "tests/fixtures/htdl-bootstrap-corpus.json",
+            "docs/relatorios/2026-11-01-m3-transacoes-preferencias.md",
+            "docs/ecossistema/evidencias/m3-transactions-2026-11-01/summary.json",
+            "tests/test-reader-transactions.py",
+            "stdlib/htdl.assis"
           ]
         },
         {
@@ -690,11 +694,16 @@
         {
           "id": "E08-04",
           "name": "Foco, movimento e falhas reativas",
-          "level": 0,
+          "level": 2,
           "acceptance": "Integrar transações semânticas e visuais, conservar último estilo válido com disabled atual, congelar movimento em edição, pausar aba oculta e respeitar reducedMotion sem backlog físico.",
-          "baseline": "Regras propostas, ainda sem execução ponta a ponta.",
+          "baseline": "Controlador local em AssisScript integra semântica, apresentação, foco e nomes acessíveis em candidato/ativo; falhas de parsing/medida/quota/OOM/publicação conservam a versão válida e bloqueiam ações pendentes. Relógio inteiro demonstrado descarta intervalos ocultos/em edição e conclui sob reducedMotion; exemplo consulta preferências Windows e usa contraste controlado. Subconjunto bootstrap, sem FS/SSC, editor, grafo reativo ou scheduler de abas; aceite final de usuário permanece aberto.",
           "evidence": [
-            "local:htdl/docs/17-execucao-transacoes-e-layout.md"
+            "local:htdl/docs/17-execucao-transacoes-e-layout.md",
+            "docs/relatorios/2026-11-01-m3-transacoes-preferencias.md",
+            "docs/ecossistema/evidencias/m3-transactions-2026-11-01/summary.json",
+            "tests/test-reader-transactions.py",
+            "exemplos/46_reader_transactions.assis",
+            "stdlib/reader.assis"
           ]
         },
         {
@@ -2238,7 +2247,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-01",
+      "rubric_version": 1,
+      "label": "M3 parcial: transações semânticas/apresentação, foco, preferências e relógio sem backlog; 30,10%, 0/5 gates",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 1,
+        "E00-03": 1,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 1,
+        "E03-03": 2,
+        "E03-04": 2,
+        "E03-05": 0,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 0,
+        "E06-02": 0,
+        "E06-03": 0,
+        "E06-04": 0,
+        "E06-05": 0,
+        "E07-01": 2,
+        "E07-02": 2,
+        "E07-03": 0,
+        "E07-04": 2,
+        "E07-05": 1,
+        "E08-01": 0,
+        "E08-02": 2,
+        "E08-03": 0,
+        "E08-04": 2,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 1,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Unidade Reader: seleção de escalares e cópia, zoom da fonte/reflow 100/200%, projeção acessível MSAA e cliente externo Windows; biblioteca e fallback Linux x64 têm resultados próprios. Geração estrangeira não é execução. Captura Computer Use falhou em app approval timed out; leitor de tela real, IME/grafemas, monitores/DPI do OS, contraste/movimento, layout FS/SSC, sandbox e CI global continuam abertos. Detalhes e contagens exatas no relatório da unidade; nenhum gate aprovado."
+  "assessment_note": "Unidade local de transações HTDL, foco por ID, consultas/edições validadas, preferências de contraste/animação Windows e relógio de apresentação sem backlog. Execução própria Windows/Linux x64 e cliente MSAA externo; formatos estrangeiros somente gerados. Captura Computer Use falhou em app approval timed out. Leitor real, DPI/monitores, IME/grafemas, catálogo completo/recuperação de editor, FS/SSC, VM/Wasm/sandbox, quota RSS, M4–M9 e aceite integrado continuam abertos; Easy permanece a última etapa. Nenhum gate aprovado."
 }

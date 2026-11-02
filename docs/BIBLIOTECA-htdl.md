@@ -81,8 +81,42 @@ lang=3, level=4, id=5, class=6, hidden=7, disabled=8, action=9, a11y-label=10.
 `span_start`/`span_end` leem os offsets originais. Views emprestadas impedem
 reload mutável. IDs antigos não pertencem ao documento de outra instância.
 
-Não há seletor CSS, mutação HTDL validada, SDK htdl_v1 para página, loader de
-recursos, HTML, FS/SSC ou conformidade completa HTDL 0.1. M3/G1 ficam abertos.
+Há edição transacional do subconjunto bootstrap descrita abaixo. Não há seletor
+CSS, SDK htdl_v1 para página, loader de recursos, HTML, FS/SSC ou conformidade
+completa HTDL 0.1. M3/G1 ficam abertos.
 Corpus e testes: [test-htdl-parser.py](../tests/test-htdl-parser.py), com
 XML ElementTree como oráculo independente somente na sintaxe em comum;
 Unicode U+FFFF usa o escalar Python, pois XML o proíbe e HTDL o permite.
+
+## Consultas e alterações transacionais
+
+`query(tree,type_id,token,after)` percorre elementos em pré-ordem. Tipo 0 e
+token vazio são curingas; tipos 1..9 e uma classe exata são suportados.
+`after` nulo inicia o percurso; cursor expirado é recusado. Não há seletores
+CSS compostos. Retorna NodeId ausente tanto em fim/argumento inválido como na
+guarda de oito milhões de comparações de classes; não promete busca indexada.
+
+`stage(store,instance,source,temporary_bytes)` faz a mesma validação de `load`,
+mas deixa o candidato validado sem ativar. O chamador deve commit/abort.
+Uma falha aborta somente o candidato criado pela chamada. A reserva adicional
+de 0..2 MiB cobra buffers temporários do chamador junto com o parser. Não
+transforma o teto em quota de processo; precisa contabilizar separadamente
+Reader/View, corpos do shell, buffers externos e overhead do alocador.
+
+`try_new htdl::Patch(document,start,end,replacement)` constrói uma fonte própria
+até 1 MiB substituindo `[start,end)` em bytes. Consulte proprietário não nulo
+e `is_open()`. Ranges inválidos e UTF-8 partido são recusados; sintaxe/semântica
+são validadas posteriormente por stage. Inserção e remoção de elementos usam
+spans da árvore validada. Texto literal exige escapar `&`/`<`; a API de range
+recebe **fonte HTDL**, não texto a ser escapado automaticamente.
+
+`set_boolean(document,node,key,value)` produz Patch para hidden=7 ou disabled=8,
+inserindo o atributo se ausente. Exige nó vivo de elemento; aplicar disabled a
+paragraph continua produzindo erro semântico, sem ativação. `Patch::instance()`
+impede reaplicar uma edição derivada de documento antigo. Cada transação muda
+a instância de todos os NodeIds: igualdade de ID textual não preserva slots.
+Não é edição incremental nem recuperação de fonte inválida para editor.
+
+Para coordenar árvore, foco e acessibilidade, use `reader::Session` conforme
+[contrato](BIBLIOTECA-reader.md), [exemplo 46](../exemplos/46_reader_transactions.assis)
+e [testes](../tests/test-reader-transactions.py).
