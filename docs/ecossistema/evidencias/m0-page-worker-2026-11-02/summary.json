@@ -82,6 +82,7 @@
     "24h/global CI/release/third-party acceptance"
   ],
   "canonical_lf_sha256": {
+    ".gitattributes": "aeaf0f7f4a60128464f42de8ceb27d5047c04967323d34ada1f557b904446182",
     "docs/BIBLIOTECA-pagewire.md": "ce880c60128510cddedebb9a6023577a2f4b1fc98a2d7204e983e1aa98ce0ad3",
     "docs/BIBLIOTECA-pageworker.md": "4174dcdd3c36a2c7a772349a23e20fe3012f4664c516c7d2f8ade6c096d83eb7",
     "docs/BIBLIOTECAS.md": "bb25358c8ecb1275f931f848cb03e293b611c4e19cf5278b53eba5d0bb6c2049",
@@ -212,6 +213,6 @@
     "tools/page-worker.assis": "5400d05016afc069ee7fdf0ff002aabdae322e8f2885ef633cd41c6f697b35de",
     "tools/stage-page-worker-installer.py": "eb5026f63b4ba714a9f94f23ec592bfb3f71566692da5e5d65a74e674e56392a",
     "tools/test-native.py": "be394d2a73daf5333c0bcc47ca7f3253f9f2f3051bdbe2d87933cd508a9539a4",
-    "tools/verify-page-worker-evidence.py": "0c7a9b066d1079c178e0b6a1c7503427ca26b9d133a5dd7105bdc1508ba822c1"
+    "tools/verify-page-worker-evidence.py": "53d950735e52b1d83f0b761b6d0916a8f4f2940a3068f0827ff8722b2c410f86"
   }
 }

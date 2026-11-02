@@ -89,7 +89,7 @@ dois modos. Não há execução ARM64/macOS ou provider de sandbox Windows.
 
 [Windows](../ecossistema/evidencias/m0-page-worker-2026-11-02/windows.json),
 [Linux](../ecossistema/evidencias/m0-page-worker-2026-11-02/linux.json),
-[resumo/verificação de 131 hashes](../ecossistema/evidencias/m0-page-worker-2026-11-02/summary.json).
+[resumo/verificação de 132 hashes](../ecossistema/evidencias/m0-page-worker-2026-11-02/summary.json).
 Comandos, tempos, hashes de logs/compiladores/worker/provider por modo e
 status individuais estão registrados. Oráculos: Python struct para encoding,
 modelo inteiro com seed fixa para estado/eventos e C independente para
@@ -124,6 +124,10 @@ ao produto ou antivírus. [Log original](../ecossistema/evidencias/m0-page-worke
 As tentativas iniciais de desenvolvimento também corrigiram sintaxe de
 retorno/borrow, campos Copy, inicialização de owner, modo de pipe Windows e
 fixture de fuel que era suficiente para terminar, sem mudar semântica.
+Na conferência do primeiro commit, Git apontou normalização de fim de linha
+e espaços naturais em logs crus. Acrescentou-se regra restrita de atributos,
+conservando os bytes originais e verificando seus hashes no conteúdo Git
+antes da publicação; não se editaram mensagens para esconder as falhas.
 
 Reprodução principal:
 

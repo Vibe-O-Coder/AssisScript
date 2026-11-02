@@ -48,7 +48,7 @@ before=json.loads((OUT/'before.json').read_text());assert before['base']==BASE a
 published=json.loads((OUT/'published-base.json').read_text());assert published['commit']==BASE and published['verified'] and published['blobs']==2068
 assert published['tree']==subprocess.check_output(['git','rev-parse',BASE+'^{tree}'],cwd=ROOT,text=True).strip()
 if args.write:
-    paths=list((ROOT/'src').glob('*.h'))+list((ROOT/'src').glob('*.inc'))+[ROOT/'src/assisc.c']+list((ROOT/'stdlib').glob('*.assis'))
+    paths=list((ROOT/'src').glob('*.h'))+list((ROOT/'src').glob('*.inc'))+[ROOT/'src/assisc.c',ROOT/'.gitattributes']+list((ROOT/'stdlib').glob('*.assis'))
     paths+=list((ROOT/'providers/worker').glob('*'))+[p for p in OUT.glob('*') if p.name!='summary.json']
     paths += [ROOT/p for p in ['tests/test-page-worker.py','tests/worker-isolation-oracle.c','tests/test-v31.js',
         'tools/build-page-worker.py','tools/page-worker.assis','tools/collect-page-worker-evidence.py','tools/capture-page-worker-before.py',
