@@ -1,3 +1,9 @@
+> **Publicação confirmada — PR #21, 01/11/2026: 32,10%, 0/5 gates.**
+> [PR de rascunho #21](https://github.com/Vibe-O-Coder/AssisScript/pull/21), aberta/sem merge,
+> base #20; implementação f53313320dd5b6a65174d4d43728fe85d43532ca.
+> 155 paths e 1999 blobs conferidos na API. Adendo documental pelo histórico.
+> [Relatório](../relatorios/2026-11-01-m3-unicode-m0-vm.md). Meta 40% pendente.
+
 > **Continuação Unicode/M0-EXEC — 01/11/2026: 32,10%, 0/5 gates.**
 > Cópia isolada `C:/Users/babus/Desktop/AssisScript/work/unicode-reader-20261101`,
 > branch `work/m3-unicode-reader-2026-11-01`, base publicada #20/a542aff.

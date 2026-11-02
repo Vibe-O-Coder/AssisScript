@@ -161,3 +161,21 @@ Branch de publicação: **work/m3-unicode-reader-2026-11-01**, incremental sobre
 #20. Commit exato deste relatório pelo histórico, evitando hash autorreferente.
 Publicação/PR/SHA remoto são confirmados por adendo depois de verificados;
 push não significa merge, release ou CI aprovada.
+
+## Adendo — publicação verificada
+
+Implementação **f53313320dd5b6a65174d4d43728fe85d43532ca** publicada por push
+normal. **155 paths alterados e 1999 blobs** da árvore inteira foram comparados
+com a API GitHub (modo e SHA), com SHA remoto igual ao local. Inventário em
+[published-implementation.json](../ecossistema/evidencias/m3-unicode-vm-2026-11-01/published-implementation.json).
+
+[PR de rascunho #21](https://github.com/Vibe-O-Coder/AssisScript/pull/21),
+aberta/sem merge sobre #20, vinculada à conversa. A integração negou criar PR
+com HTTP 403; operação concluída pela API usando credencial Git existente,
+sem expor credencial ou pedir nova autorização de rotina. O conector confirmou
+depois título, base/head, estado draft e ausência de merge.
+
+O adendo e os ponteiros de continuidade são publicados em commit documental
+posterior; seu SHA exato é obtido pelo histórico deste relatório. Testes e
+fontes de produto não mudaram nesse adendo. **32,10%, 0/5 gates**. CI global,
+release e merge não foram declarados aprovados.
