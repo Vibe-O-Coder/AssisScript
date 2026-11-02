@@ -1,3 +1,12 @@
+> **Publicação confirmada — 40,20%, 02/11/2026, 0/5 gates.**
+> Branch `work/m0-page-worker-2026-11-02`, implementação d4df15c e evidência
+> preservada em 4480096c1f6fd25f9cce1f9358966ab6f88f34fc: 66 paths e 2117
+> blobs/modos conferidos no GitHub. [Branch](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m0-page-worker-2026-11-02).
+> [Relatório e adendo](../relatorios/2026-11-02-m0-page-worker.md).
+> PR não criada: conector 403; revisão automática recusou uso da credencial
+> Git pela API sem autorização adicional explícita. Push concluído, sem merge.
+> Meta 40% atingida na régua; pendências integrais preservadas. Easy por último.
+
 > **Continuação worker — 02/11/2026: 40,20%, 0/5 gates.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/page-worker-20261102`, branch
 > `work/m0-page-worker-2026-11-02`, base remota 6b2ece0 conferida (2068 blobs).
