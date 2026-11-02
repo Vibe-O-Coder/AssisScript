@@ -54,7 +54,7 @@ public safe fn write_all(borrow mut arquivo: File, borrow data: *byte, size: int
 }
 
 /// Saída binária completa em stdout (1) ou stderr (2), incluindo NUL.
-public safe fn saida(canal: int, borrow data: *byte, size: int): int {
+public safe fn write_output(canal: int, borrow data: *byte, size: int): int {
     if (size < 0 || size > len(data) || (canal != 1 && canal != 2)) { return -1; }
     own bloco: *byte = alloc<byte>(4096);let total: int = 0;
     while (total < size) {

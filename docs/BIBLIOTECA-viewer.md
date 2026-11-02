@@ -1,6 +1,6 @@
 # viewer — apresentação HTDL local bootstrap
 
-`import "std/viewer.assis";` depende de htdl e window. Windows x64 possui
+`import "std/viewer.assis";` depende de htdl, window e graphemes. Windows x64 possui
 provider de desenho; Linux/macOS compilam o fallback explícito. A lógica de
 texto, geometria, foco, rolagem e interação é AssisScript, sem código de página.
 
@@ -41,9 +41,10 @@ a11y-label como alternativa visual. Disabled conserva desenho e não participa
 de foco/ativação. Sem árvore acessível exportada nesta unidade.
 
 Quebra gulosa usa medidas do provider, mantém palavras que cabem e divide
-palavras grandes em fronteiras de escalares UTF-8. Não promete segmentação
-por grafema, bidi, shaping completo, hifenização ou quebra Unicode UAX14.
-Cada chamada mede até 4096 bytes. Uma unidade escalar maior que a largura
+palavras grandes em fronteiras de grafemas estendidos Unicode 17/UAX29.
+Não promete bidi, shaping completo, hifenização ou quebra Unicode UAX14.
+Espaço que pertence a um grafema Prepend+space não é aparado na quebra.
+Cada chamada mede até 4096 bytes. Um grafema maior que a largura
 útil faz a construção falhar. Width 96..16384, height 64..16384 e row_height
 1..256; largura de texto width-72. Limites do provider continuam aplicáveis.
 
@@ -52,6 +53,8 @@ de `min(32768, source_size+tree.size+1)` registros Line. O corpo nativo de Line
 tem 72 bytes em v1. Guarda de oito milhões de bytes acumulados limita medidas
 de prefixos; o callback deve ser confiável e limitado. O teto é de workspace
 local, adicional ao Store, não é quota de RSS, do processo ou da página.
+Cada bloco usa temporariamente um índice de fronteiras de len+1 bytes;
+Reader guarda outro índice do texto completo para navegação/seleção.
 Bytes, linhas, objeto e temporários do adaptador usam alocação recuperável.
 O File legado do exemplo ainda usa uma alocação fatal de caminho até 32768
 bytes; não se anuncia recuperação integral de OOM da aplicação.

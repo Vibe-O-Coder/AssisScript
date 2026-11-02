@@ -3,7 +3,7 @@
 // O temporário deve ser novo e estar no mesmo filesystem do destino.
 import "std/json.assis";
 import "std/cli.assis";
-safe fn abrir(indice: int, modo: int): own File {
+safe fn open_file(indice: int, modo: int): own File {
     unsafe {
         val n: int = arg_size(indice);
         if (n < 0 || n > 16384) { return file_open("", 9); }
@@ -12,7 +12,7 @@ safe fn abrir(indice: int, modo: int): own File {
         return file_open(text(p), modo);
     }
 }
-safe fn concluir(remover: bool): int {
+safe fn finish(remover: bool): int {
     unsafe {
         val a: int = arg_size(3);val b: int = arg_size(2);
         if (a < 0 || b < 0 || a > 16384 || b > 16384) { return -1; }
@@ -25,7 +25,7 @@ safe fn concluir(remover: bool): int {
 }
 safe fn main(): int {
     if (arg_count() != 4) { print("Uso: config entrada destino temporario-novo");return 64; }
-    own entrada: File = abrir(1, 0);
+    own entrada: File = open_file(1, 0);
     if (entrada == null) { print("Erro de abertura", io_error());return 1; }
     own data: *byte = alloc<byte>(1048576);
     val n: int = cli::read_bounded(entrada, data);
@@ -33,12 +33,12 @@ safe fn main(): int {
     if (file_close(entrada) < 0) { return 1; }
     val resultado: json::ValidationResult = json::validate(data, n, 64, 262144);
     if (!resultado.valid) { print("JSON invalido no byte", resultado.position);return 2; }
-    own temporario: File = abrir(3, 3);
+    own temporario: File = open_file(3, 3);
     if (temporario == null) { print("Temporario deve ser novo", io_error());return 1; }
     if (cli::write_all(temporario, data, n) < 0 || file_sync(temporario) < 0) {
-        file_close(temporario);concluir(true);print("Erro de persistencia");return 1;
+        file_close(temporario);finish(true);print("Erro de persistencia");return 1;
     }
-    if (file_close(temporario) < 0) { concluir(true);return 1; }
-    if (concluir(false) < 0) { concluir(true);print("Erro de substituicao");return 1; }
+    if (file_close(temporario) < 0) { finish(true);return 1; }
+    if (finish(false) < 0) { finish(true);print("Erro de substituicao");return 1; }
     print("Configuracao validada", resultado.tokens);return 0;
 }

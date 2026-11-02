@@ -40,7 +40,7 @@ class System(base.Evolution):
                       '60\n9223372036854775806\n42\n')
 
     def test_binary_stdout_stderr_and_filtered_log(self):
-        code='import "std/cli.assis";\nimport "std/log.assis";\nsafe '+main('own b:*byte=alloc<byte>(3);b[0]=byte(65);b[1]=byte(0);b[2]=byte(255);assert(cli::saida(1,b,3)==3);assert(cli::saida(2,b,3)==3);assert(log::write(1,2,b,3)==0);assert(cli::saida(8,b,3)==-1);')
+        code='import "std/cli.assis";\nimport "std/log.assis";\nsafe '+main('own b:*byte=alloc<byte>(3);b[0]=byte(65);b[1]=byte(0);b[2]=byte(255);assert(cli::write_output(1,b,3)==3);assert(cli::write_output(2,b,3)==3);assert(log::write(1,2,b,3)==0);assert(cli::write_output(8,b,3)==-1);')
         source=self.source(code)
         for flags in [[],['--no-opt']]:
             r=subprocess.run([base.COMPILER,'run',source,'--safe','--debug',*flags],capture_output=True,timeout=30)

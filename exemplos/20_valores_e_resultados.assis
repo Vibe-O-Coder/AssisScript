@@ -1,20 +1,20 @@
 import "std/errors.assis";
 value struct Ponto { let x: int; let y: int; }
 
-pure fn deslocar(p: Ponto): Ponto { return new Ponto(p.x + 1, p.y + 1); }
+pure fn translate(p: Ponto): Ponto { return new Ponto(p.x + 1, p.y + 1); }
 
-pure fn dividir_valor(a: int, b: int): Result<int, int> {
+pure fn divide_value(a: int, b: int): Result<int, int> {
     if (b == 0) { return new Result<int, int>.Err(1); }
     return new Result<int, int>.Ok(a / b);
 }
 
 safe fn main(): int {
     val original: Ponto = new Ponto(19, 21);
-    val novo: Ponto = deslocar(original);
+    val novo: Ponto = translate(original);
     print(original.x, original.y, novo.x + novo.y);
     val opcao: Option<int> = new Option<int>.Some(42);
     print(option_or::<int>(opcao, 0));
-    match (dividir_valor(84, 2)) {
+    match (divide_value(84, 2)) {
         Ok(value) { print(value); }
         Err(code) { print("error", code); }
     }

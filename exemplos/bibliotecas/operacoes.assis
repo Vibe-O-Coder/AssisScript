@@ -1,10 +1,10 @@
 // Bibliotecas podem conter funções e classes e não precisam de entrada.
 class Assis_Fodase {
     let AssisAssis: int;
-    fn init(AssisFodase: int): void {
-        self.AssisAssis = AssisFodase;
+    fn init(double: int): void {
+        self.AssisAssis = double;
     }
-    fn AssisFodase(): int {
+    fn double(): int {
         return self.AssisAssis * 2;
     }
 }

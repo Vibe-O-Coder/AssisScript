@@ -1,26 +1,26 @@
 import "std/algorithms.assis";
-pure fn dobro(v: int): int { return v * 2; }
-pure fn par(v: int): bool { return v % 2 == 0; }
-pure fn somar(a: int, v: int): int { return a + v; }
-pure fn identidade<T>(v: T): T { return v; }
+pure fn double(v: int): int { return v * 2; }
+pure fn is_even(v: int): bool { return v % 2 == 0; }
+pure fn add(a: int, v: int): int { return a + v; }
+pure fn identity<T>(v: T): T { return v; }
 
-pure fn compor(f: pure fn(int): int, g: pure fn(int): int, v: int): int {
+pure fn compose(f: pure fn(int): int, g: pure fn(int): int, v: int): int {
     return f(g(v));
 }
 
-pure fn escolher(): pure fn(int): int { return dobro; }
+pure fn choose(): pure fn(int): int { return double; }
 
 safe fn main(): int {
     unsafe {
-    val f: pure fn(int): int = identidade::<int>;
-    print(compor(escolher(), f, 21));
+    val f: pure fn(int): int = identity::<int>;
+    print(compose(choose(), f, 21));
     let entrada: Array<int> = [1, 2, 3, 4];
     defer free(entrada);
-    let pares: Array<int> = filter::<int>(entrada, par);
+    let pares: Array<int> = filter::<int>(entrada, is_even);
     defer free(pares);
-    let dobrados: Array<int> = map::<int, int>(pares, dobro);
+    let dobrados: Array<int> = map::<int, int>(pares, double);
     defer free(dobrados);
-    print(fold::<int, int>(dobrados, 0, somar));
+    print(fold::<int, int>(dobrados, 0, add));
     return 0;
 
     }

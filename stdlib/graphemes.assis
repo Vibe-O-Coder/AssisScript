@@ -1,0 +1,3435 @@
+namespace graphemes;
+import "std/unicode.assis";
+
+// BEGIN GENERATED UNICODE 17.0.0 DATA; tools/generate-grapheme-data.py
+// Unicode License V3: docs/licenses/UNICODE-LICENSE.txt.
+// Low nibble: GCB; bits 4..5: InCB; bit 6: Extended_Pictographic.
+pure fn properties(cp:int):int{
+    if(cp>=44032 && cp<=55203){if((cp-44032)%28==0){return 12;}return 13;}
+    if(cp<43043){
+        if(cp<4182){
+            if(cp<2858){
+                if(cp<2385){
+                    if(cp<1807){
+                        if(cp<1473){
+                            if(cp<169){
+                                if(cp<13){
+                                    if(cp<10){
+                                        if(cp<0){
+                                            return 0;
+                                        }
+                                        if(cp<=9){return 3;}
+                                        return 0;
+                                    }
+                                    if(cp<=10){return 2;}
+                                    if(cp<11){
+                                        return 0;
+                                    }
+                                    if(cp<=12){return 3;}
+                                    return 0;
+                                }
+                                if(cp<=13){return 1;}
+                                if(cp<127){
+                                    if(cp<14){
+                                        return 0;
+                                    }
+                                    if(cp<=31){return 3;}
+                                    return 0;
+                                }
+                                if(cp<=159){return 3;}
+                                return 0;
+                            }
+                            if(cp<=169){return 64;}
+                            if(cp<1155){
+                                if(cp<174){
+                                    if(cp<173){
+                                        return 0;
+                                    }
+                                    if(cp<=173){return 3;}
+                                    return 0;
+                                }
+                                if(cp<=174){return 64;}
+                                if(cp<768){
+                                    return 0;
+                                }
+                                if(cp<=879){return 36;}
+                                return 0;
+                            }
+                            if(cp<=1161){return 36;}
+                            if(cp<1471){
+                                if(cp<1425){
+                                    return 0;
+                                }
+                                if(cp<=1469){return 36;}
+                                return 0;
+                            }
+                            if(cp<=1471){return 36;}
+                            return 0;
+                        }
+                        if(cp<=1474){return 36;}
+                        if(cp<1648){
+                            if(cp<1552){
+                                if(cp<1479){
+                                    if(cp<1476){
+                                        return 0;
+                                    }
+                                    if(cp<=1477){return 36;}
+                                    return 0;
+                                }
+                                if(cp<=1479){return 36;}
+                                if(cp<1536){
+                                    return 0;
+                                }
+                                if(cp<=1541){return 7;}
+                                return 0;
+                            }
+                            if(cp<=1562){return 36;}
+                            if(cp<1611){
+                                if(cp<1564){
+                                    return 0;
+                                }
+                                if(cp<=1564){return 3;}
+                                return 0;
+                            }
+                            if(cp<=1631){return 36;}
+                            return 0;
+                        }
+                        if(cp<=1648){return 36;}
+                        if(cp<1759){
+                            if(cp<1757){
+                                if(cp<1750){
+                                    return 0;
+                                }
+                                if(cp<=1756){return 36;}
+                                return 0;
+                            }
+                            if(cp<=1757){return 7;}
+                            return 0;
+                        }
+                        if(cp<=1764){return 36;}
+                        if(cp<1770){
+                            if(cp<1767){
+                                return 0;
+                            }
+                            if(cp<=1768){return 36;}
+                            return 0;
+                        }
+                        if(cp<=1773){return 36;}
+                        return 0;
+                    }
+                    if(cp<=1807){return 7;}
+                    if(cp<2250){
+                        if(cp<2075){
+                            if(cp<2027){
+                                if(cp<1840){
+                                    if(cp<1809){
+                                        return 0;
+                                    }
+                                    if(cp<=1809){return 36;}
+                                    return 0;
+                                }
+                                if(cp<=1866){return 36;}
+                                if(cp<1958){
+                                    return 0;
+                                }
+                                if(cp<=1968){return 36;}
+                                return 0;
+                            }
+                            if(cp<=2035){return 36;}
+                            if(cp<2070){
+                                if(cp<2045){
+                                    return 0;
+                                }
+                                if(cp<=2045){return 36;}
+                                return 0;
+                            }
+                            if(cp<=2073){return 36;}
+                            return 0;
+                        }
+                        if(cp<=2083){return 36;}
+                        if(cp<2137){
+                            if(cp<2089){
+                                if(cp<2085){
+                                    return 0;
+                                }
+                                if(cp<=2087){return 36;}
+                                return 0;
+                            }
+                            if(cp<=2093){return 36;}
+                            return 0;
+                        }
+                        if(cp<=2139){return 36;}
+                        if(cp<2199){
+                            if(cp<2192){
+                                return 0;
+                            }
+                            if(cp<=2193){return 7;}
+                            return 0;
+                        }
+                        if(cp<=2207){return 36;}
+                        return 0;
+                    }
+                    if(cp<=2273){return 36;}
+                    if(cp<2364){
+                        if(cp<2325){
+                            if(cp<2275){
+                                if(cp<2274){
+                                    return 0;
+                                }
+                                if(cp<=2274){return 7;}
+                                return 0;
+                            }
+                            if(cp<=2306){return 36;}
+                            if(cp<2307){
+                                return 0;
+                            }
+                            if(cp<=2307){return 8;}
+                            return 0;
+                        }
+                        if(cp<=2361){return 16;}
+                        if(cp<2363){
+                            if(cp<2362){
+                                return 0;
+                            }
+                            if(cp<=2362){return 36;}
+                            return 0;
+                        }
+                        if(cp<=2363){return 8;}
+                        return 0;
+                    }
+                    if(cp<=2364){return 36;}
+                    if(cp<2377){
+                        if(cp<2369){
+                            if(cp<2366){
+                                return 0;
+                            }
+                            if(cp<=2368){return 8;}
+                            return 0;
+                        }
+                        if(cp<=2376){return 36;}
+                        return 0;
+                    }
+                    if(cp<=2380){return 8;}
+                    if(cp<2382){
+                        if(cp<2381){
+                            return 0;
+                        }
+                        if(cp<=2381){return 52;}
+                        return 0;
+                    }
+                    if(cp<=2383){return 8;}
+                    return 0;
+                }
+                if(cp<=2391){return 36;}
+                if(cp<2622){
+                    if(cp<2497){
+                        if(cp<2474){
+                            if(cp<2433){
+                                if(cp<2402){
+                                    if(cp<2392){
+                                        return 0;
+                                    }
+                                    if(cp<=2399){return 16;}
+                                    return 0;
+                                }
+                                if(cp<=2403){return 36;}
+                                if(cp<2424){
+                                    return 0;
+                                }
+                                if(cp<=2431){return 16;}
+                                return 0;
+                            }
+                            if(cp<=2433){return 36;}
+                            if(cp<2453){
+                                if(cp<2434){
+                                    return 0;
+                                }
+                                if(cp<=2435){return 8;}
+                                return 0;
+                            }
+                            if(cp<=2472){return 16;}
+                            return 0;
+                        }
+                        if(cp<=2480){return 16;}
+                        if(cp<2492){
+                            if(cp<2486){
+                                if(cp<2482){
+                                    return 0;
+                                }
+                                if(cp<=2482){return 16;}
+                                return 0;
+                            }
+                            if(cp<=2489){return 16;}
+                            return 0;
+                        }
+                        if(cp<=2492){return 36;}
+                        if(cp<2495){
+                            if(cp<2494){
+                                return 0;
+                            }
+                            if(cp<=2494){return 36;}
+                            return 0;
+                        }
+                        if(cp<=2496){return 8;}
+                        return 0;
+                    }
+                    if(cp<=2500){return 36;}
+                    if(cp<2530){
+                        if(cp<2519){
+                            if(cp<2507){
+                                if(cp<2503){
+                                    return 0;
+                                }
+                                if(cp<=2504){return 8;}
+                                return 0;
+                            }
+                            if(cp<=2508){return 8;}
+                            if(cp<2509){
+                                return 0;
+                            }
+                            if(cp<=2509){return 52;}
+                            return 0;
+                        }
+                        if(cp<=2519){return 36;}
+                        if(cp<2527){
+                            if(cp<2524){
+                                return 0;
+                            }
+                            if(cp<=2525){return 16;}
+                            return 0;
+                        }
+                        if(cp<=2527){return 16;}
+                        return 0;
+                    }
+                    if(cp<=2531){return 36;}
+                    if(cp<2561){
+                        if(cp<2558){
+                            if(cp<2544){
+                                return 0;
+                            }
+                            if(cp<=2545){return 16;}
+                            return 0;
+                        }
+                        if(cp<=2558){return 36;}
+                        return 0;
+                    }
+                    if(cp<=2562){return 36;}
+                    if(cp<2620){
+                        if(cp<2563){
+                            return 0;
+                        }
+                        if(cp<=2563){return 8;}
+                        return 0;
+                    }
+                    if(cp<=2620){return 36;}
+                    return 0;
+                }
+                if(cp<=2624){return 8;}
+                if(cp<2748){
+                    if(cp<2689){
+                        if(cp<2641){
+                            if(cp<2631){
+                                if(cp<2625){
+                                    return 0;
+                                }
+                                if(cp<=2626){return 36;}
+                                return 0;
+                            }
+                            if(cp<=2632){return 36;}
+                            if(cp<2635){
+                                return 0;
+                            }
+                            if(cp<=2637){return 36;}
+                            return 0;
+                        }
+                        if(cp<=2641){return 36;}
+                        if(cp<2677){
+                            if(cp<2672){
+                                return 0;
+                            }
+                            if(cp<=2673){return 36;}
+                            return 0;
+                        }
+                        if(cp<=2677){return 36;}
+                        return 0;
+                    }
+                    if(cp<=2690){return 36;}
+                    if(cp<2730){
+                        if(cp<2709){
+                            if(cp<2691){
+                                return 0;
+                            }
+                            if(cp<=2691){return 8;}
+                            return 0;
+                        }
+                        if(cp<=2728){return 16;}
+                        return 0;
+                    }
+                    if(cp<=2736){return 16;}
+                    if(cp<2741){
+                        if(cp<2738){
+                            return 0;
+                        }
+                        if(cp<=2739){return 16;}
+                        return 0;
+                    }
+                    if(cp<=2745){return 16;}
+                    return 0;
+                }
+                if(cp<=2748){return 36;}
+                if(cp<2786){
+                    if(cp<2761){
+                        if(cp<2753){
+                            if(cp<2750){
+                                return 0;
+                            }
+                            if(cp<=2752){return 8;}
+                            return 0;
+                        }
+                        if(cp<=2757){return 36;}
+                        if(cp<2759){
+                            return 0;
+                        }
+                        if(cp<=2760){return 36;}
+                        return 0;
+                    }
+                    if(cp<=2761){return 8;}
+                    if(cp<2765){
+                        if(cp<2763){
+                            return 0;
+                        }
+                        if(cp<=2764){return 8;}
+                        return 0;
+                    }
+                    if(cp<=2765){return 52;}
+                    return 0;
+                }
+                if(cp<=2787){return 36;}
+                if(cp<2817){
+                    if(cp<2810){
+                        if(cp<2809){
+                            return 0;
+                        }
+                        if(cp<=2809){return 16;}
+                        return 0;
+                    }
+                    if(cp<=2815){return 36;}
+                    return 0;
+                }
+                if(cp<=2817){return 36;}
+                if(cp<2837){
+                    if(cp<2818){
+                        return 0;
+                    }
+                    if(cp<=2819){return 8;}
+                    return 0;
+                }
+                if(cp<=2856){return 16;}
+                return 0;
+            }
+            if(cp<=2864){return 16;}
+            if(cp<3330){
+                if(cp<3076){
+                    if(cp<2914){
+                        if(cp<2887){
+                            if(cp<2878){
+                                if(cp<2869){
+                                    if(cp<2866){
+                                        return 0;
+                                    }
+                                    if(cp<=2867){return 16;}
+                                    return 0;
+                                }
+                                if(cp<=2873){return 16;}
+                                if(cp<2876){
+                                    return 0;
+                                }
+                                if(cp<=2876){return 36;}
+                                return 0;
+                            }
+                            if(cp<=2879){return 36;}
+                            if(cp<2881){
+                                if(cp<2880){
+                                    return 0;
+                                }
+                                if(cp<=2880){return 8;}
+                                return 0;
+                            }
+                            if(cp<=2884){return 36;}
+                            return 0;
+                        }
+                        if(cp<=2888){return 8;}
+                        if(cp<2901){
+                            if(cp<2893){
+                                if(cp<2891){
+                                    return 0;
+                                }
+                                if(cp<=2892){return 8;}
+                                return 0;
+                            }
+                            if(cp<=2893){return 52;}
+                            return 0;
+                        }
+                        if(cp<=2903){return 36;}
+                        if(cp<2911){
+                            if(cp<2908){
+                                return 0;
+                            }
+                            if(cp<=2909){return 16;}
+                            return 0;
+                        }
+                        if(cp<=2911){return 16;}
+                        return 0;
+                    }
+                    if(cp<=2915){return 36;}
+                    if(cp<3014){
+                        if(cp<3007){
+                            if(cp<2946){
+                                if(cp<2929){
+                                    return 0;
+                                }
+                                if(cp<=2929){return 16;}
+                                return 0;
+                            }
+                            if(cp<=2946){return 36;}
+                            if(cp<3006){
+                                return 0;
+                            }
+                            if(cp<=3006){return 36;}
+                            return 0;
+                        }
+                        if(cp<=3007){return 8;}
+                        if(cp<3009){
+                            if(cp<3008){
+                                return 0;
+                            }
+                            if(cp<=3008){return 36;}
+                            return 0;
+                        }
+                        if(cp<=3010){return 8;}
+                        return 0;
+                    }
+                    if(cp<=3016){return 8;}
+                    if(cp<3031){
+                        if(cp<3021){
+                            if(cp<3018){
+                                return 0;
+                            }
+                            if(cp<=3020){return 8;}
+                            return 0;
+                        }
+                        if(cp<=3021){return 36;}
+                        return 0;
+                    }
+                    if(cp<=3031){return 36;}
+                    if(cp<3073){
+                        if(cp<3072){
+                            return 0;
+                        }
+                        if(cp<=3072){return 36;}
+                        return 0;
+                    }
+                    if(cp<=3075){return 8;}
+                    return 0;
+                }
+                if(cp<=3076){return 36;}
+                if(cp<3202){
+                    if(cp<3146){
+                        if(cp<3134){
+                            if(cp<3114){
+                                if(cp<3093){
+                                    return 0;
+                                }
+                                if(cp<=3112){return 16;}
+                                return 0;
+                            }
+                            if(cp<=3129){return 16;}
+                            if(cp<3132){
+                                return 0;
+                            }
+                            if(cp<=3132){return 36;}
+                            return 0;
+                        }
+                        if(cp<=3136){return 36;}
+                        if(cp<3142){
+                            if(cp<3137){
+                                return 0;
+                            }
+                            if(cp<=3140){return 8;}
+                            return 0;
+                        }
+                        if(cp<=3144){return 36;}
+                        return 0;
+                    }
+                    if(cp<=3148){return 36;}
+                    if(cp<3160){
+                        if(cp<3157){
+                            if(cp<3149){
+                                return 0;
+                            }
+                            if(cp<=3149){return 52;}
+                            return 0;
+                        }
+                        if(cp<=3158){return 36;}
+                        return 0;
+                    }
+                    if(cp<=3162){return 16;}
+                    if(cp<3201){
+                        if(cp<3170){
+                            return 0;
+                        }
+                        if(cp<=3171){return 36;}
+                        return 0;
+                    }
+                    if(cp<=3201){return 36;}
+                    return 0;
+                }
+                if(cp<=3203){return 8;}
+                if(cp<3270){
+                    if(cp<3265){
+                        if(cp<3262){
+                            if(cp<3260){
+                                return 0;
+                            }
+                            if(cp<=3260){return 36;}
+                            return 0;
+                        }
+                        if(cp<=3262){return 8;}
+                        if(cp<3263){
+                            return 0;
+                        }
+                        if(cp<=3264){return 36;}
+                        return 0;
+                    }
+                    if(cp<=3265){return 8;}
+                    if(cp<3267){
+                        if(cp<3266){
+                            return 0;
+                        }
+                        if(cp<=3266){return 36;}
+                        return 0;
+                    }
+                    if(cp<=3268){return 8;}
+                    return 0;
+                }
+                if(cp<=3272){return 36;}
+                if(cp<3298){
+                    if(cp<3285){
+                        if(cp<3274){
+                            return 0;
+                        }
+                        if(cp<=3277){return 36;}
+                        return 0;
+                    }
+                    if(cp<=3286){return 36;}
+                    return 0;
+                }
+                if(cp<=3299){return 36;}
+                if(cp<3328){
+                    if(cp<3315){
+                        return 0;
+                    }
+                    if(cp<=3315){return 8;}
+                    return 0;
+                }
+                if(cp<=3329){return 36;}
+                return 0;
+            }
+            if(cp<=3331){return 8;}
+            if(cp<3761){
+                if(cp<3458){
+                    if(cp<3402){
+                        if(cp<3391){
+                            if(cp<3387){
+                                if(cp<3349){
+                                    return 0;
+                                }
+                                if(cp<=3386){return 16;}
+                                return 0;
+                            }
+                            if(cp<=3388){return 36;}
+                            if(cp<3390){
+                                return 0;
+                            }
+                            if(cp<=3390){return 36;}
+                            return 0;
+                        }
+                        if(cp<=3392){return 8;}
+                        if(cp<3398){
+                            if(cp<3393){
+                                return 0;
+                            }
+                            if(cp<=3396){return 36;}
+                            return 0;
+                        }
+                        if(cp<=3400){return 8;}
+                        return 0;
+                    }
+                    if(cp<=3404){return 8;}
+                    if(cp<3415){
+                        if(cp<3406){
+                            if(cp<3405){
+                                return 0;
+                            }
+                            if(cp<=3405){return 52;}
+                            return 0;
+                        }
+                        if(cp<=3406){return 7;}
+                        return 0;
+                    }
+                    if(cp<=3415){return 36;}
+                    if(cp<3457){
+                        if(cp<3426){
+                            return 0;
+                        }
+                        if(cp<=3427){return 36;}
+                        return 0;
+                    }
+                    if(cp<=3457){return 36;}
+                    return 0;
+                }
+                if(cp<=3459){return 8;}
+                if(cp<3551){
+                    if(cp<3538){
+                        if(cp<3535){
+                            if(cp<3530){
+                                return 0;
+                            }
+                            if(cp<=3530){return 36;}
+                            return 0;
+                        }
+                        if(cp<=3535){return 36;}
+                        if(cp<3536){
+                            return 0;
+                        }
+                        if(cp<=3537){return 8;}
+                        return 0;
+                    }
+                    if(cp<=3540){return 36;}
+                    if(cp<3544){
+                        if(cp<3542){
+                            return 0;
+                        }
+                        if(cp<=3542){return 36;}
+                        return 0;
+                    }
+                    if(cp<=3550){return 8;}
+                    return 0;
+                }
+                if(cp<=3551){return 36;}
+                if(cp<3635){
+                    if(cp<3633){
+                        if(cp<3570){
+                            return 0;
+                        }
+                        if(cp<=3571){return 8;}
+                        return 0;
+                    }
+                    if(cp<=3633){return 36;}
+                    return 0;
+                }
+                if(cp<=3635){return 8;}
+                if(cp<3655){
+                    if(cp<3636){
+                        return 0;
+                    }
+                    if(cp<=3642){return 36;}
+                    return 0;
+                }
+                if(cp<=3662){return 36;}
+                return 0;
+            }
+            if(cp<=3761){return 36;}
+            if(cp<3981){
+                if(cp<3897){
+                    if(cp<3864){
+                        if(cp<3764){
+                            if(cp<3763){
+                                return 0;
+                            }
+                            if(cp<=3763){return 8;}
+                            return 0;
+                        }
+                        if(cp<=3772){return 36;}
+                        if(cp<3784){
+                            return 0;
+                        }
+                        if(cp<=3790){return 36;}
+                        return 0;
+                    }
+                    if(cp<=3865){return 36;}
+                    if(cp<3895){
+                        if(cp<3893){
+                            return 0;
+                        }
+                        if(cp<=3893){return 36;}
+                        return 0;
+                    }
+                    if(cp<=3895){return 36;}
+                    return 0;
+                }
+                if(cp<=3897){return 36;}
+                if(cp<3967){
+                    if(cp<3953){
+                        if(cp<3902){
+                            return 0;
+                        }
+                        if(cp<=3903){return 8;}
+                        return 0;
+                    }
+                    if(cp<=3966){return 36;}
+                    return 0;
+                }
+                if(cp<=3967){return 8;}
+                if(cp<3974){
+                    if(cp<3968){
+                        return 0;
+                    }
+                    if(cp<=3972){return 36;}
+                    return 0;
+                }
+                if(cp<=3975){return 36;}
+                return 0;
+            }
+            if(cp<=3991){return 36;}
+            if(cp<4153){
+                if(cp<4141){
+                    if(cp<4038){
+                        if(cp<3993){
+                            return 0;
+                        }
+                        if(cp<=4028){return 36;}
+                        return 0;
+                    }
+                    if(cp<=4038){return 36;}
+                    if(cp<4096){
+                        return 0;
+                    }
+                    if(cp<=4138){return 16;}
+                    return 0;
+                }
+                if(cp<=4144){return 36;}
+                if(cp<4146){
+                    if(cp<4145){
+                        return 0;
+                    }
+                    if(cp<=4145){return 8;}
+                    return 0;
+                }
+                if(cp<=4151){return 36;}
+                return 0;
+            }
+            if(cp<=4153){return 52;}
+            if(cp<4157){
+                if(cp<4155){
+                    if(cp<4154){
+                        return 0;
+                    }
+                    if(cp<=4154){return 36;}
+                    return 0;
+                }
+                if(cp<=4156){return 8;}
+                return 0;
+            }
+            if(cp<=4158){return 36;}
+            if(cp<4176){
+                if(cp<4159){
+                    return 0;
+                }
+                if(cp<=4159){return 16;}
+                return 0;
+            }
+            if(cp<=4181){return 16;}
+            return 0;
+        }
+        if(cp<=4183){return 8;}
+        if(cp<8203){
+            if(cp<6742){
+                if(cp<6071){
+                    if(cp<4238){
+                        if(cp<4209){
+                            if(cp<4193){
+                                if(cp<4186){
+                                    if(cp<4184){
+                                        return 0;
+                                    }
+                                    if(cp<=4185){return 36;}
+                                    return 0;
+                                }
+                                if(cp<=4189){return 16;}
+                                if(cp<4190){
+                                    return 0;
+                                }
+                                if(cp<=4192){return 36;}
+                                return 0;
+                            }
+                            if(cp<=4193){return 16;}
+                            if(cp<4206){
+                                if(cp<4197){
+                                    return 0;
+                                }
+                                if(cp<=4198){return 16;}
+                                return 0;
+                            }
+                            if(cp<=4208){return 16;}
+                            return 0;
+                        }
+                        if(cp<=4212){return 36;}
+                        if(cp<4228){
+                            if(cp<4226){
+                                if(cp<4213){
+                                    return 0;
+                                }
+                                if(cp<=4225){return 16;}
+                                return 0;
+                            }
+                            if(cp<=4226){return 36;}
+                            return 0;
+                        }
+                        if(cp<=4228){return 8;}
+                        if(cp<4237){
+                            if(cp<4229){
+                                return 0;
+                            }
+                            if(cp<=4230){return 36;}
+                            return 0;
+                        }
+                        if(cp<=4237){return 36;}
+                        return 0;
+                    }
+                    if(cp<=4238){return 16;}
+                    if(cp<5938){
+                        if(cp<4520){
+                            if(cp<4352){
+                                if(cp<4253){
+                                    return 0;
+                                }
+                                if(cp<=4253){return 36;}
+                                return 0;
+                            }
+                            if(cp<=4447){return 9;}
+                            if(cp<4448){
+                                return 0;
+                            }
+                            if(cp<=4519){return 10;}
+                            return 0;
+                        }
+                        if(cp<=4607){return 11;}
+                        if(cp<5906){
+                            if(cp<4957){
+                                return 0;
+                            }
+                            if(cp<=4959){return 36;}
+                            return 0;
+                        }
+                        if(cp<=5909){return 36;}
+                        return 0;
+                    }
+                    if(cp<=5940){return 36;}
+                    if(cp<6016){
+                        if(cp<6002){
+                            if(cp<5970){
+                                return 0;
+                            }
+                            if(cp<=5971){return 36;}
+                            return 0;
+                        }
+                        if(cp<=6003){return 36;}
+                        return 0;
+                    }
+                    if(cp<=6067){return 16;}
+                    if(cp<6070){
+                        if(cp<6068){
+                            return 0;
+                        }
+                        if(cp<=6069){return 36;}
+                        return 0;
+                    }
+                    if(cp<=6070){return 8;}
+                    return 0;
+                }
+                if(cp<=6077){return 36;}
+                if(cp<6432){
+                    if(cp<6109){
+                        if(cp<6089){
+                            if(cp<6086){
+                                if(cp<6078){
+                                    return 0;
+                                }
+                                if(cp<=6085){return 8;}
+                                return 0;
+                            }
+                            if(cp<=6086){return 36;}
+                            if(cp<6087){
+                                return 0;
+                            }
+                            if(cp<=6088){return 8;}
+                            return 0;
+                        }
+                        if(cp<=6097){return 36;}
+                        if(cp<6099){
+                            if(cp<6098){
+                                return 0;
+                            }
+                            if(cp<=6098){return 52;}
+                            return 0;
+                        }
+                        if(cp<=6099){return 36;}
+                        return 0;
+                    }
+                    if(cp<=6109){return 36;}
+                    if(cp<6159){
+                        if(cp<6158){
+                            if(cp<6155){
+                                return 0;
+                            }
+                            if(cp<=6157){return 36;}
+                            return 0;
+                        }
+                        if(cp<=6158){return 3;}
+                        return 0;
+                    }
+                    if(cp<=6159){return 36;}
+                    if(cp<6313){
+                        if(cp<6277){
+                            return 0;
+                        }
+                        if(cp<=6278){return 36;}
+                        return 0;
+                    }
+                    if(cp<=6313){return 36;}
+                    return 0;
+                }
+                if(cp<=6434){return 36;}
+                if(cp<6457){
+                    if(cp<6448){
+                        if(cp<6439){
+                            if(cp<6435){
+                                return 0;
+                            }
+                            if(cp<=6438){return 8;}
+                            return 0;
+                        }
+                        if(cp<=6440){return 36;}
+                        if(cp<6441){
+                            return 0;
+                        }
+                        if(cp<=6443){return 8;}
+                        return 0;
+                    }
+                    if(cp<=6449){return 8;}
+                    if(cp<6451){
+                        if(cp<6450){
+                            return 0;
+                        }
+                        if(cp<=6450){return 36;}
+                        return 0;
+                    }
+                    if(cp<=6456){return 8;}
+                    return 0;
+                }
+                if(cp<=6459){return 36;}
+                if(cp<6683){
+                    if(cp<6681){
+                        if(cp<6679){
+                            return 0;
+                        }
+                        if(cp<=6680){return 36;}
+                        return 0;
+                    }
+                    if(cp<=6682){return 8;}
+                    return 0;
+                }
+                if(cp<=6683){return 36;}
+                if(cp<6741){
+                    if(cp<6688){
+                        return 0;
+                    }
+                    if(cp<=6740){return 16;}
+                    return 0;
+                }
+                if(cp<=6741){return 8;}
+                return 0;
+            }
+            if(cp<=6742){return 36;}
+            if(cp<7078){
+                if(cp<6923){
+                    if(cp<6771){
+                        if(cp<6754){
+                            if(cp<6744){
+                                if(cp<6743){
+                                    return 0;
+                                }
+                                if(cp<=6743){return 8;}
+                                return 0;
+                            }
+                            if(cp<=6750){return 36;}
+                            if(cp<6752){
+                                return 0;
+                            }
+                            if(cp<=6752){return 52;}
+                            return 0;
+                        }
+                        if(cp<=6754){return 36;}
+                        if(cp<6765){
+                            if(cp<6757){
+                                return 0;
+                            }
+                            if(cp<=6764){return 36;}
+                            return 0;
+                        }
+                        if(cp<=6770){return 8;}
+                        return 0;
+                    }
+                    if(cp<=6780){return 36;}
+                    if(cp<6880){
+                        if(cp<6832){
+                            if(cp<6783){
+                                return 0;
+                            }
+                            if(cp<=6783){return 36;}
+                            return 0;
+                        }
+                        if(cp<=6877){return 36;}
+                        return 0;
+                    }
+                    if(cp<=6891){return 36;}
+                    if(cp<6916){
+                        if(cp<6912){
+                            return 0;
+                        }
+                        if(cp<=6915){return 36;}
+                        return 0;
+                    }
+                    if(cp<=6916){return 8;}
+                    return 0;
+                }
+                if(cp<=6924){return 16;}
+                if(cp<7019){
+                    if(cp<6978){
+                        if(cp<6964){
+                            if(cp<6931){
+                                return 0;
+                            }
+                            if(cp<=6963){return 16;}
+                            return 0;
+                        }
+                        if(cp<=6973){return 36;}
+                        if(cp<6974){
+                            return 0;
+                        }
+                        if(cp<=6977){return 8;}
+                        return 0;
+                    }
+                    if(cp<=6979){return 36;}
+                    if(cp<6981){
+                        if(cp<6980){
+                            return 0;
+                        }
+                        if(cp<=6980){return 52;}
+                        return 0;
+                    }
+                    if(cp<=6988){return 16;}
+                    return 0;
+                }
+                if(cp<=7027){return 36;}
+                if(cp<7043){
+                    if(cp<7042){
+                        if(cp<7040){
+                            return 0;
+                        }
+                        if(cp<=7041){return 36;}
+                        return 0;
+                    }
+                    if(cp<=7042){return 8;}
+                    return 0;
+                }
+                if(cp<=7072){return 16;}
+                if(cp<7074){
+                    if(cp<7073){
+                        return 0;
+                    }
+                    if(cp<=7073){return 8;}
+                    return 0;
+                }
+                if(cp<=7077){return 36;}
+                return 0;
+            }
+            if(cp<=7079){return 8;}
+            if(cp<7204){
+                if(cp<7143){
+                    if(cp<7086){
+                        if(cp<7083){
+                            if(cp<7080){
+                                return 0;
+                            }
+                            if(cp<=7082){return 36;}
+                            return 0;
+                        }
+                        if(cp<=7083){return 52;}
+                        if(cp<7084){
+                            return 0;
+                        }
+                        if(cp<=7085){return 36;}
+                        return 0;
+                    }
+                    if(cp<=7087){return 16;}
+                    if(cp<7142){
+                        if(cp<7099){
+                            return 0;
+                        }
+                        if(cp<=7101){return 16;}
+                        return 0;
+                    }
+                    if(cp<=7142){return 36;}
+                    return 0;
+                }
+                if(cp<=7143){return 8;}
+                if(cp<7149){
+                    if(cp<7146){
+                        if(cp<7144){
+                            return 0;
+                        }
+                        if(cp<=7145){return 36;}
+                        return 0;
+                    }
+                    if(cp<=7148){return 8;}
+                    return 0;
+                }
+                if(cp<=7149){return 36;}
+                if(cp<7151){
+                    if(cp<7150){
+                        return 0;
+                    }
+                    if(cp<=7150){return 8;}
+                    return 0;
+                }
+                if(cp<=7155){return 36;}
+                return 0;
+            }
+            if(cp<=7211){return 8;}
+            if(cp<7394){
+                if(cp<7376){
+                    if(cp<7220){
+                        if(cp<7212){
+                            return 0;
+                        }
+                        if(cp<=7219){return 36;}
+                        return 0;
+                    }
+                    if(cp<=7221){return 8;}
+                    if(cp<7222){
+                        return 0;
+                    }
+                    if(cp<=7223){return 36;}
+                    return 0;
+                }
+                if(cp<=7378){return 36;}
+                if(cp<7393){
+                    if(cp<7380){
+                        return 0;
+                    }
+                    if(cp<=7392){return 36;}
+                    return 0;
+                }
+                if(cp<=7393){return 8;}
+                return 0;
+            }
+            if(cp<=7400){return 36;}
+            if(cp<7415){
+                if(cp<7412){
+                    if(cp<7405){
+                        return 0;
+                    }
+                    if(cp<=7405){return 36;}
+                    return 0;
+                }
+                if(cp<=7412){return 36;}
+                return 0;
+            }
+            if(cp<=7415){return 8;}
+            if(cp<7616){
+                if(cp<7416){
+                    return 0;
+                }
+                if(cp<=7417){return 36;}
+                return 0;
+            }
+            if(cp<=7679){return 36;}
+            return 0;
+        }
+        if(cp<=8203){return 3;}
+        if(cp<9924){
+            if(cp<9748){
+                if(cp<8986){
+                    if(cp<8288){
+                        if(cp<8232){
+                            if(cp<8205){
+                                if(cp<8204){
+                                    return 0;
+                                }
+                                if(cp<=8204){return 4;}
+                                return 0;
+                            }
+                            if(cp<=8205){return 37;}
+                            if(cp<8206){
+                                return 0;
+                            }
+                            if(cp<=8207){return 3;}
+                            return 0;
+                        }
+                        if(cp<=8238){return 3;}
+                        if(cp<8265){
+                            if(cp<8252){
+                                return 0;
+                            }
+                            if(cp<=8252){return 64;}
+                            return 0;
+                        }
+                        if(cp<=8265){return 64;}
+                        return 0;
+                    }
+                    if(cp<=8303){return 3;}
+                    if(cp<8505){
+                        if(cp<8482){
+                            if(cp<8400){
+                                return 0;
+                            }
+                            if(cp<=8432){return 36;}
+                            return 0;
+                        }
+                        if(cp<=8482){return 64;}
+                        return 0;
+                    }
+                    if(cp<=8505){return 64;}
+                    if(cp<8617){
+                        if(cp<8596){
+                            return 0;
+                        }
+                        if(cp<=8601){return 64;}
+                        return 0;
+                    }
+                    if(cp<=8618){return 64;}
+                    return 0;
+                }
+                if(cp<=8987){return 64;}
+                if(cp<9654){
+                    if(cp<9208){
+                        if(cp<9167){
+                            if(cp<9000){
+                                return 0;
+                            }
+                            if(cp<=9000){return 64;}
+                            return 0;
+                        }
+                        if(cp<=9167){return 64;}
+                        if(cp<9193){
+                            return 0;
+                        }
+                        if(cp<=9203){return 64;}
+                        return 0;
+                    }
+                    if(cp<=9210){return 64;}
+                    if(cp<9642){
+                        if(cp<9410){
+                            return 0;
+                        }
+                        if(cp<=9410){return 64;}
+                        return 0;
+                    }
+                    if(cp<=9643){return 64;}
+                    return 0;
+                }
+                if(cp<=9654){return 64;}
+                if(cp<9728){
+                    if(cp<9723){
+                        if(cp<9664){
+                            return 0;
+                        }
+                        if(cp<=9664){return 64;}
+                        return 0;
+                    }
+                    if(cp<=9726){return 64;}
+                    return 0;
+                }
+                if(cp<=9732){return 64;}
+                if(cp<9745){
+                    if(cp<9742){
+                        return 0;
+                    }
+                    if(cp<=9742){return 64;}
+                    return 0;
+                }
+                if(cp<=9745){return 64;}
+                return 0;
+            }
+            if(cp<=9749){return 64;}
+            if(cp<9827){
+                if(cp<9774){
+                    if(cp<9762){
+                        if(cp<9757){
+                            if(cp<9752){
+                                return 0;
+                            }
+                            if(cp<=9752){return 64;}
+                            return 0;
+                        }
+                        if(cp<=9757){return 64;}
+                        if(cp<9760){
+                            return 0;
+                        }
+                        if(cp<=9760){return 64;}
+                        return 0;
+                    }
+                    if(cp<=9763){return 64;}
+                    if(cp<9770){
+                        if(cp<9766){
+                            return 0;
+                        }
+                        if(cp<=9766){return 64;}
+                        return 0;
+                    }
+                    if(cp<=9770){return 64;}
+                    return 0;
+                }
+                if(cp<=9775){return 64;}
+                if(cp<9794){
+                    if(cp<9792){
+                        if(cp<9784){
+                            return 0;
+                        }
+                        if(cp<=9786){return 64;}
+                        return 0;
+                    }
+                    if(cp<=9792){return 64;}
+                    return 0;
+                }
+                if(cp<=9794){return 64;}
+                if(cp<9823){
+                    if(cp<9800){
+                        return 0;
+                    }
+                    if(cp<=9811){return 64;}
+                    return 0;
+                }
+                if(cp<=9824){return 64;}
+                return 0;
+            }
+            if(cp<=9827){return 64;}
+            if(cp<9883){
+                if(cp<9854){
+                    if(cp<9832){
+                        if(cp<9829){
+                            return 0;
+                        }
+                        if(cp<=9830){return 64;}
+                        return 0;
+                    }
+                    if(cp<=9832){return 64;}
+                    if(cp<9851){
+                        return 0;
+                    }
+                    if(cp<=9851){return 64;}
+                    return 0;
+                }
+                if(cp<=9855){return 64;}
+                if(cp<9881){
+                    if(cp<9874){
+                        return 0;
+                    }
+                    if(cp<=9879){return 64;}
+                    return 0;
+                }
+                if(cp<=9881){return 64;}
+                return 0;
+            }
+            if(cp<=9884){return 64;}
+            if(cp<9898){
+                if(cp<9895){
+                    if(cp<9888){
+                        return 0;
+                    }
+                    if(cp<=9889){return 64;}
+                    return 0;
+                }
+                if(cp<=9895){return 64;}
+                return 0;
+            }
+            if(cp<=9899){return 64;}
+            if(cp<9917){
+                if(cp<9904){
+                    return 0;
+                }
+                if(cp<=9905){return 64;}
+                return 0;
+            }
+            if(cp<=9918){return 64;}
+            return 0;
+        }
+        if(cp<=9925){return 64;}
+        if(cp<10083){
+            if(cp<10002){
+                if(cp<9975){
+                    if(cp<9939){
+                        if(cp<9934){
+                            if(cp<9928){
+                                return 0;
+                            }
+                            if(cp<=9928){return 64;}
+                            return 0;
+                        }
+                        if(cp<=9935){return 64;}
+                        if(cp<9937){
+                            return 0;
+                        }
+                        if(cp<=9937){return 64;}
+                        return 0;
+                    }
+                    if(cp<=9940){return 64;}
+                    if(cp<9968){
+                        if(cp<9961){
+                            return 0;
+                        }
+                        if(cp<=9962){return 64;}
+                        return 0;
+                    }
+                    if(cp<=9973){return 64;}
+                    return 0;
+                }
+                if(cp<=9978){return 64;}
+                if(cp<9989){
+                    if(cp<9986){
+                        if(cp<9981){
+                            return 0;
+                        }
+                        if(cp<=9981){return 64;}
+                        return 0;
+                    }
+                    if(cp<=9986){return 64;}
+                    return 0;
+                }
+                if(cp<=9989){return 64;}
+                if(cp<9999){
+                    if(cp<9992){
+                        return 0;
+                    }
+                    if(cp<=9997){return 64;}
+                    return 0;
+                }
+                if(cp<=9999){return 64;}
+                return 0;
+            }
+            if(cp<=10002){return 64;}
+            if(cp<10052){
+                if(cp<10017){
+                    if(cp<10006){
+                        if(cp<10004){
+                            return 0;
+                        }
+                        if(cp<=10004){return 64;}
+                        return 0;
+                    }
+                    if(cp<=10006){return 64;}
+                    if(cp<10013){
+                        return 0;
+                    }
+                    if(cp<=10013){return 64;}
+                    return 0;
+                }
+                if(cp<=10017){return 64;}
+                if(cp<10035){
+                    if(cp<10024){
+                        return 0;
+                    }
+                    if(cp<=10024){return 64;}
+                    return 0;
+                }
+                if(cp<=10036){return 64;}
+                return 0;
+            }
+            if(cp<=10052){return 64;}
+            if(cp<10062){
+                if(cp<10060){
+                    if(cp<10055){
+                        return 0;
+                    }
+                    if(cp<=10055){return 64;}
+                    return 0;
+                }
+                if(cp<=10060){return 64;}
+                return 0;
+            }
+            if(cp<=10062){return 64;}
+            if(cp<10071){
+                if(cp<10067){
+                    return 0;
+                }
+                if(cp<=10069){return 64;}
+                return 0;
+            }
+            if(cp<=10071){return 64;}
+            return 0;
+        }
+        if(cp<=10084){return 64;}
+        if(cp<12330){
+            if(cp<11035){
+                if(cp<10175){
+                    if(cp<10145){
+                        if(cp<10133){
+                            return 0;
+                        }
+                        if(cp<=10135){return 64;}
+                        return 0;
+                    }
+                    if(cp<=10145){return 64;}
+                    if(cp<10160){
+                        return 0;
+                    }
+                    if(cp<=10160){return 64;}
+                    return 0;
+                }
+                if(cp<=10175){return 64;}
+                if(cp<11013){
+                    if(cp<10548){
+                        return 0;
+                    }
+                    if(cp<=10549){return 64;}
+                    return 0;
+                }
+                if(cp<=11015){return 64;}
+                return 0;
+            }
+            if(cp<=11036){return 64;}
+            if(cp<11503){
+                if(cp<11093){
+                    if(cp<11088){
+                        return 0;
+                    }
+                    if(cp<=11088){return 64;}
+                    return 0;
+                }
+                if(cp<=11093){return 64;}
+                return 0;
+            }
+            if(cp<=11505){return 36;}
+            if(cp<11744){
+                if(cp<11647){
+                    return 0;
+                }
+                if(cp<=11647){return 36;}
+                return 0;
+            }
+            if(cp<=11775){return 36;}
+            return 0;
+        }
+        if(cp<=12335){return 36;}
+        if(cp<42612){
+            if(cp<12951){
+                if(cp<12349){
+                    if(cp<12336){
+                        return 0;
+                    }
+                    if(cp<=12336){return 64;}
+                    return 0;
+                }
+                if(cp<=12349){return 64;}
+                if(cp<12441){
+                    return 0;
+                }
+                if(cp<=12442){return 36;}
+                return 0;
+            }
+            if(cp<=12951){return 64;}
+            if(cp<42607){
+                if(cp<12953){
+                    return 0;
+                }
+                if(cp<=12953){return 64;}
+                return 0;
+            }
+            if(cp<=42610){return 36;}
+            return 0;
+        }
+        if(cp<=42621){return 36;}
+        if(cp<43010){
+            if(cp<42736){
+                if(cp<42654){
+                    return 0;
+                }
+                if(cp<=42655){return 36;}
+                return 0;
+            }
+            if(cp<=42737){return 36;}
+            return 0;
+        }
+        if(cp<=43010){return 36;}
+        if(cp<43019){
+            if(cp<43014){
+                return 0;
+            }
+            if(cp<=43014){return 36;}
+            return 0;
+        }
+        if(cp<=43019){return 36;}
+        return 0;
+    }
+    if(cp<=43044){return 8;}
+    if(cp<71736){
+        if(cp<69927){
+            if(cp<43968){
+                if(cp<43495){
+                    if(cp<43392){
+                        if(cp<43232){
+                            if(cp<43136){
+                                if(cp<43047){
+                                    if(cp<43045){
+                                        return 0;
+                                    }
+                                    if(cp<=43046){return 36;}
+                                    return 0;
+                                }
+                                if(cp<=43047){return 8;}
+                                if(cp<43052){
+                                    return 0;
+                                }
+                                if(cp<=43052){return 36;}
+                                return 0;
+                            }
+                            if(cp<=43137){return 8;}
+                            if(cp<43204){
+                                if(cp<43188){
+                                    return 0;
+                                }
+                                if(cp<=43203){return 8;}
+                                return 0;
+                            }
+                            if(cp<=43205){return 36;}
+                            return 0;
+                        }
+                        if(cp<=43249){return 36;}
+                        if(cp<43346){
+                            if(cp<43302){
+                                if(cp<43263){
+                                    return 0;
+                                }
+                                if(cp<=43263){return 36;}
+                                return 0;
+                            }
+                            if(cp<=43309){return 36;}
+                            if(cp<43335){
+                                return 0;
+                            }
+                            if(cp<=43345){return 36;}
+                            return 0;
+                        }
+                        if(cp<=43346){return 8;}
+                        if(cp<43360){
+                            if(cp<43347){
+                                return 0;
+                            }
+                            if(cp<=43347){return 36;}
+                            return 0;
+                        }
+                        if(cp<=43388){return 9;}
+                        return 0;
+                    }
+                    if(cp<=43394){return 36;}
+                    if(cp<43450){
+                        if(cp<43443){
+                            if(cp<43401){
+                                if(cp<43395){
+                                    return 0;
+                                }
+                                if(cp<=43395){return 8;}
+                                return 0;
+                            }
+                            if(cp<=43403){return 16;}
+                            if(cp<43407){
+                                return 0;
+                            }
+                            if(cp<=43442){return 16;}
+                            return 0;
+                        }
+                        if(cp<=43443){return 36;}
+                        if(cp<43446){
+                            if(cp<43444){
+                                return 0;
+                            }
+                            if(cp<=43445){return 8;}
+                            return 0;
+                        }
+                        if(cp<=43449){return 36;}
+                        return 0;
+                    }
+                    if(cp<=43451){return 8;}
+                    if(cp<43456){
+                        if(cp<43454){
+                            if(cp<43452){
+                                return 0;
+                            }
+                            if(cp<=43453){return 36;}
+                            return 0;
+                        }
+                        if(cp<=43455){return 8;}
+                        return 0;
+                    }
+                    if(cp<=43456){return 52;}
+                    if(cp<43493){
+                        if(cp<43488){
+                            return 0;
+                        }
+                        if(cp<=43492){return 16;}
+                        return 0;
+                    }
+                    if(cp<=43493){return 36;}
+                    return 0;
+                }
+                if(cp<=43503){return 16;}
+                if(cp<43644){
+                    if(cp<43587){
+                        if(cp<43569){
+                            if(cp<43561){
+                                if(cp<43514){
+                                    return 0;
+                                }
+                                if(cp<=43518){return 16;}
+                                return 0;
+                            }
+                            if(cp<=43566){return 36;}
+                            if(cp<43567){
+                                return 0;
+                            }
+                            if(cp<=43568){return 8;}
+                            return 0;
+                        }
+                        if(cp<=43570){return 36;}
+                        if(cp<43573){
+                            if(cp<43571){
+                                return 0;
+                            }
+                            if(cp<=43572){return 8;}
+                            return 0;
+                        }
+                        if(cp<=43574){return 36;}
+                        return 0;
+                    }
+                    if(cp<=43587){return 36;}
+                    if(cp<43616){
+                        if(cp<43597){
+                            if(cp<43596){
+                                return 0;
+                            }
+                            if(cp<=43596){return 36;}
+                            return 0;
+                        }
+                        if(cp<=43597){return 8;}
+                        return 0;
+                    }
+                    if(cp<=43631){return 16;}
+                    if(cp<43642){
+                        if(cp<43633){
+                            return 0;
+                        }
+                        if(cp<=43635){return 16;}
+                        return 0;
+                    }
+                    if(cp<=43642){return 16;}
+                    return 0;
+                }
+                if(cp<=43644){return 36;}
+                if(cp<43744){
+                    if(cp<43703){
+                        if(cp<43696){
+                            if(cp<43646){
+                                return 0;
+                            }
+                            if(cp<=43647){return 16;}
+                            return 0;
+                        }
+                        if(cp<=43696){return 36;}
+                        if(cp<43698){
+                            return 0;
+                        }
+                        if(cp<=43700){return 36;}
+                        return 0;
+                    }
+                    if(cp<=43704){return 36;}
+                    if(cp<43713){
+                        if(cp<43710){
+                            return 0;
+                        }
+                        if(cp<=43711){return 36;}
+                        return 0;
+                    }
+                    if(cp<=43713){return 36;}
+                    return 0;
+                }
+                if(cp<=43754){return 16;}
+                if(cp<43758){
+                    if(cp<43756){
+                        if(cp<43755){
+                            return 0;
+                        }
+                        if(cp<=43755){return 8;}
+                        return 0;
+                    }
+                    if(cp<=43757){return 36;}
+                    return 0;
+                }
+                if(cp<=43759){return 8;}
+                if(cp<43766){
+                    if(cp<43765){
+                        return 0;
+                    }
+                    if(cp<=43765){return 8;}
+                    return 0;
+                }
+                if(cp<=43766){return 52;}
+                return 0;
+            }
+            if(cp<=43994){return 16;}
+            if(cp<68152){
+                if(cp<65279){
+                    if(cp<44013){
+                        if(cp<44008){
+                            if(cp<44005){
+                                if(cp<44003){
+                                    return 0;
+                                }
+                                if(cp<=44004){return 8;}
+                                return 0;
+                            }
+                            if(cp<=44005){return 36;}
+                            if(cp<44006){
+                                return 0;
+                            }
+                            if(cp<=44007){return 8;}
+                            return 0;
+                        }
+                        if(cp<=44008){return 36;}
+                        if(cp<44012){
+                            if(cp<44009){
+                                return 0;
+                            }
+                            if(cp<=44010){return 8;}
+                            return 0;
+                        }
+                        if(cp<=44012){return 8;}
+                        return 0;
+                    }
+                    if(cp<=44013){return 36;}
+                    if(cp<64286){
+                        if(cp<55243){
+                            if(cp<55216){
+                                return 0;
+                            }
+                            if(cp<=55238){return 10;}
+                            return 0;
+                        }
+                        if(cp<=55291){return 11;}
+                        return 0;
+                    }
+                    if(cp<=64286){return 36;}
+                    if(cp<65056){
+                        if(cp<65024){
+                            return 0;
+                        }
+                        if(cp<=65039){return 36;}
+                        return 0;
+                    }
+                    if(cp<=65071){return 36;}
+                    return 0;
+                }
+                if(cp<=65279){return 3;}
+                if(cp<68097){
+                    if(cp<66272){
+                        if(cp<65520){
+                            if(cp<65438){
+                                return 0;
+                            }
+                            if(cp<=65439){return 36;}
+                            return 0;
+                        }
+                        if(cp<=65531){return 3;}
+                        if(cp<66045){
+                            return 0;
+                        }
+                        if(cp<=66045){return 36;}
+                        return 0;
+                    }
+                    if(cp<=66272){return 36;}
+                    if(cp<68096){
+                        if(cp<66422){
+                            return 0;
+                        }
+                        if(cp<=66426){return 36;}
+                        return 0;
+                    }
+                    if(cp<=68096){return 16;}
+                    return 0;
+                }
+                if(cp<=68099){return 36;}
+                if(cp<68112){
+                    if(cp<68108){
+                        if(cp<68101){
+                            return 0;
+                        }
+                        if(cp<=68102){return 36;}
+                        return 0;
+                    }
+                    if(cp<=68111){return 36;}
+                    return 0;
+                }
+                if(cp<=68115){return 16;}
+                if(cp<68121){
+                    if(cp<68117){
+                        return 0;
+                    }
+                    if(cp<=68119){return 16;}
+                    return 0;
+                }
+                if(cp<=68149){return 16;}
+                return 0;
+            }
+            if(cp<=68154){return 36;}
+            if(cp<69744){
+                if(cp<69446){
+                    if(cp<68969){
+                        if(cp<68325){
+                            if(cp<68159){
+                                return 0;
+                            }
+                            if(cp<=68159){return 52;}
+                            return 0;
+                        }
+                        if(cp<=68326){return 36;}
+                        if(cp<68900){
+                            return 0;
+                        }
+                        if(cp<=68903){return 36;}
+                        return 0;
+                    }
+                    if(cp<=68973){return 36;}
+                    if(cp<69370){
+                        if(cp<69291){
+                            return 0;
+                        }
+                        if(cp<=69292){return 36;}
+                        return 0;
+                    }
+                    if(cp<=69375){return 36;}
+                    return 0;
+                }
+                if(cp<=69456){return 36;}
+                if(cp<69633){
+                    if(cp<69632){
+                        if(cp<69506){
+                            return 0;
+                        }
+                        if(cp<=69509){return 36;}
+                        return 0;
+                    }
+                    if(cp<=69632){return 8;}
+                    return 0;
+                }
+                if(cp<=69633){return 36;}
+                if(cp<69688){
+                    if(cp<69634){
+                        return 0;
+                    }
+                    if(cp<=69634){return 8;}
+                    return 0;
+                }
+                if(cp<=69702){return 36;}
+                return 0;
+            }
+            if(cp<=69744){return 36;}
+            if(cp<69817){
+                if(cp<69808){
+                    if(cp<69759){
+                        if(cp<69747){
+                            return 0;
+                        }
+                        if(cp<=69748){return 36;}
+                        return 0;
+                    }
+                    if(cp<=69761){return 36;}
+                    if(cp<69762){
+                        return 0;
+                    }
+                    if(cp<=69762){return 8;}
+                    return 0;
+                }
+                if(cp<=69810){return 8;}
+                if(cp<69815){
+                    if(cp<69811){
+                        return 0;
+                    }
+                    if(cp<=69814){return 36;}
+                    return 0;
+                }
+                if(cp<=69816){return 8;}
+                return 0;
+            }
+            if(cp<=69818){return 36;}
+            if(cp<69837){
+                if(cp<69826){
+                    if(cp<69821){
+                        return 0;
+                    }
+                    if(cp<=69821){return 7;}
+                    return 0;
+                }
+                if(cp<=69826){return 36;}
+                return 0;
+            }
+            if(cp<=69837){return 7;}
+            if(cp<69891){
+                if(cp<69888){
+                    return 0;
+                }
+                if(cp<=69890){return 36;}
+                return 0;
+            }
+            if(cp<=69926){return 16;}
+            return 0;
+        }
+        if(cp<=69931){return 36;}
+        if(cp<70602){
+            if(cp<70368){
+                if(cp<70079){
+                    if(cp<69959){
+                        if(cp<69940){
+                            if(cp<69933){
+                                if(cp<69932){
+                                    return 0;
+                                }
+                                if(cp<=69932){return 8;}
+                                return 0;
+                            }
+                            if(cp<=69938){return 36;}
+                            if(cp<69939){
+                                return 0;
+                            }
+                            if(cp<=69939){return 52;}
+                            return 0;
+                        }
+                        if(cp<=69940){return 36;}
+                        if(cp<69957){
+                            if(cp<69956){
+                                return 0;
+                            }
+                            if(cp<=69956){return 16;}
+                            return 0;
+                        }
+                        if(cp<=69958){return 8;}
+                        return 0;
+                    }
+                    if(cp<=69959){return 16;}
+                    if(cp<70018){
+                        if(cp<70016){
+                            if(cp<70003){
+                                return 0;
+                            }
+                            if(cp<=70003){return 36;}
+                            return 0;
+                        }
+                        if(cp<=70017){return 36;}
+                        return 0;
+                    }
+                    if(cp<=70018){return 8;}
+                    if(cp<70070){
+                        if(cp<70067){
+                            return 0;
+                        }
+                        if(cp<=70069){return 8;}
+                        return 0;
+                    }
+                    if(cp<=70078){return 36;}
+                    return 0;
+                }
+                if(cp<=70079){return 8;}
+                if(cp<70191){
+                    if(cp<70094){
+                        if(cp<70082){
+                            if(cp<70080){
+                                return 0;
+                            }
+                            if(cp<=70080){return 36;}
+                            return 0;
+                        }
+                        if(cp<=70083){return 7;}
+                        if(cp<70089){
+                            return 0;
+                        }
+                        if(cp<=70092){return 36;}
+                        return 0;
+                    }
+                    if(cp<=70094){return 8;}
+                    if(cp<70188){
+                        if(cp<70095){
+                            return 0;
+                        }
+                        if(cp<=70095){return 36;}
+                        return 0;
+                    }
+                    if(cp<=70190){return 8;}
+                    return 0;
+                }
+                if(cp<=70193){return 36;}
+                if(cp<70206){
+                    if(cp<70196){
+                        if(cp<70194){
+                            return 0;
+                        }
+                        if(cp<=70195){return 8;}
+                        return 0;
+                    }
+                    if(cp<=70199){return 36;}
+                    return 0;
+                }
+                if(cp<=70206){return 36;}
+                if(cp<70367){
+                    if(cp<70209){
+                        return 0;
+                    }
+                    if(cp<=70209){return 36;}
+                    return 0;
+                }
+                if(cp<=70367){return 36;}
+                return 0;
+            }
+            if(cp<=70370){return 8;}
+            if(cp<70498){
+                if(cp<70464){
+                    if(cp<70459){
+                        if(cp<70400){
+                            if(cp<70371){
+                                return 0;
+                            }
+                            if(cp<=70378){return 36;}
+                            return 0;
+                        }
+                        if(cp<=70401){return 36;}
+                        if(cp<70402){
+                            return 0;
+                        }
+                        if(cp<=70403){return 8;}
+                        return 0;
+                    }
+                    if(cp<=70460){return 36;}
+                    if(cp<70463){
+                        if(cp<70462){
+                            return 0;
+                        }
+                        if(cp<=70462){return 36;}
+                        return 0;
+                    }
+                    if(cp<=70463){return 8;}
+                    return 0;
+                }
+                if(cp<=70464){return 36;}
+                if(cp<70475){
+                    if(cp<70471){
+                        if(cp<70465){
+                            return 0;
+                        }
+                        if(cp<=70468){return 8;}
+                        return 0;
+                    }
+                    if(cp<=70472){return 8;}
+                    return 0;
+                }
+                if(cp<=70476){return 8;}
+                if(cp<70487){
+                    if(cp<70477){
+                        return 0;
+                    }
+                    if(cp<=70477){return 36;}
+                    return 0;
+                }
+                if(cp<=70487){return 36;}
+                return 0;
+            }
+            if(cp<=70499){return 8;}
+            if(cp<70584){
+                if(cp<70539){
+                    if(cp<70512){
+                        if(cp<70502){
+                            return 0;
+                        }
+                        if(cp<=70508){return 36;}
+                        return 0;
+                    }
+                    if(cp<=70516){return 36;}
+                    if(cp<70528){
+                        return 0;
+                    }
+                    if(cp<=70537){return 16;}
+                    return 0;
+                }
+                if(cp<=70539){return 16;}
+                if(cp<70544){
+                    if(cp<70542){
+                        return 0;
+                    }
+                    if(cp<=70542){return 16;}
+                    return 0;
+                }
+                if(cp<=70581){return 16;}
+                return 0;
+            }
+            if(cp<=70584){return 36;}
+            if(cp<70594){
+                if(cp<70587){
+                    if(cp<70585){
+                        return 0;
+                    }
+                    if(cp<=70586){return 8;}
+                    return 0;
+                }
+                if(cp<=70592){return 36;}
+                return 0;
+            }
+            if(cp<=70594){return 36;}
+            if(cp<70599){
+                if(cp<70597){
+                    return 0;
+                }
+                if(cp<=70597){return 36;}
+                return 0;
+            }
+            if(cp<=70601){return 36;}
+            return 0;
+        }
+        if(cp<=70602){return 8;}
+        if(cp<71088){
+            if(cp<70750){
+                if(cp<70709){
+                    if(cp<70609){
+                        if(cp<70606){
+                            if(cp<70604){
+                                return 0;
+                            }
+                            if(cp<=70605){return 8;}
+                            return 0;
+                        }
+                        if(cp<=70607){return 36;}
+                        if(cp<70608){
+                            return 0;
+                        }
+                        if(cp<=70608){return 52;}
+                        return 0;
+                    }
+                    if(cp<=70609){return 7;}
+                    if(cp<70625){
+                        if(cp<70610){
+                            return 0;
+                        }
+                        if(cp<=70610){return 36;}
+                        return 0;
+                    }
+                    if(cp<=70626){return 36;}
+                    return 0;
+                }
+                if(cp<=70711){return 8;}
+                if(cp<70722){
+                    if(cp<70720){
+                        if(cp<70712){
+                            return 0;
+                        }
+                        if(cp<=70719){return 36;}
+                        return 0;
+                    }
+                    if(cp<=70721){return 8;}
+                    return 0;
+                }
+                if(cp<=70724){return 36;}
+                if(cp<70726){
+                    if(cp<70725){
+                        return 0;
+                    }
+                    if(cp<=70725){return 8;}
+                    return 0;
+                }
+                if(cp<=70726){return 36;}
+                return 0;
+            }
+            if(cp<=70750){return 36;}
+            if(cp<70845){
+                if(cp<70841){
+                    if(cp<70833){
+                        if(cp<70832){
+                            return 0;
+                        }
+                        if(cp<=70832){return 36;}
+                        return 0;
+                    }
+                    if(cp<=70834){return 8;}
+                    if(cp<70835){
+                        return 0;
+                    }
+                    if(cp<=70840){return 36;}
+                    return 0;
+                }
+                if(cp<=70841){return 8;}
+                if(cp<70843){
+                    if(cp<70842){
+                        return 0;
+                    }
+                    if(cp<=70842){return 36;}
+                    return 0;
+                }
+                if(cp<=70844){return 8;}
+                return 0;
+            }
+            if(cp<=70845){return 36;}
+            if(cp<70849){
+                if(cp<70847){
+                    if(cp<70846){
+                        return 0;
+                    }
+                    if(cp<=70846){return 8;}
+                    return 0;
+                }
+                if(cp<=70848){return 36;}
+                return 0;
+            }
+            if(cp<=70849){return 8;}
+            if(cp<71087){
+                if(cp<70850){
+                    return 0;
+                }
+                if(cp<=70851){return 36;}
+                return 0;
+            }
+            if(cp<=71087){return 36;}
+            return 0;
+        }
+        if(cp<=71089){return 8;}
+        if(cp<71339){
+            if(cp<71216){
+                if(cp<71102){
+                    if(cp<71096){
+                        if(cp<71090){
+                            return 0;
+                        }
+                        if(cp<=71093){return 36;}
+                        return 0;
+                    }
+                    if(cp<=71099){return 8;}
+                    if(cp<71100){
+                        return 0;
+                    }
+                    if(cp<=71101){return 36;}
+                    return 0;
+                }
+                if(cp<=71102){return 8;}
+                if(cp<71132){
+                    if(cp<71103){
+                        return 0;
+                    }
+                    if(cp<=71104){return 36;}
+                    return 0;
+                }
+                if(cp<=71133){return 36;}
+                return 0;
+            }
+            if(cp<=71218){return 8;}
+            if(cp<71229){
+                if(cp<71227){
+                    if(cp<71219){
+                        return 0;
+                    }
+                    if(cp<=71226){return 36;}
+                    return 0;
+                }
+                if(cp<=71228){return 8;}
+                return 0;
+            }
+            if(cp<=71229){return 36;}
+            if(cp<71231){
+                if(cp<71230){
+                    return 0;
+                }
+                if(cp<=71230){return 8;}
+                return 0;
+            }
+            if(cp<=71232){return 36;}
+            return 0;
+        }
+        if(cp<=71339){return 36;}
+        if(cp<71455){
+            if(cp<71344){
+                if(cp<71341){
+                    if(cp<71340){
+                        return 0;
+                    }
+                    if(cp<=71340){return 8;}
+                    return 0;
+                }
+                if(cp<=71341){return 36;}
+                if(cp<71342){
+                    return 0;
+                }
+                if(cp<=71343){return 8;}
+                return 0;
+            }
+            if(cp<=71351){return 36;}
+            if(cp<71454){
+                if(cp<71453){
+                    return 0;
+                }
+                if(cp<=71453){return 36;}
+                return 0;
+            }
+            if(cp<=71454){return 8;}
+            return 0;
+        }
+        if(cp<=71455){return 36;}
+        if(cp<71463){
+            if(cp<71462){
+                if(cp<71458){
+                    return 0;
+                }
+                if(cp<=71461){return 36;}
+                return 0;
+            }
+            if(cp<=71462){return 8;}
+            return 0;
+        }
+        if(cp<=71467){return 36;}
+        if(cp<71727){
+            if(cp<71724){
+                return 0;
+            }
+            if(cp<=71726){return 8;}
+            return 0;
+        }
+        if(cp<=71735){return 36;}
+        return 0;
+    }
+    if(cp<=71736){return 8;}
+    if(cp<119155){
+        if(cp<72873){
+            if(cp<72243){
+                if(cp<72000){
+                    if(cp<71984){
+                        if(cp<71948){
+                            if(cp<71936){
+                                if(cp<71737){
+                                    return 0;
+                                }
+                                if(cp<=71738){return 36;}
+                                return 0;
+                            }
+                            if(cp<=71942){return 16;}
+                            if(cp<71945){
+                                return 0;
+                            }
+                            if(cp<=71945){return 16;}
+                            return 0;
+                        }
+                        if(cp<=71955){return 16;}
+                        if(cp<71960){
+                            if(cp<71957){
+                                return 0;
+                            }
+                            if(cp<=71958){return 16;}
+                            return 0;
+                        }
+                        if(cp<=71983){return 16;}
+                        return 0;
+                    }
+                    if(cp<=71984){return 36;}
+                    if(cp<71995){
+                        if(cp<71991){
+                            if(cp<71985){
+                                return 0;
+                            }
+                            if(cp<=71989){return 8;}
+                            return 0;
+                        }
+                        if(cp<=71992){return 8;}
+                        return 0;
+                    }
+                    if(cp<=71997){return 36;}
+                    if(cp<71999){
+                        if(cp<71998){
+                            return 0;
+                        }
+                        if(cp<=71998){return 52;}
+                        return 0;
+                    }
+                    if(cp<=71999){return 7;}
+                    return 0;
+                }
+                if(cp<=72000){return 8;}
+                if(cp<72156){
+                    if(cp<72145){
+                        if(cp<72002){
+                            if(cp<72001){
+                                return 0;
+                            }
+                            if(cp<=72001){return 7;}
+                            return 0;
+                        }
+                        if(cp<=72002){return 8;}
+                        if(cp<72003){
+                            return 0;
+                        }
+                        if(cp<=72003){return 36;}
+                        return 0;
+                    }
+                    if(cp<=72147){return 8;}
+                    if(cp<72154){
+                        if(cp<72148){
+                            return 0;
+                        }
+                        if(cp<=72151){return 36;}
+                        return 0;
+                    }
+                    if(cp<=72155){return 36;}
+                    return 0;
+                }
+                if(cp<=72159){return 8;}
+                if(cp<72192){
+                    if(cp<72164){
+                        if(cp<72160){
+                            return 0;
+                        }
+                        if(cp<=72160){return 36;}
+                        return 0;
+                    }
+                    if(cp<=72164){return 8;}
+                    return 0;
+                }
+                if(cp<=72192){return 16;}
+                if(cp<72203){
+                    if(cp<72193){
+                        return 0;
+                    }
+                    if(cp<=72202){return 36;}
+                    return 0;
+                }
+                if(cp<=72242){return 16;}
+                return 0;
+            }
+            if(cp<=72248){return 36;}
+            if(cp<72345){
+                if(cp<72281){
+                    if(cp<72272){
+                        if(cp<72251){
+                            if(cp<72249){
+                                return 0;
+                            }
+                            if(cp<=72249){return 8;}
+                            return 0;
+                        }
+                        if(cp<=72254){return 36;}
+                        if(cp<72263){
+                            return 0;
+                        }
+                        if(cp<=72263){return 52;}
+                        return 0;
+                    }
+                    if(cp<=72272){return 16;}
+                    if(cp<72279){
+                        if(cp<72273){
+                            return 0;
+                        }
+                        if(cp<=72278){return 36;}
+                        return 0;
+                    }
+                    if(cp<=72280){return 8;}
+                    return 0;
+                }
+                if(cp<=72283){return 36;}
+                if(cp<72330){
+                    if(cp<72324){
+                        if(cp<72284){
+                            return 0;
+                        }
+                        if(cp<=72323){return 16;}
+                        return 0;
+                    }
+                    if(cp<=72329){return 7;}
+                    return 0;
+                }
+                if(cp<=72342){return 36;}
+                if(cp<72344){
+                    if(cp<72343){
+                        return 0;
+                    }
+                    if(cp<=72343){return 8;}
+                    return 0;
+                }
+                if(cp<=72344){return 36;}
+                return 0;
+            }
+            if(cp<=72345){return 52;}
+            if(cp<72751){
+                if(cp<72549){
+                    if(cp<72545){
+                        if(cp<72544){
+                            return 0;
+                        }
+                        if(cp<=72544){return 36;}
+                        return 0;
+                    }
+                    if(cp<=72545){return 8;}
+                    if(cp<72546){
+                        return 0;
+                    }
+                    if(cp<=72548){return 36;}
+                    return 0;
+                }
+                if(cp<=72549){return 8;}
+                if(cp<72551){
+                    if(cp<72550){
+                        return 0;
+                    }
+                    if(cp<=72550){return 36;}
+                    return 0;
+                }
+                if(cp<=72551){return 8;}
+                return 0;
+            }
+            if(cp<=72751){return 8;}
+            if(cp<72766){
+                if(cp<72760){
+                    if(cp<72752){
+                        return 0;
+                    }
+                    if(cp<=72758){return 36;}
+                    return 0;
+                }
+                if(cp<=72765){return 36;}
+                return 0;
+            }
+            if(cp<=72766){return 8;}
+            if(cp<72850){
+                if(cp<72767){
+                    return 0;
+                }
+                if(cp<=72767){return 36;}
+                return 0;
+            }
+            if(cp<=72871){return 36;}
+            return 0;
+        }
+        if(cp<=72873){return 8;}
+        if(cp<73526){
+            if(cp<73104){
+                if(cp<73018){
+                    if(cp<72884){
+                        if(cp<72881){
+                            if(cp<72874){
+                                return 0;
+                            }
+                            if(cp<=72880){return 36;}
+                            return 0;
+                        }
+                        if(cp<=72881){return 8;}
+                        if(cp<72882){
+                            return 0;
+                        }
+                        if(cp<=72883){return 36;}
+                        return 0;
+                    }
+                    if(cp<=72884){return 8;}
+                    if(cp<73009){
+                        if(cp<72885){
+                            return 0;
+                        }
+                        if(cp<=72886){return 36;}
+                        return 0;
+                    }
+                    if(cp<=73014){return 36;}
+                    return 0;
+                }
+                if(cp<=73018){return 36;}
+                if(cp<73030){
+                    if(cp<73023){
+                        if(cp<73020){
+                            return 0;
+                        }
+                        if(cp<=73021){return 36;}
+                        return 0;
+                    }
+                    if(cp<=73029){return 36;}
+                    return 0;
+                }
+                if(cp<=73030){return 7;}
+                if(cp<73098){
+                    if(cp<73031){
+                        return 0;
+                    }
+                    if(cp<=73031){return 36;}
+                    return 0;
+                }
+                if(cp<=73102){return 8;}
+                return 0;
+            }
+            if(cp<=73105){return 36;}
+            if(cp<73472){
+                if(cp<73111){
+                    if(cp<73109){
+                        if(cp<73107){
+                            return 0;
+                        }
+                        if(cp<=73108){return 8;}
+                        return 0;
+                    }
+                    if(cp<=73109){return 36;}
+                    if(cp<73110){
+                        return 0;
+                    }
+                    if(cp<=73110){return 8;}
+                    return 0;
+                }
+                if(cp<=73111){return 36;}
+                if(cp<73461){
+                    if(cp<73459){
+                        return 0;
+                    }
+                    if(cp<=73460){return 36;}
+                    return 0;
+                }
+                if(cp<=73462){return 8;}
+                return 0;
+            }
+            if(cp<=73473){return 36;}
+            if(cp<73476){
+                if(cp<73475){
+                    if(cp<73474){
+                        return 0;
+                    }
+                    if(cp<=73474){return 7;}
+                    return 0;
+                }
+                if(cp<=73475){return 8;}
+                return 0;
+            }
+            if(cp<=73488){return 16;}
+            if(cp<73524){
+                if(cp<73490){
+                    return 0;
+                }
+                if(cp<=73523){return 16;}
+                return 0;
+            }
+            if(cp<=73525){return 8;}
+            return 0;
+        }
+        if(cp<=73530){return 36;}
+        if(cp<93539){
+            if(cp<78919){
+                if(cp<73562){
+                    if(cp<73536){
+                        if(cp<73534){
+                            return 0;
+                        }
+                        if(cp<=73535){return 8;}
+                        return 0;
+                    }
+                    if(cp<=73537){return 36;}
+                    if(cp<73538){
+                        return 0;
+                    }
+                    if(cp<=73538){return 52;}
+                    return 0;
+                }
+                if(cp<=73562){return 36;}
+                if(cp<78912){
+                    if(cp<78896){
+                        return 0;
+                    }
+                    if(cp<=78911){return 3;}
+                    return 0;
+                }
+                if(cp<=78912){return 36;}
+                return 0;
+            }
+            if(cp<=78933){return 36;}
+            if(cp<90413){
+                if(cp<90410){
+                    if(cp<90398){
+                        return 0;
+                    }
+                    if(cp<=90409){return 36;}
+                    return 0;
+                }
+                if(cp<=90412){return 8;}
+                return 0;
+            }
+            if(cp<=90415){return 36;}
+            if(cp<92976){
+                if(cp<92912){
+                    return 0;
+                }
+                if(cp<=92916){return 36;}
+                return 0;
+            }
+            if(cp<=92982){return 36;}
+            return 0;
+        }
+        if(cp<=93539){return 10;}
+        if(cp<113821){
+            if(cp<94095){
+                if(cp<94031){
+                    if(cp<93543){
+                        return 0;
+                    }
+                    if(cp<=93546){return 10;}
+                    return 0;
+                }
+                if(cp<=94031){return 36;}
+                if(cp<94033){
+                    return 0;
+                }
+                if(cp<=94087){return 8;}
+                return 0;
+            }
+            if(cp<=94098){return 36;}
+            if(cp<94192){
+                if(cp<94180){
+                    return 0;
+                }
+                if(cp<=94180){return 36;}
+                return 0;
+            }
+            if(cp<=94193){return 36;}
+            return 0;
+        }
+        if(cp<=113822){return 36;}
+        if(cp<118576){
+            if(cp<118528){
+                if(cp<113824){
+                    return 0;
+                }
+                if(cp<=113827){return 3;}
+                return 0;
+            }
+            if(cp<=118573){return 36;}
+            return 0;
+        }
+        if(cp<=118598){return 36;}
+        if(cp<119149){
+            if(cp<119141){
+                return 0;
+            }
+            if(cp<=119145){return 36;}
+            return 0;
+        }
+        if(cp<=119154){return 36;}
+        return 0;
+    }
+    if(cp<=119162){return 3;}
+    if(cp<127987){
+        if(cp<125136){
+            if(cp<122907){
+                if(cp<121461){
+                    if(cp<119362){
+                        if(cp<119173){
+                            if(cp<119163){
+                                return 0;
+                            }
+                            if(cp<=119170){return 36;}
+                            return 0;
+                        }
+                        if(cp<=119179){return 36;}
+                        if(cp<119210){
+                            return 0;
+                        }
+                        if(cp<=119213){return 36;}
+                        return 0;
+                    }
+                    if(cp<=119364){return 36;}
+                    if(cp<121403){
+                        if(cp<121344){
+                            return 0;
+                        }
+                        if(cp<=121398){return 36;}
+                        return 0;
+                    }
+                    if(cp<=121452){return 36;}
+                    return 0;
+                }
+                if(cp<=121461){return 36;}
+                if(cp<121505){
+                    if(cp<121499){
+                        if(cp<121476){
+                            return 0;
+                        }
+                        if(cp<=121476){return 36;}
+                        return 0;
+                    }
+                    if(cp<=121503){return 36;}
+                    return 0;
+                }
+                if(cp<=121519){return 36;}
+                if(cp<122888){
+                    if(cp<122880){
+                        return 0;
+                    }
+                    if(cp<=122886){return 36;}
+                    return 0;
+                }
+                if(cp<=122904){return 36;}
+                return 0;
+            }
+            if(cp<=122913){return 36;}
+            if(cp<124140){
+                if(cp<123184){
+                    if(cp<122918){
+                        if(cp<122915){
+                            return 0;
+                        }
+                        if(cp<=122916){return 36;}
+                        return 0;
+                    }
+                    if(cp<=122922){return 36;}
+                    if(cp<123023){
+                        return 0;
+                    }
+                    if(cp<=123023){return 36;}
+                    return 0;
+                }
+                if(cp<=123190){return 36;}
+                if(cp<123628){
+                    if(cp<123566){
+                        return 0;
+                    }
+                    if(cp<=123566){return 36;}
+                    return 0;
+                }
+                if(cp<=123631){return 36;}
+                return 0;
+            }
+            if(cp<=124143){return 36;}
+            if(cp<124646){
+                if(cp<124643){
+                    if(cp<124398){
+                        return 0;
+                    }
+                    if(cp<=124399){return 36;}
+                    return 0;
+                }
+                if(cp<=124643){return 36;}
+                return 0;
+            }
+            if(cp<=124646){return 36;}
+            if(cp<124661){
+                if(cp<124654){
+                    return 0;
+                }
+                if(cp<=124655){return 36;}
+                return 0;
+            }
+            if(cp<=124661){return 36;}
+            return 0;
+        }
+        if(cp<=125142){return 36;}
+        if(cp<127406){
+            if(cp<127183){
+                if(cp<127124){
+                    if(cp<126980){
+                        if(cp<125252){
+                            return 0;
+                        }
+                        if(cp<=125258){return 36;}
+                        return 0;
+                    }
+                    if(cp<=126980){return 64;}
+                    if(cp<127020){
+                        return 0;
+                    }
+                    if(cp<=127023){return 64;}
+                    return 0;
+                }
+                if(cp<=127135){return 64;}
+                if(cp<127168){
+                    if(cp<127151){
+                        return 0;
+                    }
+                    if(cp<=127152){return 64;}
+                    return 0;
+                }
+                if(cp<=127168){return 64;}
+                return 0;
+            }
+            if(cp<=127184){return 64;}
+            if(cp<127358){
+                if(cp<127344){
+                    if(cp<127222){
+                        return 0;
+                    }
+                    if(cp<=127231){return 64;}
+                    return 0;
+                }
+                if(cp<=127345){return 64;}
+                return 0;
+            }
+            if(cp<=127359){return 64;}
+            if(cp<127377){
+                if(cp<127374){
+                    return 0;
+                }
+                if(cp<=127374){return 64;}
+                return 0;
+            }
+            if(cp<=127386){return 64;}
+            return 0;
+        }
+        if(cp<=127461){return 64;}
+        if(cp<127561){
+            if(cp<127535){
+                if(cp<127489){
+                    if(cp<127462){
+                        return 0;
+                    }
+                    if(cp<=127487){return 6;}
+                    return 0;
+                }
+                if(cp<=127503){return 64;}
+                if(cp<127514){
+                    return 0;
+                }
+                if(cp<=127514){return 64;}
+                return 0;
+            }
+            if(cp<=127535){return 64;}
+            if(cp<127548){
+                if(cp<127538){
+                    return 0;
+                }
+                if(cp<=127546){return 64;}
+                return 0;
+            }
+            if(cp<=127551){return 64;}
+            return 0;
+        }
+        if(cp<=127583){return 64;}
+        if(cp<127894){
+            if(cp<127780){
+                if(cp<127590){
+                    return 0;
+                }
+                if(cp<=127777){return 64;}
+                return 0;
+            }
+            if(cp<=127891){return 64;}
+            return 0;
+        }
+        if(cp<=127895){return 64;}
+        if(cp<127902){
+            if(cp<127897){
+                return 0;
+            }
+            if(cp<=127899){return 64;}
+            return 0;
+        }
+        if(cp<=127984){return 64;}
+        return 0;
+    }
+    if(cp<=127989){return 64;}
+    if(cp<128640){
+        if(cp<128420){
+            if(cp<128367){
+                if(cp<128255){
+                    if(cp<127995){
+                        if(cp<127991){
+                            return 0;
+                        }
+                        if(cp<=127994){return 64;}
+                        return 0;
+                    }
+                    if(cp<=127999){return 36;}
+                    if(cp<128000){
+                        return 0;
+                    }
+                    if(cp<=128253){return 64;}
+                    return 0;
+                }
+                if(cp<=128317){return 64;}
+                if(cp<128336){
+                    if(cp<128329){
+                        return 0;
+                    }
+                    if(cp<=128334){return 64;}
+                    return 0;
+                }
+                if(cp<=128359){return 64;}
+                return 0;
+            }
+            if(cp<=128368){return 64;}
+            if(cp<128394){
+                if(cp<128391){
+                    if(cp<128371){
+                        return 0;
+                    }
+                    if(cp<=128378){return 64;}
+                    return 0;
+                }
+                if(cp<=128391){return 64;}
+                return 0;
+            }
+            if(cp<=128397){return 64;}
+            if(cp<128405){
+                if(cp<128400){
+                    return 0;
+                }
+                if(cp<=128400){return 64;}
+                return 0;
+            }
+            if(cp<=128406){return 64;}
+            return 0;
+        }
+        if(cp<=128421){return 64;}
+        if(cp<128481){
+            if(cp<128450){
+                if(cp<128433){
+                    if(cp<128424){
+                        return 0;
+                    }
+                    if(cp<=128424){return 64;}
+                    return 0;
+                }
+                if(cp<=128434){return 64;}
+                if(cp<128444){
+                    return 0;
+                }
+                if(cp<=128444){return 64;}
+                return 0;
+            }
+            if(cp<=128452){return 64;}
+            if(cp<128476){
+                if(cp<128465){
+                    return 0;
+                }
+                if(cp<=128467){return 64;}
+                return 0;
+            }
+            if(cp<=128478){return 64;}
+            return 0;
+        }
+        if(cp<=128481){return 64;}
+        if(cp<128495){
+            if(cp<128488){
+                if(cp<128483){
+                    return 0;
+                }
+                if(cp<=128483){return 64;}
+                return 0;
+            }
+            if(cp<=128488){return 64;}
+            return 0;
+        }
+        if(cp<=128495){return 64;}
+        if(cp<128506){
+            if(cp<128499){
+                return 0;
+            }
+            if(cp<=128499){return 64;}
+            return 0;
+        }
+        if(cp<=128591){return 64;}
+        return 0;
+    }
+    if(cp<=128709){return 64;}
+    if(cp<129218){
+        if(cp<129036){
+            if(cp<128747){
+                if(cp<128725){
+                    if(cp<128715){
+                        return 0;
+                    }
+                    if(cp<=128722){return 64;}
+                    return 0;
+                }
+                if(cp<=128741){return 64;}
+                if(cp<128745){
+                    return 0;
+                }
+                if(cp<=128745){return 64;}
+                return 0;
+            }
+            if(cp<=128752){return 64;}
+            if(cp<128986){
+                if(cp<128755){
+                    return 0;
+                }
+                if(cp<=128767){return 64;}
+                return 0;
+            }
+            if(cp<=129023){return 64;}
+            return 0;
+        }
+        if(cp<=129039){return 64;}
+        if(cp<129160){
+            if(cp<129114){
+                if(cp<129096){
+                    return 0;
+                }
+                if(cp<=129103){return 64;}
+                return 0;
+            }
+            if(cp<=129119){return 64;}
+            return 0;
+        }
+        if(cp<=129167){return 64;}
+        if(cp<129212){
+            if(cp<129198){
+                return 0;
+            }
+            if(cp<=129199){return 64;}
+            return 0;
+        }
+        if(cp<=129215){return 64;}
+        return 0;
+    }
+    if(cp<=129231){return 64;}
+    if(cp<130048){
+        if(cp<129351){
+            if(cp<129292){
+                if(cp<129241){
+                    return 0;
+                }
+                if(cp<=129279){return 64;}
+                return 0;
+            }
+            if(cp<=129338){return 64;}
+            if(cp<129340){
+                return 0;
+            }
+            if(cp<=129349){return 64;}
+            return 0;
+        }
+        if(cp<=129535){return 64;}
+        if(cp<129646){
+            if(cp<129624){
+                return 0;
+            }
+            if(cp<=129631){return 64;}
+            return 0;
+        }
+        if(cp<=129791){return 64;}
+        return 0;
+    }
+    if(cp<=131069){return 64;}
+    if(cp<917632){
+        if(cp<917536){
+            if(cp<917504){
+                return 0;
+            }
+            if(cp<=917535){return 3;}
+            return 0;
+        }
+        if(cp<=917631){return 36;}
+        return 0;
+    }
+    if(cp<=917759){return 3;}
+    if(cp<918000){
+        if(cp<917760){
+            return 0;
+        }
+        if(cp<=917999){return 36;}
+        return 0;
+    }
+    if(cp<=921599){return 3;}
+    return 0;
+}
+// END GENERATED UNICODE DATA
+
+/// Unicode 17.0.0, UAX #29 revision 47, default extended grapheme clusters.
+/// No allocation, normalization, tailoring, shaping or bidi is performed.
+public pure fn unicode_version():int{return 170000;}
+
+/// Streaming state, constant space. push returns a boundary BEFORE this scalar
+/// (1/0), or -1 for a non-scalar; invalid pushes preserve every state field.
+public final class Cursor{
+    private let started:bool;private let previous:int;private let regional:int;
+    private let pictographic:bool;private let joined:bool;
+    private let consonant:bool;private let linker:bool;
+    fn init(borrow mut self):void{}
+    fn reset(borrow mut self):void{
+        self.started=false;self.previous=0;self.regional=0;
+        self.pictographic=false;self.joined=false;self.consonant=false;self.linker=false;
+    }
+    fn push(borrow mut self,cp:int):int{
+        if(cp<0 || cp>1114111 || (cp>=55296 && cp<=57343)){return -1;}
+        val bits:int=properties(cp);val current:int=bits%16;
+        val indic:int=(bits/16)%4;val emoji:bool=bits>=64;
+        let boundary:bool=true;val prior:int=self.previous;
+        if(self.started){
+            if(prior==1 && current==2){boundary=false;}
+            else if(prior==1 || prior==2 || prior==3 || current==1 || current==2 || current==3){boundary=true;}
+            else if(prior==9 && (current==9 || current==10 || current==12 || current==13)){boundary=false;}
+            else if((prior==12 || prior==10) && (current==10 || current==11)){boundary=false;}
+            else if((prior==13 || prior==11) && current==11){boundary=false;}
+            else if(current==4 || current==5 || current==8 || prior==7){boundary=false;}
+            else if(indic==1 && self.consonant && self.linker){boundary=false;}
+            else if(emoji && self.joined){boundary=false;}
+            else if(prior==6 && current==6 && self.regional==1){boundary=false;}
+        }
+        // GB11: Extended_Pictographic Extend* ZWJ x Extended_Pictographic.
+        self.joined=current==5 && self.pictographic;
+        if(emoji){self.pictographic=true;}
+        else if(current!=4){self.pictographic=false;}
+        // GB9c: Consonant (Extend|Linker)* Linker (Extend|Linker)* x Consonant.
+        if(indic==1){self.consonant=true;self.linker=false;}
+        else if(indic==3){self.linker=self.consonant;}
+        else if(indic!=2){self.consonant=false;self.linker=false;}
+        if(current==6){self.regional=1-self.regional;}else{self.regional=0;}
+        self.previous=current;self.started=true;return int(boundary);
+    }
+}
+
+/// Decode one scalar in previously validated UTF-8, at a scalar boundary.
+public safe fn codepoint(borrow data:slice<byte>,offset:int):int{
+    assert(offset>=0 && offset<len(data));val first:int=int(data[offset]);
+    if(first<128){return first;}
+    let count:int=2;let result:int=first%32;
+    if(first>=240){count=4;result=first%8;}
+    else if(first>=224){count=3;result=first%16;}
+    assert(count<=len(data)-offset);
+    for(let i:int=1;i<count;i++){result=result*64+int(data[offset+i])%64;}
+    return result;
+}
+
+/// Owned random-access byte boundary index. Fallible construction, <=1 MiB
+/// input, len+1 bytes plus one temporary Cursor. No source pointers retained.
+/// status: 0 ready, -1 invalid UTF-8/limit, -4 OOM. Empty input has boundary 0.
+public final class Index{
+    private own flags:*byte;private let length:int;private let cluster_count:int;
+    private let result:int;
+    fn init(borrow mut self,borrow data:slice<byte>):void{
+        self.result=-1;
+        if(len(data)>1048576 || unicode::error(data)>=0){return;}
+        self.result=-4;self.flags=try_alloc<byte>(len(data)+1);
+        if(self.flags==null){return;}
+        own cursor:Cursor=try_new Cursor();if(cursor==null){return;}
+        let at:int=0;
+        while(at<len(data)){
+            if(cursor.push(codepoint(data,at))==1){self.flags[at]=byte(1);self.cluster_count++;}
+            at=unicode::next(data,at);
+        }
+        self.length=len(data);self.flags[self.length]=byte(1);self.result=0;
+    }
+    fn status(borrow self):int{return self.result;}
+    fn size(borrow self):int{return self.length;}
+    fn count(borrow self):int{return self.cluster_count;}
+    fn boundary(borrow self,offset:int):bool{
+        return self.result==0 && offset>=0 && offset<=self.length && self.flags[offset]==1;
+    }
+    /// Input must itself be a grapheme boundary. -1 means invalid offset/state.
+    fn next(borrow self,offset:int):int{
+        if(!self.boundary(offset)){return -1;}if(offset==self.length){return offset;}
+        let at:int=offset+1;while(self.flags[at]!=1){at++;}return at;
+    }
+    fn previous(borrow self,offset:int):int{
+        if(!self.boundary(offset)){return -1;}if(offset==0){return 0;}
+        let at:int=offset-1;while(self.flags[at]!=1){at--;}return at;
+    }
+}

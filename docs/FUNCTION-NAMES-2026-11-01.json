@@ -1,0 +1,156 @@
+{
+  "stdlib/algorithms.assis": {},
+  "stdlib/cli.assis": {
+    "saida": "write_output"
+  },
+  "stdlib/log.assis": {},
+  "stdlib/math.assis": {
+    "Assis_assis_fodase": "legacy_min",
+    "Assis_fodase_assis": "legacy_max",
+    "Assis_fodase_fodase": "legacy_clamp",
+    "Assis_assis_assis": "legacy_abs"
+  },
+  "stdlib/memory.assis": {
+    "Assis_Assis_Fodase": "legacy_fill",
+    "Assis_Fodase_Assis": "legacy_copy"
+  },
+  "stdlib/strings.assis": {
+    "Fodase_assis_fodase": "legacy_starts_with",
+    "Fodase_fodase_assis": "legacy_ends_with"
+  },
+  "exemplos/02_objetos.assis": {
+    "Assis_Fodase": "increment"
+  },
+  "exemplos/03_polimorfismo.assis": {
+    "FodaseFodase": "value",
+    "Assis_Fodase": "read_value"
+  },
+  "exemplos/06_fibonacci.assis": {
+    "FodaseFodase": "fibonacci"
+  },
+  "exemplos/07_arena.assis": {
+    "FodaseFodase": "attack_power",
+    "Assis_Fodase": "attack"
+  },
+  "exemplos/08_modulos.assis": {},
+  "exemplos/11_pacotes.assis": {},
+  "exemplos/12_relatorio_vendas.assis": {},
+  "exemplos/15_funcional.assis": {
+    "dobro": "double",
+    "total_com_taxa": "total_with_tax",
+    "fatorial": "factorial"
+  },
+  "exemplos/16_generics.assis": {
+    "identidade": "identity"
+  },
+  "exemplos/17_funcoes.assis": {
+    "dobro": "double",
+    "identidade": "identity",
+    "par": "is_even",
+    "somar": "add",
+    "compor": "compose",
+    "escolher": "choose"
+  },
+  "exemplos/18_classes_genericas.assis": {
+    "dobro": "double",
+    "ler": "read",
+    "aplicar": "apply"
+  },
+  "exemplos/19_ownership_funcoes.assis": {
+    "dobro": "double",
+    "par": "is_even",
+    "somar": "add",
+    "resumir": "summarize",
+    "ver_valores": "inspect_values"
+  },
+  "exemplos/20_valores_e_resultados.assis": {
+    "deslocar": "translate",
+    "dividir_valor": "divide_value"
+  },
+  "exemplos/21_relatorio_csv_stream.assis": {
+    "abrir_argumento": "open_argument",
+    "numero_csv": "parse_csv_number",
+    "somar_csv": "sum_csv",
+    "processar_linha": "process_line"
+  },
+  "exemplos/22_numeros.assis": {
+    "escalar": "scale"
+  },
+  "exemplos/23_eventos.assis": {
+    "contar": "count"
+  },
+  "exemplos/24_config_json.assis": {
+    "abrir": "open_file",
+    "concluir": "finish"
+  },
+  "exemplos/rpg.assis": {
+    "escolher": "choose",
+    "compr": "length",
+    "adicionarNumero": "append_number",
+    "adicionarEspacos": "append_spaces",
+    "adicionarBarra": "append_bar",
+    "linha": "line",
+    "imprimirOpcao": "print_option",
+    "adicionarFracao": "append_fraction",
+    "faixa": "range",
+    "lerNumero": "read_number",
+    "automatico": "automatic",
+    "liberar": "dispose",
+    "aliada": "is_friendly",
+    "usar": "use",
+    "classe": "class_name",
+    "controlavel": "controllable",
+    "xpRecompensa": "xp_reward",
+    "ganharXp": "gain_xp",
+    "ataqueBasico": "basic_attack",
+    "agir": "act",
+    "vivo": "is_alive",
+    "receberDano": "take_damage",
+    "curar": "heal",
+    "restaurarMp": "restore_mp",
+    "avisarSeCaiu": "notify_defeat",
+    "iniciarTurno": "start_turn",
+    "usarHabilidade": "use_ability",
+    "descansar": "rest",
+    "ficha": "character_sheet",
+    "linhaStatus": "status_line",
+    "subirNivel": "level_up",
+    "aplicarCrescimento": "apply_growth",
+    "aliado": "is_ally",
+    "util": "useful",
+    "tipos": "kinds",
+    "consumir": "consume",
+    "novoGuerreiro": "new_warrior",
+    "novoMago": "new_mage",
+    "novoClerigo": "new_cleric",
+    "novoSlime": "new_slime",
+    "novoGoblin": "new_goblin",
+    "novoLobo": "new_wolf",
+    "novoDragao": "new_dragon",
+    "montarEncontro": "create_encounter",
+    "contarVivos": "count_alive",
+    "alvoAleatorio": "random_target",
+    "maisFerido": "most_injured",
+    "maisFraco": "weakest",
+    "terminou": "is_finished",
+    "montarOrdem": "create_turn_order",
+    "mostrarCampo": "show_battlefield",
+    "escolherAlvo": "choose_target",
+    "turnoHeroi": "hero_turn",
+    "menuHabilidade": "ability_menu",
+    "menuItem": "item_menu",
+    "itemAutomatico": "automatic_item",
+    "turnoAutomatico": "automatic_turn",
+    "rodada": "round"
+  },
+  "exemplos/bibliotecas/geometria.assis": {
+    "distancia_quadrada": "squared_distance"
+  },
+  "exemplos/bibliotecas/operacoes.assis": {
+    "AssisFodase": "double"
+  },
+  "exemplos/pacote-offline/assis.assis": {},
+  "exemplos/pacote-offline/vendor/medidas/api.assis": {
+    "dobro": "double"
+  }
+}

@@ -10,11 +10,11 @@ import "bibliotecas/operacoes.assis";
 safe fn main(): int {
     unsafe {
     let AssisAssis: Assis_Fodase = new Assis_Fodase(21);
-    print(AssisAssis.AssisFodase());
-    print(Assis_fodase_fodase(99, 0, 10));
-    print(Fodase_assis_fodase("AssisScript", "Assis"));
+    print(AssisAssis.double());
+    print(legacy_clamp(99, 0, 10));
+    print(legacy_starts_with("AssisScript", "Assis"));
     let AssisFodase: *byte = alloc<byte>(4);
-    Assis_Assis_Fodase(AssisFodase, 4, byte(65));
+    legacy_fill(AssisFodase, 4, byte(65));
     print(AssisFodase[3]);
     free(AssisFodase);
     free(AssisAssis);

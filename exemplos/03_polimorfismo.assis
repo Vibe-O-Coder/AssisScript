@@ -6,19 +6,19 @@ class AssisAssis {
         self.Assis_assis = AssisFodase;
     }
 
-    fn FodaseFodase(): int {
+    fn value(): int {
         return self.Assis_assis;
     }
 }
 
 class AssisAssisAssis extends AssisAssis {
-    fn FodaseFodase(): int {
+    fn value(): int {
         return self.Assis_assis * 3;
     }
 }
 
-fn Assis_Fodase(AssisFodase: AssisAssis): int {
-    return AssisFodase.FodaseFodase();
+fn read_value(AssisFodase: AssisAssis): int {
+    return AssisFodase.value();
 }
 
 safe fn main(): int {
@@ -26,8 +26,8 @@ safe fn main(): int {
     let FodaseAssis: AssisAssis = new AssisAssis(14);
     // Conversão implícita da derivada para a base; construtor herdado.
     let FodaseAssisAssis: AssisAssis = new AssisAssisAssis(14);
-    print("Base:", Assis_Fodase(FodaseAssis));
-    print("Derivada via base:", Assis_Fodase(FodaseAssisAssis));
+    print("Base:", read_value(FodaseAssis));
+    print("Derivada via base:", read_value(FodaseAssisAssis));
     free(FodaseAssis);
     free(FodaseAssisAssis);
     return 0;

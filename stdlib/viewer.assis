@@ -1,6 +1,7 @@
 namespace viewer;
 import "std/htdl.assis";
 import "std/window.assis";
+import "std/graphemes.assis";
 
 // Keep extension imports out of std/window: old base-v1 providers still load.
 platform("windows-x64"){
@@ -122,22 +123,24 @@ public final class View{
             }
         }
         val end:int=self.used;let cursor:int=start;
+        own boundaries:graphemes::Index=try_new graphemes::Index(slice_of(self.data,start,end-start));
+        if(boundaries==null || boundaries.status()!=0){return false;}
         val disabled:int=int(htdl::value_equals(tree,htdl::attribute(tree,node,8),utf8("true")));
         while(cursor<end){
             let scan:int=cursor;let fit:int=cursor;let boundary:int=cursor;let measured:int=0;
             while(scan<end){
-                val c:int=int(self.data[scan]);let size:int=1;
-                if(c>=240){size=4;}else if(c>=224){size=3;}else if(c>=192){size=2;}
+                val c:int=int(self.data[scan]);
+                val size:int=boundaries.next(scan-start)+start-scan;
                 if(scan+size-cursor>4096){break;}
                 self.work+=scan+size-cursor;if(self.work>8000000){return false;}
                 val w:int=measure(slice_of(self.data,cursor,scan+size-cursor));
                 if(w<0 || w>2147483647){return false;}
                 if(w>self.width-72){break;}
                 fit=scan+size;measured=w;
-                if(c==32){boundary=scan;}
+                if(c==32 && size==1){boundary=scan;}
                 scan=fit;
             }
-            // Reject a scalar wider than the viewport instead of clipping it silently.
+            // Reject a grapheme wider than the viewport; never split its bytes.
             if(fit==cursor){return false;}
             if(fit<end && self.data[fit]!=32 && boundary>cursor){
                 let word_end:int=boundary+1;
@@ -150,12 +153,14 @@ public final class View{
                     if(word_width<=self.width-72){fit=boundary;}
                 }
             }
-            while(fit>cursor && self.data[fit-1]==32){fit--;}
+            // Only discard a whole standalone space cluster. A Prepend+space
+            // cluster must stay intact even when it ends a visual row.
+            while(fit>cursor && self.data[fit-1]==32 && boundaries.boundary(fit-start-1)){fit--;}
             measured=measure(slice_of(self.data,cursor,fit-cursor));
             if(measured<0 || self.count==len(self.lines)){return false;}
             self.lines[self.count]=new Line(node,cursor,fit-cursor,self.bottom,measured,kind,disabled);
             self.count++;self.bottom+=self.row+8;cursor=fit;
-            while(cursor<end && self.data[cursor]==32){cursor++;}
+            while(cursor<end && self.data[cursor]==32 && boundaries.next(cursor-start)==cursor-start+1){cursor++;}
         }
         // A semantic block boundary survives reflow; soft wraps add no bytes.
         if(self.used>start && !self.put(byte(10))){return false;}

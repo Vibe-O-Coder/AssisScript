@@ -10,6 +10,11 @@ import re
 WORDS = dict(zip(
     'ASSIS ASSIS_FODASE assis Assis AssIs AssiS FodAsE FoDaSe FODase assIS fodASE ASSis Fodase FODASE fodase foDASE aSSIS aSsIs fOdAsE fOdase FODasE FodASE ASSIS_fodase FODASE_fodase importa assis_assis assis_fodase ler_bytes agora escrever_bytes dormir relogio_civil arquivo_sincronizar arquivo_substituir arquivo_remover Arquivo arquivo_abrir arquivo_ler arquivo_escrever arquivo_fechar erro_io argumentos argumento_tamanho argumento_copiar fatia'.split(),
     'class extends fn let int byte bool text void if else while return print new free self true false null break continue alloc<byte> len import main init read_bytes monotonic_ms write_bytes sleep_ms civil_ms file_sync file_replace file_remove File file_open file_read file_write file_close io_error arg_count arg_size arg_copy slice_of'.split()))
+WORDS.update({'saida':'write_output','Assis_assis_fodase':'legacy_min',
+    'Assis_fodase_assis':'legacy_max','Assis_fodase_fodase':'legacy_clamp',
+    'Assis_assis_assis':'legacy_abs','Assis_Assis_Fodase':'legacy_fill',
+    'Assis_Fodase_Assis':'legacy_copy','Fodase_assis_fodase':'legacy_starts_with',
+    'Fodase_fodase_assis':'legacy_ends_with'})
 
 def migrate(source):
     out=[];i=0

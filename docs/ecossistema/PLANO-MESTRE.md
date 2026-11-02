@@ -1,3 +1,8 @@
+> Continuação de 01/11/2026: **32,10%, 0/5 gates**. Grafemas/inglês e
+> spikes parciais M0-EXEC; [estado atual](ESTADO-ATUAL.md).
+> Meta 40% pendente;
+> aceites e escopo integral preservados. Relatório 2026-11-01-m3-unicode-m0-vm.
+
 # Plano mestre — AssisScript como base do Browser, da busca e do ecossistema web
 
 Versão da régua: **1**. Data: **29/10/2026**. Base nativa inspecionada: **3.3.0-alpha.15**, commit `e9183e7f98447e97feb2f2e7f1953c035e24f7e6`, com continuação local ainda não publicada. Este documento planeja evolução; não declara novas capacidades implementadas.

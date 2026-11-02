@@ -8,19 +8,19 @@ class AssisAssis {
         self.Fodase_assis = FodaseAssis;
     }
 
-    fn FodaseFodase(): int {
+    fn attack_power(): int {
         return self.Fodase_assis;
     }
 
-    fn Assis_Fodase(AssisFodase: AssisAssis): void {
-        let FodaseAssis: int = self.FodaseFodase();
+    fn attack(AssisFodase: AssisAssis): void {
+        let FodaseAssis: int = self.attack_power();
         AssisFodase.Assis_assis -= FodaseAssis;
         print("Dano:", FodaseAssis, "| Vida remaining:", AssisFodase.Assis_assis);
     }
 }
 
 class AssisAssisAssis extends AssisAssis {
-    fn FodaseFodase(): int {
+    fn attack_power(): int {
         return self.Fodase_assis * 2;
     }
 }
@@ -33,9 +33,9 @@ safe fn main(): int {
     let AssisFodaseAssis: int = 1;
     while (AssisFodase.Assis_assis > 0 && FodaseAssis.Assis_assis > 0) {
         print("Turno", AssisFodaseAssis);
-        AssisFodase.Assis_Fodase(FodaseAssis);
+        AssisFodase.attack(FodaseAssis);
         if (FodaseAssis.Assis_assis <= 0) { break; }
-        FodaseAssis.Assis_Fodase(AssisFodase);
+        FodaseAssis.attack(AssisFodase);
         AssisFodaseAssis += 1;
     }
     if (AssisFodase.Assis_assis <= 0) {

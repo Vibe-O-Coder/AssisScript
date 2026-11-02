@@ -11,7 +11,7 @@ base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
 class English(base.Evolution):
     def test_canonical_catalog_and_every_module(self):
         catalog=json.loads((base.ROOT/'stdlib/catalogo.json').read_text(encoding='utf-8'))
-        self.assertEqual({x['name'] for x in catalog['libraries']},{'math','strings','memory','errors','convert','algorithms','csv','encoding','cli','json','time','log','iterators','events','unicode','owned','arena','http','process','net','window','buffers','doctree','documents','htdl','viewer','reader','random'})
+        self.assertEqual({x['name'] for x in catalog['libraries']},{'math','strings','memory','errors','convert','algorithms','csv','encoding','cli','json','time','log','iterators','events','unicode','owned','arena','http','process','net','window','buffers','doctree','documents','htdl','viewer','reader','graphemes','pagevm','random'})
         mapping=json.loads((base.ROOT/'docs/API-MIGRATION.json').read_text(encoding='utf-8'))
         obsolete=set(mapping['modules'])|set(mapping['identifiers'])|set(mapping['builtins'])
         for library in catalog['libraries']:
@@ -20,6 +20,15 @@ class English(base.Evolution):
             text=re.sub(r'//[^\n]*|miyabi[^\n]*|"(?:[^"\\]|\\.)*"','',path.read_text(encoding='utf-8'))
             public=set(re.findall(r'\b(?:fn|class|struct|enum|namespace)\s+(\w+)',text))
             self.assertFalse(public&obsolete,(library['name'],public&obsolete))
+
+    def test_shipped_function_names_follow_the_english_migration(self):
+        migration=json.loads((base.ROOT/'docs/FUNCTION-NAMES-2026-11-01.json').read_text(encoding='utf-8'))
+        for name,mapping in migration.items():
+            source=(base.ROOT/name).read_text(encoding='utf-8')
+            declared=set(re.findall(r'\bfn\s+(\w+)',source))
+            self.assertFalse(declared & set(mapping),(name,declared & set(mapping)))
+            self.assertTrue(set(mapping.values())<=declared,(name,set(mapping.values())-declared))
+        self.accepted('import "std/cli.assis";safe fn main():int{own data:*byte=try_alloc<byte>(1);data[0]=byte(65);assert(cli::write_output(1,data,1)==1);return 0;}','A')
 
     def test_entry_constructor_import_and_callbacks(self):
         helper=self.source('public pure fn double(n:int):int{return n*2;}','helper.assis')

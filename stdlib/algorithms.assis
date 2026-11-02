@@ -59,18 +59,18 @@ fn unique_sorted(valores: Array<int>): int {
 
 /// Novo array, mesma ordem; não altera nem libera entrada. Callback pure escalar. O(n); resultado exige free/defer free no chamador.
 fn map<T, U>(entrada: Array<T>, transformar: pure fn(T): U): Array<U> {
-    let saida: Array<U> = new Array<U>();
+    let output: Array<U> = new Array<U>();
     let n: int = len(entrada);
-    for (let i: int = 0; i < n; i += 1) { saida.push(transformar(entrada[i])); }
-    return saida;
+    for (let i: int = 0; i < n; i += 1) { output.push(transformar(entrada[i])); }
+    return output;
 }
 
 /// Novo array com os valores aceitos, na ordem de entrada. Não assume posse dos elementos. O(n); resultado exige free/defer free.
 fn filter<T>(entrada: Array<T>, aceitar: pure fn(T): bool): Array<T> {
-    let saida: Array<T> = new Array<T>();
+    let output: Array<T> = new Array<T>();
     let n: int = len(entrada);
-    for (let i: int = 0; i < n; i += 1) { if (aceitar(entrada[i])) { saida.push(entrada[i]); } }
-    return saida;
+    for (let i: int = 0; i < n; i += 1) { if (aceitar(entrada[i])) { output.push(entrada[i]); } }
+    return output;
 }
 
 /// Redução da esquerda para a direita; retorna inicial no vazio. O(n), sem novo array. Callback pure e acumulador escalar.
@@ -83,18 +83,18 @@ fn fold<T, A>(entrada: Array<T>, inicial: A, combinar: pure fn(A, T): A): A {
 
 /// Map gerenciado: entrada emprestada, nova saída own; limpeza automática no chamador. T/U escalares ou funções pure.
 safe fn map_own<T, U>(borrow entrada: Array<T>, transformar: pure fn(T): U): own Array<U> {
-    own saida: Array<U> = new Array<U>();
+    own output: Array<U> = new Array<U>();
     val n: int = len(entrada);
-    for (let i: int = 0; i < n; i += 1) { saida.push(transformar(entrada[i])); }
-    return move(saida);
+    for (let i: int = 0; i < n; i += 1) { output.push(transformar(entrada[i])); }
+    return move(output);
 }
 
 /// Filter gerenciado: preserva entrada e ordem; a saída tem proprietário independente.
 safe fn filter_own<T>(borrow entrada: Array<T>, aceitar: pure fn(T): bool): own Array<T> {
-    own saida: Array<T> = new Array<T>();
+    own output: Array<T> = new Array<T>();
     val n: int = len(entrada);
-    for (let i: int = 0; i < n; i += 1) { if (aceitar(entrada[i])) { saida.push(entrada[i]); } }
-    return move(saida);
+    for (let i: int = 0; i < n; i += 1) { if (aceitar(entrada[i])) { output.push(entrada[i]); } }
+    return move(output);
 }
 
 /// Fold sem cópia/consumo do array; acumulador e callback pure escalares.

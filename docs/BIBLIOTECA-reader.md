@@ -16,16 +16,18 @@ nomes e geometrias; não retém documento, Store ou callback de medida.
 
 ## Seleção e eventos
 
-`select(anchor,caret)` aceita offsets de bytes em fronteiras de escalares UTF-8,
+`select(anchor,caret)` aceita offsets de bytes em fronteiras de grafemas estendidos Unicode 17,
 inclusive seleção invertida e vazia. Offset inválido retorna false e preserva
 seleção. `selection_start/end`, `selected_text()` e snapshot são consultas.
 Cada bloco termina em LF; quebras de linha visuais não acrescentam bytes.
 Espaços já colapsados pelo viewer são preservados ao copiar entre linhas.
-Seleção é de leitura: pode separar acento combinante de sua base. Não há
-segmentação por grafema, edição, bidi completo, IME ou UIA TextPattern.
+Seleção e quebras visuais preservam acentos combinantes e sequências emoji.
+O índice segue UAX #29 revisão 47, com cursor e tabelas em AssisScript;
+[contrato e limites](BIBLIOTECA-graphemes.md). Não há edição, normalização,
+segmentação de palavras, bidi completo, IME ou UIA TextPattern.
 
 Arrastar em texto seleciona; botões conservam press/release do viewer.
-Shift+Left/Right estende por escalar; Ctrl+A seleciona tudo, Ctrl+C solicita
+Shift+Left/Right estende por grafema; Ctrl+A seleciona tudo, Ctrl+C solicita
 cópia; Ctrl+plus/minus/0 solicita 200/100%. Outros atalhos seguem o viewer.
 Perda de foco/captura cancela arrasto/modificadores. Eventos precisam ter
 documento/janela/sequência atuais. Reader::dispatch devolve viewer::Change:

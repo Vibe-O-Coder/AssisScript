@@ -1,0 +1,46 @@
+test_bad_geometry_metric_failure_and_workspace_limits (__main__.HtdlViewer.test_bad_geometry_metric_failure_and_workspace_limits) ... ok
+test_focus_reverse_disabled_and_enter_space_repeat (__main__.HtdlViewer.test_focus_reverse_disabled_and_enter_space_repeat) ... ok
+test_hidden_subtrees_inline_collapse_and_label_fallback (__main__.HtdlViewer.test_hidden_subtrees_inline_collapse_and_label_fallback) ... ok
+test_native_paint_measure_close_and_pixels (__main__.HtdlViewer.test_native_paint_measure_close_and_pixels) ... ok
+test_os_refusal_preserves_existing_snapshot_and_neighbor (__main__.HtdlViewer.test_os_refusal_preserves_existing_snapshot_and_neighbor) ... ok
+test_pointer_requires_matching_press_release_and_cancels_keyboard (__main__.HtdlViewer.test_pointer_requires_matching_press_release_and_cancels_keyboard) ... ok
+test_real_application_native_loop_file_errors_resize_and_input (__main__.HtdlViewer.test_real_application_native_loop_file_errors_resize_and_input) ... ERROR
+test_resize_snapshot_is_owned_and_preserves_focus_scroll (__main__.HtdlViewer.test_resize_snapshot_is_owned_and_preserves_focus_scroll) ... ok
+test_scroll_clamping_and_focus_reveals_long_document (__main__.HtdlViewer.test_scroll_clamping_and_focus_reveals_long_document) ... ok
+test_stale_document_window_sequence_and_close (__main__.HtdlViewer.test_stale_document_window_sequence_and_close) ... ok
+test_viewer_five_output_formats_and_native_execution (__main__.HtdlViewer.test_viewer_five_output_formats_and_native_execution) ... ok
+test_wrapping_against_python_textwrap_for_atomic_characters (__main__.HtdlViewer.test_wrapping_against_python_textwrap_for_atomic_characters) ... ok
+
+======================================================================
+ERROR: test_real_application_native_loop_file_errors_resize_and_input (__main__.HtdlViewer.test_real_application_native_loop_file_errors_resize_and_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 701, in _rmtree_unsafe
+    os.unlink(fullname)
+    ~~~~~~~~~^^^^^^^^^^
+PermissionError: [WinError 5] Acesso negado: 'C:\\Users\\babus\\AppData\\Local\\Temp\\assis-evolution-9919c4yk\\optimized.exe'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py", line 975, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py", line 955, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 852, in rmtree
+    _rmtree_impl(path, dir_fd, onexc)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 705, in _rmtree_unsafe
+    onexc(os.unlink, fullname, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py", line 930, in onexc
+    _os.unlink(path)
+    ~~~~~~~~~~^^^^^^
+PermissionError: [WinError 5] Acesso negado: 'C:\\Users\\babus\\AppData\\Local\\Temp\\assis-evolution-9919c4yk\\optimized.exe'
+
+----------------------------------------------------------------------
+Ran 12 tests in 29.978s
+
+FAILED (errors=1)

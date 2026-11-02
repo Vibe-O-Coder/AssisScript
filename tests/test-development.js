@@ -77,10 +77,10 @@ test('fontes importados e extensão exe final são protegidos contra sobrescrita
 test('bibliotecas padrão: matemática, texto UTF-8 e memória', () => {
     const source = write('padrao.assis', `import "std/math"; import "std/strings"; import "std/memory";
 fn main(): int {
-    print(Assis_assis_fodase(-5, 2), Assis_fodase_assis(-5, 2), Assis_fodase_fodase(99, 0, 10), Assis_assis_assis(-42));
-    print(Fodase_assis_fodase("ação", "aç"), Fodase_fodase_assis("ação", "ão"), Fodase_assis_fodase("a", "ab"), Fodase_fodase_assis("", ""));
+    print(legacy_min(-5, 2), legacy_max(-5, 2), legacy_clamp(99, 0, 10), legacy_abs(-42));
+    print(legacy_starts_with("ação", "aç"), legacy_ends_with("ação", "ão"), legacy_starts_with("a", "ab"), legacy_ends_with("", ""));
     let AssisAssis: *byte = alloc<byte>(3); let AssisFodase: *byte = alloc<byte>(3);
-    Assis_Assis_Fodase(AssisAssis, 3, byte(255)); Assis_Fodase_Assis(AssisFodase, AssisAssis, 3);
+    legacy_fill(AssisAssis, 3, byte(255)); legacy_copy(AssisFodase, AssisAssis, 3);
     print(AssisFodase[0], AssisFodase[2]); free(AssisAssis); free(AssisFodase); return 0;
 }`);
     const r = run(['run', source]); assert.equal(r.status, 0, r.stderr); assert.equal(r.stdout, '-5 2 10 42\ntrue true false true\n255 255\n');

@@ -1,0 +1,189 @@
+{
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler_sha256": "41a04975b09f2ef12441e6f20e2d6c5f0f839aa75b5c527064ce4ed999bd5325",
+  "checks": [
+    {
+      "name": "graphemes",
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 21.302433699999998,
+      "log": "linux-graphemes.log",
+      "log_sha256": "2dde3dbfe47481d0a618990d74377224530370ffa5c47a8e635d4ab9fbbe3a42"
+    },
+    {
+      "name": "pagevm",
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 4.466827900000002,
+      "log": "linux-pagevm.log",
+      "log_sha256": "0df987d21b0675c5d0935736eddda8662d71a3f4a0d9c65b4e5316614d2bf8be"
+    },
+    {
+      "name": "reader-transactions",
+      "returncode": 0,
+      "executed": 11,
+      "not_run": 4,
+      "seconds": 30.305217098000004,
+      "log": "linux-reader-transactions.log",
+      "log_sha256": "dfb3de1470a4f2b2e6608c030e7b00ae77886f586cccc56d1c826cc225a0c410"
+    },
+    {
+      "name": "htdl-reader",
+      "returncode": 0,
+      "executed": 7,
+      "not_run": 3,
+      "seconds": 19.610322805000003,
+      "log": "linux-htdl-reader.log",
+      "log_sha256": "ae7f65db83146a526c18c1a18bac401baa5e00bbddddf404d1960f7e153b3aca"
+    },
+    {
+      "name": "htdl-viewer",
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 2,
+      "seconds": 33.19176990300001,
+      "log": "linux-htdl-viewer.log",
+      "log_sha256": "990be9adae18d882cf19e06de6fd64fc5859569a2d12ba1630ba1fa415656029"
+    },
+    {
+      "name": "htdl-parser",
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 57.20513222999999,
+      "log": "linux-htdl-parser.log",
+      "log_sha256": "8db68b80447c761e41ad781ad7292b7533503669e10932d7dc400c00e62366e8"
+    },
+    {
+      "name": "document-memory",
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 18.036496637,
+      "log": "linux-document-memory.log",
+      "log_sha256": "318a72f47ddc676350737f72846d16b19b54513e9aac5d77fe0e203a5286087f"
+    },
+    {
+      "name": "document-tree",
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 16.565015579000004,
+      "log": "linux-document-tree.log",
+      "log_sha256": "c6d9e24f52f02143716f60d53994dc311cef54e9d33befd68ffe13271c5f9b2a"
+    },
+    {
+      "name": "english-api",
+      "returncode": 0,
+      "executed": 5,
+      "not_run": 0,
+      "seconds": 3.116041583000026,
+      "log": "linux-english-api.log",
+      "log_sha256": "de6a1ddee0d02f273425a45c87cec3a8cab4409517ec8bcb2019ded5ecf68278"
+    },
+    {
+      "name": "ffi",
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 4.862930198000015,
+      "log": "linux-ffi.log",
+      "log_sha256": "35fc0d880433b1d683d307d07928b9d85f9e0214e9f90ac1385a745873a74102"
+    },
+    {
+      "name": "cli",
+      "returncode": 0,
+      "executed": 1,
+      "not_run": 0,
+      "seconds": 0.9119965939999872,
+      "log": "linux-cli.log",
+      "log_sha256": "2a868cb044d08d91ab399e659be6155b40cbe919c23675f24cddb18184d3b0d6"
+    },
+    {
+      "name": "system",
+      "returncode": 0,
+      "executed": 8,
+      "not_run": 0,
+      "seconds": 1.7874982779999868,
+      "log": "linux-system.log",
+      "log_sha256": "b6993dacc5490f12c314082ae338a64e233a3dedf88d4a132527e4cf17e39678"
+    },
+    {
+      "name": "packages",
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 1,
+      "seconds": 1.6401053920000095,
+      "log": "linux-packages.log",
+      "log_sha256": "6f6e01a5ceb5baa36b3d37c9d9e3cdc3a6c26f0646d23b04d72e44997f010f6e"
+    },
+    {
+      "name": "optimization",
+      "returncode": 0,
+      "executed": 6,
+      "not_run": 0,
+      "seconds": 2.796561001000015,
+      "log": "linux-optimization.log",
+      "log_sha256": "a798d76fd8d573ccd3227ddfd630a54b3892230dcedd8b8f1dc0d4ff3be54169"
+    },
+    {
+      "name": "complete-ir",
+      "returncode": 0,
+      "executed": 7,
+      "not_run": 0,
+      "seconds": 1.008050202000021,
+      "log": "linux-complete-ir.log",
+      "log_sha256": "1a58140d5c8680d22da8be45d8763b89584bc794b935277073451f30cb72d926"
+    },
+    {
+      "name": "functions",
+      "returncode": 0,
+      "executed": 19,
+      "not_run": 0,
+      "seconds": 5.275493136999984,
+      "log": "linux-functions.log",
+      "log_sha256": "289e758b2aa00dc55b11dd0603630858a6498732d525b2016425120aad6baba1"
+    },
+    {
+      "name": "ownership-functions",
+      "returncode": 0,
+      "executed": 26,
+      "not_run": 0,
+      "seconds": 6.835106090000011,
+      "log": "linux-ownership-functions.log",
+      "log_sha256": "c3acb9cded36d02337d7c70f1b1105e58f99992a761b8c34aa8f098efe962372"
+    },
+    {
+      "name": "generic-classes",
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 7.555158896000023,
+      "log": "linux-generic-classes.log",
+      "log_sha256": "0f889a79139433eab3f5c60028de7207271f8b6b8e767256668661d3ba723806"
+    },
+    {
+      "name": "collections-ast",
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 4.889022941999997,
+      "log": "linux-collections-ast.log",
+      "log_sha256": "ce3352bff99520ac44c719ec1ef75d385314df90b4230aa8d27ca28cfb48bd4b"
+    }
+  ],
+  "passed": true,
+  "native_provider": "unsupported",
+  "wasm": "not-run: Node unavailable",
+  "targets_generated": [
+    "windows-x64",
+    "linux-x64",
+    "linux-arm64",
+    "macos-x64",
+    "macos-arm64"
+  ],
+  "other_native_targets": "ARM64/macOS not-run; generation is not execution"
+}

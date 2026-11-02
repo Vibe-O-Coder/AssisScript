@@ -66,12 +66,13 @@ public value struct Item{
     let node:doctree::NodeId;let first:int;let last:int;let role:int;let disabled:int;
     let name_start:int;let name_size:int;
 }
-/// Read-only content selection uses UTF-8 scalar boundaries, not grapheme editing.
+/// Read-only selection uses Unicode 17 extended grapheme boundaries.
 /// Names and MSAA projection are owned independently of the source/Store.
 public final class Reader{
     private own view:viewer::View;
     private own items:*Item;private own names:*byte;private own words:*int;
     private own advances:*int;
+    private own boundaries:graphemes::Index;
     private let count:int;private let names_used:int;private let window_instance:int;
     private let anchor:int;private let caret:int;private let last_request:int;
     private let control:bool;private let shift:bool;private let dragging:bool;
@@ -81,6 +82,8 @@ public final class Reader{
         self.window_instance=window_instance;
         self.view=try_new viewer::View(document,window_instance,width,height,row,metric);
         if(self.view==null || !self.view.is_open()){return;}
+        self.boundaries=try_new graphemes::Index(self.view.text_bytes());
+        if(self.boundaries==null || self.boundaries.status()!=0){return;}
         self.items=try_alloc<reader::Item>(self.view.line_count());
         self.names=try_alloc<byte>(document.source_size()+32);
         self.words=try_alloc<int>((self.view.line_count()+1)*8);
@@ -144,19 +147,14 @@ public final class Reader{
         return slice_of(content,self.selection_start(),self.selection_end()-self.selection_start());
     }
     private fn boundary(borrow self,at:int):bool{
-        if(at<0 || at>self.view.text_size()){return false;}
-        if(at==self.view.text_size()){return true;}
-        val b:byte=self.view.text_bytes()[at];return b<128 || b>=192;
+        return self.boundaries!=null && self.boundaries.boundary(at);
     }
     fn select(borrow mut self,anchor:int,caret:int):bool{
         if(!self.is_open() || !self.boundary(anchor) || !self.boundary(caret)){return false;}
         self.anchor=anchor;self.caret=caret;return true;
     }
     private fn step(borrow self,at:int,back:bool):int{
-        let result:int=at;
-        if(back){if(result==0){return 0;}result--;while(!self.boundary(result)){result--;}}
-        else{if(result==self.view.text_size()){return result;}result++;while(!self.boundary(result)){result++;}}
-        return result;
+        if(back){return self.boundaries.previous(at);}return self.boundaries.next(at);
     }
     private fn point(borrow self,x:int,y:int):int{
         // All native coordinates are i32; hostile synthetic inputs are bounded.

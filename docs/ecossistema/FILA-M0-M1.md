@@ -1,3 +1,26 @@
+# Continuação Unicode e M0-EXEC — 01/11/2026
+
+**32,10%, 0/5 gates; meta 40% pendente.**
+[Relatório](../relatorios/2026-11-01-m3-unicode-m0-vm.md). Grafemas estendidos
+Unicode 17/UAX29 entram na seleção, navegação e quebra; normalização, palavras,
+case folding, shaping/bidi/edição/IME permanecem abertos. Não repetir o índice
+ou as tabelas. Funções das bibliotecas/exemplos/RPG foram migradas para inglês;
+cli::saida agora é cli::write_output e aliases 2.x têm prefixo legacy_.
+
+M0-EXEC agora tem ASV1 experimental em AssisScript: verificador de bytes,
+inteiros/booleanos/calls/memória, fuel total e fatias, contador local com
+concessão/revogação. Comparativo Wasm/V8 tem fixtures confiáveis, import names
+negados e limites de memória de teste; não tem loader restrito ou fuel geral.
+MIN/-1 exige lowering Wasm, e loop infinito exigiu terminar o processo pai.
+Escolha permanece aberta. Próximo: perfil de valores/IR → formato restrito,
+verificador Wasm/limites comparáveis e decisão por semântica, autoridade e custo.
+Sandbox de processo, SDK htdl_v1 e ciclo de vida de aba seguem independentes.
+
+Ordem dos aceites visuais preservada: desktop/leitor real/DPI/monitores;
+shaping/bidi/IME; catálogo/recuperação HTDL. M1 RSS, FS/SSC, loader, rede,
+persistência/busca, M4–M9 e distribuição/aceite continuam sem dispensa.
+Easy permanece a última etapa. As entradas anteriores abaixo são históricas.
+
 # Fila operacional após as reconciliações M0
 
 **Continuação atual, 01/11/2026: 30,10%, 0/5 gates.**

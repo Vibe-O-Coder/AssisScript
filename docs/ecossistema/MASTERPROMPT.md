@@ -1,3 +1,19 @@
+> **Continuação Unicode/M0-EXEC — 01/11/2026: 32,10%, 0/5 gates.**
+> Cópia isolada `C:/Users/babus/Desktop/AssisScript/work/unicode-reader-20261101`,
+> branch `work/m3-unicode-reader-2026-11-01`, base publicada #20/a542aff.
+> [Relatório atual](../relatorios/2026-11-01-m3-unicode-m0-vm.md) e
+> [evidências](evidencias/m3-unicode-vm-2026-11-01/summary.json).
+> Grafemas Unicode 17 no Reader/View; APIs/funções dos exemplos em inglês,
+> incluindo RPG, CLI e auxiliares 2.x (migração explícita; fontes antigas
+> precisam novos nomes). ASV1 experimental em AssisScript tem verificador,
+> fuel/memória/frames/calls, fatias e contador revogável. Comparativo Wasm/V8
+> observou diferença MIN/-1 e loop encerrado pelo processo pai; escolha aberta.
+> Não há backend/SDK de página ou sandbox. Publicação é confirmada no adendo
+> do relatório; conferir SHA remoto antes de continuar. Meta 40% não atingida.
+> Desktop/leitor/DPI/monitores, normalização/palavras/shaping/bidi/IME,
+> catálogo/editor/loader HTDL, FS/SSC, M1 RSS e M4–M9 continuam na fila.
+> Easy é a última etapa. O conteúdo anterior abaixo é histórico preservado.
+
 > **Continuação atual — transações e preferências (01/11/2026): 30,10%, 0/5 gates.**
 > Publicada: [PR de rascunho #20](https://github.com/Vibe-O-Coder/AssisScript/pull/20),
 > aberta/sem merge sobre #19; 64 paths/blobs conferidos em 312116efce613c8c5cdb2eaf6b14dcb99bafc5ef.

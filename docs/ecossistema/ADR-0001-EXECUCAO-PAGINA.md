@@ -3,6 +3,31 @@
 Data: 29/10/2026. Estado: **estratégia aceita; formato ainda não escolhido**.
 Escopo: E00-03/E06-01, sem promoção de capacidade ou gate.
 
+## Continuação de 01/11/2026 — dois spikes parciais, escolha aberta
+
+`std/pagevm.assis` executa ASV1 em AssisScript, com validação estrutural,
+registradores i64/booleanos, calls, memória e fuel totais, fatias cooperativas
+e contador hospedeiro com concessão/revogação locais. Não há frontend de
+página, FFI ou autoridade nativa no bytecode. Contrato em
+[BIBLIOTECA-pagevm.md](../BIBLIOTECA-pagevm.md); relatório/evidências em
+[Unicode e VM](../relatorios/2026-11-01-m3-unicode-m0-vm.md).
+
+O comparativo Wasm usa fixtures confiáveis em Node 24/V8, sem redistribuir
+runtime: validação pelo engine, nomes de import negados, contador limitado,
+overflow i64, desvio booleano e memória de um page com máximo explícito.
+MIN/-1 produz trap, enquanto ASV1/nativo preservam MIN: um backend Wasm precisa
+lowering para preservar a linguagem. Loop infinito exigiu terminar o processo
+do teste; não há fuel cooperativo/validador geral de memória/imports de host.
+Os testes de timeout demonstram a lacuna, sem dar aceite de confinamento.
+
+Não foi escolhida VM em função dessa prova menor. Faltam representação de
+objetos/ownership, tradução do IR, ABI/SDK completo, compilador/host submetidos
+a orçamento, rejeições/semântica do subconjunto anunciado, medição comparável
+de custo e alternativa Wasm com restrições verificáveis. A memória cobrada é
+corpo solicitado, não RSS. Não há sandbox de processo nem recuperação de aba.
+E06-01/E06-03 recebem apenas fundação (1); E06-02 delimita execução ASV1 (2).
+Nenhum gate aprovado. Os parágrafos abaixo preservam o contrato de escolha.
+
 Nativo atual serve shell/broker/motor confiáveis. Conteúdo remoto não pode
 executar binário nativo privilegiado. safe e processo sem restrições não
 definem autoridade, limites de CPU nem isolamento do sistema operacional.

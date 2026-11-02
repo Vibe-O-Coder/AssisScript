@@ -1,14 +1,14 @@
 /// Núcleo puro: não lê estado externo e compõe apenas funções puras.
-pure fn dobro(value: int): int { return value * 2; }
+pure fn double(value: int): int { return value * 2; }
 
-pure fn total_com_taxa(count: int, preco: int): int {
+pure fn total_with_tax(count: int, preco: int): int {
     val subtotal: int = count * preco;
-    return subtotal + dobro(count);
+    return subtotal + double(count);
 }
 
-pure fn fatorial(n: int): int {
+pure fn factorial(n: int): int {
     if (n < 2) { return 1; }
-    return n * fatorial(n - 1);
+    return n * factorial(n - 1);
 }
 
 /// A borda com efeitos recebe o resultado do cálculo e faz a saída.
@@ -16,7 +16,7 @@ safe fn main(): int {
     unsafe {
     val count: int = 3;
     val preco: int = 100;
-    print(total_com_taxa(count, preco), fatorial(10));
+    print(total_with_tax(count, preco), factorial(10));
     return 0;
 
     }

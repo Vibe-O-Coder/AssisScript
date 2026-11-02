@@ -6,7 +6,7 @@ class AssisAssis {
         self.Assis_assis = FodaseAssis;
     }
 
-    fn Assis_Fodase(): int {
+    fn increment(): int {
         self.Assis_assis += 1;
         return self.Assis_assis;
     }
@@ -15,8 +15,8 @@ class AssisAssis {
 safe fn main(): int {
     unsafe {
     let AssisFodase: AssisAssis = new AssisAssis(40);
-    print("Primeiro:", AssisFodase.Assis_Fodase());
-    print("Segundo:", AssisFodase.Assis_Fodase());
+    print("Primeiro:", AssisFodase.increment());
+    print("Segundo:", AssisFodase.increment());
     free(AssisFodase);
     return 0;
 
