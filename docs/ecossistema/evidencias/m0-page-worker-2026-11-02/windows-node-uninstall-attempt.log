@@ -1,0 +1,54 @@
+✔ compilação estática: build não executa e binário roda sozinho (187.0027ms)
+✔ comentários, delimitadores, strings, BOM e CRLF (157.5818ms)
+✔ módulos: importação transitiva, repetida e herança entre arquivos (199.7927ms)
+✔ errors de importação: ciclos, ausência, colisões e fronteiras de arquivo (270.9202ms)
+✔ diagnóstico do módulo aponta arquivo e linha corretos (48.9222ms)
+✔ stdin, overlays e colunas UTF-16 usam posições do editor (127.8522ms)
+✔ diretórios de bibliotecas via -I e ASSIS_PATH (243.4367ms)
+✔ fontes importados e extensão exe final são protegidos contra sobrescrita (57.0968ms)
+✔ bibliotecas padrão: matemática, texto UTF-8 e memória (150.7948ms)
+✔ falhas de runtime em bibliotecas incluem arquivo e linha (343.3087ms)
+✔ decimal: limites, overflow, posição e formatação int64 (279.4754ms)
+✔ errors recuperáveis: soma, divisão, mapas e arrays preservam saída em falha (257.8437ms)
+✔ String: autoacréscimo com/sem realocação, vida própria, UTF-8 e KMP (261.601ms)
+✔ heapsort e busca: comparação com ordenação independente em entradas adversas (369.0421ms)
+✔ CSV: campos vazios, CRLF, aspas escapadas, multilinha e errors recuperáveis (285.6362ms)
+✔ Base64 e hexadecimal: comparação com Buffer, todos os bytes e padding inválido (313.5994ms)
+✔ otimizador: aritmética int64 confrontada com BigInt e ordem dos efeitos (527.9349ms)
+✔ diagnósticos incluem ajuda e intervalo UTF-16; ponteiros de strings exigem tipos corretos (114.9059ms)
+✔ funções com quadro grande podem chamar antes de inicializar variáveis locais (997.4897ms)
+✔ assert aceita mensagem e só a avalia na falha (217.7425ms)
+✔ exemplos de aplicação produzem relatório e transporte binário corretos (297.4415ms)
+✖ instalação: núcleo obrigatório, seleção de opcionais e remoção isolada (9872.6324ms)
+✔ catálogo: cada biblioteca e documento existe e a análise de tipos passa (2304.3916ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 22
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18079.861
+
+✖ failing tests:
+
+test at tests\test-v31.js:112:1
+✖ instalação: núcleo obrigatório, seleção de opcionais e remoção isolada (9872.6324ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (C:\Users\babus\Desktop\AssisScript\work\page-worker-20261102\tests\test-v31.js:142:16)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -113,9 +113,16 @@ Há 14 bibliotecas: cinco obrigatórias e nove opcionais. O instalador seleciona
 
 ## Continuação do ecossistema — 02/11/2026
 
-O catálogo atual contém cinco bibliotecas obrigatórias e 27 opcionais.
+O catálogo atual contém cinco bibliotecas obrigatórias e 29 opcionais.
 [page](BIBLIOTECA-page.md) oferece o SDK escalar htdl_v1/read-only-1;
 [pagehost](BIBLIOTECA-pagehost.md) integra ASV2/projeção HTDL/eventos e
 escalonamento cooperativo local. São perfis experimentais, sem sandbox do OS.
 `--with page,pagehost` seleciona suas dependências. Os números das seções
 anteriores descrevem suas respectivas versões históricas.
+
+[pagewire](BIBLIOTECA-pagewire.md) e [pageworker](BIBLIOTECA-pageworker.md)
+acrescentam ASIP/1, supervisão e navegação transacional em processo separado.
+`--with pageworker` inclui pagewire; worker/provider nativos são construídos
+separadamente no repositório, sem promessa de distribuição binária automática.
+Linux x64 tem restrições nativas delimitadas; Windows exige opt-in local e
+recusa isolamento obrigatório. G2 permanece aberto.

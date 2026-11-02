@@ -1,0 +1,127 @@
+namespace pageworker;
+import "std/pagewire.assis";
+
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_version") fn version():int;
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_open") fn open_native(borrow path:*byte,length:int,restricted:int,borrow mut token:*int):int;
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_send") fn send_native(token:int,borrow data:*byte,length:int):int;
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_receive") fn receive_native(token:int,borrow mut data:*byte,length:int):int;
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_close") fn close_native(token:int):int;
+public value struct Reply{let code:int;let status:int;let result:int;let steps:int;let counter:int;let state:int;let queued:int;let isolation:int;}
+
+/// Trusted, main-thread supervisor. One command is in flight per worker.
+/// poll performs one <=4096-byte write/read; teardown kills/reaps on failure.
+public final class Worker{
+    private let token:int;private let instance:int;private let origin:int;private let epoch:int;private let request:int;
+    private let deadline:int;private let clock:int;private let kind:int;private let sent:int;private let length:int;
+    private let failure:int;private let ready_flag:bool;private let loaded:bool;private let require_isolation:bool;
+    private own output:*byte;private own chunk:*byte;private own decoder:pagewire::Decoder;
+    private let answer:Reply;
+    fn init(borrow mut self,borrow path:slice<byte>,instance:int,origin:int,epoch:int,restricted:bool,now:int,timeout:int):void{
+        self.failure=-1;if(instance<=0 || origin<=0 || epoch<=0 || now<0 || timeout<1 || timeout>60000 || now>9223372036854775807-timeout || len(path)<2 || len(path)>4096){return;}
+        self.output=try_alloc<byte>(196708);self.chunk=try_alloc<byte>(4096);self.decoder=try_new pagewire::Decoder();
+        own file:*byte=try_alloc<byte>(len(path));own handle:*int=try_alloc<int>(1);
+        if(self.output==null || self.chunk==null || self.decoder==null || !self.decoder.is_open() || file==null || handle==null){self.failure=-4;return;}
+        for(let i:int=0;i<len(path);i++){file[i]=path[i];}
+        unsafe{if(version()!=1){self.failure=-3;return;}self.failure=open_native(file,len(path),int(restricted),handle);}
+        if(self.failure!=0){return;}self.token=handle[0];self.instance=instance;self.origin=origin;self.epoch=epoch;
+        self.require_isolation=restricted;self.deadline=now+timeout;self.clock=now;self.kind=0;
+    }
+    fn is_open(borrow self):bool{return self.token>0;}
+    fn error(borrow self):int{return self.failure;}
+    fn ready(borrow self):bool{return self.ready_flag;}
+    fn busy(borrow self):bool{return self.token>0 && self.kind>=0;}
+    fn activatable(borrow self):bool{return self.token>0 && self.loaded && self.ready_flag && self.kind<0;}
+    fn reply(borrow self):Reply{return self.answer;}
+    fn close(borrow mut self):void{if(self.token>0){unsafe{close_native(self.token);}self.token=0;}self.ready_flag=false;self.loaded=false;self.kind=-1;}
+    fn drop(borrow mut self):void{self.close();}
+    private fn fail(borrow mut self,code:int):int{self.close();self.failure=code;return code;}
+    /// LOAD is single-use. Navigation prepares another Worker and swaps owners
+    /// only after its successful load; closing the old owner revokes all work.
+    fn load(borrow mut self,borrow source:slice<byte>,borrow code:slice<byte>,memory:int,frames:int,fuel:int,calls:int,now:int,timeout:int):int{
+        if(!self.ready_flag || self.loaded || self.kind>=0){return -12;}
+        if(len(source)>65536 || len(code)>131088 || len(code)<16 || memory<0 || memory>65536 || frames<1 || frames>128 || fuel<1 || fuel>1000000 || calls<0 || calls>10000){return -1;}
+        val result:int=self.start(1,now,timeout);if(result!=0){return result;}
+        val length:int=4+len(source)+len(code);val instance:int=self.instance;val origin:int=self.origin;val epoch:int=self.epoch;val request:int=self.request;
+        pagewire::header(self.output,1,length,instance,origin,epoch,request);
+        for(let i:int=0;i<4;i++){self.output[80+i]=byte((len(source)>>(8*i))&255);}
+        for(let i:int=0;i<len(source);i++){self.output[84+i]=source[i];}
+        for(let i:int=0;i<len(code);i++){self.output[84+len(source)+i]=code[i];}
+        pagewire::put(self.output,48,memory);pagewire::put(self.output,56,frames);pagewire::put(self.output,64,fuel);pagewire::put(self.output,72,calls);
+        self.length=80+length;return 0;
+    }
+    private fn start(borrow mut self,kind:int,now:int,timeout:int):int{
+        if(!self.ready_flag || self.kind>=0){return -12;}
+        if(now<self.clock || timeout<1 || timeout>60000 || now>9223372036854775807-timeout || self.request==9223372036854775807){return -1;}
+        self.clock=now;self.deadline=now+timeout;self.request++;self.kind=kind;self.sent=0;self.length=80;self.decoder.reset();
+        val instance:int=self.instance;val origin:int=self.origin;val epoch:int=self.epoch;val request:int=self.request;
+        pagewire::header(self.output,kind,0,instance,origin,epoch,request);return 0;
+    }
+    /// kind 2=tick, 3=grant counter, 4=grant document, 5=post event,
+    /// 6=revoke, 7=close, 8=stats. Zero reserved args are mandatory.
+    fn command(borrow mut self,kind:int,arg0:int,arg1:int,now:int,timeout:int):int{
+        if(!self.loaded || kind<2 || kind>8 || (kind==2 && (arg0<1 || arg0>10000 || arg1!=0)) ||
+           ((kind==3 || kind==4 || kind>=6) && (arg0!=0 || arg1!=0)) || (kind==5 && (arg0<2 || arg0>3))){return -1;}
+        val result:int=self.start(kind,now,timeout);if(result!=0){return result;}
+        pagewire::put(self.output,48,arg0);pagewire::put(self.output,56,arg1);return 0;
+    }
+    /// 0 waiting/idle, 1 reply available, negative terminal error. A deadline
+    /// closes/reaps the entire worker before another message can be accepted.
+    fn poll(borrow mut self,now:int):int{
+        if(self.token<=0){if(self.failure<0){return self.failure;}return -9;}if(now<self.clock){return -1;}self.clock=now;
+        if(self.kind<0){
+            val idle_token:int=self.token;let received:int=0;unsafe{received=receive_native(idle_token,self.chunk,4096);}
+            if(received<0){return self.fail(-21);}if(received>0){return self.fail(-22);}return 0;
+        }if(now>=self.deadline){return self.fail(-20);}
+        val token:int=self.token;unsafe{
+            if(self.sent<self.length){
+                let amount:int=self.length-self.sent;if(amount>4096){amount=4096;}
+                // The FFI borrows a scratch chunk; no interior pointer escapes.
+                for(let i:int=0;i<amount;i++){self.chunk[i]=self.output[self.sent+i];}
+                val count:int=send_native(token,self.chunk,amount);if(count<0){return self.fail(-21);}self.sent+=count;
+            }
+            val count:int=receive_native(token,self.chunk,4096);if(count<0){return self.fail(-21);}
+            for(let i:int=0;i<count;i++){if(!self.decoder.feed(self.chunk[i])){return self.fail(-22);}}
+        }
+        if(!self.decoder.ready()){return 0;}
+        let valid:bool=false;let reply:Reply=new Reply();
+        {borrow data:slice<byte>=self.decoder.view();
+            if(pagewire::valid(data) && len(data)==144 && int(data[6])==128+self.kind && pagewire::get(data,56)==0 && pagewire::get(data,64)==0 && pagewire::get(data,72)==0 && pagewire::get(data,136)==0){
+                val isolation:int=pagewire::get(data,128);
+                if(self.kind==0){valid=pagewire::get(data,16)==0 && pagewire::get(data,24)==0 && pagewire::get(data,32)==0 && pagewire::get(data,40)==0 && pagewire::get(data,48)==0 && (isolation==0 || isolation==1);
+                    for(let i:int=80;i<128;i+=8){if(pagewire::get(data,i)!=0){valid=false;}}}
+                else{valid=self.sent==self.length && pagewire::get(data,16)==self.instance && pagewire::get(data,24)==self.origin && pagewire::get(data,32)==self.epoch && pagewire::get(data,40)==self.request && isolation==self.answer.isolation;}
+                reply=new Reply(pagewire::get(data,48),pagewire::get(data,80),pagewire::get(data,88),pagewire::get(data,96),pagewire::get(data,104),pagewire::get(data,112),pagewire::get(data,120),isolation);
+            }
+        }
+        if(!valid){return self.fail(-22);}if(self.require_isolation && reply.isolation!=1){return self.fail(-3);}
+        self.answer=reply;if(self.kind==0){self.ready_flag=true;}if(self.kind==1 && reply.code==0){self.loaded=true;}
+        val closed:bool=self.kind==7 || (self.kind==1 && reply.code!=0);self.kind=-1;if(closed){self.close();}return 1;
+    }
+}
+
+/// Transactional navigation. A candidate has its own process/epoch and cannot
+/// replace the current worker until HELLO and LOAD succeed. Failed candidates
+/// are discarded; commit closes the old process and its entire event queue.
+public final class Session{
+    private own active_worker:Worker;private own pending_worker:Worker;
+    private let next_epoch:int;private let opened:bool;
+    fn init(borrow mut self):void{self.opened=true;}
+    fn has_active(borrow self):bool{return self.active_worker!=null;}
+    fn has_pending(borrow self):bool{return self.pending_worker!=null;}
+    fn epoch(borrow self):int{return self.next_epoch;}
+    fn current(borrow self):borrow(self) Worker{assert(self.active_worker!=null);return self.active_worker;}
+    fn current_mut(borrow mut self):borrow mut(self) Worker{assert(self.active_worker!=null);return self.active_worker;}
+    fn candidate_mut(borrow mut self):borrow mut(self) Worker{assert(self.pending_worker!=null);return self.pending_worker;}
+    fn prepare(borrow mut self,borrow path:slice<byte>,instance:int,origin:int,restricted:bool,now:int,timeout:int):int{
+        if(!self.opened){return -9;}if(self.pending_worker!=null){return -12;}if(self.next_epoch==9223372036854775807){return -13;}
+        self.next_epoch++;own candidate:Worker=try_new pageworker::Worker(path,instance,origin,self.next_epoch,restricted,now,timeout);
+        if(candidate==null){return -4;}if(!candidate.is_open()){return candidate.error();}self.pending_worker=move(candidate);return 0;
+    }
+    fn abort(borrow mut self):void{if(self.pending_worker!=null){self.pending_worker.close();}own retired:Worker=move(self.pending_worker);}
+    fn commit(borrow mut self):bool{
+        if(!self.opened || self.pending_worker==null || !self.pending_worker.activatable()){return false;}
+        if(self.active_worker!=null){self.active_worker.close();}
+        own next:Worker=move(self.pending_worker);self.active_worker=move(next);return true;
+    }
+    fn close(borrow mut self):void{self.opened=false;self.abort();if(self.active_worker!=null){self.active_worker.close();}own retired:Worker=move(self.active_worker);}
+}

@@ -1,0 +1,23 @@
+#ifndef ASSIS_WORKER_V1_H
+#define ASSIS_WORKER_V1_H
+#include <stdint.h>
+#ifdef _WIN32
+#define ASSW_API __declspec(dllexport)
+#else
+#define ASSW_API __attribute__((visibility("default")))
+#endif
+/* Main-thread only. Buffers are borrowed for this call, never retained.
+ * 0 I/O backpressure, >0 bytes, -1 input, -2 stale, -3 unsupported,
+ * -4 OS/resource, -5 EOF. Tokens are local identities, never capabilities.
+ * Executable is a trusted host-supplied absolute path; no shell or page native code. */
+ASSW_API int64_t assw_version(void);
+ASSW_API int64_t assw_open(const uint8_t*,int64_t,int64_t,int64_t*);
+ASSW_API int64_t assw_send(int64_t,const uint8_t*,int64_t);
+ASSW_API int64_t assw_receive(int64_t,uint8_t*,int64_t);
+ASSW_API int64_t assw_close(int64_t);
+ASSW_API int64_t assw_child_read(uint8_t*,int64_t);
+ASSW_API int64_t assw_child_write(const uint8_t*,int64_t);
+/* Enter before reading any input. 1 Linux x64 restriction, 0 unavailable.
+ * Linux failure is -4 and the worker must exit without reading page bytes. */
+ASSW_API int64_t assw_restrict(void);
+#endif

@@ -280,6 +280,20 @@
         "pagevm",
         "htdl"
       ]
+    },
+    {
+      "name": "pagewire",
+      "required": false,
+      "doc": "BIBLIOTECA-pagewire.md",
+      "description": "ASIP/1: framing binário little-endian limitado e incremental, sem ponteiros.",
+      "dependencies": []
+    },
+    {
+      "name": "pageworker",
+      "required": false,
+      "doc": "BIBLIOTECA-pageworker.md",
+      "description": "Supervisor e navegação transacional em AssisScript, com worker local, IPC limitado e negociação explícita de isolamento.",
+      "dependencies": ["pagewire"]
     }
   ]
 }

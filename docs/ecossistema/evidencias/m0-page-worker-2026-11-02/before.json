@@ -1,0 +1,17 @@
+{
+  "base": "6b2ece0ba5a28b7775e9da90adade5a36c8a29bc",
+  "compiler_sha256": "f20e73c914b05812bc581092a1d7b34584d435c180763035037339e064ce5248",
+  "checks": [
+    {
+      "library": "pagewire",
+      "returncode": 1,
+      "stderr": "<workspace>\\build\\before-page-worker\\probe.assis:1:8: A001: m\u00f3dulo n\u00e3o encontrado: std/pagewire.assis (use caminho relativo, -I ou ASSIS_PATH)\n  import \"std/pagewire.assis\";safe fn main():int{return 0;}\n         ^\n  Ajuda: Confira o caminho relativo ao arquivo importador e as bibliotecas instaladas. Use -I pasta para bibliotecas externas.\n"
+    },
+    {
+      "library": "pageworker",
+      "returncode": 1,
+      "stderr": "<workspace>\\build\\before-page-worker\\probe.assis:1:8: A001: m\u00f3dulo n\u00e3o encontrado: std/pageworker.assis (use caminho relativo, -I ou ASSIS_PATH)\n  import \"std/pageworker.assis\";safe fn main():int{return 0;}\n         ^\n  Ajuda: Confira o caminho relativo ao arquivo importador e as bibliotecas instaladas. Use -I pasta para bibliotecas externas.\n"
+    }
+  ],
+  "execution": "not-run: compile/import rejection"
+}

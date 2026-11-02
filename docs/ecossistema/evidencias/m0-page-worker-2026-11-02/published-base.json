@@ -1,0 +1,10 @@
+{
+  "commit": "6b2ece0ba5a28b7775e9da90adade5a36c8a29bc",
+  "tree": "b8d31c382d44dba66344e9210472b05fcf1554be",
+  "blobs": 2068,
+  "remote": "Vibe-O-Coder/AssisScript",
+  "branch": "work/m0-page-runtime-2026-11-01",
+  "verified": true,
+  "pr_created": false,
+  "pr_error": "GitHub connector: 403 Resource not accessible by integration"
+}

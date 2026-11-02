@@ -223,3 +223,9 @@ test-page-runtime: bin/assis
 	python3 tests/test-page-host.py
 test-wasm-spike:
 	python3 tests/test-wasm-spike.py
+
+.PHONY: page-worker test-page-worker
+page-worker: bin/assis
+	python3 tools/build-page-worker.py
+test-page-worker: bin/assis
+	python3 tests/test-page-worker.py

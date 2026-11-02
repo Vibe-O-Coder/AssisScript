@@ -1,0 +1,27 @@
+// Build tools/page-worker.assis and its provider with tools/build-page-worker.py.
+// Arguments: absolute trusted worker path, local counter.asv2, optional
+// --trusted-local (required on Windows until native authority isolation exists).
+import "std/pageworker.assis";
+safe fn wait_reply(borrow mut worker:pageworker::Worker):bool{
+    while(true){val result:int=worker.poll(monotonic_ms());if(result<0){return false;}if(result==1){return true;}sleep_ms(1);}
+}
+safe fn open_code():own File{unsafe{
+    val size:int=arg_size(2);if(size<1 || size>4096){return file_open("",9);}
+    let path:*byte=alloc<byte>(size+1);defer free(path);if(arg_copy(2,path,size+1)!=size){return file_open("",9);}return file_open(text(path),0);
+}}
+safe fn main():int{
+    let path_length:int=0;unsafe{path_length=arg_size(1);}if(path_length<2 || path_length>4096){print("Passe worker absoluto e counter.asv2 local");return 2;}
+    own path:*byte=try_alloc<byte>(path_length+1);if(path==null){return 4;}unsafe{if(arg_copy(1,path,path_length+1)!=path_length){return 2;}}
+    let restricted:bool=true;own option:*byte=try_alloc<byte>(16);if(option==null){return 4;}
+    unsafe{if(arg_size(3)>0){if(arg_size(3)!=15 || arg_copy(3,option,16)!=15){return 2;}borrow expected:slice<byte>=utf8("--trusted-local");for(let i:int=0;i<15;i++){if(option[i]!=expected[i]){return 2;}}restricted=false;}}
+    own file:File=open_code();if(file==null){return 2;}own code:*byte=try_alloc<byte>(131088);own chunk:*byte=try_alloc<byte>(4096);if(code==null || chunk==null){return 4;}
+    let size:int=0;while(true){val count:int=file_read(file,chunk,4096);if(count<0 || count>131088-size){return 3;}if(count==0){break;}for(let i:int=0;i<count;i++){code[size+i]=chunk[i];}size+=count;}
+    own worker:pageworker::Worker=try_new pageworker::Worker(slice_of(path,0,path_length),7,11,1,restricted,monotonic_ms(),1000);
+    if(worker==null){return 4;}if(!worker.is_open()){print("Worker indisponível",worker.error());return 5;}if(!wait_reply(worker)){return 5;}
+    if(worker.load(utf8("<div type=document version=\"0.1\" lang=\"pt-BR\"><div type=head><div type=title>Counter</div></div><div type=body><div type=button>Increment</div></div></div>"),slice_of(code,0,size),0,16,100000,1000,monotonic_ms(),1000)!=0 || !wait_reply(worker) || worker.reply().code!=0){return 5;}
+    let completed:int=0;while(completed<3){
+        if(worker.command(2,10000,0,monotonic_ms(),1000)!=0 || !wait_reply(worker)){return 5;}
+        val reply:pageworker::Reply=worker.reply();if(reply.code<0){return 5;}if(reply.code==2){completed++;if(completed<3){if(worker.command(5,2,1,monotonic_ms(),1000)!=0 || !wait_reply(worker) || worker.reply().code!=0){return 5;}}}
+    }
+    print("WORKER",worker.reply().result,"STATE",worker.reply().state,"ISOLATION",worker.reply().isolation);worker.close();return 0;
+}
