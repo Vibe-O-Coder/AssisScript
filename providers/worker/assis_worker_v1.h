@@ -14,6 +14,7 @@ ASSW_API int64_t assw_version(void);
 ASSW_API int64_t assw_open(const uint8_t*,int64_t,int64_t,int64_t*);
 /* Extension: fixed page-compile-worker argument, 16..512 MiB, 1..10 CPU s.
  * Windows limits committed private memory; Linux limits address space.
+ * Windows also requires LPAC isolation, with no unrestricted fallback.
  * Does not authorize executing a downloaded compiler or native page binary. */
 ASSW_API int64_t assw_compile_open(const uint8_t*,int64_t,int64_t,int64_t,int64_t*);
 /* Six words: version=1, limit bytes, current RSS, peak RSS, private commit
@@ -25,7 +26,10 @@ ASSW_API int64_t assw_receive(int64_t,uint8_t*,int64_t);
 ASSW_API int64_t assw_close(int64_t);
 ASSW_API int64_t assw_child_read(uint8_t*,int64_t);
 ASSW_API int64_t assw_child_write(const uint8_t*,int64_t);
-/* Enter before reading any input. 1 Linux x64 restriction, 0 unavailable.
+/* Enter/verify before reading input. 1 Linux x64 restriction or Windows
+ * AppContainer token with zero capabilities; the trusted Windows launcher
+ * separately requires LPAC, per-spawn SID and process mitigations.
+ * 0 means an explicitly unrestricted Windows launch.
  * Linux failure is -4 and the worker must exit without reading page bytes. */
 ASSW_API int64_t assw_restrict(void);
 #endif

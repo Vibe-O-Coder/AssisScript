@@ -9,7 +9,7 @@ import subprocess
 
 ROOT=Path(__file__).resolve().parent.parent
 
-def build(output,compiler=None,cc=None):
+def build(output,compiler=None,cc=None,testing=False):
     if platform.machine().lower() not in ('x86_64','amd64') or platform.system() not in ('Windows','Linux'):
         raise RuntimeError('Worker provider supports Windows/Linux x64 only')
     output=Path(output).resolve();output.mkdir(parents=True,exist_ok=True)
@@ -19,8 +19,10 @@ def build(output,compiler=None,cc=None):
     env=dict(os.environ,PATH=str(Path(cc).parent)+os.pathsep+os.environ.get('PATH',''))
     provider=output/('assis_worker_v1.dll' if windows else 'libassis_worker_v1.so')
     command=[cc,'-O2','-std=c11','-Wall','-Wextra','-Werror','-Wno-misleading-indentation','-shared']
+    if windows and testing:command+=['-DASSIS_WORKER_TESTING']
     command+=['-static-libgcc','-Wl,--no-insert-timestamp'] if windows else ['-fPIC','-pthread']
     command += [str(ROOT/'providers/worker/worker.c'),'-o',str(provider)]
+    if windows:command += ['-ladvapi32','-luserenv','-lbcrypt']
     subprocess.run(command,env=env,check=True)
     worker=output/('page-worker.exe' if windows else 'page-worker')
     flags=['--no-opt'] if os.environ.get('ASSIS_WORKER_NO_OPT')=='1' else []

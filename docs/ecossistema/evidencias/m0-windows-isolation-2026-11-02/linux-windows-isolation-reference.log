@@ -1,0 +1,9 @@
+test_compiler_launch_is_also_isolated_before_source_input (__main__.WindowsIsolation.test_compiler_launch_is_also_isolated_before_source_input) ... skipped 'Windows AppContainer/LPAC native execution only'
+test_every_creation_fault_rolls_back_without_unrestricted_fallback (__main__.WindowsIsolation.test_every_creation_fault_rolls_back_without_unrestricted_fallback) ... skipped 'Windows AppContainer/LPAC native execution only'
+test_native_authority_denials_unique_identities_and_readonly_runtime (__main__.WindowsIsolation.test_native_authority_denials_unique_identities_and_readonly_runtime) ... skipped 'Windows AppContainer/LPAC native execution only'
+test_repeated_isolated_close_reclaims_profile_files_handles_and_tokens (__main__.WindowsIsolation.test_repeated_isolated_close_reclaims_profile_files_handles_and_tokens) ... skipped 'Windows AppContainer/LPAC native execution only'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK (skipped=4)

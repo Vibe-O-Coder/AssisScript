@@ -89,21 +89,21 @@ build/assis.exe build exemplos/pages/reader-counter.assis --target page-asv2 -o 
 build/assis.exe build exemplos/50_page_reader.assis -o build/demo-reader/reader.exe
 ```
 
-Execute `reader.exe` com caminho absoluto do worker e do ASV2 e, no Windows,
-`--trusted-local`. O diretório precisa conter ambos os providers. O exemplo
+Execute `reader.exe` com caminho absoluto do worker e do ASV2. Isolamento é
+obrigatório por padrão também no Windows; `--trusted-local` é opt-out explícito. O diretório precisa conter ambos os providers. O exemplo
 tem contador visível no painel do shell e saída PAGE-STATE no terminal;
 esse painel adicional ainda não publica valor assistivo. A ação do botão e
 sua árvore Reader usam MSAA. Falha do worker mantém o documento legível.
 O exemplo conserva File legado e sua alocação fatal de caminho, limitada a
 4097 bytes; essa API não integra a quota recuperável da Session.
 
-Windows `restricted=true` continua recusado (-3): Job/limites de processo
-não isolam autoridade. Linux aplica o perfil seccomp existente; macOS/ARM
+Windows `restricted=true` exige [LPAC](ecossistema/PERFIL-WINDOWS-ISOLATION-V1.md),
+sem fallback, enquanto Linux aplica seccomp; macOS/ARM
 não foram executados. Preparação/parsing e teardown/kill/reap são síncronos;
 Windows pode aguardar até 5 s no encerramento. Não há garantia de latência
 de UI em tempo real. Copies/FIFOs/Reader têm memória adicional fora da quota
 do Store; amostragem de RSS não é quota integral ou serviço de compilação.
 
-FS/SSC/recursos, loader remoto, sandbox Windows/macOS, IME/shaping/bidi,
+FS/SSC/recursos, loader remoto, sandbox macOS e quotas agregadas, IME/shaping/bidi,
 desktop/leitor real/DPI/monitores, 24h e aceites de distribuição permanecem
 na fila integral. Nenhum gate é aprovado por esta biblioteca.

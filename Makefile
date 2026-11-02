@@ -239,3 +239,7 @@ test-wasm-candidate: bin/assis
 .PHONY: test-page-compiler
 test-page-compiler: bin/assis
 	python3 tests/test-page-compiler.py
+
+.PHONY: test-windows-isolation
+test-windows-isolation: bin/assis
+	python3 tests/test-windows-isolation.py

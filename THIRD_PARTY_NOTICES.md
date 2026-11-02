@@ -52,3 +52,9 @@ Unicode 17.0.0 UCD properties and GraphemeBreakTest, and derived property
 lookup code in stdlib/graphemes.assis, are distributed under Unicode License
 V3. Copyright and permission notice: [UNICODE-LICENSE.txt](docs/licenses/UNICODE-LICENSE.txt).
 Exact sources and SHA-256 are pinned in tests/fixtures/unicode-17.0.0/PROVENANCE.json.
+
+The optional Windows worker provider is original project code under LICENSE.
+Its AppContainer integration imports system Advapi32, Userenv and BCrypt in
+addition to Kernel32/UCRT. These Windows binaries are not redistributed.
+The independent test oracle additionally uses system Winsock/User32 and is
+not a product dependency. Build tool notices above continue to apply.

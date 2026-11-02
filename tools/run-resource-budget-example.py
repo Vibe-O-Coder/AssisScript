@@ -5,10 +5,15 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import argparse
 
 ROOT=Path(__file__).resolve().parent.parent
-OUT=ROOT/'docs/ecossistema/evidencias/m0-resource-budget-2026-11-02'
-STAGE=ROOT/'build/resource-budget-example';STAGE.mkdir(parents=True,exist_ok=True)
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--evidence-dir',type=Path,default=ROOT/'docs/ecossistema/evidencias/m0-resource-budget-2026-11-02')
+parser.add_argument('--stage-dir',type=Path,default=ROOT/'build/resource-budget-example')
+parser.add_argument('--require-isolation',action='store_true');args=parser.parse_args()
+OUT=args.evidence_dir.resolve();OUT.mkdir(parents=True,exist_ok=True)
+STAGE=args.stage_dir.resolve();STAGE.mkdir(parents=True,exist_ok=True)
 compiler=Path(os.environ['ASSIS_BIN']).resolve();host='windows' if os.name=='nt' else 'linux'
 def module(name,path):
     spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
@@ -18,7 +23,7 @@ binary=STAGE/('compile-page.exe' if os.name=='nt' else 'compile-page')
 command=[str(compiler),'build',str(ROOT/'exemplos/51_compile_page.assis'),'-o',str(binary)]
 subprocess.run(command,cwd=ROOT,check=True)
 env=dict(os.environ,PATH=str(STAGE)+os.pathsep+os.environ.get('PATH',''),LD_LIBRARY_PATH=str(STAGE))
-run=[str(binary),str(compiler),built['worker']]+(['--trusted-local'] if os.name=='nt' else [])
+run=[str(binary),str(compiler),built['worker']]+(['--trusted-local'] if os.name=='nt' and not args.require_isolation else [])
 r=subprocess.run(run,env=env,cwd=ROOT,capture_output=True,timeout=15)
 log=r.stdout+r.stderr;(OUT/f'{host}-example-51.log').write_bytes(log)
 report=dict(passed=(r.returncode,r.stdout,r.stderr)==(0,b'PAGE-STATE 42\n',b''),returncode=r.returncode,

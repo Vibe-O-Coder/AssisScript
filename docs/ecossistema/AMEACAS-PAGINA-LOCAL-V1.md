@@ -1,5 +1,17 @@
 # Autoridade e falhas do perfil local ASV2
 
+Continuação 02/11/2026: o perfil [windows-isolation-v1](PERFIL-WINDOWS-ISOLATION-V1.md)
+acrescenta LPAC com identidade/perfil por processo ao worker e compilador.
+Sentinelas privadas, registro, pai, runtime vizinho, clipboard, rede, código
+executável e processos filhos são tentados por C independente. O token do OS,
+SID/capabilities e recusas AccessCheck são distintos do HELLO não autenticador.
+São preservadas VM/concessões/origem/IPC existentes e seus testes. Riscos
+abertos incluem recursos de sistema/armazenamento próprio permitidos ao LPAC,
+quota de disco, perfis órfãos após crash, kernel/canais laterais, quota agregada
+de shell/Reader e preparação síncrona. A seção inicial e matriz abaixo são
+históricas da entrega ASV2; não descrevem ausência atual de proteção Windows/Linux.
+
+
 Data: 02/11/2026. Escopo delimitado da avaliação E00-02; não é modelo completo
 de Browser/rede/busca nem aprovação de sandbox. Implementação: pagevm/pagehost,
 backend escalar e SDK read-only-1. Tests/test-page-backend.py e test-page-host.py

@@ -1,0 +1,22 @@
+ASSIS: executável nativo gerado em C:\Users\babus\AppData\Local\Temp\assis-page-compiler-ecccwzps\page-worker.exe
+COMPILER_CANDIDATE {"compiler_sha256": "4c0118bf65c6327fd6b013f99ce0d7d023e192b3024768781fcf4fca2bb9ed4c", "provider_sha256": "a5fc451cc8e3e943704b4245e739af998fe4fd32f73d973c31a8fbdd232f036a", "worker_sha256": "8d0736645f6a5fd2976a8f55227a044443b99fd1a47eebd081d154759488d8cb"}
+RESOURCE_CPU {"cpu_seconds": 1, "wall_seconds": 1.016}
+RESOURCE_MEMORY {"allocations_mib": 15, "usage": [1, 16777216, 18755584, 18759680, 16306176, 1]}
+test_backend_profile_still_denies_native_authority_in_dead_code (__main__.PageCompiler.test_backend_profile_still_denies_native_authority_in_dead_code) ... ok
+test_cpu_budget_terminates_busy_child_during_provider_polling (__main__.PageCompiler.test_cpu_budget_terminates_busy_child_during_provider_polling) ... ok
+test_deadline_cancel_drop_and_failed_source_keep_neighbor_live (__main__.PageCompiler.test_deadline_cancel_drop_and_failed_source_keep_neighbor_live) ... ok
+test_import_paths_never_resolve_project_config_environment_or_aliases (__main__.PageCompiler.test_import_paths_never_resolve_project_config_environment_or_aliases) ... ok
+test_invalid_quota_stale_and_wrong_thread (__main__.PageCompiler.test_invalid_quota_stale_and_wrong_thread) ... ok
+test_provider_fragmented_stream_and_peak_memory (__main__.PageCompiler.test_provider_fragmented_stream_and_peak_memory) ... ok
+test_real_memory_refusal_preserves_neighbor_and_reports_usage (__main__.PageCompiler.test_real_memory_refusal_preserves_neighbor_and_reports_usage) ... ok
+test_repeated_compiler_cancel_reclaims_slots_and_os_handles (__main__.PageCompiler.test_repeated_compiler_cancel_reclaims_slots_and_os_handles) ... ok
+test_source_and_protocol_hostile_bounds (__main__.PageCompiler.test_source_and_protocol_hostile_bounds) ... ok
+test_source_navigation_compiles_before_activation_and_rolls_back_all_failures (__main__.PageCompiler.test_source_navigation_compiles_before_activation_and_rolls_back_all_failures) ... ok
+test_stream_matches_file_backend_in_both_modes_and_sdk_is_embedded (__main__.PageCompiler.test_stream_matches_file_backend_in_both_modes_and_sdk_is_embedded) ... ok
+test_task_rejects_forged_response_and_preserves_clock_contract (__main__.PageCompiler.test_task_rejects_forged_response_and_preserves_clock_contract) ... ok
+test_task_validates_bytes_then_reader_worker_activates_same_result (__main__.PageCompiler.test_task_validates_bytes_then_reader_worker_activates_same_result) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 19.572s
+
+OK

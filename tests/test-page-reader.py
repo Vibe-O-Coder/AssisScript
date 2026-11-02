@@ -62,10 +62,10 @@ class PageReader(unittest.TestCase):
         return ('own s:pagereader::Session=try_new pagereader::Session(32000000,250000,7,19,23);assert(s!=null && s.is_open());'
             'val limits:pagereader::Limits=new pagereader::Limits(0,16,100000,1000,3000);'
             'assert(s.prepare('+literal(str(self.worker))+','+literal(document(content))+','+self.binary(self.code if code is None else code)+','+
-            ('false' if os.name=='nt' else 'true')+',300,220,16,cells,limits,'+grants+',monotonic_ms())==0);ready(s);'+('assert(s.commit());' if commit else ''))
+            ('true')+',300,220,16,cells,limits,'+grants+',monotonic_ms())==0);ready(s);'+('assert(s.commit());' if commit else ''))
     def prepare(self,content,code=None,metric='cells',path=None):
         return ('s.prepare('+literal(str(self.worker) if path is None else path)+','+literal(document(content))+','+self.binary(self.code if code is None else code)+','+
-            ('false' if os.name=='nt' else 'true')+',300,220,16,'+metric+',limits,new pagereader::Grants(true,false),monotonic_ms())')
+            ('true')+',300,220,16,'+metric+',limits,new pagereader::Grants(true,false),monotonic_ms())')
     def test_keyboard_accessible_and_pointer_actions_use_same_sdk_projection(self):
         self.execute(self.setup()+
             'drain(s,0);assert(s.dispatch(1,event(3,9,1,1)).status==0);'
@@ -112,7 +112,7 @@ class PageReader(unittest.TestCase):
         self.execute(self.setup(code=hostile)+
             'own n:pagereader::Session=try_new pagereader::Session(32000000,250000,8,20,24);assert(n!=null);'
             'assert(n.prepare('+literal(str(self.worker))+','+literal(document('<div type=paragraph>Neighbor</div>'))+','+self.binary(neighbor)+','+
-            ('false' if os.name=='nt' else 'true')+',300,220,16,cells,limits,new pagereader::Grants(false,false),monotonic_ms())==0);ready(n);assert(n.commit());'
+            ('true')+',300,220,16,cells,limits,new pagereader::Grants(false,false),monotonic_ms())==0);ready(n);assert(n.commit());'
             'let stopped:bool=false;for(let i:int=0;i<5000;i++){assert(n.advance(monotonic_ms())>=0);if(s.advance(monotonic_ms())<0){stopped=true;break;}sleep_ms(1);}'
             'assert(stopped && s.has_active() && !s.worker_alive() && s.active_reader().item_count()==1);'
             'drain(n,42);assert(n.worker_alive());'
@@ -126,7 +126,7 @@ class PageReader(unittest.TestCase):
         src=self.binary(source);code=self.binary(self.code)
         source_name=src.split('(')[1].split(',')[0];code_name=code.split('(')[1].split(',')[0]
         self.execute('own s:pagereader::Session=try_new pagereader::Session(32000000,250000,7,19,23);assert(s!=null);'
-            'assert(s.prepare('+literal(str(self.worker))+','+src+','+code+','+('false' if os.name=='nt' else 'true')+
+            'assert(s.prepare('+literal(str(self.worker))+','+src+','+code+','+('true')+
             ',300,220,16,cells,new pagereader::Limits(0,16,100000,1000,3000),new pagereader::Grants(true,false),monotonic_ms())==0);'
             +source_name+'[0]=byte(0);'+code_name+'[0]=byte(0);ready(s);assert(s.commit());drain(s,0);'
             's.dispatch(1,event(3,9,1,1));s.dispatch(1,event(3,13,1,2));drain(s,1);')

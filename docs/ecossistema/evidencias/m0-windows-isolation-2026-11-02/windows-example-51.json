@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "returncode": 0,
+  "stdout": "PAGE-STATE 42\n",
+  "stderr": "",
+  "compiler_sha256": "4c0118bf65c6327fd6b013f99ce0d7d023e192b3024768781fcf4fca2bb9ed4c",
+  "artifacts": {
+    "assis_worker_v1.dll": "61d9d547828fcc625d4f701ce708072fdfe41ce58933d15a35b047ed2b544890",
+    "page-worker.exe": "f9927c42c26e885055ce2378d2c3d988395a21b07bc912f2bb55a5d9ffb80718"
+  },
+  "example_sha256": "db548730a66001752fe58b38a6fa4f4b501b39f11e57229c78b76f4482671f8e",
+  "commands": [
+    [
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\windows-isolation-20261102\\build\\assis.exe",
+      "build",
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\windows-isolation-20261102\\exemplos\\51_compile_page.assis",
+      "-o",
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\windows-isolation-20261102\\build\\isolation-example\\compile-page.exe"
+    ],
+    [
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\windows-isolation-20261102\\build\\isolation-example\\compile-page.exe",
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\windows-isolation-20261102\\build\\assis.exe",
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\windows-isolation-20261102\\build\\isolation-example\\page-worker.exe"
+    ]
+  ]
+}

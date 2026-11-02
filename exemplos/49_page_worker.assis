@@ -1,6 +1,6 @@
 // Build tools/page-worker.assis and its provider with tools/build-page-worker.py.
 // Arguments: absolute trusted worker path, local counter.asv2, optional
-// --trusted-local (required on Windows until native authority isolation exists).
+// --trusted-local (explicit opt-out for trusted local diagnostics only).
 import "std/pageworker.assis";
 safe fn wait_reply(borrow mut worker:pageworker::Worker):bool{
     while(true){val result:int=worker.poll(monotonic_ms());if(result<0){return false;}if(result==1){return true;}sleep_ms(1);}

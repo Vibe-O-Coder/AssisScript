@@ -1,0 +1,24 @@
+{
+  "base": "f12a1f2a9a7edf97e829d5f7c6e2f29980961414",
+  "returncode": -3,
+  "token": 0,
+  "provider_sha256": "2c4eb7adf125ecf5722068a7b0af893bab027533b156e028b973448a6a0da0db",
+  "commands": [
+    [
+      "C:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-O2",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-misleading-indentation",
+      "-shared",
+      "-static-libgcc",
+      "-Wl,--no-insert-timestamp",
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\windows-isolation-20261102\\build\\isolation-before\\providers\\worker\\worker.c",
+      "-o",
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\windows-isolation-20261102\\build\\isolation-before\\before.dll"
+    ]
+  ],
+  "reproduction": "Published Windows provider rejects restricted=1 before spawning, even with a valid trusted executable"
+}

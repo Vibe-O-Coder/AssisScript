@@ -1,3 +1,13 @@
+> **Continuação local validada — 42,70%, 02/11/2026, 0/5 gates; publicação no adendo.**
+> Cópia `C:/Users/babus/Desktop/AssisScript/work/windows-isolation-20261102`,
+> branch `work/m0-windows-isolation-2026-11-02`, base publicada f12a1f2 conferida.
+> Worker e compilador Windows exigem LPAC sem capabilities, com perfil/SID
+> por processo, runtime read-only e teste nativo de recusas; Linux reexecutado.
+> [Relatório e evidências](docs/relatorios/2026-11-02-m0-windows-isolation.md). Meta 50% pendente; fila integral preservada.
+> Sandbox macOS/ARM, disco/perfis órfãos, quota agregada shell/Reader/RSS,
+> SDK/HTDL/editor/FS/SSC/recursos, desktop/leitor/DPI/IME, rede/persistência/busca,
+> M4–M9, 24h e aceites seguem abertos. Easy por último. Entradas abaixo históricas.
+
 > **Publicação confirmada — 42,20%, 02/11/2026, 0/5 gates.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/resource-budget-20261102`,
 > branch `work/m0-resource-budget-2026-11-02`, implementação 3fb9810 publicada.

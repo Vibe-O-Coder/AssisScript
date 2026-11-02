@@ -1,4 +1,4 @@
-// Trusted CLI: absolute compiler, absolute page-worker, --trusted-local on Windows.
+// Trusted CLI: absolute compiler, absolute page-worker, optional --trusted-local to disable worker isolation.
 // Compiles source in a disposable process, then commits Reader and SDK together.
 import "std/pagereader.assis";
 safe fn argument(index:int):own *byte{unsafe{

@@ -1,6 +1,6 @@
 # worker-local-v1 — contrato e limites
 
-Continuação de 02/11/2026: [compilador de página supervisionado](../BIBLIOTECA-pagecompiler.md) usa ASC1/1, processo por fonte e o mesmo provider, sem multiplexar ASIP/1. O worker recebe somente ASV2 validado. Herança mínima, deadlines e Linux default deny conservados; Windows continua sem sandbox de autoridade. Memória privada comprometida Windows/espaço virtual Linux são distintos de RSS observado.
+Continuação de 02/11/2026: [compilador de página supervisionado](../BIBLIOTECA-pagecompiler.md) usa ASC1/1, processo por fonte e o mesmo provider, sem multiplexar ASIP/1. O worker recebe somente ASV2 validado. Herança mínima, deadlines e Linux default deny conservados; Windows passa a exigir LPAC no modo restrito e na compilação; veja o perfil Windows atual. Memória privada comprometida Windows/espaço virtual Linux são distintos de RSS observado.
 
 Data 02/11/2026. Perfil experimental de processo para ASV1/ASV2 e
 `htdl_v1/read-only-1`, sem alterar gramática, nomes canônicos ou ownership.
@@ -18,8 +18,9 @@ bytes HTDL/VM, tamanhos/framing, pedidos e respostas antigas/forjadas,
 worker travado, EOF parcial ou abrupto e esgotamento de quota.
 Shell/provider/worker inicial são confiáveis; página não escolhe programa
 nativo. Escape da VM é contido parcialmente pelo perfil Linux de syscalls,
-sem proteção contra bugs do kernel. Windows ainda exige conteúdo local
-confiável e recusa isolamento obrigatório. Não há rede/broker remoto.
+sem proteção contra bugs do kernel. Windows usa [LPAC](PERFIL-WINDOWS-ISOLATION-V1.md) sem capability SID, perfil/identidade
+por processo e duas cópias de runtime somente leitura; modo irrestrito exige
+opt-out explícito de conteúdo local confiável. Não há rede/broker remoto.
 
 | Invariante | Evidência independente |
 | --- | --- |
@@ -31,14 +32,14 @@ confiável e recusa isolamento obrigatório. Não há rede/broker remoto.
 | Herança e ambiente mínimos | oráculo C enumera FDs/variável sentinela antes da restrição |
 | Linux sem arquivos/rede/processos | open/socket/fork/exec/ptrace/kill negados por EPERM em oráculo C |
 | Memória/execução | mmap 256 MiB recusado, PROT_EXEC negado; fuel e frames mantidos pela VM |
-| Windows não anuncia sandbox | restricted=true retorna -3; exemplo exige opt-in local |
+| Windows LPAC sem fallback | token/SID/capabilities verificados, AccessCheck independente e recusas de acesso; criação falha com -4/token zero |
 
 Testes em `tests/test-page-worker.py` usam cliente binário Python/struct,
 modelo inteiro de eventos e oráculo C de syscalls. Otimizado/referência e
 Windows/Linux são registrados separadamente. O relatório corrente identifica
 o candidato e os resultados; esta especificação não certifica outros hosts.
 
-Limites pendentes: compilação externa/RSS, sandbox Windows/macOS, watcher de
+Limites pendentes: RSS agregado e disco do perfil/órfãos após crash, sandbox macOS, watcher de
 CPU no shell, broker/origens/perfis completos, reentrada/subscriptions gerais,
 Reader/loader visual conjunto, decisão Wasm/VM, catálogo HTDL e FS/SSC.
 Uma sessão mantém no máximo ativo+candidato; o chamador define quantas sessões
@@ -49,6 +50,6 @@ Referências primárias consultadas: [seccomp](https://man7.org/linux/man-pages/
 [no_new_privs](https://docs.kernel.org/userspace-api/no_new_privs.html),
 [CreateProcessW/herança de handles](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw).
 Shim próprio sob LICENSE do repositório; sem dependência redistribuída nova.
-Windows usa Kernel32/UCRT do sistema; Linux usa glibc e APIs do kernel x64.
+Windows usa Kernel32/UCRT/Advapi32/Userenv/BCrypt do sistema; Linux usa glibc e APIs do kernel x64.
 Toolchains/versões e hashes são registrados com a evidência, sem promessa
 de suporte universal de kernels/Windows diferentes dos executados.

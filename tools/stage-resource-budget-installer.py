@@ -7,9 +7,13 @@ import re
 import shutil
 import subprocess
 import sys
+import argparse
 ROOT=Path(__file__).resolve().parent.parent
-OUT=ROOT/'docs/ecossistema/evidencias/m0-resource-budget-2026-11-02'
-STAGE=ROOT/'build/resource-budget-distribution'
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--evidence-dir',type=Path,default=ROOT/'docs/ecossistema/evidencias/m0-resource-budget-2026-11-02')
+parser.add_argument('--stage-dir',type=Path,default=ROOT/'build/resource-budget-distribution');args=parser.parse_args()
+OUT=args.evidence_dir.resolve();OUT.mkdir(parents=True,exist_ok=True)
+STAGE=args.stage_dir.resolve()
 names=[json.loads(line[1:-1]) for line in (ROOT/'src/install_files.inc').read_text().splitlines() if line.startswith('L')]
 catalog=json.loads((ROOT/'stdlib/catalogo.json').read_text(encoding='utf-8'))
 names += ['stdlib\\'+x['name']+'.assis' for x in catalog['libraries'] if not x['required']]

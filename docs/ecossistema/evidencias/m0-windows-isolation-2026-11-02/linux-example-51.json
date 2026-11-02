@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "returncode": 0,
+  "stdout": "PAGE-STATE 42\n",
+  "stderr": "",
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "artifacts": {
+    "libassis_worker_v1.so": "61da1a0745b1d8b67e72c9c2489cffe8db9687241598b801d9671027c69342eb",
+    "page-worker": "b72e7c11bf6bc46af4693ff3ae528117de6eeb2c5d7d696dd1eb18c51bbf47bc"
+  },
+  "example_sha256": "370f95606dd60bfa82a65b8e8246a1544da3f57891f77ae2ff26e6dd18c21dbd",
+  "commands": [
+    [
+      "/mnt/c/Users/babus/Desktop/AssisScript/work/windows-isolation-20261102/build/assis-linux",
+      "build",
+      "/mnt/c/Users/babus/Desktop/AssisScript/work/windows-isolation-20261102/exemplos/51_compile_page.assis",
+      "-o",
+      "/mnt/c/Users/babus/Desktop/AssisScript/work/windows-isolation-20261102/build/isolation-example-linux/compile-page"
+    ],
+    [
+      "/mnt/c/Users/babus/Desktop/AssisScript/work/windows-isolation-20261102/build/isolation-example-linux/compile-page",
+      "/mnt/c/Users/babus/Desktop/AssisScript/work/windows-isolation-20261102/build/assis-linux",
+      "/mnt/c/Users/babus/Desktop/AssisScript/work/windows-isolation-20261102/build/isolation-example-linux/page-worker"
+    ]
+  ]
+}

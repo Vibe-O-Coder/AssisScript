@@ -57,7 +57,7 @@ class PageWorker(unittest.TestCase):
 
     def start(self,path=None,restricted=None):
         path=str(path or self.worker).encode();token=ctypes.c_int64()
-        mode=int(os.name!='nt') if restricted is None else restricted
+        mode=1 if restricted is None else restricted
         result=self.lib.assw_open(path,len(path),mode,ctypes.byref(token));self.assertEqual(result,0)
         self.addCleanup(lambda:self.lib.assw_close(token.value));return token.value
 
@@ -78,7 +78,7 @@ class PageWorker(unittest.TestCase):
         self.assertEqual(len(data),144);return HEADER.unpack_from(data),struct.unpack_from('<8q',data,80)
 
     def hello(self,token):
-        header,body=self.receive(token);self.assertEqual(header[:4],(b'ASIP',1,128,64));self.assertEqual(header[4:8],(0,0,0,0));self.assertEqual(body[6],int(os.name!='nt'))
+        header,body=self.receive(token);self.assertEqual(header[:4],(b'ASIP',1,128,64));self.assertEqual(header[4:8],(0,0,0,0));self.assertEqual(body[6],1)
 
     def request(self,token,data):self.send(token,data);return self.receive(token)
 
@@ -144,10 +144,9 @@ class PageWorker(unittest.TestCase):
         for t in tokens:self.lib.assw_close(t)
         errors=[];thread=threading.Thread(target=lambda:errors.append(self.lib.assw_close(1)));thread.start();thread.join();self.assertEqual(errors,[-6])
 
-    @unittest.skipUnless(os.name=='nt','Windows-specific fail-closed restriction negotiation')
-    def test_windows_restricted_mode_is_explicitly_unavailable(self):
-        path=str(self.worker).encode();token=ctypes.c_int64(99)
-        self.assertEqual(self.lib.assw_open(path,len(path),1,ctypes.byref(token)),-3);self.assertEqual(token.value,0)
+    @unittest.skipUnless(os.name=='nt','Windows native AppContainer negotiation')
+    def test_windows_restricted_worker_enters_before_reading_input(self):
+        token=self.start(restricted=1);self.hello(token)
 
     @unittest.skipUnless(os.name=='nt','Windows Job memory and explicit handle/environment inheritance')
     def test_windows_job_memory_and_minimum_inheritance(self):
@@ -225,7 +224,7 @@ class PageWorker(unittest.TestCase):
             host=self.compile_host(body);r=subprocess.run([str(host)],env=self.env,capture_output=True,timeout=10);self.assertEqual((r.returncode,r.stderr),(0,b''))
 
     def test_transactional_navigation_failure_abort_reload_and_close(self):
-        path=json.dumps(str(self.worker).replace('\\','/'));restricted='false' if os.name=='nt' else 'true'
+        path=json.dumps(str(self.worker).replace('\\','/'));restricted='true'
         code84=self.compile_page('safe fn main():int{return 84;}')
         source=HOST.data_buffer(self.code)+HOST.data_buffer(code84,'next')
         source+='own s:pageworker::Session=try_new pageworker::Session();assert(s!=null);'
@@ -270,17 +269,18 @@ class PageWorker(unittest.TestCase):
             h,body=self.request(t,frame(2,req,args=(10000,0,0,0)));self.assertEqual(h[8],2 if grant else expected)
             if grant:self.assertEqual((body[1],body[3]),(1,1))
 
-    def test_shipped_worker_example_and_opt_in_on_windows(self):
+    def test_shipped_worker_example_requires_isolation_by_default(self):
         code=self.compile_page((ROOT/'exemplos/pages/counter.assis').read_text(encoding='utf-8'));artifact=self.out/'counter.asv2';artifact.write_bytes(code)
         example=self.out/('example.exe' if os.name=='nt' else 'example')
         flags=['--no-opt'] if os.environ.get('ASSIS_WORKER_NO_OPT')=='1' else []
         built=subprocess.run([str(base.COMPILER),'build',str(ROOT/'exemplos/49_page_worker.assis'),'-o',str(example),*flags],capture_output=True)
         self.assertEqual(built.returncode,0,built.stderr)
-        args=[str(example),str(self.worker),str(artifact)]+(['--trusted-local'] if os.name=='nt' else [])
+        args=[str(example),str(self.worker),str(artifact)]
         r=subprocess.run(args,env=self.env,capture_output=True,timeout=10)
-        self.assertEqual((r.returncode,r.stdout,r.stderr),(0,f'WORKER 2 STATE 2 ISOLATION {int(os.name!="nt")}\n'.encode(),b''))
+        self.assertEqual((r.returncode,r.stdout,r.stderr),(0,b'WORKER 2 STATE 2 ISOLATION 1\n',b''))
         if os.name=='nt':
-            r=subprocess.run(args[:3],env=self.env,capture_output=True,timeout=10);self.assertEqual(r.returncode,5);self.assertIn(b'-3',r.stdout)
+            r=subprocess.run(args+['--trusted-local'],env=self.env,capture_output=True,timeout=10)
+            self.assertEqual((r.returncode,r.stdout,r.stderr),(0,b'WORKER 2 STATE 2 ISOLATION 0\n',b''))
 
     def test_large_frames_backpressure_coalescing_and_fuel_quota(self):
         t=self.start();self.hello(t)
@@ -330,7 +330,7 @@ class PageWorker(unittest.TestCase):
         _,body=self.request(neighbor,frame(8,3));self.assertEqual(body[1],42)
 
     def test_assisscript_supervisor_nonblocking_deadline_drop_and_neighbor(self):
-        path=json.dumps(str(self.worker).replace('\\','/'));restricted='false' if os.name=='nt' else 'true'
+        path=json.dumps(str(self.worker).replace('\\','/'));restricted='true'
         buffer=HOST.data_buffer(self.code)
         source='''own w:pageworker::Worker=try_new pageworker::Worker(utf8(PATH),7,11,1,RESTRICTED,0,1000);
           assert(w!=null && w.is_open());let done:bool=false;

@@ -143,7 +143,7 @@ class PageCompiler(unittest.TestCase):
         self.execute(self.task('import "std/page.assis";safe fn main():int{return htdl_v1::state_set(0,42);}')+
             'for(let i:int=0;i<5000 && !t.ready();i++){assert(t.poll(monotonic_ms())>=0);sleep_ms(1);}assert(t.ready() && !t.is_open());'
             'own s:pagereader::Session=try_new pagereader::Session(32000000,250000,7,11,19);assert(s!=null && s.is_open());'
-            'assert(s.prepare('+literal(str(self.worker))+','+literal(doc)+',t.code(),'+('false' if os.name=='nt' else 'true')+',300,200,16,cells,new pagereader::Limits(0,16,100000,1000,3000),new pagereader::Grants(true,false),monotonic_ms())==0);'
+            'assert(s.prepare('+literal(str(self.worker))+','+literal(doc)+',t.code(),'+('true')+',300,200,16,cells,new pagereader::Limits(0,16,100000,1000,3000),new pagereader::Grants(true,false),monotonic_ms())==0);'
             'for(let i:int=0;i<5000 && !s.ready();i++){assert(s.advance(monotonic_ms())>=0);sleep_ms(1);}assert(s.ready() && s.commit());'
             'for(let i:int=0;i<5000 && s.result().state!=42;i++){assert(s.advance(monotonic_ms())>=0);sleep_ms(1);}assert(s.result().state==42);s.close();t.close();assert(!t.ready());')
     def test_deadline_cancel_drop_and_failed_source_keep_neighbor_live(self):
@@ -158,7 +158,7 @@ class PageCompiler(unittest.TestCase):
     def pipeline(self,program,doc=None):
         literal=worker.HOST.parser.literal
         return ('s.prepare_source('+literal(str(base.COMPILER))+','+literal(str(self.worker))+','+literal(doc or worker.DOC.decode())+','+literal(program)+
-            ',false,128,3,'+('false' if os.name=='nt' else 'true')+',300,200,16,cells,new pagereader::Limits(0,16,100000,1000,3000),new pagereader::Grants(true,false),monotonic_ms())')
+            ',false,128,3,'+('true')+',300,200,16,cells,new pagereader::Limits(0,16,100000,1000,3000),new pagereader::Grants(true,false),monotonic_ms())')
     def test_source_navigation_compiles_before_activation_and_rolls_back_all_failures(self):
         self.execute('own s:pagereader::Session=try_new pagereader::Session(32000000,250000,7,11,19);assert(s!=null && s.is_open());'
             'assert('+self.pipeline('import "std/page.assis";safe fn main():int{return htdl_v1::state_set(0,42);}')+'==0);'

@@ -1,5 +1,10 @@
 # ADR-0001 — estratégia de escolha do executor de página
 
+Continuação de isolamento Windows, 02/11/2026: worker e compilador recebem
+[LPAC sem capabilities](PERFIL-WINDOWS-ISOLATION-V1.md), identidade e perfil
+por processo e teste nativo de recusas. A decisão ASV2 não muda; sandbox macOS,
+quota agregada de shell/Reader, armazenamento do perfil e G2 continuam abertos.
+
 Continuação de 02/11/2026: compilação escalar via ASC1/1 é serviço descartável com SDK embutido, orçamento de processo e supervisão em AssisScript; [contrato](../BIBLIOTECA-pagecompiler.md). A decisão ASV2 não muda. Isso remove a compilação sem orçamento desse fluxo, mas não encerra quota agregada de shell/Reader/RSS, valores gerais, sandbox Windows/macOS ou G2.
 
 Data inicial: 29/10/2026. Decisão de 02/11/2026: **ASV2 escolhido para o perfil

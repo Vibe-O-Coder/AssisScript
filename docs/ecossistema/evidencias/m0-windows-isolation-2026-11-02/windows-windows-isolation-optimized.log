@@ -1,0 +1,14 @@
+ASSIS: executável nativo gerado em C:\Users\babus\AppData\Local\Temp\assis-isolation-jzycl78w\page-worker.exe
+ISOLATION_CANDIDATE {"mode": "optimized", "compiler_sha256": "4c0118bf65c6327fd6b013f99ce0d7d023e192b3024768781fcf4fca2bb9ed4c", "worker_sha256": "f9927c42c26e885055ce2378d2c3d988395a21b07bc912f2bb55a5d9ffb80718", "provider_sha256": "f102953ace7826828c8d5261419c8e3d860c5da5091d1833978f42fdc816bfa2", "oracle_sha256": "a075e797da32952397773a040bdf0117acb17b30df862fa9833b58e2ffb0d83d"}
+NATIVE_DENIALS {"own_read": 0, "own_write": 5, "private_read": 5, "private_write": 5, "neighbor_read": 5, "stage_create": 5, "registry": 5, "inherited": 0, "environment": 0, "parent": 5, "child": 367, "network": 10107, "dynamic_code": 1655, "clipboard": 5}
+NATIVE_DENIALS {"own_read": 0, "own_write": 5, "private_read": 5, "private_write": 5, "neighbor_read": 5, "stage_create": 5, "registry": 5, "inherited": 0, "environment": 0, "parent": 5, "child": 367, "network": 10107, "dynamic_code": 1655, "clipboard": 5}
+ISOLATION_CYCLES 64; unchanged profiles/stage directories/handles
+test_compiler_launch_is_also_isolated_before_source_input (__main__.WindowsIsolation.test_compiler_launch_is_also_isolated_before_source_input) ... ok
+test_every_creation_fault_rolls_back_without_unrestricted_fallback (__main__.WindowsIsolation.test_every_creation_fault_rolls_back_without_unrestricted_fallback) ... ok
+test_native_authority_denials_unique_identities_and_readonly_runtime (__main__.WindowsIsolation.test_native_authority_denials_unique_identities_and_readonly_runtime) ... ok
+test_repeated_isolated_close_reclaims_profile_files_handles_and_tokens (__main__.WindowsIsolation.test_repeated_isolated_close_reclaims_profile_files_handles_and_tokens) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 16.773s
+
+OK

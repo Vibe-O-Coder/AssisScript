@@ -1,0 +1,13 @@
+{
+  "host": "windows",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "machine": "AMD64",
+  "processor": "Intel64 Family 6 Model 94 Stepping 3, GenuineIntel",
+  "python": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "base": "f12a1f2a9a7edf97e829d5f7c6e2f29980961414",
+  "compiler_sha256": "4c0118bf65c6327fd6b013f99ce0d7d023e192b3024768781fcf4fca2bb9ed4c",
+  "cc": "C:\\msys64\\ucrt64\\bin\\gcc.EXE",
+  "cc_version": "gcc.EXE (Rev13, Built by MSYS2 project) 15.2.0",
+  "node_version": "v24.17.0",
+  "node_status": "available"
+}

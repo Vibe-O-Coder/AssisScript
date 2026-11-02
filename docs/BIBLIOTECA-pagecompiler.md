@@ -30,8 +30,11 @@ Windows aplica Job antes de retomar o processo, com um processo ativo, teto
 de memória privada comprometida e tempo de CPU em modo usuário. Cada consulta
 de I/O também confere GetProcessTimes e encerra o Job ao ultrapassar o teto,
 pois a checagem do OS é periódica, conforme o [contrato Microsoft](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_limit_information).
-Isso não é sandbox de autoridade Windows. Arquivos/rede continuam sem
-isolamento nativo nesse OS; o serviço não os oferece à fonte pelo frontend.
+O launcher agora exige também [LPAC Windows](ecossistema/PERFIL-WINDOWS-ISOLATION-V1.md)
+antes de ler fonte: zero capabilities, identidade/perfil novos, runtime
+somente leitura e recusas nativas de arquivos privados/rede/processos.
+Não há fallback de compilação para processo irrestrito. Invocar diretamente
+o comando interno fora desse launcher não cria esse isolamento.
 
 O comando interno `assis page-compile-worker` também instala tetos próprios
 de 512 MiB/10 s e, no Linux, 8 MiB de pilha; limites mais restritos do pai

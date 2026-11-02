@@ -1,5 +1,5 @@
 // Trusted local shell. Build page/worker/provider as described in the API.
-// Args: absolute trusted worker, reader-counter.asv2, --trusted-local on Windows.
+// Args: absolute trusted worker, reader-counter.asv2, optional --trusted-local to disable worker isolation.
 import "std/pagereader.assis";
 import "std/convert.assis";
 safe fn code_file():own File{unsafe{

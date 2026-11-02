@@ -1,11 +1,11 @@
 # std/pageworker — execução local supervisionada
 
-Continuação de 02/11/2026: o provider compartilha os 16 slots com o serviço [pagecompiler](BIBLIOTECA-pagecompiler.md), oferece leitura de uso de memória e aplica limites de processo antes de exec/resume. Windows acrescenta limite de CPU em modo usuário e conferência por consulta de I/O; Linux conserva o filtro compartilhado e tetos anteriores. ABI v1/imports antigos preservados; não amplia sandbox Windows/macOS.
+Continuação de 02/11/2026: o provider compartilha os 16 slots com o serviço [pagecompiler](BIBLIOTECA-pagecompiler.md). Windows agora oferece LPAC sem capabilities, com perfil/identidade por processo e limites antes de resume; Linux conserva seccomp e tetos anteriores. ABI v1/imports antigos preservados. [Perfil Windows e limites](ecossistema/PERFIL-WINDOWS-ISOLATION-V1.md).
 
 Biblioteca opcional dependente de `pagewire`, para o host nativo confiável.
 Lógica de protocolo, deadlines, navegação e execução da página em AssisScript.
 Provider escalar próprio `assis_worker_v1` adapta somente processos, streams,
-encerramento e restrições Linux. Não aceita executável nativo de página.
+encerramento e restrições do OS. Não aceita executável nativo de página.
 
 Construa o worker confiável e seu provider com:
 
@@ -73,11 +73,21 @@ o filho quando o pai morre. Não é isolamento de kernel, canais laterais ou
 proteção contra kernel comprometido. Limites fixos contam o processo todo,
 incluindo runtime/parser; não medem RSS e não limitam a compilação externa.
 
-Windows x64: pipes nomeados privados, lista explícita de handles herdados,
-ambiente reduzido, processo suspenso até entrar em Job; Job limita um processo,
-128 MiB de memória comprometida e mata no fechamento. Isso é supervisão e
-limites, **sem sandbox de autoridade Windows**. `restricted=true` falha -3
-antes de iniciar. O exemplo exige `--trusted-local` para essa prova local.
+Windows x64: `restricted=true` exige LPAC, zero capabilities e SID nova por
+processo. Perfil temporário, duas cópias de runtime com leitura/execução e
+DACL própria, lista de três handles herdados e ambiente mínimo. Antes de
+resume, token/SID/capabilities e Job são validados. Job limita um processo,
+128 MiB de commit privado e CPU de usuário a 3 s; política recusa filhos,
+código dinâmico, extension points e interação de UI com outros Jobs.
+Falha de criação/restrição retorna -4 com token zero, sem fallback.
+Close encerra processo e remove cópias/perfil; falha nativa de remoção retorna
+-4. O wrapper close já existente não expõe esse retorno de limpeza.
+O exemplo agora usa isolamento por padrão também no Windows. A opção
+`--trusted-local` permanece um opt-out explícito de diagnóstico local.
+Perfil do OS tem armazenamento próprio gravável; não há quota de disco nem
+coletor após crash do shell. Win32k lockdown não está anunciado. Consulte os
+demais limites e evidências no contrato específico antes de integrar.
 macOS/ARM64/provider ausente não recebem fallback com isolamento anunciado.
 G2 e a escolha geral VM/Wasm continuam abertos. Linux é prova delimitada,
-sem páginas remotas, broker, perfil, FS/SSC ou integração visual Reader.
+sem páginas remotas, broker, partição de produto ou FS/SSC. Reader usa a mesma
+transação nos testes; aceites reais de desktop e leitor continuam pendentes.
