@@ -1,6 +1,7 @@
-> **Continuação local validada — 42,20%, 02/11/2026, 0/5 gates; publicação no adendo.**
+> **Publicação confirmada — 42,20%, 02/11/2026, 0/5 gates.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/resource-budget-20261102`,
-> branch `work/m0-resource-budget-2026-11-02`, base publicada fffd1b8 conferida.
+> branch `work/m0-resource-budget-2026-11-02`, implementação 3fb9810 publicada.
+> SHA remoto e 83 paths/blobs/modos conferidos no GitHub; PR não criada (conector 403).
 > Compilação ASV2 em processo descartável com SDK embutido, limites de memória/CPU
 > do OS e deadline; navegação Reader/worker de fonte com rollback e cancelamento.
 > [Relatório e evidências](../relatorios/2026-11-02-m0-resource-budget.md). Meta 50% pendente; fila integral preservada.

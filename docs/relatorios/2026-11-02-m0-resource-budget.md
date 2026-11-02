@@ -177,3 +177,23 @@ Branch **work/m0-resource-budget-2026-11-02**, remoto autorizado
 **Vibe-O-Coder/AssisScript**. SHA publicado, paths/blobs e resultado de PR
 ficam no adendo após commit/push/verificação; não são inferidos de commit local.
 Hash do relatório obtido pelo histórico, sem referência autorreferente.
+
+
+## Adendo — publicação confirmada
+
+Implementação **3fb9810d6690b164e899825d62440904fb59373d** publicada em
+[work/m0-resource-budget-2026-11-02](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m0-resource-budget-2026-11-02).
+Git ls-remote devolveu o mesmo SHA. A árvore Git no conector GitHub não foi
+truncada; os **83 paths, blobs, modos e tipos** foram comparados um a um com
+git ls-tree local. [Inventário verificável](../ecossistema/evidencias/m0-resource-budget-2026-11-02/published-implementation.json).
+
+**PR não criada:** o conector retornou HTTP 403 Resource not accessible by
+integration. Não houve uso de credencial Git pela API. A negativa de PR não
+impediu a publicação autorizada da branch. Sem merge/force push/release ou
+alegação de CI global. Os 23 testes Node/instalador finais passaram com a lista
+de arquivos estabilizada; matriz, exemplos e hashes preservados.
+
+Este inventário e adendo recebem commit documental posterior, identificado
+pelo histórico. O masterprompt no caminho original solicitado foi atualizado
+com a continuação, preservando integralmente suas entradas anteriores.
+**42,20%, 0/5 gates; meta 50% pendente; fila integral preservada, Easy por último.**

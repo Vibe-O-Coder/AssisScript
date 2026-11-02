@@ -1,5 +1,429 @@
 {
-  "status": "pending-publication",
+  "status": "published-and-verified",
   "branch": "work/m0-resource-budget-2026-11-02",
-  "note": "Filled after remote SHA and every changed blob are verified; not a claim of publication"
+  "commit": "3fb9810d6690b164e899825d62440904fb59373d",
+  "tree": "3fb9810d6690b164e899825d62440904fb59373d",
+  "remote": "https://github.com/Vibe-O-Coder/AssisScript",
+  "verification": "git ls-remote matched commit; GitHub Git tree API matched each changed path/blob/mode/type",
+  "verified_paths": 83,
+  "remote_tree_truncated": false,
+  "paths": {
+    ".gitattributes": {
+      "mode": "100644",
+      "sha": "cd190bf8a80c06e47c471dfc5413064e57c733b8",
+      "type": "blob"
+    },
+    "Makefile": {
+      "mode": "100644",
+      "sha": "fa574c4018d49f97e5273ca14e8f27e1c8bdc03d",
+      "type": "blob"
+    },
+    "PLANO-ECOSSISTEMA.md": {
+      "mode": "100644",
+      "sha": "100d6244b73c69fbb9507228c0b13b836e18cbbe",
+      "type": "blob"
+    },
+    "docs/BIBLIOTECA-pagecompiler.md": {
+      "mode": "100644",
+      "sha": "dd6c3b29995e873c875af9b54fc0cec66ab258eb",
+      "type": "blob"
+    },
+    "docs/BIBLIOTECA-pagereader.md": {
+      "mode": "100644",
+      "sha": "50917349ed6a86e9e36f45cbbc3ec23b7f7d6ce6",
+      "type": "blob"
+    },
+    "docs/BIBLIOTECA-pageworker.md": {
+      "mode": "100644",
+      "sha": "89998b6837e7de81f91d458b8d53fc8db8869cd5",
+      "type": "blob"
+    },
+    "docs/ecossistema/ADR-0001-EXECUCAO-PAGINA.md": {
+      "mode": "100644",
+      "sha": "48b20b9846910662e5b38c8da3bfe179d1e0a509",
+      "type": "blob"
+    },
+    "docs/ecossistema/ESTADO-ATUAL.md": {
+      "mode": "100644",
+      "sha": "91a957a0a7bb80d941f3827a916c987a5b3c2c92",
+      "type": "blob"
+    },
+    "docs/ecossistema/FILA-M0-M1.md": {
+      "mode": "100644",
+      "sha": "9304161399aa8a3c9cf56c46ebe8c19c1513d152",
+      "type": "blob"
+    },
+    "docs/ecossistema/MASTERPROMPT.md": {
+      "mode": "100644",
+      "sha": "e4b1c7dfd8d0317b998fb19195c0c88d935d24f0",
+      "type": "blob"
+    },
+    "docs/ecossistema/PERFIL-WORKER-LOCAL-V1.md": {
+      "mode": "100644",
+      "sha": "19a3e42512dbedd7a2b8b2ff8760e4eb8214fd7e",
+      "type": "blob"
+    },
+    "docs/ecossistema/PLANO-MESTRE.md": {
+      "mode": "100644",
+      "sha": "1dc1a033cee28e49b5d7d39af474e5ed9cf8bf78",
+      "type": "blob"
+    },
+    "docs/ecossistema/PROGRESSO.json": {
+      "mode": "100644",
+      "sha": "aba1fe1b1b4cb32a49d264c5ea1f071b7c82d19d",
+      "type": "blob"
+    },
+    "docs/ecossistema/PROGRESSO.md": {
+      "mode": "100644",
+      "sha": "318b638c701469d9b9a4dae33e009e6efefd9c96",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/before.json": {
+      "mode": "100644",
+      "sha": "e4cc7675a20d38ab72703182c63c6978e86dee76",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-environment.json": {
+      "mode": "100644",
+      "sha": "40bb0a8df07c68e9888abeb04f856a2e2dde435b",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-example-51.json": {
+      "mode": "100644",
+      "sha": "b755a84e4a04b9c827d519a2dd4e7e821c4c7edc",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-example-51.log": {
+      "mode": "100644",
+      "sha": "a3ea0ce47fef5dc6c425d9a66040ba1a38a5abf1",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-examples.json": {
+      "mode": "100644",
+      "sha": "81cd14d809d2fdc991c353ea413c03b5173db232",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-functions-both.log": {
+      "mode": "100644",
+      "sha": "dc6ee1e1891a6873a88fcd2f44d12f02eee7c6f3",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-htdl-parser-both.log": {
+      "mode": "100644",
+      "sha": "16fc8d07931b3dc8847ca976e7ea92448fb6189d",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-ownership-functions-both.log": {
+      "mode": "100644",
+      "sha": "76b0b981101b73c6509285a90dd4c2747d6c9fb6",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-page-backend-both.log": {
+      "mode": "100644",
+      "sha": "43b3cdffbc9bd3a98f93a6543f61dd3c94c49841",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-page-compiler-optimized.log": {
+      "mode": "100644",
+      "sha": "0aa3059f795e4473b9a67eddb14dbc693eddbaff",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-page-compiler-reference.log": {
+      "mode": "100644",
+      "sha": "30356201744a94b6942fd4e1ca29693ae0d63f77",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-page-host-both.log": {
+      "mode": "100644",
+      "sha": "fcf356f87191b5ab44bc234df118dcb54c209637",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-page-reader-optimized.log": {
+      "mode": "100644",
+      "sha": "3181233cd9b9efee45d1621253560e2d7b672cc2",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-page-reader-reference.log": {
+      "mode": "100644",
+      "sha": "b0468745065fe56ed23934637a927f7d7eb1cb96",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-page-worker-optimized.log": {
+      "mode": "100644",
+      "sha": "c68257416880521cd2623947da4e680091c974b9",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-page-worker-reference.log": {
+      "mode": "100644",
+      "sha": "b41e5fa6f893a3920692cd420ad4836f74b7ee10",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-pagevm-both.log": {
+      "mode": "100644",
+      "sha": "e7dcd0533544cc3d0403b1840af1df14acaf7716",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-reader-transactions-both.log": {
+      "mode": "100644",
+      "sha": "97a3674eb84c275c2d2c8b749292c5de208e9546",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux-safe-default-both.log": {
+      "mode": "100644",
+      "sha": "c427a5320e75d201f01a4f521643f60635940504",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/linux.json": {
+      "mode": "100644",
+      "sha": "d93fba41008b6e716f4016b612bf75928c4261c2",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/published-base.json": {
+      "mode": "100644",
+      "sha": "804d5a4c6583245501d9c947385a4fb4695300fd",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/published-implementation.json": {
+      "mode": "100644",
+      "sha": "6b42dbdbcbbe54f75e2f88bd6ef612d60e0fd658",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/summary.json": {
+      "mode": "100644",
+      "sha": "27868358cca55d3385310c6d63df303279ac5263",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-environment.json": {
+      "mode": "100644",
+      "sha": "629d3fa8a455bc8ac1f01bb2cf90b99d0bc1382b",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-example-51.json": {
+      "mode": "100644",
+      "sha": "5388ef0c9349fd2a32558ed685fc323a889116fb",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-example-51.log": {
+      "mode": "100644",
+      "sha": "a3ea0ce47fef5dc6c425d9a66040ba1a38a5abf1",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-examples.json": {
+      "mode": "100644",
+      "sha": "9577372e3890a3477828693bb5d12ab0e917ada3",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-functions-both.log": {
+      "mode": "100644",
+      "sha": "51c719df6ec8d75f065edb9ccd551eae4e5e940c",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-htdl-parser-both.log": {
+      "mode": "100644",
+      "sha": "3d0b410a7ff6fd6bd5266902480bd51813febaa1",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-node.json": {
+      "mode": "100644",
+      "sha": "bcf299b92aee160eb6ae654dc0eec6a4823a3f2a",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-node.log": {
+      "mode": "100644",
+      "sha": "7cef1e9b415409e8f4375737f175453856f7ffce",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-ownership-functions-both.log": {
+      "mode": "100644",
+      "sha": "44ed49681c032c917c99aff96513bd0169b7bae8",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-page-backend-both.log": {
+      "mode": "100644",
+      "sha": "b1df6e4ddbd2b3cbe78b90b4b67ecf41c655303e",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-page-compiler-optimized.log": {
+      "mode": "100644",
+      "sha": "96fa4ccfda78c1c65a749b62539b8a84312ed663",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-page-compiler-reference.log": {
+      "mode": "100644",
+      "sha": "4cb980c23c3aace72db64396e933a12f18e5ac0f",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-page-host-both.log": {
+      "mode": "100644",
+      "sha": "89612f9706e7aef6c5fbb78cbae812792b10ec99",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-page-reader-optimized.log": {
+      "mode": "100644",
+      "sha": "8c7990406ec5793539acffd0f343313f55a14b93",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-page-reader-reference.log": {
+      "mode": "100644",
+      "sha": "6b4a64bec18e045459acc9623e305b9680848ef8",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-page-worker-optimized.log": {
+      "mode": "100644",
+      "sha": "0ee630a2ab8350640ac01125423eda480b7d98a8",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-page-worker-reference.log": {
+      "mode": "100644",
+      "sha": "9abc2ea2bf4f633aca1db728754d101c51bffc8d",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-pagevm-both.log": {
+      "mode": "100644",
+      "sha": "738d1d4b3fe2eeb598382a80c917caa304f6bf73",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-reader-transactions-both.log": {
+      "mode": "100644",
+      "sha": "08d0acbb32adc02ac8502a125a3f94fb24eead94",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows-safe-default-both.log": {
+      "mode": "100644",
+      "sha": "a1b19131de74c326cb2a5960fa83ffef9299e47c",
+      "type": "blob"
+    },
+    "docs/ecossistema/evidencias/m0-resource-budget-2026-11-02/windows.json": {
+      "mode": "100644",
+      "sha": "c68acaf04be9d24479e1f44dc6809ad2eba85b54",
+      "type": "blob"
+    },
+    "docs/relatorios/2026-11-02-m0-resource-budget.md": {
+      "mode": "100644",
+      "sha": "d6f4cdffcd7afdb909466aadfd42e52ef96c302f",
+      "type": "blob"
+    },
+    "exemplos/51_compile_page.assis": {
+      "mode": "100644",
+      "sha": "c0e2058df8d8185368a98dbef400d5d5ccc18aed",
+      "type": "blob"
+    },
+    "providers/worker/assis_worker_v1.h": {
+      "mode": "100644",
+      "sha": "1a72ceeb690480a946f230cddbe089d655eb3930",
+      "type": "blob"
+    },
+    "providers/worker/worker.c": {
+      "mode": "100644",
+      "sha": "aae6253e9d77acfee7246e4553a35414f9fa1953",
+      "type": "blob"
+    },
+    "src/assisc.c": {
+      "mode": "100644",
+      "sha": "786d40a61fd35b47b553746233e0642663c6d479",
+      "type": "blob"
+    },
+    "src/install_files.inc": {
+      "mode": "100644",
+      "sha": "18624ed094b2f2a7a4e900c38174f5fe27d8b509",
+      "type": "blob"
+    },
+    "src/install_optional.inc": {
+      "mode": "100644",
+      "sha": "f4c67f3067be39de3013584a3c1609d46d84f449",
+      "type": "blob"
+    },
+    "src/modules.h": {
+      "mode": "100644",
+      "sha": "ebb0e1fb0f0ebb26010f84fefebd3a5a8ba23d4a",
+      "type": "blob"
+    },
+    "src/page_compile.h": {
+      "mode": "100644",
+      "sha": "a5e36566041a36ae40c27914565ae5619792fee4",
+      "type": "blob"
+    },
+    "src/page_emit.h": {
+      "mode": "100644",
+      "sha": "4ff496aa284a8c7d23dcb93aba6228bff604ed79",
+      "type": "blob"
+    },
+    "src/page_restrict.h": {
+      "mode": "100644",
+      "sha": "f32e848adbd13a1d6331212e88eacb300a37b6d2",
+      "type": "blob"
+    },
+    "src/page_sdk.inc": {
+      "mode": "100644",
+      "sha": "8a7fb9edc3c15e5b3887af887f88e4816e1f8d79",
+      "type": "blob"
+    },
+    "stdlib/catalogo.json": {
+      "mode": "100644",
+      "sha": "b492187702e90d1bb22d8b6b0765275a2548f568",
+      "type": "blob"
+    },
+    "stdlib/catalogo.sh": {
+      "mode": "100644",
+      "sha": "07de5ff89b081c28f0d8ea93e73b4b9ab68aff6b",
+      "type": "blob"
+    },
+    "stdlib/pagecompiler.assis": {
+      "mode": "100644",
+      "sha": "55c2db0559d049e421f79097b795323bcf49b683",
+      "type": "blob"
+    },
+    "stdlib/pagereader.assis": {
+      "mode": "100644",
+      "sha": "cf86668ff54fda4da77c3722b8e4545b8a9450f4",
+      "type": "blob"
+    },
+    "tests/test-page-compiler.py": {
+      "mode": "100644",
+      "sha": "7c3ceaf79b17bba21d75f9119910fe4a79c1ed2e",
+      "type": "blob"
+    },
+    "tests/test-v31.js": {
+      "mode": "100644",
+      "sha": "db4b5e924c0ecd62c16239f010e41f8024d35a86",
+      "type": "blob"
+    },
+    "tools/collect-resource-budget-evidence.py": {
+      "mode": "100644",
+      "sha": "ea9406068830215c1666f35b55cd4cda740e3171",
+      "type": "blob"
+    },
+    "tools/generate-install-manifest.py": {
+      "mode": "100644",
+      "sha": "9f5531ad21246c5afd635f1051105dd22a82d37b",
+      "type": "blob"
+    },
+    "tools/prepare-page-sdk.py": {
+      "mode": "100644",
+      "sha": "7e9c38bb603a12a9447b83f585896fa6a7db8c2c",
+      "type": "blob"
+    },
+    "tools/run-resource-budget-example.py": {
+      "mode": "100644",
+      "sha": "1287d8b635fbc31a707d5ea061bacdbeed61432f",
+      "type": "blob"
+    },
+    "tools/stage-resource-budget-installer.py": {
+      "mode": "100644",
+      "sha": "d1f84f764c0c9add16c4971a0b958ec80853499b",
+      "type": "blob"
+    },
+    "tools/test-native.py": {
+      "mode": "100644",
+      "sha": "84030115c493875eb52225851837605b317ac678",
+      "type": "blob"
+    },
+    "tools/verify-resource-budget-evidence.py": {
+      "mode": "100644",
+      "sha": "848c577c852b7fe0cc6701e68a4068ad4103645a",
+      "type": "blob"
+    }
+  },
+  "pr_created": false,
+  "pr_error": "GitHub connector HTTP 403 Resource not accessible by integration; no credential API fallback attempted"
 }
