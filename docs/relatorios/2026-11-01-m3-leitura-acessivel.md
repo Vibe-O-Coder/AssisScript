@@ -236,3 +236,24 @@ revisão final** da branch work/m3-viewer-accessibility-2026-11-01 em
 work/m2-htdl-viewer-2026-11-01 (#18), sem merge/release. Fontes, testes, logs e
 quatro imagens da demonstração tornar-se-ão públicos. O bloqueio não reduz as
 evidências de implementação local, mas impede declarar a unidade publicada.
+
+## Adendo — autorização direta e publicação confirmada
+
+O usuário autorizou diretamente publicar os **73 arquivos do commit 722d7cd**
+(código, testes, logs e quatro imagens) no GitHub público Vibe-O-Coder/AssisScript
+e abrir PR de rascunho sobre #18, sem merge ou release. O push foi concluído e
+ls-remote confirmou `722d7cda89859ad08cfdef4191b5f54e0dc97786`. A API compare
+conferiu todos os 73 paths/blobs contra build/publication-inventory.json.
+Os 183 hashes também foram conferidos contra blobs Git, não só arquivos locais.
+
+[PR de rascunho #19](https://github.com/Vibe-O-Coder/AssisScript/pull/19), aberta,
+sem merge, incremental sobre work/m2-htdl-viewer-2026-11-01 (#18), criada e
+vinculada à conversa. O conector retornou 403 na criação; a operação autorizada
+foi concluída pela autenticação Git existente, sem expor credenciais. O conector
+confirmou head=722d7cd, state=open, draft=true, merged=false, changed_files=73.
+
+Este adendo e as duas correções de continuidade são documentais e apenas
+confirmam fatos já públicos. Código/testes, 28,90%, 0/5 gates e os 73 paths
+permanecem iguais; SHA documental final é localizado pelo histórico deste
+relatório. Não se declara CI global aprovada, merge ou release. O bloqueio do
+adendo anterior é histórico e foi resolvido pela autorização direta/publicação.
