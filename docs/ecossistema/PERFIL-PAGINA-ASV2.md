@@ -1,8 +1,9 @@
 # page-asv2 — perfil escalar experimental
 
 Versão do formato: **2**, SDK **htdl_v1 / read-only-1**. Data: 02/11/2026.
-Escopo E06-01/E06-03/E06-05/E07-03. Não ratifica um backend geral da linguagem
-ou a escolha final VM/Wasm; o [ADR-0001](ADR-0001-EXECUCAO-PAGINA.md) continua aberto.
+Escopo E06-01/E06-03/E06-05/E07-03. ASV2 foi escolhido para este perfil
+escalar local após comparação Wasm; o executor geral e suas extensões
+permanecem abertos no [ADR-0001](ADR-0001-EXECUCAO-PAGINA.md).
 
 ## Compilação e semântica
 

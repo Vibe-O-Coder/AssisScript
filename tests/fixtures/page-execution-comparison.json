@@ -1,0 +1,12 @@
+{
+  "schema": "assisscript-scalar-executor-comparison-v1",
+  "seed": 20261102,
+  "repeats": 40,
+  "samples": 7,
+  "cases": [
+    {"id":"integer-edges","expected":-9223372036854775807,"oracle":"i64 modular minimum / -1 + remainder + 1","source":"safe fn main():int{let m:int= -9223372036854775808;let n:int= -1;return m/n+m%n+1;}"},
+    {"id":"sum-2000","expected":1999000,"oracle":"sum(range(2000)) = n*(n-1)/2","source":"safe fn main():int{let total:int=0;for(let i:int=0;i<2000;i++){total+=i;}return total;}"},
+    {"id":"factorial-8","expected":40320,"oracle":"math.factorial(8)","source":"safe fn fact(n:int):int{if(n==0){return 1;}return n*fact(n-1);}safe fn main():int{return fact(8);}"},
+    {"id":"counter-250","expected":250,"oracle":"250 bounded capability additions of one","source":"import \"std/page.assis\";safe fn main():int{let result:int=0;for(let i:int=0;i<250;i++){result=htdl_v1::counter_add(1);}return result;}"}
+  ]
+}

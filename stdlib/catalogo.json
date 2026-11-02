@@ -293,7 +293,19 @@
       "required": false,
       "doc": "BIBLIOTECA-pageworker.md",
       "description": "Supervisor e navegação transacional em AssisScript, com worker local, IPC limitado e negociação explícita de isolamento.",
-      "dependencies": ["pagewire"]
+      "dependencies": [
+        "pagewire"
+      ]
+    },
+    {
+      "name": "pagereader",
+      "required": false,
+      "doc": "BIBLIOTECA-pagereader.md",
+      "description": "Reader e worker ASV2 locais com ativacao conjunta, eventos limitados e recuperacao.",
+      "dependencies": [
+        "reader",
+        "pageworker"
+      ]
     }
   ]
 }

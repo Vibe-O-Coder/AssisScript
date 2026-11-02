@@ -1,0 +1,189 @@
+{
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler_sha256": "ce366104a9832226d6cf6ac3d26690812992096c1d55cd8c49f2ff3627563541",
+  "checks": [
+    {
+      "name": "wasm-candidate",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-wasm-candidate.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 11.365,
+      "log": "linux-wasm-candidate-both.log",
+      "log_sha256": "a4f6ef372cc677aec0680af009b8ce7553ffd97a0fe8ea69853ec4666f2f31a6"
+    },
+    {
+      "name": "page-worker",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-page-worker.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 2,
+      "seconds": 6.798,
+      "log": "linux-page-worker-both.log",
+      "log_sha256": "1f6109d0f6424d9c80b7e89cecc335e660e392fbff8774a253b2629016fba4e8",
+      "candidates": {
+        "worker_sha256": "d3aa9bdce6f4d22e11ed2e8aa00d4d271a4a89c13515bbfaeaab0c6666c10518",
+        "provider_sha256": "7e8874cdc7ff7ab4da7461a84a4a66bccc54b6ecb6e511b826e8e3f12ebe1016",
+        "mode": "optimized"
+      }
+    },
+    {
+      "name": "page-host",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-page-host.py"
+      ],
+      "returncode": 0,
+      "executed": 13,
+      "not_run": 0,
+      "seconds": 18.386,
+      "log": "linux-page-host-both.log",
+      "log_sha256": "0d097d5d12e3e62290170fa13d224b22b2cec4874c0ba0a7acbac58fe7fa6997"
+    },
+    {
+      "name": "page-backend",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-page-backend.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 5.433,
+      "log": "linux-page-backend-both.log",
+      "log_sha256": "5846aa66d415ca7176749d58cb9ec8fe868f375a7b4e48b63992904e0ed4c791"
+    },
+    {
+      "name": "pagevm",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-pagevm.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 4.911,
+      "log": "linux-pagevm-both.log",
+      "log_sha256": "b17dbf22944dd312b9f8b1b046b7b2b7de576ca9630c393acae29f482c228d43"
+    },
+    {
+      "name": "htdl-parser",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 56.475,
+      "log": "linux-htdl-parser-both.log",
+      "log_sha256": "91bec8c9b9be9c4e0e7e3820f34a476a16ff7d196d824d2e4fcbbd86ce2d9c70"
+    },
+    {
+      "name": "reader-transactions",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-reader-transactions.py"
+      ],
+      "returncode": 0,
+      "executed": 11,
+      "not_run": 4,
+      "seconds": 30.185,
+      "log": "linux-reader-transactions-both.log",
+      "log_sha256": "8a1ff0ccc0163369623d467b287e214d3dd1780b8a0741b59ab2fad25699c433"
+    },
+    {
+      "name": "htdl-reader",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-htdl-reader.py"
+      ],
+      "returncode": 0,
+      "executed": 7,
+      "not_run": 3,
+      "seconds": 19.384,
+      "log": "linux-htdl-reader-both.log",
+      "log_sha256": "53c6a7692c2fe3966908c5cc08ad48bb2ffe154d9a96ea133b8e4a1bcb6677b7"
+    },
+    {
+      "name": "safe-default",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-safe-default.py"
+      ],
+      "returncode": 0,
+      "executed": 5,
+      "not_run": 0,
+      "seconds": 1.673,
+      "log": "linux-safe-default-both.log",
+      "log_sha256": "fde8c8d2ee16ed54c42401ddc00326ae70489ea6461a8827e25ea2d6458c625c"
+    },
+    {
+      "name": "ownership-functions",
+      "mode": "both",
+      "command": [
+        "python3",
+        "tests/test-ownership-functions.py"
+      ],
+      "returncode": 0,
+      "executed": 26,
+      "not_run": 0,
+      "seconds": 7.425,
+      "log": "linux-ownership-functions-both.log",
+      "log_sha256": "7de3978d8b68c030cbd5d828fc3ccc401f392c18d276cf430bd79effc91d9aee"
+    },
+    {
+      "name": "page-reader",
+      "mode": "optimized",
+      "command": [
+        "python3",
+        "tests/test-page-reader.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 1,
+      "seconds": 8.924,
+      "log": "linux-page-reader-optimized.log",
+      "log_sha256": "a3f0729581df16dd3e21b6c1f1d3c2d31332c9d493528f8d8d9d9d613ed05327",
+      "candidates": {
+        "worker_sha256": "d3aa9bdce6f4d22e11ed2e8aa00d4d271a4a89c13515bbfaeaab0c6666c10518",
+        "mode": "optimized"
+      }
+    },
+    {
+      "name": "page-reader",
+      "mode": "reference",
+      "command": [
+        "python3",
+        "tests/test-page-reader.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 1,
+      "seconds": 8.6,
+      "log": "linux-page-reader-reference.log",
+      "log_sha256": "3d318d2bd6e75fc081490dd5414c2b079a1803dcc6dbee074b88fc7dd17cc0ff",
+      "candidates": {
+        "worker_sha256": "6e0bbb3771207dd0aa15e231760793ec851f595d185fd9dc89ede8c62a0ec8a6",
+        "mode": "reference"
+      }
+    }
+  ],
+  "passed": true
+}

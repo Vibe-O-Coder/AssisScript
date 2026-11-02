@@ -1,7 +1,72 @@
 # ADR-0001 — estratégia de escolha do executor de página
 
-Data: 29/10/2026. Estado: **estratégia aceita; formato ainda não escolhido**.
-Escopo: E00-03/E06-01, sem promoção de capacidade ou gate.
+Data inicial: 29/10/2026. Decisão de 02/11/2026: **ASV2 escolhido para o perfil
+escalar local; executor geral e extensão de valores/ownership ainda abertos**.
+Escopo: E00-03/E06-01/E06-03. Nenhum gate aprovado.
+
+## Decisão delimitada — reader-worker-local-1 / page-asv2
+
+Manter a VM ASV2 em AssisScript como executor do perfil escalar documentado.
+O candidato Wasm comparável agora executa os mesmos bytes produzidos pelo
+backend real, preserva inteiros/booleanos, funções/controle, fuel total,
+frames lógicos, memória e concessão de contador. É alternativa válida de
+comparação; a decisão não depende da lacuna de fuel do spike antigo.
+
+`tools/asv2-wasm-candidate.py` valida ASV2 e traduz para wasm32: i64 modular,
+duas páginas de memória linear com máximo igual ao mínimo, um dispatcher
+balanceado de PC e frames explícitos. Não há start, table, imports, grow,
+chamada indireta ou recursão na pilha nativa. Cada instrução ASV2 cobra um
+passo antes de executar, inclusive saltos/calls; quantum e limite cumulativo
+coincidem com a VM. Registros/retornos e memória da página têm regiões
+separadas, com guardas anteriores ao acesso. MIN/-1 e shifts fora de 0..63
+recebem lowering explícito para conservar a linguagem. A
+[semântica numérica Wasm](https://webassembly.github.io/spec/core/exec/numerics.html)
+e a [validação de módulos](https://webassembly.github.io/spec/core/valid/modules.html)
+foram consultadas; bytes e resultados têm provas executadas.
+
+O harness Node invoca o verificador canônico antes de instanciar: somente
+bytes exatamente reconstruídos a partir de ASV2 validado e limites aceitos
+são permitidos. Mutação de fuel/import/start/memória altera os bytes e é
+recusada. Depois, V8 valida o módulo e uma segunda guarda exige zero imports.
+Globals/memória exportados são privados do harness confiável; nunca expostos
+à página ou usados como isolamento de JS. Resposta por event/request/call e
+concessão por instância/origem/geração são verificadas fora do Wasm. Imports
+SDK 2..8 suspendem e esperam resposta; o harness de comparação não implementa
+um segundo HTDL/SDK de produto nem conecta essa alternativa ao worker nativo.
+
+Corpus fixo, quatro programas, sete amostras de quarenta instâncias por
+amostra/engine/host. VM e Wasm observam o mesmo resultado e número de passos.
+Windows x64 e Linux x64/WSL2 foram executados. No batch sum-2000 (34014 passos
+por instância), medianas VM/Wasm foram 62/9,451 ms em Windows e 75/8,4762 ms
+em Linux. Nos casos pequenos, o relógio inteiro da VM tem resolução insuficiente;
+0 ms não significa custo nulo. Dados crus de execução, validação/compilação,
+tamanho e RSS amostrado estão nos
+[Windows](evidencias/m0-page-integration-2026-11-02/windows-benchmark.json) e
+[Linux](evidencias/m0-page-integration-2026-11-02/linux-benchmark.json).
+Tempos do processo incluem startup; tempos internos usam relógios diferentes.
+Não são benchmark de um backend Wasm direto otimizado, SLA ou quota de RSS.
+
+Razões para ASV2 neste perfil: já integra worker restrito Linux/ASIP/HTDL/SDK,
+Reader, ownership local e recuperações em AssisScript; evita introduzir um
+engine e outro embedding no produto e tem auditoria uniforme do custo por
+instrução. Wasm ganha execução nos loops deste protótipo e merece reavaliação
+se um requisito de desempenho justificar esse custo de integração. Não se
+afirma que ASV2 seja universalmente mais rápido ou que o candidato substitua
+um estudo de Wasmtime/embedding C com fuel próprio.
+
+Manutenção: VM/verificador/worker próprios conservam licença do repositório.
+O tradutor e harness são ferramentas locais de teste, sem nova dependência
+redistribuída. Node/V8 existentes foram medidos nas versões registradas por
+host (24.17.0 e 24.16.0). As licenças e avisos de Node/V8 constam do
+[inventário oficial de Node](https://github.com/nodejs/node/blob/v24.17.0/LICENSE);
+qualquer embedding distribuído futuro exige inventário/atualização próprios.
+
+Objetos, strings, generics/ownership de página, orçamento do compilador e RSS
+integral, sandbox Windows/macOS, broker/perfis e loader FS/SSC/recursos continuam
+abertos. O programa de página não recebe FFI/arquivo/processo/rede/relógio por
+esta decisão. [Reader/worker](../BIBLIOTECA-pagereader.md) usa somente ASV2.
+A escolha geral exigirá novo ADR/perfil com suas provas; esta decisão não
+fecha M0/M4 nem G2. As continuações abaixo preservam o histórico anterior.
 
 ## Continuação worker de 02/11/2026 — decisão VM/Wasm ainda aberta
 

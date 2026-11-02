@@ -1,0 +1,14 @@
+test_capability_forgeries_revocation_and_call_quota (__main__.WasmCandidate.test_capability_forgeries_revocation_and_call_quota) ... ok
+test_fuel_yield_recursion_and_independent_neighbor (__main__.WasmCandidate.test_fuel_yield_recursion_and_independent_neighbor) ... ok
+test_malformed_bytecode_and_mutated_wasm_are_rejected_before_execution (__main__.WasmCandidate.test_malformed_bytecode_and_mutated_wasm_are_rejected_before_execution) ... ok
+test_memory_zero_bounds_and_no_growth_or_user_metadata_alias (__main__.WasmCandidate.test_memory_zero_bounds_and_no_growth_or_user_metadata_alias) ... ok
+test_real_functions_loops_frames_and_evaluation_order (__main__.WasmCandidate.test_real_functions_loops_frames_and_evaluation_order) ... ok
+test_real_source_integer_edges_and_lazy_control (__main__.WasmCandidate.test_real_source_integer_edges_and_lazy_control) ... ok
+test_reply_replay_event_generation_and_fuel_survive_reentry (__main__.WasmCandidate.test_reply_replay_event_generation_and_fuel_survive_reentry) ... ok
+test_seeded_arithmetic_against_python_model (__main__.WasmCandidate.test_seeded_arithmetic_against_python_model) ... ok
+test_shifts_and_divide_zero_preserve_trap_contract (__main__.WasmCandidate.test_shifts_and_divide_zero_preserve_trap_contract) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 22.330s
+
+OK

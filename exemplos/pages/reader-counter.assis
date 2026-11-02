@@ -1,0 +1,12 @@
+import "std/page.assis";
+// The host forwards only validated native button activations. Payload is a
+// local index; document handles remain scoped to the current worker/grant.
+safe fn main():int{
+    if(htdl_v1::event_get(0)==2){
+        let node:int=htdl_v1::node_at(htdl_v1::event_get(1));
+        if(htdl_v1::node_kind(node)==9 && htdl_v1::node_flags(node)==0){
+            return htdl_v1::state_set(0,htdl_v1::state_get(0)+1);
+        }
+    }
+    return htdl_v1::state_get(0);
+}

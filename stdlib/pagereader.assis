@@ -1,0 +1,158 @@
+namespace pagereader;
+import "std/reader.assis";
+import "std/pageworker.assis";
+
+public value struct Limits{let memory:int;let frames:int;let fuel:int;let calls:int;let timeout:int;}
+public value struct Grants{let document:bool;let counter:bool;}
+public value struct Action{let status:int;let change:viewer::Change;}
+
+/// Trusted local coordinator. HTDL/Reader and worker are prepared separately,
+/// then committed together. No native page binary, filename or origin from HTDL.
+/// The UI host calls advance once per turn and handles explicit backpressure.
+public final class Session{
+    private own visual:reader::Session;private own workers:pageworker::Session;
+    private own source:*byte;private own code:*byte;private own events:*int;
+    private let page_instance:int;private let origin:int;private let next_document:int;
+    private let pending_document:int;private let active_document:int;private let phase:int;
+    private let limits:Limits;private let grants:Grants;private let first:int;private let count:int;
+    private let active_command:int;private let active_timeout:int;private let running:bool;private let opened:bool;private let failure:int;
+    private let answer:pageworker::Reply;
+    fn init(borrow mut self,max_bytes:int,max_nodes:int,window_instance:int,page_instance:int,origin:int):void{
+        if(page_instance<=0 || origin<=0){return;}
+        self.visual=try_new reader::Session(max_bytes,max_nodes,window_instance);
+        self.workers=try_new pageworker::Session();self.events=try_alloc<int>(32);
+        if(self.visual==null || !self.visual.is_open() || self.workers==null || self.events==null){return;}
+        self.page_instance=page_instance;self.origin=origin;self.opened=true;
+    }
+    fn is_open(borrow self):bool{return self.opened;}
+    fn has_active(borrow self):bool{return self.opened && self.visual.has_active();}
+    fn has_pending(borrow self):bool{return self.phase!=0;}
+    fn ready(borrow self):bool{return self.phase==5 && self.workers.has_pending();}
+    fn document_id(borrow self):int{return self.active_document;}
+    fn candidate_id(borrow self):int{return self.pending_document;}
+    fn error(borrow self):int{return self.failure;}
+    fn queued(borrow self):int{return self.count;}
+    fn result(borrow self):pageworker::Reply{return self.answer;}
+    fn worker_alive(borrow self):bool{return self.opened && self.workers.has_active() && self.workers.current().is_open();}
+    fn document(borrow self):borrow(self) documents::Document{assert(self.has_active());return self.visual.document();}
+    fn active_reader(borrow self):borrow(self) reader::Reader{assert(self.has_active());return self.visual.active_reader();}
+    /// 0 staging started; 1..Hxxx parser errors; negative local errors. Every
+    /// attempt after limits validation reserves an identity, even if it aborts.
+    fn prepare(borrow mut self,borrow path:slice<byte>,borrow source:slice<byte>,borrow code:slice<byte>,restricted:bool,
+            width:int,height:int,row:int,metric:safe fn(borrow slice<byte>):int,limits:Limits,grants:Grants,now:int):int{
+        if(!self.opened){return -9;}if(self.phase!=0){return -12;}
+        if(self.next_document==4503599627370495){return -13;}
+        if(len(source)>65536 || len(code)<16 || len(code)>131088 || limits.memory<0 || limits.memory>65536 ||
+           limits.frames<1 || limits.frames>128 || limits.fuel<1 || limits.fuel>1000000 || limits.calls<0 || limits.calls>10000 ||
+           limits.timeout<1 || limits.timeout>60000){return -1;}
+        self.next_document++;val document:int=self.next_document;
+        own source_copy:*byte=try_alloc<byte>(len(source));own code_copy:*byte=try_alloc<byte>(len(code));
+        if(source_copy==null || code_copy==null){return -4;}
+        for(let i:int=0;i<len(source);i++){source_copy[i]=source[i];}for(let i:int=0;i<len(code);i++){code_copy[i]=code[i];}
+        val parsed:int=self.visual.prepare(document,source,width,height,row,metric);if(parsed!=0){return parsed;}
+        val spawned:int=self.workers.prepare(path,self.page_instance,self.origin,restricted,now,limits.timeout);
+        if(spawned!=0){self.visual.abort();return spawned;}
+        self.source=move(source_copy);self.code=move(code_copy);self.pending_document=document;
+        self.limits=limits;self.grants=grants;self.phase=1;self.failure=0;return 0;
+    }
+    fn abort(borrow mut self):void{
+        if(self.visual!=null){self.visual.abort();}if(self.workers!=null){self.workers.abort();}
+        own source:*byte=move(self.source);own code:*byte=move(self.code);self.phase=0;self.pending_document=0;
+    }
+    private fn candidate_failure(borrow mut self,status:int):int{self.abort();self.failure=status;return status;}
+    private fn prepare_grants(borrow mut self,now:int):int{
+        if(self.phase==2 && self.grants.document){
+            val status:int=self.workers.candidate_mut().command(4,0,0,now,self.limits.timeout);
+            if(status!=0){return self.candidate_failure(status);}self.phase=3;return 0;
+        }
+        if(self.phase<=3 && self.grants.counter){
+            val status:int=self.workers.candidate_mut().command(3,0,0,now,self.limits.timeout);
+            if(status!=0){return self.candidate_failure(status);}self.phase=4;return 0;
+        }
+        self.phase=5;return 1;
+    }
+    private fn advance_candidate(borrow mut self,now:int):int{
+        if(self.phase==0){return 0;}
+        val polled:int=self.workers.candidate_mut().poll(now);
+        if(polled<0){return self.candidate_failure(polled);}if(self.phase==5){return 1;}if(polled==0){return 0;}
+        if(self.phase==1){
+            own source:*byte=move(self.source);own code:*byte=move(self.code);val limits:Limits=self.limits;
+            self.source=try_alloc<byte>(0);self.code=try_alloc<byte>(0);
+            val loaded:int=self.workers.candidate_mut().load(slice_of(source,0,len(source)),slice_of(code,0,len(code)),
+                limits.memory,limits.frames,limits.fuel,limits.calls,now,limits.timeout);
+            if(loaded!=0){return self.candidate_failure(loaded);}
+            self.phase=2;return 0;
+        }
+        val reply:pageworker::Reply=self.workers.candidate_mut().reply();
+        if(reply.code!=0){return self.candidate_failure(reply.code);}return self.prepare_grants(now);
+    }
+    private fn complete_commit(borrow mut self):void{
+        assert(self.workers.commit());self.active_document=self.pending_document;self.pending_document=0;self.phase=0;
+        self.first=0;self.count=0;self.active_command=0;self.active_timeout=self.limits.timeout;self.running=true;self.failure=0;self.answer=new pageworker::Reply();
+    }
+    /// Headless transaction. Native UI hosts publish the accessible projection
+    /// first; after success the two in-memory commits allocate nothing.
+    fn commit(borrow mut self):bool{
+        if(!self.opened || !self.ready() || !self.workers.candidate_mut().activatable()){return false;}
+        assert(self.visual.commit());self.complete_commit();return true;
+    }
+    fn publish(borrow mut self,borrow window:window::Window):int{
+        if(!self.opened || !self.ready() || !self.workers.candidate_mut().activatable()){return -12;}
+        val status:int=self.visual.publish(window);if(status!=0){return status;}self.complete_commit();return 0;
+    }
+    private fn worker_failure(borrow mut self,status:int):void{
+        self.workers.current_mut().close();self.failure=status;self.first=0;self.count=0;self.running=false;self.active_command=0;
+    }
+    /// One bounded provider poll/command per active worker, plus one candidate
+    /// step. The shell owns the clock; no blocking wait or page callback here.
+    /// Negative candidate error preserves the active worker/document.
+    fn advance(borrow mut self,now:int):int{
+        if(!self.opened){return -9;}val candidate:int=self.advance_candidate(now);
+        if(self.worker_alive()){
+            val polled:int=self.workers.current_mut().poll(now);
+            if(polled<0){self.worker_failure(polled);return polled;}
+            if(polled==1){
+                self.answer=self.workers.current().reply();val reply:pageworker::Reply=self.answer;
+                if(reply.code<0 || reply.status<0){let error:int=reply.code;if(error>=0){error=reply.status;}self.worker_failure(error);return error;}
+                if(self.active_command==2 && (reply.code==0 || reply.code==2)){self.running=false;}
+                if(self.active_command==5){
+                    // A post is removed only after ACK=0. ACK=1 retains the
+                    // event while a tick makes room in the worker's queue.
+                    if(reply.code==0){self.first=(self.first+1)%32;self.count--;}
+                    self.running=true;
+                }self.active_command=0;
+            }else if(!self.workers.current().busy()){
+                let status:int=0;
+                if(self.running){status=self.workers.current_mut().command(2,1000,0,now,self.active_timeout);if(status==0){self.active_command=2;}}
+                else if(self.count>0){
+                    status=self.workers.current_mut().command(5,2,self.events[self.first],now,self.active_timeout);
+                    if(status==0){self.active_command=5;}
+                }
+                if(status!=0){self.worker_failure(status);return status;}
+            }
+        }return candidate;
+    }
+    /// Payload is the immutable semantic projection index, not a global NodeId
+    /// or a grant. Reader validates hidden/disabled/focus/window/request first.
+    fn dispatch(borrow mut self,document:int,event:window::Event):Action{
+        if(!self.has_active() || document!=self.active_document || self.phase!=0){return new Action(-2,new viewer::Change());}
+        val change:viewer::Change=self.visual.dispatch(document,event);
+        if(change.kind==3){self.close();return new Action(0,change);}if(change.kind!=2){return new Action(0,change);}
+        if(!self.worker_alive()){return new Action(-9,change);}if(self.count==32){return new Action(1,change);}
+        let node:doctree::NodeId=new doctree::NodeId();let index:int=0;
+        while(index<1024){
+            node=htdl::query(self.visual.document().nodes(),0,utf8(""),node);if(doctree::absent(node)){return new Action(-2,change);}
+            if(viewer::same(node,change.node)){self.events[(self.first+self.count)%32]=index;self.count++;return new Action(0,change);}index++;
+        }return new Action(-2,change);
+    }
+    fn reflow(borrow mut self,borrow window:window::Window,width:int,height:int,row:int,metric:safe fn(borrow slice<byte>):int):int{
+        if(!self.opened || self.phase!=0){return -12;}return self.visual.reflow(window,width,height,row,metric);
+    }
+    fn paint_with(borrow self,borrow mut window:window::Window,scale:int,p:reader::Preferences):bool{
+        return self.opened && self.visual.paint_with(window,scale,p);
+    }
+    fn close(borrow mut self):void{
+        self.opened=false;self.abort();if(self.workers!=null){self.workers.close();}if(self.visual!=null){self.visual.close();}
+        self.count=0;self.running=false;self.active_document=0;
+    }
+}

@@ -1,0 +1,48 @@
+// Trusted local shell. Build page/worker/provider as described in the API.
+// Args: absolute trusted worker, reader-counter.asv2, --trusted-local on Windows.
+import "std/pagereader.assis";
+import "std/convert.assis";
+safe fn code_file():own File{unsafe{
+    val size:int=arg_size(2);if(size<1 || size>4096){return file_open("",9);}
+    let path:*byte=alloc<byte>(size+1);defer free(path);
+    if(arg_copy(2,path,size+1)!=size){return file_open("",9);}return file_open(text(path),0);
+}}
+safe fn main():int{
+    if(!reader::available()){return 4;}
+    let length:int=0;unsafe{length=arg_size(1);}if(length<2 || length>4096){return 2;}
+    own path:*byte=try_alloc<byte>(length+1);if(path==null){return 4;}unsafe{if(arg_copy(1,path,length+1)!=length){return 2;}}
+    let restricted:bool=true;own option:*byte=try_alloc<byte>(16);if(option==null){return 4;}
+    unsafe{if(arg_size(3)>0){if(arg_size(3)!=15 || arg_copy(3,option,16)!=15){return 2;}borrow expected:slice<byte>=utf8("--trusted-local");for(let i:int=0;i<15;i++){if(option[i]!=expected[i]){return 2;}}restricted=false;}}
+    own file:File=code_file();if(file==null){return 2;}
+    own code:*byte=try_alloc<byte>(131088);own chunk:*byte=try_alloc<byte>(4096);own number:*byte=try_alloc<byte>(32);
+    if(code==null || chunk==null || number==null){return 4;}let used:int=0;
+    while(true){val n:int=file_read(file,chunk,4096);if(n<0 || n>131088-used){return 3;}if(n==0){break;}for(let i:int=0;i<n;i++){code[used+i]=chunk[i];}used+=n;}
+    own session:pagereader::Session=try_new pagereader::Session(32000000,250000,1,7,11);if(session==null || !session.is_open()){return 4;}
+    val metrics:int=reader::measure(utf8("M"),1000);if(metrics<0){return 4;}let width:int=780;let height:int=520;
+    borrow source:slice<byte>=utf8("<div type=document version=\"0.1\" lang=\"pt-BR\"><div type=head><div type=title>Página local em outro processo</div></div><div type=body><div type=heading level=1>Reader e programa de página</div><div type=paragraph>Use Tab e Enter, Espaço ou clique. A ativação nativa segue para a página ASV2 em outro processo. Seleção e cópia continuam disponíveis.</div><div type=button id=add a11y-label=\"Incrementar contador da página\">Incrementar</div><div type=button disabled=true>Desabilitado</div></div></div>");
+    if(session.prepare(slice_of(path,0,length),source,slice_of(code,0,used),restricted,width,height-48,metrics/4294967296,reader::width_100,
+        new pagereader::Limits(0,16,1000000,10000,3000),new pagereader::Grants(true,false),monotonic_ms())!=0){return 5;}
+    own w:window::Window=try_new window::Window(1,width,height,"AssisScript — Reader e página local");if(w==null || !w.opened()){return 4;}
+    let preferences:reader::Preferences=reader::preferences(w);if(preferences.status!=0){return 4;}
+    let shown:int= -1;let dirty:bool=true;
+    while(session.is_open()){
+        val event:window::Event=w.poll(5);if(event.status<0){return 4;}if(event.status==0 && event.kind==1){break;}
+        val progressed:int=session.advance(monotonic_ms());if(progressed<0){print("WORKER-ERROR",progressed);}
+        if(session.ready()){if(session.publish(w)!=0){session.abort();return 4;}dirty=true;}
+        if(!session.has_active()){continue;}
+        if(event.status==0){
+            dirty=true;
+            if(event.kind==12){val next:reader::Preferences=reader::preferences(w);if(next.status==0){preferences=next;}}
+            val action:pagereader::Action=session.dispatch(session.document_id(),event);if(action.status!=0){print("ACTION-REFUSED",action.status);}
+            if(action.change.kind==4){session.active_reader().copy(w);}
+            if(event.kind==2){width=event.arg0;height=event.arg1;session.reflow(w,width,height-48,metrics/4294967296,reader::width_100);}
+        }
+        if(!session.is_open()){break;}
+        val value:int=session.result().state;if(value!=shown){dirty=true;}if(!dirty){continue;}dirty=false;
+        if(!session.paint_with(w,1000,preferences)){return 4;}
+        if(w.draw_text(24,height-30,"Contador do shell:",preferences.foreground)!=0){return 4;}
+        val size:int=format_int_buffer(value,number);if(size<0){return 4;}number[size]=byte(0);
+        if(w.draw_text(180,height-30,slice_of(number,0,size),preferences.foreground)!=0){return 4;}
+        if(w.present()!=0){return 4;}if(value!=shown){shown=value;print("PAGE-STATE",value);}
+    }session.close();return int(w.close()!=0);
+}

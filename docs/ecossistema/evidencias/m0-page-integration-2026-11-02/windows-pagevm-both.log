@@ -1,0 +1,15 @@
+test_calls_isolate_registers_order_effects_and_copy_code (__main__.PageVM.test_calls_isolate_registers_order_effects_and_copy_code) ... ok
+test_capability_default_deny_origin_instance_generation_revocation_and_call_limit (__main__.PageVM.test_capability_default_deny_origin_instance_generation_revocation_and_call_limit) ... ok
+test_division_trap_fallthrough_and_bounded_host_argument (__main__.PageVM.test_division_trap_fallthrough_and_bounded_host_argument) ... ok
+test_five_target_formats_and_native_execution (__main__.PageVM.test_five_target_formats_and_native_execution) ... ok
+test_fuel_yield_recursion_cancel_and_neighbor (__main__.PageVM.test_fuel_yield_recursion_cancel_and_neighbor) ... ok
+test_integer_boolean_division_and_overflow_against_expression_model (__main__.PageVM.test_integer_boolean_division_and_overflow_against_expression_model) ... ok
+test_malformed_unknown_import_register_branch_size_and_limits_fail_before_run (__main__.PageVM.test_malformed_unknown_import_register_branch_size_and_limits_fail_before_run) ... ok
+test_memory_bounds_zero_initialization_and_modular_store (__main__.PageVM.test_memory_bounds_zero_initialization_and_modular_store) ... ok
+test_minimum_division_preserves_native_modular_contract (__main__.PageVM.test_minimum_division_preserves_native_modular_contract) ... ok
+test_oom_constructor_and_instance_boundaries_preserve_other_state (__main__.PageVM.test_oom_constructor_and_instance_boundaries_preserve_other_state) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 14.266s
+
+OK

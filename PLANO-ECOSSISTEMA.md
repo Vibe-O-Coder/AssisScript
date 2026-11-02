@@ -1,3 +1,14 @@
+> **Continuação — 02/11/2026: 41,70%, 0/5 gates; meta 50% pendente.**
+> Cópia `C:/Users/babus/Desktop/AssisScript/work/page-integration-20261102`,
+> branch `work/m0-page-integration-2026-11-02`, base remota 0345d56 conferida.
+> ASV2 escolhido para o perfil escalar local após comparação Wasm limitada;
+> Reader/worker com ativação conjunta, concessões e FIFO de ações.
+> [Relatório, evidência e publicação](docs/relatorios/2026-11-02-m0-page-integration.md). Confira o adendo/SHA remoto.
+> Não repetir as fundações; executor geral/compilação/RSS, sandbox Windows/macOS,
+> SDK/HTDL completo/editor, loader FS/SSC/recursos, desktop/leitor/DPI/IME,
+> rede/broker/perfis, persistência/busca, M4–M9, 24h e aceites seguem abertos.
+> Fila integral/histórico preservados; Easy por último. Entradas abaixo históricas.
+
 > **Continuação worker — 02/11/2026: 40,20%, 0/5 gates.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/page-worker-20261102`, branch
 > `work/m0-page-worker-2026-11-02`, base remota 6b2ece0 conferida (2068 blobs).

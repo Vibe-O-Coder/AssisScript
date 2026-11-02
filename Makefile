@@ -229,3 +229,9 @@ page-worker: bin/assis
 	python3 tools/build-page-worker.py
 test-page-worker: bin/assis
 	python3 tests/test-page-worker.py
+
+.PHONY: test-page-reader test-wasm-candidate
+test-page-reader: bin/assis
+	python3 tests/test-page-reader.py
+test-wasm-candidate: bin/assis
+	python3 tests/test-wasm-candidate.py

@@ -1,0 +1,12 @@
+{
+  "base": "0345d567a7ade632546805fc18eca5ca32749cdb",
+  "compiler_sha256": "66da01bcc397e3c56f702c3a284cb3209fd11467f87ed2444f4c5608285b4d71",
+  "checks": [
+    {
+      "library": "pagereader",
+      "returncode": 1,
+      "stderr": "<workspace>\\build\\before-page-integration\\probe.assis:1:8: A001: m\u00f3dulo n\u00e3o encontrado: std/pagereader.assis (use caminho relativo, -I ou ASSIS_PATH)\n  import \"std/pagereader.assis\";safe fn main():int{return 0;}\n         ^\n  Ajuda: Confira o caminho relativo ao arquivo importador e as bibliotecas instaladas. Use -I pasta para bibliotecas externas.\n"
+    }
+  ],
+  "execution": "not-run: compile/import rejection"
+}

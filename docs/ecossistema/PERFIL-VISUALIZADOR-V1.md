@@ -1,5 +1,12 @@
 # Perfil viewer-local-bootstrap-v1 — contrato de desenvolvimento
 
+Continuação de 02/11/2026: [pagereader](../BIBLIOTECA-pagereader.md) prepara
+Reader e worker ASV2 com os mesmos bytes HTDL, valida concessões antes de
+ativar, encaminha ações nativas ao SDK e conserva leitura após falha de
+programa. Não amplia catálogo bootstrap, autoridade Windows, SDK read-only,
+FS/SSC, recursos ou critérios de aceite G1/G2. O perfil estático abaixo e
+todos os seus requisitos visuais permanecem válidos.
+
 Continuação Unicode em 01/11/2026: seleção, navegação por setas, hit test e
 quebra agora preservam grafemas estendidos Unicode 17/UAX29 rev47. Índice e
 cursor são AssisScript, com tabelas/corpus oficial versionados e licença.

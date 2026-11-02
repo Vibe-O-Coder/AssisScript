@@ -1,0 +1,494 @@
+{
+  "schema": "assisscript-scalar-executor-comparison-v1",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "processor": "x86_64",
+  "python": "3.12.3",
+  "node": "{\"node\":\"24.16.0\",\"acorn\":\"8.16.0\",\"ada\":\"3.4.4\",\"amaro\":\"1.1.9\",\"ares\":\"1.34.6\",\"brotli\":\"1.2.0\",\"cldr\":\"48.0\",\"icu\":\"78.3\",\"llhttp\":\"9.4.1\",\"merve\":\"1.2.2\",\"modules\":\"137\",\"napi\":\"10\",\"nbytes\":\"0.1.4\",\"ncrypto\":\"0.0.1\",\"nghttp2\":\"1.68.0\",\"nghttp3\":\"\",\"ngtcp2\":\"\",\"openssl\":\"3.5.6\",\"simdjson\":\"4.6.1\",\"simdutf\":\"6.4.0\",\"sqlite\":\"3.53.0\",\"tz\":\"2026b\",\"undici\":\"7.25.0\",\"unicode\":\"17.0\",\"uv\":\"1.52.1\",\"uvwasi\":\"0.0.23\",\"v8\":\"13.6.233.17-node.49\",\"zlib\":\"1.3.1-e00f703\",\"zstd\":\"1.5.7\"}",
+  "compiler_sha256": "ce366104a9832226d6cf6ac3d26690812992096c1d55cd8c49f2ff3627563541",
+  "repeats": 40,
+  "samples": 7,
+  "cases": [
+    {
+      "id": "integer-edges",
+      "expected": "-9223372036854775807",
+      "steps": 17,
+      "asv2_bytes": 152,
+      "wasm_bytes": 1146,
+      "asv2_compile": {
+        "seconds": 0.034573799999999544,
+        "peak_rss_sampled_bytes": 2076672,
+        "stdout": "",
+        "stderr": ""
+      },
+      "translation_ms": 0.303200000000281,
+      "vm_samples": [
+        {
+          "executor_ms": 1,
+          "process_ms": 6.271200000000476,
+          "peak_rss_sampled_bytes": 4096
+        },
+        {
+          "executor_ms": 1,
+          "process_ms": 7.927899999999433,
+          "peak_rss_sampled_bytes": 4096
+        },
+        {
+          "executor_ms": 1,
+          "process_ms": 7.5552999999999315,
+          "peak_rss_sampled_bytes": 307200
+        },
+        {
+          "executor_ms": 0,
+          "process_ms": 6.7006000000002786,
+          "peak_rss_sampled_bytes": 303104
+        },
+        {
+          "executor_ms": 1,
+          "process_ms": 10.243700000000189,
+          "peak_rss_sampled_bytes": 299008
+        },
+        {
+          "executor_ms": 0,
+          "process_ms": 6.282500000000191,
+          "peak_rss_sampled_bytes": 4096
+        },
+        {
+          "executor_ms": 1,
+          "process_ms": 7.1110000000000895,
+          "peak_rss_sampled_bytes": 303104
+        }
+      ],
+      "wasm_samples": [
+        {
+          "execute_ms": 7.162199999999984,
+          "validator_ms": 138.9902,
+          "engine_compile_ms": 0.5878000000000156,
+          "linear_bytes": 131072,
+          "rss_bytes": 51003392,
+          "process_ms": 341.12659999999994,
+          "peak_rss_sampled_bytes": 51712000
+        },
+        {
+          "execute_ms": 3.678200000000004,
+          "validator_ms": 117.57310000000001,
+          "engine_compile_ms": 0.4210999999999956,
+          "linear_bytes": 131072,
+          "rss_bytes": 51003392,
+          "process_ms": 191.30729999999917,
+          "peak_rss_sampled_bytes": 51650560
+        },
+        {
+          "execute_ms": 4.0257000000000005,
+          "validator_ms": 129.4583,
+          "engine_compile_ms": 0.37420000000000186,
+          "linear_bytes": 131072,
+          "rss_bytes": 51036160,
+          "process_ms": 199.3109999999998,
+          "peak_rss_sampled_bytes": 51638272
+        },
+        {
+          "execute_ms": 4.2398000000000025,
+          "validator_ms": 135.45300000000003,
+          "engine_compile_ms": 0.29579999999998563,
+          "linear_bytes": 131072,
+          "rss_bytes": 51171328,
+          "process_ms": 211.1869000000004,
+          "peak_rss_sampled_bytes": 51630080
+        },
+        {
+          "execute_ms": 3.7203999999999837,
+          "validator_ms": 108.80539999999999,
+          "engine_compile_ms": 0.35490000000001487,
+          "linear_bytes": 131072,
+          "rss_bytes": 51118080,
+          "process_ms": 187.5847000000004,
+          "peak_rss_sampled_bytes": 51548160
+        },
+        {
+          "execute_ms": 4.558599999999984,
+          "validator_ms": 134.7686,
+          "engine_compile_ms": 0.34730000000001837,
+          "linear_bytes": 131072,
+          "rss_bytes": 50974720,
+          "process_ms": 211.13099999999997,
+          "peak_rss_sampled_bytes": 51564544
+        },
+        {
+          "execute_ms": 5.260599999999982,
+          "validator_ms": 145.8705,
+          "engine_compile_ms": 0.38769999999999527,
+          "linear_bytes": 131072,
+          "rss_bytes": 51101696,
+          "process_ms": 244.60369999999986,
+          "peak_rss_sampled_bytes": 51605504
+        }
+      ],
+      "vm_median_ms": 1,
+      "wasm_median_ms": 4.2398000000000025
+    },
+    {
+      "id": "sum-2000",
+      "expected": "1999000",
+      "steps": 34014,
+      "asv2_bytes": 224,
+      "wasm_bytes": 1188,
+      "asv2_compile": {
+        "seconds": 0.030297600000000813,
+        "peak_rss_sampled_bytes": 2060288,
+        "stdout": "",
+        "stderr": ""
+      },
+      "translation_ms": 0.30980000000013774,
+      "vm_samples": [
+        {
+          "executor_ms": 85,
+          "process_ms": 89.9239999999999,
+          "peak_rss_sampled_bytes": 311296
+        },
+        {
+          "executor_ms": 75,
+          "process_ms": 81.84239999999932,
+          "peak_rss_sampled_bytes": 311296
+        },
+        {
+          "executor_ms": 74,
+          "process_ms": 79.67790000000008,
+          "peak_rss_sampled_bytes": 311296
+        },
+        {
+          "executor_ms": 92,
+          "process_ms": 98.06260000000044,
+          "peak_rss_sampled_bytes": 307200
+        },
+        {
+          "executor_ms": 95,
+          "process_ms": 100.0204999999994,
+          "peak_rss_sampled_bytes": 311296
+        },
+        {
+          "executor_ms": 74,
+          "process_ms": 79.85350000000047,
+          "peak_rss_sampled_bytes": 311296
+        },
+        {
+          "executor_ms": 74,
+          "process_ms": 80.9520999999993,
+          "peak_rss_sampled_bytes": 315392
+        }
+      ],
+      "wasm_samples": [
+        {
+          "execute_ms": 10.35250000000002,
+          "validator_ms": 131.47969999999998,
+          "engine_compile_ms": 0.563999999999993,
+          "linear_bytes": 131072,
+          "rss_bytes": 54923264,
+          "process_ms": 220.98489999999947,
+          "peak_rss_sampled_bytes": 55717888
+        },
+        {
+          "execute_ms": 8.114199999999983,
+          "validator_ms": 113.31049999999999,
+          "engine_compile_ms": 0.37990000000002055,
+          "linear_bytes": 131072,
+          "rss_bytes": 55230464,
+          "process_ms": 192.530399999999,
+          "peak_rss_sampled_bytes": 55771136
+        },
+        {
+          "execute_ms": 8.436599999999999,
+          "validator_ms": 125.91730000000001,
+          "engine_compile_ms": 0.2745999999999924,
+          "linear_bytes": 131072,
+          "rss_bytes": 55066624,
+          "process_ms": 203.17130000000105,
+          "peak_rss_sampled_bytes": 55713792
+        },
+        {
+          "execute_ms": 9.872000000000014,
+          "validator_ms": 132.8587,
+          "engine_compile_ms": 0.27949999999998454,
+          "linear_bytes": 131072,
+          "rss_bytes": 54788096,
+          "process_ms": 217.20070000000112,
+          "peak_rss_sampled_bytes": 55709696
+        },
+        {
+          "execute_ms": 8.009999999999991,
+          "validator_ms": 110.1536,
+          "engine_compile_ms": 0.3135000000000048,
+          "linear_bytes": 131072,
+          "rss_bytes": 54935552,
+          "process_ms": 185.7609,
+          "peak_rss_sampled_bytes": 55619584
+        },
+        {
+          "execute_ms": 8.726400000000012,
+          "validator_ms": 114.6999,
+          "engine_compile_ms": 0.34729999999998995,
+          "linear_bytes": 131072,
+          "rss_bytes": 54804480,
+          "process_ms": 192.35390000000052,
+          "peak_rss_sampled_bytes": 55545856
+        },
+        {
+          "execute_ms": 8.476200000000006,
+          "validator_ms": 135.4895,
+          "engine_compile_ms": 0.28360000000000696,
+          "linear_bytes": 131072,
+          "rss_bytes": 55197696,
+          "process_ms": 216.3714999999993,
+          "peak_rss_sampled_bytes": 55709696
+        }
+      ],
+      "vm_median_ms": 75,
+      "wasm_median_ms": 8.476200000000006
+    },
+    {
+      "id": "factorial-8",
+      "expected": "40320",
+      "steps": 125,
+      "asv2_bytes": 192,
+      "wasm_bytes": 1853,
+      "asv2_compile": {
+        "seconds": 0.032440599999999264,
+        "peak_rss_sampled_bytes": 2088960,
+        "stdout": "",
+        "stderr": ""
+      },
+      "translation_ms": 0.49470000000084724,
+      "vm_samples": [
+        {
+          "executor_ms": 1,
+          "process_ms": 9.585799999999978,
+          "peak_rss_sampled_bytes": 299008
+        },
+        {
+          "executor_ms": 2,
+          "process_ms": 9.884500000000074,
+          "peak_rss_sampled_bytes": 299008
+        },
+        {
+          "executor_ms": 1,
+          "process_ms": 12.051599999999496,
+          "peak_rss_sampled_bytes": 307200
+        },
+        {
+          "executor_ms": 1,
+          "process_ms": 10.082400000001712,
+          "peak_rss_sampled_bytes": 299008
+        },
+        {
+          "executor_ms": 1,
+          "process_ms": 9.90610000000025,
+          "peak_rss_sampled_bytes": 299008
+        },
+        {
+          "executor_ms": 1,
+          "process_ms": 10.571500000001066,
+          "peak_rss_sampled_bytes": 299008
+        },
+        {
+          "executor_ms": 1,
+          "process_ms": 10.559999999999903,
+          "peak_rss_sampled_bytes": 311296
+        }
+      ],
+      "wasm_samples": [
+        {
+          "execute_ms": 3.6865000000000236,
+          "validator_ms": 137.3432,
+          "engine_compile_ms": 0.3552999999999997,
+          "linear_bytes": 131072,
+          "rss_bytes": 54775808,
+          "process_ms": 220.06050000000067,
+          "peak_rss_sampled_bytes": 55746560
+        },
+        {
+          "execute_ms": 3.4767000000000223,
+          "validator_ms": 130.3383,
+          "engine_compile_ms": 0.37940000000000396,
+          "linear_bytes": 131072,
+          "rss_bytes": 54419456,
+          "process_ms": 204.09409999999895,
+          "peak_rss_sampled_bytes": 55885824
+        },
+        {
+          "execute_ms": 3.3851999999999975,
+          "validator_ms": 128.7722,
+          "engine_compile_ms": 0.2892999999999972,
+          "linear_bytes": 131072,
+          "rss_bytes": 54411264,
+          "process_ms": 212.4195000000011,
+          "peak_rss_sampled_bytes": 55857152
+        },
+        {
+          "execute_ms": 3.3566999999999894,
+          "validator_ms": 125.02749999999999,
+          "engine_compile_ms": 0.27360000000001605,
+          "linear_bytes": 131072,
+          "rss_bytes": 53792768,
+          "process_ms": 204.25550000000038,
+          "peak_rss_sampled_bytes": 55889920
+        },
+        {
+          "execute_ms": 3.335199999999986,
+          "validator_ms": 129.2908,
+          "engine_compile_ms": 0.2994000000000199,
+          "linear_bytes": 131072,
+          "rss_bytes": 54386688,
+          "process_ms": 204.90860000000134,
+          "peak_rss_sampled_bytes": 55861248
+        },
+        {
+          "execute_ms": 3.6162999999999954,
+          "validator_ms": 133.71679999999998,
+          "engine_compile_ms": 0.3024000000000058,
+          "linear_bytes": 131072,
+          "rss_bytes": 54542336,
+          "process_ms": 213.52280000000155,
+          "peak_rss_sampled_bytes": 55713792
+        },
+        {
+          "execute_ms": 3.3874000000000137,
+          "validator_ms": 120.4672,
+          "engine_compile_ms": 0.27259999999998286,
+          "linear_bytes": 131072,
+          "rss_bytes": 54411264,
+          "process_ms": 197.80860000000013,
+          "peak_rss_sampled_bytes": 55848960
+        }
+      ],
+      "vm_median_ms": 1,
+      "wasm_median_ms": 3.3874000000000137
+    },
+    {
+      "id": "counter-250",
+      "expected": "250",
+      "steps": 5014,
+      "asv2_bytes": 488,
+      "wasm_bytes": 3645,
+      "asv2_compile": {
+        "seconds": 0.03665819999999975,
+        "peak_rss_sampled_bytes": 2240512,
+        "stdout": "",
+        "stderr": ""
+      },
+      "translation_ms": 0.7658999999993199,
+      "vm_samples": [
+        {
+          "executor_ms": 12,
+          "process_ms": 20.680900000000335,
+          "peak_rss_sampled_bytes": 401408
+        },
+        {
+          "executor_ms": 12,
+          "process_ms": 18.488000000001392,
+          "peak_rss_sampled_bytes": 401408
+        },
+        {
+          "executor_ms": 13,
+          "process_ms": 22.69719999999964,
+          "peak_rss_sampled_bytes": 401408
+        },
+        {
+          "executor_ms": 11,
+          "process_ms": 20.803199999999578,
+          "peak_rss_sampled_bytes": 401408
+        },
+        {
+          "executor_ms": 14,
+          "process_ms": 21.63340000000069,
+          "peak_rss_sampled_bytes": 405504
+        },
+        {
+          "executor_ms": 12,
+          "process_ms": 19.059600000000287,
+          "peak_rss_sampled_bytes": 401408
+        },
+        {
+          "executor_ms": 12,
+          "process_ms": 17.33489999999982,
+          "peak_rss_sampled_bytes": 401408
+        }
+      ],
+      "wasm_samples": [
+        {
+          "execute_ms": 5.2911,
+          "validator_ms": 132.7192,
+          "engine_compile_ms": 0.33439999999998804,
+          "linear_bytes": 131072,
+          "rss_bytes": 55136256,
+          "process_ms": 210.92120000000136,
+          "peak_rss_sampled_bytes": 55771136
+        },
+        {
+          "execute_ms": 5.0449999999999875,
+          "validator_ms": 126.32479999999998,
+          "engine_compile_ms": 0.3505000000000109,
+          "linear_bytes": 131072,
+          "rss_bytes": 54951936,
+          "process_ms": 205.67089999999945,
+          "peak_rss_sampled_bytes": 55685120
+        },
+        {
+          "execute_ms": 6.4170999999999765,
+          "validator_ms": 132.1674,
+          "engine_compile_ms": 0.2950000000000159,
+          "linear_bytes": 131072,
+          "rss_bytes": 55136256,
+          "process_ms": 216.00620000000072,
+          "peak_rss_sampled_bytes": 55664640
+        },
+        {
+          "execute_ms": 6.029200000000003,
+          "validator_ms": 124.2022,
+          "engine_compile_ms": 0.4362999999999886,
+          "linear_bytes": 131072,
+          "rss_bytes": 55246848,
+          "process_ms": 210.93060000000108,
+          "peak_rss_sampled_bytes": 55984128
+        },
+        {
+          "execute_ms": 5.756599999999992,
+          "validator_ms": 130.88389999999998,
+          "engine_compile_ms": 0.3112000000000137,
+          "linear_bytes": 131072,
+          "rss_bytes": 55107584,
+          "process_ms": 219.23010000000076,
+          "peak_rss_sampled_bytes": 55590912
+        },
+        {
+          "execute_ms": 6.781399999999991,
+          "validator_ms": 119.82709999999999,
+          "engine_compile_ms": 0.43940000000000623,
+          "linear_bytes": 131072,
+          "rss_bytes": 55042048,
+          "process_ms": 190.94179999999915,
+          "peak_rss_sampled_bytes": 55635968
+        },
+        {
+          "execute_ms": 7.966000000000008,
+          "validator_ms": 111.646,
+          "engine_compile_ms": 0.40619999999998413,
+          "linear_bytes": 131072,
+          "rss_bytes": 55128064,
+          "process_ms": 188.04540000000003,
+          "peak_rss_sampled_bytes": 55566336
+        }
+      ],
+      "vm_median_ms": 12,
+      "wasm_median_ms": 6.029200000000003
+    }
+  ],
+  "limits": [
+    "Single local host per OS; no throughput/SLA extrapolation",
+    "VM integer-ms clock is coarse for tiny cases; Wasm uses performance.now",
+    "Wasm includes fixed 128 KiB linear memory and engine; VM requested bytes exclude allocator/process overhead",
+    "RSS is sampled process high water, not an enforced compilation/host RSS quota",
+    "Wasm dispatcher uses a balanced PC tree; not an optimized direct-source Wasm backend",
+    "Python canonical validation is separate from engine compilation; both are included in end-to-end time",
+    "Existing Node runtime is a comparison dependency, never embedded or distributed"
+  ]
+}

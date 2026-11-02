@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-02",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "partial-native-retest-page-worker",
+  "assessment": "native-scalar-decision-reader-worker",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -42,15 +42,17 @@
         {
           "id": "E00-03",
           "name": "Fronteiras e decisões arquiteturais",
-          "level": 2,
+          "level": 3,
           "acceptance": "Registrar decisões de backend de página, providers nativos, processos, protocolos e dependências; demonstrar separação shell/broker/conteúdo e atualização de versões.",
-          "baseline": "Perfil experimental ASV2 e SDK read-only-1 versionados, emissão por IR, imports sem ponteiros e fronteira do host local demonstrados. Escolha geral VM/Wasm e separação de processos/broker permanecem abertas.",
+          "baseline": "Decisão ASV2 para o perfil escalar local após alternativa Wasm com fuel/frames/memória/calls comparáveis; fronteira Reader/shell/worker e protocolo em AssisScript demonstrados. Executor geral, extensões e broker completo permanecem abertos.",
           "evidence": [
             "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md",
             "docs/relatorios/2026-10-29-m0-contratos.md",
             "docs/ecossistema/referencias/htdl-drafts-2026-10-29/PROVENANCE.json",
             "docs/relatorios/2026-11-02-m0-page-runtime.md",
-            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-02-m0-page-integration.md",
+            "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/summary.json"
           ]
         },
         {
@@ -530,9 +532,9 @@
         {
           "id": "E06-01",
           "name": "Formato de execução de página",
-          "level": 2,
+          "level": 3,
           "acceptance": "Escolher VM/Wasm com ADR e prova; implementar layout, validação, loader e imports permitidos; preservar semântica declarada e comparar execução com referência nativa ou oráculo.",
-          "baseline": "Backend page-asv2 emite IR tipada int/bool para bytes validados e preserva semântica contra nativo/AST/Python. Perfil escalar experimental, sem objetos/ownership geral, escolha final VM/Wasm ou sandbox.",
+          "baseline": "ASV2 escalar escolhido em ADR após tradução Wasm canônica e comparação nativo/VM/V8/Python em Windows/Linux x64. Layout, verificador, loader/imports e semântica do perfil demonstrados. Objetos/ownership e executor geral permanecem abertos.",
           "evidence": [
             "local:htdl/docs/03-assisscript-no-navegador.md",
             "docs/ARM64-NATIVO.md",
@@ -541,7 +543,9 @@
             "docs/BIBLIOTECA-pagevm.md",
             "docs/ecossistema/ADR-0001-EXECUCAO-PAGINA.md",
             "docs/relatorios/2026-11-02-m0-page-runtime.md",
-            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-02-m0-page-integration.md",
+            "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/summary.json"
           ]
         },
         {
@@ -562,9 +566,9 @@
         {
           "id": "E06-03",
           "name": "Capacidades e API hospedeira",
-          "level": 2,
+          "level": 3,
           "acceptance": "Negar arquivos/processos/FFI/rede/relógio por padrão; expor somente imports versionados e tokens revogáveis por origem/instância/geração; testar forja, replay e confused deputy.",
-          "baseline": "Oito imports htdl_v1/read-only-1 sem ponteiros; queries locais negadas por padrão, concessão por envelope completo, revogação permanente, resposta por request/call e canal de erro. Broker de rede/arquivos, tokens entre processos e API completa não implementados.",
+          "baseline": "Concessões explícitas de documento/contador antes da ativação, identidades/replies e invalidação em Reader/SDK/worker; bytes copiados antes da etapa assíncrona e casos de forja/replay/negação/revogação executados. Imports nativos negados; broker de rede/arquivos e SDK completo permanecem abertos.",
           "evidence": [
             "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md",
             "docs/relatorios/2026-11-01-m3-unicode-m0-vm.md",
@@ -572,7 +576,9 @@
             "docs/BIBLIOTECA-pagevm.md",
             "docs/ecossistema/ADR-0001-EXECUCAO-PAGINA.md",
             "docs/relatorios/2026-11-02-m0-page-runtime.md",
-            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-02-m0-page-integration.md",
+            "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/summary.json"
           ]
         },
         {
@@ -951,12 +957,14 @@
         {
           "id": "E11-04",
           "name": "Performance, carga e orçamento",
-          "level": 1,
+          "level": 2,
           "acceptance": "Fixar corpus/hardware/seeds e medir p50/p95/p99, memória, handles e bytes; ensaiar UI, crawler e busca em conjunto por 24h reais e comparar candidato à baseline sem regressão não justificada.",
-          "baseline": "Há benchmarks/soak nativos históricos; não do navegador/buscador.",
+          "baseline": "Corpus fixo de quatro programas, sete amostras de quarenta instâncias por engine/host, custo de compilação/validação/execução, tamanhos e RSS amostrado Windows/Linux. Medição local reproduzível; UI+crawler/busca em conjunto, quota integral e 24h permanecem abertos.",
           "evidence": [
             "docs/HANDOFF-3.3-ALPHA.15.md",
-            "docs/DESEMPENHO.md"
+            "docs/DESEMPENHO.md",
+            "docs/relatorios/2026-11-02-m0-page-integration.md",
+            "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/summary.json"
           ]
         },
         {
@@ -2597,7 +2605,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-02",
+      "rubric_version": 1,
+      "label": "Decisão escalar ASV2/Wasm e Reader com worker: 41,70%, 0/5 gates",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 2,
+        "E06-03": 3,
+        "E06-04": 2,
+        "E06-05": 3,
+        "E07-01": 2,
+        "E07-02": 2,
+        "E07-03": 2,
+        "E07-04": 2,
+        "E07-05": 2,
+        "E08-01": 0,
+        "E08-02": 2,
+        "E08-03": 0,
+        "E08-04": 2,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Worker ASV2/HTDL/SDK e ASIP/1 em AssisScript, supervisor e navegação transacional com processos Windows/Linux; restrições Linux x64 verificadas e Windows explicitamente sem sandbox de autoridade. 40,20%, 0/5 gates; evidência própria e limites no relatório. Sem redução de escopo: decisão VM/Wasm, compilação/RSS, sandbox Windows/macOS, Reader/loader, desktop/leitor/DPI/IME, HTDL completo/editor, FS/SSC, M4–M9 e aceites permanecem na fila; Easy por último."
+  "assessment_note": "ASV2 escolhido para o perfil escalar local após alternativa Wasm limitada/comparável; Reader e worker preparados/ativados juntos, com concessões e FIFO de ações em AssisScript. 41,70%, 0/5 gates; meta 50% pendente. Executor geral, compilação/RSS, sandbox Windows/macOS, SDK/HTDL completo, loader FS/SSC/recursos, desktop/leitor/DPI/IME, rede/busca, M4–M9 e aceites preservados. Easy por último."
 }
