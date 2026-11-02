@@ -1,0 +1,512 @@
+{
+  "schema": "ssc-grid-42-q16-v1",
+  "step": "1/120 second",
+  "rounding": "nearest, ties away from zero",
+  "generation": "Decimal 90 and 110 digits; cross-check binary64 reference; finite table only",
+  "rows": [
+    {
+      "frequency": "0.5",
+      "damping": "0.1",
+      "frequency_q": 32768,
+      "damping_q": 6554,
+      "matrix": [
+        65514,
+        545,
+        -5375,
+        65171
+      ]
+    },
+    {
+      "frequency": "0.5",
+      "damping": "0.3",
+      "frequency_q": 32768,
+      "damping_q": 19661,
+      "matrix": [
+        65514,
+        542,
+        -5347,
+        64492
+      ]
+    },
+    {
+      "frequency": "0.5",
+      "damping": "0.8",
+      "frequency_q": 32768,
+      "damping_q": 52429,
+      "matrix": [
+        65514,
+        535,
+        -5278,
+        62826
+      ]
+    },
+    {
+      "frequency": "0.5",
+      "damping": "1",
+      "frequency_q": 32768,
+      "damping_q": 65536,
+      "matrix": [
+        65514,
+        532,
+        -5251,
+        62171
+      ]
+    },
+    {
+      "frequency": "0.5",
+      "damping": "2",
+      "frequency_q": 32768,
+      "damping_q": 131072,
+      "matrix": [
+        65514,
+        518,
+        -5117,
+        58999
+      ]
+    },
+    {
+      "frequency": "0.5",
+      "damping": "4",
+      "frequency_q": 32768,
+      "damping_q": 262144,
+      "matrix": [
+        65515,
+        493,
+        -4863,
+        53133
+      ]
+    },
+    {
+      "frequency": "1",
+      "damping": "0.1",
+      "frequency_q": 65536,
+      "damping_q": 6554,
+      "matrix": [
+        65446,
+        543,
+        -21438,
+        64764
+      ]
+    },
+    {
+      "frequency": "1",
+      "damping": "0.3",
+      "frequency_q": 65536,
+      "damping_q": 19661,
+      "matrix": [
+        65447,
+        537,
+        -21216,
+        63421
+      ]
+    },
+    {
+      "frequency": "1",
+      "damping": "0.8",
+      "frequency_q": 65536,
+      "damping_q": 52429,
+      "matrix": [
+        65449,
+        524,
+        -20673,
+        60184
+      ]
+    },
+    {
+      "frequency": "1",
+      "damping": "1",
+      "frequency_q": 65536,
+      "damping_q": 65536,
+      "matrix": [
+        65449,
+        518,
+        -20461,
+        58936
+      ]
+    },
+    {
+      "frequency": "1",
+      "damping": "2",
+      "frequency_q": 65536,
+      "damping_q": 131072,
+      "matrix": [
+        65452,
+        493,
+        -19443,
+        53074
+      ]
+    },
+    {
+      "frequency": "1",
+      "damping": "4",
+      "frequency_q": 65536,
+      "damping_q": 262144,
+      "matrix": [
+        65458,
+        446,
+        -17606,
+        43040
+      ]
+    },
+    {
+      "frequency": "2",
+      "damping": "0.1",
+      "frequency_q": 131072,
+      "damping_q": 6554,
+      "matrix": [
+        65179,
+        539,
+        -85189,
+        63824
+      ]
+    },
+    {
+      "frequency": "2",
+      "damping": "0.3",
+      "frequency_q": 131072,
+      "damping_q": 19661,
+      "matrix": [
+        65184,
+        528,
+        -83436,
+        61201
+      ]
+    },
+    {
+      "frequency": "2",
+      "damping": "0.8",
+      "frequency_q": 131072,
+      "damping_q": 52429,
+      "matrix": [
+        65196,
+        502,
+        -79259,
+        55105
+      ]
+    },
+    {
+      "frequency": "2",
+      "damping": "1",
+      "frequency_q": 131072,
+      "damping_q": 65536,
+      "matrix": [
+        65201,
+        492,
+        -77667,
+        52840
+      ]
+    },
+    {
+      "frequency": "2",
+      "damping": "2",
+      "frequency_q": 131072,
+      "damping_q": 131072,
+      "matrix": [
+        65222,
+        445,
+        -70330,
+        42836
+      ]
+    },
+    {
+      "frequency": "2",
+      "damping": "4",
+      "frequency_q": 131072,
+      "damping_q": 262144,
+      "matrix": [
+        65259,
+        369,
+        -58297,
+        28147
+      ]
+    },
+    {
+      "frequency": "4",
+      "damping": "0.1",
+      "frequency_q": 262144,
+      "damping_q": 6554,
+      "matrix": [
+        64124,
+        531,
+        -335378,
+        61455
+      ]
+    },
+    {
+      "frequency": "4",
+      "damping": "0.3",
+      "frequency_q": 262144,
+      "damping_q": 19661,
+      "matrix": [
+        64162,
+        509,
+        -321809,
+        56479
+      ]
+    },
+    {
+      "frequency": "4",
+      "damping": "0.8",
+      "frequency_q": 262144,
+      "damping_q": 52429,
+      "matrix": [
+        64251,
+        461,
+        -290983,
+        45727
+      ]
+    },
+    {
+      "frequency": "4",
+      "damping": "1",
+      "frequency_q": 262144,
+      "damping_q": 65536,
+      "matrix": [
+        64284,
+        443,
+        -279782,
+        42020
+      ]
+    },
+    {
+      "frequency": "4",
+      "damping": "2",
+      "frequency_q": 262144,
+      "damping_q": 131072,
+      "matrix": [
+        64432,
+        367,
+        -231924,
+        27520
+      ]
+    },
+    {
+      "frequency": "4",
+      "damping": "4",
+      "frequency_q": 262144,
+      "damping_q": 262144,
+      "matrix": [
+        64655,
+        263,
+        -166176,
+        11760
+      ]
+    },
+    {
+      "frequency": "6",
+      "damping": "0.1",
+      "frequency_q": 393216,
+      "damping_q": 6554,
+      "matrix": [
+        62394,
+        521,
+        -739983,
+        58469
+      ]
+    },
+    {
+      "frequency": "6",
+      "damping": "0.3",
+      "frequency_q": 393216,
+      "damping_q": 19661,
+      "matrix": [
+        62521,
+        490,
+        -695840,
+        51446
+      ]
+    },
+    {
+      "frequency": "6",
+      "damping": "0.8",
+      "frequency_q": 393216,
+      "damping_q": 52429,
+      "matrix": [
+        62804,
+        422,
+        -600117,
+        37334
+      ]
+    },
+    {
+      "frequency": "6",
+      "damping": "1",
+      "frequency_q": 393216,
+      "damping_q": 65536,
+      "matrix": [
+        62906,
+        399,
+        -566922,
+        32830
+      ]
+    },
+    {
+      "frequency": "6",
+      "damping": "2",
+      "frequency_q": 393216,
+      "damping_q": 131072,
+      "matrix": [
+        63336,
+        306,
+        -434820,
+        17200
+      ]
+    },
+    {
+      "frequency": "6",
+      "damping": "4",
+      "frequency_q": 393216,
+      "damping_q": 262144,
+      "matrix": [
+        63914,
+        197,
+        -279594,
+        4583
+      ]
+    },
+    {
+      "frequency": "8",
+      "damping": "0.1",
+      "frequency_q": 524288,
+      "damping_q": 6554,
+      "matrix": [
+        60025,
+        509,
+        -1285286,
+        54911
+      ]
+    },
+    {
+      "frequency": "8",
+      "damping": "0.3",
+      "frequency_q": 524288,
+      "damping_q": 19661,
+      "matrix": [
+        60315,
+        469,
+        -1184797,
+        46173
+      ]
+    },
+    {
+      "frequency": "8",
+      "damping": "0.8",
+      "frequency_q": 524288,
+      "damping_q": 52429,
+      "matrix": [
+        60946,
+        387,
+        -976615,
+        29860
+      ]
+    },
+    {
+      "frequency": "8",
+      "damping": "1",
+      "frequency_q": 524288,
+      "damping_q": 65536,
+      "matrix": [
+        61166,
+        359,
+        -907657,
+        25051
+      ]
+    },
+    {
+      "frequency": "8",
+      "damping": "2",
+      "frequency_q": 524288,
+      "damping_q": 131072,
+      "matrix": [
+        62047,
+        258,
+        -650816,
+        10257
+      ]
+    },
+    {
+      "frequency": "8",
+      "damping": "4",
+      "frequency_q": 524288,
+      "damping_q": 262144,
+      "matrix": [
+        63120,
+        153,
+        -387524,
+        1443
+      ]
+    },
+    {
+      "frequency": "10",
+      "damping": "0.1",
+      "frequency_q": 655360,
+      "damping_q": 6554,
+      "matrix": [
+        57053,
+        495,
+        -1954755,
+        50831
+      ]
+    },
+    {
+      "frequency": "10",
+      "damping": "0.3",
+      "frequency_q": 655360,
+      "damping_q": 19661,
+      "matrix": [
+        57603,
+        448,
+        -1766969,
+        40730
+      ]
+    },
+    {
+      "frequency": "10",
+      "damping": "0.8",
+      "frequency_q": 655360,
+      "damping_q": 52429,
+      "matrix": [
+        58760,
+        353,
+        -1395000,
+        23237
+      ]
+    },
+    {
+      "frequency": "10",
+      "damping": "1",
+      "frequency_q": 655360,
+      "damping_q": 65536,
+      "matrix": [
+        59150,
+        324,
+        -1277210,
+        18495
+      ]
+    },
+    {
+      "frequency": "10",
+      "damping": "2",
+      "frequency_q": 655360,
+      "damping_q": 131072,
+      "matrix": [
+        60645,
+        219,
+        -864663,
+        5599
+      ]
+    },
+    {
+      "frequency": "10",
+      "damping": "4",
+      "frequency_q": 655360,
+      "damping_q": 262144,
+      "matrix": [
+        62307,
+        124,
+        -488779,
+        74
+      ]
+    }
+  ]
+}

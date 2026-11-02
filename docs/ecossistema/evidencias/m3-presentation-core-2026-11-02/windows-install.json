@@ -1,0 +1,71 @@
+{
+  "passed": true,
+  "compiler_sha256": "4c0118bf65c6327fd6b013f99ce0d7d023e192b3024768781fcf4fca2bb9ed4c",
+  "setup_sha256": "1fe75cd70514caa1eccab206387035220eea5208f507a8143c408c4eaec69ed5",
+  "selected_libraries": [
+    "buffers",
+    "doctree",
+    "documents",
+    "fluxstyle",
+    "htdl",
+    "owned",
+    "sanscript",
+    "unicode"
+  ],
+  "checks": [
+    {
+      "command": [
+        "<TEMP>\\distribution\\bin\\assis-setup.exe",
+        "install",
+        "--prefix",
+        "<TEMP>\\prefix with spaces",
+        "--no-path",
+        "--no-associations",
+        "--with",
+        "sanscript"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em C:\\Users\\babus\\AppData\\Local\\Temp\\assis-presentation-install-acp029un\\prefix with spaces\\bin\\assis.exe\r\nO PATH foi preservado. Use o caminho completo ou adicione a pasta bin ao PATH.\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\assis.exe",
+        "run",
+        "<TEMP>\\prefix with spaces\\exemplos\\54_fluxstyle_sanscript.assis",
+        "--safe",
+        "--debug"
+      ],
+      "returncode": 0,
+      "stdout": "FLOW-TARGET -524288\nSSC-REST -524288 true\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\distribution\\bin\\assis-setup.exe",
+        "uninstall",
+        "--prefix",
+        "<TEMP>\\prefix with spaces",
+        "--no-path",
+        "--no-associations"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: desinstalado. Projetos e arquivos extras foram preservados.\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-isolation=none",
+        "tests/test-development.js",
+        "tests/test-v31.js"
+      ],
+      "returncode": 0,
+      "executed": 23,
+      "log": "windows-distribution-node.log",
+      "sha256": "7f1afb56f84ee6437e9a98ff8ccf786c3ee6cd3aa7b1620fe8ab73152cce4497"
+    }
+  ],
+  "scope": "Fresh candidate and isolated offline prefix, optional indices 31/32 and transitive closure; installed FS/SSC demo, uninstall and user file preservation; no PATH, associations or release changes"
+}

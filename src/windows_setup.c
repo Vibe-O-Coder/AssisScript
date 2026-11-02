@@ -15,6 +15,7 @@
 #include <wchar.h>
 #include <io.h>
 #include <fcntl.h>
+#include <stdint.h>
 
 #define CAP 32768
 static wchar_t prefix[CAP],root[CAP];
@@ -22,7 +23,8 @@ static const wchar_t *files[]={
 #include "install_files.inc"
 };
 #include "install_optional.inc"
-static unsigned optional_mask=(1u<<OPTIONAL_COUNT)-1;
+_Static_assert(OPTIONAL_COUNT>0 && OPTIONAL_COUNT<=63,"optional library mask width exceeded");
+static uint64_t optional_mask=(UINT64_C(1)<<OPTIONAL_COUNT)-1;
 static void die(const wchar_t *message){fwprintf(stderr,L"assis: %ls (Windows %lu).\n",message,(unsigned long)GetLastError());exit(1);}
 static void join(wchar_t *out,const wchar_t *base,const wchar_t *part){
     if(wcslen(base)+wcslen(part)+2>=CAP)die(L"Caminho grande demais");wcscpy(out,base);wcscat(out,L"\\");wcscat(out,part);
@@ -91,13 +93,13 @@ static void install(int change_path,int file_icons){
     wchar_t from[CAP],to[CAP],dir[CAP];
     if(!_wcsicmp(prefix,root))die(L"Escolha um destino diferente da pasta extraída, ou use bin\\assis.exe sem instalar");
     for(size_t i=0;i<sizeof(files)/sizeof(files[0]);i++){join(from,root,files[i]);if(!is_file(from))die(L"Pacote incompleto: extraia todos os arquivos antes de instalar");}
-    for(unsigned i=0;i<OPTIONAL_COUNT;i++)if(optional_mask&(1u<<i)){join(from,root,optional_files[i]);if(!is_file(from))die(L"Biblioteca opcional ausente no pacote");}
+    for(unsigned i=0;i<OPTIONAL_COUNT;i++)if(optional_mask&(UINT64_C(1)<<i)){join(from,root,optional_files[i]);if(!is_file(from))die(L"Biblioteca opcional ausente no pacote");}
     directory(prefix);join(dir,prefix,L"bin");directory(dir);join(dir,prefix,L"docs");directory(dir);join(dir,prefix,L"exemplos");directory(dir);
     join(dir,prefix,L"stdlib");directory(dir);join(dir,prefix,L"exemplos\\bibliotecas");directory(dir);
     join(dir,prefix,L"assets");directory(dir);
     join(dir,prefix,L"benchmarks");directory(dir);join(dir,prefix,L"benchmarks\\resultados");directory(dir);
     for(size_t i=0;i<sizeof(files)/sizeof(files[0]);i++){join(from,root,files[i]);join(to,prefix,files[i]);wcscpy(dir,to);wchar_t *parent=wcsrchr(dir,L'\\');if(parent){*parent=0;directory(dir);}if(!CopyFileW(from,to,FALSE))die(L"Não foi possível copiar um arquivo da instalação");}
-    for(unsigned i=0;i<OPTIONAL_COUNT;i++)if(optional_mask&(1u<<i)){join(from,root,optional_files[i]);join(to,prefix,optional_files[i]);if(!CopyFileW(from,to,FALSE))die(L"Não foi possível instalar biblioteca opcional");}
+    for(unsigned i=0;i<OPTIONAL_COUNT;i++)if(optional_mask&(UINT64_C(1)<<i)){join(from,root,optional_files[i]);join(to,prefix,optional_files[i]);if(!CopyFileW(from,to,FALSE))die(L"Não foi possível instalar biblioteca opcional");}
     join(to,prefix,L"INSTALADO");FILE *marker=_wfopen(to,L"wb");if(!marker)die(L"Não foi possível gravar marcador de instalação");
     int ok=fputs("AssisScript " ASSIS_VERSION "\n",marker)>=0;if(fclose(marker))ok=0;if(!ok)die(L"Erro ao gravar marcador de instalação");
     if(change_path)edit_path(1);
@@ -138,13 +140,13 @@ int wmain(int argc,wchar_t **argv){
         else if(!_wcsicmp(argv[i],L"--with")&&i+1<argc){
             if(!selected)optional_mask=0;selected=1;const wchar_t *p=argv[++i];if(!*p)die(L"--with exige bibliotecas separadas por vírgula");
             while(*p){const wchar_t *end=wcschr(p,L',');size_t len=end?(size_t)(end-p):wcslen(p);int found=0;
-                for(unsigned j=0;j<OPTIONAL_COUNT;j++)if(len==wcslen(optional_names[j])&&!wcsncmp(p,optional_names[j],len)){optional_mask|=1u<<j;found=1;break;}
+                for(unsigned j=0;j<OPTIONAL_COUNT;j++)if(len==wcslen(optional_names[j])&&!wcsncmp(p,optional_names[j],len)){optional_mask|=UINT64_C(1)<<j;found=1;break;}
                 if(!found)die(L"Biblioteca desconhecida; consulte stdlib/catalogo.json");if(!end)break;p=end+1;if(!*p)die(L"OwnedList de bibliotecas incompleta");
             }
         }
         else if(!_wcsicmp(argv[i],L"--no-path"))change_path=0;else if(!_wcsicmp(argv[i],L"--no-associations"))file_icons=0;else die(L"Opção desconhecida");
     }
-    for(unsigned pass=0;pass<OPTIONAL_COUNT;pass++)for(unsigned j=0;j<OPTIONAL_COUNT;j++)if(optional_mask&(1u<<j))optional_mask|=optional_dependencies[j];
+    for(unsigned pass=0;pass<OPTIONAL_COUNT;pass++)for(unsigned j=0;j<OPTIONAL_COUNT;j++)if(optional_mask&(UINT64_C(1)<<j))optional_mask|=optional_dependencies[j];
     wchar_t default_path[CAP];
     if(!chosen){DWORD n=GetEnvironmentVariableW(L"LOCALAPPDATA",default_path,CAP);if(!n||n+13>=CAP)die(L"LOCALAPPDATA não definido ou grande demais");wcscat(default_path,L"\\AssisScript");chosen=default_path;}
     DWORD n=GetFullPathNameW(chosen,CAP,prefix,NULL);if(!n||n>=CAP)die(L"Destino inválido");

@@ -124,3 +124,27 @@ sem pular os aceites visuais ou declarar integração que ainda não existe.
 A publicação normal desta mudança em Vibe-O-Coder/AssisScript foi autorizada
 pelo masterprompt invocado pelo usuário. SHA/inventário remoto e eventual PR
 serão confirmados no adendo desta seção; este parágrafo não afirma publicação.
+
+## Adendo — recusa automática de publicação
+
+Implementação local 6701d1b6d67687144606c03e2431c0f5a6ddf313, 38 arquivos.
+O push para Vibe-O-Coder/AssisScript/work/m3-htdl-recovery-2026-11-02 foi recusado
+antes de executar: a revisão automática exigiu autorização explícita do usuário
+para exportar esse conteúdo ao destino. O pedido permanece pendente; não houve
+contorno ou publicação. A continuação local FS/SSC está documentada no
+[relatório seguinte](2026-11-02-m3-presentation-core.md). O original recebe
+somente uma entrada de continuidade; suas demais alterações são preservadas.
+
+## Adendo — autorização recebida e publicação confirmada
+
+Após resposta explícita do usuário, foi publicado exatamente o commit
+**6701d1b6d67687144606c03e2431c0f5a6ddf313** na
+[branch de recuperação HTDL](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m3-htdl-recovery-2026-11-02).
+git ls-remote, fetch e conector GitHub confirmaram o SHA; os 38 paths/blobs/modos
+e a árvore recursiva inteira foram comparados.
+[Inventário publicado](../ecossistema/evidencias/m3-htdl-recovery-2026-11-02/published-implementation.json).
+PR não criada: conector 403 Resource not accessible by integration. Não houve
+uso de credencial/API alternativa, merge, force push, release ou alegação de CI.
+O bloqueio anterior desta implementação foi resolvido. A continuação FS/SSC
+está em branch separada work/m3-presentation-core-2026-11-02 e sua publicação
+ainda depende da aprovação do novo commit. Este adendo integra essa continuação.

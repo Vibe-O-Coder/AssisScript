@@ -1,0 +1,50 @@
+{
+  "schema": "presentation-core-evidence-v1",
+  "base": "6701d1b6d67687144606c03e2431c0f5a6ddf313",
+  "base_publication": "blocked pending explicit user authorization",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "checks": [
+    {
+      "name": "fluxstyle",
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/htdl-recovery-20261102/tests/test-fluxstyle.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 19.665,
+      "log": "linux-fluxstyle.log",
+      "sha256": "0a5851be7963587dc8a16c33470927f304b1ab5295a12aca1117ff3da69b56c9"
+    },
+    {
+      "name": "sanscript",
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/htdl-recovery-20261102/tests/test-sanscript.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 15.566,
+      "log": "linux-sanscript.log",
+      "sha256": "2a889f073a0611502929cb5178b3e8024196fb94684e9f2037d775bdb8260efe"
+    },
+    {
+      "name": "install-mask",
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/c/Users/babus/Desktop/AssisScript/work/htdl-recovery-20261102/tests/test-install-mask.py"
+      ],
+      "returncode": 0,
+      "executed": 2,
+      "not_run": 0,
+      "seconds": 1.617,
+      "log": "linux-install-mask.log",
+      "sha256": "5a7f520dd98912ddd3fe9bf2382e78cf30dc30f2b8352279ebbd1919ad146b76"
+    }
+  ],
+  "passed": true
+}

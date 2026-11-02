@@ -1,0 +1,7 @@
+test_native_mask_boundaries_and_transitive_dependency_closure (__main__.Mask.test_native_mask_boundaries_and_transitive_dependency_closure) ... ok
+test_rejects_64_entries_before_touching_generated_files (__main__.Mask.test_rejects_64_entries_before_touching_generated_files) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.410s
+
+OK

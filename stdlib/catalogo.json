@@ -316,6 +316,24 @@
       "dependencies": [
         "pagevm"
       ]
+    },
+    {
+      "name": "fluxstyle",
+      "required": false,
+      "doc": "BIBLIOTECA-fluxstyle.md",
+      "description": "Perfil local de grafo puro tipado, Q16.16, produtores e transacao de saidas.",
+      "dependencies": [
+        "htdl"
+      ]
+    },
+    {
+      "name": "sanscript",
+      "required": false,
+      "doc": "BIBLIOTECA-sanscript.md",
+      "description": "Perfil experimental SSC de 42 matrizes canonicas, canais e passo limitado.",
+      "dependencies": [
+        "fluxstyle"
+      ]
     }
   ]
 }

@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "setup_sha256": null,
+  "selected_libraries": [
+    "buffers",
+    "doctree",
+    "documents",
+    "fluxstyle",
+    "htdl",
+    "owned",
+    "sanscript",
+    "unicode"
+  ],
+  "checks": [
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/instalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces",
+        "--no-path",
+        "--with",
+        "sanscript"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em /tmp/assis-presentation-install-w4o_w_jx/prefix with spaces/bin/assis\nInclua /tmp/assis-presentation-install-w4o_w_jx/prefix with spaces/bin no PATH ou use o caminho completo.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/prefix with spaces/bin/assis",
+        "run",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/54_fluxstyle_sanscript.assis",
+        "--safe",
+        "--debug"
+      ],
+      "returncode": 0,
+      "stdout": "FLOW-TARGET -524288\nSSC-REST -524288 true\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/desinstalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: compilador desinstalado. Seus projetos foram preservados.\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Fresh candidate and isolated offline prefix, optional indices 31/32 and transitive closure; installed FS/SSC demo, uninstall and user file preservation; no PATH, associations or release changes"
+}

@@ -1,0 +1,121 @@
+{
+  "schema": "presentation-core-evidence-v1",
+  "base": "6701d1b6d67687144606c03e2431c0f5a6ddf313",
+  "base_publication": "blocked pending explicit user authorization",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "compiler_sha256": "4c0118bf65c6327fd6b013f99ce0d7d023e192b3024768781fcf4fca2bb9ed4c",
+  "checks": [
+    {
+      "name": "fluxstyle",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-recovery-20261102\\tests\\test-fluxstyle.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 19.297,
+      "log": "windows-fluxstyle.log",
+      "sha256": "d14da556226526943c602f89f8536d0ce4dec0bf6d1e12a5ee9d2f0eadc3ed2b"
+    },
+    {
+      "name": "sanscript",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-recovery-20261102\\tests\\test-sanscript.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 15.634,
+      "log": "windows-sanscript.log",
+      "sha256": "cb695584025d446ee989154626764865a0981d22289365d0d804e3da167ba66f"
+    },
+    {
+      "name": "install-mask",
+      "command": [
+        "C:\\Users\\babus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-recovery-20261102\\tests\\test-install-mask.py"
+      ],
+      "returncode": 0,
+      "executed": 2,
+      "not_run": 0,
+      "seconds": 2.719,
+      "log": "windows-install-mask.log",
+      "sha256": "ad958d1b85bf09766d04354bcd1b55315f1bea7e3f5045e31d6a0fb46fbf1137"
+    }
+  ],
+  "passed": true,
+  "import_reproduction": {
+    "public_base": "5fad34e32c444574b4900f6629855cf9a2626cb0",
+    "checks": [
+      {
+        "source": "import \"std/fluxstyle.assis\";safe fn main():int{return 0;}",
+        "runs": [
+          {
+            "label": "before",
+            "command": [
+              "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-catalog-20261102\\build\\assis.exe",
+              "check",
+              "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-recovery-20261102\\build\\import-fluxstyle-probe.assis",
+              "--safe",
+              "--diagnostics=json"
+            ],
+            "returncode": 1,
+            "stdout": "",
+            "stderr": "{\"file\":\"C:\\\\Users\\\\babus\\\\Desktop\\\\AssisScript\\\\work\\\\htdl-recovery-20261102\\\\build\\\\import-fluxstyle-probe.assis\",\"line\":1,\"column\":8,\"code\":\"A001\",\"message\":\"m\u00f3dulo n\u00e3o encontrado: std/fluxstyle.assis (use caminho relativo, -I ou ASSIS_PATH)\",\"endColumn\":9,\"severity\":\"error\",\"hint\":\"Confira o caminho relativo ao arquivo importador e as bibliotecas instaladas. Use -I pasta para bibliotecas externas.\"}\n",
+            "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f"
+          },
+          {
+            "label": "after",
+            "command": [
+              "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-recovery-20261102\\build\\assis.exe",
+              "check",
+              "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-recovery-20261102\\build\\import-fluxstyle-probe.assis",
+              "--safe",
+              "--diagnostics=json"
+            ],
+            "returncode": 0,
+            "stdout": "{\"ok\":true}\n",
+            "stderr": "",
+            "compiler_sha256": "4c0118bf65c6327fd6b013f99ce0d7d023e192b3024768781fcf4fca2bb9ed4c"
+          }
+        ]
+      },
+      {
+        "source": "import \"std/sanscript.assis\";safe fn main():int{return 0;}",
+        "runs": [
+          {
+            "label": "before",
+            "command": [
+              "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-catalog-20261102\\build\\assis.exe",
+              "check",
+              "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-recovery-20261102\\build\\import-sanscript-probe.assis",
+              "--safe",
+              "--diagnostics=json"
+            ],
+            "returncode": 1,
+            "stdout": "",
+            "stderr": "{\"file\":\"C:\\\\Users\\\\babus\\\\Desktop\\\\AssisScript\\\\work\\\\htdl-recovery-20261102\\\\build\\\\import-sanscript-probe.assis\",\"line\":1,\"column\":8,\"code\":\"A001\",\"message\":\"m\u00f3dulo n\u00e3o encontrado: std/sanscript.assis (use caminho relativo, -I ou ASSIS_PATH)\",\"endColumn\":9,\"severity\":\"error\",\"hint\":\"Confira o caminho relativo ao arquivo importador e as bibliotecas instaladas. Use -I pasta para bibliotecas externas.\"}\n",
+            "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f"
+          },
+          {
+            "label": "after",
+            "command": [
+              "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-recovery-20261102\\build\\assis.exe",
+              "check",
+              "C:\\Users\\babus\\Desktop\\AssisScript\\work\\htdl-recovery-20261102\\build\\import-sanscript-probe.assis",
+              "--safe",
+              "--diagnostics=json"
+            ],
+            "returncode": 0,
+            "stdout": "{\"ok\":true}\n",
+            "stderr": "",
+            "compiler_sha256": "4c0118bf65c6327fd6b013f99ce0d7d023e192b3024768781fcf4fca2bb9ed4c"
+          }
+        ]
+      }
+    ]
+  }
+}

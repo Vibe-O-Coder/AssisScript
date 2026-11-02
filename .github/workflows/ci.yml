@@ -19,6 +19,17 @@ jobs:
         run: python3 tools/embed-runtime.py && python3 tools/embed-arm64.py && python3 tools/build-icons.py && make -B all
       - name: Check Darwin C API error return widths
         run: mkdir -p build && cc -O2 -std=c11 -Wall -Wextra tests/arm64-macos-runtime-fixture.c -o build/macos-runtime-oracle && build/macos-runtime-oracle
+      - name: Local HTDL editor and finite FS SSC profiles
+        env:
+          ASSIS_BIN: ${{ github.workspace }}/bin/assis
+        run: |
+          python3 tests/test-htdl-recovery.py
+          python3 tests/test-htdl-catalog.py
+          python3 tests/test-fluxstyle.py
+          python3 tests/test-sanscript.py
+          python3 tests/test-install-mask.py
+          python3 tools/generate-ssc-coefficients.py --check
+          python3 tools/report-ecosystem-progress.py --check
       - run: |
           mkdir -p build/review-tests
           set -o pipefail
@@ -98,8 +109,19 @@ jobs:
           $env:ASSIS_CURL_BIN = $env:ASSIS_TOOLCHAIN_BIN
           New-Item -ItemType Directory -Path build/review-tests -Force | Out-Null
           ./tests/test-windows.ps1 6>&1 | Tee-Object -FilePath build/review-tests/native-windows.log
-          node --test --test-isolation=none tests/test-development.js tests/test-v3.js tests/test-v31.js tests/test-v32.js tests/test-lsp.js vscode-assisscript/test/language.test.js vscode-assisscript/test/extension.test.js *> build/review-tests/node-windows.log
+          node --test --test-isolation=none tests/test-development.js tests/test-v3.js tests/test-v31.js tests/test-v32.js tests/test-lsp.js tests/test-htdl-editor.js vscode-assisscript/test/language.test.js vscode-assisscript/test/extension.test.js *> build/review-tests/node-windows.log
           if ($LASTEXITCODE -ne 0) { throw 'Node tests failed' }
+          $env:ASSIS_BIN = (Resolve-Path bin/assis.exe).Path
+          $env:CC = Join-Path $env:ASSIS_TOOLCHAIN_BIN 'gcc.exe'
+          $env:PYTHONUTF8 = '1'
+          foreach ($suite in @('htdl-recovery','htdl-catalog','fluxstyle','sanscript','install-mask')) {
+            python "tests/test-$suite.py"
+            if ($LASTEXITCODE -ne 0) { throw "Local presentation profile failed: $suite" }
+          }
+          python tools/generate-ssc-coefficients.py --check
+          if ($LASTEXITCODE -ne 0) { throw 'SSC coefficients changed' }
+          python tools/report-ecosystem-progress.py --check
+          if ($LASTEXITCODE -ne 0) { throw 'Ecosystem rubric changed' }
           python tests/test-evolution.py
           if ($LASTEXITCODE -ne 0) { throw 'Evolution tests failed' }
           python tests/test-generics.py

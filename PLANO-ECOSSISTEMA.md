@@ -1,3 +1,16 @@
+> **Entrega local validada — 44,90%, 02/11/2026, 0/5 gates; publicação FS/SSC pendente.**
+> Cópia `C:/Users/babus/Desktop/AssisScript/work/htdl-recovery-20261102`,
+> branch `work/m3-presentation-core-2026-11-02`, base pública 6701d1b conferida.
+> Recuperação sintática HTDL + FS tipado/puro e SSC finito de 42 matrizes em AssisScript.
+> Novo núcleo: 28 métodos nativos por host, 23 Node Windows, 56 exemplos por host;
+> instalação/execução/remoção isoladas Windows/Linux e mask até 63 opcionais.
+> [Relatório e bloqueio](docs/relatorios/2026-11-02-m3-presentation-core.md). Revisão automática exigiu autorização
+> específica no envio anterior; o novo commit aguarda aprovação. HTDL 6701d1b publicado.
+> Meta 50% pendente. Transação/dirtiness da página, layout/Reader/catálogo, desktop/leitor/
+> DPI/IME, SDK/loader/recursos, quota agregada/RSS/disco/órfãos, macOS/ARM, rede/perfis/
+> persistência/busca, M4–M9, 24h e aceites seguem na fila integral. Easy por último.
+> Entradas abaixo históricas; não republicar a pasta original ou uma base antiga.
+
 > **Continuação validada — recuperação sintática de editor, 43,30%, 02/11/2026, 0/5 gates.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/htdl-recovery-20261102`,
 > branch `work/m3-htdl-recovery-2026-11-02`, base publicada 5fad34e conferida.

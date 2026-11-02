@@ -9,6 +9,10 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--check', action='store_true')
 args = parser.parse_args()
 catalog = json.loads((ROOT/'stdlib/catalogo.json').read_text(encoding='utf-8'))
+optional = [item for item in catalog['libraries'] if not item['required']]
+assert len(optional) <= 63, 'Native optional-library mask supports at most 63 libraries'
+assert all(re.fullmatch('[a-z_][a-z_0-9]*', item['name']) for item in catalog['libraries'])
+names = [item['name'] for item in optional]
 files = {'bin/assis.exe', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'README.md', 'README.en.md', 'README.pt-BR.md', 'README.es.md', 'docs/LICENSE', 'stdlib/catalogo.json', 'stdlib/catalogo.sh',
          'tools/assis-lsp.js', 'tools/htdl-check.assis', 'vscode-assisscript/src/htdl.js', 'vscode-assisscript/src/language.js', 'vscode-assisscript/src/reference.json', 'vscode-assisscript/package.json'}
 files.update('stdlib/'+item['name']+'.assis' for item in catalog['libraries'] if item['required'])
@@ -22,14 +26,10 @@ if args.check:
     assert path.read_text(encoding='utf-8') == text, 'Regenerate src/install_files.inc'
 else:
     path.write_text(text, encoding='utf-8', newline='\n')
-optional = [item for item in catalog['libraries'] if not item['required']]
-assert len(optional) <= 31
-assert all(re.fullmatch('[a-z_][a-z_0-9]*', item['name']) for item in catalog['libraries'])
-names = [item['name'] for item in optional]
 optional_text = '/* Generated from stdlib/catalogo.json. */\n#define OPTIONAL_COUNT '+str(len(names))+'\n'
 optional_text += 'static const wchar_t *optional_names[]={' + ','.join('L'+json.dumps(name) for name in names) + '};\n'
 optional_text += 'static const wchar_t *optional_files[]={' + ','.join('L'+json.dumps('stdlib\\'+name+'.assis') for name in names) + '};\n'
-optional_text += 'static const unsigned optional_dependencies[]={' + ','.join(str(sum(1<<names.index(d) for d in item.get('dependencies',[]) if d in names)) for item in optional) + '};\n'
+optional_text += 'static const uint64_t optional_dependencies[]={' + ','.join('UINT64_C('+str(sum(1<<names.index(d) for d in item.get('dependencies',[]) if d in names))+')' for item in optional) + '};\n'
 shell_text = '# Generated from catalogo.json; sourced by the offline installer.\n'
 shell_text += "ASSIS_VERSION='" + catalog['version'] + "'\n"
 shell_text += "ASSIS_REQUIRED='" + ' '.join(item['name'] for item in catalog['libraries'] if item['required']) + "'\n"

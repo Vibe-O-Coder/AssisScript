@@ -1,0 +1,58 @@
+{
+  "schema": "presentation-core-summary-v1",
+  "base": "6701d1b6d67687144606c03e2431c0f5a6ddf313",
+  "counts": {
+    "windows": {
+      "native_methods": 28,
+      "not_run": 0,
+      "examples": 56
+    },
+    "linux": {
+      "native_methods": 28,
+      "not_run": 0,
+      "examples": 56
+    }
+  },
+  "windows_distribution_node": 23,
+  "points_before": "43.30",
+  "points_after": "44.90",
+  "gates_passed": 0,
+  "max_error_8px": 0.02130126332269495,
+  "trace_scope": "42 grid pairs, 8px step over 3 seconds only",
+  "source_sha256": {
+    ".github/workflows/ci.yml": "6d3762dba6cfa7c1eacb81d5ce347a24aa2f4d0a6efafd1f0601892515000827",
+    "stdlib/fluxstyle.assis": "76901a38732fc3076dccc4d66efdc616a6b42c0f02588090e8a206879440f76a",
+    "stdlib/sanscript.assis": "f64b2f3110b90ad3108d01c3e203acedbb15c3ac234140a090bc10cd960739e4",
+    "stdlib/catalogo.json": "68995b91e57083bfe196feebae64485411672d30d47ca8940709d36a29596111",
+    "stdlib/catalogo.sh": "6e8ac2cc607a0656b9b68b05ad8ab6994ae6b78a069f7155b1ad4fdf750b3976",
+    "src/windows_setup.c": "90d8e6b063544c4a486e5c5401685d1a760868197125986f1f213b92203dd2ba",
+    "src/install_optional.inc": "f9379b49a6c7706240fe373522f3618ec79185aa7a6d7bac5cd1edc9ad5f7c77",
+    "tests/fixtures/fluxstyle-driver.assis": "09c97a47f6e09678e93711325dfddca281e5441944143dae0b71a6ab6f525a71",
+    "tests/fixtures/sanscript-driver.assis": "f193844e875d2753298949cb9cf1c2e076b9c64f53ba1f0abe33d2281a9e26f0",
+    "tests/fixtures/ssc-coefficients.json": "1b46d401e6253c7f00c50bb8320eeeb3c3feb4f4d71b148928db52f94c8d2a75",
+    "tests/test-fluxstyle.py": "126f3e563b736a97cbaac34ad9b0abe8e768b49de43843545ce871d8013d4a99",
+    "tests/test-sanscript.py": "08a1e71ff3806edf64e8e41dcbc46594aa109aa5800b336483721ab36d53791e",
+    "tests/test-install-mask.py": "51766d6d5a5d456c96190862259e947cb8a2a7c4ee11d5df7a442c4fce22be51",
+    "tests/test-v31.js": "52a51cf1b2a95c50927dda499a7924f556483062d92c124f1a85249c95726330",
+    "exemplos/54_fluxstyle_sanscript.assis": "35812b30442b2f8e4e17ba5bb18d002e679255a4f8361664cb5c7ad253301c49",
+    "tools/generate-install-manifest.py": "10093fc4a2a006b7ba8849b90b8be5a29e06b0120473e3a3c8b9141651a428e3",
+    "tools/generate-ssc-coefficients.py": "4926706e61aef968e0545384c9728af43592284c90424f42f533539a64b4e709",
+    "tools/collect-presentation-core-evidence.py": "951719e1ba072baca995617bb73a5199cc84b38d34f916f045098f534e5a607a",
+    "tools/verify-presentation-install.py": "a4c7c3a48043ae3e324a58c64640f76143387f714ae043599d8de2fd30bb17d0",
+    "tools/verify-presentation-core-evidence.py": "61cd2a69dadf597eceaf10ece29544ce8290736e5e8b05b70d4f2078cb5243b5",
+    "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md": "6e1b5896d24bb65df6c249432e6d7837d8cfa1045b5cd6a7ac6ed6f4f5dd0464",
+    "docs/BIBLIOTECA-fluxstyle.md": "d70627e84fe85a55c6db1cc32a784d26ac71cce632de5bdf5aeb06f27369b1b1",
+    "docs/BIBLIOTECA-sanscript.md": "9d83c2caa313386bf1a82e21eb1920889fb72d337c2fcbfbcf46881f4c52e91e"
+  },
+  "limitations": [
+    "SSC finite 42-pair profile; no intermediate parameter promise",
+    "No full-page presentation transaction",
+    "No incremental dirtiness between transactions",
+    "No renderer/layout/hit-test/accessibility snapshot integration",
+    "No aggregate channel/RSS quota",
+    "No remote loader or authority change",
+    "ARM/macOS generation only; native execution not-run",
+    "No desktop/IME/screen-reader or 24h acceptance",
+    "Publication blocked pending explicit user approval; no merge/release/remote CI claim"
+  ]
+}

@@ -27,7 +27,10 @@
             "docs/ecossistema/referencias/htdl-drafts-2026-10-29/PROVENANCE.json",
             "docs/relatorios/2026-11-02-m3-htdl-catalog.md",
             "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/summary.json",
-            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md"
+            "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md",
+            "docs/relatorios/2026-11-02-m3-presentation-core.md",
+            "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md"
           ]
         },
         {
@@ -73,7 +76,10 @@
             "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/summary.json",
             "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md",
             "docs/relatorios/2026-11-02-m3-htdl-recovery.md",
-            "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-02-m3-presentation-core.md",
+            "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md"
           ]
         },
         {
@@ -740,12 +746,15 @@
         {
           "id": "E08-01",
           "name": "Frontend e avaliador FluxStyle",
-          "level": 0,
+          "level": 2,
           "acceptance": "Implementar gramática/tipos/unidades, seletores/bindings, DAG, produtor único e avaliação incremental pura; testar ciclos, ramos curtos, conflitos e dirtiness sem cascata implícita.",
-          "baseline": "Rascunhos e exemplos conceituais, sem avaliador nativo demonstrado.",
+          "baseline": "Perfil local FS executado em AssisScript: parser/tipos/unidades, DAG, bindings HTDL, produtores únicos, avaliação curta e Style transacional por nó em Windows/Linux x64. Dirtiness entre transações, transação da página inteira e integração visual permanecem abertos; publicação pendente.",
           "evidence": [
             "local:htdl/docs/16-gramaticas-fs-e-ssc.md",
-            "local:htdl/docs/12-contrato-fs-ssc-e-assisscript.md"
+            "local:htdl/docs/12-contrato-fs-ssc-e-assisscript.md",
+            "docs/relatorios/2026-11-02-m3-presentation-core.md",
+            "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md"
           ]
         },
         {
@@ -768,12 +777,15 @@
         {
           "id": "E08-03",
           "name": "Perfil numérico e temporal SSC",
-          "level": 0,
+          "level": 2,
           "acceptance": "Fixar representação/faixa, arredondamento, coeficientes e passo de tempo; implementar parser/canais com vetores independentes e fallback de erro numérico, sem prometer igualdade de float sem prova.",
-          "baseline": "Simulador isolado não é motor SSC integrado ao navegador.",
+          "baseline": "Perfil experimental SSC finito de 42 matrizes canônicas Q16.16, parser/canais/tempo/fallback executados em AssisScript, com referência congelada e solução analítica em Windows/Linux x64. Domínio contínuo, quotas de página e integração visual permanecem abertos; publicação pendente.",
           "evidence": [
             "local:htdl/docs/12-contrato-fs-ssc-e-assisscript.md",
-            "local:htdl/docs/16-gramaticas-fs-e-ssc.md"
+            "local:htdl/docs/16-gramaticas-fs-e-ssc.md",
+            "docs/relatorios/2026-11-02-m3-presentation-core.md",
+            "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md"
           ]
         },
         {
@@ -788,7 +800,10 @@
             "docs/ecossistema/evidencias/m3-transactions-2026-11-01/summary.json",
             "tests/test-reader-transactions.py",
             "exemplos/46_reader_transactions.assis",
-            "stdlib/reader.assis"
+            "stdlib/reader.assis",
+            "docs/relatorios/2026-11-02-m3-presentation-core.md",
+            "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md"
           ]
         },
         {
@@ -954,7 +969,10 @@
           "evidence": [
             "docs/PACOTES-E-NAMESPACES.md",
             "docs/INSTALACAO.md",
-            "docs/VALIDACAO-TARGETS-V1.json"
+            "docs/VALIDACAO-TARGETS-V1.json",
+            "docs/relatorios/2026-11-02-m3-presentation-core.md",
+            "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md"
           ]
         },
         {
@@ -3005,7 +3023,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-02",
+      "rubric_version": 1,
+      "label": "Núcleo local FS/SSC finito: avaliação local 44,90%, publicação bloqueada, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 2,
+        "E07-03": 2,
+        "E07-04": 2,
+        "E07-05": 2,
+        "E08-01": 2,
+        "E08-02": 2,
+        "E08-03": 2,
+        "E08-04": 2,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Recuperação sintática limitada e não executante do editor HTDL validada em Windows/Linux x64. Níveis preservados: 43,30%, 0/5 gates; meta 50% pendente. Identidade incremental/editor, Reader completo/desktop/leitor/DPI/IME, SDK/loader/FS/SSC/recursos, quota agregada/RSS/disco/órfãos, macOS/ARM, rede/persistência/busca, M4–M9, 24h e aceites continuam na fila. Easy por último."
+  "assessment_note": "Avaliação local 44,90%, 0/5 gates, meta 50% pendente. Recuperação sintática HTDL publicada em 6701d1b após autorização; núcleo FS/SSC finito testado localmente, publicação pendente de autorização explícita do novo commit. Transação/dirtiness de página, layout/Reader/catálogo/desktop/leitor/DPI/IME, SDK/loader/recursos, quota agregada/RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h e aceites continuam na fila. Easy por último."
 }

@@ -53,6 +53,12 @@ test-dev:
 test-htdl-recovery:
 	python3 tests/test-htdl-recovery.py
 
+.PHONY: test-presentation-core
+test-presentation-core:
+	python3 tests/test-fluxstyle.py
+	python3 tests/test-sanscript.py
+	python3 tests/test-install-mask.py
+
 test-evolution: bin/assis
 	python3 tests/test-evolution.py
 

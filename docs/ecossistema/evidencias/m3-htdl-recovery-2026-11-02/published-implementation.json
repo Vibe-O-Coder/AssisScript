@@ -1,0 +1,212 @@
+{
+  "status": "published-and-verified",
+  "repository": "Vibe-O-Coder/AssisScript",
+  "branch": "work/m3-htdl-recovery-2026-11-02",
+  "commit": "6701d1b6d67687144606c03e2431c0f5a6ddf313",
+  "url": "https://github.com/Vibe-O-Coder/AssisScript/commit/6701d1b6d67687144606c03e2431c0f5a6ddf313",
+  "verified_paths": 38,
+  "verified_full_tree_entries": 2364,
+  "verification": [
+    "Explicit user approval for this exact commit received",
+    "git ls-remote matched exact SHA",
+    "git fetch SHA and complete recursive tree matched",
+    "GitHub connector independently confirmed exact SHA"
+  ],
+  "pull_request": {
+    "status": "not-created",
+    "reason": "GitHub connector returned 403 Resource not accessible by integration"
+  },
+  "paths": {
+    ".gitattributes": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "daa007bbe65a89ecdd552545d7d480b2feb80906"
+    },
+    "Makefile": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "59e1765eacf110b93360eadcf33fbf94379c97e0"
+    },
+    "PLANO-ECOSSISTEMA.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e5f769b49fc7a2692facec9a194b35ee5ac11b3e"
+    },
+    "docs/BIBLIOTECA-htdl.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0376605de0604cb134b4f667f8bffb35191d1856"
+    },
+    "docs/ecossistema/ESTADO-ATUAL.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c7a8213107144f5c2aa050129e1b58e8df046f0"
+    },
+    "docs/ecossistema/FILA-M0-M1.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49670258e4e572efee643192306f68ab61300a5c"
+    },
+    "docs/ecossistema/MASTERPROMPT.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8cd9b608ee3b1f2eb2d3bafb15a9ffb0635817ac"
+    },
+    "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "86fea06d942dea9ecec3e69d0baa5f58c6f2ddcc"
+    },
+    "docs/ecossistema/PLANO-MESTRE.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "072d524a4e8f7d97dbcd87455f4ed1f28cddec01"
+    },
+    "docs/ecossistema/PROGRESSO.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "faca40e72fcfecfb8efc29089c4167818ae1a7dd"
+    },
+    "docs/ecossistema/PROGRESSO.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "418e38032225e4e2c9b84905be3392104a67be73"
+    },
+    "docs/ecossistema/RECUPERACAO-HTDL-EDITOR-V1.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d848530c97f6ef9582bf5530ff386f636ee43e3"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/before-after.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c17a6023b6f7359569fe491c75c36054289b23a0"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/linux-examples.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a1d4dd6f9e92841117e60bca1a4ccb9d3d9031ac"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/linux-htdl-catalog.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ad5248f7c63e9a2a428bee45e4d64d6940feca3b"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/linux-htdl-parser.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5db32630c397d81593b924d900221ad761523533"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/linux-htdl-reader.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b045b9025e0fc76899cd7e02a7871fbe949bd0b5"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/linux-htdl-recovery.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f2b1f337f16402bfb51ad7407c42297aba418f7"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/linux-reader-transactions.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7fb69d55ca908af057b4720dc289c43179a923ea"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/linux.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "951fb2c55327808759ad6ffd3acc75e57f39d03f"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/summary.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4ab1dfa108ca34183a56cea42ef74653551c05ae"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/windows-editor.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "618cd943fa15c06574e6087f743f85b0443a0867"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/windows-examples.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "14fc3eed4ba3b3d7b114d4e673892bf4a1dc29b4"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/windows-htdl-catalog.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2bfbab83b8092287d9db765eb9ee381e341ec1aa"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/windows-htdl-parser.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b85b89fb1fc089508221fc219b3aa8c18402c4e1"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/windows-htdl-reader.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "591d72f0f0d09aa2484165b673caa8955e53bf75"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/windows-htdl-recovery.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "56ccc3c95494965b9c8033f72d3b36d2cc57af68"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/windows-reader-transactions.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "410685d285b3d65e626cc5f77bdf4ca5f55fb2ae"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/windows.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c6ce15e1783a1261e416e6e1a3f87db32ae4ea7f"
+    },
+    "docs/relatorios/2026-11-02-m3-htdl-recovery.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8f7634b6fc18a4697c2326d12ba9383c18d4698b"
+    },
+    "exemplos/53_htdl_editor_recovery.assis": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "734d756fb5aa8d8568654d1c8f9ae926aa9c93e5"
+    },
+    "src/install_files.inc": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cbd1a2211fab2fe96e94cd87d877c73bd5178022"
+    },
+    "stdlib/htdl.assis": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e1579a9cb948172c66d05f2af288f4c0ddcb6300"
+    },
+    "tests/test-htdl-editor.js": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e5c0c5330ae982f4b06ae47b3680b6ff932f5178"
+    },
+    "tests/test-htdl-recovery.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d1e4c4987eee6a743381f7803bec81493329ec58"
+    },
+    "tests/test-lsp.js": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "24b2d17f3f14880eb14a24b5a8957a9c42b6f12f"
+    },
+    "tools/collect-htdl-recovery-evidence.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3b76b54bb51377fa36b98fd54bd855671a2123f6"
+    },
+    "tools/verify-htdl-recovery-evidence.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec1bba2725693857568caba76b9b88f9a950c1c2"
+    }
+  },
+  "scope": "Branch only; no merge, force push, release or claim of remote CI"
+}

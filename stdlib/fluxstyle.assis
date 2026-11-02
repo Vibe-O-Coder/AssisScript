@@ -1,0 +1,541 @@
+namespace fluxstyle;
+import "std/htdl.assis";
+
+/// fs-local-v1: Q16.16, positive tie for arithmetic, away from zero for literals.
+public value struct Number{let code:int;let value:int;}
+public pure fn in_range(value:int):bool{return value>= -2147483648 && value<=2147483647;}
+pure fn checked(value:int):Number{if(!in_range(value)){return new Number(401,0);}return new Number(0,value);}
+public pure fn add(a:int,b:int):Number{
+    if(!in_range(a) || !in_range(b)){return new Number(401,0);}return checked(a+b);
+}
+public pure fn subtract(a:int,b:int):Number{
+    if(!in_range(a) || !in_range(b)){return new Number(401,0);}return checked(a-b);
+}
+public pure fn multiply(a:int,b:int):Number{
+    if(!in_range(a) || !in_range(b)){return new Number(401,0);}
+    // A product of two signed 32-bit values plus 32768 fits int64.
+    return checked((a*b+32768)>>16);
+}
+public pure fn divide(a:int,b:int):Number{
+    if(!in_range(a) || !in_range(b)){return new Number(401,0);}if(b==0){return new Number(402,0);}
+    let numerator:int=a*65536;let denominator:int=b;
+    if(denominator<0){denominator= -denominator;numerator= -numerator;}
+    val scaled:int=numerator*2+denominator;val divisor:int=denominator*2;
+    let result:int=scaled/divisor;if(scaled%divisor<0){result--;}
+    return checked(result);
+}
+pure fn letter(c:int):bool{return (c>=65 && c<=90) || (c>=97 && c<=122) || c==95;}
+pure fn digit(c:int):bool{return c>=48 && c<=57;}
+pure fn name_char(c:int):bool{return letter(c) || digit(c);}
+pure fn hex(c:int):int{
+    if(digit(c)){return c-48;}if(c>=65 && c<=70){return c-55;}if(c>=97 && c<=102){return c-87;}return -1;
+}
+/// Decimal input has no unit/sign, <=9 fractional digits, bounded integer part.
+/// One extra positive magnitude is admitted for the exact negative endpoint.
+public safe fn decimal(borrow source:slice<byte>,negative:bool,multiplier:int,divisor:int):Number{
+    if((multiplier!=1 && multiplier!=1000) || (divisor!=1 && divisor!=100 && divisor!=1000) || len(source)==0){return new Number(101,0);}
+    let whole:int=0;let fraction:int=0;let scale:int=1;let at:int=0;
+    while(at<len(source) && digit(int(source[at]))){
+        if(whole>(32768000-(int(source[at])-48))/10){return new Number(401,0);}
+        whole=whole*10+int(source[at])-48;at++;
+    }
+    if(at==0){return new Number(101,0);}
+    if(at<len(source) && source[at]==46){at++;val first:int=at;
+        while(at<len(source) && digit(int(source[at]))){
+            if(scale==1000000000){return new Number(401,0);}
+            fraction=fraction*10+int(source[at])-48;scale*=10;at++;
+        }if(at==first){return new Number(101,0);}
+    }
+    if(at!=len(source)){return new Number(101,0);}
+    val integral:int=whole*65536*multiplier;
+    val denominator:int=scale*divisor;
+    let result:int=integral/divisor+((integral%divisor)*scale+fraction*65536*multiplier+denominator/2)/denominator;
+    if(negative){result= -result;}
+    if(result< -2147483648 || result>2147483648){return new Number(401,0);}
+    return new Number(0,result);
+}
+
+/// Host supplies typed input values by program-local index. No pointers/capabilities.
+public final class Inputs{
+    private own data:*int;private let count:int;
+    fn init(borrow mut self,capacity:int):void{
+        if(capacity<1 || capacity>2048){return;}self.data=try_alloc<int>(capacity*3);
+        if(self.data!=null){self.count=capacity;}
+    }
+    fn is_ready(borrow self):bool{return self.data!=null;}
+    fn has(borrow self,index:int):bool{return index>=0 && index<self.count && self.data[index*3]!=0;}
+    fn type(borrow self,index:int):int{if(!self.has(index)){return 0;}return self.data[index*3+1];}
+    fn value(borrow self,index:int):int{assert(self.has(index));return self.data[index*3+2];}
+    fn set(borrow mut self,index:int,type:int,value:int):bool{
+        if(index<0 || index>=self.count || type<1 || type>11){return false;}
+        if((type==1 && value!=0 && value!=1) || (type>=2 && type<=5 && !in_range(value)) ||
+           ((type==10 || type==11) && value!=0 && value!=1)){return false;}
+        self.data[index*3]=1;self.data[index*3+1]=type;self.data[index*3+2]=value;return true;
+    }
+    fn clear(borrow mut self):void{for(let i:int=0;i<self.count*3;i++){self.data[i]=0;}}
+}
+/// Caller-owned last valid author outputs for one live semantic node.
+public final class Style{
+    private own data:*int;private let mask:int;private let revision:int;private let bound:doctree::NodeId;
+    fn init(borrow mut self):void{self.data=try_alloc<int>(15);}
+    fn is_ready(borrow self):bool{return self.data!=null;}
+    fn version(borrow self):int{return self.revision;}
+    fn node(borrow self):doctree::NodeId{return self.bound;}
+    fn has(borrow self,property:int):bool{return property>=1 && property<=15 && (self.mask&(1<<(property-1)))!=0;}
+    fn value(borrow self,property:int):int{assert(self.has(property));return self.data[property-1];}
+    /// Trusted host operation; copies all values before exposing the new version.
+    fn commit(borrow mut self,node:doctree::NodeId,version:int,mask:int,borrow values:slice<int>):bool{
+        if(!self.is_ready() || version<=self.revision || len(values)!=15){return false;}
+        if(self.revision>0 && (self.bound.instance!=node.instance || self.bound.slot!=node.slot || self.bound.generation!=node.generation)){return false;}
+        for(let i:int=0;i<15;i++){self.data[i]=values[i];}
+        self.bound=node;self.mask=mask;self.revision=version;return true;
+    }
+}
+
+/// Closed, bounded parser/type graph/evaluator. No effects or final geometry inputs.
+public final class Program{
+    private own source:*byte;private own nodes:*int;private own marks:*int;private own values:*int;
+    private own definitions:*int;private own flows:*int;private own bindings:*int;private own outputs:*int;private own pending:*int;
+    private let length:int;private let cursor:int;private let token:int;private let begin:int;private let end:int;
+    private let literal:int;private let literal_type:int;private let count:int;private let definition_count:int;
+    private let flow_count:int;private let binding_count:int;private let output_count:int;private let current_flow:int;
+    private let code:int;private let first:int;private let last:int;private let work:int;private let active:bool;
+
+    private fn fail(borrow mut self,code:int,start:int,end:int):void{
+        if(self.code==0){self.code=code;self.first=start;self.last=end;}
+    }
+    private fn eq(borrow self,start:int,end:int,borrow value:slice<byte>):bool{
+        if(end-start!=len(value)){return false;}
+        for(let i:int=0;i<len(value);i++){if(self.source[start+i]!=value[i]){return false;}}return true;
+    }
+    private fn same(borrow self,a:int,b:int,c:int,d:int):bool{
+        if(b-a!=d-c){return false;}for(let i:int=0;i<b-a;i++){if(self.source[a+i]!=self.source[c+i]){return false;}}return true;
+    }
+    private fn word(borrow self,borrow value:slice<byte>):bool{return self.token==1 && self.eq(self.begin,self.end,value);}
+    private fn next(borrow mut self):void{
+        self.token=0;if(self.code!=0){return;}
+        while(self.cursor<self.length){
+            val c:int=int(self.source[self.cursor]);
+            if(htdl::space(c)){self.cursor++;continue;}
+            if(c==47 && self.cursor+1<self.length && self.source[self.cursor+1]==47){
+                self.cursor+=2;while(self.cursor<self.length && self.source[self.cursor]!=10 && self.source[self.cursor]!=13){self.cursor++;}continue;
+            }
+            if(c==47 && self.cursor+1<self.length && self.source[self.cursor+1]==42){
+                val start:int=self.cursor;self.cursor+=2;let depth:int=1;
+                while(self.cursor<self.length && depth>0){
+                    if(self.cursor+1<self.length && self.source[self.cursor]==47 && self.source[self.cursor+1]==42){depth++;self.cursor+=2;
+                        if(depth>32){self.fail(401,start,self.cursor);return;}}
+                    else if(self.cursor+1<self.length && self.source[self.cursor]==42 && self.source[self.cursor+1]==47){depth--;self.cursor+=2;}
+                    else{self.cursor++;}
+                }if(depth!=0){self.fail(102,start,self.cursor);return;}continue;
+            }break;
+        }
+        self.begin=self.cursor;self.end=self.cursor;if(self.cursor==self.length){return;}
+        val c:int=int(self.source[self.cursor]);self.cursor++;
+        if(letter(c)){self.token=1;while(self.cursor<self.length && name_char(int(self.source[self.cursor]))){self.cursor++;}}
+        else if(digit(c)){
+            self.token=2;while(self.cursor<self.length && digit(int(self.source[self.cursor]))){self.cursor++;}
+            if(self.cursor<self.length && self.source[self.cursor]==46){self.cursor++;
+                val digits:int=self.cursor;while(self.cursor<self.length && digit(int(self.source[self.cursor]))){self.cursor++;}
+                if(digits==self.cursor){self.fail(101,self.begin,self.cursor);return;}}
+            val number_end:int=self.cursor;let multiplier:int=1;let divisor:int=1;self.literal_type=2;
+            if(self.cursor<self.length && self.source[self.cursor]==37){divisor=100;self.cursor++;}
+            else{val start:int=self.cursor;while(self.cursor<self.length && letter(int(self.source[self.cursor]))){self.cursor++;}
+                if(self.cursor<self.length && digit(int(self.source[self.cursor]))){self.fail(101,self.begin,self.cursor+1);return;}
+                if(start!=self.cursor){
+                    if(self.eq(start,self.cursor,utf8("px"))){self.literal_type=3;}
+                    else if(self.eq(start,self.cursor,utf8("ms"))){self.literal_type=4;divisor=1000;}
+                    else if(self.eq(start,self.cursor,utf8("s"))){self.literal_type=4;}
+                    else if(self.eq(start,self.cursor,utf8("Hz"))){self.literal_type=5;}
+                    else{self.fail(201,start,self.cursor);return;}}}
+            if(self.cursor<self.length && name_char(int(self.source[self.cursor]))){self.fail(101,self.begin,self.cursor+1);return;}
+            val number:Number=decimal(slice_of(self.source,self.begin,number_end-self.begin),false,multiplier,divisor);
+            if(number.code!=0){self.fail(number.code,self.begin,self.cursor);return;}self.literal=number.value;
+        }else if(c==34){
+            self.token=3;let closed:bool=false;
+            while(self.cursor<self.length){val ch:int=int(self.source[self.cursor]);self.cursor++;
+                if(ch==34){closed=true;break;}
+                if(ch<32){self.fail(101,self.cursor-1,self.cursor);return;}
+                if(ch==92){if(self.cursor==self.length){break;}val escape:int=int(self.source[self.cursor]);self.cursor++;
+                    if(escape!=34 && escape!=92 && escape!=110 && escape!=114 && escape!=116){self.fail(101,self.cursor-2,self.cursor);return;}}
+            }if(!closed){self.fail(101,self.begin,self.cursor);return;}
+        }else{
+            self.token=c;
+            if(self.cursor<self.length){val n:int=int(self.source[self.cursor]);
+                if(c==45 && n==62){self.token=200;self.cursor++;}
+                else if(c==60 && n==61){self.token=201;self.cursor++;}
+                else if(c==62 && n==61){self.token=202;self.cursor++;}
+                else if(c==61 && n==61){self.token=203;self.cursor++;}
+                else if(c==33 && n==61){self.token=204;self.cursor++;}
+                else if(c==38 && n==38){self.token=205;self.cursor++;}
+                else if(c==124 && n==124){self.token=206;self.cursor++;}}
+            if(c>=128 || c<32 || (c==38 && self.token!=205) || (c==124 && self.token!=206)){
+                if(c>=128){while(self.cursor<self.length && self.source[self.cursor]>=128 && self.source[self.cursor]<192){self.cursor++;}}
+                self.fail(101,self.begin,self.cursor);return;}
+        }self.end=self.cursor;
+    }
+    private fn expect(borrow mut self,token:int):void{
+        if(self.code!=0){return;}if(self.token!=token){self.fail(102,self.begin,self.end);return;}self.next();
+    }
+    private fn expect_word(borrow mut self,borrow word:slice<byte>):void{
+        if(self.code!=0){return;}if(!self.word(word)){self.fail(102,self.begin,self.end);return;}self.next();
+    }
+    private fn make(borrow mut self,op:int,a:int,b:int,c:int,value:int,type:int,start:int,end:int):int{
+        if(self.code!=0){return 0;}if(self.count==2048){self.fail(401,start,end);return 0;}
+        val index:int=self.count;self.count++;val p:int=index*16;
+        self.nodes[p]=op;self.nodes[p+1]=a;self.nodes[p+2]=b;self.nodes[p+3]=c;
+        self.nodes[p+4]=value;self.nodes[p+5]=type;self.nodes[p+6]=start;self.nodes[p+7]=end;self.nodes[p+8]=self.current_flow;
+        return index;
+    }
+    private fn primary(borrow mut self,depth:int):int{
+        if(self.code!=0){return 0;}if(depth>64){self.fail(401,self.begin,self.end);return 0;}
+        val start:int=self.begin;
+        if(self.token==45 || self.token==33){val op:int=self.token;self.next();
+            if(op==45 && self.token==2){val result:int=self.make(1,0,0,0,-self.literal,self.literal_type,start,self.end);self.next();return result;}
+            val child:int=self.primary(depth+1);let kind:int=11;if(op==33){kind=12;}
+            return self.make(kind,child,0,0,0,0,start,self.begin);
+        }
+        if(self.token==2){val result:int=self.make(1,0,0,0,self.literal,self.literal_type,start,self.end);self.next();return result;}
+        if(self.token==35){
+            let color:int=0;let digits:int=0;
+            while(self.cursor<self.length && hex(int(self.source[self.cursor]))>=0){
+                if(digits==8){self.fail(101,start,self.cursor+1);return 0;}
+                color=color*16+hex(int(self.source[self.cursor]));digits++;self.cursor++;}
+            if((digits!=3 && digits!=6 && digits!=8) || (self.cursor<self.length && name_char(int(self.source[self.cursor])))){
+                self.fail(101,start,self.cursor);return 0;}
+            if(digits==3){color=((color>>8)&15)*1114112+((color>>4)&15)*4352+(color&15)*17;}
+            if(digits!=8){color=color*256+255;}
+            val result:int=self.make(1,0,0,0,color,6,start,self.cursor);self.next();return result;
+        }
+        if(self.token==40){self.next();val result:int=self.expression(1,depth+1);self.expect(41);return result;}
+        if(self.token==3){self.fail(201,start,self.end);return 0;}
+        if(self.token!=1){self.fail(102,start,self.end);return 0;}
+        val stop:int=self.end;let primitive:int=0;let enum_type:int=0;let enum_value:int=0;
+        if(self.word(utf8("true")) || self.word(utf8("false"))){enum_type=1;if(self.word(utf8("true"))){enum_value=1;}}
+        else if(self.word(utf8("start")) || self.word(utf8("center")) || self.word(utf8("end")) || self.word(utf8("stretch"))){
+            enum_type=7;if(self.word(utf8("center"))){enum_value=1;}if(self.word(utf8("end"))){enum_value=2;}if(self.word(utf8("stretch"))){enum_value=3;}}
+        else if(self.word(utf8("visible")) || self.word(utf8("clip")) || self.word(utf8("scroll"))){
+            enum_type=8;if(self.word(utf8("clip"))){enum_value=1;}if(self.word(utf8("scroll"))){enum_value=2;}}
+        else if(self.word(utf8("light")) || self.word(utf8("dark"))){enum_type=10;if(self.word(utf8("dark"))){enum_value=1;}}
+        else if(self.word(utf8("normal")) || self.word(utf8("high"))){enum_type=11;if(self.word(utf8("high"))){enum_value=1;}}
+        if(self.word(utf8("choose"))){primitive=40;}if(self.word(utf8("min"))){primitive=41;}
+        if(self.word(utf8("max"))){primitive=42;}if(self.word(utf8("clamp"))){primitive=43;}
+        if(self.word(utf8("abs"))){primitive=44;}if(self.word(utf8("block"))){primitive=45;}
+        if(self.word(utf8("row"))){primitive=46;}if(self.word(utf8("column"))){primitive=47;}
+        self.next();
+        if(self.token!=40){
+            // Resolution prefers local declarations to closed enum constants.
+            val result:int=self.make(2,-1,enum_type,enum_value,0,0,start,stop);
+            self.nodes[result*16+9]=start;self.nodes[result*16+10]=stop;return result;
+        }
+        if(primitive==0){self.fail(205,start,stop);return 0;}self.next();
+        let a:int=0;let b:int=0;let c:int=0;let arity:int=0;
+        if(primitive>=45){
+            if(self.token!=41){if(primitive==45){self.fail(207,start,self.end);return 0;}
+                self.expect_word(utf8("gap"));self.expect(58);a=self.expression(1,depth+1);arity=1;}
+            if(arity==0){a=self.make(1,0,0,0,0,3,start,self.begin);}
+        }else{
+            if(self.token!=41){a=self.expression(1,depth+1);arity=1;
+                if(self.token==44){self.next();b=self.expression(1,depth+1);arity=2;
+                    if(self.token==44){self.next();c=self.expression(1,depth+1);arity=3;}}}
+            let expected:int=2;if(primitive==40 || primitive==43){expected=3;}if(primitive==44){expected=1;}
+            if(arity!=expected || self.token!=41){self.fail(207,start,self.end);return 0;}
+        }
+        self.expect(41);return self.make(primitive,a,b,c,0,0,start,self.begin);
+    }
+    private fn precedence(borrow self):int{
+        if(self.token==206){return 1;}if(self.token==205){return 2;}
+        if(self.token==203 || self.token==204){return 3;}
+        if(self.token==60 || self.token==62 || self.token==201 || self.token==202){return 4;}
+        if(self.token==43 || self.token==45){return 5;}if(self.token==42 || self.token==47){return 6;}return 0;
+    }
+    private fn expression(borrow mut self,minimum:int,depth:int):int{
+        let left:int=self.primary(depth+1);let compared:int=0;
+        while(self.code==0 && self.precedence()>=minimum){
+            val priority:int=self.precedence();if(priority==0){break;}
+            if((priority==3 || priority==4) && (compared&(1<<priority))!=0){self.fail(102,self.begin,self.end);return left;}
+            compared|=1<<priority;val token:int=self.token;self.next();val right:int=self.expression(priority+1,depth+1);
+            let op:int=21;if(token==45){op=22;}if(token==42){op=23;}if(token==47){op=24;}
+            if(token==60){op=25;}if(token==201){op=26;}if(token==62){op=27;}if(token==202){op=28;}
+            if(token==203){op=29;}if(token==204){op=30;}if(token==205){op=31;}if(token==206){op=32;}
+            left=self.make(op,left,right,0,0,0,self.nodes[left*16+6],self.begin);
+        }return left;
+    }
+    private fn define(borrow mut self,index:int,start:int,end:int):void{
+        if(self.code!=0){return;}if(self.definition_count==256){self.fail(401,start,end);return;}
+        if(end-start>128 || self.reserved(start,end)){self.fail(206,start,end);return;}
+        for(let i:int=0;i<self.definition_count;i++){val previous:int=self.definitions[i]*16;
+            if(self.nodes[previous+8]==self.current_flow && self.same(start,end,self.nodes[previous+9],self.nodes[previous+10])){self.fail(206,start,end);return;}}
+        self.nodes[index*16+9]=start;self.nodes[index*16+10]=end;self.definitions[self.definition_count]=index;self.definition_count++;
+    }
+    private fn reserved(borrow self,start:int,end:int):bool{
+        return self.eq(start,end,utf8("flow")) || self.eq(start,end,utf8("input")) || self.eq(start,end,utf8("let")) ||
+            self.eq(start,end,utf8("bind")) || self.eq(start,end,utf8("to")) || self.eq(start,end,utf8("true")) || self.eq(start,end,utf8("false")) ||
+            self.eq(start,end,utf8("choose")) || self.eq(start,end,utf8("min")) || self.eq(start,end,utf8("max")) || self.eq(start,end,utf8("clamp")) ||
+            self.eq(start,end,utf8("abs")) || self.eq(start,end,utf8("block")) || self.eq(start,end,utf8("row")) || self.eq(start,end,utf8("column")) || self.eq(start,end,utf8("state"));
+    }
+    private fn input_declaration(borrow mut self):void{
+        self.next();val start:int=self.begin;val end:int=self.end;self.expect(1);self.expect(58);
+        let type:int=0;
+        if(self.word(utf8("bool"))){type=1;}if(self.word(utf8("number"))){type=2;}if(self.word(utf8("length"))){type=3;}
+        if(self.word(utf8("time"))){type=4;}if(self.word(utf8("frequency"))){type=5;}
+        if(self.word(utf8("colorScheme"))){type=10;}if(self.word(utf8("contrast"))){type=11;}
+        if(type==0){self.fail(201,self.begin,self.end);return;}self.next();self.expect(61);
+        let source:int=0;let value:int=0;let key_start:int=0;let key_end:int=0;let scope:int=0;
+        if(self.word(utf8("state"))){
+            source=12;self.next();self.expect(40);key_start=self.begin+1;key_end=self.end-1;
+            if(self.token!=3 || key_end<=key_start || key_end-key_start>128){self.fail(204,self.begin,self.end);return;}
+            for(let i:int=key_start;i<key_end;i++){val ch:int=int(self.source[i]);
+                if((i==key_start && (ch<97 || ch>122)) || (i!=key_start && !(ch>=97 && ch<=122) && !digit(ch) && ch!=95 && ch!=46 && ch!=45)){
+                    self.fail(204,key_start,key_end);return;}}
+            self.next();self.expect(44);let negative:bool=false;if(self.token==45){negative=true;self.next();}
+            if(type==1 && !negative && (self.word(utf8("true")) || self.word(utf8("false")))){if(self.word(utf8("true"))){value=1;}self.next();}
+            else if(type==2 && self.token==2 && self.literal_type==2){value=self.literal;if(negative){value= -value;}
+                if(!in_range(value)){self.fail(401,self.begin,self.end);return;}
+                if(value%65536!=0){self.fail(201,self.begin,self.end);return;}self.next();}
+            else{self.fail(201,self.begin,self.end);return;}
+            if(self.token==44){self.next();self.expect_word(utf8("scope"));self.expect(58);self.expect_word(utf8("node"));scope=1;}
+            self.expect(41);
+        }else{
+            val a:int=self.begin;val b:int=self.end;self.expect(1);self.expect(46);val c:int=self.begin;val d:int=self.end;self.expect(1);
+            if(self.eq(a,b,utf8("parent")) && self.eq(c,d,utf8("availableWidth"))){source=1;}
+            if(self.eq(a,b,utf8("self"))){
+                if(self.eq(c,d,utf8("focused"))){source=2;}if(self.eq(c,d,utf8("hovered"))){source=3;}if(self.eq(c,d,utf8("pressed"))){source=4;}
+                if(self.eq(c,d,utf8("disabled"))){source=5;}if(self.eq(c,d,utf8("checked"))){source=6;}if(self.eq(c,d,utf8("invalid"))){source=7;}}
+            if(self.eq(a,b,utf8("env"))){
+                if(self.eq(c,d,utf8("reducedMotion"))){source=8;}if(self.eq(c,d,utf8("colorScheme"))){source=9;}
+                if(self.eq(c,d,utf8("contrast"))){source=10;}if(self.eq(c,d,utf8("textScale"))){source=11;}}
+            let expected:int=1;if(source==1){expected=3;}if(source==9){expected=10;}if(source==10){expected=11;}if(source==11){expected=2;}
+            if(source==0){self.fail(204,a,d);return;}if(type!=expected){self.fail(201,a,d);return;}
+        }
+        self.expect(59);val index:int=self.make(3,source,0,0,value,type,start,self.begin);
+        self.nodes[index*16+13]=key_start;self.nodes[index*16+14]=key_end;self.nodes[index*16+15]=scope;self.define(index,start,end);
+    }
+    private fn property(borrow self,a:int,b:int,c:int,d:int):int{
+        if(self.eq(a,b,utf8("layout"))){
+            if(self.eq(c,d,utf8("width"))){return 1;}if(self.eq(c,d,utf8("height"))){return 2;}if(self.eq(c,d,utf8("padding"))){return 3;}
+            if(self.eq(c,d,utf8("children"))){return 4;}if(self.eq(c,d,utf8("align"))){return 5;}if(self.eq(c,d,utf8("overflow"))){return 6;}}
+        if(self.eq(a,b,utf8("paint"))){
+            if(self.eq(c,d,utf8("background"))){return 7;}if(self.eq(c,d,utf8("text"))){return 8;}
+            if(self.eq(c,d,utf8("radius"))){return 9;}if(self.eq(c,d,utf8("opacity"))){return 10;}}
+        if(self.eq(a,b,utf8("text"))){if(self.eq(c,d,utf8("size"))){return 11;}if(self.eq(c,d,utf8("weight"))){return 12;}if(self.eq(c,d,utf8("align"))){return 13;}}
+        if(self.eq(a,b,utf8("target"))){if(self.eq(c,d,utf8("offsetX"))){return 14;}if(self.eq(c,d,utf8("offsetY"))){return 15;}}return 0;
+    }
+    private fn property_type(borrow self,property:int):int{
+        if(property==4){return 9;}if(property==5 || property==13){return 7;}if(property==6){return 8;}
+        if(property==7 || property==8){return 6;}if(property==10 || property==12){return 2;}return 3;
+    }
+    private fn flow_declaration(borrow mut self):void{
+        self.next();val start:int=self.begin;val end:int=self.end;self.expect(1);
+        if(end-start>128 || self.reserved(start,end)){self.fail(206,start,end);return;}
+        if(self.flow_count==32){self.fail(401,start,end);return;}
+        for(let i:int=0;i<self.flow_count;i++){if(self.same(start,end,self.flows[i*2],self.flows[i*2+1])){self.fail(206,start,end);return;}}
+        self.current_flow=self.flow_count;self.flows[self.flow_count*2]=start;self.flows[self.flow_count*2+1]=end;self.flow_count++;
+        self.expect(123);
+        while(self.code==0 && self.token!=125 && self.token!=0){
+            if(self.word(utf8("input"))){self.input_declaration();}
+            else if(self.word(utf8("let"))){self.next();val a:int=self.begin;val b:int=self.end;self.expect(1);self.expect(61);
+                val expression:int=self.expression(1,0);self.expect(59);val index:int=self.make(4,expression,0,0,0,0,a,self.begin);self.define(index,a,b);}
+            else{val expression:int=self.expression(1,0);self.expect(200);
+                val a:int=self.begin;val b:int=self.end;self.expect(1);self.expect(46);val c:int=self.begin;val d:int=self.end;self.expect(1);
+                val property:int=self.property(a,b,c,d);if(property==0){self.fail(202,a,d);return;}self.expect(59);
+                if(self.output_count==480){self.fail(401,a,d);return;}
+                for(let i:int=0;i<self.output_count;i++){if(self.outputs[i*3]==self.current_flow && self.outputs[i*3+1]==property){self.fail(302,a,d);return;}}
+                val p:int=self.output_count*3;self.outputs[p]=self.current_flow;self.outputs[p+1]=property;self.outputs[p+2]=expression;self.output_count++;}
+        }self.expect(125);
+    }
+    private fn binding(borrow mut self):void{
+        self.next();val kind:int=self.token;if(kind!=35 && kind!=46){self.fail(102,self.begin,self.end);return;}
+        val start:int=self.cursor;
+        if(self.cursor==self.length || !letter(int(self.source[self.cursor]))){self.fail(102,start,start);return;}
+        self.cursor++;while(self.cursor<self.length && (name_char(int(self.source[self.cursor])) || self.source[self.cursor]==45)){self.cursor++;}
+        val end:int=self.cursor;self.next();self.expect_word(utf8("to"));val a:int=self.begin;val b:int=self.end;self.expect(1);self.expect(59);
+        if(self.binding_count==128){self.fail(401,start,end);return;}val p:int=self.binding_count*6;
+        self.bindings[p]=kind;self.bindings[p+1]=start;self.bindings[p+2]=end;self.bindings[p+3]=a;self.bindings[p+4]=b;self.bindings[p+5]= -1;self.binding_count++;
+    }
+    private fn local(borrow self,flow:int,start:int,end:int):int{
+        for(let i:int=0;i<self.definition_count;i++){val index:int=self.definitions[i];val p:int=index*16;
+            if(self.nodes[p+8]==flow && self.same(start,end,self.nodes[p+9],self.nodes[p+10])){return index;}}return -1;
+    }
+    private fn infer(borrow mut self,index:int,depth:int):int{
+        if(self.code!=0){return 0;}val p:int=index*16;
+        self.work++;if(depth>64 || self.work>1000000){self.fail(401,self.nodes[p+6],self.nodes[p+7]);return 0;}
+        if(self.marks[index]==2){return self.nodes[p+5];}if(self.marks[index]==1){self.fail(301,self.nodes[p+6],self.nodes[p+7]);return 0;}
+        self.marks[index]=1;val op:int=self.nodes[p];let a:int=self.nodes[p+1];let type:int=self.nodes[p+5];let left:int=0;let right:int=0;
+        if(op==2){
+            a=self.local(self.nodes[p+8],self.nodes[p+9],self.nodes[p+10]);
+            if(a<0){if(self.nodes[p+2]==0){self.fail(205,self.nodes[p+6],self.nodes[p+7]);return 0;}
+                self.nodes[p]=1;self.nodes[p+4]=self.nodes[p+3];type=self.nodes[p+2];}
+            else{self.nodes[p+1]=a;type=self.infer(a,depth+1);}
+        }else if(op==4){type=self.infer(a,depth+1);}
+        else if(op!=1 && op!=3){
+            left=self.infer(a,depth+1);if(op>=21 && op<=43){right=self.infer(self.nodes[p+2],depth+1);}
+            if(op==11 || op==44){if(left<2 || left>5){self.fail(201,self.nodes[p+6],self.nodes[p+7]);}type=left;}
+            else if(op==12){if(left!=1){self.fail(201,self.nodes[p+6],self.nodes[p+7]);}type=1;}
+            else if(op==21 || op==22 || op==41 || op==42 || op==43){
+                if(left!=right || left<2 || left>5){self.fail(201,self.nodes[p+6],self.nodes[p+7]);}
+                if(op==43 && self.infer(self.nodes[p+3],depth+1)!=left){self.fail(201,self.nodes[p+6],self.nodes[p+7]);}type=left;
+            }else if(op==23){
+                if(left==2 && (right==2 || right==3)){type=right;}
+                else if(left==3 && right==2){type=3;}
+                else if((left==4 && right==5) || (left==5 && right==4)){type=2;}
+                else{self.fail(201,self.nodes[p+6],self.nodes[p+7]);}
+            }else if(op==24){
+                if(left==3 && right==2){type=3;}else if((left==2 && right==2) || (left==3 && right==3) || (left==4 && right==4)){type=2;}
+                else{self.fail(201,self.nodes[p+6],self.nodes[p+7]);}
+            }else if(op>=25 && op<=30){
+                if(left!=right || (op<=28 && (left<2 || left>5))){self.fail(201,self.nodes[p+6],self.nodes[p+7]);}type=1;
+            }else if(op==31 || op==32){if(left!=1 || right!=1){self.fail(201,self.nodes[p+6],self.nodes[p+7]);}type=1;}
+            else if(op==40){val other:int=self.infer(self.nodes[p+3],depth+1);
+                if(left!=1){self.fail(201,self.nodes[p+6],self.nodes[p+7]);}
+                if(right!=other){self.fail(203,self.nodes[p+6],self.nodes[p+7]);}type=right;
+            }else if(op>=45 && op<=47){if(left!=3){self.fail(201,self.nodes[p+6],self.nodes[p+7]);}type=9;}
+        }
+        self.nodes[p+5]=type;self.marks[index]=2;return type;
+    }
+    fn init(borrow mut self,borrow input:slice<byte>,max_bytes:int):void{
+        // Conservative requested-storage budget, including an extra 1 KiB for bodies.
+        if(len(input)>65536 || max_bytes<400000+len(input)){self.fail(401,0,0);return;}
+        self.source=try_alloc<byte>(len(input)+1);if(self.source==null){self.fail(401,0,0);return;}
+        self.length=len(input);for(let i:int=0;i<self.length;i++){self.source[i]=input[i];}
+        val bad:int=unicode::error(input);if(bad>=0){self.fail(101,bad,bad+1);return;}
+        for(let i:int=0;i<len(input);i++){if(input[i]<32 && !htdl::space(int(input[i]))){self.fail(101,i,i+1);return;}}
+        self.nodes=try_alloc<int>(2048*16);self.marks=try_alloc<int>(2048);
+        self.values=try_alloc<int>(2048);self.definitions=try_alloc<int>(256);self.flows=try_alloc<int>(64);
+        self.bindings=try_alloc<int>(128*6);self.outputs=try_alloc<int>(480*3);self.pending=try_alloc<int>(30);
+        if(self.source==null || self.nodes==null || self.marks==null || self.values==null || self.definitions==null ||
+           self.flows==null || self.bindings==null || self.outputs==null || self.pending==null){self.fail(401,0,0);return;}
+        if(self.length>=3 && self.source[0]==239 && self.source[1]==187 && self.source[2]==191){self.cursor=3;}
+        self.next();while(self.code==0 && self.token!=0){
+            if(self.word(utf8("flow"))){self.flow_declaration();}
+            else if(self.word(utf8("bind"))){self.binding();}
+            else{self.fail(102,self.begin,self.end);}}
+        for(let i:int=0;i<self.count && self.code==0;i++){self.infer(i,0);}
+        for(let i:int=0;i<self.output_count && self.code==0;i++){val index:int=self.outputs[i*3+2];
+            if(self.nodes[index*16+5]!=self.property_type(self.outputs[i*3+1])){self.fail(201,self.nodes[index*16+6],self.nodes[index*16+7]);}}
+        for(let i:int=0;i<self.binding_count && self.code==0;i++){
+            val p:int=i*6;for(let f:int=0;f<self.flow_count;f++){
+                if(self.same(self.bindings[p+3],self.bindings[p+4],self.flows[f*2],self.flows[f*2+1])){self.bindings[p+5]=f;break;}}
+            if(self.bindings[p+5]<0){self.fail(205,self.bindings[p+3],self.bindings[p+4]);}}
+        // This local profile requires a consistent state schema throughout a resource.
+        for(let i:int=0;i<self.definition_count && self.code==0;i++){val p:int=self.definitions[i]*16;
+            if(self.nodes[p]!=3 || self.nodes[p+1]!=12){continue;}
+            for(let j:int=0;j<i;j++){val q:int=self.definitions[j]*16;
+                if(self.nodes[q]==3 && self.nodes[q+1]==12 && self.nodes[p+15]==self.nodes[q+15] &&
+                   self.same(self.nodes[p+13],self.nodes[p+14],self.nodes[q+13],self.nodes[q+14])){
+                    if(self.nodes[p+5]!=self.nodes[q+5]){self.fail(304,self.nodes[p+6],self.nodes[p+7]);}
+                    else if(self.nodes[p+4]!=self.nodes[q+4]){self.fail(306,self.nodes[p+6],self.nodes[p+7]);}}}}
+        self.active=self.code==0;
+    }
+    fn is_open(borrow self):bool{return self.active;}
+    fn diagnostic(borrow self):htdl::Diagnostic{
+        let a:htdl::Position=new htdl::Position(1,1);let b:htdl::Position=new htdl::Position(1,1);
+        if(self.source!=null){a=htdl::position(slice_of(self.source,0,self.length),self.first);b=htdl::position(slice_of(self.source,0,self.length),self.last);}
+        return new htdl::Diagnostic(self.code,self.first,self.last,a.line,a.column,b.line,b.column);
+    }
+    fn input_index(borrow self,flow:int,borrow name:slice<byte>):int{
+        if(!self.active || flow<0 || flow>=self.flow_count){return -1;}
+        for(let i:int=0;i<self.definition_count;i++){val index:int=self.definitions[i];val p:int=index*16;
+            if(self.nodes[p]==3 && self.nodes[p+8]==flow && self.eq(self.nodes[p+9],self.nodes[p+10],name)){return index;}}return -1;
+    }
+    fn flow_index(borrow self,borrow name:slice<byte>):int{
+        if(!self.active){return -1;}for(let i:int=0;i<self.flow_count;i++){if(self.eq(self.flows[i*2],self.flows[i*2+1],name)){return i;}}return -1;
+    }
+    private fn matches(borrow mut self,borrow tree:doctree::Tree,node:doctree::NodeId,index:int):bool{
+        val p:int=index*6;val start:int=self.bindings[p+1];val end:int=self.bindings[p+2];
+        if(self.bindings[p]==35){return htdl::value_equals(tree,htdl::attribute(tree,node,5),slice_of(self.source,start,end-start));}
+        val attribute:doctree::NodeId=htdl::attribute(tree,node,6);if(doctree::absent(attribute)){return false;}
+        let at:int=0;while(at<htdl::value_size(tree,attribute)){
+            let stop:int=at;while(stop<htdl::value_size(tree,attribute) && htdl::value_byte(tree,attribute,stop)!=32){
+                stop++;self.work++;if(self.work>1000000){self.fail(401,start,end);return false;}}
+            if(stop-at==end-start){let same:bool=true;for(let i:int=0;i<end-start;i++){
+                self.work++;if(self.work>1000000){self.fail(401,start,end);return false;}
+                if(htdl::value_byte(tree,attribute,at+i)!=self.source[start+i]){same=false;break;}}if(same){return true;}}
+            at=stop+1;
+        }return false;
+    }
+    private fn evaluate_node(borrow mut self,index:int,borrow input:Inputs,depth:int):int{
+        if(self.code!=0){return 0;}val p:int=index*16;
+        self.work++;if(depth>64 || self.work>1000000){self.fail(401,self.nodes[p+6],self.nodes[p+7]);return 0;}
+        if(self.marks[index]==1){return self.values[index];}
+        val op:int=self.nodes[p];let result:int=self.nodes[p+4];let a:int=0;let b:int=0;let c:int=0;
+        if(op==3){if(input.has(index)){if(input.type(index)!=self.nodes[p+5]){self.fail(201,self.nodes[p+6],self.nodes[p+7]);return 0;}result=input.value(index);}}
+        else if(op==2 || op==4){result=self.evaluate_node(self.nodes[p+1],input,depth+1);}
+        else if(op!=1){
+            a=self.evaluate_node(self.nodes[p+1],input,depth+1);
+            if(op==40){if(a!=0){result=self.evaluate_node(self.nodes[p+2],input,depth+1);}else{result=self.evaluate_node(self.nodes[p+3],input,depth+1);}}
+            else if(op==31 || op==32){
+                result=0;if(op==32 && a!=0){result=1;}else if(op==31 && a==0){result=0;}
+                else{result=self.evaluate_node(self.nodes[p+2],input,depth+1);}
+            }else if(op==11 || op==44){result=a;if(op==11 || a<0){result= -a;}}
+            else if(op==12){result=0;if(a==0){result=1;}}
+            else if(op>=45 && op<=47){if(a<0){self.fail(404,self.nodes[p+6],self.nodes[p+7]);}result=a*4+op-45;}
+            else{
+                b=self.evaluate_node(self.nodes[p+2],input,depth+1);let number:Number=new Number();
+                if(op==21){number=add(a,b);}if(op==22){number=subtract(a,b);}if(op==23){number=multiply(a,b);}if(op==24){number=divide(a,b);}
+                if(op>=21 && op<=24){if(number.code!=0){self.fail(number.code,self.nodes[p+6],self.nodes[p+7]);}result=number.value;}
+                else if(op>=25 && op<=30){result=0;
+                    if((op==25 && a<b) || (op==26 && a<=b) || (op==27 && a>b) || (op==28 && a>=b) || (op==29 && a==b) || (op==30 && a!=b)){result=1;}}
+                else if(op==41){result=a;if(b<a){result=b;}}
+                else if(op==42){result=a;if(b>a){result=b;}}
+                else if(op==43){c=self.evaluate_node(self.nodes[p+3],input,depth+1);result=a;
+                    if(b>c){self.fail(403,self.nodes[p+6],self.nodes[p+7]);}if(result<b){result=b;}if(result>c){result=c;}}
+            }
+        }
+        val type:int=self.nodes[p+5];if(type>=2 && type<=5 && !in_range(result)){self.fail(401,self.nodes[p+6],self.nodes[p+7]);}
+        self.values[index]=result;self.marks[index]=1;return result;
+    }
+    fn evaluate(borrow mut self,borrow document:documents::Document,node:doctree::NodeId,borrow input:Inputs,version:int,borrow mut output:Style):htdl::Diagnostic{
+        self.code=0;self.first=0;self.last=0;self.work=0;
+        if(!self.active || !document.is_open() || !document.nodes().contains(node) || htdl::kind(document.nodes(),node)<4 ||
+           htdl::kind(document.nodes(),node)==10 || htdl::kind(document.nodes(),node)==11 ||
+           !input.is_ready() || !output.is_ready() || version<=output.version()){
+            self.fail(204,0,0);return self.diagnostic();}
+        let flows:int=0;for(let i:int=0;i<self.binding_count && self.code==0;i++){if(self.matches(document.nodes(),node,i)){flows|=1<<self.bindings[i*6+5];}}
+        for(let i:int=0;i<self.count;i++){self.marks[i]=0;}
+        for(let i:int=0;i<30;i++){self.pending[i]=0;}
+        for(let i:int=0;i<self.definition_count && self.code==0;i++){val index:int=self.definitions[i];val p:int=index*16;
+            if(self.nodes[p]==3 && (flows&(1<<self.nodes[p+8]))!=0){val source:int=self.nodes[p+1];
+                if(source!=12 && source!=5 && source!=6 && !input.has(index)){let code:int=204;if(source==1){code=303;}self.fail(code,self.nodes[p+6],self.nodes[p+7]);}
+                if(source==6 && (htdl::kind(document.nodes(),node)!=21 || !htdl::value_equals(document.nodes(),htdl::attribute(document.nodes(),node,18),utf8("checkbox")))){
+                    self.fail(204,self.nodes[p+6],self.nodes[p+7]);}
+                if(source==5 && htdl::kind(document.nodes(),node)!=9 && htdl::kind(document.nodes(),node)!=21){self.fail(204,self.nodes[p+6],self.nodes[p+7]);}
+                if(input.has(index) && input.type(index)!=self.nodes[p+5]){self.fail(201,self.nodes[p+6],self.nodes[p+7]);}
+                let value:int=self.nodes[p+4];
+                if(input.has(index)){value=input.value(index);}
+                if(source==1 && value<0){self.fail(303,self.nodes[p+6],self.nodes[p+7]);}
+                if(source==11 && value<=0){self.fail(204,self.nodes[p+6],self.nodes[p+7]);}
+                if(source==5 || source==6){let key:int=8;if(source==6){key=22;}value=0;
+                    if(htdl::value_equals(document.nodes(),htdl::attribute(document.nodes(),node,key),utf8("true"))){value=1;}}
+                if(source==12){
+                    // All readers of the same page/node key observe one cell,
+                    // independent of declaration order and branch reachability.
+                    let provided:bool=false;
+                    for(let j:int=0;j<self.definition_count;j++){val other:int=self.definitions[j];val q:int=other*16;
+                        if(self.nodes[q]==3 && self.nodes[q+1]==12 && self.nodes[p+15]==self.nodes[q+15] &&
+                           self.same(self.nodes[p+13],self.nodes[p+14],self.nodes[q+13],self.nodes[q+14]) && input.has(other)){
+                            if(input.type(other)!=self.nodes[p+5]){self.fail(201,self.nodes[p+6],self.nodes[p+7]);}
+                            if(provided && value!=input.value(other)){self.fail(304,self.nodes[p+6],self.nodes[p+7]);}
+                            provided=true;value=input.value(other);
+                        }}
+                    if(self.nodes[p+5]==2 && value%65536!=0){self.fail(201,self.nodes[p+6],self.nodes[p+7]);}
+                }
+                self.values[index]=value;self.marks[index]=1;
+            }}
+        let mask:int=0;
+        for(let i:int=0;i<self.output_count && self.code==0;i++){
+            val p:int=i*3;val flow:int=self.outputs[p];if((flows&(1<<flow))==0){continue;}
+            val property:int=self.outputs[p+1];val expression:int=self.outputs[p+2];val start:int=self.nodes[expression*16+6];val end:int=self.nodes[expression*16+7];
+            if(self.pending[15+property-1]!=0){self.fail(302,start,end);break;}self.pending[15+property-1]=flow+1;
+            val value:int=self.evaluate_node(expression,input,0);
+            if(((property>=1 && property<=3) || property==9) && value<0){self.fail(404,start,end);}
+            if(property==10 && (value<0 || value>65536)){self.fail(404,start,end);}
+            if(property==11 && value<=0){self.fail(404,start,end);}
+            if(property==12 && (value<100*65536 || value>900*65536 || value%65536!=0)){self.fail(404,start,end);}
+            if(property==13 && value==3){self.fail(404,start,end);}
+            self.pending[property-1]=value;mask|=1<<(property-1);
+        }
+        if(self.code==0 && !output.commit(node,version,mask,slice_of(self.pending,0,15))){self.fail(204,0,0);}
+        return self.diagnostic();
+    }
+}

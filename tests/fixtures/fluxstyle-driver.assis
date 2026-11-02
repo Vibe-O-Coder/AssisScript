@@ -1,0 +1,21 @@
+import "std/fluxstyle.assis";
+safe fn main():int{
+    own source:*byte=try_alloc<byte>(65537);own chunk:*byte=try_alloc<byte>(4096);
+    if(source==null || chunk==null){return 2;}let size:int=0;
+    while(true){val n:int=read_bytes(chunk,4096);if(n<0){return 2;}if(n==0){break;}
+        if(n>65536-size){print(401,0,0,1,1,1,1);return 0;}
+        for(let i:int=0;i<n;i++){source[size+i]=chunk[i];}size+=n;}
+    own program:fluxstyle::Program=try_new fluxstyle::Program(slice_of(source,0,size),1000000);
+    if(program==null){return 2;}val diagnostic:htdl::Diagnostic=program.diagnostic();
+    print(diagnostic.code,diagnostic.start,diagnostic.end,diagnostic.line,diagnostic.column,diagnostic.end_line,diagnostic.end_column);
+    if(!program.is_open()){return 0;}
+    own input:fluxstyle::Inputs=try_new fluxstyle::Inputs(2048);own style:fluxstyle::Style=try_new fluxstyle::Style();
+    own store:documents::Store=try_new documents::Store(1000000,1000,100);
+    if(input==null || style==null || store==null || !input.is_ready() || !style.is_ready()){return 2;}
+    assert(htdl::load_catalog(store,1,utf8("<div type=document version=\"0.1\" lang=en><div type=head><div type=title>FS</div></div><div type=body><div type=input kind=checkbox id=card class=\"card featured\" a11y-label=Card checked=true disabled=true></div></div></div>")).code==0);
+    val node:doctree::NodeId=htdl::find_id(store.active_document().nodes(),utf8("card"));
+    val result:htdl::Diagnostic=program.evaluate(store.active_document(),node,input,1,style);
+    print(result.code,result.start,result.end,result.line,result.column,result.end_line,result.end_column);
+    print(style.version());for(let p:int=1;p<=15;p++){if(style.has(p)){print(p,style.value(p));}}
+    return 0;
+}
