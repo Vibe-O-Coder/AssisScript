@@ -1,0 +1,20 @@
+{
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "logical_cpus": 8,
+  "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "compiler_sha256": "5f3958b33dc6a6932a175e1d802ffe0d0321458c59aa476b13b4f8ee6141447f",
+  "build_command": [
+    "gcc",
+    "-O2",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Wno-misleading-indentation",
+    "src/assisc.c",
+    "-s",
+    "-o",
+    "build/assis-linux"
+  ]
+}

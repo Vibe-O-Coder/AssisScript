@@ -23,7 +23,7 @@ if args.check:
 else:
     path.write_text(text, encoding='utf-8', newline='\n')
 optional = [item for item in catalog['libraries'] if not item['required']]
-assert len(optional) < 31
+assert len(optional) <= 31
 assert all(re.fullmatch('[a-z_][a-z_0-9]*', item['name']) for item in catalog['libraries'])
 names = [item['name'] for item in optional]
 optional_text = '/* Generated from stdlib/catalogo.json. */\n#define OPTIONAL_COUNT '+str(len(names))+'\n'

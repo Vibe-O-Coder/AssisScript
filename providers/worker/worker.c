@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 #include "assis_worker_v1.h"
+#include "../../src/page_restrict.h"
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
@@ -10,7 +11,8 @@ static int64_t sequence;
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-typedef struct {int64_t token;HANDLE process,job,input,output;} Slot;
+#include <psapi.h>
+typedef struct {int64_t token;HANDLE process,job,input,output;int64_t memory,cpu;} Slot;
 #else
 #include <unistd.h>
 #include <errno.h>
@@ -25,7 +27,7 @@ typedef struct {int64_t token;HANDLE process,job,input,output;} Slot;
 #include <linux/seccomp.h>
 #include <linux/audit.h>
 #include <stddef.h>
-typedef struct {int64_t token;pid_t pid;int input,output;} Slot;
+typedef struct {int64_t token;pid_t pid;int input,output;int64_t memory;} Slot;
 #endif
 static Slot slots[SLOTS];
 static int owner_thread(void){
@@ -59,6 +61,16 @@ static int64_t transfer(HANDLE pipe,uint8_t *data,int64_t length,int writing){
     BOOL ok=writing?WriteFile(pipe,data,(DWORD)length,&amount,NULL):ReadFile(pipe,data,(DWORD)length,&amount,NULL);
     if(!ok){DWORD e=GetLastError();if(e==ERROR_NO_DATA||e==ERROR_PIPE_BUSY)return 0;return e==ERROR_BROKEN_PIPE?-5:-4;}return amount;
 }
+static int process_budget(Slot *s){
+    FILETIME created,ended,kernel,user;
+    if(!GetProcessTimes(s->process,&created,&ended,&kernel,&user))return -4;
+    ULARGE_INTEGER ticks;ticks.LowPart=user.dwLowDateTime;ticks.HighPart=user.dwHighDateTime;
+    /* Windows Job accounting is checked periodically by the OS. Also enforce
+     * at each host I/O turn, so a responsive supervisor observes the overrun
+     * without depending on that unspecified periodic check interval. */
+    if(ticks.QuadPart>=(ULONGLONG)s->cpu*10000000){TerminateJobObject(s->job,125);return -5;}
+    return 0;
+}
 static int make_pipe(HANDLE *server,HANDLE *client,int input,int64_t id){
     wchar_t name[128];swprintf(name,128,L"\\\\.\\pipe\\assis-worker-%lu-%lld-%d",GetCurrentProcessId(),(long long)id,input);
     *server=CreateNamedPipeW(name,(input?PIPE_ACCESS_OUTBOUND:PIPE_ACCESS_INBOUND)|FILE_FLAG_FIRST_PIPE_INSTANCE,
@@ -70,7 +82,7 @@ static int make_pipe(HANDLE *server,HANDLE *client,int input,int64_t id){
     /* Child uses blocking streams; parent keeps PIPE_NOWAIT on server ends. */
     return 1;
 }
-int64_t assw_open(const uint8_t *path,int64_t length,int64_t restricted,int64_t *output){
+static int64_t open_process(const uint8_t *path,int64_t length,int64_t restricted,int64_t memory,int64_t cpu,int compiling,int64_t *output){
     if(output)*output=0;if(!owner_thread())return -6;if(!output||!path||length<3||length>4096||(restricted!=0&&restricted!=1))return -1;
     if(restricted)return -3; /* Job limits are supervision, not authority isolation. */
     for(int64_t i=0;i<length;i++)if(!path[i])return -1;
@@ -84,31 +96,33 @@ int64_t assw_open(const uint8_t *path,int64_t length,int64_t restricted,int64_t 
     if(err==INVALID_HANDLE_VALUE){err=NULL;goto finish;}
     job=CreateJobObjectW(NULL,NULL);if(!job)goto finish;
     JOBOBJECT_EXTENDED_LIMIT_INFORMATION limits={0};limits.BasicLimitInformation.LimitFlags=JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE|JOB_OBJECT_LIMIT_ACTIVE_PROCESS|JOB_OBJECT_LIMIT_PROCESS_MEMORY;
-    limits.BasicLimitInformation.ActiveProcessLimit=1;limits.ProcessMemoryLimit=128*1024*1024;
+    limits.BasicLimitInformation.LimitFlags|=JOB_OBJECT_LIMIT_PROCESS_TIME;
+    limits.BasicLimitInformation.PerProcessUserTimeLimit.QuadPart=cpu*10000000;
+    limits.BasicLimitInformation.ActiveProcessLimit=1;limits.ProcessMemoryLimit=(SIZE_T)memory;
     if(!SetInformationJobObject(job,JobObjectExtendedLimitInformation,&limits,sizeof(limits)))goto finish;
     InitializeProcThreadAttributeList(NULL,1,0,&size);si.lpAttributeList=HeapAlloc(GetProcessHeap(),0,size);if(!si.lpAttributeList)goto finish;
     if(!InitializeProcThreadAttributeList(si.lpAttributeList,1,0,&size)){HeapFree(GetProcessHeap(),0,si.lpAttributeList);si.lpAttributeList=NULL;goto finish;}
     HANDLE allowed[]={childin,childout,err};if(!UpdateProcThreadAttribute(si.lpAttributeList,0,PROC_THREAD_ATTRIBUTE_HANDLE_LIST,allowed,sizeof(allowed),NULL,NULL))goto finish;
     si.StartupInfo.dwFlags=STARTF_USESTDHANDLES;si.StartupInfo.hStdInput=childin;si.StartupInfo.hStdOutput=childout;si.StartupInfo.hStdError=err;
-    wchar_t command[8200];swprintf(command,8200,L"\"%ls\"",file);
+    wchar_t command[8250];swprintf(command,8250,L"\"%ls\"%ls",file,compiling?L" page-compile-worker":L"");
     wchar_t environment[512]={0};wchar_t windows[260];UINT wn=GetWindowsDirectoryW(windows,260);if(!wn||wn>=260)goto finish;
     swprintf(environment,510,L"SystemRoot=%ls",windows); /* double NUL; no inherited secrets */
     wchar_t directory[4097];wcscpy(directory,file);wchar_t *slash=wcsrchr(directory,L'\\');wchar_t *slash2=wcsrchr(directory,L'/');if(!slash||(slash2&&slash2>slash))slash=slash2;if(!slash)goto finish;*slash=0;
     if(!CreateProcessW(file,command,NULL,NULL,TRUE,EXTENDED_STARTUPINFO_PRESENT|CREATE_SUSPENDED|CREATE_NO_WINDOW|CREATE_UNICODE_ENVIRONMENT,environment,directory,&si.StartupInfo,&pi))goto finish;
     if(!AssignProcessToJobObject(job,pi.hProcess)||ResumeThread(pi.hThread)==(DWORD)-1)goto finish;
-    slots[index]=(Slot){id,pi.hProcess,job,in,out};*output=id;result=0;pi.hProcess=NULL;job=in=out=NULL;
+    slots[index]=(Slot){id,pi.hProcess,job,in,out,memory,cpu};*output=id;result=0;pi.hProcess=NULL;job=in=out=NULL;
 finish:
     if(pi.hProcess){TerminateProcess(pi.hProcess,125);WaitForSingleObject(pi.hProcess,5000);CloseHandle(pi.hProcess);}if(pi.hThread)CloseHandle(pi.hThread);
     if(si.lpAttributeList){DeleteProcThreadAttributeList(si.lpAttributeList);HeapFree(GetProcessHeap(),0,si.lpAttributeList);}
     if(in)CloseHandle(in);if(out)CloseHandle(out);if(childin)CloseHandle(childin);if(childout)CloseHandle(childout);if(err)CloseHandle(err);if(job)CloseHandle(job);return result;
 }
-int64_t assw_send(int64_t t,const uint8_t *p,int64_t n){if(!owner_thread())return -6;Slot *s=find(t);return s?transfer(s->input,(uint8_t*)p,n,1):-2;}
-int64_t assw_receive(int64_t t,uint8_t *p,int64_t n){if(!owner_thread())return -6;Slot *s=find(t);return s?transfer(s->output,p,n,0):-2;}
+int64_t assw_send(int64_t t,const uint8_t *p,int64_t n){if(!owner_thread())return -6;Slot *s=find(t);if(!s)return -2;int budget=process_budget(s);return budget?budget:transfer(s->input,(uint8_t*)p,n,1);}
+int64_t assw_receive(int64_t t,uint8_t *p,int64_t n){if(!owner_thread())return -6;Slot *s=find(t);if(!s)return -2;int budget=process_budget(s);return budget?budget:transfer(s->output,p,n,0);}
 int64_t assw_child_read(uint8_t *p,int64_t n){if(!p||n<1||n>4096)return -1;DWORD count=0;return ReadFile(GetStdHandle(STD_INPUT_HANDLE),p,(DWORD)n,&count,NULL)?(count?(int64_t)count:-5):-5;}
 int64_t assw_child_write(const uint8_t *p,int64_t n){if(!p||n<1||n>4096)return -1;DWORD count=0;return WriteFile(GetStdHandle(STD_OUTPUT_HANDLE),p,(DWORD)n,&count,NULL)?(int64_t)count:-5;}
 int64_t assw_restrict(void){return 0;}
 #else
-int64_t assw_open(const uint8_t *path,int64_t length,int64_t restricted,int64_t *output){
+static int64_t open_process(const uint8_t *path,int64_t length,int64_t restricted,int64_t memory,int64_t cpu,int compiling,int64_t *output){
     if(output)*output=0;if(!owner_thread())return -6;if(!output||!path||length<2||length>4096||path[0]!='/'||(restricted!=0&&restricted!=1))return -1;
     for(int64_t i=0;i<length;i++)if(!path[i])return -1;
     char file[4097];memcpy(file,path,length);file[length]=0;char resolved[4097];if(!realpath(file,resolved))return -4;
@@ -117,16 +131,18 @@ int64_t assw_open(const uint8_t *path,int64_t length,int64_t restricted,int64_t 
     pid_t parent=getpid();pid_t pid=fork();
     if(pid==0){
         if(prctl(PR_SET_PDEATHSIG,SIGKILL)||getppid()!=parent||setpgid(0,0))_exit(126);
+        struct rlimit mem={(rlim_t)memory,(rlim_t)memory},clock={(rlim_t)cpu,(rlim_t)cpu},stack={8*1024*1024,8*1024*1024},core={0,0};
+        if(setrlimit(RLIMIT_AS,&mem)||setrlimit(RLIMIT_CPU,&clock)||setrlimit(RLIMIT_STACK,&stack)||setrlimit(RLIMIT_CORE,&core))_exit(126);
         if(dup2(in[0],0)<0||dup2(out[1],1)<0)_exit(126);
         int null=open("/dev/null",O_WRONLY|O_CLOEXEC);if(null<0||dup2(null,2)<0)_exit(126);
         if(syscall(SYS_close_range,3,~0U,0)<0)_exit(126);
         if(chdir("/"))_exit(126);
         char loader[4160]="LD_LIBRARY_PATH=";strcat(loader,resolved);char *slash=strrchr(loader,'/');if(!slash)_exit(126);*slash=0;
-        char *env[]={"LANG=C.UTF-8",loader,NULL};char *argv[]={resolved,NULL};execve(resolved,argv,env);_exit(127);
+        char *env[]={"LANG=C.UTF-8",loader,NULL};char *argv[]={resolved,compiling?"page-compile-worker":NULL,NULL};execve(resolved,argv,env);_exit(127);
     }
     close(in[0]);close(out[1]);if(pid<0){close(in[1]);close(out[0]);return -4;}
     setpgid(pid,pid);
-    int64_t id=++sequence;slots[index]=(Slot){id,pid,in[1],out[0]};
+    int64_t id=++sequence;slots[index]=(Slot){id,pid,in[1],out[0],memory};
     if(fcntl(in[1],F_SETFL,O_NONBLOCK)||fcntl(out[0],F_SETFL,O_NONBLOCK)){assw_close(id);return -4;}
     /* Process-wide SIGPIPE changes would affect the trusted host. Suppress it
      * only around writes below, and consume only our newly pending signal. */
@@ -149,34 +165,40 @@ int64_t assw_restrict(void){
 #if defined(__x86_64__)
     struct rlimit mem={128*1024*1024,128*1024*1024},cpu={3,3},files={3,3},core={0,0},stack={8*1024*1024,8*1024*1024};
     if(setrlimit(RLIMIT_AS,&mem)||setrlimit(RLIMIT_CPU,&cpu)||setrlimit(RLIMIT_NOFILE,&files)||setrlimit(RLIMIT_CORE,&core)||setrlimit(RLIMIT_STACK,&stack)||prctl(PR_SET_DUMPABLE,0)||prctl(PR_SET_NO_NEW_PRIVS,1,0,0,0))return -4;
-    /* Default deny; inspect architecture before syscall numbers (also denies
-     * x32). No open, socket, exec, fork, ptrace, kill, io_uring or fd transfer.
-     * read/write are limited to the dedicated streams; executable mappings and
-     * file-backed mmap are denied even if a future runtime changes behavior. */
-#define ALLOW(n) BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,(n),0,1),BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ALLOW)
-    struct sock_filter f[]={
-        BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,arch)),
-        BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,AUDIT_ARCH_X86_64,1,0),BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_KILL_PROCESS),
-        BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,nr)),
-        BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,SYS_read,0,4),BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,args[0])),
-        BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,0,0,1),BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ALLOW),BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ERRNO|EPERM),
-        BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,SYS_write,0,5),BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,args[0])),
-        BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,1,1,0),BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,2,0,1),BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ALLOW),BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ERRNO|EPERM),
-        BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,SYS_mmap,0,7),
-        BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,args[2])),BPF_JUMP(BPF_JMP|BPF_JSET|BPF_K,PROT_EXEC,4,0),
-        BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,args[3])),BPF_JUMP(BPF_JMP|BPF_JSET|BPF_K,MAP_ANONYMOUS,0,2),
-        BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ALLOW),BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ERRNO|EPERM),BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ERRNO|EPERM),
-        BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,SYS_mprotect,0,4),BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,args[2])),
-        BPF_JUMP(BPF_JMP|BPF_JSET|BPF_K,PROT_EXEC,1,0),BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ALLOW),BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ERRNO|EPERM),
-        ALLOW(SYS_brk),ALLOW(SYS_munmap),ALLOW(SYS_madvise),ALLOW(SYS_clock_gettime),ALLOW(SYS_nanosleep),ALLOW(SYS_clock_nanosleep),
-        ALLOW(SYS_futex),ALLOW(SYS_rt_sigreturn),ALLOW(SYS_exit),ALLOW(SYS_exit_group),
-        BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ERRNO|EPERM)
-    };
-#undef ALLOW
-    struct sock_fprog program={(unsigned short)(sizeof(f)/sizeof(f[0])),f};
-    return prctl(PR_SET_SECCOMP,SECCOMP_MODE_FILTER,&program)==0?1:-4;
+    return page_stream_restrict();
 #else
     return -3;
 #endif
 }
 #endif
+int64_t assw_open(const uint8_t *p,int64_t n,int64_t restricted,int64_t *out){
+    return open_process(p,n,restricted,128*1024*1024,3,0,out);
+}
+int64_t assw_compile_open(const uint8_t *p,int64_t n,int64_t mib,int64_t seconds,int64_t *out){
+    if(out)*out=0;if(!owner_thread())return -6;
+    if(mib<16||mib>512||seconds<1||seconds>10)return -1;
+    return open_process(p,n,0,mib*1024*1024,seconds,1,out);
+}
+int64_t assw_usage(int64_t token,int64_t *out,int64_t capacity){
+    if(!owner_thread())return -6;if(!out||capacity<6)return -1;memset(out,0,6*sizeof(*out));
+    Slot *s=find(token);if(!s)return -2;
+    out[0]=1;out[1]=s->memory;
+#ifdef _WIN32
+    PROCESS_MEMORY_COUNTERS_EX info;memset(&info,0,sizeof(info));info.cb=sizeof(info);
+    if(!GetProcessMemoryInfo(s->process,(PROCESS_MEMORY_COUNTERS*)&info,sizeof(info)))return -4;
+    out[2]=(int64_t)info.WorkingSetSize;out[3]=(int64_t)info.PeakWorkingSetSize;out[4]=(int64_t)info.PrivateUsage;
+    DWORD code=0;if(!GetExitCodeProcess(s->process,&code))return -4;out[5]=code==STILL_ACTIVE?1:2;
+#else
+    char path[64],line[256];snprintf(path,sizeof(path),"/proc/%ld/status",(long)s->pid);
+    FILE *f=fopen(path,"r");if(!f)return -4;
+    out[5]=1;while(fgets(line,sizeof(line),f)){
+        unsigned long long value;
+        if(sscanf(line,"VmRSS: %llu kB",&value)==1)out[2]=(int64_t)value*1024;
+        else if(sscanf(line,"VmHWM: %llu kB",&value)==1)out[3]=(int64_t)value*1024;
+        else if(sscanf(line,"VmSize: %llu kB",&value)==1)out[4]=(int64_t)value*1024;
+        else if(!strncmp(line,"State:",6)&&(strchr(line,'Z')||strchr(line,'X')))out[5]=2;
+    }
+    fclose(f);
+#endif
+    return 0;
+}

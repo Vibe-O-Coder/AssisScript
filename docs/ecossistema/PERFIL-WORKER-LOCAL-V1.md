@@ -1,5 +1,7 @@
 # worker-local-v1 — contrato e limites
 
+Continuação de 02/11/2026: [compilador de página supervisionado](../BIBLIOTECA-pagecompiler.md) usa ASC1/1, processo por fonte e o mesmo provider, sem multiplexar ASIP/1. O worker recebe somente ASV2 validado. Herança mínima, deadlines e Linux default deny conservados; Windows continua sem sandbox de autoridade. Memória privada comprometida Windows/espaço virtual Linux são distintos de RSS observado.
+
 Data 02/11/2026. Perfil experimental de processo para ASV1/ASV2 e
 `htdl_v1/read-only-1`, sem alterar gramática, nomes canônicos ou ownership.
 Escopo E03-03/E03-04/E03-05/E06-04/E06-05. Não fecha M0-EXEC ou G2.

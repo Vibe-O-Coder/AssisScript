@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "returncode": 0,
+  "stdout": "PAGE-STATE 42\n",
+  "stderr": "",
+  "compiler_sha256": "4c0118bf65c6327fd6b013f99ce0d7d023e192b3024768781fcf4fca2bb9ed4c",
+  "artifacts": {
+    "assis_worker_v1.dll": "b2e8d04ddd0b7c456beb0036b47f1aa4cad200ad23c360b0e906d11b72459d1c",
+    "page-worker.exe": "8819543fc645d3085f53b2be444741109a744c9005a2e27f14c1b377ae653988"
+  },
+  "example_sha256": "a27ca99d80e6677eee793991cfa119e6e375f3b960155a2b68cb89041ccedbff",
+  "commands": [
+    [
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\resource-budget-20261102\\build\\assis.exe",
+      "build",
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\resource-budget-20261102\\exemplos\\51_compile_page.assis",
+      "-o",
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\resource-budget-20261102\\build\\resource-budget-example\\compile-page.exe"
+    ],
+    [
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\resource-budget-20261102\\build\\resource-budget-example\\compile-page.exe",
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\resource-budget-20261102\\build\\assis.exe",
+      "C:\\Users\\babus\\Desktop\\AssisScript\\work\\resource-budget-20261102\\build\\resource-budget-example\\page-worker.exe",
+      "--trusted-local"
+    ]
+  ]
+}

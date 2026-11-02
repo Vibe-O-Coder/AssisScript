@@ -12,6 +12,14 @@
  * Executable is a trusted host-supplied absolute path; no shell or page native code. */
 ASSW_API int64_t assw_version(void);
 ASSW_API int64_t assw_open(const uint8_t*,int64_t,int64_t,int64_t*);
+/* Extension: fixed page-compile-worker argument, 16..512 MiB, 1..10 CPU s.
+ * Windows limits committed private memory; Linux limits address space.
+ * Does not authorize executing a downloaded compiler or native page binary. */
+ASSW_API int64_t assw_compile_open(const uint8_t*,int64_t,int64_t,int64_t,int64_t*);
+/* Six words: version=1, limit bytes, current RSS, peak RSS, private commit
+ * (Windows) or virtual size (Linux), running=1/exited=2. Sample before close.
+ * RSS is observed, not a hard working-set ceiling. Output zeroed on stale. */
+ASSW_API int64_t assw_usage(int64_t,int64_t*,int64_t);
 ASSW_API int64_t assw_send(int64_t,const uint8_t*,int64_t);
 ASSW_API int64_t assw_receive(int64_t,uint8_t*,int64_t);
 ASSW_API int64_t assw_close(int64_t);

@@ -1,0 +1,31 @@
+// Trusted CLI: absolute compiler, absolute page-worker, --trusted-local on Windows.
+// Compiles source in a disposable process, then commits Reader and SDK together.
+import "std/pagereader.assis";
+safe fn argument(index:int):own *byte{unsafe{
+    val length:int=arg_size(index);if(length<1 || length>4096){return try_alloc<byte>(0);}
+    own data:*byte=try_alloc<byte>(length+1);if(data==null){return move(data);}
+    if(arg_copy(index,data,length+1)!=length){return try_alloc<byte>(0);}return move(data);
+}}
+safe fn cells(borrow data:slice<byte>):int{return len(data);}
+safe fn main():int{
+    own compiler:*byte=argument(1);own worker:*byte=argument(2);own option:*byte=argument(3);
+    if(compiler==null || worker==null || len(compiler)<2 || len(worker)<2){return 2;}
+    let restricted:bool=true;
+    if(option!=null && len(option)>0){
+        borrow expected:slice<byte>=utf8("--trusted-local");if(len(option)!=len(expected)+1){return 2;}
+        for(let i:int=0;i<len(expected);i++){if(option[i]!=expected[i]){return 2;}}restricted=false;
+    }
+    own session:pagereader::Session=try_new pagereader::Session(32000000,250000,1,7,11);
+    if(session==null || !session.is_open()){return 4;}
+    borrow document:slice<byte>=utf8("<div type=document version=0.1 lang=en><div type=head><div type=title>Compiled page</div></div><div type=body><div type=paragraph>Compiled with process budgets.</div></div></div>");
+    borrow program:slice<byte>=utf8("import \"std/page.assis\";safe fn main():int{return htdl_v1::state_set(0,42);}");
+    val started:int=session.prepare_source(slice_of(compiler,0,len(compiler)-1),slice_of(worker,0,len(worker)-1),document,program,false,128,3,restricted,
+        300,200,16,cells,new pagereader::Limits(0,16,100000,1000,3000),new pagereader::Grants(true,false),monotonic_ms());
+    if(started!=0){print("PREPARE-ERROR",started);return 5;}
+    val deadline:int=monotonic_ms()+10000;
+    while(monotonic_ms()<deadline){
+        val status:int=session.advance(monotonic_ms());if(status<0){print("COMPILE-ERROR",status);return 5;}
+        if(session.ready()){if(!session.commit()){return 5;}}
+        if(session.has_active() && session.result().state==42){print("PAGE-STATE",42);session.close();return 0;}sleep_ms(1);
+    }session.close();return 6;
+}

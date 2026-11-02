@@ -1,5 +1,7 @@
 # std/pageworker — execução local supervisionada
 
+Continuação de 02/11/2026: o provider compartilha os 16 slots com o serviço [pagecompiler](BIBLIOTECA-pagecompiler.md), oferece leitura de uso de memória e aplica limites de processo antes de exec/resume. Windows acrescenta limite de CPU em modo usuário e conferência por consulta de I/O; Linux conserva o filtro compartilhado e tetos anteriores. ABI v1/imports antigos preservados; não amplia sandbox Windows/macOS.
+
 Biblioteca opcional dependente de `pagewire`, para o host nativo confiável.
 Lógica de protocolo, deadlines, navegação e execução da página em AssisScript.
 Provider escalar próprio `assis_worker_v1` adapta somente processos, streams,

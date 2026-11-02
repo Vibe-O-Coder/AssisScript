@@ -5,6 +5,7 @@
 /* Darwin hides mkdtemp behind its full API level when POSIX is requested. */
 #define _DARWIN_C_SOURCE 1
 #endif
+#define _GNU_SOURCE
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
 #if (!defined(__linux__) && !defined(_WIN32) && !defined(__APPLE__)) || (!defined(__x86_64__) && !((defined(__aarch64__) || defined(__arm64__)) && !defined(_WIN32)))
@@ -58,6 +59,11 @@ static bool target_macos=false;
 #endif
 static bool target_arm64=!HOST_RUN_X64;
 static bool target_page;
+static bool page_compile_worker;
+static char *page_stream_source;
+static const char page_stream_sdk[] =
+#include "page_sdk.inc"
+;
 
 #include "version.h"
 #define VERSION ASSIS_VERSION
@@ -734,6 +740,7 @@ static void gen_stmt(Node *n){
 }
 #include "backend_emit.h"
 #include "page_emit.h"
+#include "page_compile.h"
 static size_t entry_offset;
 #include "arm64_emit.h"
 static void generate(void){
@@ -989,6 +996,7 @@ static const char *token_name(Token *t){
 static int compiler_main(int argc,char **argv){
     for(int i=1;i<argc;i++)if(same(argv[i],"--diagnostics=json"))json_diagnostics=true;
     if(argc<2){help();return 0;}const char *cmd=argv[1];
+    if(same(cmd,"page-compile-worker"))return page_compile_stream(argc,argv);
     if(same(cmd,"--help")||same(cmd,"help")||same(cmd,"--ajuda")){help();return 0;}
     if(same(cmd,"--version")||same(cmd,"version")){puts("AssisScript " VERSION " (nativo, " HOST_NAME ")");return 0;}
     if(same(cmd,"doctor")){

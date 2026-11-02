@@ -1,0 +1,12 @@
+{
+  "base": "fffd1b8bd3eb4c43eeab535f586a12e2e6719c0d",
+  "compiler_sha256": "fc880cee46a48e2ace73af7f185b40767d314c304ae5cc3c3691f9b9388812d4",
+  "command": [
+    "assis-before.exe",
+    "page-compile-worker"
+  ],
+  "returncode": 2,
+  "stdout": "",
+  "stderr": "assis: comando desconhecido: page-compile-worker. Use assis help.\n",
+  "scope": "Fresh Windows compiler from the exact base, built before edits; no new service in that revision"
+}

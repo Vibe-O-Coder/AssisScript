@@ -304,7 +304,17 @@
       "description": "Reader e worker ASV2 locais com ativacao conjunta, eventos limitados e recuperacao.",
       "dependencies": [
         "reader",
-        "pageworker"
+        "pageworker",
+        "pagecompiler"
+      ]
+    },
+    {
+      "name": "pagecompiler",
+      "required": false,
+      "doc": "BIBLIOTECA-pagecompiler.md",
+      "description": "Compilação escalar em processo descartável com protocolo limitado, quotas do OS, deadline e SDK embutido.",
+      "dependencies": [
+        "pagevm"
       ]
     }
   ]

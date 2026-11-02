@@ -1,5 +1,7 @@
 # pagereader — Reader e página ASV2 local
 
+Continuação de 02/11/2026: `prepare_source` compila fonte em processo descartável com orçamento antes de preparar Reader/worker. `advance` preserva o ativo, abort/close cancelam compilação e falhas preservam o documento anterior. Consulte [pagecompiler](BIBLIOTECA-pagecompiler.md) para assinatura, limites do OS, protocolo e restrições; o prepare de bytecode anterior continua disponível.
+
 Perfil **reader-worker-local-1**, 02/11/2026. Shell/coordenador em AssisScript;
 reutiliza Reader, HTDL, pagehost, ASIP/1 e worker existentes. Windows x64 tem
 provider gráfico; Linux x64 tem execução headless com worker restrito.

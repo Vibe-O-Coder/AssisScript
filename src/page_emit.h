@@ -130,6 +130,11 @@ static void page_write(const char *path){
     for(int i=0;i<page_code.n;i++){PageInstruction *op=page_code.v[i];if(op->callee)op->immediate=page_function(op->callee)->start;}
     Buffer output={0};bytes(&output,"ASV2",4);u32(&output,(uint32_t)page_code.n);u32(&output,(uint32_t)page_function(main_function)->start);u32(&output,0);
     for(int i=0;i<page_code.n;i++){PageInstruction *op=page_code.v[i];u8(&output,op->op);u8(&output,op->a);u8(&output,op->b);u8(&output,op->c);u32(&output,(uint32_t)op->immediate);}
+    if(page_compile_worker){
+        unsigned char header[4];for(int i=0;i<4;i++)header[i]=(unsigned char)(output.n>>(i*8));
+        if(fwrite(header,1,4,stdout)!=4||fwrite(output.v,1,output.n,stdout)!=output.n||fflush(stdout))fatal("page-compile-worker: saída indisponível");
+        return;
+    }
     protect_output(path);FILE *file=fopen(path,"wb");if(!file)fatal("não foi possível gravar %s",path);
     bool failed=fwrite(output.v,1,output.n,file)!=output.n;if(fclose(file))failed=true;if(failed)fatal("erro ao gravar %s",path);
 }

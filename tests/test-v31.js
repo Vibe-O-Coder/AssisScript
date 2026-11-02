@@ -112,7 +112,7 @@ test('exemplos de aplicação produzem relatório e transporte binário corretos
 test('instalação: núcleo obrigatório, seleção de opcionais e remoção isolada', {skip: process.platform !== 'win32'}, () => {
     const setup = process.env.ASSIS_SETUP_BIN || path.join(root, 'bin/assis-setup.exe');
     function setupRun(args) { const r = spawnSync(setup, args, {encoding:'utf8', timeout:20000, windowsHide:true}); assert.ifError(r.error); return r; }
-    for (const [name, flags, optional] of [['minimal', ['--minimal'], []], ['selected', ['--with', 'csv,algorithms'], ['csv','algorithms']], ['full', [], JSON.parse(fs.readFileSync(path.join(root,'stdlib/catalogo.json'))).libraries.filter(lib=>!lib.required).map(lib=>lib.name)], ['log', ['--with','log'], ['log','cli']], ['worker', ['--with','pageworker'], ['pageworker','pagewire']], ['pagereader', ['--with','pagereader'], ['pagereader','reader','viewer','htdl','window','graphemes','unicode','documents','doctree','buffers','owned','pageworker','pagewire']], ['reader', ['--with','reader'], ['reader','viewer','htdl','window','graphemes','unicode','documents','doctree','buffers','owned']], ['page', ['--with','page,pagehost'], ['page','pagehost','pagevm','htdl','documents','doctree','buffers','owned','unicode']]]) {
+    for (const [name, flags, optional] of [['minimal', ['--minimal'], []], ['selected', ['--with', 'csv,algorithms'], ['csv','algorithms']], ['full', [], JSON.parse(fs.readFileSync(path.join(root,'stdlib/catalogo.json'))).libraries.filter(lib=>!lib.required).map(lib=>lib.name)], ['log', ['--with','log'], ['log','cli']], ['worker', ['--with','pageworker'], ['pageworker','pagewire']], ['pagereader', ['--with','pagereader'], ['pagereader','pagecompiler','pagevm','reader','viewer','htdl','window','graphemes','unicode','documents','doctree','buffers','owned','pageworker','pagewire']], ['compiler', ['--with','pagecompiler'], ['pagecompiler','pagevm']], ['reader', ['--with','reader'], ['reader','viewer','htdl','window','graphemes','unicode','documents','doctree','buffers','owned']], ['page', ['--with','page,pagehost'], ['page','pagehost','pagevm','htdl','documents','doctree','buffers','owned','unicode']]]) {
         const prefix = path.join(temp, 'instalacao-' + name);
         const result = setupRun(['install', '--prefix', prefix, '--no-path', '--no-associations', ...flags]); assert.equal(result.status, 0, result.stderr);
         const catalog = JSON.parse(fs.readFileSync(path.join(prefix, 'stdlib/catalogo.json')));
@@ -125,6 +125,13 @@ test('instalação: núcleo obrigatório, seleção de opcionais e remoção iso
         if (optional.includes('graphemes')) {
             const graphemes = source('import "std/graphemes.assis";safe fn main():int{own index:graphemes::Index=try_new graphemes::Index(utf8("é"));assert(index!=null && index.status()==0 && index.count()==1);return 0;}');
             const ran = spawnSync(path.join(prefix, 'bin/assis.exe'), ['run', graphemes, '--safe'], {encoding:'utf8',timeout:20000,windowsHide:true}); assert.ifError(ran.error); assert.equal(ran.status,0,ran.stderr);
+        }
+        if (optional.includes('pagecompiler')) {
+            const input = Buffer.from('safe fn main():int{return 42;}');
+            const header = Buffer.alloc(12); header.write('ASC1'); header.writeUInt32LE(input.length,4);
+            const compiled = spawnSync(path.join(prefix,'bin/assis.exe'), ['page-compile-worker'], {input:Buffer.concat([header,input]), timeout:20000, windowsHide:true});
+            assert.ifError(compiled.error); assert.equal(compiled.status,0,compiled.stderr.toString());
+            assert.equal(compiled.stdout.readUInt32LE(0),compiled.stdout.length-4);assert.equal(compiled.stdout.subarray(4,8).toString(),'ASV2');
         }
         if (optional.includes('pagevm')) {
             const ran = spawnSync(path.join(prefix, 'bin/assis.exe'), ['run', path.join(root,'exemplos/47_pagevm_counter.assis'), '--safe'], {encoding:'utf8',timeout:20000,windowsHide:true}); assert.ifError(ran.error); assert.equal(ran.status,0,ran.stderr); assert.equal(ran.stdout,'42\n');

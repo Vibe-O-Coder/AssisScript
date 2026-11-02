@@ -235,3 +235,7 @@ test-page-reader: bin/assis
 	python3 tests/test-page-reader.py
 test-wasm-candidate: bin/assis
 	python3 tests/test-wasm-candidate.py
+
+.PHONY: test-page-compiler
+test-page-compiler: bin/assis
+	python3 tests/test-page-compiler.py

@@ -1,0 +1,15 @@
+test_asv2_unknown_operands_version_and_shift_traps (__main__.PageBackend.test_asv2_unknown_operands_version_and_shift_traps) ... ok
+test_forbidden_features_in_dead_code_do_not_overwrite_output (__main__.PageBackend.test_forbidden_features_in_dead_code_do_not_overwrite_output) ... ok
+test_i64_extremes_bitwise_shifts_and_signed_remainders (__main__.PageBackend.test_i64_extremes_bitwise_shifts_and_signed_remainders) ... ok
+test_lazy_boolean_operators_skip_traps_and_preserve_nested_values (__main__.PageBackend.test_lazy_boolean_operators_skip_traps_and_preserve_nested_values) ... ok
+test_loops_calls_comparisons_break_continue_and_for_updates (__main__.PageBackend.test_loops_calls_comparisons_break_continue_and_for_updates) ... ok
+test_platform_selection_and_compilation_limits (__main__.PageBackend.test_platform_selection_and_compilation_limits) ... ok
+test_randomized_arithmetic_against_independent_wrapping_model (__main__.PageBackend.test_randomized_arithmetic_against_independent_wrapping_model) ... ok
+test_reject_run_native_flags_and_preserve_source (__main__.PageBackend.test_reject_run_native_flags_and_preserve_source) ... ok
+test_sdk_import_signature_library_and_version_must_match_exactly (__main__.PageBackend.test_sdk_import_signature_library_and_version_must_match_exactly) ... ok
+test_tail_recursion_and_non_tail_frames (__main__.PageBackend.test_tail_recursion_and_non_tail_frames) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 5.729s
+
+OK

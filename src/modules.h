@@ -60,6 +60,10 @@ static void package_import_boundary(Token *t,const char *path);
 static void package_alias_boundary(Token *t,const char *original,const char *alias);
 static char *resolve_module(Token *where){
     if(!where->len||strlen(where->str)!=where->len)error(where,"caminho de importação vazio ou contém byte nulo");
+    if(page_compile_worker){
+        if(!same(where->str,"std/page.assis"))error(where,"page-compile-worker: somente std/page.assis embutido");
+        return copy("std/page.assis",14);
+    }
     const char *name=where->str;char *package=resolve_package(where,name);if(package)return package;
     char *dir=path_directory(where->file->path),*found=module_candidate(dir,name);free(dir);
     if(found){package_import_boundary(where,found);return found;}
@@ -78,6 +82,15 @@ static char *resolve_module(Token *where){
     error(where,"módulo não encontrado: %s (use caminho relativo, -I ou ASSIS_PATH)",name);
 }
 static char *read_module_text(const char *path,bool from_stdin){
+    if(page_compile_worker){
+        const char *input=same(path,"page.assis")?page_stream_source:page_stream_sdk;
+        size_t n=strlen(input);source_bytes+=n;
+        if(source_bytes>65536)fatal("page-asv2: fonte e SDK excedem 64 KiB");
+        last_source_digest=source_sha256((const unsigned char*)input,n);
+        char *text=copy(input,n);
+        if(n>=3&&(unsigned char)text[0]==0xef&&(unsigned char)text[1]==0xbb&&(unsigned char)text[2]==0xbf)memmove(text,text+3,n-2);
+        return text;
+    }
     FILE *f=from_stdin?stdin:fopen(overlay_path(path),"rb");if(!f)fatal("não foi possível ler %s: %s",path,strerror(errno));
     size_t n=0,cap=4096;char *text=mem(cap+1);
     for(;;){
@@ -97,10 +110,10 @@ static char *read_module_text(const char *path,bool from_stdin){
 static void load_module(const char *path,Token *where,bool from_stdin,Vec *out,int depth){
     if(target_page&&depth>16)error(where,"page-asv2: limite de 16 módulos");
     if(depth>128)error(where,"importação aninhada demais");
-    char *absolute=absolute_path(path);
+    char *absolute=page_compile_worker?copy(path,strlen(path)):absolute_path(path);
     for(int i=0;i<source_files.n;i++){
         SourceFile *old=source_files.v[i];
-        if(same(old->path,absolute)||same_file(old->path,absolute)){
+        if(same(old->path,absolute)||(!page_compile_worker&&same_file(old->path,absolute))){
             if(old->state==1)error(where,"ciclo de importação detectado: %s",old->path);
             package_alias_boundary(where,old->path,absolute);
             if(!same(old->path,absolute)){

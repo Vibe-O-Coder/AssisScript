@@ -1,0 +1,26 @@
+ASSIS: executável nativo gerado em /tmp/assis-worker-r5ycrf7a/page-worker
+WORKER_CANDIDATE {"worker_sha256": "97bce3f2815a922deb1fea365f01d7522cc9113eddae743f9d2eab0701734ff9", "provider_sha256": "61da1a0745b1d8b67e72c9c2489cffe8db9687241598b801d9671027c69342eb", "mode": "optimized"}
+test_assisscript_supervisor_nonblocking_deadline_drop_and_neighbor (__main__.PageWorker.test_assisscript_supervisor_nonblocking_deadline_drop_and_neighbor) ... ok
+test_background_cpu_and_output_stall_do_not_block_neighbor (__main__.PageWorker.test_background_cpu_and_output_stall_do_not_block_neighbor) ... ok
+test_document_and_counter_default_deny_grants_and_revocation (__main__.PageWorker.test_document_and_counter_default_deny_grants_and_revocation) ... ok
+test_fuel_revocation_and_crash_leave_neighbor_live (__main__.PageWorker.test_fuel_revocation_and_crash_leave_neighbor_live) ... ok
+test_idle_worker_exit_is_detected_without_new_command (__main__.PageWorker.test_idle_worker_exit_is_detected_without_new_command) ... ok
+test_large_frames_backpressure_coalescing_and_fuel_quota (__main__.PageWorker.test_large_frames_backpressure_coalescing_and_fuel_quota) ... ok
+test_linux_cpu_limit_kills_busy_worker_and_preserves_neighbor (__main__.PageWorker.test_linux_cpu_limit_kills_busy_worker_and_preserves_neighbor) ... ok
+test_linux_default_deny_syscalls_memory_environment_and_descriptors (__main__.PageWorker.test_linux_default_deny_syscalls_memory_environment_and_descriptors) ... ok
+test_native_tokens_limits_slots_and_release (__main__.PageWorker.test_native_tokens_limits_slots_and_release) ... ok
+test_protocol_rejects_version_length_epoch_replay_and_reserved_fields (__main__.PageWorker.test_protocol_rejects_version_length_epoch_replay_and_reserved_fields) ... ok
+test_raw_wire_fragmentation_real_page_and_identity (__main__.PageWorker.test_raw_wire_fragmentation_real_page_and_identity) ... ok
+test_sdk_state_and_event_model_across_process (__main__.PageWorker.test_sdk_state_and_event_model_across_process) ... ok
+test_shipped_worker_example_and_opt_in_on_windows (__main__.PageWorker.test_shipped_worker_example_and_opt_in_on_windows) ... ok
+test_stalled_worker_deadline_and_drop_release_all_slots (__main__.PageWorker.test_stalled_worker_deadline_and_drop_release_all_slots) ... ok
+test_supervisor_rejects_hostile_hello_oversize_trailing_and_eof (__main__.PageWorker.test_supervisor_rejects_hostile_hello_oversize_trailing_and_eof) ... ok
+test_supervisor_rejects_old_epoch_request_and_response_kind (__main__.PageWorker.test_supervisor_rejects_old_epoch_request_and_response_kind) ... ok
+test_transactional_navigation_failure_abort_reload_and_close (__main__.PageWorker.test_transactional_navigation_failure_abort_reload_and_close) ... ok
+test_windows_job_memory_and_minimum_inheritance (__main__.PageWorker.test_windows_job_memory_and_minimum_inheritance) ... skipped 'Windows Job memory and explicit handle/environment inheritance'
+test_windows_restricted_mode_is_explicitly_unavailable (__main__.PageWorker.test_windows_restricted_mode_is_explicitly_unavailable) ... skipped 'Windows-specific fail-closed restriction negotiation'
+
+----------------------------------------------------------------------
+Ran 19 tests in 10.470s
+
+OK (skipped=2)

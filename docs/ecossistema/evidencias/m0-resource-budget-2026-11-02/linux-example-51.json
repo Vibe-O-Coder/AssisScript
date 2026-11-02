@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "returncode": 0,
+  "stdout": "PAGE-STATE 42\n",
+  "stderr": "",
+  "compiler_sha256": "5f3958b33dc6a6932a175e1d802ffe0d0321458c59aa476b13b4f8ee6141447f",
+  "artifacts": {
+    "libassis_worker_v1.so": "61da1a0745b1d8b67e72c9c2489cffe8db9687241598b801d9671027c69342eb",
+    "page-worker": "97bce3f2815a922deb1fea365f01d7522cc9113eddae743f9d2eab0701734ff9"
+  },
+  "example_sha256": "c7655a89e3b88e3c4162e82464c205b84d23018266450fdcb98e325e81d3f96f",
+  "commands": [
+    [
+      "/mnt/c/Users/babus/Desktop/AssisScript/work/resource-budget-20261102/build/assis-linux",
+      "build",
+      "/mnt/c/Users/babus/Desktop/AssisScript/work/resource-budget-20261102/exemplos/51_compile_page.assis",
+      "-o",
+      "/mnt/c/Users/babus/Desktop/AssisScript/work/resource-budget-20261102/build/resource-budget-example/compile-page"
+    ],
+    [
+      "/mnt/c/Users/babus/Desktop/AssisScript/work/resource-budget-20261102/build/resource-budget-example/compile-page",
+      "/mnt/c/Users/babus/Desktop/AssisScript/work/resource-budget-20261102/build/assis-linux",
+      "/mnt/c/Users/babus/Desktop/AssisScript/work/resource-budget-20261102/build/resource-budget-example/page-worker"
+    ]
+  ]
+}

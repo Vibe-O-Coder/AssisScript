@@ -1,0 +1,69 @@
+namespace pagecompiler;
+import "std/pagevm.assis";
+
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_compile_open") fn open_native(borrow path:*byte,size:int,mib:int,seconds:int,borrow mut token:*int):int;
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_send") fn send_native(token:int,borrow data:*byte,size:int):int;
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_receive") fn receive_native(token:int,borrow mut data:*byte,size:int):int;
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_close") fn close_native(token:int):int;
+extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_usage") fn usage_native(token:int,borrow mut data:*int,size:int):int;
+
+public value struct Usage{let limit:int;let resident:int;let peak_resident:int;let accounted:int;let state:int;}
+/// One copied source, one disposable trusted compiler, one bounded response.
+/// Source cannot select paths, compiler flags, imports or native executables.
+public final class Task{
+    private let token:int;private let failure:int;private let deadline:int;private let clock:int;
+    private let sent:int;private let received:int;private let expected:int;private let complete:bool;
+    private own input:*byte;private own output:*byte;private own chunk:*byte;private own metrics:*int;
+    fn init(borrow mut self,borrow compiler:slice<byte>,borrow source:slice<byte>,reference:bool,mib:int,cpu_seconds:int,now:int,timeout:int):void{
+        self.failure=-1;
+        if(len(compiler)<2 || len(compiler)>4096 || len(source)<1 || len(source)>65536 || mib<16 || mib>512 || cpu_seconds<1 || cpu_seconds>10 || now<0 || timeout<1 || timeout>60000 || now>9223372036854775807-timeout){return;}
+        self.input=try_alloc<byte>(12+len(source));self.output=try_alloc<byte>(131092);self.chunk=try_alloc<byte>(4096);self.metrics=try_alloc<int>(6);
+        own file:*byte=try_alloc<byte>(len(compiler));own token:*int=try_alloc<int>(1);
+        if(self.input==null || self.output==null || self.chunk==null || self.metrics==null || file==null || token==null){self.failure=-4;return;}
+        for(let i:int=0;i<len(compiler);i++){file[i]=compiler[i];}
+        self.input[0]=byte(65);self.input[1]=byte(83);self.input[2]=byte(67);self.input[3]=byte(49);
+        for(let i:int=0;i<4;i++){self.input[4+i]=byte((len(source)>>(i*8))&255);}
+        self.input[8]=byte(int(reference));for(let i:int=0;i<len(source);i++){self.input[12+i]=source[i];}
+        unsafe{self.failure=open_native(file,len(file),mib,cpu_seconds,token);}
+        if(self.failure!=0){return;}self.token=token[0];self.deadline=now+timeout;self.clock=now;
+    }
+    fn status(borrow self):int{if(self.complete){return 1;}return self.failure;}
+    fn is_open(borrow self):bool{return self.token>0;}
+    fn ready(borrow self):bool{return self.complete;}
+    fn code(borrow self):borrow(self) slice<byte>{assert(self.complete);return slice_of(self.output,4,self.expected-4);}
+    private fn stop(borrow mut self):void{if(self.token>0){unsafe{close_native(self.token);}self.token=0;}}
+    private fn fail(borrow mut self,code:int):int{self.stop();self.failure=code;return code;}
+    fn close(borrow mut self):void{self.stop();self.complete=false;self.failure=-9;}
+    fn drop(borrow mut self):void{self.stop();}
+    fn usage(borrow mut self):Usage{
+        if(self.token>0){unsafe{if(usage_native(self.token,self.metrics,6)!=0){return new Usage();}}}
+        if(self.metrics==null){return new Usage();}
+        return new Usage(self.metrics[1],self.metrics[2],self.metrics[3],self.metrics[4],self.metrics[5]);
+    }
+    /// One <=4096-byte write and read. 0 pending, 1 validated bytes, negative
+    /// failure. A successful task kills/reaps its compiler before publication.
+    fn poll(borrow mut self,now:int):int{
+        if(self.complete){return 1;}if(self.token<=0){return self.failure;}
+        if(now<self.clock){return -1;}self.clock=now;if(now>=self.deadline){return self.fail(-20);}
+        val token:int=self.token;unsafe{
+            if(self.sent<len(self.input)){
+                let size:int=len(self.input)-self.sent;if(size>4096){size=4096;}
+                for(let i:int=0;i<size;i++){self.chunk[i]=self.input[self.sent+i];}
+                val amount:int=send_native(token,self.chunk,size);if(amount<0){return self.fail(-21);}self.sent+=amount;
+            }
+            val amount:int=receive_native(token,self.chunk,4096);if(amount<0){return self.fail(-21);}
+            if(amount>131092-self.received){return self.fail(-22);}
+            for(let i:int=0;i<amount;i++){self.output[self.received+i]=self.chunk[i];}self.received+=amount;
+        }
+        if(self.received>=4 && self.expected==0){
+            let size:int=0;for(let i:int=0;i<4;i++){size+=int(self.output[i])<<(8*i);}
+            if(size<24 || size>131088 || (size-16)%8!=0){return self.fail(-22);}self.expected=4+size;
+        }
+        if(self.expected>0 && self.received>self.expected){return self.fail(-22);}
+        if(self.expected==0 || self.received<self.expected){return 0;}
+        if(self.sent!=len(self.input) || self.output[7]!=50){return self.fail(-22);}
+        own checked:pagevm::Instance=try_new pagevm::Instance(1,1,1,slice_of(self.output,4,self.expected-4),65536,1,1,0);
+        if(checked==null || checked.status()==-4){return self.fail(-4);}if(checked.status()!=0){return self.fail(-22);}
+        val observed:Usage=self.usage();self.stop();self.complete=true;self.failure=0;return 1;
+    }
+}
