@@ -1,9 +1,9 @@
 {
   "schema": "assisscript-ecosystem-progress-v1",
   "rubric_version": 1,
-  "date": "2026-11-01",
+  "date": "2026-11-02",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "partial-native-retest-unicode-pagevm",
+  "assessment": "partial-native-retest-page-runtime",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -30,23 +30,27 @@
         {
           "id": "E00-02",
           "name": "Modelo de ameaças e privacidade",
-          "level": 1,
+          "level": 2,
           "acceptance": "Inventariar ativos, agentes hostis e autoridades; testar origens, concessões, revogação, fluxo de dados, logs e comportamento de falhas por componente.",
-          "baseline": "Arquitetura de capacidades existe como proposta.",
+          "baseline": "Autoridade e falhas do perfil local ASV2 documentadas e executadas: origem/instância/geração, concessões, revogação, replay, OOM e vizinha. Modelo completo de rede/perfil/busca e sandbox permanecem abertos.",
           "evidence": [
-            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md"
+            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md",
+            "docs/relatorios/2026-11-02-m0-page-runtime.md",
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
           ]
         },
         {
           "id": "E00-03",
           "name": "Fronteiras e decisões arquiteturais",
-          "level": 1,
+          "level": 2,
           "acceptance": "Registrar decisões de backend de página, providers nativos, processos, protocolos e dependências; demonstrar separação shell/broker/conteúdo e atualização de versões.",
-          "baseline": "Há desenho documental; nenhuma integração nativa observada.",
+          "baseline": "Perfil experimental ASV2 e SDK read-only-1 versionados, emissão por IR, imports sem ponteiros e fronteira do host local demonstrados. Escolha geral VM/Wasm e separação de processos/broker permanecem abertas.",
           "evidence": [
             "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md",
             "docs/relatorios/2026-10-29-m0-contratos.md",
-            "docs/ecossistema/referencias/htdl-drafts-2026-10-29/PROVENANCE.json"
+            "docs/ecossistema/referencias/htdl-drafts-2026-10-29/PROVENANCE.json",
+            "docs/relatorios/2026-11-02-m0-page-runtime.md",
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
           ]
         },
         {
@@ -302,15 +306,17 @@
         {
           "id": "E03-02",
           "name": "Loop responsivo e I/O não bloqueante",
-          "level": 1,
+          "level": 2,
           "acceptance": "Integrar eventos nativos, polling de I/O, timers monotônicos, deadlines e filas limitadas; assegurar fairness, pressão de retorno e cancelamento com callbacks em thread correta.",
-          "baseline": "Fila cooperativa e polling de rede separados; sem loop gráfico integrado.",
+          "baseline": "Page/Group cooperativos em AssisScript: fila limitada, quanta, alternância circular, deadline monotônico, backpressure e cancelamento com vizinha. Integração geral de IO não bloqueante/polling do OS não implementada.",
           "evidence": [
             "docs/EVENTOS-E-PERSISTENCIA.md",
             "docs/BIBLIOTECA-eventos.md",
             "docs/BIBLIOTECA-net.md",
             "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
-            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json"
+            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json",
+            "docs/relatorios/2026-11-02-m0-page-runtime.md",
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
           ]
         },
         {
@@ -512,16 +518,18 @@
         {
           "id": "E06-01",
           "name": "Formato de execução de página",
-          "level": 1,
+          "level": 2,
           "acceptance": "Escolher VM/Wasm com ADR e prova; implementar layout, validação, loader e imports permitidos; preservar semântica declarada e comparar execução com referência nativa ou oráculo.",
-          "baseline": "browser-wasm32 é proposta, não alvo existente.",
+          "baseline": "Backend page-asv2 emite IR tipada int/bool para bytes validados e preserva semântica contra nativo/AST/Python. Perfil escalar experimental, sem objetos/ownership geral, escolha final VM/Wasm ou sandbox.",
           "evidence": [
             "local:htdl/docs/03-assisscript-no-navegador.md",
             "docs/ARM64-NATIVO.md",
             "docs/relatorios/2026-11-01-m3-unicode-m0-vm.md",
             "docs/ecossistema/evidencias/m3-unicode-vm-2026-11-01/summary.json",
             "docs/BIBLIOTECA-pagevm.md",
-            "docs/ecossistema/ADR-0001-EXECUCAO-PAGINA.md"
+            "docs/ecossistema/ADR-0001-EXECUCAO-PAGINA.md",
+            "docs/relatorios/2026-11-02-m0-page-runtime.md",
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
           ]
         },
         {
@@ -542,15 +550,17 @@
         {
           "id": "E06-03",
           "name": "Capacidades e API hospedeira",
-          "level": 1,
+          "level": 2,
           "acceptance": "Negar arquivos/processos/FFI/rede/relógio por padrão; expor somente imports versionados e tokens revogáveis por origem/instância/geração; testar forja, replay e confused deputy.",
-          "baseline": "Modelo descrito, sem enforcement executável.",
+          "baseline": "Oito imports htdl_v1/read-only-1 sem ponteiros; queries locais negadas por padrão, concessão por envelope completo, revogação permanente, resposta por request/call e canal de erro. Broker de rede/arquivos, tokens entre processos e API completa não implementados.",
           "evidence": [
             "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md",
             "docs/relatorios/2026-11-01-m3-unicode-m0-vm.md",
             "docs/ecossistema/evidencias/m3-unicode-vm-2026-11-01/summary.json",
             "docs/BIBLIOTECA-pagevm.md",
-            "docs/ecossistema/ADR-0001-EXECUCAO-PAGINA.md"
+            "docs/ecossistema/ADR-0001-EXECUCAO-PAGINA.md",
+            "docs/relatorios/2026-11-02-m0-page-runtime.md",
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
           ]
         },
         {
@@ -567,11 +577,13 @@
         {
           "id": "E06-05",
           "name": "Ciclo de vida e recuperação de aba",
-          "level": 0,
+          "level": 2,
           "acceptance": "Inicializar/eventuar/descartar instância, invalidar callbacks e interromper conteúdo travado; validar reload, navegação, falha e rollback de ativação com isolamento entre abas.",
-          "baseline": "Nenhum runtime de aba integrado disponível.",
+          "baseline": "Page integra prepare/commit/abort, eventos/células, replay/reload/close, projeção imutável e Group com quanta/deadline; OOM preserva ativo/vizinha. Sem proteção de crash nativo por worker/sandbox ou integração visual de aba.",
           "evidence": [
-            "local:htdl/docs/15-htdl-0.2-e-carregamento.md"
+            "local:htdl/docs/15-htdl-0.2-e-carregamento.md",
+            "docs/relatorios/2026-11-02-m0-page-runtime.md",
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
           ]
         }
       ]
@@ -624,12 +636,14 @@
         {
           "id": "E07-03",
           "name": "SDK e ABI htdl_v1",
-          "level": 0,
+          "level": 2,
           "acceptance": "Definir handles, tipos, erros, strings e assinaturas de inicialização/eventos; oferecer pacote compilável com APIs canônicas em inglês e compatibilidade/versionamento sem acesso a ponteiros do host.",
-          "baseline": "SDK e nomes antigos dos rascunhos não são API implementada.",
+          "baseline": "Pacote compilável std/page.assis, namespace htdl_v1, ABI read-only-1 com int/handles locais, erros e eventos. Sem strings/assinaturas gerais, mutações, subscriptions ou SDK HTDL completo.",
           "evidence": [
             "local:htdl/docs/03-assisscript-no-navegador.md",
-            "docs/ENGLISH-API.md"
+            "docs/ENGLISH-API.md",
+            "docs/relatorios/2026-11-02-m0-page-runtime.md",
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
           ]
         },
         {
@@ -647,14 +661,16 @@
         {
           "id": "E07-05",
           "name": "Loader e ativação atômica",
-          "level": 1,
+          "level": 2,
           "acceptance": "Carregar HTDL, código, FS/SSC e recursos locais/remotos sob política; resolver versões/dependências, validar antes de ativar e descartar resultados atrasados; cache somente de artefato imutável.",
-          "baseline": "Fonte HTDL local fornecida pelo host é validada antes do commit; falha aborta candidato completo e preserva ativo/vizinho, candidato externo ocupado e IDs antigos. Resolução de arquivos/origem, código, recursos, FS/SSC, rede e resposta assíncrona tardia não implementados.",
+          "baseline": "Código ASV1/ASV2 e projeção de documento HTDL já validado são copiados antes de ativação atômica local; erro/OOM preserva anterior e invalida respostas/handles antigos. Sem resolver recursos/FS/SSC, versões gerais, rede ou cache imutável.",
           "evidence": [
             "local:htdl/docs/15-htdl-0.2-e-carregamento.md",
             "docs/relatorios/2026-11-01-m3-parser-htdl.md",
             "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/summary.json",
-            "tests/fixtures/htdl-bootstrap-corpus.json"
+            "tests/fixtures/htdl-bootstrap-corpus.json",
+            "docs/relatorios/2026-11-02-m0-page-runtime.md",
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
           ]
         }
       ]
@@ -2413,7 +2429,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-02",
+      "rubric_version": 1,
+      "label": "Backend escalar ASV2, SDK HTDL e ciclo local de página: 36,20%, 0/5 gates",
+      "levels": {
+        "E00-01": 1,
+        "E00-02": 2,
+        "E00-03": 2,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 2,
+        "E03-04": 2,
+        "E03-05": 0,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 2,
+        "E06-02": 2,
+        "E06-03": 2,
+        "E06-04": 0,
+        "E06-05": 2,
+        "E07-01": 2,
+        "E07-02": 2,
+        "E07-03": 2,
+        "E07-04": 2,
+        "E07-05": 2,
+        "E08-01": 0,
+        "E08-02": 2,
+        "E08-03": 0,
+        "E08-04": 2,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 1,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "Grafemas estendidos Unicode 17 com corpus oficial, seleção/quebra integradas e funções de biblioteca/exemplos em inglês; sem promoção adicional de Unicode por faltarem normalização/palavras/bidi/IME. Spikes ASV1 em AssisScript e Wasm/V8 confiável; ASV1 tem limites de fuel/memória/calls e contador revogável local. E06-01/E06-03=1 e E06-02=2. A escolha VM/Wasm permanece aberta, sem backend de página ou sandbox. Desktop/leitor real/DPI/monitores, HTDL completo/editor/loader, FS/SSC, quota RSS, M4–M9 e aceite integrado permanecem na fila; Easy por último. 32,10%, 0/5 gates; meta de 40% não atingida."
+  "assessment_note": "Backend escalar ASV2 por IR tipada, SDK htdl_v1/read-only-1, projeção HTDL e ciclo de eventos/células/concessões em AssisScript; Group cooperativo com quanta/deadlines. 238 métodos Windows e 210 Linux executados, 1/29 not-run; 50 exemplos por host. Escolha VM/Wasm geral, sandbox/worker/IPC, compilação/RSS, integração visual e loader completo permanecem abertos. Desktop/leitor/DPI/IME, HTDL completo/editor, FS/SSC, M4–M9 e aceites preservados; Easy por último. 36,20%, 0/5 gates; meta 40% não atingida."
 }

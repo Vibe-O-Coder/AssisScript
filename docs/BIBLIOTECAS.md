@@ -110,3 +110,12 @@ A sintaxe antiga `importa "std/math";` ainda funciona e permite omitir extensão
 - [eventos](BIBLIOTECA-eventos.md): Fila limitada de uma thread com temporizadores e cancelamento.
 
 Há 14 bibliotecas: cinco obrigatórias e nove opcionais. O instalador seleciona dependências opcionais automaticamente (`log` inclui `cli`). Todas continuam locais e só entram no programa ao importar.
+
+## Continuação do ecossistema — 02/11/2026
+
+O catálogo atual contém cinco bibliotecas obrigatórias e 27 opcionais.
+[page](BIBLIOTECA-page.md) oferece o SDK escalar htdl_v1/read-only-1;
+[pagehost](BIBLIOTECA-pagehost.md) integra ASV2/projeção HTDL/eventos e
+escalonamento cooperativo local. São perfis experimentais, sem sandbox do OS.
+`--with page,pagehost` seleciona suas dependências. Os números das seções
+anteriores descrevem suas respectivas versões históricas.

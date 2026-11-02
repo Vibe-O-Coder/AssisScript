@@ -1,3 +1,18 @@
+> **Continuação ASV2 — 02/11/2026: 36,20%, 0/5 gates.**
+> Cópia atual: `C:/Users/babus/Desktop/AssisScript/work/page-runtime-20261101`,
+> branch `work/m0-page-runtime-2026-11-01`, base publicada #21/1e574736.
+> [Relatório atual](../relatorios/2026-11-02-m0-page-runtime.md) e
+> [evidências](evidencias/m0-page-runtime-2026-11-02/summary.json).
+> Backend escalar ASV2 por IR, SDK htdl_v1/read-only-1, projeção HTDL,
+> células/eventos/concessões, fila limitada e Group cooperativo com deadlines.
+> 238 métodos Windows/210 Linux executados, 1/29 not-run; 50 exemplos por host.
+> Publicação/SHA/PR são confirmados no adendo do relatório; confira-o antes
+> de continuar. Meta 40% não atingida; nenhum gate aprovado.
+> Escolha VM/Wasm geral, compilação/RSS, worker/IPC/sandbox por OS, Reader
+> integrado ao SDK e loader completo seguem na fila. Desktop/leitor/DPI/IME,
+> HTDL completo/editor, FS/SSC, M4–M9 e distribuição/aceites preservados.
+> Easy por último. As entradas anteriores abaixo são históricas.
+
 > **Publicação confirmada — PR #21, 01/11/2026: 32,10%, 0/5 gates.**
 > [PR de rascunho #21](https://github.com/Vibe-O-Coder/AssisScript/pull/21), aberta/sem merge,
 > base #20; implementação f53313320dd5b6a65174d4d43728fe85d43532ca.

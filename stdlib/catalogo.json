@@ -261,8 +261,25 @@
       "name": "pagevm",
       "required": false,
       "doc": "BIBLIOTECA-pagevm.md",
-      "description": "Spike ASV1: verificador, fuel, memória e contador revogável; não é sandbox de processo.",
+      "description": "ASV1/ASV2: bytes validados, fuel, memória, frames, imports limitados e respostas por identidade; sem sandbox de processo.",
       "dependencies": []
+    },
+    {
+      "name": "page",
+      "required": false,
+      "doc": "BIBLIOTECA-page.md",
+      "description": "SDK htdl_v1 do perfil page-asv2: eventos, células e consultas sem ponteiros; bibliotecas nativas não são distribuídas para páginas.",
+      "dependencies": []
+    },
+    {
+      "name": "pagehost",
+      "required": false,
+      "doc": "BIBLIOTECA-pagehost.md",
+      "description": "Host local ASV2 com projeção HTDL, concessões, ativação atômica, fila limitada, navegação e escalonador cooperativo.",
+      "dependencies": [
+        "pagevm",
+        "htdl"
+      ]
     }
   ]
 }

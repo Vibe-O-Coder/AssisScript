@@ -57,6 +57,7 @@ static bool target_macos=true;
 static bool target_macos=false;
 #endif
 static bool target_arm64=!HOST_RUN_X64;
+static bool target_page;
 
 #include "version.h"
 #define VERSION ASSIS_VERSION
@@ -732,6 +733,7 @@ static void gen_stmt(Node *n){
     n->code_end=code.n;
 }
 #include "backend_emit.h"
+#include "page_emit.h"
 static size_t entry_offset;
 #include "arm64_emit.h"
 static void generate(void){
@@ -910,7 +912,7 @@ static void help(void){
          "  assis version                     mostra a versão\n"
          "  assis help                        mostra esta ajuda\n"
          "\nSem fonte, procura assis.assis no diretório atual.\n"
-         "build: --target windows-x64, linux-x64, macos-x64, linux-arm64, macos-arm64 (experimental).\n"
+         "build: --target windows-x64, linux-x64, macos-x64, linux-arm64, macos-arm64, page-asv2 (experimental).\n"
          "Aliases: criar, compilar, executar, verificar.\n"
          "O compilador não chama Python, GCC, Clang, assembler ou linker.");
 }
@@ -1010,7 +1012,8 @@ static int compiler_main(int argc,char **argv){
             if(errno||!end||*end||!isfinite(timeout)||timeout<=0)fatal("--timeout deve ser um número positivo");
         }else if(same(argv[i],"--target")){
             if((!build&&!run)||i+1>=argc)fatal("--target exige um destino em build/run");const char *target=argv[++i];
-            if(!same(target,"windows-x64")&&!same(target,"linux-x64")&&!same(target,"macos-x64")&&!same(target,"linux-arm64")&&!same(target,"macos-arm64"))fatal("destino desconhecido: %s",target);
+            if(!same(target,"windows-x64")&&!same(target,"linux-x64")&&!same(target,"macos-x64")&&!same(target,"linux-arm64")&&!same(target,"macos-arm64")&&!same(target,"page-asv2"))fatal("destino desconhecido: %s",target);
+            target_page=same(target,"page-asv2");
             target_windows=same(target,"windows-x64");target_macos=same(target,"macos-x64")||same(target,"macos-arm64");target_arm64=same(target,"linux-arm64")||same(target,"macos-arm64");
         }else if(same(argv[i],"-I")){if(i+1>=argc)fatal("-I exige uma pasta");push(&include_dirs,argv[++i]);}
         else if(same(argv[i],"--diagnostics=json")){}
@@ -1030,6 +1033,7 @@ static int compiler_main(int argc,char **argv){
         else if(argv[i][0]=='-')fatal("opção desconhecida: %s",argv[i]);
         else if(!input)input=argv[i];else fatal("informe apenas um arquivo fonte");
     }
+    if(target_page&&(run||bundle_app||debug_symbols))fatal("page-asv2 exige build sem --app/--symbols; execute os bytes pelo host pagevm");
     if(run){
         if(target_arm64==!!HOST_RUN_X64)fatal("run/test exige a arquitetura nativa do host; use build para compilar para outra arquitetura");
 #ifdef _WIN32
@@ -1044,7 +1048,8 @@ static int compiler_main(int argc,char **argv){
     if(!input)input="assis.assis";module_search_paths();initialize_packages(input);Vec expanded={0};load_module(input,NULL,stdin_source,&expanded,0);tokens=expanded;
     if(!locking)package_lock(false);
     if(show_tokens){for(int i=0;i<tokens.n;i++){Token *t=tokens.v[i];printf("%4d:%-3d %-18s %s\n",t->line,t->col,token_name(t),t->text);}return 0;}
-    scan_platforms();scan_namespaces();parse();if(testing)prepare_tests();bind_namespaces();check();check_ownership();check_safety();prepare_ir();prepare_ranges();prepare_registers();if(inspecting_ir){prepare_backend_ir();print_ir();return 0;}if(locking){package_lock(true);return 0;}if(documenting){document_api(output);return 0;}if(validate){if(json_diagnostics)puts("{\"ok\":true}");else printf("ASSIS: %s passou na análise de sintaxe e tipos.\n",input);return 0;}
+    scan_platforms();scan_namespaces();parse();if(testing)prepare_tests();bind_namespaces();check();check_ownership();check_safety();if(target_page)page_check_profile();prepare_ir();prepare_ranges();prepare_registers();if(inspecting_ir){prepare_backend_ir();print_ir();return 0;}if(locking){package_lock(true);return 0;}if(documenting){document_api(output);return 0;}if(validate){if(json_diagnostics)puts("{\"ok\":true}");else printf("ASSIS: %s passou na análise de sintaxe e tipos.\n",input);return 0;}
+    if(target_page){prepare_backend_ir();discard_frontend_ast();page_write(output?output:"page.asv2");return 0;}
     if(optimize||target_arm64){prepare_backend_ir();if(optimize)discard_frontend_ast();}generate();if(run)return run_program(timeout);
     if(!output){
         size_t len=strlen(input);char *name=copy(input,len);char *slash=strrchr(name,'/'),*dot=strrchr(name,'.');

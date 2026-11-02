@@ -1,0 +1,196 @@
+namespace pagehost;
+import "std/pagevm.assis";
+import "std/htdl.assis";
+
+public value struct Event{let request:int;let kind:int;let value:int;}
+public value struct Node{let kind:int;let flags:int;}
+
+/// Trusted host of the htdl_v1 read-only SDK profile. A fixed queue and one
+/// instruction quantum per tick make fairness the caller's explicit policy.
+/// This class never executes native page code and is not an OS sandbox.
+public final class Page{
+    private own current:pagevm::Instance;private own pending:pagevm::Instance;
+    private own nodes:*Node;private own pending_nodes:*Node;
+    private own events:*Event;private own cells:*int;
+    private let instance_id:int;private let origin_id:int;private let generation_id:int;
+    private let next_generation:int;private let pending_generation:int;
+    private let document_id:int;private let pending_document:int;
+    private let node_count:int;private let pending_count:int;
+    private let first:int;private let queued:int;private let last_request:int;
+    private let event_request:int;private let event_kind:int;private let event_value:int;
+    private let running:bool;private let opened:bool;
+    private let document_granted:bool;private let document_revoked:bool;
+    private let sdk_error:int;
+
+    fn init(borrow mut self,instance:int,origin:int):void{
+        if(instance<=0 || origin<=0){return;}
+        self.events=try_alloc<pagehost::Event>(32);self.cells=try_alloc<int>(32);
+        if(self.events==null || self.cells==null){return;}
+        self.instance_id=instance;self.origin_id=origin;self.opened=true;
+    }
+    fn is_open(borrow self):bool{return self.opened;}
+    fn has_active(borrow self):bool{return self.current!=null;}
+    fn has_pending(borrow self):bool{return self.pending!=null;}
+    fn generation(borrow self):int{return self.generation_id;}
+    fn document(borrow self):int{return self.document_id;}
+    fn queue_size(borrow self):int{return self.queued;}
+    fn state_get(borrow self,slot:int):int{if(!self.opened || slot<0 || slot>=32){return -1;}return self.cells[slot];}
+    fn status(borrow self):int{if(self.current==null){return -9;}return self.current.status();}
+    fn result(borrow self):int{if(self.current==null){return 0;}return self.current.result();}
+    fn steps(borrow self):int{if(self.current==null){return 0;}return self.current.steps();}
+    fn counter(borrow self):int{if(self.current==null){return 0;}return self.current.counter();}
+
+    /// The caller supplies a validated HTDL document, not origin attributes.
+    /// Both code and a bounded immutable semantic projection are copied before
+    /// activation. The old instance is untouched on any validation/OOM failure.
+    fn prepare(borrow mut self,borrow document:documents::Document,borrow code:slice<byte>,
+            memory:int,frames:int,fuel:int,calls:int):int{
+        if(!self.opened){return -9;}if(self.pending!=null){return -12;}
+        if(!document.is_open() || !document.has_root() || htdl::kind(document.nodes(),document.nodes().root())!=1){return -1;}
+        if(self.next_generation==4503599627370495){return -13;}
+        self.next_generation++;val generation:int=self.next_generation;
+        own machine:pagevm::Instance=try_new pagevm::Instance(self.instance_id,self.origin_id,generation,code,memory,frames,fuel,calls);
+        if(machine==null){return -4;}val status:int=machine.status();if(status!=0){return status;}
+        let count:int=0;let at:doctree::NodeId=new doctree::NodeId();
+        while(true){at=htdl::query(document.nodes(),0,utf8(""),at);if(doctree::absent(at)){break;}count++;if(count>1024){return -1;}}
+        own projection:*Node=try_alloc<pagehost::Node>(count);if(projection==null){return -4;}
+        at=new doctree::NodeId();
+        for(let i:int=0;i<count;i++){
+            at=htdl::query(document.nodes(),0,utf8(""),at);let flags:int=0;
+            if(htdl::value_equals(document.nodes(),htdl::attribute(document.nodes(),at,7),utf8("true"))){flags+=1;}
+            if(htdl::value_equals(document.nodes(),htdl::attribute(document.nodes(),at,8),utf8("true"))){flags+=2;}
+            projection[i]=new Node(htdl::kind(document.nodes(),at),flags);
+        }
+        self.pending=move(machine);self.pending_nodes=move(projection);self.pending_count=count;
+        self.pending_document=document.instance();self.pending_generation=generation;return 0;
+    }
+    fn abort(borrow mut self):void{
+        own machine:pagevm::Instance=move(self.pending);own nodes:*Node=move(self.pending_nodes);
+        self.pending_count=0;self.pending_document=0;self.pending_generation=0;
+    }
+    /// No allocation or callbacks occur during commit. All old event/reply and
+    /// node identities expire together. Cell state is private to the new page.
+    fn commit(borrow mut self):bool{
+        if(!self.opened || self.pending==null){return false;}
+        if(self.current!=null){self.current.close();}
+        own next:pagevm::Instance=move(self.pending);own nodes:*Node=move(self.pending_nodes);
+        self.current=move(next);self.nodes=move(nodes);
+        self.document_id=self.pending_document;self.node_count=self.pending_count;self.generation_id=self.pending_generation;
+        self.pending_document=0;self.pending_count=0;self.pending_generation=0;
+        self.first=0;self.queued=1;self.last_request=1;self.events[0]=new Event(1,1,0);self.running=false;
+        self.document_granted=false;self.document_revoked=false;self.sdk_error=0;
+        for(let i:int=0;i<32;i++){self.cells[i]=0;}return true;
+    }
+    fn grant_document(borrow mut self,instance:int,origin:int,generation:int,document:int):bool{
+        if(!self.opened || self.current==null || self.document_revoked || self.current.status()<0 ||
+            instance!=self.instance_id || origin!=self.origin_id || generation!=self.generation_id || document!=self.document_id){return false;}
+        self.document_granted=true;return true;
+    }
+    fn revoke_document(borrow mut self):void{self.document_granted=false;self.document_revoked=true;}
+    fn grant_counter(borrow mut self,instance:int,origin:int,generation:int):bool{
+        if(!self.opened || self.current==null){return false;}return self.current.grant_counter(instance,origin,generation);
+    }
+    /// 0 accepted, 1 backpressure (request remains retryable), negative error.
+    /// Init is generated by commit. Kinds 2=activation and 3=host update carry
+    /// integer payload only; source attributes cannot construct this envelope.
+    fn post(borrow mut self,instance:int,origin:int,generation:int,document:int,request:int,kind:int,value:int):int{
+        if(!self.opened || self.current==null || self.current.status()<0){return -9;}
+        if(instance!=self.instance_id || origin!=self.origin_id || generation!=self.generation_id || document!=self.document_id || request<=self.last_request){return -2;}
+        if(kind<2 || kind>3){return -1;}if(self.queued==32){return 1;}
+        self.events[(self.first+self.queued)%32]=new Event(request,kind,value);self.queued++;self.last_request=request;return 0;
+    }
+    private fn sdk_failure(borrow mut self,code:int):int{self.sdk_error=code;return code;}
+    private fn answer(borrow mut self,import_id:int,arg:int,second:int):int{
+        if(import_id==2 && arg==6){return self.sdk_error;}self.sdk_error=0;
+        if(import_id==2){
+            if(arg==0){return self.event_kind;}if(arg==1){return self.event_value;}if(arg==2){return self.document_id;}
+            if(arg==3){return self.event_request;}if(arg==4){return self.generation_id;}if(arg==5){return self.instance_id;}return self.sdk_failure(-1);
+        }
+        if(import_id==3 || import_id==4){
+            if(arg<0 || arg>=32){return self.sdk_failure(-1);}if(import_id==4){self.cells[arg]=second;}return self.cells[arg];
+        }
+        if(!self.document_granted || self.document_revoked){return self.sdk_failure(-2);}
+        if(import_id==8){if(arg!=0){return self.sdk_failure(-1);}return self.node_count;}
+        if(import_id==5){if(arg<0 || arg>=self.node_count){return self.sdk_failure(-1);}return self.generation_id*2048+arg+1;}
+        if(arg/2048!=self.generation_id || arg%2048<1 || arg%2048>self.node_count){return self.sdk_failure(-2);}
+        val index:int=arg%2048-1;
+        if(import_id==6){return self.nodes[index].kind;}if(import_id==7){return self.nodes[index].flags;}return -1;
+    }
+    /// 0 idle, 1 yielded (including exactly one host call), 2 event completed,
+    /// or a terminal VM error. Scheduling several Pages round-robin is bounded
+    /// in instructions; this is cooperative CPU fairness, not async OS I/O.
+    fn tick(borrow mut self,max_work:int):int{
+        if(max_work<1 || max_work>10000){return -1;}
+        if(!self.opened || self.current==null){return -9;}
+        val status:int=self.current.status();if(status<0){self.queued=0;return status;}
+        if(!self.running){
+            if(self.queued==0){return 0;}
+            val event:Event=self.events[self.first];self.first=(self.first+1)%32;self.queued--;
+            if(!self.current.begin_event(self.instance_id,self.origin_id,self.generation_id,event.request)){return -2;}
+            self.event_request=event.request;self.event_kind=event.kind;self.event_value=event.value;self.running=true;
+        }
+        val result:int=self.current.run(max_work);
+        if(result==3){
+            val call:int=self.current.waiting_call();val import_id:int=self.current.waiting_import();
+            val arg:int=self.current.waiting_argument();val second:int=self.current.waiting_second();
+            val answer:int=self.answer(import_id,arg,second);
+            if(!self.current.reply(self.instance_id,self.origin_id,self.generation_id,self.event_request,call,answer)){return -2;}
+            return 1;
+        }
+        if(result==2){self.running=false;}if(result<0){self.running=false;self.queued=0;}return result;
+    }
+    fn revoke(borrow mut self):void{
+        self.queued=0;self.running=false;self.revoke_document();if(self.current!=null){self.current.revoke();}
+    }
+    fn close(borrow mut self):void{
+        self.opened=false;self.queued=0;self.running=false;self.revoke_document();self.abort();
+        if(self.current!=null){self.current.close();}
+        own machine:pagevm::Instance=move(self.current);own nodes:*Node=move(self.nodes);
+        own events:*Event=move(self.events);own cells:*int=move(self.cells);
+    }
+}
+
+public value struct Poll{let visited:int;let yielded:int;let completed:int;let failed:int;let expired:int;}
+/// At most sixteen slots per group lifetime. Slot indices are never reassigned,
+/// including after close. A caller may compose groups without sharing heaps.
+public final class Group{
+    private own pages:owned::OwnedArray<pagehost::Page>;
+    private own deadlines:*int;private let cursor:int;private let last_time:int;private let opened:bool;
+    fn init(borrow mut self):void{
+        self.pages=try_new owned::OwnedArray<pagehost::Page>();self.deadlines=try_alloc<int>(16);
+        self.opened=self.pages!=null && self.deadlines!=null;
+    }
+    fn is_open(borrow self):bool{return self.opened;}
+    fn size(borrow self):int{if(self.pages==null){return 0;}return self.pages.size();}
+    /// Consumes Page on all outcomes; -1 invalid/deadline, -4 allocation, -9 closed/full.
+    fn add(borrow mut self,own page:Page,deadline_ms:int):int{
+        if(!self.opened || self.pages.size()==16){return -9;}
+        if(page==null || !page.is_open() || deadline_ms<0){return -1;}
+        val index:int=self.pages.size();if(!self.pages.try_push(move(page))){return -4;}
+        self.deadlines[index]=deadline_ms;return index;
+    }
+    fn page(borrow self,index:int):borrow(self) Page{assert(self.opened && index>=0 && index<self.pages.size());return self.pages.get(index);}
+    fn page_mut(borrow mut self,index:int):borrow mut(self) Page{assert(self.opened && index>=0 && index<self.pages.size());return self.pages.get_mut(index);}
+    fn close_page(borrow mut self,index:int):bool{
+        if(!self.opened || index<0 || index>=self.pages.size()){return false;}
+        self.pages.get_mut(index).close();self.deadlines[index]=0;return true;
+    }
+    /// now_ms is host monotonic time. Invalid/backward time and invalid budgets
+    /// leave every page and the scheduling cursor unchanged (visited=-1).
+    fn poll(borrow mut self,now_ms:int,max_quanta:int,quantum:int):Poll{
+        if(!self.opened || now_ms<self.last_time || max_quanta<1 || max_quanta>16 || quantum<1 || quantum>10000){return new Poll(-1,0,0,0,0);}
+        self.last_time=now_ms;let visited:int=0;let yielded:int=0;let completed:int=0;let failed:int=0;let expired:int=0;
+        val count:int=self.pages.size();if(count==0){return new Poll();}
+        while(visited<max_quanta){
+            val index:int=self.cursor;self.cursor=(self.cursor+1)%count;visited++;
+            if(self.deadlines[index]>0 && now_ms>=self.deadlines[index]){self.pages.get_mut(index).revoke();self.deadlines[index]=0;expired++;}
+            val status:int=self.pages.get_mut(index).tick(quantum);
+            if(status==1){yielded++;}else if(status==2){completed++;}else if(status<0){failed++;}
+        }
+        return new Poll(visited,yielded,completed,failed,expired);
+    }
+    fn close(borrow mut self):void{
+        self.opened=false;if(self.pages!=null){self.pages.clear();}
+        own deadlines:*int=move(self.deadlines);
+    }
+}

@@ -3,23 +3,33 @@ namespace pagevm;
 /// ASV1 is an experimental integer/boolean register machine, not an AssisScript
 /// page backend or an OS sandbox. No FFI, file, network, process or clock opcode.
 public pure fn version():int{return 1;}
+public pure fn format_version():int{return 2;}
 safe fn word(borrow data:slice<byte>,at:int):int{
     return int(data[at])+int(data[at+1])*256+int(data[at+2])*65536+int(data[at+3])*16777216;
 }
 safe fn signed_word(borrow data:slice<byte>,at:int):int{
     val n:int=word(data,at);if(n>=2147483648){return n-4294967296;}return n;
 }
-safe fn valid_instruction(borrow data:slice<byte>,at:int,count:int):bool{
+safe fn valid_instruction(borrow data:slice<byte>,at:int,count:int,format:int):bool{
     val op:int=int(data[at]);val a:int=int(data[at+1]);
     val b:int=int(data[at+2]);val c:int=int(data[at+3]);val immediate:int=signed_word(data,at+4);
-    if(op>15 || a>=16){return false;}
+    if(op>26 || (format==1 && op>15) || a>=16){return false;}
+    if(op>=16){
+        if(op==23){return b==0 && c==0;}
+        if(op==26){return a==0 && b==0 && c==0 && immediate==0;}
+        if(op==16 || op==24 || op==25){return b<16 && c==0 && immediate==0;}
+        return b<16 && c<16 && immediate==0;
+    }
     if(op==0 || op==11){return b==0 && c==0 && immediate==0;}
     if(op==1){return b==0 && c==0;}
     if(op>=2 && op<=7){return b<16 && c<16 && immediate==0;}
     if(op==8){return a==0 && b==0 && c==0 && immediate>=0 && immediate<count;}
     if(op==9){return b==0 && c==0 && immediate>=0 && immediate<count;}
-    if(op==10){return b<16 && c==0 && immediate>=0 && immediate<count;}
-    if(op==12){return b<16 && c==0 && immediate==1;}
+    if(op==10){return b<16 && ((format==1 && c==0) || (format==2 && c<=3 && b+c<16)) && immediate>=0 && immediate<count;}
+    if(op==12){
+        if(format==1){return b<16 && c==0 && immediate==1;}
+        return b<16 && immediate>=1 && immediate<=8 && ((immediate==4 && c<16) || (immediate!=4 && c==0));
+    }
     return b<16 && c==0 && immediate==0;
 }
 
@@ -34,16 +44,19 @@ public final class Instance{
     private let frame:int;private let frames:int;private let fuel_limit:int;private let fuel_used:int;
     private let host_limit:int;private let host_used:int;private let counter_value:int;
     private let granted:bool;private let state:int;private let output:int;
+    private let entry:int;private let event_request:int;private let pending_import:int;
+    private let pending_arg:int;private let pending_second:int;private let pending_register:int;
     fn init(borrow mut self,instance:int,origin:int,generation:int,borrow data:slice<byte>,
             max_memory:int,max_frames:int,max_steps:int,max_host_calls:int):void{
         self.state=-1;
         if(instance<=0 || origin<=0 || generation<=0 || len(data)<16 || len(data)>131088 ||
            max_memory<0 || max_memory>65536 || max_frames<1 || max_frames>128 ||
            max_steps<1 || max_steps>1000000 || max_host_calls<0 || max_host_calls>10000){return;}
-        if(data[0]!=65 || data[1]!=83 || data[2]!=86 || data[3]!=49){return;}
+        if(data[0]!=65 || data[1]!=83 || data[2]!=86 || (data[3]!=49 && data[3]!=50)){return;}
+        val format:int=int(data[3])-48;
         val count:int=word(data,4);val entry:int=word(data,8);val memory:int=word(data,12);
         if(count<1 || count>16384 || len(data)!=16+count*8 || entry>=count || memory>max_memory){return;}
-        for(let i:int=0;i<count;i++){if(!valid_instruction(data,16+i*8,count)){return;}}
+        for(let i:int=0;i<count;i++){if(!valid_instruction(data,16+i*8,count,format)){return;}}
         self.state=-4;
         self.code=try_alloc<byte>(count*8);self.memory=try_alloc<byte>(memory);
         self.registers=try_alloc<int>(max_frames*16);self.returns=try_alloc<int>(max_frames);
@@ -51,7 +64,7 @@ public final class Instance{
         if(self.code==null || self.memory==null || self.registers==null || self.returns==null || self.destinations==null){return;}
         for(let i:int=0;i<count*8;i++){self.code[i]=data[i+16];}
         self.instance_id=instance;self.origin_id=origin;self.generation_id=generation;
-        self.instruction_count=count;self.memory_size=memory;self.pc=entry;self.frames=max_frames;
+        self.instruction_count=count;self.memory_size=memory;self.pc=entry;self.entry=entry;self.frames=max_frames;
         self.fuel_limit=max_steps;self.host_limit=max_host_calls;self.state=0;
     }
     fn status(borrow self):int{return self.state;}
@@ -59,6 +72,25 @@ public final class Instance{
     fn steps(borrow self):int{return self.fuel_used;}
     fn host_calls(borrow self):int{return self.host_used;}
     fn counter(borrow self):int{return self.counter_value;}
+    fn waiting_import(borrow self):int{if(self.state!=3){return 0;}return self.pending_import;}
+    fn waiting_argument(borrow self):int{return self.pending_arg;}
+    fn waiting_second(borrow self):int{return self.pending_second;}
+    fn waiting_call(borrow self):int{return self.host_used;}
+    /// Each event re-enters main with fresh scalar frames. Owned page state is
+    /// supplied by the host SDK. Lifetime instruction/call fuel never resets.
+    fn begin_event(borrow mut self,instance:int,origin:int,generation:int,request:int):bool{
+        if((self.state!=0 && self.state!=2) || (self.state==0 && self.fuel_used!=0) || request<=self.event_request ||
+            instance!=self.instance_id || origin!=self.origin_id || generation!=self.generation_id){return false;}
+        self.event_request=request;self.pc=self.entry;self.frame=0;self.output=0;self.state=0;
+        for(let i:int=0;i<len(self.registers);i++){self.registers[i]=0;}return true;
+    }
+    /// Reply must match this exact event and monotonic call. No pointer or host
+    /// reference enters the machine. Replays and responses after close fail.
+    fn reply(borrow mut self,instance:int,origin:int,generation:int,request:int,call:int,value:int):bool{
+        if(self.state!=3 || instance!=self.instance_id || origin!=self.origin_id || generation!=self.generation_id ||
+            request!=self.event_request || call!=self.host_used){return false;}
+        self.registers[self.pending_register]=value;self.pending_import=0;self.state=0;return true;
+    }
     /// Counter capability is granted by trusted host only; bytecode has no way
     /// to call this API. Local import index zero has no authority without it.
     fn grant_counter(borrow mut self,instance:int,origin:int,generation:int):bool{
@@ -100,10 +132,10 @@ public final class Instance{
             else if(op==9){if(self.registers[base+a]==0){self.pc=immediate;}}
             else if(op==10){
                 if(self.frame+1==self.frames){self.state=-6;return self.state;}
-                val argument:int=self.registers[base+b];self.frame++;
+                self.frame++;
                 self.returns[self.frame]=self.pc;self.destinations[self.frame]=a;
                 for(let i:int=0;i<16;i++){self.registers[self.frame*16+i]=0;}
-                self.registers[self.frame*16]=argument;self.pc=immediate;
+                for(let i:int=0;i<=c;i++){self.registers[self.frame*16+i]=self.registers[base+b+i];}self.pc=immediate;
             }
             else if(op==11){
                 val result:int=self.registers[base+a];
@@ -112,6 +144,11 @@ public final class Instance{
                 self.frame--;self.registers[self.frame*16+dest]=result;
             }
             else if(op==12){
+                if(immediate!=1){
+                    if(self.host_used==self.host_limit){self.state=-8;return self.state;}
+                    self.host_used++;self.pending_import=immediate;self.pending_arg=self.registers[base+b];
+                    self.pending_second=self.registers[base+c];self.pending_register=base+a;self.state=3;return 3;
+                }
                 if(!self.granted){self.state=-2;return self.state;}
                 if(self.host_used==self.host_limit){self.state=-8;return self.state;}
                 val delta:int=self.registers[base+b];
@@ -125,6 +162,25 @@ public final class Instance{
                 else{self.memory[address]=byte(self.registers[base+b]);}
             }
             else if(op==15){self.registers[base+a]=int(self.registers[base+b]==0);}
+            else if(op==16){self.registers[base+a]=self.registers[base+b];}
+            else if(op==17){self.registers[base+a]=self.registers[base+b]&self.registers[base+c];}
+            else if(op==18){self.registers[base+a]=self.registers[base+b]|self.registers[base+c];}
+            else if(op==19){self.registers[base+a]=self.registers[base+b]^self.registers[base+c];}
+            else if(op==20 || op==21){
+                val shift:int=self.registers[base+c];if(shift<0 || shift>=64){self.state=-11;return self.state;}
+                if(op==20){self.registers[base+a]=self.registers[base+b]<<shift;}
+                else{self.registers[base+a]=self.registers[base+b]>>shift;}
+            }
+            else if(op==22){
+                val left:int=self.registers[base+b];val right:int=self.registers[base+c];
+                if(right==0){self.state=-7;return self.state;}
+                if(left== -9223372036854775808 && right== -1){self.registers[base+a]=0;}
+                else{self.registers[base+a]=left%right;}
+            }
+            else if(op==23){self.registers[base+a]=(self.registers[base+a]&4294967295)+immediate*4294967296;}
+            else if(op==24){self.registers[base+a]=~self.registers[base+b];}
+            else if(op==25){self.registers[base+a]= -self.registers[base+b];}
+            else if(op==26){self.state=-12;return self.state;}
         }
         return 1;
     }

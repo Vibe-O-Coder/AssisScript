@@ -131,7 +131,7 @@ class PageVM(base.Evolution):
 
     def test_malformed_unknown_import_register_branch_size_and_limits_fail_before_run(self):
         valid=program([instruction(0)])
-        bad=[b'',valid[:15],b'ASV2'+valid[4:],valid+b'\0',program([instruction(255)]),
+        bad=[b'',valid[:15],b'ASV3'+valid[4:],valid+b'\0',program([instruction(255)]),
             program([instruction(0,16)]),program([instruction(0,b=1)]),
             program([instruction(8,immediate=1)]),program([instruction(8,immediate=-1)]),
             program([instruction(12,immediate=2)]),program([instruction(12,c=1,immediate=1)]),

@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "returncode": 0,
+  "tests": 23,
+  "log_sha256": "9a823a46e63dbc6311e09aa62f4b0f3b124c92eb8eeecec37693636682d84726",
+  "setup_sha256": "ec4e197c86a71cedfd0de00b105aa3db25fb11f191207fc96e173201e1cb698b",
+  "compiler_sha256": "fc880cee46a48e2ace73af7f185b40767d314c304ae5cc3c3691f9b9388812d4",
+  "scope": "Fresh isolated setup/current distribution/compiler; temporary prefixes; no PATH, associations, release or tracked binary writes"
+}

@@ -82,6 +82,7 @@ static char *read_module_text(const char *path,bool from_stdin){
     size_t n=0,cap=4096;char *text=mem(cap+1);
     for(;;){
         size_t got=fread(text+n,1,cap-n,f);n+=got;
+        if(target_page&&(n>65536||source_bytes>65536-n)){if(!from_stdin)fclose(f);fatal("page-asv2: fonte excede 64 KiB");}
         if(n>MAX_SOURCE){if(!from_stdin)fclose(f);fatal("arquivo maior que o limite de 16 MiB");}
         if(n<cap){if(ferror(f))fatal("erro ao ler %s",path);break;}
         cap=cap>MAX_SOURCE/2?MAX_SOURCE+1:cap*2;text=realloc(text,cap+1);if(!text)fatal("memória insuficiente");
@@ -94,6 +95,7 @@ static char *read_module_text(const char *path,bool from_stdin){
     return text;
 }
 static void load_module(const char *path,Token *where,bool from_stdin,Vec *out,int depth){
+    if(target_page&&depth>16)error(where,"page-asv2: limite de 16 módulos");
     if(depth>128)error(where,"importação aninhada demais");
     char *absolute=absolute_path(path);
     for(int i=0;i<source_files.n;i++){
@@ -104,6 +106,7 @@ static void load_module(const char *path,Token *where,bool from_stdin,Vec *out,i
             if(!same(old->path,absolute)){
                 bool seen=false;for(int j=0;j<source_aliases.n;j++)if(same(((SourceAlias*)source_aliases.v[j])->path,absolute))seen=true;
                 if(!seen){
+                    if(target_page&&source_files.n+source_aliases.n>=16)error(where,"page-asv2: limite de 16 módulos/aliases");
                     if(source_files.n+source_aliases.n>=1024)error(where,"limite de 1024 módulos/aliases excedido");
                     SourceAlias *alias=mem(sizeof(*alias));alias->path=absolute;alias->digest=old->digest;push(&source_aliases,alias);return;
                 }
@@ -111,6 +114,7 @@ static void load_module(const char *path,Token *where,bool from_stdin,Vec *out,i
             free(absolute);return;
         }
     }
+    if(target_page&&source_files.n+source_aliases.n>=16)error(where,"page-asv2: limite de 16 módulos");
     if(source_files.n+source_aliases.n>=1024)error(where,"limite de 1024 módulos excedido");
     SourceFile *file=mem(sizeof(*file));file->path=absolute;file->text=read_module_text(absolute,from_stdin);file->digest=last_source_digest;file->state=1;push(&source_files,file);
     Vec previous=tokens;SourceFile *previous_file=current_source;

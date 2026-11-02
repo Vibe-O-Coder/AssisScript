@@ -112,7 +112,7 @@ test('exemplos de aplicação produzem relatório e transporte binário corretos
 test('instalação: núcleo obrigatório, seleção de opcionais e remoção isolada', {skip: process.platform !== 'win32'}, () => {
     const setup = process.env.ASSIS_SETUP_BIN || path.join(root, 'bin/assis-setup.exe');
     function setupRun(args) { const r = spawnSync(setup, args, {encoding:'utf8', timeout:20000, windowsHide:true}); assert.ifError(r.error); return r; }
-    for (const [name, flags, optional] of [['minimal', ['--minimal'], []], ['selected', ['--with', 'csv,algorithms'], ['csv','algorithms']], ['full', [], JSON.parse(fs.readFileSync(path.join(root,'stdlib/catalogo.json'))).libraries.filter(lib=>!lib.required).map(lib=>lib.name)], ['log', ['--with','log'], ['log','cli']], ['reader', ['--with','reader'], ['reader','viewer','htdl','window','graphemes','unicode','documents','doctree','buffers','owned']]]) {
+    for (const [name, flags, optional] of [['minimal', ['--minimal'], []], ['selected', ['--with', 'csv,algorithms'], ['csv','algorithms']], ['full', [], JSON.parse(fs.readFileSync(path.join(root,'stdlib/catalogo.json'))).libraries.filter(lib=>!lib.required).map(lib=>lib.name)], ['log', ['--with','log'], ['log','cli']], ['reader', ['--with','reader'], ['reader','viewer','htdl','window','graphemes','unicode','documents','doctree','buffers','owned']], ['page', ['--with','page,pagehost'], ['page','pagehost','pagevm','htdl','documents','doctree','buffers','owned','unicode']]]) {
         const prefix = path.join(temp, 'instalacao-' + name);
         const result = setupRun(['install', '--prefix', prefix, '--no-path', '--no-associations', ...flags]); assert.equal(result.status, 0, result.stderr);
         const catalog = JSON.parse(fs.readFileSync(path.join(prefix, 'stdlib/catalogo.json')));
@@ -128,6 +128,15 @@ test('instalação: núcleo obrigatório, seleção de opcionais e remoção iso
         }
         if (optional.includes('pagevm')) {
             const ran = spawnSync(path.join(prefix, 'bin/assis.exe'), ['run', path.join(root,'exemplos/47_pagevm_counter.assis'), '--safe'], {encoding:'utf8',timeout:20000,windowsHide:true}); assert.ifError(ran.error); assert.equal(ran.status,0,ran.stderr); assert.equal(ran.stdout,'42\n');
+        }
+        if (optional.includes('page') && optional.includes('pagehost')) {
+            const compiler = path.join(prefix, 'bin/assis.exe');
+            const artifact = path.join(temp, name + '-counter.asv2');
+            const host = path.join(temp, name + '-page-host.exe');
+            for (const args of [['build',path.join(root,'exemplos/pages/counter.assis'),'--target','page-asv2','-o',artifact],['build',path.join(root,'exemplos/48_page_runtime.assis'),'-o',host]]) {
+                const built = spawnSync(compiler,args,{encoding:'utf8',timeout:20000,windowsHide:true});assert.ifError(built.error);assert.equal(built.status,0,built.stderr);
+            }
+            const ran = spawnSync(host,[artifact],{encoding:'utf8',timeout:20000,windowsHide:true});assert.ifError(ran.error);assert.equal(ran.status,0,ran.stderr);assert.equal(ran.stdout,'PAGE 2 STATE 2\n');
         }
         fs.writeFileSync(path.join(prefix, 'pessoal.txt'), 'preservar');
         assert.equal(setupRun(['uninstall', '--prefix', prefix, '--no-path', '--no-associations']).status, 0);

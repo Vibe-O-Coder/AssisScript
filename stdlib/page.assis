@@ -1,0 +1,24 @@
+namespace htdl_v1;
+
+// A page-asv2 build resolves exactly these signatures to bounded VM imports.
+// Native builds require an explicitly linked test provider; no native library
+// is distributed or downloaded for page execution.
+extern("assis_htdl_v1","assis_htdl_v1","counter_add_v1") fn native_counter(delta:int):int;
+extern("assis_htdl_v1","assis_htdl_v1","event_get_v1") fn native_event(field:int):int;
+extern("assis_htdl_v1","assis_htdl_v1","state_get_v1") fn native_get(slot:int):int;
+extern("assis_htdl_v1","assis_htdl_v1","state_set_v1") fn native_set(slot:int,value:int):int;
+extern("assis_htdl_v1","assis_htdl_v1","node_at_v1") fn native_at(index:int):int;
+extern("assis_htdl_v1","assis_htdl_v1","node_kind_v1") fn native_kind(handle:int):int;
+extern("assis_htdl_v1","assis_htdl_v1","node_flags_v1") fn native_flags(handle:int):int;
+extern("assis_htdl_v1","assis_htdl_v1","node_count_v1") fn native_count(reserved:int):int;
+
+public pure fn version():int{return 1;}
+public safe fn counter_add(delta:int):int{unsafe{return native_counter(delta);}}
+public safe fn event_get(field:int):int{unsafe{return native_event(field);}}
+public safe fn last_error():int{unsafe{return native_event(6);}}
+public safe fn state_get(slot:int):int{unsafe{return native_get(slot);}}
+public safe fn state_set(slot:int,value:int):int{unsafe{return native_set(slot,value);}}
+public safe fn node_at(index:int):int{unsafe{return native_at(index);}}
+public safe fn node_kind(handle:int):int{unsafe{return native_kind(handle);}}
+public safe fn node_flags(handle:int):int{unsafe{return native_flags(handle);}}
+public safe fn node_count():int{unsafe{return native_count(0);}}

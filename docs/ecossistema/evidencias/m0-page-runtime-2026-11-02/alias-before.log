@@ -1,0 +1,15 @@
+test_platform_selection_and_compilation_limits (__main__.PageBackend.test_platform_selection_and_compilation_limits) ... FAIL
+
+======================================================================
+FAIL: test_platform_selection_and_compilation_limits (__main__.PageBackend.test_platform_selection_and_compilation_limits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\Desktop\AssisScript\work\page-runtime-20261101\tests\test-page-backend.py", line 123, in test_platform_selection_and_compilation_limits
+    self.assertNotEqual(result.returncode,0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.106s
+
+FAILED (failures=1)
