@@ -1,4 +1,7 @@
 > **Estado atual: 30,10%, 0/5 gates — transações e preferências.**
+> [PR #20](https://github.com/Vibe-O-Coder/AssisScript/pull/20), aberta/draft/sem merge,
+> base #19; 312116efce613c8c5cdb2eaf6b14dcb99bafc5ef e 64 paths/blobs confirmados.
+> O adendo do relatório confirma publicação; SHA documental final pelo histórico.
 > Continuação em `AssisScript/work/reader-transactions-20261101`, branch
 > `work/m3-reader-transactions-2026-11-01`, base publicada #19/4ba27b3.
 > [Relatório atual](../relatorios/2026-11-01-m3-transacoes-preferencias.md) e

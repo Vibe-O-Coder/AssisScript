@@ -22,7 +22,8 @@ Antes: existiam parser/Store e Reader, mas nenhuma sessão coordenava alteraçã
 semântica, apresentação e publicação assistiva. O compilador atual contra a
 stdlib exata da base rejeitou reader::Session; isso é evidência de frontend,
 não execução antiga: [before.json](../ecossistema/evidencias/m3-transactions-2026-11-01/before.json).
-Não foram mudados compilador, sintaxe, ownership, efeitos ou semântica numérica.
+Não foram mudados frontend/backends, sintaxe, ownership, efeitos ou semântica
+numérica; o manifesto do instalador foi sincronizado com os novos arquivos.
 
 ## Resultado e decisões
 
@@ -178,3 +179,23 @@ Próximo incremento: aceite desktop/leitor real e DPI/monitores com evidência
 da revisão exata, seguido de grafemas/IME e catálogo/recuperação HTDL. M0-EXEC
 mantém seus dois spikes/decisão independentes; M1 RSS e a fila completa
 continuam abertos no [índice](../ecossistema/ESTADO-ATUAL.md).
+
+## Adendo — publicação confirmada
+
+Os **64 arquivos** de implementação/testes/evidências/relatório foram publicados
+em **312116efce613c8c5cdb2eaf6b14dcb99bafc5ef**, branch
+work/m3-reader-transactions-2026-11-01. `git ls-remote` confirmou o mesmo SHA.
+A API GitHub confirmou inventário de 64 paths e todos os respectivos blob SHAs
+contra a árvore local. [PR de rascunho #20](https://github.com/Vibe-O-Coder/AssisScript/pull/20),
+aberta/sem merge, base #19/4ba27b3, foi vinculada a esta conversa.
+
+O conector recusou criar PR com HTTP 403 `Resource not accessible by integration`.
+A criação pelo acesso GitHub local já usado no push foi bem-sucedida; nenhuma
+permissão de conta foi alterada e nenhum dado de autenticação foi impresso.
+Não houve bloqueio de revisão automática nesta publicação. Não é merge,
+release ou afirmação de CI global aprovada.
+
+Este adendo e os apontadores de continuidade são documentais. A revisão final
+é obtida pelo histórico deste relatório. Progresso **30,10%, 0/5 gates**,
+resultados e limitações permanecem iguais; o masterprompt original conduz à
+cópia isolada atual, conservando seu texto anterior e mudanças alheias.
