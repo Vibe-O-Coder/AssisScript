@@ -189,3 +189,29 @@ identifica o SHA deste relatório e o inventário/patch local preserva os arquiv
 Pendente: autorização explícita para publicar o novo commit FS/SSC e seus
 relatórios/evidências; depois, conferir SHA/paths/blobs no remoto. A recuperação
 HTDL já está publicada e não precisa de nova autorização.
+
+## Adendo — autorização recebida e publicação confirmada
+
+Em 02/11/2026 o usuário autorizou explicitamente os 58 arquivos do commit
+**f274c9f7d4dda1e1d9a7bfe92b172354b89a4203** e este adendo documental. O push foi concluído na
+[branch work/m3-presentation-core-2026-11-02](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m3-presentation-core-2026-11-02),
+sem merge, force push ou release. O bloqueio anterior de autorização está resolvido.
+
+git ls-remote e fetch retornaram o SHA exato; a árvore recursiva local e a
+buscada coincidiram integralmente em **2404 entradas**. Os **58 caminhos
+alterados** tiveram blob, modo e tipo conferidos e inventariados. O conector
+GitHub confirmou o mesmo SHA independentemente.
+[Inventário da implementação publicada](../ecossistema/evidencias/m3-presentation-core-2026-11-02/published-implementation.json).
+
+PR não criada: conector GitHub retornou **403 Resource not accessible by integration**.
+Não houve uso de credencial/API alternativa para contornar essa restrição.
+Publicação de branch não significa CI aprovada, merge, release ou gate fechado.
+Os testes e seus hashes retratam a coleta anterior ao push; a limitação de
+publicação registrada naquele resumo é histórica e está resolvida por este
+inventário e adendo. Fontes de runtime/testes não foram alteradas no adendo.
+
+Régua permanece **44,90%, 0/5 gates**; meta 50% pendente. Não mudam os níveis,
+pesos, aceites, baseline ou histórico. Toda a fila e Easy por último permanecem.
+Este inventário/relatório/continuidade integram um commit documental posterior;
+seu SHA é obtido pelo histórico e conferido no remoto ao concluir, evitando hash
+autorreferente. O masterprompt original recebe somente uma entrada de continuidade.

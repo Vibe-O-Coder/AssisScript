@@ -748,7 +748,7 @@
           "name": "Frontend e avaliador FluxStyle",
           "level": 2,
           "acceptance": "Implementar gramática/tipos/unidades, seletores/bindings, DAG, produtor único e avaliação incremental pura; testar ciclos, ramos curtos, conflitos e dirtiness sem cascata implícita.",
-          "baseline": "Perfil local FS executado em AssisScript: parser/tipos/unidades, DAG, bindings HTDL, produtores únicos, avaliação curta e Style transacional por nó em Windows/Linux x64. Dirtiness entre transações, transação da página inteira e integração visual permanecem abertos; publicação pendente.",
+          "baseline": "Perfil local FS executado em AssisScript: parser/tipos/unidades, DAG, bindings HTDL, produtores únicos, avaliação curta e Style transacional por nó em Windows/Linux x64. Dirtiness entre transações, transação da página inteira e integração visual permanecem abertos; publicação verificada em f274c9f na branch de trabalho.",
           "evidence": [
             "local:htdl/docs/16-gramaticas-fs-e-ssc.md",
             "local:htdl/docs/12-contrato-fs-ssc-e-assisscript.md",
@@ -779,7 +779,7 @@
           "name": "Perfil numérico e temporal SSC",
           "level": 2,
           "acceptance": "Fixar representação/faixa, arredondamento, coeficientes e passo de tempo; implementar parser/canais com vetores independentes e fallback de erro numérico, sem prometer igualdade de float sem prova.",
-          "baseline": "Perfil experimental SSC finito de 42 matrizes canônicas Q16.16, parser/canais/tempo/fallback executados em AssisScript, com referência congelada e solução analítica em Windows/Linux x64. Domínio contínuo, quotas de página e integração visual permanecem abertos; publicação pendente.",
+          "baseline": "Perfil experimental SSC finito de 42 matrizes canônicas Q16.16, parser/canais/tempo/fallback executados em AssisScript, com referência congelada e solução analítica em Windows/Linux x64. Domínio contínuo, quotas de página e integração visual permanecem abertos; publicação verificada em f274c9f na branch de trabalho.",
           "evidence": [
             "local:htdl/docs/12-contrato-fs-ssc-e-assisscript.md",
             "local:htdl/docs/16-gramaticas-fs-e-ssc.md",
@@ -3099,5 +3099,5 @@
       }
     }
   ],
-  "assessment_note": "Avaliação local 44,90%, 0/5 gates, meta 50% pendente. Recuperação sintática HTDL publicada em 6701d1b após autorização; núcleo FS/SSC finito testado localmente, publicação pendente de autorização explícita do novo commit. Transação/dirtiness de página, layout/Reader/catálogo/desktop/leitor/DPI/IME, SDK/loader/recursos, quota agregada/RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h e aceites continuam na fila. Easy por último."
+  "assessment_note": "44,90%, 0/5 gates; meta 50% pendente. Recuperação sintática HTDL publicada em 6701d1b e núcleo FS/SSC finito publicado em f274c9f após autorizações explícitas, com SHA/paths/blobs/modos remotos conferidos. PRs não criadas: conector 403. Transação/dirtiness de página, layout/Reader/catálogo/desktop/leitor/DPI/IME, SDK/loader/recursos, quota agregada/RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h e aceites continuam na fila. Easy por último."
 }

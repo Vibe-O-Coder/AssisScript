@@ -148,3 +148,12 @@ uso de credencial/API alternativa, merge, force push, release ou alegação de C
 O bloqueio anterior desta implementação foi resolvido. A continuação FS/SSC
 está em branch separada work/m3-presentation-core-2026-11-02 e sua publicação
 ainda depende da aprovação do novo commit. Este adendo integra essa continuação.
+
+## Continuação — núcleo FS/SSC publicado
+
+O usuário também autorizou a continuação e seu adendo. A implementação
+f274c9f7d4dda1e1d9a7bfe92b172354b89a4203 está publicada na branch
+work/m3-presentation-core-2026-11-02, com SHA e 58 paths/blobs/modos conferidos.
+[Relatório e confirmação](2026-11-02-m3-presentation-core.md). Meta 50%
+permanece pendente; 44,90%, 0/5 gates. As descrições de bloqueio anteriores
+são históricas e foram resolvidas por autorização explícita, sem contorno.

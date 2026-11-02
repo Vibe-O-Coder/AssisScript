@@ -1,6 +1,312 @@
 {
-  "status": "pending-user-authorization",
+  "status": "published-and-verified",
   "repository": "Vibe-O-Coder/AssisScript",
   "branch": "work/m3-presentation-core-2026-11-02",
-  "note": "Placeholder only; this file is not proof of publication. Fill SHA, remote tree inventory and confirmation only after an authorized successful push."
+  "commit": "f274c9f7d4dda1e1d9a7bfe92b172354b89a4203",
+  "url": "https://github.com/Vibe-O-Coder/AssisScript/commit/f274c9f7d4dda1e1d9a7bfe92b172354b89a4203",
+  "verified_paths": 58,
+  "verified_full_tree_entries": 2404,
+  "verification": [
+    "User explicitly authorized exact implementation and documentary publication addendum",
+    "git ls-remote matched exact SHA",
+    "git fetch SHA and complete recursive tree matched",
+    "GitHub connector independently confirmed exact SHA"
+  ],
+  "pull_request": {
+    "status": "not-created",
+    "reason": "GitHub connector returned 403 Resource not accessible by integration"
+  },
+  "paths": {
+    ".gitattributes": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ab65c14f385413277e66dda427027d3bf17734a3"
+    },
+    ".github/workflows/ci.yml": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5dab9ee976758474d3c6d0e0c368c37b517818e9"
+    },
+    "Makefile": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "069ee555b7c89c5bee915d3d1fb79291ede6266a"
+    },
+    "PLANO-ECOSSISTEMA.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "17fac7b7c4beaba1835795af5e214b9f4cc1c78e"
+    },
+    "docs/BIBLIOTECA-fluxstyle.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4e74792472c160c8b4b7919060ec9127967b14a3"
+    },
+    "docs/BIBLIOTECA-sanscript.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "390ed43adce67f807b8d56f83d8e5b3e952573ff"
+    },
+    "docs/ecossistema/ESTADO-ATUAL.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "609b96b4cad782d3372bacd8c581dfbdd0141911"
+    },
+    "docs/ecossistema/FILA-M0-M1.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "286809b8c3941bf107ea21cf86159eb443c70d51"
+    },
+    "docs/ecossistema/MASTERPROMPT.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2ee5d6dbe42b0a2730bb7a8e1c5bdc9a5638cda1"
+    },
+    "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "29373acf7a93bf92eb4b71003e9227bd51212de7"
+    },
+    "docs/ecossistema/PLANO-MESTRE.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "66149bfae30c2fc79ef98db037af960c0cebdee2"
+    },
+    "docs/ecossistema/PROGRESSO.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2648a0cbb5740a86a0027d204217b7f2634e100c"
+    },
+    "docs/ecossistema/PROGRESSO.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cf03765b806c896695922ae2dfb43d4a5d1a0c48"
+    },
+    "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/published-implementation.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f3718017a7df013b12d497946bd0312a4e676320"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/linux-example-54-optimized.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "125d953e9c2429b823d8740f0638e6aba4fbf4a7"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/linux-example-54-reference.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "125d953e9c2429b823d8740f0638e6aba4fbf4a7"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/linux-examples.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f141779d2a40614f0302f8672bd3f769bf5e994c"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/linux-fluxstyle.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a66264c3eb44a2b4734eafe4699c6961e9c3aafc"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/linux-install-mask.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f1dce7c1be08d8d49f1fcf43d90a0dee78939777"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/linux-install.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "61df616837002dd0ee0136bafecc90540b18bf0e"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/linux-sanscript.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "855f439dae4aa37e7f4c79182aa3d32321d266b3"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/linux-ssc-traces.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "efb4a50a60c54ffe9698a8e53aa8f8730bec086d"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/linux.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1b52fee0f5ec99c9d2df95abb8922f5a6f3c93fb"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/published-implementation.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9eb3eba647f58e2c712affba03bae895b392de43"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/reference-integrity.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "533a06d9fc3de5d3b4376078af53bdba6056d78c"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/summary.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bccb8c249bf1ece07b6469377e289817b19e384b"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/windows-distribution-node.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f731b1559feebce822e495ad0c4c344a13c152f8"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/windows-example-54-optimized.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "125d953e9c2429b823d8740f0638e6aba4fbf4a7"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/windows-example-54-reference.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "125d953e9c2429b823d8740f0638e6aba4fbf4a7"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/windows-examples.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "14a5ca4bbedd758315ef21be0bebb440bfc3d31d"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/windows-fluxstyle.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a0c5e43ec8020f9890b67cd5599d09d4fc78771e"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/windows-install-mask.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e3c889bf0149f20460a695d354069221b15a7d0"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/windows-install.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc4b30374e6810a7278bab09037beac95c7491f2"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/windows-sanscript.log": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bb8ab690ad6c7442232ee512b02ab0fc376c77cb"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/windows-ssc-traces.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6d84dffddaaa2ee8afa6d22b9fafa057068f8e3c"
+    },
+    "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/windows.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c5a974b4e5a48b5fc39165f2250be6f01d543047"
+    },
+    "docs/relatorios/2026-11-02-m3-htdl-recovery.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2a39a65b5144ee6fde914f6466b8a05c4eda0a90"
+    },
+    "docs/relatorios/2026-11-02-m3-presentation-core.md": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "97decab0147124bfdf67dcc8ce595dc2f69885dc"
+    },
+    "exemplos/54_fluxstyle_sanscript.assis": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e5409e7738ae872e621fdd37f5527ca1cc821ad1"
+    },
+    "src/install_files.inc": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "28c248d0ac01937c1eb1a0c8ce25e27612010eaf"
+    },
+    "src/install_optional.inc": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5104afd6144391c1f397d621cb92d5505eea67ce"
+    },
+    "src/windows_setup.c": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f106001de90a1e4b39b5c1a74fdfea483f416e4e"
+    },
+    "stdlib/catalogo.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d2a19e6fed73cff2e9687a76cf5d955ff94e70c1"
+    },
+    "stdlib/catalogo.sh": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "950e208bd4e0f09a4f99bdd5fe4c1e79c62dc8d3"
+    },
+    "stdlib/fluxstyle.assis": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "166c5bffc1caa243829298c7d7e06580640088c4"
+    },
+    "stdlib/sanscript.assis": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ee270c60c12dea28dff66ec7597bdbfc9492ea72"
+    },
+    "tests/fixtures/fluxstyle-driver.assis": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "97552f353c906e0b9e248fea1fe4edb906e7c871"
+    },
+    "tests/fixtures/sanscript-driver.assis": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "27d23a495235b2d5a18081f214708ce3d9a524f4"
+    },
+    "tests/fixtures/ssc-coefficients.json": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "833716bc033f9e339b9ee9a770b0c16458e45389"
+    },
+    "tests/test-fluxstyle.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1fa77da276407e43e0eb940deacb0708785057b0"
+    },
+    "tests/test-install-mask.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6698ee59235582e7023ce55acfc6a02e1c3ff588"
+    },
+    "tests/test-sanscript.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "13d83c1614609d57a87c08adf6c3ab653d9d2cbe"
+    },
+    "tests/test-v31.js": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fcefaff95d95375caad09576b5e1115752657a3d"
+    },
+    "tools/collect-presentation-core-evidence.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5f7e298c19c2c7145980d53b0c83675c3043df2f"
+    },
+    "tools/generate-install-manifest.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49508934f4c15fccaefc50ed18e4392165b85847"
+    },
+    "tools/generate-ssc-coefficients.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "567e43cb1f93601cf719bdd665a921aca10f2480"
+    },
+    "tools/verify-presentation-core-evidence.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2610e0762807a888f57d2261e53451c88deee6b7"
+    },
+    "tools/verify-presentation-install.py": {
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7bfca288822a2585cd879d5371d0c08fc04319ab"
+    }
+  },
+  "scope": "Branch only; no merge, force push, release or claim of remote CI approval"
 }
