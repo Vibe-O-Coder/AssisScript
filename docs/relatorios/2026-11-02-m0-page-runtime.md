@@ -173,3 +173,24 @@ continuam na fila, sem dispensa. **Easy é a última etapa do projeto**.
 Branch **work/m0-page-runtime-2026-11-01**, incremental sobre #21.
 Publicação, SHA remoto e PR são confirmados por adendo depois da verificação.
 O SHA deste relatório é obtido pelo histórico para evitar autorreferência.
+
+## Adendo — publicação bloqueada pela revisão automática
+
+Implementação local **5549c330ab06a8f8f4798f023f4718b12b5cad03**, 98 arquivos,
+com matriz/geradores/verificador aprovados. A tentativa de push normal para
+`https://github.com/Vibe-O-Coder/AssisScript.git`, branch
+`work/m0-page-runtime-2026-11-01`, foi rejeitada **antes da execução**.
+Não há publicação ou PR desta unidade; não houve merge ou force push.
+
+A revisão automática considerou que a propriedade/confiança do destino e a
+autorização explícita para exportar esse conteúdo não estavam estabelecidas
+em mensagem confiável do usuário. O masterprompt local autoriza publicação,
+mas a revisão não aceitou isso como autorização explícita na conversa.
+Não foi tentado contornar a recusa com outro canal de publicação.
+
+O código, testes e documentação permanecem na branch local. Patch completo
+é preservado em `build/page-runtime-20261102.patch`; o adendo tem commit
+documental separado, cujo SHA é obtido pelo histórico. Após autorização
+explícita do usuário para esse destino e payload, pendem: push normal,
+verificação de SHA/árvore remotos e criação/vínculo de PR de rascunho sobre #21.
+**36,20% localmente verificados, 0/5 gates; meta 40% pendente**.

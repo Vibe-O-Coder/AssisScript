@@ -1,3 +1,13 @@
+> **Entrega local — 36,20%, 02/11/2026; publicação bloqueada.**
+> Implementação 5549c330ab06a8f8f4798f023f4718b12b5cad03, branch
+> `work/m0-page-runtime-2026-11-01`, cópia `C:/Users/babus/Desktop/AssisScript/work/page-runtime-20261101`.
+> Revisão automática recusou o push antes da execução por falta de autorização
+> explícita na conversa para o destino/payload. Não há PR/publicação desta unidade.
+> [Relatório e bloqueio](../relatorios/2026-11-02-m0-page-runtime.md).
+> Autorização necessária: publicar os 98 arquivos de código/testes/documentação
+> desta branch em `Vibe-O-Coder/AssisScript`, sem merge/force push.
+> Testes locais completos; 0/5 gates e meta 40% pendente. Preserve a fila integral.
+
 > **Continuação ASV2 — 02/11/2026: 36,20%, 0/5 gates.**
 > Cópia atual: `C:/Users/babus/Desktop/AssisScript/work/page-runtime-20261101`,
 > branch `work/m0-page-runtime-2026-11-01`, base publicada #21/1e574736.

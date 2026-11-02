@@ -2505,5 +2505,5 @@
       }
     }
   ],
-  "assessment_note": "Backend escalar ASV2 por IR tipada, SDK htdl_v1/read-only-1, projeção HTDL e ciclo de eventos/células/concessões em AssisScript; Group cooperativo com quanta/deadlines. 238 métodos Windows e 210 Linux executados, 1/29 not-run; 50 exemplos por host. Escolha VM/Wasm geral, sandbox/worker/IPC, compilação/RSS, integração visual e loader completo permanecem abertos. Desktop/leitor/DPI/IME, HTDL completo/editor, FS/SSC, M4–M9 e aceites preservados; Easy por último. 36,20%, 0/5 gates; meta 40% não atingida."
+  "assessment_note": "Backend escalar ASV2 por IR tipada, SDK htdl_v1/read-only-1, projeção HTDL e ciclo de eventos/células/concessões em AssisScript; Group cooperativo com quanta/deadlines. 238 métodos Windows e 210 Linux executados, 1/29 not-run; 50 exemplos por host. Escolha VM/Wasm geral, sandbox/worker/IPC, compilação/RSS, integração visual e loader completo permanecem abertos. Desktop/leitor/DPI/IME, HTDL completo/editor, FS/SSC, M4–M9 e aceites preservados; Easy por último. 36,20%, 0/5 gates; meta 40% não atingida. Publicação desta unidade bloqueada pela revisão automática antes do push; implementação e evidências permanecem locais até autorização explícita do destino/payload."
 }
