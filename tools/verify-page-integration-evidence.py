@@ -70,6 +70,7 @@ if args.write:
         before='40.20',after='41.70',changed_levels=changes,gates_passed=0,hosts=hosts,node_tests=23,new_distinct_test_methods=19,
         benchmarks=dict(cases=4,repeats=40,samples=7,executions_per_engine_host=1120),
         preserved_failure='windows-page-reader-reference-attempt.log: temporary host.exe rewrite denied; unique per-method output paths; original assertions rerun in both modes',
+        preserved_installer_failure='windows-node-uninstall-attempt.log: Windows 5 removing temporary page prefix; installer/test assertions unchanged, complete isolated suite rerun',
         not_run=['macOS/ARM native execution','Windows/macOS authority sandbox','general page values/ownership/runtime decision',
             'compiler/host overall RSS quotas','desktop/real screen reader/DPI/multimonitor/IME/shaping/bidi',
             'mutable SDK/strings/general subscriptions/full HTDL/editor/FS/SSC/resource loader','network/broker/profile/persistence/search',

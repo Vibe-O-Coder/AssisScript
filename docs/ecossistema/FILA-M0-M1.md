@@ -1,4 +1,4 @@
-> **Continuação — 02/11/2026: 41,70%, 0/5 gates; meta 50% pendente.**
+> **Publicação confirmada — 02/11/2026: 41,70%, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/page-integration-20261102`,
 > branch `work/m0-page-integration-2026-11-02`, base remota 0345d56 conferida.
 > ASV2 escolhido para o perfil escalar local após comparação Wasm limitada;

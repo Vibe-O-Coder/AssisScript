@@ -1,0 +1,55 @@
+✔ compilação estática: build não executa e binário roda sozinho (189.1343ms)
+✔ comentários, delimitadores, strings, BOM e CRLF (148.1323ms)
+✔ módulos: importação transitiva, repetida e herança entre arquivos (201.8034ms)
+✔ errors de importação: ciclos, ausência, colisões e fronteiras de arquivo (256.8497ms)
+✔ diagnóstico do módulo aponta arquivo e linha corretos (44.9822ms)
+✔ stdin, overlays e colunas UTF-16 usam posições do editor (149.0749ms)
+✔ diretórios de bibliotecas via -I e ASSIS_PATH (225.8179ms)
+✔ fontes importados e extensão exe final são protegidos contra sobrescrita (45.6176ms)
+✔ bibliotecas padrão: matemática, texto UTF-8 e memória (140.4587ms)
+✔ falhas de runtime em bibliotecas incluem arquivo e linha (327.7833ms)
+✔ decimal: limites, overflow, posição e formatação int64 (266.6207ms)
+✔ errors recuperáveis: soma, divisão, mapas e arrays preservam saída em falha (246.2904ms)
+✔ String: autoacréscimo com/sem realocação, vida própria, UTF-8 e KMP (256.9188ms)
+✔ heapsort e busca: comparação com ordenação independente em entradas adversas (370.8216ms)
+✔ CSV: campos vazios, CRLF, aspas escapadas, multilinha e errors recuperáveis (286.5381ms)
+✔ Base64 e hexadecimal: comparação com Buffer, todos os bytes e padding inválido (303.9033ms)
+✔ otimizador: aritmética int64 confrontada com BigInt e ordem dos efeitos (511.4041ms)
+✔ diagnósticos incluem ajuda e intervalo UTF-16; ponteiros de strings exigem tipos corretos (118.5834ms)
+✔ funções com quadro grande podem chamar antes de inicializar variáveis locais (903.0389ms)
+✔ assert aceita mensagem e só a avalia na falha (208.5647ms)
+✔ exemplos de aplicação produzem relatório e transporte binário corretos (293.7119ms)
+✖ instalação: núcleo obrigatório, seleção de opcionais e remoção isolada (12440.7018ms)
+✔ catálogo: cada biblioteca e documento existe e a análise de tipos passa (1776.6875ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 22
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19872.7697
+
+✖ failing tests:
+
+test at tests\test-v31.js:112:1
+✖ instalação: núcleo obrigatório, seleção de opcionais e remoção isolada (12440.7018ms)
+  AssertionError [ERR_ASSERTION]: page: assis: Não foi possível remover arquivo; encerre processos AssisScript abertos (Windows 5).
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (C:\Users\babus\Desktop\AssisScript\work\page-integration-20261102\tests\test-v31.js:143:16)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

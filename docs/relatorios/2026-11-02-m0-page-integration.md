@@ -121,6 +121,11 @@ Fixtures passaram a usar diretório exclusivo por método e os dois modos foram
 reexecutados com as mesmas asserções. Ensaios preliminares também identificaram
 ajustes das fixtures de bytes/keyup/borrow e do ambiente Node no WSL; não foram
 contados como testes aprovados. Nenhuma verificação foi enfraquecida.
+Na conferência documental posterior, uma remoção de prefixo temporário também
+recebeu Windows 5; log preservado em windows-node-uninstall-attempt.log, com
+22/23 nessa tentativa. A suíte completa foi repetida sem alterar instalador
+ou asserções. Isso registra uma falha observada de remoção imediata em Windows;
+não é garantia de ausência de interferência do ambiente em outras instalações.
 
 Comandos principais (ASSIS_BIN sempre aponta ao candidato próprio do host):
 
@@ -176,3 +181,28 @@ Branch **work/m0-page-integration-2026-11-02**, destino normal
 adendo após commit/push/verificação. O SHA do relatório é localizado pelo
 histórico, evitando hash autorreferente. Nenhum resultado de publicação é
 presumido a partir de commit local.
+
+## Adendo — publicação confirmada
+
+Implementação **8fb60cdbd6ad5ff71f7501502c3bc2cd45254e6c** publicada por push
+normal em [work/m0-page-integration-2026-11-02](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m0-page-integration-2026-11-02).
+SHA remoto igual ao local. Os **72 paths e respectivos blobs Git** foram
+conferidos individualmente pelo conector contra git ls-tree. [Inventário](../ecossistema/evidencias/m0-page-integration-2026-11-02/published-implementation.json).
+Sem merge, force push, release ou declaração de CI global aprovada.
+
+O parent efetivo é **3069ee801fea2ea0f23b94c985bc7be82722a73c**, atualização
+documental que confirmou as PRs #22/#23 durante esta sessão. Comparação das
+árvores: somente índices, relatórios/evidências históricos e lista gerada do
+instalador, sem fonte de execução, teste ou mudança de nível. Foi preservada
+na ancestralidade da nova branch. A referência de antes/reprodução dos testes
+continua **0345d56**, e os 60 estados/histórico de partida são idênticos.
+
+**PR desta unidade não criada:** o conector GitHub retornou HTTP 403 Resource
+not accessible by integration. Não foi reutilizada credencial Git pela API.
+A branch publicada e o inventário estão disponíveis para revisão; a negativa
+do conector não impediu o push autorizado. Nenhuma nova aprovação foi pedida.
+
+Este adendo/inventário recebe commit documental posterior, identificado pelo
+histórico. Manifesto/evidência/instalador foram novamente conferidos após a
+inclusão do inventário; os testes nativos não foram recontados. **41,70%,
+0/5 gates; meta 50% pendente e fila integral preservada, Easy por último.**

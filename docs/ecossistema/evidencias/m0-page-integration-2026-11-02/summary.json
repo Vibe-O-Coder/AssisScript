@@ -69,6 +69,7 @@
     "executions_per_engine_host": 1120
   },
   "preserved_failure": "windows-page-reader-reference-attempt.log: temporary host.exe rewrite denied; unique per-method output paths; original assertions rerun in both modes",
+  "preserved_installer_failure": "windows-node-uninstall-attempt.log: Windows 5 removing temporary page prefix; installer/test assertions unchanged, complete isolated suite rerun",
   "not_run": [
     "macOS/ARM native execution",
     "Windows/macOS authority sandbox",
@@ -102,13 +103,15 @@
     "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/linux-wasm-candidate-both.log": "a4f6ef372cc677aec0680af009b8ce7553ffd97a0fe8ea69853ec4666f2f31a6",
     "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/linux.json": "246f7011b261bc7da80f646565ee54f4748952c9f073af4a43fcd556a521e908",
     "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/published-base.json": "6f2585bf16b4d2a169e676512e36a04bd14778809f7d68fc84652a9a64ecfcb0",
+    "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/published-implementation.json": "7cfdac9f164e419c7178698974071ae937d16b6d9c8173545a64bb7aa984af84",
     "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-benchmark.json": "06f9143c2b9f840600a5c4f5a8efdddf3326a7b60a39159c5bd20aa6aa07ded7",
     "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-environment.json": "197d9a3b688c652e0f5ed8ded19673d2e207d67e40cff3521eb449d5e7bf7f92",
     "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-examples.json": "923bea7021580d39a66fe8206a849ba76b5cc160f7a53cf3550ad97bdfaee8d5",
     "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-htdl-parser-both.log": "61a43a0af80375c7e64fe044d704e3380f7a67e8123e32f61109d940d8f48d3d",
     "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-htdl-reader-both.log": "6498f2499de6c817bda5e452482c9d8a5b5232a5b7de4d2ca7eef1bfe43687fa",
-    "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-node.json": "7f6ffa57ebb3544b96c72f5e7f8189d10f7465e5e24884d7802f8bcf41df9771",
-    "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-node.log": "a9c4a2689ee242b5e8e693c0991b44c7c7abe062bafc22065bd4b930c2cad051",
+    "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-node-uninstall-attempt.log": "721b9fbba0a54ea6f8d3db844bebdb763076c77875015b51af66a86b57d1140d",
+    "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-node.json": "ed7b27a3c77eaab04edfd6db5e550d73a8ec299d14043ec43d07f590d4874b0d",
+    "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-node.log": "feaff242721601e271a2027be24cadbbf69a990d746f0c5d2cb5ef47b6e9b5fe",
     "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-ownership-functions-both.log": "f1109f321bc68c411bcc1212e3f45b69005512b38adcacbe2ac1c9020a38dda0",
     "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-page-backend-both.log": "6705001c43437c5b4afbd87c3f7d28fb3f9932eba2f2dbd9a7c47498c4930e63",
     "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/windows-page-host-both.log": "f375dffec670551644b74080a21019f1ba68d31fb61c98fe571db8acf2b10b3e",
@@ -149,7 +152,7 @@
     "src/generics.h": "3acccdd8489dd94c22f3b036e1be394f64e53d1620fa442f68242f23b4e517d7",
     "src/icon_blob.h": "4c52392780110640152fa702b9447f8403e9bfa4e40b468b4cbe2ca5711a90c5",
     "src/icon_icns.h": "ba42070a47ae1c6034769bd82cfbdce1c2353a466efe7c51fc52f98aed2fe636",
-    "src/install_files.inc": "dcd0d3b240ae9fac0512df9e5e00b65d2f47be5934b50af941381892edba682d",
+    "src/install_files.inc": "7dd8d4dd3b6425141b67b124ef7c6597aa1b086cf1b7acfa194a1aadb5e97997",
     "src/install_optional.inc": "ecaff114ec47e02b17ae4a65a6347a421f49bd2350cac7b45959367fa5a1ca51",
     "src/ir.h": "eca987cee5e10aa631dab5bc9e760c88f3abc5572ce852008d51dfb1a16d09dc",
     "src/lexer.h": "26767210ae5d06485113c7608e03bb7a82fae4890ff7f0b7793a9461d4bff0d1",
@@ -226,6 +229,6 @@
     "tools/run-wasm-candidate.js": "b8e1b76e638025074e24348d7fd9699af577906b080a1106950aabe022eb9bac",
     "tools/stage-page-integration-installer.py": "d56d24dda83a92872dd10e11b62a9b1707aefdc8e892dee8de0915c8609da8bc",
     "tools/test-native.py": "2b0771d55d67dc1404eae87b0af28fece926a0445ac941cdc523aa81c29092a2",
-    "tools/verify-page-integration-evidence.py": "4f851dce84a7f814769b5c5882674a8c45a388886b1b5b49134cd1f6a4526213"
+    "tools/verify-page-integration-evidence.py": "8ac5841694e3c1727bd3be3d486025d38e4dd9d6dcd9852eb6c13694178325ae"
   }
 }

@@ -277,6 +277,7 @@ L"docs\\ecossistema\\evidencias\\m0-page-integration-2026-11-02\\linux-environme
 L"docs\\ecossistema\\evidencias\\m0-page-integration-2026-11-02\\linux-examples.json",
 L"docs\\ecossistema\\evidencias\\m0-page-integration-2026-11-02\\linux.json",
 L"docs\\ecossistema\\evidencias\\m0-page-integration-2026-11-02\\published-base.json",
+L"docs\\ecossistema\\evidencias\\m0-page-integration-2026-11-02\\published-implementation.json",
 L"docs\\ecossistema\\evidencias\\m0-page-integration-2026-11-02\\summary.json",
 L"docs\\ecossistema\\evidencias\\m0-page-integration-2026-11-02\\windows-benchmark.json",
 L"docs\\ecossistema\\evidencias\\m0-page-integration-2026-11-02\\windows-environment.json",
