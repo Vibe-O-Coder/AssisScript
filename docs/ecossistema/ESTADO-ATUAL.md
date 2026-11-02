@@ -1,3 +1,9 @@
+> **Publicação Reader pendente:** o push dos 73 arquivos foi rejeitado pela
+> revisão automática por exigir autorização direta de payload/destino públicos.
+> Branch apenas local; nenhuma PR Reader. Código/testes em 47604fc, hashes em
+> c509988; SHA documental final pelo histórico do relatório Reader. Não tentar
+> envio por outra rota sem autorização direta. 28,90%, 0/5 gates preservados.
+
 # Continuação Reader — 01/11/2026
 
 **28,90%, 0/5 gates**. Base remota #18 conferida em

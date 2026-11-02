@@ -213,3 +213,26 @@ recalculados. Correção documental de evidência, sem mudança de comportamento
 assertions, 28,90% ou gates. O inventário de publicação confere os 183 hashes
 contra os blobs do commit final, não só contra a cópia de trabalho. Patch e
 inventário ficam em build/m3-reader.patch e build/publication-inventory.json.
+
+## Adendo — publicação bloqueada pela revisão automática
+
+A revisão local `c50998868b6cda82eaf91b8022e9178dece8ba10`, 73 arquivos sobre
+#18, foi conferida: todos os 183 hashes correspondem aos blobs Git. O comando
+`git push -u origin work/m3-viewer-accessibility-2026-11-01` foi **rejeitado
+antes da execução pela revisão automática de aprovação**. A revisão informou
+que os 73 arquivos de código/testes/evidências seriam expostos em repositório
+público, que a mensagem direta do usuário não especificava esse payload e
+destino e que o masterprompt não ampliava por si só essa autorização.
+
+**Branch não publicada; nenhuma PR nova criada.** Não houve repetição por
+API, browser ou outra rota. Este adendo apenas documenta o bloqueio; código,
+testes, 28,90%, 0/5 gates e inventário de 73 paths são preservados. SHA final
+documental é obtido pelo histórico. Patch completo/inventário final são
+regerados em build/m3-reader.patch e build/publication-inventory.json.
+
+A ação exata pendente é autorização direta para publicar os **73 arquivos da
+revisão final** da branch work/m3-viewer-accessibility-2026-11-01 em
+`https://github.com/Vibe-O-Coder/AssisScript.git` e abrir PR de rascunho sobre
+work/m2-htdl-viewer-2026-11-01 (#18), sem merge/release. Fontes, testes, logs e
+quatro imagens da demonstração tornar-se-ão públicos. O bloqueio não reduz as
+evidências de implementação local, mas impede declarar a unidade publicada.
