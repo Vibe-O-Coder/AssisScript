@@ -140,7 +140,7 @@
     "src/generics.h": "3acccdd8489dd94c22f3b036e1be394f64e53d1620fa442f68242f23b4e517d7",
     "src/icon_blob.h": "4c52392780110640152fa702b9447f8403e9bfa4e40b468b4cbe2ca5711a90c5",
     "src/icon_icns.h": "ba42070a47ae1c6034769bd82cfbdce1c2353a466efe7c51fc52f98aed2fe636",
-    "src/install_files.inc": "535fc16a2d6201b51a7d277dee0248928fa47d69a544246d7639af0e94e13216",
+    "src/install_files.inc": "d26d2caaa156cdc5607d300c5cc123ddda17f556c9591188083525a78ae7b11f",
     "src/install_optional.inc": "dd82a3f5c9900e6981d5ebbc9f67a2d2c2d4ff08375fdbdbf54a5e2d40b37912",
     "src/ir.h": "eca987cee5e10aa631dab5bc9e760c88f3abc5572ce852008d51dfb1a16d09dc",
     "src/lexer.h": "26767210ae5d06485113c7608e03bb7a82fae4890ff7f0b7793a9461d4bff0d1",

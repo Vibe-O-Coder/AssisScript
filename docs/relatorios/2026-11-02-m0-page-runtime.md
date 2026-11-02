@@ -194,3 +194,23 @@ documental separado, cujo SHA é obtido pelo histórico. Após autorização
 explícita do usuário para esse destino e payload, pendem: push normal,
 verificação de SHA/árvore remotos e criação/vínculo de PR de rascunho sobre #21.
 **36,20% localmente verificados, 0/5 gates; meta 40% pendente**.
+
+## Adendo — publicação autorizada e confirmada
+
+Após autorização explícita do usuário na conversa, a branch foi publicada
+por push normal com head **6b2ece0ba5a28b7775e9da90adade5a36c8a29bc**,
+incluindo a implementação **5549c330ab06a8f8f4798f023f4718b12b5cad03**.
+SHA remoto igual ao local; **98 paths alterados e 2068 blobs** da árvore
+inteira conferidos em paths/modos/hashes com a API GitHub. Inventário em
+[published-implementation.json](../ecossistema/evidencias/m0-page-runtime-2026-11-02/published-implementation.json).
+
+[PR de rascunho #22](https://github.com/Vibe-O-Coder/AssisScript/pull/22),
+aberta/sem merge sobre #21, vinculada à conversa. O conector negou criar PR
+com HTTP 403; criação concluída pela API com autenticação Git existente,
+sem expor credencial. O conector confirmou depois head/base, draft e sem merge.
+O bloqueio descrito no adendo anterior está resolvido pela autorização.
+
+Este adendo, inventário e ponteiros de continuidade são publicados em commit
+documental posterior, identificado pelo histórico. Não alteram código,
+matriz, níveis ou gates. **36,20%, 0/5 gates; meta 40% pendente**. Não há
+declaração de CI global aprovada, release ou merge.

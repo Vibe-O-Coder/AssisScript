@@ -198,3 +198,26 @@ acesso exige autorização adicional do usuário; a branch e o relatório já
 permitem revisão do payload concreto. O bloqueio da PR não desfaz o push
 confirmado nem muda os testes/pontos. O adendo documental recebe commit
 separado, identificado pelo histórico para evitar hash autorreferente.
+
+## Adendo — autorização e PR #23 confirmadas
+
+Após o usuário autorizar explicitamente a abertura da PR nesta conversa,
+foi criada a [PR de rascunho #23](https://github.com/Vibe-O-Coder/AssisScript/pull/23),
+aberta/sem merge, head inicial **0345d567a7ade632546805fc18eca5ca32749cdb**,
+base `work/m0-page-runtime-2026-11-01` (PR #22). A autenticação Git existente
+foi usada somente para a criação autorizada, sem exibir/gravar credenciais.
+A PR foi vinculada a esta conversa; o conector confirmou draft/head/base e
+ausência de merge. O bloqueio descrito acima está resolvido pela autorização.
+
+A base avançou para **f4469babd0a731bbd7fcd42965c2cee4241658f5**, com confirmação
+documental da PR #22. Isso causou conflitos apenas em índice/masterprompt e
+notas de progresso. A atualização foi conciliada localmente na branch de
+trabalho, preservando os registros da base e os 60 estados/40,20% do worker.
+Nenhum merge da PR no GitHub foi executado; não houve force push.
+
+Este adendo acrescenta confirmação da PR, preserva o inventário documental
+publicado pela base e atualiza a lista gerada do instalador. Não altera
+código, binários, testes de execução ou níveis/gates. Foram conferidos
+progresso, manifesto, hashes e diff documental; os testes nativos anteriores
+não foram recontados como execução nova. SHA documental final pelo histórico.
+**40,20%, 0/5 gates**; demais pendências/Easy por último preservados.

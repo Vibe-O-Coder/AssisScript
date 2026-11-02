@@ -1,3 +1,13 @@
+> **PR #23 confirmada — 40,20%, 02/11/2026, 0/5 gates.**
+> [PR de rascunho #23](https://github.com/Vibe-O-Coder/AssisScript/pull/23), aberta/sem merge,
+> sobre a branch da [PR #22](https://github.com/Vibe-O-Coder/AssisScript/pull/22).
+> Criada após autorização explícita do usuário e vinculada à conversa;
+> bloqueio anterior resolvido. Cópia `C:/Users/babus/Desktop/AssisScript/work/page-worker-20261102`,
+> branch `work/m0-page-worker-2026-11-02`. Implementação d4df15c/4480096,
+> adendos documentais pelo histórico. [Relatório e confirmação](../relatorios/2026-11-02-m0-page-worker.md).
+> Meta 40% atingida na régua; fila e aceites integrais preservados. Easy por último.
+> As entradas de bloqueio e de 36,20% abaixo são históricas.
+
 > **Publicação confirmada — 40,20%, 02/11/2026, 0/5 gates.**
 > Branch `work/m0-page-worker-2026-11-02`, implementação d4df15c e evidência
 > preservada em 4480096c1f6fd25f9cce1f9358966ab6f88f34fc: 66 paths e 2117
@@ -20,6 +30,16 @@
 > sandbox Windows/macOS, Reader/loader conjunto, desktop/leitor/DPI/IME,
 > HTDL completo/editor, FS/SSC, rede/persistência/busca, M4–M9 e distribuição/
 > aceites permanecem na fila. Easy por último. Texto anterior é histórico.
+
+> **Publicação confirmada — PR #22, 02/11/2026: 36,20%, 0/5 gates.**
+> [PR de rascunho #22](https://github.com/Vibe-O-Coder/AssisScript/pull/22), aberta/sem merge,
+> base #21; implementação 5549c330ab06a8f8f4798f023f4718b12b5cad03.
+> Revisão publicada 6b2ece0ba5a28b7775e9da90adade5a36c8a29bc: 98 paths
+> e 2068 blobs conferidos na API. Autorização explícita resolveu o bloqueio anterior.
+> Cópia atual: `C:/Users/babus/Desktop/AssisScript/work/page-runtime-20261101`,
+> branch `work/m0-page-runtime-2026-11-01`. Adendo documental pelo histórico.
+> [Relatório](../relatorios/2026-11-02-m0-page-runtime.md). Meta 40% pendente;
+> fila e aceites integrais preservados, Easy por último. Entradas abaixo são históricas.
 
 > **Entrega local — 36,20%, 02/11/2026; publicação bloqueada.**
 > Implementação 5549c330ab06a8f8f4798f023f4718b12b5cad03, branch
