@@ -1,4 +1,4 @@
-> **Continuação validada — 47,10%, 03/11/2026, 0/5 gates; meta 50% pendente.**
+> **Publicação confirmada — 47,10%, 03/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/frame-reader-20261103`,
 > branch `work/m5-frame-reader-2026-11-03`, base pública a37a39a conferida.
 > Seleção por grafemas sobre Frame composto e bundle local HTDL bootstrap/FS/SSC/
@@ -6,7 +6,7 @@
 > Windows 162/0, Linux 146/16 executados/not-run; 63 exemplos por host.
 > Instalação/execução/remoção isoladas, 18 bibliotecas, 4 locks e 23 Node Windows.
 > Janela abriu via Computer Use; duas capturas expiraram, sem aceite desktop/
-> leitor/DPI/IME. Publicação será confirmada no adendo. [Relatório](../relatorios/2026-11-03-m5-frame-reader.md).
+> leitor/DPI/IME. 40a2740 publicado; SHA/árvore/65 paths conferidos; PR: conector 403. [Relatório](../relatorios/2026-11-03-m5-frame-reader.md).
 > Próximo: catálogo visual/loader de recursos e integração ASV2. Identidade
 > incremental/editor, SDK geral, RSS/disco/órfãos, macOS/ARM, rede/perfis/
 > persistência/busca, M4–M9, 24h, distribuição e todos os aceites continuam

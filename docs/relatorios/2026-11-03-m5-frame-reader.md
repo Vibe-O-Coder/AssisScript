@@ -161,3 +161,28 @@ Nenhum requisito foi dispensado para aproximar 50%. **Easy por último.**
 
 Publicação normal autorizada pelo masterprompt. SHA/árvore remotos e inventário
 serão registrados no adendo após o envio; sem afirmar publicação antecipadamente.
+
+## Adendo — publicação confirmada
+
+Implementação, testes, documentação e evidências publicados em
+**40a2740b1ed81c845812074bb97092ec019ef1ba**, branch
+**work/m5-frame-reader-2026-11-03**. Conector GitHub e `git ls-remote`
+confirmaram a cabeça remota. Árvore **928084b39128a6505a98848492290d9cc33517cd**,
+não truncada, com **2678 entradas/2588 blobs**. Os **65 paths/blobs/modos/tipos**
+da unidade coincidem individualmente com o Git local; os bytes do índice e
+workspace também foram conferidos antes do commit. Inventário/patch completos
+permanecem em build/delivery nesta cópia isolada.
+
+[Commit publicado](https://github.com/Vibe-O-Coder/AssisScript/commit/40a2740b1ed81c845812074bb97092ec019ef1ba).
+[Branch publicada](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m5-frame-reader-2026-11-03).
+
+PR de rascunho foi solicitada sobre work/m5-page-motion-2026-11-02; o conector
+retornou **403 Resource not accessible by integration**. A PR não foi criada.
+Não houve uso alternativo de credencial/API para contornar essa restrição.
+Branch publicada não significa merge, release ou nova CI aprovada.
+
+O adendo documental recebe SHA pelo histórico e também é publicado/conferido.
+Fontes, resultados e pontuação não mudaram. Verificador de evidências, manifesto,
+baseline, régua, histórico dos 60 estados e cinco gates foram conferidos.
+Resultado: **47,10%, 0/5 gates; meta 50% pendente**. Próximo: catálogo visual,
+loader de recursos e integração ASV2; toda a fila acima permanece. **Easy por último.**
