@@ -11,11 +11,36 @@
     {
       "operation": "sky.list_windows after failure",
       "result": "no matching target window"
+    },
+    {
+      "operation": "sky.launch_app final-source executable",
+      "result": "success; target window returned by sky.list_windows"
+    },
+    {
+      "operation": "sky.get_window_state include_screenshot=true include_text=true",
+      "result": "FrameArrived timed out: timed out waiting on channel"
+    },
+    {
+      "operation": "sky.list_windows and sky.get_window recovery",
+      "result": "same unique target returned"
+    },
+    {
+      "operation": "sky.get_window_state include_screenshot=true include_text=false",
+      "result": "window capture timed out: timed out waiting on channel"
     }
   ],
   "screenshots": 0,
   "inputs": 0,
   "limitations": [
-    "No desktop, real screen reader, OS DPI, multiple monitor or IME acceptance"
-  ]
+    "Final-source demonstration opened successfully; both Computer Use capture attempts timed out. Zero screenshots and zero keyboard/pointer inputs.",
+    "No desktop appearance, real screen reader, OS DPI, multiple monitor or IME acceptance."
+  ],
+  "application_opened": true,
+  "retry_date": "2026-11-03",
+  "retry_title": "AssisScript - catalogo de leitura",
+  "retry_artifacts_sha256": {
+    "exemplos/63_catalog_reader_window.assis": "0f258d7cbcf17258ea92d3d1afa4d025d2d1eb3696fdb9be9225abefd73ddfaf",
+    "build/catalog-development-windows-20261103/bin/catalog-reader-visual.exe": "bc8d1fd9be72ae46cbfd7c42079728e2b64de99844c5300bc3a4a0dceffd2717",
+    "build/catalog-development-windows-20261103/bin/assis_platform_v1.dll": "08a4023f9cb1b09bb19752ebbd9a5e63421e6e0b9f63feed9e88341196dd1789"
+  }
 }

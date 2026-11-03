@@ -72,7 +72,7 @@ summary=dict(schema='catalog-reading-summary-v1',base=BASE,validation='pass',cou
     prior_failed_run_sha256=sha(OUT/'windows-initial-pagepresent-failure.log'),
     limitations=['18-type local reading subset; script, label/input/form/image, live regions and full HTDL visual compliance remain open',
         'Fragment links only; external resources, file paths/URLs and ASV2 integration are separate',
-        'Flat MSAA projection; desktop launch timed out, with no real screen reader, DPI, IME, multiple monitor or complete assistive hierarchy acceptance',
+        'Flat MSAA projection; final-source demo opened but both Computer Use captures timed out; no desktop appearance, real screen reader, DPI, IME, multiple monitor or complete assistive hierarchy acceptance',
         'Local workspace/scan/command limits are not aggregate RSS quotas, UI latency guarantees or per-logical-allocation OOM injection',
         'Only Windows/Linux x64 executed; native macOS/ARM and Linux graphical provider not-run',
         'Development package installed/run/removed in isolated prefixes; no global installation, release, merge, new remote CI or 24h soak'])

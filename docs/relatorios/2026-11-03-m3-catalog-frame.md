@@ -212,3 +212,48 @@ work/m5-frame-reader-2026-11-03. O adendo tem SHA próprio obtido pelo históric
 Resultado validado **localmente: 47,50%, 0/5 gates**; última base publicada
 permanece em **47,10%**. A meta de 50% e toda a fila de aceites continuam
 pendentes. Pacote local aprovado não equivale a publicação ou release.
+
+
+## Adendo — autorização e publicação confirmada
+
+O usuário autorizou explicitamente a publicação nesta conversa. A primeira
+repetição não foi executada por limite de uso do serviço de revisão automática;
+foi erro da revisão, não nova classificação de risco. Após o pedido de continuar,
+o mesmo envio, pelo fluxo normal de revisão, foi executado com sucesso.
+
+**8007b5c784829dbc43ebf74d9fb419bd6e0d20d1** e o registro de bloqueio
+**9f4a23a1787933f977c6e845c22b2a3a91d5c789** estão publicados na branch
+**work/m3-catalog-frame-2026-11-03** de **Vibe-O-Coder/AssisScript**.
+O conector GitHub confirmou a cabeça remota e a árvore
+**223cbeff76fd8b6fe04b48fdfd73d98f0e71754f**: **2729 entradas, 2638 blobs**,
+sem truncamento. Todos os paths/blobs/modos/tipos coincidem com o Git local,
+incluindo os **78 arquivos** da unidade. A base pública 6f4398c também foi
+conferida. A recusa anterior está resolvida, preservada acima como histórico.
+
+[Branch publicada](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m3-catalog-frame-2026-11-03).
+[Implementação publicada](https://github.com/Vibe-O-Coder/AssisScript/commit/8007b5c784829dbc43ebf74d9fb419bd6e0d20d1).
+
+A PR de rascunho foi solicitada sobre work/m5-frame-reader-2026-11-03; o conector
+retornou **403 Resource not accessible by integration**. A PR não foi criada.
+Não houve uso alternativo de credencial/API para contornar a restrição.
+Publicação não significa merge, release ou CI remota nova aprovada.
+
+## Adendo — nova tentativa visual solicitada pelo usuário
+
+O compilador/provider do pacote validado recompilou o exemplo 63 das fontes
+finais para catalog-reader-visual.exe. Computer Use abriu a aplicação; a janela
+exata **AssisScript - catalogo de leitura** foi retornada e selecionada.
+A primeira captura, com screenshot/texto, retornou **FrameArrived timed out:
+timed out waiting on channel**. Após nova seleção da janela retornada, a segunda
+captura, somente screenshot, retornou **window capture timed out: timed out
+waiting on channel**. Não foram usados screenshots, coordenadas ou índices
+antigos, nem outro mecanismo de captura/UI. Zero screenshots e zero entradas
+de teclado/ponteiro. A abertura foi demonstrada; a aparência do desktop segue
+sem aceite. Os testes nativos de janela/seleção/reflow continuam aprovados.
+Registro de tentativas e hashes dos artefatos está em desktop.json. O aceite
+de leitor real/DPI/IME/monitores permanece aberto. A janela foi deixada para
+inspeção direta pelo usuário, sem alegar que sua aparência foi verificada.
+
+Resultado publicado **47,50%, 0/5 gates**; meta 50% ainda pendente. Fila integral
+e Easy por último conservados. Este adendo e a evidência da repetição visual
+recebem SHA pelo histórico e são publicados/conferidos na mesma branch.

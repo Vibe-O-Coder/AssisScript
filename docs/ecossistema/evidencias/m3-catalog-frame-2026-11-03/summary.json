@@ -39,7 +39,7 @@
     "exemplos/62_catalog_reader.assis": "7658647192ea9a07804a77e59c9e65eef513baa6d8f45dfa04e81f7890a89afc",
     "exemplos/63_catalog_reader_window.assis": "0f258d7cbcf17258ea92d3d1afa4d025d2d1eb3696fdb9be9225abefd73ddfaf",
     "tools/collect-catalog-frame-evidence.py": "f39e7adf01cd53425d275368382bccdc4b1315c56a0346d608c4a8b0f3932a37",
-    "tools/verify-catalog-frame-evidence.py": "d8c663c7cafc4e14fb41897037b423953341608886932004b24d55810a65d847",
+    "tools/verify-catalog-frame-evidence.py": "cef45988f5923f49e6dd66e1062ebe94cdff8f01826317fe08000c4a670e1201",
     "tools/verify-catalog-frame-install.py": "967561dc7eaa2a56f3d63345706b48fbc4ba8b39e428b827a2af28781fe83583",
     "tools/prepare-development-installer.py": "1c8ec0ea382448209ac92f72c7b4afd1a0a55fdae5e300e330322aa675b7e5e1",
     "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md": "187c25575ecd25518b123f2ef9ca05b055f4501a70dba6f76b6921e4ac36930a",
@@ -50,7 +50,7 @@
     "docs/BIBLIOTECA-framehost.md": "a3c24d2cffd351229aa41b204f4b8715ba5da5e8c9c5bf29748e25e6fcb280d9"
   },
   "auxiliary_sha256": {
-    "desktop.json": "5250bb05690cb49ac7295ad56414a183937a6a6237ee978e2e2a91ccfe25818e",
+    "desktop.json": "8aeea231ff5a7e9a57dc2ce6364879a8c79db7384a743e3579a9f14411f48adc",
     "development-bundle.json": "814f244f6e655e4e677734507fa1ff5cc254cf1b9b23cd932400f77157110ed3",
     "linux-examples.json": "41827e955c59c51ac8e5bc1114e777b719834672bf7eca4d8cef475785e2f3ff",
     "linux-install.json": "c0d00e3bc0e99adeb8b6e3c53c21d4d643948e04a0774b58198a8f938a7c8b44",
@@ -64,7 +64,7 @@
   "limitations": [
     "18-type local reading subset; script, label/input/form/image, live regions and full HTDL visual compliance remain open",
     "Fragment links only; external resources, file paths/URLs and ASV2 integration are separate",
-    "Flat MSAA projection; desktop launch timed out, with no real screen reader, DPI, IME, multiple monitor or complete assistive hierarchy acceptance",
+    "Flat MSAA projection; final-source demo opened but both Computer Use captures timed out; no desktop appearance, real screen reader, DPI, IME, multiple monitor or complete assistive hierarchy acceptance",
     "Local workspace/scan/command limits are not aggregate RSS quotas, UI latency guarantees or per-logical-allocation OOM injection",
     "Only Windows/Linux x64 executed; native macOS/ARM and Linux graphical provider not-run",
     "Development package installed/run/removed in isolated prefixes; no global installation, release, merge, new remote CI or 24h soak"

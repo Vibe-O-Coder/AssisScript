@@ -1,3 +1,18 @@
+> **Publicação confirmada — 47,50%, 03/11/2026, 0/5 gates; meta 50% pendente.**
+> Cópia `C:/Users/babus/Desktop/AssisScript/work/catalog-frame-20261103`,
+> branch `work/m3-catalog-frame-2026-11-03`, implementação 8007b5c e revisão
+> 9f4a23a publicadas. Autorização explícita resolveu o bloqueio anterior;
+> SHA/árvore completa/2638 blobs e os 78 paths da unidade conferidos.
+> Catálogo de leitura de 18 tipos, listas/marcadores, links #id, teclado/MSAA
+> e rollback. Windows 199/0, Linux 180/19 executados/not-run; 65 exemplos por host,
+> instalação/execução/remoção isoladas, 18 bibliotecas, 4 locks e 23 Node Windows.
+> PR não criada: conector 403. A janela final abriu na repetição Computer Use;
+> duas capturas expiraram, sem aceite desktop/leitor/DPI/IME. [Relatório](docs/relatorios/2026-11-03-m3-catalog-frame.md).
+> Próximo: controles/imagens/live regions, loader externo e integração ASV2.
+> Identidade incremental/editor, SDK geral, RSS/disco/órfãos, macOS/ARM,
+> rede/perfis/persistência/busca, M4–M9, 24h, distribuição e todos os aceites
+> seguem integralmente na fila. Easy por último. Entradas abaixo históricas.
+
 > **Entrega local; publicação bloqueada — 47,50%, 03/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/catalog-frame-20261103`,
 > branch `work/m3-catalog-frame-2026-11-03`, base pública 6f4398c conferida.
