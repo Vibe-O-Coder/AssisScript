@@ -24,10 +24,32 @@ public pure fn pixels(q:int):int{return (q+32768)>>16;}
 public pure fn same(a:doctree::NodeId,b:doctree::NodeId):bool{
     return a.instance==b.instance && a.slot==b.slot && a.generation==b.generation;
 }
+public pure fn interactive(kind:int):bool{return kind==9 || kind==17;}
+public pure fn structural(kind:int):bool{return kind==4 || kind==5 || (kind>=12 && kind<=16) || kind==18 || kind==19;}
+/// Delimited reading catalog. Validate even hidden declarations: no resource or
+/// event is silently ignored. The parser remains responsible for HTDL validity.
+public safe fn reading_profile(borrow document:documents::Document):int{
+    if(!document.is_open() || !document.has_root()){return 204;}
+    let reference_work:int=0;borrow tree:doctree::Tree=document.nodes();let n:doctree::NodeId=htdl::query(tree,0,utf8(""),new doctree::NodeId());
+    while(!doctree::absent(n)){
+        val k:int=htdl::kind(tree,n);
+        if(k==11 || k>=20){return 203;}
+        val live:doctree::NodeId=htdl::attribute(tree,n,24);
+        if(!doctree::absent(live) && !htdl::value_equals(tree,live,utf8("off"))){return 203;}
+        for(let key:int=25;key<=30;key++){if(!doctree::absent(htdl::attribute(tree,n,key))){return 203;}}
+        if(k==17){reference_work+=document.source_size();if(reference_work>8000000){return 401;}val href:doctree::NodeId=htdl::attribute(tree,n,15);
+            val size:int=htdl::value_size(tree,href);if(size<2 || size>257 || htdl::value_byte(tree,href,0)!=byte(35)){return 203;}
+            own id:*byte=try_alloc<byte>(size-1);if(id==null){return 401;}
+            for(let i:int=1;i<size;i++){id[i-1]=htdl::value_byte(tree,href,i);}
+            if(doctree::absent(htdl::find_id(tree,slice_of(id,0,size-1)))){return 207;}
+        }
+        n=htdl::query(tree,0,utf8(""),n);
+    }return 0;
+}
 /// Immutable local geometry, text and accessible names, independent of providers.
 /// Construct a candidate and replace the previous owner only after is_open().
 public final class Frame{
-    // 40 words per box: identity, parent, kind, geometry, style, text and clip.
+    // 44 words per box; words 40..43 hold list indent/ordinal/marker storage.
     private own data:*int;private own content:*byte;private own runs:*Run;
     private let count:int;private let used:int;private let lines:int;private let work:int;
     private let instance_id:int;private let semantic:int;private let style:int;private let revision:int;
@@ -39,7 +61,7 @@ public final class Frame{
         if(self.code==0){self.code=code;self.failed=node;}
     }
     private fn node(borrow self,i:int):doctree::NodeId{
-        return new doctree::NodeId(self.data[i*40],self.data[i*40+1],self.data[i*40+2]);
+        return new doctree::NodeId(self.data[i*44],self.data[i*44+1],self.data[i*44+2]);
     }
     private fn find(borrow self,node:doctree::NodeId):int{
         for(let i:int=0;i<self.count;i++){if(same(self.node(i),node)){return i;}}return -1;
@@ -83,13 +105,14 @@ public final class Frame{
            text_scale<65536 || text_scale>262144){self.fail(204,new doctree::NodeId());return;}
         // Cap before arithmetic; includes bounded box/line storage and text workspace.
         if(document.source_size()>1048576 || max_bytes<6000000+2*document.source_size()){self.fail(401,new doctree::NodeId());return;}
-        self.data=try_alloc<int>(256*40);self.content=try_alloc<byte>(2*document.source_size()+64);self.runs=try_alloc<pageframe::Run>(32768);
+        val profile:int=reading_profile(document);if(profile!=0){self.fail(profile,new doctree::NodeId());return;}
+        self.data=try_alloc<int>(256*44);self.content=try_alloc<byte>(2*document.source_size()+2048);self.runs=try_alloc<pageframe::Run>(32768);
         if(self.data==null || self.content==null || self.runs==null){self.fail(401,new doctree::NodeId());return;}
         self.width=width;self.height=height;self.scroll=scroll_y;
         self.instance_id=document.instance();self.semantic=document.semantic_version();self.revision=frame_version;
         if(page.document_instance()==document.instance()){self.style=page.version();}
         borrow tree:doctree::Tree=document.nodes();
-        val head:doctree::NodeId=htdl::first_element(tree,tree.root());val title:doctree::NodeId=htdl::first_element(tree,head);
+        val title:doctree::NodeId=htdl::query(tree,3,utf8(""),new doctree::NodeId());
         if(!self.collect(tree,title)){return;}self.title_size=self.used;
         let node:doctree::NodeId=htdl::query(tree,0,utf8(""),new doctree::NodeId());
         while(!doctree::absent(node)){
@@ -99,9 +122,9 @@ public final class Frame{
                     // Mixed inline author styles need shaped runs, outside this profile.
                     for(let k:int=1;k<=15;k++){if(page.has(document,node,k)){self.fail(203,node);return;}}
                 }else{
-                    if(kind!=4 && kind!=5 && kind!=6 && kind!=8 && kind!=9){self.fail(203,node);return;}
+                    if(!structural(kind) && kind!=6 && kind!=8 && kind!=9 && kind!=17){self.fail(203,node);return;}
                     if(self.count==256){self.fail(401,node);return;}
-                    val p:int=self.count*40;val parent:int=self.find(tree.parent(node));
+                    val p:int=self.count*44;val parent:int=self.find(tree.parent(node));
                     if(kind!=4 && parent<0){self.fail(204,node);return;}
                     self.data[p]=node.instance;self.data[p+1]=node.slot;self.data[p+2]=node.generation;
                     self.data[p+3]=parent;self.data[p+4]=kind;self.data[p+5]=int(htdl::value_equals(tree,htdl::attribute(tree,node,8),utf8("true")));
@@ -110,7 +133,8 @@ public final class Frame{
                     self.data[p+12]=pixels(self.property(page,document,node,4,0)/4);
                     self.data[p+13]=self.property(page,document,node,5,0);self.data[p+14]=self.property(page,document,node,6,0);
                     let background:int=0;if(kind==9){background=0xd9e6e4ff;}
-                    self.data[p+15]=self.property(page,document,node,7,background);self.data[p+16]=self.property(page,document,node,8,0x223143ff);
+                    let foreground:int=0x223143ff;if(kind==17){foreground=0x006d77ff;}
+                    self.data[p+15]=self.property(page,document,node,7,background);self.data[p+16]=self.property(page,document,node,8,foreground);
                     // Rounded corners require a matching clipping/raster provider.
                     if(self.property(page,document,node,9,0)!=0){self.fail(203,node);return;}
                     self.data[p+17]=self.property(page,document,node,10,65536);
@@ -121,18 +145,36 @@ public final class Frame{
                     self.data[p+23]=int(page.has(document,node,1));self.data[p+24]=int(page.has(document,node,2));
                     self.data[p+8]=pixels(self.property(page,document,node,1,width*65536));self.data[p+9]=pixels(self.property(page,document,node,2,0));
                     if(self.data[p+18]<65536 || self.data[p+18]>256*65536){self.fail(303,node);return;}
-                    if(parent>=0){val q:int=parent*40;val available:int=maximum(0,self.data[q+8]-2*self.data[q+10]-self.data[q+36]);
+                    if(kind==19){
+                        let ordinal:int=1;let sibling:doctree::NodeId=htdl::first_element(tree,tree.parent(node));
+                        while(!doctree::absent(sibling) && !same(sibling,node)){
+                            if(!self.hidden(tree,sibling)){ordinal++;}sibling=htdl::next_element(tree,sibling);
+                        }
+                        self.data[p+41]= -1;
+                        if(htdl::value_equals(tree,htdl::attribute(tree,tree.parent(node),16),utf8("true"))){self.data[p+41]=ordinal;}
+                        self.data[p+42]=self.used;
+                        if(self.data[p+41]<0){if(!self.put(byte(226)) || !self.put(byte(128)) || !self.put(byte(162))){return;}}
+                        else{if(ordinal>=100){if(!self.put(byte(48+ordinal/100))){return;}}
+                            if(ordinal>=10){if(!self.put(byte(48+(ordinal/10)%10))){return;}}
+                            if(!self.put(byte(48+ordinal%10)) || !self.put(byte(46))){return;}}
+                        self.data[p+43]=self.used-self.data[p+42];
+                        val mark:int=metric(slice_of(self.content,self.data[p+42],self.data[p+43]),self.data[p+18],self.data[p+19]);
+                        if(mark<0 || (mark>>32)<1 || (mark>>32)>1024 || mark%4294967296>16384){self.fail(304,node);return;}
+                        self.data[p+40]=mark%4294967296+maximum(1,pixels(self.data[p+18])/2);self.data[p+37]=mark>>32;
+                    }
+                    if(parent>=0){val q:int=parent*44;val available:int=maximum(0,self.data[q+8]-2*self.data[q+10]-self.data[q+36]-self.data[q+40]);
                         if(self.data[q+11]==1 && self.data[p+23]==0){self.fail(303,node);return;}
                         if(self.data[p+23]==0){self.data[p+8]=available;}
                     }
                     if(self.data[p+14]==2){self.data[p+36]=12;}
                     self.data[p+25]=self.used;
-                    if(kind==6 || kind==8 || kind==9){
+                    if(kind==6 || kind==8 || kind==9 || kind==17){
                         if(!self.collect(tree,node)){return;}self.data[p+26]=self.used-self.data[p+25];
                         self.data[p+27]=self.lines;
                         if(!self.wrap(self.count,metric)){return;}self.data[p+28]=self.lines-self.data[p+27];
                     }
                     self.data[p+29]=self.data[p+25];self.data[p+30]=self.data[p+26];
+                    if(kind==19){self.data[p+29]=self.data[p+42];self.data[p+30]=self.data[p+43];}
                     val label:doctree::NodeId=htdl::attribute(tree,node,10);
                     if(!doctree::absent(label)){self.data[p+29]=self.used;
                         for(let i:int=0;i<htdl::value_size(tree,label);i++){if(!self.put(htdl::value_byte(tree,label,i))){return;}}
@@ -144,29 +186,30 @@ public final class Frame{
         }
         if(self.count==0 || self.data[4]!=4){self.fail(204,new doctree::NodeId());return;}
         // Automatic heights resolve only upwards, never back into FS inputs.
-        for(let i:int=self.count-1;i>=0;i--){val p:int=i*40;let content:int=self.data[p+37];let children:int=0;
-            for(let j:int=i+1;j<self.count;j++){val q:int=j*40;if(self.data[q+3]!=i){continue;}
+        for(let i:int=self.count-1;i>=0;i--){val p:int=i*44;let content:int=self.data[p+37];if(self.data[p+4]==19){content=0;}let children:int=0;
+            for(let j:int=i+1;j<self.count;j++){val q:int=j*44;if(self.data[q+3]!=i){continue;}
                 if(self.data[p+11]==1){content=maximum(content,self.data[q+9]);}
                 else{if(children>0){content+=self.data[p+12];}content+=self.data[q+9];}children++;}
+            if(self.data[p+4]==19){content=maximum(content,self.data[p+37]);}
             if(self.data[p+24]==0){self.data[p+9]=content+2*self.data[p+10];}
             if(self.data[p+9]>16777216){self.fail(401,self.node(i));return;}
         }
         self.extent=self.data[9];self.scroll=minimum(self.scroll,maximum(0,self.extent-height));
         // Parent positions and clips are final before descendants are positioned.
-        for(let i:int=0;i<self.count;i++){val p:int=i*40;val parent:int=self.data[p+3];let x:int=0;let y:int= -self.scroll;
-            if(parent>=0){val q:int=parent*40;x=self.data[q+6]+self.data[q+10];y=self.data[q+7]+self.data[q+10];
-                let previous:int=0;for(let j:int=parent+1;j<i;j++){val r:int=j*40;if(self.data[r+3]!=parent){continue;}
+        for(let i:int=0;i<self.count;i++){val p:int=i*44;val parent:int=self.data[p+3];let x:int=0;let y:int= -self.scroll;
+            if(parent>=0){val q:int=parent*44;x=self.data[q+6]+self.data[q+10]+self.data[q+40];y=self.data[q+7]+self.data[q+10];
+                let previous:int=0;for(let j:int=parent+1;j<i;j++){val r:int=j*44;if(self.data[r+3]!=parent){continue;}
                     if(self.data[q+11]==1){x+=self.data[r+8];}else{y+=self.data[r+9];}previous++;}
                 if(self.data[q+11]==1){x+=previous*self.data[q+12];
                     val spare:int=maximum(0,self.data[q+9]-2*self.data[q+10]-self.data[p+9]);
                     if(self.data[q+13]==1){y+=spare/2;}if(self.data[q+13]==2){y+=spare;}
                     if(self.data[q+13]==3 && self.data[p+24]==0){self.data[p+9]+=spare;}
-                }else{y+=previous*self.data[q+12];val spare:int=maximum(0,self.data[q+8]-2*self.data[q+10]-self.data[q+36]-self.data[p+8]);
+                }else{y+=previous*self.data[q+12];val spare:int=maximum(0,self.data[q+8]-2*self.data[q+10]-self.data[q+36]-self.data[q+40]-self.data[p+8]);
                     if(self.data[q+13]==1){x+=spare/2;}if(self.data[q+13]==2){x+=spare;}}
             }
             self.data[p+6]=x+self.data[p+21];self.data[p+7]=y+self.data[p+22];
             let clip:Rect=new Rect(0,0,width,height);
-            if(parent>=0){val q:int=parent*40;clip=new Rect(self.data[q+31],self.data[q+32],self.data[q+33],self.data[q+34]);
+            if(parent>=0){val q:int=parent*44;clip=new Rect(self.data[q+31],self.data[q+32],self.data[q+33],self.data[q+34]);
                 if(self.data[q+14]!=0){clip=intersect(clip,new Rect(self.data[q+6]+self.data[q+10],self.data[q+7]+self.data[q+10],maximum(0,self.data[q+8]-2*self.data[q+10]-self.data[q+36]),maximum(0,self.data[q+9]-2*self.data[q+10])));}}
             self.data[p+31]=clip.x;self.data[p+32]=clip.y;self.data[p+33]=clip.width;self.data[p+34]=clip.height;
             for(let j:int=self.data[p+27];j<self.data[p+27]+self.data[p+28];j++){val r:Run=self.runs[j];
@@ -175,7 +218,7 @@ public final class Frame{
         self.active=true;
     }
     private fn wrap(borrow mut self,index:int,metric:safe fn(borrow slice<byte>,int,int):int):bool{
-        val p:int=index*40;val start:int=self.data[p+25];val size:int=self.data[p+26];
+        val p:int=index*44;val start:int=self.data[p+25];val size:int=self.data[p+26];
         val available:int=maximum(0,self.data[p+8]-2*self.data[p+10]-self.data[p+36]);
         val sample:int=metric(utf8("M"),self.data[p+18],self.data[p+19]);
         if(sample<0 || (sample>>32)<1 || (sample>>32)>1024){self.fail(304,self.node(index));return false;}
@@ -204,16 +247,16 @@ public final class Frame{
         if(!self.current(document) || self.composed || self.sealed || !motion.ready(document) ||
            motion.candidate_style()!=self.style){return 204;}
         // Preflight every displacement before touching bounds, clips or runs.
-        for(let i:int=0;i<self.count;i++){val p:int=i*40;val parent:int=self.data[p+3];
+        for(let i:int=0;i<self.count;i++){val p:int=i*44;val parent:int=self.data[p+3];
             val x:fluxstyle::Number=motion.value(document,self.node(i),1);val y:fluxstyle::Number=motion.value(document,self.node(i),2);
             if((x.code!=0 && x.code!=302) || (y.code!=0 && y.code!=302)){return 204;}
             let dx:int=0;let dy:int=0;if(x.code==0){dx=pixels(x.value)-self.data[p+21];}if(y.code==0){dy=pixels(y.value)-self.data[p+22];}
-            if(parent>=0){dx+=self.data[parent*40+38];dy+=self.data[parent*40+39];}
+            if(parent>=0){dx+=self.data[parent*44+38];dy+=self.data[parent*44+39];}
             if(self.data[p+6]+dx< -16777216 || self.data[p+6]+dx>16777216 ||
                self.data[p+7]+dy< -16777216 || self.data[p+7]+dy>16777216){return 401;}
             self.data[p+38]=dx;self.data[p+39]=dy;
         }
-        for(let i:int=0;i<self.count;i++){val p:int=i*40;val parent:int=self.data[p+3];
+        for(let i:int=0;i<self.count;i++){val p:int=i*44;val parent:int=self.data[p+3];
             val dx:int=self.data[p+38];val dy:int=self.data[p+39];self.data[p+6]+=dx;self.data[p+7]+=dy;
             let clip:Rect=self.viewport();if(parent>=0){clip=self.content_clip(parent);}
             self.data[p+31]=clip.x;self.data[p+32]=clip.y;self.data[p+33]=clip.width;self.data[p+34]=clip.height;
@@ -235,7 +278,7 @@ public final class Frame{
     fn scroll_y(borrow self):int{return self.scroll;}
     fn max_scroll(borrow self):int{return maximum(0,self.extent-self.height);}
     fn box(borrow self,index:int):Box{
-        assert(self.active && index>=0 && index<self.count);val p:int=index*40;
+        assert(self.active && index>=0 && index<self.count);val p:int=index*44;
         return new Box(self.node(index),self.data[p+4],self.data[p+5]!=0,
             new Rect(self.data[p+6],self.data[p+7],self.data[p+8],self.data[p+9]),
             new Rect(self.data[p+31],self.data[p+32],self.data[p+33],self.data[p+34]),
@@ -243,12 +286,12 @@ public final class Frame{
     }
     fn accessible_bounds(borrow self,index:int):Rect{val b:Box=self.box(index);return intersect(b.bounds,b.clip);}
     fn content_clip(borrow self,index:int):Rect{
-        val b:Box=self.box(index);val p:int=index*40;if(self.data[p+14]==0){return b.clip;}
+        val b:Box=self.box(index);val p:int=index*44;if(self.data[p+14]==0){return b.clip;}
         return intersect(b.clip,new Rect(b.bounds.x+self.data[p+10],b.bounds.y+self.data[p+10],
             maximum(0,b.bounds.width-2*self.data[p+10]-self.data[p+36]),maximum(0,b.bounds.height-2*self.data[p+10])));
     }
     fn name(borrow self,index:int):borrow(self) slice<byte>{
-        assert(self.active && index>=0 && index<self.count);return slice_of(self.content,self.data[index*40+29],self.data[index*40+30]);
+        assert(self.active && index>=0 && index<self.count);return slice_of(self.content,self.data[index*44+29],self.data[index*44+30]);
     }
     fn run(borrow self,index:int):Run{assert(self.active && index>=0 && index<self.lines);return self.runs[index];}
     fn run_text(borrow self,index:int):borrow(self) slice<byte>{val r:Run=self.run(index);return slice_of(self.content,r.start,r.size);}
@@ -259,7 +302,7 @@ public final class Frame{
     }
     fn eligible(borrow self,borrow document:documents::Document,index:int):bool{
         if(!self.current(document) || index<0 || index>=self.count){return false;}
-        val b:Box=self.box(index);return b.kind==9 && !b.disabled && document.nodes().contains(b.node);
+        val b:Box=self.box(index);return interactive(b.kind) && !b.disabled && document.nodes().contains(b.node);
     }
     fn hit(borrow self,borrow document:documents::Document,frame_version:int,x:int,y:int):doctree::NodeId{
         if(!self.current(document) || frame_version!=self.revision){return new doctree::NodeId();}
@@ -274,6 +317,28 @@ public final class Frame{
             if(backward){at--;}else{at++;}if(at<0){at=self.count-1;}if(at>=self.count){at=0;}
             if(self.eligible(document,at)){return self.node(at);}
         }return new doctree::NodeId();
+    }
+    fn marker(borrow self,index:int):borrow(self) slice<byte>{
+        assert(self.active && index>=0 && index<self.count);val p:int=index*44;
+        return slice_of(self.content,self.data[p+42],self.data[p+43]);
+    }
+    fn marker_bounds(borrow self,index:int):Rect{
+        val b:Box=self.box(index);val p:int=index*44;
+        return new Rect(b.bounds.x+self.data[p+10],b.bounds.y+self.data[p+10],self.data[p+40],self.data[p+37]);
+    }
+    /// A fragment resolves only within this exact semantic snapshot. Inline IDs
+    /// scroll to their containing block. Missing/hidden/stale targets fail closed.
+    fn fragment_scroll(borrow self,borrow document:documents::Document,link:doctree::NodeId):int{
+        if(!self.current(document) || !document.nodes().contains(link) || htdl::kind(document.nodes(),link)!=17 || self.find(link)<0){return -1;}
+        borrow tree:doctree::Tree=document.nodes();val href:doctree::NodeId=htdl::attribute(tree,link,15);
+        val size:int=htdl::value_size(tree,href);if(size<2 || size>257 || htdl::value_byte(tree,href,0)!=byte(35)){return -1;}
+        own id:*byte=try_alloc<byte>(size-1);if(id==null){return -1;}
+        for(let i:int=1;i<size;i++){id[i-1]=htdl::value_byte(tree,href,i);}
+        let target:doctree::NodeId=htdl::find_id(tree,slice_of(id,0,size-1));
+        if(doctree::absent(target) || self.hidden(tree,target)){return -1;}
+        if(htdl::kind(tree,target)==7){target=tree.parent(target);}
+        val index:int=self.find(target);if(index<0){return -1;}
+        return minimum(self.max_scroll(),maximum(0,self.box(index).bounds.y+self.scroll));
     }
     fn close(borrow mut self):void{self.active=false;own data:*int=move(self.data);own content:*byte=move(self.content);own runs:*Run=move(self.runs);}
 }

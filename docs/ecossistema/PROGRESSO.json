@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-03",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "native-composed-frame-reading-and-atomic-local-bundle",
+  "assessment": "native-local-reading-catalog-fragments-and-accessibility",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -19,7 +19,7 @@
           "name": "Especificações versionadas",
           "level": 2,
           "acceptance": "Fixar gramáticas e catálogos HTDL/FS/SSC, versões, subconjuntos, diagnósticos e negociação; ligar cada requisito a cenários positivos e negativos executáveis.",
-          "baseline": "Contrato versionado static-catalog-0.1-v1, 23 tipos, atributos/referências/limites/diagnósticos e corpus declarativo positivo/negativo executado em Windows/Linux x64. Subconjunto estático explícito; FS/SSC, loader e conformidade de execução/presentação continuam abertos.",
+          "baseline": "Novo perfil local de leitura explicitamente negociado em (2,1,1), conservando bootstrap (1,1,1); subconjunto de 18 tipos, diagnósticos e recusas de recursos/eventos documentados e executados. Gramáticas gerais e conformidade integral permanecem abertas.",
           "evidence": [
             "local:htdl/docs/14-fundamentos-e-perfis.md",
             "local:htdl/docs/19-conformidade-e-cenarios.md",
@@ -30,7 +30,10 @@
             "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md",
             "docs/relatorios/2026-11-02-m3-presentation-core.md",
             "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/summary.json",
-            "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md"
+            "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md",
+            "docs/relatorios/2026-11-03-m3-catalog-frame.md",
+            "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
+            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md"
           ]
         },
         {
@@ -473,14 +476,17 @@
           "name": "Acessibilidade e políticas do usuário",
           "level": 2,
           "acceptance": "Exportar árvore semântica, nome/role/valor, foco e ações às APIs assistivas do OS; testar leitor de tela, contraste, zoom e movimento reduzido com usuário e automação.",
-          "baseline": "Projeção MSAA nativa documento/blocos, nomes/roles/disabled/offscreen/foco/geometria e ação padrão via fila com identidade, testada por cliente externo e oráculo C com falhas/lifetime. Projeção plana; leitor de tela real, UIA TextPattern e políticas de contraste/movimento ainda sem aceite.",
+          "baseline": "Projeção MSAA plana adicional com agrupamentos, links, listas e itens; oráculo independente testa papéis, ações, hit e revogação com rollback nativo. Leitor real, hierarquia completa, live regions e aceites desktop/DPI/IME seguem abertos.",
           "evidence": [
             "local:htdl/docs/14-fundamentos-e-perfis.md",
             "local:htdl/docs/19-conformidade-e-cenarios.md",
             "docs/relatorios/2026-11-01-m3-leitura-acessivel.md",
             "docs/ecossistema/evidencias/m3-reader-2026-11-01/summary.json",
             "tests/test-htdl-reader.py",
-            "tests/reader_oracle.c"
+            "tests/reader_oracle.c",
+            "docs/relatorios/2026-11-03-m3-catalog-frame.md",
+            "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
+            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md"
           ]
         }
       ]
@@ -689,9 +695,9 @@
         {
           "id": "E07-02",
           "name": "Árvore, seletores e mutações",
-          "level": 2,
+          "level": 3,
           "acceptance": "Oferecer criação/remoção/consulta, hierarquia ordenada, atributos/tipos semânticos e invalidação; manter identidade geracional, foco e acessibilidade coerentes após transações.",
-          "baseline": "Árvore/consultas bootstrap e catálogo estático de 23 tipos, classes/IDs e data-* com spans preservados. Patches de fonte/hidden/disabled e transações continuam revalidando antes de commit; NodeIds são revogados por instância. Identidade incremental, seletores gerais, controles completos e catálogo no Reader permanecem abertos. Nova evidência: versão semântica monotônica por mutação aceita e revogação de saídas por instância/geração no coordenador FS; sem ampliar SDK/Reader.",
+          "baseline": "Árvore/consultas e transações anteriores agora integradas ao catálogo de leitura de 18 tipos: hierarquia e ordens independentes, listas, IDs de fragmento, hidden, remoção/navegação e revogação de foco/leitura/ações sobre snapshots. Modelos adversos, recusa de OS e execução Windows/Linux x64. Criação/mutação semântica geral via SDK e identidade incremental de editor permanecem abertas.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "docs/relatorios/2026-11-01-m3-parser-htdl.md",
@@ -710,7 +716,10 @@
             "docs/relatorios/2026-11-02-m5-page-frame.md",
             "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json",
             "docs/relatorios/2026-11-03-m5-frame-reader.md",
-            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json",
+            "docs/relatorios/2026-11-03-m3-catalog-frame.md",
+            "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
+            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md"
           ]
         },
         {
@@ -745,7 +754,7 @@
           "name": "Loader e ativação atômica",
           "level": 3,
           "acceptance": "Carregar HTDL, código, FS/SSC e recursos locais/remotos sob política; resolver versões/dependências, validar antes de ativar e descartar resultados atrasados; cache somente de artefato imutável.",
-          "baseline": "Bundle local prepara HTDL bootstrap, FS, SSC, layout, leitura, nomes e comandos em conjunto; versões locais, produtor único, request/instância/quadro, rollback e publicação pixels/MSAA antes de ativar. ASV2/SDK geral, catálogo visual completo, recursos externos, rede, cache e política de caminhos permanecem separados.",
+          "baseline": "Além do bundle bootstrap já validado, catálogo de leitura negociado e destinos #id são validados antes da ativação conjunta. Referências ausentes, versões desconhecidas e recursos fora do perfil preservam ativo; loader externo e integração ASV2 continuam abertos.",
           "evidence": [
             "local:htdl/docs/15-htdl-0.2-e-carregamento.md",
             "docs/relatorios/2026-11-01-m3-parser-htdl.md",
@@ -754,7 +763,10 @@
             "docs/relatorios/2026-11-02-m0-page-runtime.md",
             "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json",
             "docs/relatorios/2026-11-03-m5-frame-reader.md",
-            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json",
+            "docs/relatorios/2026-11-03-m3-catalog-frame.md",
+            "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
+            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md"
           ]
         }
       ]
@@ -792,7 +804,7 @@
           "name": "Layout e snapshots coerentes",
           "level": 3,
           "acceptance": "Definir constraints, distribuição row/column, texto, overflow/scroll e invalidações; provar ausência de ciclo geométrico e uso do mesmo snapshot por desenho, hit test e acessibilidade.",
-          "baseline": "Layout local em AssisScript com restricoes descendentes, alturas ascendentes, row/column, texto por grafemas, offsets e recortes. Frame imutavel compartilhado por desenho, hit test e limites MSAA; provider Windows publica raster e projecao juntos ou preserva ambos. Modelos independentes, OOM e versoes antigas executados Windows/Linux x64; casos nativos Windows. Scroll interno independente, estilos inline mistos, imagens, SSC agregado, ligacao automatica de parent.availableWidth e aceites desktop/leitor/DPI continuam abertos. Continuação: offsets SSC e deltas de descendentes compõem o mesmo Frame antes do selo de Packet; clipes/runs/hit/MSAA seguem a geometria composta, sem reflow por passo físico.",
+          "baseline": "Regiões/listas/itens/link usam o Frame comum; marcador medido antes dos filhos, reserva horizontal, listas aninhadas, hidden, clip e zoom têm modelos independentes. Artefatos e seleção conservam ordem semântica. Layout integral e aceite visual permanecem abertos.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "local:htdl/docs/19-conformidade-e-cenarios.md",
@@ -808,7 +820,10 @@
             "docs/ecossistema/evidencias/m5-page-motion-2026-11-02/summary.json",
             "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md",
             "docs/relatorios/2026-11-03-m5-frame-reader.md",
-            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json",
+            "docs/relatorios/2026-11-03-m3-catalog-frame.md",
+            "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
+            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md"
           ]
         },
         {
@@ -1013,7 +1028,7 @@
           "name": "Builds, pacotes e dependências",
           "level": 2,
           "acceptance": "Garantir build limpo reprodutível, manifestos/lockfiles, providers e hashes coerentes; distribuir SDK/runtime/stdlib/editor com instalação, atualização e remoção testadas por perfil.",
-          "baseline": "Pacotes nativos/offline existem; componentes de navegador ainda não empacotados. Nova evidência: flowpage instalada/executada/removida em prefixos isolados Windows/Linux; bloqueio transitório Windows recebe retry limitado, bloqueio persistente e readonly continuam erros. Não promove release.",
+          "baseline": "Novo perfil e exemplos recebem instalação/execução/remoção isoladas Windows/Linux; Windows reconstrói e inclui DLL correspondente em pacote de desenvolvimento privado. Não promove release, atualização global ou aceite por terceiro.",
           "evidence": [
             "docs/PACOTES-E-NAMESPACES.md",
             "docs/INSTALACAO.md",
@@ -1030,7 +1045,10 @@
             "docs/ecossistema/evidencias/m5-page-motion-2026-11-02/summary.json",
             "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md",
             "docs/relatorios/2026-11-03-m5-frame-reader.md",
-            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json",
+            "docs/relatorios/2026-11-03-m3-catalog-frame.md",
+            "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
+            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md"
           ]
         },
         {
@@ -3451,7 +3469,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-03",
+      "rubric_version": 1,
+      "label": "Catálogo de leitura, fragmentos e MSAA transacional: 47,50%, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 3,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 3,
+        "E07-03": 2,
+        "E07-04": 2,
+        "E07-05": 3,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "47,10%, 0/5 gates; meta 50% pendente. Seleção por grafemas e eventos sobre o Frame composto; bundle local HTDL bootstrap/FS/SSC/layout/Reader/Packet com ativação conjunta e rollback. Windows e Linux x64 executados; resultados exatos no relatório e evidência desta revisão. Janela real abriu pelo Computer Use, mas duas capturas expiraram, sem aceite desktop/leitor/DPI/IME. Implementação 40a2740 publicada; SHA/árvore completa e 65 paths/blobs/modos conferidos; PR não criada pelo conector 403. Adendo documental pelo histórico. Catálogo visual completo, integração ASV2 e recursos externos, identidade incremental/editor, SDK geral, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites seguem integralmente na fila. Easy por último."
+  "assessment_note": "47,50%, 0/5 gates; meta 50% pendente. Catálogo de leitura de 18 tipos no Frame FS/SSC, listas com marcadores medidos, links #id, teclado e MSAA adicional com rollback. Windows/Linux x64 executados; resultados exatos no relatório. Computer Use expirou na abertura, sem aceite desktop/leitor real/DPI/IME. Publicação será confirmada no adendo. Controles/imagens/live regions, loader externo e integração ASV2, identidade incremental/editor, SDK geral, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites continuam integralmente na fila. Easy por último."
 }

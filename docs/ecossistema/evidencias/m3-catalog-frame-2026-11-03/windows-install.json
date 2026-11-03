@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+  "setup_sha256": "2bac49b559943f3fba863002dd01139651f0d13451f5d035019984806c1e11f8",
+  "provider_sha256": "55b72ca939e0d5e47958796ff477337ae0a45f8fac5ee0308c79b486a2d0b06f",
+  "selected_libraries": [
+    "buffers",
+    "doctree",
+    "documents",
+    "flowpage",
+    "fluxstyle",
+    "framehost",
+    "framereader",
+    "graphemes",
+    "htdl",
+    "motionpage",
+    "owned",
+    "pageframe",
+    "pagepresent",
+    "reader",
+    "sanscript",
+    "unicode",
+    "viewer",
+    "window"
+  ],
+  "checks": [
+    {
+      "command": [
+        "python",
+        "tests/test-installer-retry.py"
+      ],
+      "returncode": 0,
+      "executed": 4,
+      "log": "windows-installer-retry.log",
+      "sha256": "80c1353629b9c581fd40047bc2e565d26085054fe489579d5a12968d8634930b"
+    },
+    {
+      "command": [
+        "<TEMP>\\distribution\\bin\\assis-setup.exe",
+        "install",
+        "--prefix",
+        "<TEMP>\\prefix with spaces",
+        "--no-path",
+        "--no-associations",
+        "--with",
+        "framehost"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em C:\\Users\\babus\\AppData\\Local\\Temp\\assis-presentation-install-uantq20w\\prefix with spaces\\bin\\assis.exe\r\nO PATH foi preservado. Use o caminho completo ou adicione a pasta bin ao PATH.\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\assis.exe",
+        "run",
+        "<TEMP>\\prefix with spaces\\exemplos\\62_catalog_reader.assis",
+        "--safe",
+        "--debug"
+      ],
+      "returncode": 0,
+      "stdout": "CATALOG FRAME 1 10\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\distribution\\bin\\assis-setup.exe",
+        "uninstall",
+        "--prefix",
+        "<TEMP>\\prefix with spaces",
+        "--no-path",
+        "--no-associations"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: desinstalado. Projetos e arquivos extras foram preservados.\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-isolation=none",
+        "tests/test-development.js",
+        "tests/test-v31.js"
+      ],
+      "returncode": 0,
+      "executed": 23,
+      "log": "windows-distribution-node.log",
+      "sha256": "6223fbae4d6ee71024ebed120c6d008e2479409b86e25e2c2c5b40ff54f784da"
+    }
+  ],
+  "scope": "Fresh candidate and isolated offline prefix, framehost/framereader transitive dependency closure; installed Frame reading demo, uninstall and user file preservation; no PATH, associations or release changes"
+}

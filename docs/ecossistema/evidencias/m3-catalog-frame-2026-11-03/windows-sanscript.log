@@ -1,0 +1,14 @@
+test_all_42_matrices_and_trajectories_against_pinned_and_analytic_oracles (__main__.SanScript.test_all_42_matrices_and_trajectories_against_pinned_and_analytic_oracles) ... ok
+test_arguments_types_ranges_and_finite_profile_rejection (__main__.SanScript.test_arguments_types_ranges_and_finite_profile_rejection) ... ok
+test_checked_product_outside_physical_range_and_safe_fallback (__main__.SanScript.test_checked_product_outside_physical_range_and_safe_fallback) ... ok
+test_coefficient_generation_and_five_native_formats (__main__.SanScript.test_coefficient_generation_and_five_native_formats) ... ok
+test_first_presentation_continuity_and_retarget (__main__.SanScript.test_first_presentation_continuity_and_retarget) ... ok
+test_fs_pipeline_stale_handles_close_and_missing_producer (__main__.SanScript.test_fs_pipeline_stale_handles_close_and_missing_producer) ... ok
+test_grammar_unicode_limits_and_reordered_arguments (__main__.SanScript.test_grammar_unicode_limits_and_reordered_arguments) ... ok
+test_real_allocation_denial_and_allocation_free_advancement (__main__.SanScript.test_real_allocation_denial_and_allocation_free_advancement) ... ok
+test_time_budget_pause_focus_hidden_and_no_backlog (__main__.SanScript.test_time_budget_pause_focus_hidden_and_no_backlog) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 16.399s
+
+OK

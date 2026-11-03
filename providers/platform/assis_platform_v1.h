@@ -52,4 +52,9 @@ ASSISP_API int64_t assisp_frame_measure(const uint8_t *text, int64_t length, int
 ASSISP_API int32_t assisp_frame_commit(int64_t window, int64_t projection, uint32_t background,
     const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
     const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length);
+/* Catalog-reading extension 1: same records and limits, additional roles 12..19. */
+ASSISP_API int64_t assisp_frame_catalog_version(void);
+ASSISP_API int32_t assisp_frame_catalog_commit(int64_t window, int64_t projection, uint32_t background,
+    const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
+    const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length);
 #endif

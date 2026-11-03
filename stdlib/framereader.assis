@@ -11,7 +11,8 @@ public final class Reader{
     private let instance:int;private let semantic:int;private let window_instance:int;
     private let anchor:int;private let caret:int;private let request:int;private let generation:int;
     private let control:bool;private let shift:bool;private let dragging:bool;
-    private let focus:doctree::NodeId;private let pressed:doctree::NodeId;
+    private let focus:doctree::NodeId;private let pressed:doctree::NodeId;private let keyboard:doctree::NodeId;
+    private let enter:bool;private let space:bool;
     private let scroll:int;private let active:bool;private let code:int;
     fn init(borrow mut self,borrow mut frame:pageframe::Frame,borrow document:documents::Document,
             window_instance:int,max_bytes:int,metric:safe fn(borrow slice<byte>,int,int):int):void{
@@ -72,9 +73,9 @@ public final class Reader{
         self.anchor=anchor;self.caret=caret;return true;
     }
     fn focus_node(borrow self):doctree::NodeId{return self.focus;}
-    fn gesture_active(borrow self):bool{return self.dragging || !doctree::absent(self.pressed);}
+    fn gesture_active(borrow self):bool{return self.dragging || !doctree::absent(self.pressed) || !doctree::absent(self.keyboard);}
     fn scroll_target(borrow self):int{return self.scroll;}
-    fn cancel_gesture(borrow mut self):void{self.dragging=false;self.pressed=new doctree::NodeId();self.control=false;self.shift=false;}
+    fn cancel_gesture(borrow mut self):void{self.dragging=false;self.pressed=new doctree::NodeId();self.keyboard=new doctree::NodeId();self.enter=false;self.space=false;self.control=false;self.shift=false;}
     fn run_start(borrow self,index:int):int{assert(self.active && index>=0 && index<self.lines);return self.starts[index];}
     /// Selection geometry is cut from the exact run; author offsets are already composed.
     fn highlight(borrow self,borrow frame:pageframe::Frame,index:int):pageframe::Rect{
@@ -93,7 +94,7 @@ public final class Reader{
         self.request=previous.request;self.generation=previous.generation;
         if(self.instance!=previous.instance || self.semantic!=previous.semantic || self.used!=previous.used){return false;}
         for(let i:int=0;i<self.used;i++){if(self.content[i]!=previous.content[i]){return false;}}
-        self.anchor=previous.anchor;self.caret=previous.caret;
+        self.anchor=previous.anchor;self.caret=previous.caret;self.enter=previous.enter;self.space=previous.space;
         for(let i:int=0;i<frame.size();i++){
             if(pageframe::same(frame.box(i).node,previous.focus) && frame.eligible(document,i)){self.focus=previous.focus;}
         }return true;
@@ -109,7 +110,7 @@ public final class Reader{
         if(x< -2147483648 || x>2147483647 || y< -2147483648 || y>2147483647){return -1;}
         for(let box:int=frame.size()-1;box>=0;box--){
             if(!pageframe::contains(frame.accessible_bounds(box),x,y)){continue;}
-            if(frame.box(box).kind==9){return -1;}
+            if(pageframe::interactive(frame.box(box).kind)){return -1;}
             for(let i:int=0;i<self.lines;i++){
                 val run:pageframe::Run=frame.run(i);if(run.box!=box){continue;}
                 val clip:pageframe::Rect=pageframe::intersect(run.bounds,frame.content_clip(box));
@@ -130,12 +131,17 @@ public final class Reader{
         self.request=event.request_id;self.generation=event.generation;return true;
     }
     /// Host supplies the projection that owned the event. Reflow cancels gestures.
-    /// Change kinds: repaint=1, activate=2, close=3, copy=4, zoom=5/6, scroll=7.
+    /// Change kinds: repaint=1, button=2, close=3, copy=4, zoom=5/6,
+    /// scroll=7, fragment link=8. The trusted host decides when to reflow.
+    private fn activation(borrow self,borrow document:documents::Document,node:doctree::NodeId):viewer::Change{
+        if(doctree::absent(node) || !document.nodes().contains(node)){return new viewer::Change();}
+        if(htdl::kind(document.nodes(),node)==17){return new viewer::Change(8,node);}return new viewer::Change(2,node);
+    }
     fn dispatch(borrow mut self,borrow frame:pageframe::Frame,borrow document:documents::Document,projection:int,event:window::Event):viewer::Change{
         val none:viewer::Change=new viewer::Change();
         if(!self.accept(frame,document,projection,event)){return none;}
         if(event.kind==1){self.close();return new viewer::Change(3,new doctree::NodeId());}
-        if(event.kind==5 || event.kind==10){self.dragging=false;self.control=false;self.shift=false;self.pressed=new doctree::NodeId();return none;}
+        if(event.kind==5 || event.kind==10){self.cancel_gesture();return none;}
         if(event.kind==3 && (event.arg1==0 || event.arg1==1)){
             val down:bool=event.arg1==1;
             if(event.arg0==17){self.control=down;}if(event.arg0==16){self.shift=down;}
@@ -149,11 +155,19 @@ public final class Reader{
                 let at:int=self.boundaries.next(self.caret);if(event.arg0==37){at=self.boundaries.previous(self.caret);}
                 self.caret=at;if(!self.shift){self.anchor=at;}return new viewer::Change(1,new doctree::NodeId());
             }
-            if(down && event.arg0==9){self.focus=frame.next_focus(document,self.focus,self.shift);return new viewer::Change(1,self.focus);}
-            if(event.arg0==13 || event.arg0==32){
-                if(down){if(doctree::absent(self.pressed)){self.pressed=self.focus;}return none;}
-                val pressed:doctree::NodeId=self.pressed;self.pressed=new doctree::NodeId();
-                if(!doctree::absent(pressed) && pageframe::same(pressed,self.focus)){return new viewer::Change(2,pressed);}return none;
+            if(down && event.arg0==9){self.keyboard=new doctree::NodeId();self.pressed=new doctree::NodeId();self.focus=frame.next_focus(document,self.focus,self.shift);return new viewer::Change(1,self.focus);}
+            if(event.arg0==13){
+                if(!down){self.enter=false;return none;}if(self.enter){return none;}self.enter=true;
+                self.keyboard=new doctree::NodeId();self.pressed=new doctree::NodeId();return self.activation(document,self.focus);
+            }
+            if(event.arg0==32){
+                if(down){if(self.space){return none;}self.space=true;self.pressed=new doctree::NodeId();
+                    if(!doctree::absent(self.focus) && htdl::kind(document.nodes(),self.focus)==9){self.keyboard=self.focus;return none;}
+                    self.scroll=pageframe::minimum(frame.max_scroll(),self.scroll+pageframe::maximum(1,frame.viewport().height/2));
+                    return new viewer::Change(7,new doctree::NodeId());
+                }
+                self.space=false;val target:doctree::NodeId=self.keyboard;self.keyboard=new doctree::NodeId();
+                if(!doctree::absent(target) && pageframe::same(target,self.focus)){return self.activation(document,target);}return none;
             }
         }
         if(event.kind==9 && event.arg0>= -2147483648 && event.arg0<=2147483647){
@@ -161,7 +175,7 @@ public final class Reader{
             return new viewer::Change(7,new doctree::NodeId());
         }
         if(event.kind==7){
-            self.dragging=false;self.pressed=frame.hit(document,projection,event.arg0,event.arg1);
+            self.dragging=false;self.keyboard=new doctree::NodeId();self.pressed=frame.hit(document,projection,event.arg0,event.arg1);
             if(!doctree::absent(self.pressed)){self.focus=self.pressed;return new viewer::Change(1,self.focus);}
             val at:int=self.point(frame,event.arg0,event.arg1);
             if(at>=0){if(!self.shift){self.anchor=at;}self.caret=at;self.dragging=true;return new viewer::Change(1,new doctree::NodeId());}
@@ -170,7 +184,7 @@ public final class Reader{
             if(self.dragging){val at:int=self.point(frame,event.arg0,event.arg1);if(at>=0){self.caret=at;}
                 if(event.kind==8){self.dragging=false;}return new viewer::Change(1,new doctree::NodeId());}
             if(event.kind==8){val pressed:doctree::NodeId=self.pressed;self.pressed=new doctree::NodeId();
-                if(!doctree::absent(pressed) && pageframe::same(pressed,frame.hit(document,projection,event.arg0,event.arg1))){return new viewer::Change(2,pressed);}}
+                if(!doctree::absent(pressed) && pageframe::same(pressed,frame.hit(document,projection,event.arg0,event.arg1))){return self.activation(document,pressed);}}
         }return none;
     }
     fn copy(borrow self,borrow frame:pageframe::Frame,borrow document:documents::Document,borrow window:window::Window):int{
@@ -178,5 +192,5 @@ public final class Reader{
         if(self.selection_start()==self.selection_end()){return 0;}
         return reader::copy_text(window,self.selected_text());
     }
-    fn close(borrow mut self):void{self.active=false;self.dragging=false;self.pressed=new doctree::NodeId();}
+    fn close(borrow mut self):void{self.active=false;self.cancel_gesture();}
 }

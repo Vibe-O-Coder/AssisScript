@@ -1,3 +1,17 @@
+> **Continuação validada — 47,50%, 03/11/2026, 0/5 gates; meta 50% pendente.**
+> Cópia `C:/Users/babus/Desktop/AssisScript/work/catalog-frame-20261103`,
+> branch `work/m3-catalog-frame-2026-11-03`, base pública 6f4398c conferida.
+> Catálogo de leitura de 18 tipos no Frame FS/SSC; listas/marcadores medidos,
+> links #id, teclado e MSAA adicional com publicação conjunta e rollback.
+> Windows 199/0, Linux 180/19 executados/not-run; 65 exemplos por host.
+> Instalação/execução/remoção isoladas, 18 bibliotecas, 4 locks e 23 Node Windows.
+> Publicação será confirmada no adendo do [relatório](../relatorios/2026-11-03-m3-catalog-frame.md).
+> Computer Use expirou na abertura; sem aceite desktop/leitor real/DPI/IME.
+> Próximo: controles/imagens, loader de recursos externos e integração ASV2.
+> Identidade incremental/editor, SDK geral, RSS/disco/órfãos, macOS/ARM,
+> rede/perfis/persistência/busca, M4–M9, 24h, distribuição e todos os aceites
+> continuam integralmente na fila. Easy por último. Entradas abaixo históricas.
+
 > **Publicação confirmada — 47,10%, 03/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/frame-reader-20261103`,
 > branch `work/m5-frame-reader-2026-11-03`, base pública a37a39a conferida.

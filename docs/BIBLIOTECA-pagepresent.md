@@ -1,3 +1,5 @@
+Continuação 03/11/2026: [extensão catalog-reading 1](ecossistema/PERFIL-LEITURA-CATALOGO-V1.md) publica papéis 12..19 por símbolo próprio, mantendo Frame 1. `catalog_available()` negocia a extensão; DLL atualizada é obrigatória para as bibliotecas novas. Marcadores são comandos sem offsets de seleção; erro de limite conserva o Packet anterior.
+
 Continuação: o construtor de Packet recebe `borrow mut frame`, sela o candidato depois de construir comandos/nomes e recusa composição tardia. Guarde em variável separada um foco lido do próprio Frame antes de passá-lo ao construtor. [Movimento agregado](BIBLIOTECA-motionpage.md).
 
 # pagepresent — composição Windows do snapshot local v1

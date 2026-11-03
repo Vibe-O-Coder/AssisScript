@@ -1,3 +1,5 @@
+Continuação 03/11/2026: [catálogo de leitura](ecossistema/PERFIL-LEITURA-CATALOGO-V1.md) acrescenta regiões, listas/marcadores medidos e links por fragmento. `reading_profile`, `interactive`, `structural`, `marker(i)`, `marker_bounds(i)` e `fragment_scroll(document,link)` explicitam o perfil. Armazenamento passa a 44 palavras por caixa e `2*sourceBytes+2048` bytes de conteúdo. As seções abaixo preservam o contrato anterior onde não ampliado.
+
 Continuação: `compose(document,motionpage)` compõe uma vez no candidato; Packet toma empréstimo exclusivo e sela o Frame. [Contrato agregado](BIBLIOTECA-motionpage.md). As posições finais continuam compartilhadas por desenho, hit test e acessibilidade.
 
 # pageframe — layout e snapshot local v1

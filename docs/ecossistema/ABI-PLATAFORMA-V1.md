@@ -1,3 +1,5 @@
+Continuação 03/11/2026: [catalog-reading 1](PERFIL-LEITURA-CATALOGO-V1.md) acrescenta `assisp_frame_catalog_version` e `assisp_frame_catalog_commit`, com papéis 12..19. As quatro versões anteriores continuam intactas; o commit antigo recusa os novos papéis. Bibliotecas atualizadas exigem provider correspondente.
+
 Continuação de 02/11/2026: [Frame local](PERFIL-FRAME-LOCAL-V1.md) acrescenta
 layout/snapshot comum e extensão frame 1 do provider Windows. Publicação de
 raster e MSAA é conjunta; Reader::Session/seleção, SSC agregado e catálogo

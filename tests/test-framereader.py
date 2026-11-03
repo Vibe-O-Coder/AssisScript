@@ -77,8 +77,8 @@ class FrameReader(unittest.TestCase):
             'assert(r.dispatch(frame,store.candidate(),1,ev(3,187,1,9)).kind==5);'
             'r.dispatch(frame,store.candidate(),1,ev(10,0,0,10));assert(r.dispatch(frame,store.candidate(),1,ev(3,67,1,11)).kind==0);'
             'r.dispatch(frame,store.candidate(),1,ev(3,9,1,12));assert(pageframe::same(r.focus_node(),frame.box(2).node));'
-            'assert(r.dispatch(frame,store.candidate(),1,ev(3,13,1,13)).kind==0);'
-            'assert(r.dispatch(frame,store.candidate(),1,ev(3,13,0,14)).kind==2);'
+            'assert(r.dispatch(frame,store.candidate(),1,ev(3,13,1,13)).kind==2);'
+            'assert(r.dispatch(frame,store.candidate(),1,ev(3,13,0,14)).kind==0);'
             'assert(r.dispatch(frame,store.candidate(),1,ev(7,1,17,15)).kind==1);'
             'assert(r.dispatch(frame,store.candidate(),1,ev(8,1,17,16)).kind==2);',prefix=EVENT)
 

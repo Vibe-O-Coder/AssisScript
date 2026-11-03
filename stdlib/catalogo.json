@@ -386,7 +386,7 @@
       "name": "framehost",
       "required": false,
       "doc": "BIBLIOTECA-framehost.md",
-      "description": "Ativacao conjunta local de HTDL bootstrap, FS, SSC, layout e leitura.",
+      "description": "Ativacao conjunta local de HTDL bootstrap/catalogo de leitura, FS, SSC e Frame.",
       "dependencies": ["pagepresent"]
     }
   ]

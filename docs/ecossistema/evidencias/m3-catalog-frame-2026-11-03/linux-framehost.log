@@ -1,0 +1,17 @@
+test_bundle_commit_and_headless_reading_share_one_revision (__main__.FrameHost.test_bundle_commit_and_headless_reading_share_one_revision) ... ok
+test_busy_abort_old_request_and_instance_are_not_reused (__main__.FrameHost.test_busy_abort_old_request_and_instance_are_not_reused) ... ok
+test_gesture_freezes_timer_until_explicit_cancel_or_release (__main__.FrameHost.test_gesture_freezes_timer_until_explicit_cancel_or_release) ... ok
+test_htdl_fs_ssc_version_and_frame_failures_preserve_active (__main__.FrameHost.test_htdl_fs_ssc_version_and_frame_failures_preserve_active) ... ok
+test_native_bundle_failure_and_accessibility_replay (__main__.FrameHost.test_native_bundle_failure_and_accessibility_replay) ... skipped 'Windows native frame provider unavailable'
+test_navigation_never_carries_selection_or_old_semantic_handles (__main__.FrameHost.test_navigation_never_carries_selection_or_old_semantic_handles) ... ok
+test_os_refusal_during_bundle_preparation_conserves_active_and_neighbor (__main__.FrameHost.test_os_refusal_during_bundle_preparation_conserves_active_and_neighbor) ... ok
+test_pending_navigation_freezes_events_abort_restores_previous (__main__.FrameHost.test_pending_navigation_freezes_events_abort_restores_previous) ... ok
+test_reading_example_and_five_generated_formats_are_separate_from_execution (__main__.FrameHost.test_reading_example_and_five_generated_formats_are_separate_from_execution) ... ok
+test_real_font_window_selects_reflows_presents_and_closes (__main__.FrameHost.test_real_font_window_selects_reflows_presents_and_closes) ... skipped 'Windows native frame provider unavailable'
+test_reflow_selection_zoom_scroll_abort_and_stale_frame (__main__.FrameHost.test_reflow_selection_zoom_scroll_abort_and_stale_frame) ... ok
+test_repaint_retains_held_control_for_subsequent_explicit_copy (__main__.FrameHost.test_repaint_retains_held_control_for_subsequent_explicit_copy) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 76.835s
+
+OK (skipped=2)

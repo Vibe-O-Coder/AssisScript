@@ -1,0 +1,192 @@
+{
+  "schema": "catalog-reading-host-evidence-v1",
+  "base": "6f4398c830fadde4d809bbbac104a1fa4f22c711",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "checks": [
+    {
+      "name": "htdl-catalog",
+      "command": [
+        "python",
+        "tests/test-htdl-catalog.py"
+      ],
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 14.432,
+      "log": "linux-htdl-catalog.log",
+      "sha256": "93e88f329acba2eb255d3561ec2270fe5280a208c3843c7b756395f75195a030"
+    },
+    {
+      "name": "framereader",
+      "command": [
+        "python",
+        "tests/test-framereader.py"
+      ],
+      "returncode": 0,
+      "executed": 13,
+      "not_run": 1,
+      "seconds": 89.781,
+      "log": "linux-framereader.log",
+      "sha256": "27d1c1006456b93f525163ddc216157f956b0880e6aad5e0fe3c9b007c1b3840"
+    },
+    {
+      "name": "framehost",
+      "command": [
+        "python",
+        "tests/test-framehost.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 2,
+      "seconds": 77.169,
+      "log": "linux-framehost.log",
+      "sha256": "744873381d0233589b23c7bce19be783258f2ab7dc5ba44b9318339f972d101d"
+    },
+    {
+      "name": "motionpage",
+      "command": [
+        "python",
+        "tests/test-motionpage.py"
+      ],
+      "returncode": 0,
+      "executed": 14,
+      "not_run": 0,
+      "seconds": 72.207,
+      "log": "linux-motionpage.log",
+      "sha256": "51624061062a2b955b0da27c071ac0e90c8b2580344a2f260bd9418a14c62036"
+    },
+    {
+      "name": "pagepresent",
+      "command": [
+        "python",
+        "tests/test-pagepresent.py"
+      ],
+      "returncode": 0,
+      "executed": 3,
+      "not_run": 6,
+      "seconds": 16.738,
+      "log": "linux-pagepresent.log",
+      "sha256": "2fb9e0ed0615f1fe3eae2d9efa60fbe9abd91b25fa61e61bba0f9c2759153904"
+    },
+    {
+      "name": "flowpage",
+      "command": [
+        "python",
+        "tests/test-flowpage.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 31.225,
+      "log": "linux-flowpage.log",
+      "sha256": "dfa02113aa4d04ffe44edb7b7d4b2d360845d56413d9bc20f1012c10d1528aa4"
+    },
+    {
+      "name": "fluxstyle",
+      "command": [
+        "python",
+        "tests/test-fluxstyle.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 16.973,
+      "log": "linux-fluxstyle.log",
+      "sha256": "7de57a16a0cef8cb9dacab274ac59957677e921b7702feb1eb218f8e2952c935"
+    },
+    {
+      "name": "sanscript",
+      "command": [
+        "python",
+        "tests/test-sanscript.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 14.767,
+      "log": "linux-sanscript.log",
+      "sha256": "f03308ac74c467e0d00febc94c3f71e1ac951bf4266c7af87200ebd67ac94709"
+    },
+    {
+      "name": "document-memory",
+      "command": [
+        "python",
+        "tests/test-document-memory.py"
+      ],
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 15.906,
+      "log": "linux-document-memory.log",
+      "sha256": "39ac9c65ad1bb343b685d1e08124fe844330dd6c1e40af2c4a3c3f8fbf1dfa5a"
+    },
+    {
+      "name": "htdl-parser",
+      "command": [
+        "python",
+        "tests/test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 49.48,
+      "log": "linux-htdl-parser.log",
+      "sha256": "8584400154a13dcbbb757efe54b8a08ffd02f0089cc388270e3163c0a31e8778"
+    },
+    {
+      "name": "htdl-reader",
+      "command": [
+        "python",
+        "tests/test-htdl-reader.py"
+      ],
+      "returncode": 0,
+      "executed": 7,
+      "not_run": 3,
+      "seconds": 18.748,
+      "log": "linux-htdl-reader.log",
+      "sha256": "9084f6607a2ce5a4ee934cd444ce6c4669fd5d621fdaf0077c2a794749a30d6e"
+    },
+    {
+      "name": "reader-transactions",
+      "command": [
+        "python",
+        "tests/test-reader-transactions.py"
+      ],
+      "returncode": 0,
+      "executed": 11,
+      "not_run": 4,
+      "seconds": 28.577,
+      "log": "linux-reader-transactions.log",
+      "sha256": "93ab8d9652c6979365530793b7f48a5898d37a97813d372b39f4427b60a8158d"
+    },
+    {
+      "name": "catalog-frame",
+      "command": [
+        "python",
+        "tests/test-catalog-frame.py"
+      ],
+      "returncode": 0,
+      "executed": 18,
+      "not_run": 3,
+      "seconds": 172.649,
+      "log": "linux-catalog-frame.log",
+      "sha256": "826348e54b1b2a87bfa77a94fb5616f460be6ff6a392d3909054d95c0b6664a1"
+    },
+    {
+      "name": "pageframe",
+      "command": [
+        "python",
+        "tests/test-pageframe.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 120.109,
+      "log": "linux-pageframe.log",
+      "sha256": "1d9b37673db555a5b39ce1dd5afec039d34ffbdb06640b3b343b4df35e6ddb12"
+    }
+  ],
+  "passed": true
+}

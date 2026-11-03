@@ -1,0 +1,72 @@
+{
+  "schema": "catalog-reading-summary-v1",
+  "base": "6f4398c830fadde4d809bbbac104a1fa4f22c711",
+  "validation": "pass",
+  "counts": {
+    "windows": {
+      "executed": 199,
+      "not_run": 0,
+      "examples": 65
+    },
+    "linux": {
+      "executed": 180,
+      "not_run": 19,
+      "examples": 65
+    }
+  },
+  "points_before": "47.10",
+  "points_after": "47.50",
+  "gates_passed": 0,
+  "source_sha256": {
+    ".gitattributes": "36a0c60f35c386523b6a48bb34ac46319e26700ee161030206e6a55f325ec2fa",
+    ".github/workflows/ci.yml": "e63bc01badf41ea2f7b9f35ebe2f456119542e1f6b7750259cc2f11030bb995f",
+    "Makefile": "f4fff6a4dfd25dd4efd3c501f13e8b0f69fc7ff0ee471d9c9c06eca3830e26ae",
+    "stdlib/pageframe.assis": "8420b5728231fe0968c9066e6e0b3ccc85a067737d6060efdb7cef24bbaa349d",
+    "stdlib/framereader.assis": "772f3fe1557a7a9855fe110151b829dca9d997ce17752b93cfd38491741ab6ac",
+    "stdlib/framehost.assis": "7e74d4594c9cb63c45cb6feffd546ee874d37e820bad333359e6c986f4bfe0a7",
+    "stdlib/pagepresent.assis": "d908e512de460928540fe1d0d860adc65bd78358191c78f1cc316aad95cd2ec8",
+    "providers/platform/windows.c": "4002147f5e20d49c1d235264260717f7f0f1e44007fac6a6f83d9a7c9b7d49a6",
+    "providers/platform/reader.inc": "94212436d812dccfbcbc8f58489f4d3f67ceb0df66396befde6501c4a1a55afd",
+    "providers/platform/frame.inc": "6714a990c889e9ddaefd395ab376bfb8a5586ee6d322c3915194a650707a35ab",
+    "providers/platform/assis_platform_v1.h": "8908e6c5abc23975d0691b1a743a63682f9ad9e35bf39b6ebdf33bcc21bb5941",
+    "stdlib/catalogo.json": "e8e0ff42d0a6814d383eab3bdc027326d1f63eab6e1b0c78b9a9577ea5b33193",
+    "stdlib/catalogo.sh": "174d06bb39a4d7492369c744edbf88ff4430c06dc206c197a037abe1b0ce306e",
+    "src/install_files.inc": "52ba257cd59c9be9045775fba87603eb27afa1f269feba851d5c470d09a224bd",
+    "src/install_optional.inc": "12e18123b2110db023be522b299cd966c30c18493426b7f4a6ce509d4ecb1d9d",
+    "tests/test-catalog-frame.py": "dfffb62c2d33581b3fbdfc01499afa45defe0badbab5d0f10bf95dd5443ec898",
+    "tests/catalog_frame_oracle.c": "d13b7cd3f2cf26910eef97a386e3c3f5deffa1b06042b09ee9a11bc152585dda",
+    "tests/test-framereader.py": "6d55ef7d70fe3f8d1d1800f46600458c8b334d490d7df358697a531a7ed0426f",
+    "exemplos/62_catalog_reader.assis": "7658647192ea9a07804a77e59c9e65eef513baa6d8f45dfa04e81f7890a89afc",
+    "exemplos/63_catalog_reader_window.assis": "0f258d7cbcf17258ea92d3d1afa4d025d2d1eb3696fdb9be9225abefd73ddfaf",
+    "tools/collect-catalog-frame-evidence.py": "f39e7adf01cd53425d275368382bccdc4b1315c56a0346d608c4a8b0f3932a37",
+    "tools/verify-catalog-frame-evidence.py": "d8c663c7cafc4e14fb41897037b423953341608886932004b24d55810a65d847",
+    "tools/verify-catalog-frame-install.py": "967561dc7eaa2a56f3d63345706b48fbc4ba8b39e428b827a2af28781fe83583",
+    "tools/prepare-development-installer.py": "1c8ec0ea382448209ac92f72c7b4afd1a0a55fdae5e300e330322aa675b7e5e1",
+    "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md": "187c25575ecd25518b123f2ef9ca05b055f4501a70dba6f76b6921e4ac36930a",
+    "docs/ecossistema/ABI-PLATAFORMA-V1.md": "73577b9180e31b2ebd3d58d6341f5e4b85d55cb8901e9c9d6707ecd3873f6fb9",
+    "docs/BIBLIOTECA-pageframe.md": "c36f495d97abec3bc8fbf048ef58b0aace0f2e0fa652a87cfce01062af45d649",
+    "docs/BIBLIOTECA-pagepresent.md": "6ab6751f61dc7a39e43b95deb1e8829cc0f2cc17e760fad1dada5b479f64983c",
+    "docs/BIBLIOTECA-framereader.md": "0581b4e8fd80ce3c1b24ff395a1e9fa780f74ed75cced7cf4e213760d11e142f",
+    "docs/BIBLIOTECA-framehost.md": "a3c24d2cffd351229aa41b204f4b8715ba5da5e8c9c5bf29748e25e6fcb280d9"
+  },
+  "auxiliary_sha256": {
+    "desktop.json": "5250bb05690cb49ac7295ad56414a183937a6a6237ee978e2e2a91ccfe25818e",
+    "development-bundle.json": "814f244f6e655e4e677734507fa1ff5cc254cf1b9b23cd932400f77157110ed3",
+    "linux-examples.json": "41827e955c59c51ac8e5bc1114e777b719834672bf7eca4d8cef475785e2f3ff",
+    "linux-install.json": "c0d00e3bc0e99adeb8b6e3c53c21d4d643948e04a0774b58198a8f938a7c8b44",
+    "linux.json": "53b22866ce72c56cf52bd22b0daf20a8b48e97fed0ab9e8c32c8c54b9c5a309c",
+    "reference-integrity.json": "b573df6046f5f987a2f0d59d8a8f866060d0eca1f3efd3907255fb429f2058fe",
+    "windows-examples.json": "7d49fbe152f6a231184a7d825189794cf116de83e77166e18c0178b11cea1357",
+    "windows-install.json": "095bec4230c39bc7b4de647ac3f323950f33d241b80208a3af8a51e4ca830394",
+    "windows.json": "8c2c91cf6ce8d49fbe59065d232b0a006990559b6fef9714642824b7e3533ca7"
+  },
+  "prior_failed_run_sha256": "608c0ba4115936c9d9fce1dac186982c3d84711b0ba1f1982ec7bb670c361eb2",
+  "limitations": [
+    "18-type local reading subset; script, label/input/form/image, live regions and full HTDL visual compliance remain open",
+    "Fragment links only; external resources, file paths/URLs and ASV2 integration are separate",
+    "Flat MSAA projection; desktop launch timed out, with no real screen reader, DPI, IME, multiple monitor or complete assistive hierarchy acceptance",
+    "Local workspace/scan/command limits are not aggregate RSS quotas, UI latency guarantees or per-logical-allocation OOM injection",
+    "Only Windows/Linux x64 executed; native macOS/ARM and Linux graphical provider not-run",
+    "Development package installed/run/removed in isolated prefixes; no global installation, release, merge, new remote CI or 24h soak"
+  ]
+}

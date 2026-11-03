@@ -1,0 +1,43 @@
+test_all_native_allocation_boundaries_preserve_pixels_accessibility_and_gdi_objects (__main__.PagePresent.test_all_native_allocation_boundaries_preserve_pixels_accessibility_and_gdi_objects) ... ok
+test_animated_packet_copies_composed_bounds_and_seals_candidate (__main__.PagePresent.test_animated_packet_copies_composed_bounds_and_seals_candidate) ... ok
+test_failed_native_animated_publication_does_not_commit_time_or_revoke_old_action (__main__.PagePresent.test_failed_native_animated_publication_does_not_commit_time_or_revoke_old_action) ... ok
+test_focus_order_tracks_semantics_and_disabled_overlay_blocks_underlying_action (__main__.PagePresent.test_focus_order_tracks_semantics_and_disabled_overlay_blocks_underlying_action) ... ok
+test_native_publish_and_action_revalidate_projection_and_semantic_generation (__main__.PagePresent.test_native_publish_and_action_revalidate_projection_and_semantic_generation) ... ok
+test_packet_commands_and_accessibility_share_clipped_frame_bounds (__main__.PagePresent.test_packet_commands_and_accessibility_share_clipped_frame_bounds) ... ok
+test_real_font_metrics_feed_layout_and_native_render_at_two_scales (__main__.PagePresent.test_real_font_metrics_feed_layout_and_native_render_at_two_scales) ... ok
+test_two_panel_ssc_window_retargets_presents_and_closes_in_both_modes (__main__.PagePresent.test_two_panel_ssc_window_retargets_presents_and_closes_in_both_modes) ... ok
+test_two_panel_window_presents_and_closes_in_both_modes (__main__.PagePresent.test_two_panel_window_presents_and_closes_in_both_modes) ... ERROR
+
+======================================================================
+ERROR: test_two_panel_window_presents_and_closes_in_both_modes (__main__.PagePresent.test_two_panel_window_presents_and_closes_in_both_modes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 701, in _rmtree_unsafe
+    os.unlink(fullname)
+    ~~~~~~~~~^^^^^^^^^^
+PermissionError: [WinError 5] Acesso negado: 'C:\\Users\\babus\\AppData\\Local\\Temp\\assis-evolution-3arfp9kt\\panels-0.exe'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py", line 975, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py", line 955, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 852, in rmtree
+    _rmtree_impl(path, dir_fd, onexc)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 705, in _rmtree_unsafe
+    onexc(os.unlink, fullname, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\babus\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py", line 930, in onexc
+    _os.unlink(path)
+    ~~~~~~~~~~^^^^^^
+PermissionError: [WinError 5] Acesso negado: 'C:\\Users\\babus\\AppData\\Local\\Temp\\assis-evolution-3arfp9kt\\panels-0.exe'
+
+----------------------------------------------------------------------
+Ran 9 tests in 25.322s
+
+FAILED (errors=1)

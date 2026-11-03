@@ -1,3 +1,5 @@
+Continuação 03/11/2026: `reading_versions()` negocia `(2,1,1)`, com 18 tipos do catálogo de leitura, listas e fragmentos locais. `fragment_scroll(projection,link)` consulta o destino no mesmo Frame. [Perfil e limites](ecossistema/PERFIL-LEITURA-CATALOGO-V1.md). As entradas abaixo descrevem o bootstrap histórico.
+
 # std/framehost.assis
 
 Perfil de desenvolvimento `local-reading-bundle-1`, 03/11/2026. Coordena o Store,

@@ -1,0 +1,26 @@
+test_all_structural_reading_types_keep_semantic_order (__main__.CatalogFrame.test_all_structural_reading_types_keep_semantic_order) ... ok
+test_box_and_fragment_work_limits_preserve_previous_document (__main__.CatalogFrame.test_box_and_fragment_work_limits_preserve_previous_document) ... ok
+test_examples_use_both_modes_and_generate_all_five_formats (__main__.CatalogFrame.test_examples_use_both_modes_and_generate_all_five_formats) ... ok
+test_explicit_reading_profile_and_arbitrary_valid_head_order (__main__.CatalogFrame.test_explicit_reading_profile_and_arbitrary_valid_head_order) ... ok
+test_fragment_target_can_be_offscreen_inline_or_structural (__main__.CatalogFrame.test_fragment_target_can_be_offscreen_inline_or_structural) ... ok
+test_hidden_fragment_target_is_valid_but_never_scrolled_or_focused (__main__.CatalogFrame.test_hidden_fragment_target_is_valid_but_never_scrolled_or_focused) ... ok
+test_hidden_items_do_not_consume_ordinal_or_copy_marker_bytes (__main__.CatalogFrame.test_hidden_items_do_not_consume_ordinal_or_copy_marker_bytes) ... ok
+test_independent_native_com_roles_actions_hits_revocation_and_allocation_rollback (__main__.CatalogFrame.test_independent_native_com_roles_actions_hits_revocation_and_allocation_rollback) ... skipped 'Windows catalog provider unavailable'
+test_item_clip_keeps_marker_and_child_content_in_one_inner_rectangle (__main__.CatalogFrame.test_item_clip_keeps_marker_and_child_content_in_one_inner_rectangle) ... ok
+test_keyboard_and_pointer_gestures_do_not_complete_each_other (__main__.CatalogFrame.test_keyboard_and_pointer_gestures_do_not_complete_each_other) ... ok
+test_link_enter_once_space_scrolls_and_button_space_releases_once (__main__.CatalogFrame.test_link_enter_once_space_scrolls_and_button_space_releases_once) ... ok
+test_list_wrapping_indents_before_text_measurement_and_zoom (__main__.CatalogFrame.test_list_wrapping_indents_before_text_measurement_and_zoom) ... ok
+test_native_catalog_actions_and_failure_keep_previous_frame (__main__.CatalogFrame.test_native_catalog_actions_and_failure_keep_previous_frame) ... skipped 'Windows catalog provider unavailable'
+test_numbered_markers_and_geometry_against_independent_stack_model (__main__.CatalogFrame.test_numbered_markers_and_geometry_against_independent_stack_model) ... ok
+test_os_refusal_of_catalog_candidate_preserves_neighbor (__main__.CatalogFrame.test_os_refusal_of_catalog_candidate_preserves_neighbor) ... ok
+test_pointer_link_activation_and_requests_revalidate_snapshot (__main__.CatalogFrame.test_pointer_link_activation_and_requests_revalidate_snapshot) ... ok
+test_real_font_catalog_window_selects_reflows_and_closes (__main__.CatalogFrame.test_real_font_catalog_window_selects_reflows_and_closes) ... skipped 'Windows catalog provider unavailable'
+test_repaint_while_enter_is_held_does_not_repeat_activation (__main__.CatalogFrame.test_repaint_while_enter_is_held_does_not_repeat_activation) ... ok
+test_seeded_hidden_list_matches_plain_text_and_ordinal_model (__main__.CatalogFrame.test_seeded_hidden_list_matches_plain_text_and_ordinal_model) ... ok
+test_tree_mutation_revokes_fragment_focus_and_old_reading_projection (__main__.CatalogFrame.test_tree_mutation_revokes_fragment_focus_and_old_reading_projection) ... ok
+test_unsupported_resources_live_hints_and_missing_fragments_preserve_active (__main__.CatalogFrame.test_unsupported_resources_live_hints_and_missing_fragments_preserve_active) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 172.111s
+
+OK (skipped=3)

@@ -118,15 +118,20 @@ static HRESULT STDMETHODCALLTYPE ac_no_string(IAccessible *self, VARIANT child, 
 static HRESULT STDMETHODCALLTYPE ac_description(IAccessible *self, VARIANT child, BSTR *out) {
     HRESULT hr = ac_no_string(self, child, out); if (FAILED(hr)) {return hr;}
     int64_t index; Access *a = as_access(self); if (!child_index(a, child, &index)) {return E_INVALIDARG;}
-    if (a->words[index * 8] != 8) {return S_FALSE;}
-    *out = SysAllocString(L"heading"); return *out ? S_OK : E_OUTOFMEMORY;
+    int64_t role = a->words[index * 8];
+    const wchar_t *description = role == 8 ? L"heading" : role == 12 ? L"main" :
+        role == 13 ? L"section" : role == 14 ? L"header" : role == 15 ? L"footer" : role == 16 ? L"navigation" : NULL;
+    if (!description) {return S_FALSE;}
+    *out = SysAllocString(description); return *out ? S_OK : E_OUTOFMEMORY;
 }
 static HRESULT STDMETHODCALLTYPE ac_role(IAccessible *self, VARIANT child, VARIANT *out) {
     if (!out) {return E_POINTER;} VariantInit(out); Window *w = NULL; HRESULT hr = access_live(self, &w);
     if (FAILED(hr)) {return hr;} int64_t index; Access *a = as_access(self);
     if (!child_index(a, child, &index)) {return E_INVALIDARG;}
     V_VT(out) = VT_I4; int64_t role = a->words[index * 8];
-    V_I4(out) = role == 1 ? ROLE_SYSTEM_DOCUMENT : role == 9 ? ROLE_SYSTEM_PUSHBUTTON : ROLE_SYSTEM_STATICTEXT; return S_OK;
+    V_I4(out) = role == 1 ? ROLE_SYSTEM_DOCUMENT : role == 9 ? ROLE_SYSTEM_PUSHBUTTON :
+        role == 17 ? ROLE_SYSTEM_LINK : role == 18 ? ROLE_SYSTEM_LIST : role == 19 ? ROLE_SYSTEM_LISTITEM :
+        role >= 12 && role <= 16 ? ROLE_SYSTEM_GROUPING : ROLE_SYSTEM_STATICTEXT; return S_OK;
 }
 static HRESULT STDMETHODCALLTYPE ac_state(IAccessible *self, VARIANT child, VARIANT *out) {
     if (!out) {return E_POINTER;} VariantInit(out); Window *w = NULL; HRESULT hr = access_live(self, &w);
@@ -134,7 +139,7 @@ static HRESULT STDMETHODCALLTYPE ac_state(IAccessible *self, VARIANT child, VARI
     if (!child_index(a, child, &index)) {return E_INVALIDARG;}
     int64_t *r = a->words + index * 8; LONG flags = STATE_SYSTEM_READONLY;
     if (r[1] & 1) flags |= STATE_SYSTEM_UNAVAILABLE;
-    if (r[0] == 9 && !(r[1] & 1)) flags |= STATE_SYSTEM_FOCUSABLE;
+    if ((r[0] == 9 || r[0] == 17) && !(r[1] & 1)) flags |= STATE_SYSTEM_FOCUSABLE;
     if ((r[1] & 2) && GetFocus() == w->hwnd) flags |= STATE_SYSTEM_FOCUSED;
     RECT rect; if (!access_rect(w, r, &rect)) flags |= STATE_SYSTEM_OFFSCREEN;
     V_VT(out) = VT_I4; V_I4(out) = flags; return S_OK;
@@ -156,8 +161,8 @@ static HRESULT STDMETHODCALLTYPE ac_selection(IAccessible *self, VARIANT *out) {
 static HRESULT STDMETHODCALLTYPE ac_action_name(IAccessible *self, VARIANT child, BSTR *out) {
     HRESULT hr = ac_no_string(self, child, out); if (FAILED(hr)) {return hr;}
     int64_t index; Access *a = as_access(self); if (!child_index(a, child, &index)) {return E_INVALIDARG;}
-    if (a->words[index * 8] != 9 || (a->words[index * 8 + 1] & 1)) {return S_FALSE;}
-    *out = SysAllocString(L"Press"); return *out ? S_OK : E_OUTOFMEMORY;
+    if ((a->words[index * 8] != 9 && a->words[index * 8] != 17) || (a->words[index * 8 + 1] & 1)) {return S_FALSE;}
+    *out = SysAllocString(a->words[index * 8] == 17 ? L"Open" : L"Press"); return *out ? S_OK : E_OUTOFMEMORY;
 }
 static HRESULT STDMETHODCALLTYPE ac_select(IAccessible *self, LONG flags, VARIANT child) {
     (void)flags; Window *w = NULL; HRESULT hr = access_live(self, &w); if (FAILED(hr)) {return hr;}
@@ -190,7 +195,7 @@ static HRESULT STDMETHODCALLTYPE ac_hit(IAccessible *self, LONG x, LONG y, VARIA
     Access *a = as_access(self); int64_t *root = a->words; RECT root_rect;
     if (!access_rect(w, root, &root_rect) || !PtInRect(&root_rect, point)) {return S_FALSE;}
     V_VT(out) = VT_I4; V_I4(out) = CHILDID_SELF;
-    for (int64_t i = 1; i < a->count; i++) {
+    for (int64_t i = a->count - 1; i >= 1; i--) {
         int64_t *r = a->words + i * 8; RECT rect;
         if (access_rect(w, r, &rect) && PtInRect(&rect, point)) {
             V_I4(out) = (LONG)i; break;
@@ -200,7 +205,7 @@ static HRESULT STDMETHODCALLTYPE ac_hit(IAccessible *self, LONG x, LONG y, VARIA
 static HRESULT STDMETHODCALLTYPE ac_action(IAccessible *self, VARIANT child) {
     Window *w = NULL; HRESULT hr = access_live(self, &w); if (FAILED(hr)) {return hr;}
     Access *a = as_access(self); int64_t index; if (!child_index(a, child, &index)) {return E_INVALIDARG;}
-    if (a->words[index * 8] != 9 || (a->words[index * 8 + 1] & 1)) {return E_ACCESSDENIED;}
+    if ((a->words[index * 8] != 9 && a->words[index * 8] != 17) || (a->words[index * 8 + 1] & 1)) {return E_ACCESSDENIED;}
     enqueue(w, 11, a->document, index); return w->failure ? E_FAIL : S_OK;
 }
 static HRESULT STDMETHODCALLTYPE ac_put(IAccessible *self, VARIANT child, BSTR value) {
@@ -249,7 +254,7 @@ int32_t assisp_clipboard_utf8(int64_t token, const uint8_t *text, int64_t length
     int success = EmptyClipboard() && SetClipboardData(CF_UNICODETEXT, memory) != NULL;
     CloseClipboard(); if (!success) {GlobalFree(memory); return -6;} return 0;
 }
-int32_t assisp_accessibility(int64_t token, int64_t document, const int64_t *words, int64_t count, const uint8_t *names, int64_t length) {
+static int32_t accessibility_commit(int64_t token, int64_t document, const int64_t *words, int64_t count, const uint8_t *names, int64_t length, int catalog) {
     Window *w = NULL; int code = access_window(token, &w); if (code) {return code;}
     if (document <= 0 || !words || count < 1 || count > 32769 || length < 0 || length > 1048608 || (!names && length)) {return -1;}
     if (w->access && document < w->access->document) {return -2;}
@@ -257,12 +262,12 @@ int32_t assisp_accessibility(int64_t token, int64_t document, const int64_t *wor
     int focused = 0;
     for (int64_t i = 0; i < count; i++) {
         const int64_t *r = words + i * 8;
-        if ((i ? r[0] != 6 && r[0] != 8 && r[0] != 9 : r[0] != 1) || r[1] < 0 || r[1] > 7 ||
+        if ((i ? r[0] != 6 && r[0] != 8 && r[0] != 9 && !(catalog && r[0] >= 12 && r[0] <= 19) : r[0] != 1) || r[1] < 0 || r[1] > 7 ||
             r[2] < 0 || r[2] > 16384 || r[3] < 0 || r[3] > 16384 || r[4] < 0 || r[4] > 16384 || r[5] < 0 || r[5] > 16384 ||
             r[6] < 0 || r[7] < 0 || r[7] > 1048576 || r[6] > length || r[7] > length - r[6]) return -1;
         if ((r[6] < length && names[r[6]] >= 128 && names[r[6]] < 192) ||
             (r[6]+r[7] < length && names[r[6]+r[7]] >= 128 && names[r[6]+r[7]] < 192)) return -1;
-        if (r[1] & 2) {if (r[0] != 9 || (r[1] & 1) || focused++) {return -1;}}
+        if (r[1] & 2) {if ((r[0] != 9 && !(catalog && r[0] == 17)) || (r[1] & 1) || focused++) {return -1;}}
     }
     if (length && !MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, (const char *)names, (int)length, NULL, 0)) {return -1;}
     Access *old = w->access;
@@ -295,4 +300,8 @@ int32_t assisp_accessibility(int64_t token, int64_t document, const int64_t *wor
     else NotifyWinEvent(EVENT_OBJECT_LOCATIONCHANGE, w->hwnd, OBJID_CLIENT, CHILDID_SELF);
     if (focused_before != focused_after || new_document) NotifyWinEvent(EVENT_OBJECT_FOCUS, w->hwnd, OBJID_CLIENT, focused_after);
     return 0;
+}
+
+int32_t assisp_accessibility(int64_t token, int64_t document, const int64_t *words, int64_t count, const uint8_t *names, int64_t length) {
+    return accessibility_commit(token, document, words, count, names, length, 0);
 }

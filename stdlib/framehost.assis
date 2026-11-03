@@ -4,6 +4,7 @@ import "std/pagepresent.assis";
 /// Fixed local development profiles, not the complete HTDL/FS/SSC languages.
 public value struct Versions{let document:int;let style:int;let motion:int;}
 public pure fn versions():Versions{return new Versions(1,1,1);}
+public pure fn reading_versions():Versions{return new Versions(2,1,1);}
 public final class Drawing{
     own frame:pageframe::Frame;own reading:framereader::Reader;own packet:pagepresent::Packet;
 }
@@ -99,7 +100,7 @@ public final class Page{
             val accepted:bool=reading.accept(frame,document,projection,event);self.current.reading=move(reading);self.current.frame=move(frame);
             if(!accepted){return new viewer::Change();}
             val node:doctree::NodeId=self.current.packet.action(self.current.frame,document,event.arg0,event.arg1);
-            if(!doctree::absent(node)){return new viewer::Change(2,node);}return new viewer::Change();
+            if(!doctree::absent(node)){if(htdl::kind(document.nodes(),node)==17){return new viewer::Change(8,node);}return new viewer::Change(2,node);}return new viewer::Change();
         }
         own reading:framereader::Reader=move(self.current.reading);
         own frame:pageframe::Frame=move(self.current.frame);
@@ -132,9 +133,11 @@ public final class Session{
         if(self.pending!=null || self.store.has_candidate()){return 407;}
         if(self.current!=null){if(self.current.has_pending()){return 407;}}
         self.request=request;
-        if(profile.document!=1 || profile.style!=1 || profile.motion!=1){return 200;}
+        if((profile.document!=1 && profile.document!=2) || profile.style!=1 || profile.motion!=1){return 200;}
         if(len(fs)>65536 || len(ssc)>65536){return 401;}
-        val diagnostic:htdl::Diagnostic=htdl::stage(self.store,instance,source,len(fs)+len(ssc));
+        let diagnostic:htdl::Diagnostic=new htdl::Diagnostic();
+        if(profile.document==1){diagnostic=htdl::stage(self.store,instance,source,len(fs)+len(ssc));}
+        else{diagnostic=htdl::stage_catalog(self.store,instance,source,len(fs)+len(ssc));}
         if(diagnostic.code!=0){return diagnostic.code;}
         own page:Page=try_new Page(self.store.candidate(),fs,ssc,self.window_instance);
         if(page==null){self.store.abort(instance);return 401;}
@@ -186,6 +189,10 @@ public final class Session{
         val code:int=page.publish(store.active_document(),window);self.current=move(page);self.store=move(store);if(code==0){self.revision++;}return code;
     }
     fn cancel_gesture(borrow mut self):void{if(self.current!=null){self.current.cancel_gesture();}}
+    fn fragment_scroll(borrow self,projection:int,link:doctree::NodeId):int{
+        if(self.current==null || self.pending!=null || projection!=self.revision){return -1;}
+        return self.current.snapshot().frame.fragment_scroll(self.store.active_document(),link);
+    }
     fn copy(borrow self,borrow window:window::Window):int{
         if(self.current==null || self.pending!=null){return -2;}return self.current.copy(self.store.active_document(),window);
     }

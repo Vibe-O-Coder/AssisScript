@@ -1,3 +1,5 @@
+Continuação 03/11/2026: [perfil de leitura](ecossistema/PERFIL-LEITURA-CATALOGO-V1.md) inclui links. Change 8 é ativação de fragmento; Enter ativa no pressionamento sem repetição, Espaço ativa botão na liberação e rola no link/documento. Gestos de teclado/ponteiro não completam um ao outro. Enter segurado é conservado em reflow da mesma fonte.
+
 # std/framereader.assis
 
 Perfil experimental `frame-reading-local-1`, 03/11/2026. Lógica em AssisScript;

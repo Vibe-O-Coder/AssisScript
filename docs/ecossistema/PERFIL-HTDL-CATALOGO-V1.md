@@ -1,3 +1,5 @@
+Continuação 03/11/2026: [perfil de leitura do catálogo](PERFIL-LEITURA-CATALOGO-V1.md) permite 18 dos tipos estáticos por negociação explícita `(2,1,1)` no framehost. Reader/pagereader antigos continuam bootstrap; controles, código e recursos externos continuam recusados nesse novo host.
+
 # HTDL static-catalog-0.1-v1
 
 Continuação de 02/11/2026: `inspect` recupera também erros independentes de

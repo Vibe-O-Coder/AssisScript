@@ -1,0 +1,12 @@
+// Headless, explicit catalog-reading profile; no file or URL resolution.
+import "std/framehost.assis";
+safe fn metric(borrow content:slice<byte>,size:int,weight:int):int{return (pageframe::pixels(size)<<32)+len(content)*pageframe::pixels(size)/2;}
+safe fn main():int{
+    own s:framehost::Session=try_new framehost::Session(8000000,4000,7);
+    if(s==null || !s.is_open()){return 4;}
+    val code:int=s.prepare(1,1,framehost::reading_versions(),utf8("<div type=document version=0.1 lang=pt-BR><div type=head><div type=meta name=description content=\"Leitura local\"></div><div type=title>Catalogo de leitura</div></div><div type=body id=body><div type=main><div type=heading level=1 id=title>Catalogo de leitura</div><div type=link id=jump href=\"#end\">Ir para o final</div><div type=list ordered=true><div type=item><div type=paragraph id=first>Primeiro item: texto selecionavel e acessivel.</div></div><div type=item><div type=paragraph>Segundo item com marcador fora da copia.</div></div></div><div type=paragraph id=end>Fim do documento.</div></div></div></div>"),utf8(""),utf8(""),640,200,65536,reader::default_preferences(),metric);
+    if(code!=0 || !s.commit(1)){return 5;}
+    assert(s.snapshot().frame.size()==10);assert(s.snapshot().frame.marker(5)[0]==49);
+    val link:doctree::NodeId=htdl::find_id(s.document().nodes(),utf8("jump"));assert(s.fragment_scroll(1,link)>=0);
+    print("CATALOG FRAME",s.snapshot().frame.version(),s.snapshot().frame.size());s.close();return 0;
+}

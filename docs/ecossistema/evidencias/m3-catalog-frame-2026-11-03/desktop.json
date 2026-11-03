@@ -1,0 +1,21 @@
+{
+  "schema": "catalog-desktop-attempt-v1",
+  "status": "not-run",
+  "acceptance": false,
+  "skill": "computer-use",
+  "attempts": [
+    {
+      "operation": "sky.launch_app",
+      "result": "Computer Use app approval timed out"
+    },
+    {
+      "operation": "sky.list_windows after failure",
+      "result": "no matching target window"
+    }
+  ],
+  "screenshots": 0,
+  "inputs": 0,
+  "limitations": [
+    "No desktop, real screen reader, OS DPI, multiple monitor or IME acceptance"
+  ]
+}

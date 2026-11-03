@@ -26,9 +26,9 @@ int64_t assisp_frame_measure(const uint8_t *text, int64_t length, int32_t size, 
     DeleteDC(dc); DeleteObject(font); free(wide);
     return code ? code : ((int64_t)metrics.tmHeight << 32) | (uint32_t)extent.cx;
 }
-int32_t assisp_frame_commit(int64_t token, int64_t projection, uint32_t background,
+static int32_t frame_commit(int64_t token, int64_t projection, uint32_t background,
         const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
-        const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length) {
+        const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length, int catalog) {
     Window *w = NULL; int code = access_window(token, &w); if (code) return code;
     if (projection <= 0 || (w->access && projection <= w->access->document)) return -2;
     if (count < 0 || count > 33028 || (!commands && count) || length < 0 || length > 2097216 || (!text && length)) return -1;
@@ -83,9 +83,21 @@ int32_t assisp_frame_commit(int64_t token, int64_t projection, uint32_t backgrou
             }
         }
     }
-    if (!code) code = assisp_accessibility(token, projection, access, items, names, names_length);
+    if (!code) code = accessibility_commit(token, projection, access, items, names, names_length, catalog);
     if (code) {free_surface(&next); return code;}
     /* No fallible operation follows the accessible commit; physical presentation
        is separate. Calls run on one owner thread, without user callbacks. */
     Surface old = w->surface; w->surface = next; free_surface(&old); return 0;
+}
+
+int64_t assisp_frame_catalog_version(void) {return on_owner() ? 1 : -5;}
+int32_t assisp_frame_commit(int64_t token, int64_t projection, uint32_t background,
+        const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
+        const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length) {
+    return frame_commit(token, projection, background, commands, count, text, length, access, items, names, names_length, 0);
+}
+int32_t assisp_frame_catalog_commit(int64_t token, int64_t projection, uint32_t background,
+        const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
+        const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length) {
+    return frame_commit(token, projection, background, commands, count, text, length, access, items, names, names_length, 1);
 }
