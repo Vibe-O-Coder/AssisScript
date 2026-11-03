@@ -362,7 +362,7 @@
       "description": "Comandos do mesmo snapshot e publicacao atomica de pixels e MSAA Windows.",
       "dependencies": [
         "pageframe",
-        "reader"
+        "framereader"
       ]
     },
     {
@@ -374,6 +374,20 @@
         "sanscript",
         "flowpage"
       ]
+    },
+    {
+      "name": "framereader",
+      "required": false,
+      "doc": "BIBLIOTECA-framereader.md",
+      "description": "Selecao por grafemas sobre Frame composto, eventos versionados e copia explicita.",
+      "dependencies": ["pageframe", "reader"]
+    },
+    {
+      "name": "framehost",
+      "required": false,
+      "doc": "BIBLIOTECA-framehost.md",
+      "description": "Ativacao conjunta local de HTDL bootstrap, FS, SSC, layout e leitura.",
+      "dependencies": ["pagepresent"]
     }
   ]
 }

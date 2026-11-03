@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+  "setup_sha256": "70ad13f9a92f709818dd1fd73488ca24ddff5a541e0a7f9649d87eea09f89d60",
+  "selected_libraries": [
+    "buffers",
+    "doctree",
+    "documents",
+    "flowpage",
+    "fluxstyle",
+    "framehost",
+    "framereader",
+    "graphemes",
+    "htdl",
+    "motionpage",
+    "owned",
+    "pageframe",
+    "pagepresent",
+    "reader",
+    "sanscript",
+    "unicode",
+    "viewer",
+    "window"
+  ],
+  "checks": [
+    {
+      "command": [
+        "python",
+        "tests/test-installer-retry.py"
+      ],
+      "returncode": 0,
+      "executed": 4,
+      "log": "windows-installer-retry.log",
+      "sha256": "8445293f42c6f77e489df2ff02d18c05e36265afef5c950f31ff4d0b78060a20"
+    },
+    {
+      "command": [
+        "<TEMP>\\distribution\\bin\\assis-setup.exe",
+        "install",
+        "--prefix",
+        "<TEMP>\\prefix with spaces",
+        "--no-path",
+        "--no-associations",
+        "--with",
+        "framehost"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em C:\\Users\\babus\\AppData\\Local\\Temp\\assis-presentation-install-x_rok8vl\\prefix with spaces\\bin\\assis.exe\r\nO PATH foi preservado. Use o caminho completo ou adicione a pasta bin ao PATH.\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\assis.exe",
+        "run",
+        "<TEMP>\\prefix with spaces\\exemplos\\60_frame_reader.assis",
+        "--safe",
+        "--debug"
+      ],
+      "returncode": 0,
+      "stdout": "FRAME READER 1 7\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\distribution\\bin\\assis-setup.exe",
+        "uninstall",
+        "--prefix",
+        "<TEMP>\\prefix with spaces",
+        "--no-path",
+        "--no-associations"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: desinstalado. Projetos e arquivos extras foram preservados.\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-isolation=none",
+        "tests/test-development.js",
+        "tests/test-v31.js"
+      ],
+      "returncode": 0,
+      "executed": 23,
+      "log": "windows-distribution-node.log",
+      "sha256": "d60eb91b305ef01f68351d5ea11e7ea4481e4a59a8de403cc402327006b97eff"
+    }
+  ],
+  "scope": "Fresh candidate and isolated offline prefix, framehost/framereader transitive dependency closure; installed Frame reading demo, uninstall and user file preservation; no PATH, associations or release changes"
+}

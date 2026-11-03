@@ -1,0 +1,14 @@
+import "std/framehost.assis";
+safe fn metric(borrow content:slice<byte>,size:int,weight:int):int{
+    return (pageframe::pixels(size)<<32)+len(content)*pageframe::pixels(size)/2;
+}
+safe fn main():int{
+    own session:framehost::Session=try_new framehost::Session(4000000,4000,7);
+    if(session==null || !session.is_open()){return 2;}
+    val code:int=session.prepare(1,1,framehost::versions(),utf8("<div type=document version=0.1 lang=pt-BR><div type=head><div type=title>Reading</div></div><div type=body><div type=paragraph>abcd</div><div type=button>Go</div></div></div>"),utf8(""),utf8(""),320,200,65536,reader::default_preferences(),metric);
+    if(code!=0 || !session.commit(1)){return 3;}
+    session.dispatch(1,new window::Event(0,3,7,1,17,1,1));
+    session.dispatch(1,new window::Event(0,3,7,1,65,1,2));
+    print("FRAME READER",session.snapshot().frame.version(),len(session.snapshot().reading.selected_text()));
+    session.close();return 0;
+}

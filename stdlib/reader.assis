@@ -62,6 +62,13 @@ public safe fn width_100(borrow content:slice<byte>):int{
 public safe fn width_200(borrow content:slice<byte>):int{
     val m:int=measure(content,2000);if(m<0){return m;}return m%4294967296;
 }
+/// Explicit trusted-host clipboard request, also shared by Frame readers.
+public safe fn copy_text(borrow window:window::Window,borrow content:slice<byte>):int{
+    if(!window.opened()){return -2;}if(len(content)==0){return 0;}if(len(content)>1081344){return -1;}
+    own buffer:*byte=try_alloc<byte>(len(content));if(buffer==null){return -4;}
+    for(let i:int=0;i<len(content);i++){buffer[i]=content[i];}
+    unsafe{return int(native_copy(window.platform_token(),buffer,len(buffer)));}
+}
 public value struct Item{
     let node:doctree::NodeId;let first:int;let last:int;let role:int;let disabled:int;
     let name_start:int;let name_size:int;
@@ -236,10 +243,7 @@ public final class Reader{
     }
     fn copy(borrow self,borrow window:window::Window):int{
         if(!self.is_open() || !window.opened()){return -2;}
-        borrow content:slice<byte>=self.selected_text();if(len(content)==0){return 0;}
-        own buffer:*byte=try_alloc<byte>(len(content));if(buffer==null){return -4;}
-        for(let i:int=0;i<len(content);i++){buffer[i]=content[i];}
-        unsafe{return int(native_copy(window.platform_token(),buffer,len(buffer)));}
+        return copy_text(window,self.selected_text());
     }
     /// Publish a flat document/semantic-block MSAA projection, never page pointers.
     fn publish(borrow mut self,borrow window:window::Window):int{

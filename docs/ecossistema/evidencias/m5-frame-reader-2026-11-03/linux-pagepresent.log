@@ -1,0 +1,14 @@
+test_all_native_allocation_boundaries_preserve_pixels_accessibility_and_gdi_objects (__main__.PagePresent.test_all_native_allocation_boundaries_preserve_pixels_accessibility_and_gdi_objects) ... skipped 'Windows native frame provider unavailable'
+test_animated_packet_copies_composed_bounds_and_seals_candidate (__main__.PagePresent.test_animated_packet_copies_composed_bounds_and_seals_candidate) ... ok
+test_failed_native_animated_publication_does_not_commit_time_or_revoke_old_action (__main__.PagePresent.test_failed_native_animated_publication_does_not_commit_time_or_revoke_old_action) ... skipped 'Windows native frame provider unavailable'
+test_focus_order_tracks_semantics_and_disabled_overlay_blocks_underlying_action (__main__.PagePresent.test_focus_order_tracks_semantics_and_disabled_overlay_blocks_underlying_action) ... ok
+test_native_publish_and_action_revalidate_projection_and_semantic_generation (__main__.PagePresent.test_native_publish_and_action_revalidate_projection_and_semantic_generation) ... skipped 'Windows native frame provider unavailable'
+test_packet_commands_and_accessibility_share_clipped_frame_bounds (__main__.PagePresent.test_packet_commands_and_accessibility_share_clipped_frame_bounds) ... ok
+test_real_font_metrics_feed_layout_and_native_render_at_two_scales (__main__.PagePresent.test_real_font_metrics_feed_layout_and_native_render_at_two_scales) ... skipped 'Windows native frame provider unavailable'
+test_two_panel_ssc_window_retargets_presents_and_closes_in_both_modes (__main__.PagePresent.test_two_panel_ssc_window_retargets_presents_and_closes_in_both_modes) ... skipped 'Windows native frame provider unavailable'
+test_two_panel_window_presents_and_closes_in_both_modes (__main__.PagePresent.test_two_panel_window_presents_and_closes_in_both_modes) ... skipped 'Windows native frame provider unavailable'
+
+----------------------------------------------------------------------
+Ran 9 tests in 19.234s
+
+OK (skipped=6)

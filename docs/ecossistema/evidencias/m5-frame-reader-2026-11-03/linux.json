@@ -1,0 +1,166 @@
+{
+  "schema": "frame-reading-host-evidence-v1",
+  "base": "a37a39a85a64e90543eecc668aeb796cee37b27e",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "checks": [
+    {
+      "name": "motionpage",
+      "command": [
+        "python",
+        "tests/test-motionpage.py"
+      ],
+      "returncode": 0,
+      "executed": 14,
+      "not_run": 0,
+      "seconds": 76.356,
+      "log": "linux-motionpage.log",
+      "sha256": "59c271b137dfc4037a8a874a30e404f6eff854f5008b271dff9e8824ae61bfb5"
+    },
+    {
+      "name": "pageframe",
+      "command": [
+        "python",
+        "tests/test-pageframe.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 111.477,
+      "log": "linux-pageframe.log",
+      "sha256": "94e472b5a2b7dfce903f2b1a143e2d26c7b271507edeb3f62b6f7f08fe7e38db"
+    },
+    {
+      "name": "pagepresent",
+      "command": [
+        "python",
+        "tests/test-pagepresent.py"
+      ],
+      "returncode": 0,
+      "executed": 3,
+      "not_run": 6,
+      "seconds": 19.565,
+      "log": "linux-pagepresent.log",
+      "sha256": "e0378d461ab8a1858d6984af022d0f456c6a3e19ee9f159ed868b52deee6084e"
+    },
+    {
+      "name": "flowpage",
+      "command": [
+        "python",
+        "tests/test-flowpage.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 35.576,
+      "log": "linux-flowpage.log",
+      "sha256": "5a773b2687a6c03d74664735e07be6f7c733a4af963fc0140b7110a1814a7cbf"
+    },
+    {
+      "name": "fluxstyle",
+      "command": [
+        "python",
+        "tests/test-fluxstyle.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 19.283,
+      "log": "linux-fluxstyle.log",
+      "sha256": "06a7c453ff879f24e44c7fd588ecd80eb9df1132f5ff726bbeddd5637ffa2719"
+    },
+    {
+      "name": "sanscript",
+      "command": [
+        "python",
+        "tests/test-sanscript.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 16.642,
+      "log": "linux-sanscript.log",
+      "sha256": "2972fed364793da4e7fadeb5d0e7a5d6397f5de4236e249f04c44619b8fec212"
+    },
+    {
+      "name": "document-memory",
+      "command": [
+        "python",
+        "tests/test-document-memory.py"
+      ],
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 19.176,
+      "log": "linux-document-memory.log",
+      "sha256": "e167f6ff0c534cc98a077a3a6fa292a0bba68ee3afb46509179693c8810a46b7"
+    },
+    {
+      "name": "htdl-parser",
+      "command": [
+        "python",
+        "tests/test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 58.751,
+      "log": "linux-htdl-parser.log",
+      "sha256": "7f70b90ba372af329184b4d2ae8d30875728e9f17116b9ab7a91cd15adef575b"
+    },
+    {
+      "name": "htdl-reader",
+      "command": [
+        "python",
+        "tests/test-htdl-reader.py"
+      ],
+      "returncode": 0,
+      "executed": 7,
+      "not_run": 3,
+      "seconds": 20.099,
+      "log": "linux-htdl-reader.log",
+      "sha256": "c73d6d54f3a06b1b05af325083bb0cf7293cdd791b296d47b1520de80e524e56"
+    },
+    {
+      "name": "reader-transactions",
+      "command": [
+        "python",
+        "tests/test-reader-transactions.py"
+      ],
+      "returncode": 0,
+      "executed": 11,
+      "not_run": 4,
+      "seconds": 30.155,
+      "log": "linux-reader-transactions.log",
+      "sha256": "3da77f805212c5585a6282efcfaf4a69727f9e2caee8ba361c0731eeafffef2f"
+    },
+    {
+      "name": "framereader",
+      "command": [
+        "python",
+        "tests/test-framereader.py"
+      ],
+      "returncode": 0,
+      "executed": 13,
+      "not_run": 1,
+      "seconds": 93.69,
+      "log": "linux-framereader.log",
+      "sha256": "05d4736a40cb6be0bdc3417861bfe04126d7ac035eabb5aff4eee973dab22cd0"
+    },
+    {
+      "name": "framehost",
+      "command": [
+        "python",
+        "tests/test-framehost.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 2,
+      "seconds": 82.962,
+      "log": "linux-framehost.log",
+      "sha256": "77632388f65cd35075493ee7e2748a818e9d9be730107314bb7894fade31a527"
+    }
+  ],
+  "passed": true
+}

@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-03",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "native-whole-page-ssc-and-transactional-frame-composition",
+  "assessment": "native-composed-frame-reading-and-atomic-local-bundle",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -64,9 +64,9 @@
         {
           "id": "E00-04",
           "name": "Driver e matriz de conformidade",
-          "level": 2,
+          "level": 3,
           "acceptance": "Executar corpus por perfil e sistema; distinguir pass/fail/not-run/unsupported, com hashes, versões e resultados sem depender de inspeção manual de exemplos.",
-          "baseline": "Drivers nativos dos perfis bootstrap e catálogo estático com corpus declarativo, diagnósticos/árvores, XML independente na sintaxe em comum e Windows/Linux x64. Geração dos cinco formatos é separada de execução; FS/SSC e produto integrado permanecem sem driver completo.",
+          "baseline": "Matriz executável do perfil local integrado HTDL/FS/SSC/Frame/Reader: oráculos de bytes/grafemas/retângulos, ambos os modos, falhas reais de alocação e publicação; Windows/Linux x64 com not-run explícitos. Corpus integral dos rascunhos, catálogo visual completo e outros hosts permanecem abertos.",
           "evidence": [
             "local:htdl/docs/19-conformidade-e-cenarios.md",
             "docs/relatorios/2026-11-01-m3-parser-htdl.md",
@@ -79,7 +79,9 @@
             "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/summary.json",
             "docs/relatorios/2026-11-02-m3-presentation-core.md",
             "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/summary.json",
-            "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md"
+            "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md",
+            "docs/relatorios/2026-11-03-m5-frame-reader.md",
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
           ]
         },
         {
@@ -274,7 +276,9 @@
             "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json",
             "docs/relatorios/2026-11-03-m5-page-motion.md",
             "docs/ecossistema/evidencias/m5-page-motion-2026-11-02/summary.json",
-            "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md"
+            "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md",
+            "docs/relatorios/2026-11-03-m5-frame-reader.md",
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
           ]
         },
         {
@@ -459,7 +463,9 @@
             "tests/reader_oracle.c",
             "docs/relatorios/2026-11-01-m3-unicode-m0-vm.md",
             "docs/ecossistema/evidencias/m3-unicode-vm-2026-11-01/summary.json",
-            "docs/BIBLIOTECA-graphemes.md"
+            "docs/BIBLIOTECA-graphemes.md",
+            "docs/relatorios/2026-11-03-m5-frame-reader.md",
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
           ]
         },
         {
@@ -702,7 +708,9 @@
             "docs/ecossistema/evidencias/m5-page-styles-2026-11-02/summary.json",
             "docs/BIBLIOTECA-flowpage.md",
             "docs/relatorios/2026-11-02-m5-page-frame.md",
-            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-03-m5-frame-reader.md",
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
           ]
         },
         {
@@ -727,22 +735,26 @@
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
-            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json"
+            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json",
+            "docs/relatorios/2026-11-03-m5-frame-reader.md",
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
           ]
         },
         {
           "id": "E07-05",
           "name": "Loader e ativação atômica",
-          "level": 2,
+          "level": 3,
           "acceptance": "Carregar HTDL, código, FS/SSC e recursos locais/remotos sob política; resolver versões/dependências, validar antes de ativar e descartar resultados atrasados; cache somente de artefato imutável.",
-          "baseline": "Código ASV1/ASV2 e projeção de documento HTDL já validado são copiados antes de ativação atômica local; erro/OOM preserva anterior e invalida respostas/handles antigos. Sem resolver recursos/FS/SSC, versões gerais, rede ou cache imutável.",
+          "baseline": "Bundle local prepara HTDL bootstrap, FS, SSC, layout, leitura, nomes e comandos em conjunto; versões locais, produtor único, request/instância/quadro, rollback e publicação pixels/MSAA antes de ativar. ASV2/SDK geral, catálogo visual completo, recursos externos, rede, cache e política de caminhos permanecem separados.",
           "evidence": [
             "local:htdl/docs/15-htdl-0.2-e-carregamento.md",
             "docs/relatorios/2026-11-01-m3-parser-htdl.md",
             "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/summary.json",
             "tests/fixtures/htdl-bootstrap-corpus.json",
             "docs/relatorios/2026-11-02-m0-page-runtime.md",
-            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-03-m5-frame-reader.md",
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
           ]
         }
       ]
@@ -794,7 +806,9 @@
             "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json",
             "docs/relatorios/2026-11-03-m5-page-motion.md",
             "docs/ecossistema/evidencias/m5-page-motion-2026-11-02/summary.json",
-            "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md"
+            "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md",
+            "docs/relatorios/2026-11-03-m5-frame-reader.md",
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
           ]
         },
         {
@@ -1014,7 +1028,9 @@
             "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json",
             "docs/relatorios/2026-11-03-m5-page-motion.md",
             "docs/ecossistema/evidencias/m5-page-motion-2026-11-02/summary.json",
-            "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md"
+            "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md",
+            "docs/relatorios/2026-11-03-m5-frame-reader.md",
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
           ]
         },
         {
@@ -3361,7 +3377,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-03",
+      "rubric_version": 1,
+      "label": "Leitura no Frame composto e bundle local transacional: 47,10%, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 3,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 2,
+        "E07-03": 2,
+        "E07-04": 2,
+        "E07-05": 3,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "46,50%, 0/5 gates; meta 50% pendente. SSC agregado em AssisScript com cota de 256 canais, candidatos independentes, proteção de ancestrais e composição de Frame selado; Windows 136/0 e Linux 123/13 executados/not-run, 61 exemplos por host. Instalação/execução/remoção isoladas Windows/Linux, 4 locks e 23 Node Windows aprovados. Implementação 658b831 publicada, com SHA remoto, árvore completa e 70 paths/blobs/modos conferidos; PR indisponível pelo conector 403. Adendo documental pelo histórico. Computer Use parou em app approval timed out e não expôs janela: sem aceite desktop/leitor/DPI/IME. Fila integral de Reader/seleção/catálogo, identidade incremental/editor, SDK/loader/recursos, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites preservada. Easy por último."
+  "assessment_note": "47,10%, 0/5 gates; meta 50% pendente. Seleção por grafemas e eventos sobre o Frame composto; bundle local HTDL bootstrap/FS/SSC/layout/Reader/Packet com ativação conjunta e rollback. Windows e Linux x64 executados; resultados exatos no relatório e evidência desta revisão. Janela real abriu pelo Computer Use, mas duas capturas expiraram, sem aceite desktop/leitor/DPI/IME. Publicação será confirmada no adendo. Catálogo visual completo, integração ASV2 e recursos externos, identidade incremental/editor, SDK geral, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites seguem integralmente na fila. Easy por último."
 }

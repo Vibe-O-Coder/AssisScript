@@ -1,3 +1,5 @@
+Continuação 03/11/2026: [Frame Reader](../BIBLIOTECA-framereader.md) seleciona a geometria composta e [Frame host](../BIBLIOTECA-framehost.md) ativa HTDL bootstrap/FS/SSC/layout/leitura em conjunto. As seções anteriores permanecem históricas; catálogo visual/recursos externos/ASV2, desktop/leitor/DPI/IME e gates continuam abertos.
+
 Continuação de 02/11/2026: [Frame local](PERFIL-FRAME-LOCAL-V1.md) acrescenta
 layout/snapshot comum e extensão frame 1 do provider Windows. Publicação de
 raster e MSAA é conjunta; Reader::Session/seleção, SSC agregado e catálogo

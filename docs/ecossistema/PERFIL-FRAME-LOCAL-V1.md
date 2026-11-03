@@ -1,3 +1,5 @@
+Continuação 03/11/2026: [Frame Reader](../BIBLIOTECA-framereader.md) seleciona a geometria composta e [Frame host](../BIBLIOTECA-framehost.md) ativa HTDL bootstrap/FS/SSC/layout/leitura em conjunto. As seções anteriores permanecem históricas; catálogo visual/recursos externos/ASV2, desktop/leitor/DPI/IME e gates continuam abertos.
+
 Continuação 03/11/2026: [movimento agregado](PERFIL-MOVIMENTO-PAGINA-V1.md) compõe o Frame candidato antes do selo de Packet. Layout e ABI frame 1 permanecem; o item SSC agregado na lista histórica abaixo foi implementado nesse perfil finito. Reader/seleção e aceites continuam abertos.
 
 # Frame local v1 — contrato de desenvolvimento

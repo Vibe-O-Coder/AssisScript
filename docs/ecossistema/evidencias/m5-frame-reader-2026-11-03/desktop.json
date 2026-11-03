@@ -1,0 +1,22 @@
+{
+  "status": "not-run",
+  "acceptance": false,
+  "skill": "computer-use",
+  "window_launched": true,
+  "title": "AssisScript - leitura composta",
+  "attempts": [
+    {
+      "operation": "get_window_state",
+      "error": "FrameArrived timed out: timed out waiting on channel"
+    },
+    {
+      "operation": "get_window_state after fresh window selection",
+      "error": "window capture timed out: timed out waiting on channel"
+    }
+  ],
+  "screenshots": 0,
+  "inputs": 0,
+  "limitations": [
+    "No visual desktop, screen reader, OS DPI, multiple monitors or IME acceptance; no alternate capture or UI automation used"
+  ]
+}

@@ -1,0 +1,52 @@
+// Trusted offline reading host. Drag selects; Ctrl+A/C copies explicitly;
+// Ctrl+plus/minus zooms the font. The button also toggles 100/200%.
+import "std/framehost.assis";
+safe fn option(borrow name:slice<byte>):bool{
+    if(arg_count()!=2 || arg_size(1)!=len(name)){return false;}
+    own data:*byte=try_alloc<byte>(len(name)+1);if(data==null){return false;}
+    if(arg_copy(1,data,len(name)+1)!=len(name)){return false;}
+    for(let i:int=0;i<len(name);i++){if(data[i]!=name[i]){return false;}}return true;
+}
+safe fn main():int{
+    if(!pagepresent::available()){print("Windows frame provider required");return 4;}
+    own s:framehost::Session=try_new framehost::Session(8000000,4000,7);
+    own w:window::Window=try_new window::Window(7,640,420,utf8("AssisScript - leitura composta"));
+    if(s==null || !s.is_open() || w==null || !w.opened()){return 4;}
+    let policy:reader::Preferences=reader::preferences(w);if(policy.status!=0){return 4;}
+    val result:int=s.prepare(1,1,framehost::versions(),utf8("<div type=document version=0.1 lang=pt-BR><div type=head><div type=title>Leitura no Frame composto</div></div><div type=body id=body><div type=heading level=1 id=title>Leitura e selecao</div><div type=container id=card><div type=paragraph>Selecione este texto com o mouse ou use Ctrl+A. Ctrl+C copia apenas por pedido explicito. Acentos: acao, cafe.</div><div type=paragraph>Layout, recortes, movimento, desenho e acessibilidade usam o mesmo quadro. O zoom de fonte conserva os offsets da selecao.</div><div type=button id=zoom>Alternar fonte 100 / 200%</div></div></div></div>"),
+        utf8("flow Body{20px -> layout.padding;column(gap:12px) -> layout.children;#f4f1ea -> paint.background;}bind #body to Body;flow Title{24px -> text.size;700 -> text.weight;}bind #title to Title;flow Card{16px -> layout.padding;column(gap:12px) -> layout.children;#d9e6e4 -> paint.background;8px -> target.offsetX;}bind #card to Card;flow Button{8px -> layout.padding;#145563 -> paint.background;#fff -> paint.text;}bind #zoom to Button;"),
+        utf8("motion Card{spring(target:fs.target.offsetX,frequency:4Hz,dampingRatio:0.8)->presentation.offsetX;}bind #card to Card;"),640,420,65536,policy,pagepresent::measure);
+    if(result!=0 || s.publish(1,w)!=0 || w.present()!=0){return 5;}
+    if(option(utf8("--once"))){print("READING FRAME",s.snapshot().frame.version(),s.snapshot().frame.size());return int(w.close()!=0);}
+    if(option(utf8("--smoke"))){
+        s.dispatch(1,new window::Event(0,3,7,1,17,1,1));s.dispatch(1,new window::Event(0,3,7,1,65,1,2));
+        val selected:int=len(s.snapshot().reading.selected_text());
+        if(s.reflow(640,420,0,131072,25,true,policy,pagepresent::measure)!=0 || s.publish_reflow(w)!=0 || w.present()!=0){return 5;}
+        assert(len(s.snapshot().reading.selected_text())==selected);print("READING FRAME",s.snapshot().frame.version(),s.snapshot().frame.size());return int(w.close()!=0);
+    }
+    let width:int=640;let height:int=420;let scale:int=65536;let visible:bool=true;let coherent:bool=true;
+    while(w.opened()){
+        val event:window::Event=w.poll(50);if(event.status<0){return 4;}if(event.status!=0){continue;}
+        if(event.kind==1){break;}
+        let repaint:bool=false;let scroll:int=s.snapshot().frame.scroll_y();
+        if(event.kind==13){visible=event.arg0!=0;s.cancel_gesture();}
+        if(event.kind==2 && event.arg0>0 && event.arg1>0){width=event.arg0;height=event.arg1;s.cancel_gesture();repaint=true;}
+        if(event.kind==12){policy=reader::preferences(w);s.cancel_gesture();repaint=true;}
+        if(coherent && visible){
+            val projection:int=s.snapshot().frame.version();val change:viewer::Change=s.dispatch(projection,event);
+            if(change.kind==4){if(s.copy(w)!=0){print("COPY FAILED");}}
+            if(change.kind==5){scale=131072;repaint=true;}if(change.kind==6){scale=65536;repaint=true;}
+            if(change.kind==2){if(scale==65536){scale=131072;}else{scale=65536;}repaint=true;}
+            if(change.kind==7){scroll=s.snapshot().reading.scroll_target();repaint=true;}
+            if(change.kind==1){repaint=true;}
+        }
+        // Hold the published frame for the whole gesture; discard timer debt.
+        if(s.snapshot().reading.gesture_active()){continue;}
+        if(repaint){
+            val code:int=s.reflow(width,height,scroll,scale,0,visible,policy,pagepresent::measure);
+            coherent=code==0;
+            if(coherent){coherent=s.publish_reflow(w)==0;if(coherent){if(w.present()!=0){return 4;}}}
+            if(!coherent){s.abort_reflow();print("FRAME FAILED - retry on resize");}
+        }
+    }s.close();return int(w.close()!=0);
+}

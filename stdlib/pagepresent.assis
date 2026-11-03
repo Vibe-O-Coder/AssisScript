@@ -1,6 +1,6 @@
 namespace pagepresent;
 import "std/pageframe.assis";
-import "std/reader.assis";
+import "std/framereader.assis";
 platform("windows-x64"){
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_version") fn native_version():int;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_current") fn native_current(window:int):int;
@@ -31,11 +31,11 @@ public pure fn alpha(color:int,opacity:int):int{return (color&0xffffff00)|(((col
 /// Owned, provider-independent commands/names made from exactly one Frame.
 /// publish commits pixels and MSAA together; window.present displays them.
 public final class Packet{
-    private own commands:*int;private own content:*byte;private own access:*int;private own names:*byte;private own mapping:*int;
+    private own commands:*int;private own content:*byte;private own access:*int;private own names:*byte;private own mapping:*int;private own run_map:*int;
     private let count:int;private let used:int;private let items:int;private let name_size:int;
     private let frame_id:int;private let instance:int;private let semantic:int;private let background:u32;
     private let window_token:int;
-    private let active:bool;private let published:bool;
+    private let active:bool;private let published:bool;private let highlighted:bool;
     private fn command(borrow mut self,type:int,bounds:pageframe::Rect,clip:pageframe::Rect,color:int,font:int,weight:int,start:int,size:int):void{
         val p:int=self.count*14;self.commands[p]=type;self.commands[p+1]=bounds.x;self.commands[p+2]=bounds.y;
         self.commands[p+3]=bounds.width;self.commands[p+4]=bounds.height;self.commands[p+5]=clip.x;self.commands[p+6]=clip.y;
@@ -45,8 +45,9 @@ public final class Packet{
     fn init(borrow mut self,borrow mut frame:pageframe::Frame,focus:doctree::NodeId,policy:reader::Preferences,max_bytes:int):void{
         if(!frame.is_open() || max_bytes<10000000 || policy.status!=0){return;}
         self.commands=try_alloc<int>((frame.run_count()+frame.size()+4)*14);
+        self.run_map=try_alloc<int>(frame.run_count()+frame.size()+4);
         self.content=try_alloc<byte>(2097216);self.access=try_alloc<int>(256*8);self.names=try_alloc<byte>(1048608);self.mapping=try_alloc<int>(256);
-        if(self.commands==null || self.content==null || self.access==null || self.names==null || self.mapping==null){return;}
+        if(self.commands==null || self.content==null || self.access==null || self.names==null || self.mapping==null || self.run_map==null){return;}
         self.frame_id=frame.version();self.instance=frame.instance();self.semantic=frame.semantic_version();self.background=policy.background;
         val viewport:pageframe::Rect=frame.viewport();self.access[0]=1;self.access[4]=viewport.width;self.access[5]=viewport.height;
         for(let i:int=0;i<len(frame.title());i++){self.names[self.name_size]=frame.title()[i];self.name_size++;}
@@ -72,7 +73,7 @@ public final class Packet{
                 if(policy.high_contrast){foreground=int(policy.foreground);if(b.kind==9){foreground=int(policy.button_text);}}
                 if(b.disabled){foreground=int(policy.disabled_text);}
                 val text_clip:pageframe::Rect=pageframe::intersect(run.bounds,frame.content_clip(i));
-                if(text_clip.width>0 && text_clip.height>0){self.command(1,run.bounds,text_clip,foreground,pageframe::pixels(b.text_size),pageframe::pixels(b.weight),start,run.size);}
+                if(text_clip.width>0 && text_clip.height>0){self.run_map[self.count]=j+1;self.command(1,run.bounds,text_clip,foreground,pageframe::pixels(b.text_size),pageframe::pixels(b.weight),start,run.size);}
             }
         }
         // Native focus indication wins over author opacity/color and draw order.
@@ -88,6 +89,32 @@ public final class Packet{
         }frame.seal();self.active=true;
     }
     fn is_open(borrow self):bool{return self.active;}
+    /// Prepare selection in structural paint order. Full text is drawn through
+    /// the selected clip, retaining the same glyph origins and font metrics.
+    /// Failure keeps the unmodified packet usable; this is a one-shot operation.
+    fn highlight(borrow mut self,borrow frame:pageframe::Frame,borrow document:documents::Document,borrow selection:framereader::Reader,policy:reader::Preferences):int{
+        if(!self.matches(frame,document) || !selection.current(frame,document) || self.published || self.highlighted || policy.status!=0){return 204;}
+        let needed:int=self.count;
+        for(let i:int=0;i<self.count;i++){if(self.run_map[i]>0){val r:pageframe::Rect=selection.highlight(frame,self.run_map[i]-1);if(r.width>0 && r.height>0){needed+=2;}}}
+        if(needed>33028){return 401;}
+        own commands:*int=try_alloc<int>(needed*14);if(commands==null){return 401;}
+        let count:int=0;
+        for(let i:int=0;i<self.count;i++){
+            val p:int=i*14;let clip:pageframe::Rect=new pageframe::Rect();
+            if(self.run_map[i]>0){clip=selection.highlight(frame,self.run_map[i]-1);}
+            if(clip.width>0 && clip.height>0){val q:int=count*14;
+                commands[q]=0;commands[q+1]=clip.x;commands[q+2]=clip.y;commands[q+3]=clip.width;commands[q+4]=clip.height;
+                commands[q+5]=clip.x;commands[q+6]=clip.y;commands[q+7]=clip.width;commands[q+8]=clip.height;commands[q+9]=int(policy.selection);count++;
+            }
+            for(let j:int=0;j<14;j++){commands[count*14+j]=self.commands[p+j];}count++;
+            if(clip.width>0 && clip.height>0){val q:int=count*14;
+                for(let j:int=0;j<14;j++){commands[q+j]=self.commands[p+j];}
+                commands[q+5]=clip.x;commands[q+6]=clip.y;commands[q+7]=clip.width;commands[q+8]=clip.height;
+                commands[q+9]=int(policy.selection_text);count++;
+            }
+        }
+        self.commands=move(commands);self.count=count;self.highlighted=true;return 0;
+    }
     fn command_count(borrow self):int{return self.count;}
     fn item_count(borrow self):int{return self.items;}
     fn item_box(borrow self,index:int):int{if(index<0 || index>=self.items){return -1;}return self.mapping[index];}
@@ -115,5 +142,6 @@ public final class Packet{
     fn close(borrow mut self):void{
         self.active=false;self.published=false;own commands:*int=move(self.commands);own content:*byte=move(self.content);
         own access:*int=move(self.access);own names:*byte=move(self.names);own mapping:*int=move(self.mapping);
+        own run_map:*int=move(self.run_map);
     }
 }

@@ -1,0 +1,182 @@
+namespace framereader;
+import "std/pageframe.assis";
+import "std/reader.assis";
+
+/// Owned read-only text selection for a sealed, possibly SSC-composed Frame.
+/// Offsets refer to copied reading text, never source, labels or host pointers.
+public final class Reader{
+    private own content:*byte;private own starts:*int;private own advances:*int;
+    private own boundaries:graphemes::Index;
+    private let used:int;private let lines:int;private let revision:int;
+    private let instance:int;private let semantic:int;private let window_instance:int;
+    private let anchor:int;private let caret:int;private let request:int;private let generation:int;
+    private let control:bool;private let shift:bool;private let dragging:bool;
+    private let focus:doctree::NodeId;private let pressed:doctree::NodeId;
+    private let scroll:int;private let active:bool;private let code:int;
+    fn init(borrow mut self,borrow mut frame:pageframe::Frame,borrow document:documents::Document,
+            window_instance:int,max_bytes:int,metric:safe fn(borrow slice<byte>,int,int):int):void{
+        self.code=204;
+        if(!frame.current(document) || window_instance<1){return;}
+        self.code=401;if(max_bytes<20000000){return;}
+        self.lines=frame.run_count();let capacity:int=0;
+        for(let i:int=0;i<self.lines;i++){capacity+=frame.run(i).size+1;}
+        if(capacity>1081344){return;}
+        self.content=try_alloc<byte>(pageframe::maximum(1,capacity));self.starts=try_alloc<int>(self.lines+1);
+        self.advances=try_alloc<int>(capacity+1);
+        if(self.content==null || self.starts==null || self.advances==null){return;}
+        for(let i:int=0;i<self.lines;i++){
+            if(i>0 && frame.run(i).box!=frame.run(i-1).box){self.content[self.used]=byte(10);self.used++;}
+            self.starts[i]=self.used;
+            for(let j:int=0;j<frame.run(i).size;j++){self.content[self.used]=frame.run_text(i)[j];self.used++;}
+        }self.starts[self.lines]=self.used;
+        self.boundaries=try_new graphemes::Index(slice_of(self.content,0,self.used));
+        if(self.boundaries==null || self.boundaries.status()!=0){return;}
+        let work:int=0;
+        for(let i:int=0;i<self.lines;i++){
+            val run:pageframe::Run=frame.run(i);val b:pageframe::Box=frame.box(run.box);
+            let offset:int=0;let prior:int=0;
+            while(true){
+                if(!self.boundaries.boundary(self.starts[i]+offset)){self.code=304;return;}
+                work+=offset;if(work>8000000){return;}
+                val m:int=metric(slice_of(self.content,self.starts[i],offset),b.text_size,b.weight);
+                val width:int=m%4294967296;
+                if(m<0 || (m>>32)!=run.bounds.height || width<prior || width>run.bounds.width ||
+                   (offset==0 && width!=0) || (offset==run.size && width!=run.bounds.width)){
+                    self.code=304;return;
+                }
+                self.advances[self.starts[i]+offset]=width;prior=width;
+                if(offset==run.size){break;}
+                offset=self.boundaries.next(self.starts[i]+offset)-self.starts[i];
+                if(offset>run.size){self.code=304;return;}
+            }
+        }
+        self.revision=frame.version();self.instance=frame.instance();self.semantic=frame.semantic_version();
+        self.window_instance=window_instance;self.scroll=frame.scroll_y();
+        frame.seal();self.code=0;self.active=true;
+    }
+    fn is_open(borrow self):bool{return self.active;}
+    fn status(borrow self):int{return self.code;}
+    fn version(borrow self):int{return self.revision;}
+    fn current(borrow self,borrow frame:pageframe::Frame,borrow document:documents::Document):bool{
+        return self.active && frame.current(document) && frame.version()==self.revision &&
+            frame.instance()==self.instance && frame.semantic_version()==self.semantic;
+    }
+    fn text_bytes(borrow self):borrow(self) slice<byte>{return slice_of(self.content,0,self.used);}
+    fn selection_start(borrow self):int{return pageframe::minimum(self.anchor,self.caret);}
+    fn selection_end(borrow self):int{return pageframe::maximum(self.anchor,self.caret);}
+    fn selected_text(borrow self):borrow(self) slice<byte>{
+        return slice_of(self.content,self.selection_start(),self.selection_end()-self.selection_start());
+    }
+    fn select(borrow mut self,borrow frame:pageframe::Frame,borrow document:documents::Document,anchor:int,caret:int):bool{
+        if(!self.current(frame,document) || !self.boundaries.boundary(anchor) || !self.boundaries.boundary(caret)){return false;}
+        self.anchor=anchor;self.caret=caret;return true;
+    }
+    fn focus_node(borrow self):doctree::NodeId{return self.focus;}
+    fn gesture_active(borrow self):bool{return self.dragging || !doctree::absent(self.pressed);}
+    fn scroll_target(borrow self):int{return self.scroll;}
+    fn cancel_gesture(borrow mut self):void{self.dragging=false;self.pressed=new doctree::NodeId();self.control=false;self.shift=false;}
+    fn run_start(borrow self,index:int):int{assert(self.active && index>=0 && index<self.lines);return self.starts[index];}
+    /// Selection geometry is cut from the exact run; author offsets are already composed.
+    fn highlight(borrow self,borrow frame:pageframe::Frame,index:int):pageframe::Rect{
+        if(!self.active || frame.version()!=self.revision || frame.instance()!=self.instance || index<0 || index>=self.lines){return new pageframe::Rect();}
+        val run:pageframe::Run=frame.run(index);val start:int=self.starts[index];
+        val a:int=pageframe::maximum(start,self.selection_start());val b:int=pageframe::minimum(start+run.size,self.selection_end());
+        if(a>=b){return new pageframe::Rect();}
+        // A soft-wrap boundary is both the prior line's end and next line's
+        // zero advance. Its terminal width belongs to the run, not the offset.
+        let right:int=self.advances[b];if(b==start+run.size){right=run.bounds.width;}
+        return pageframe::intersect(new pageframe::Rect(run.bounds.x+self.advances[a],run.bounds.y,
+            right-self.advances[a],run.bounds.height),frame.content_clip(run.box));
+    }
+    fn restore(borrow mut self,borrow frame:pageframe::Frame,borrow document:documents::Document,borrow previous:Reader):bool{
+        if(!self.current(frame,document) || !previous.active || self.window_instance!=previous.window_instance){return false;}
+        self.request=previous.request;self.generation=previous.generation;
+        if(self.instance!=previous.instance || self.semantic!=previous.semantic || self.used!=previous.used){return false;}
+        for(let i:int=0;i<self.used;i++){if(self.content[i]!=previous.content[i]){return false;}}
+        self.anchor=previous.anchor;self.caret=previous.caret;
+        for(let i:int=0;i<frame.size();i++){
+            if(pageframe::same(frame.box(i).node,previous.focus) && frame.eligible(document,i)){self.focus=previous.focus;}
+        }return true;
+    }
+    /// A repaint of unchanged geometry may retain held modifier keys. Pointer
+    /// and activation gestures never transfer to a replacement projection.
+    fn restore_keys(borrow mut self,borrow frame:pageframe::Frame,borrow document:documents::Document,borrow previous:Reader):bool{
+        if(!self.current(frame,document) || !previous.active || self.instance!=previous.instance || self.semantic!=previous.semantic ||
+           self.window_instance!=previous.window_instance || self.request!=previous.request || self.generation!=previous.generation){return false;}
+        self.control=previous.control;self.shift=previous.shift;return true;
+    }
+    private fn point(borrow self,borrow frame:pageframe::Frame,x:int,y:int):int{
+        if(x< -2147483648 || x>2147483647 || y< -2147483648 || y>2147483647){return -1;}
+        for(let box:int=frame.size()-1;box>=0;box--){
+            if(!pageframe::contains(frame.accessible_bounds(box),x,y)){continue;}
+            if(frame.box(box).kind==9){return -1;}
+            for(let i:int=0;i<self.lines;i++){
+                val run:pageframe::Run=frame.run(i);if(run.box!=box){continue;}
+                val clip:pageframe::Rect=pageframe::intersect(run.bounds,frame.content_clip(box));
+                if(clip.height==0 || y<clip.y || y>=clip.y+clip.height){continue;}
+                let at:int=self.starts[i];val end:int=at+run.size;
+                while(at<end){val next:int=self.boundaries.next(at);
+                    let right:int=self.advances[next];if(next==end){right=run.bounds.width;}
+                    if(x-run.bounds.x<self.advances[at]+(right-self.advances[at])/2){return at;}at=next;
+                }return end;
+            }return -1;
+        }return -1;
+    }
+    /// One envelope gate shared by keyboard/pointer and native accessible actions.
+    fn accept(borrow mut self,borrow frame:pageframe::Frame,borrow document:documents::Document,projection:int,event:window::Event):bool{
+        if(!self.current(frame,document) || projection!=self.revision || event.status!=0 ||
+           event.instance!=self.window_instance || event.generation<1 ||
+           (self.generation!=0 && event.generation!=self.generation) || event.request_id<=self.request){return false;}
+        self.request=event.request_id;self.generation=event.generation;return true;
+    }
+    /// Host supplies the projection that owned the event. Reflow cancels gestures.
+    /// Change kinds: repaint=1, activate=2, close=3, copy=4, zoom=5/6, scroll=7.
+    fn dispatch(borrow mut self,borrow frame:pageframe::Frame,borrow document:documents::Document,projection:int,event:window::Event):viewer::Change{
+        val none:viewer::Change=new viewer::Change();
+        if(!self.accept(frame,document,projection,event)){return none;}
+        if(event.kind==1){self.close();return new viewer::Change(3,new doctree::NodeId());}
+        if(event.kind==5 || event.kind==10){self.dragging=false;self.control=false;self.shift=false;self.pressed=new doctree::NodeId();return none;}
+        if(event.kind==3 && (event.arg1==0 || event.arg1==1)){
+            val down:bool=event.arg1==1;
+            if(event.arg0==17){self.control=down;}if(event.arg0==16){self.shift=down;}
+            if(self.control && down){
+                if(event.arg0==65){self.anchor=0;self.caret=self.used;return new viewer::Change(1,new doctree::NodeId());}
+                if(event.arg0==67){return new viewer::Change(4,new doctree::NodeId());}
+                if(event.arg0==187 || event.arg0==107){return new viewer::Change(5,new doctree::NodeId());}
+                if(event.arg0==189 || event.arg0==109 || event.arg0==48){return new viewer::Change(6,new doctree::NodeId());}
+            }
+            if(down && (event.arg0==37 || event.arg0==39)){
+                let at:int=self.boundaries.next(self.caret);if(event.arg0==37){at=self.boundaries.previous(self.caret);}
+                self.caret=at;if(!self.shift){self.anchor=at;}return new viewer::Change(1,new doctree::NodeId());
+            }
+            if(down && event.arg0==9){self.focus=frame.next_focus(document,self.focus,self.shift);return new viewer::Change(1,self.focus);}
+            if(event.arg0==13 || event.arg0==32){
+                if(down){if(doctree::absent(self.pressed)){self.pressed=self.focus;}return none;}
+                val pressed:doctree::NodeId=self.pressed;self.pressed=new doctree::NodeId();
+                if(!doctree::absent(pressed) && pageframe::same(pressed,self.focus)){return new viewer::Change(2,pressed);}return none;
+            }
+        }
+        if(event.kind==9 && event.arg0>= -2147483648 && event.arg0<=2147483647){
+            self.scroll=pageframe::minimum(frame.max_scroll(),pageframe::maximum(0,self.scroll-event.arg0/4));
+            return new viewer::Change(7,new doctree::NodeId());
+        }
+        if(event.kind==7){
+            self.dragging=false;self.pressed=frame.hit(document,projection,event.arg0,event.arg1);
+            if(!doctree::absent(self.pressed)){self.focus=self.pressed;return new viewer::Change(1,self.focus);}
+            val at:int=self.point(frame,event.arg0,event.arg1);
+            if(at>=0){if(!self.shift){self.anchor=at;}self.caret=at;self.dragging=true;return new viewer::Change(1,new doctree::NodeId());}
+        }
+        if(event.kind==4 || event.kind==8){
+            if(self.dragging){val at:int=self.point(frame,event.arg0,event.arg1);if(at>=0){self.caret=at;}
+                if(event.kind==8){self.dragging=false;}return new viewer::Change(1,new doctree::NodeId());}
+            if(event.kind==8){val pressed:doctree::NodeId=self.pressed;self.pressed=new doctree::NodeId();
+                if(!doctree::absent(pressed) && pageframe::same(pressed,frame.hit(document,projection,event.arg0,event.arg1))){return new viewer::Change(2,pressed);}}
+        }return none;
+    }
+    fn copy(borrow self,borrow frame:pageframe::Frame,borrow document:documents::Document,borrow window:window::Window):int{
+        if(!self.current(frame,document) || !window.opened()){return -2;}
+        if(self.selection_start()==self.selection_end()){return 0;}
+        return reader::copy_text(window,self.selected_text());
+    }
+    fn close(borrow mut self):void{self.active=false;self.dragging=false;self.pressed=new doctree::NodeId();}
+}

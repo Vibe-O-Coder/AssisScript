@@ -1,0 +1,196 @@
+namespace framehost;
+import "std/pagepresent.assis";
+
+/// Fixed local development profiles, not the complete HTDL/FS/SSC languages.
+public value struct Versions{let document:int;let style:int;let motion:int;}
+public pure fn versions():Versions{return new Versions(1,1,1);}
+public final class Drawing{
+    own frame:pageframe::Frame;own reading:framereader::Reader;own packet:pagepresent::Packet;
+}
+safe fn build_drawing(borrow document:documents::Document,borrow styles:flowpage::Page,borrow mut motion:motionpage::Page,
+        borrow previous:Drawing,borrow mut drawing:Drawing,window_instance:int,revision:int,width:int,height:int,scroll:int,scale:int,
+        elapsed:int,visible:bool,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int):int{
+    let focus:doctree::NodeId=new doctree::NodeId();if(previous!=null){focus=previous.reading.focus_node();}
+    let code:int=motion.prepare(document,styles,elapsed,visible,focus,new doctree::NodeId(),policy.reduced_motion);if(code!=0){return code;}
+    own frame:pageframe::Frame=try_new pageframe::Frame(document,styles,revision,width,height,scroll,scale,10000000,metric);
+    if(frame==null){return 401;}if(!frame.is_open()){return frame.status();}
+    code=frame.compose(document,motion);if(code!=0){return code;}
+    own reading:framereader::Reader=try_new framereader::Reader(frame,document,window_instance,20000000,metric);
+    if(reading==null){return 401;}if(!reading.is_open()){return reading.status();}
+    if(previous!=null){
+        val restored:bool=reading.restore(frame,document,previous.reading);
+        let same:bool=restored && frame.size()==previous.frame.size() && frame.run_count()==previous.frame.run_count() &&
+            frame.viewport().width==previous.frame.viewport().width && frame.viewport().height==previous.frame.viewport().height && frame.scroll_y()==previous.frame.scroll_y();
+        for(let i:int=0;i<frame.size() && same;i++){
+            val a:pageframe::Box=frame.box(i);val b:pageframe::Box=previous.frame.box(i);
+            same=a.bounds.x==b.bounds.x && a.bounds.y==b.bounds.y && a.bounds.width==b.bounds.width && a.bounds.height==b.bounds.height &&
+                a.text_size==b.text_size && a.weight==b.weight;
+        }
+        if(same){reading.restore_keys(frame,document,previous.reading);}
+    }
+    val selected_focus:doctree::NodeId=reading.focus_node();
+    own packet:pagepresent::Packet=try_new pagepresent::Packet(frame,selected_focus,policy,10000000);
+    if(packet==null || !packet.is_open()){return 401;}
+    code=packet.highlight(frame,document,reading,policy);if(code!=0){return code;}
+    if(!motion.prepared(document,styles)){return 204;}
+    drawing.frame=move(frame);drawing.reading=move(reading);drawing.packet=move(packet);return 0;
+}
+/// Local bundle made only from caller-granted bytes. No path, URL, resource,
+/// script or code execution is inferred from HTDL. Each bundle owns its graphs.
+public final class Page{
+    private own styles:flowpage::Page;private own motion:motionpage::Page;
+    private own current:Drawing;private own pending:Drawing;
+    private let window_instance:int;private let code:int;private let active:bool;
+    fn init(borrow mut self,borrow document:documents::Document,borrow fs:slice<byte>,borrow ssc:slice<byte>,window_instance:int):void{
+        self.code=401;if(len(fs)>65536 || len(ssc)>65536 || window_instance<1){return;}
+        self.styles=try_new flowpage::Page(fs,256,128,8000000);
+        self.motion=try_new motionpage::Page(ssc,1000000);
+        own input:fluxstyle::Inputs=try_new fluxstyle::Inputs(128);
+        if(self.styles==null || self.motion==null || input==null){return;}
+        if(!self.styles.is_open()){self.code=self.styles.diagnostic().code;return;}
+        if(!self.motion.is_open()){self.code=self.motion.status();return;}
+        val code:int=self.styles.refresh(document,input);self.code=code;if(code!=0){return;}
+        self.window_instance=window_instance;self.active=true;
+    }
+    fn is_open(borrow self):bool{return self.active;}
+    fn status(borrow self):int{return self.code;}
+    fn has_pending(borrow self):bool{return self.pending!=null;}
+    fn has_frame(borrow self):bool{return self.current!=null;}
+    fn snapshot(borrow self):borrow(self) Drawing{assert(self.current!=null);return self.current;}
+    fn cancel_gesture(borrow mut self):void{if(self.current!=null){self.current.reading.cancel_gesture();}}
+    fn prepare(borrow mut self,borrow document:documents::Document,revision:int,width:int,height:int,scroll:int,scale:int,
+            elapsed:int,visible:bool,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int):int{
+        if(!self.active){return 204;}if(self.pending!=null){return 407;}
+        if(self.current!=null){
+            if(revision<=self.current.frame.version()){return 204;}
+            if(self.current.reading.gesture_active()){return 407;}
+        }
+        own drawing:Drawing=try_new Drawing();if(drawing==null){return 401;}
+        own styles:flowpage::Page=move(self.styles);own motion:motionpage::Page=move(self.motion);own previous:Drawing=move(self.current);
+        val code:int=build_drawing(document,styles,motion,previous,drawing,self.window_instance,revision,width,height,scroll,scale,elapsed,visible,policy,metric);
+        self.styles=move(styles);self.motion=move(motion);self.current=move(previous);
+        if(code!=0){self.motion.abort();return code;}
+        self.pending=move(drawing);return 0;
+    }
+    fn abort(borrow mut self):void{
+        if(self.motion!=null){self.motion.abort();}own discarded:Drawing=move(self.pending);
+    }
+    /// Headless commit for deterministic conformance; a native host uses publish.
+    fn commit(borrow mut self,borrow document:documents::Document):bool{
+        if(self.pending==null || !self.pending.reading.current(self.pending.frame,document) || !self.motion.prepared(document,self.styles)){return false;}
+        own motion:motionpage::Page=move(self.motion);own styles:flowpage::Page=move(self.styles);
+        val code:int=motion.commit(document,styles);self.motion=move(motion);self.styles=move(styles);
+        assert(code==0);own next:Drawing=move(self.pending);self.current=move(next);return true;
+    }
+    fn publish(borrow mut self,borrow document:documents::Document,borrow window:window::Window):int{
+        if(self.pending==null || !self.motion.prepared(document,self.styles)){return 204;}
+        own packet:pagepresent::Packet=move(self.pending.packet);
+        own frame:pageframe::Frame=move(self.pending.frame);
+        val code:int=packet.publish(window,frame,document);self.pending.packet=move(packet);self.pending.frame=move(frame);if(code!=0){return code;}
+        // Publication has no event dispatch between this check and owner transfer.
+        assert(self.commit(document));return 0;
+    }
+    fn dispatch(borrow mut self,borrow document:documents::Document,projection:int,event:window::Event):viewer::Change{
+        if(self.current==null || self.pending!=null){return new viewer::Change();}
+        if(event.kind==11){
+            if(event.status!=0 || event.instance!=self.window_instance || projection!=self.current.frame.version()){return new viewer::Change();}
+            own reading:framereader::Reader=move(self.current.reading);
+            own frame:pageframe::Frame=move(self.current.frame);
+            val accepted:bool=reading.accept(frame,document,projection,event);self.current.reading=move(reading);self.current.frame=move(frame);
+            if(!accepted){return new viewer::Change();}
+            val node:doctree::NodeId=self.current.packet.action(self.current.frame,document,event.arg0,event.arg1);
+            if(!doctree::absent(node)){return new viewer::Change(2,node);}return new viewer::Change();
+        }
+        own reading:framereader::Reader=move(self.current.reading);
+        own frame:pageframe::Frame=move(self.current.frame);
+        val change:viewer::Change=reading.dispatch(frame,document,projection,event);self.current.reading=move(reading);self.current.frame=move(frame);return change;
+    }
+    fn copy(borrow self,borrow document:documents::Document,borrow window:window::Window):int{
+        if(self.current==null || self.pending!=null){return -2;}
+        return self.current.reading.copy(self.current.frame,document,window);
+    }
+}
+
+/// Active document and prepared bundle share one Store; at most one producer.
+/// Requests/instances/revisions are monotonically assigned by the trusted host.
+public final class Session{
+    private own store:documents::Store;private own current:Page;private own pending:Page;
+    private let window_instance:int;private let pending_instance:int;private let request:int;
+    private let pending_request:int;private let revision:int;
+    fn init(borrow mut self,max_bytes:int,max_nodes:int,window_instance:int):void{
+        if(max_bytes<documents::store_bytes() || max_nodes<0 || window_instance<1){return;}
+        self.store=try_new documents::Store(max_bytes,max_nodes,1000);self.window_instance=window_instance;
+    }
+    fn is_open(borrow self):bool{return self.store!=null && self.store.is_open();}
+    fn has_active(borrow self):bool{return self.current!=null;}
+    fn has_pending(borrow self):bool{return self.pending!=null;}
+    fn document(borrow self):borrow(self) documents::Document{assert(self.current!=null);return self.store.active_document();}
+    fn snapshot(borrow self):borrow(self) Drawing{assert(self.current!=null);return self.current.snapshot();}
+    fn prepare(borrow mut self,instance:int,request:int,profile:Versions,borrow source:slice<byte>,borrow fs:slice<byte>,borrow ssc:slice<byte>,
+            width:int,height:int,scale:int,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int):int{
+        if(!self.is_open() || request<=self.request || self.revision==9223372036854775807){return 204;}
+        if(self.pending!=null || self.store.has_candidate()){return 407;}
+        if(self.current!=null){if(self.current.has_pending()){return 407;}}
+        self.request=request;
+        if(profile.document!=1 || profile.style!=1 || profile.motion!=1){return 200;}
+        if(len(fs)>65536 || len(ssc)>65536){return 401;}
+        val diagnostic:htdl::Diagnostic=htdl::stage(self.store,instance,source,len(fs)+len(ssc));
+        if(diagnostic.code!=0){return diagnostic.code;}
+        own page:Page=try_new Page(self.store.candidate(),fs,ssc,self.window_instance);
+        if(page==null){self.store.abort(instance);return 401;}
+        if(!page.is_open()){val code:int=page.status();self.store.abort(instance);return code;}
+        val code:int=page.prepare(self.store.candidate(),self.revision+1,width,height,0,scale,0,true,policy,metric);
+        if(code!=0){self.store.abort(instance);return code;}
+        self.pending=move(page);self.pending_instance=instance;self.pending_request=request;return 0;
+    }
+    fn abort(borrow mut self,request:int):bool{
+        if(self.pending==null || request!=self.pending_request){return false;}
+        assert(self.store.abort(self.pending_instance));own discarded:Page=move(self.pending);self.pending_instance=0;return true;
+    }
+    fn commit(borrow mut self,request:int):bool{
+        if(self.pending==null || request!=self.pending_request || self.pending_request!=self.request){return false;}
+        own page:Page=move(self.pending);own store:documents::Store=move(self.store);
+        val committed:bool=page.commit(store.candidate());self.pending=move(page);self.store=move(store);
+        if(!committed){return false;}
+        assert(self.store.commit(self.pending_instance));own next:Page=move(self.pending);self.current=move(next);
+        self.pending_instance=0;self.revision++;return true;
+    }
+    fn publish(borrow mut self,request:int,borrow window:window::Window):int{
+        if(self.pending==null || request!=self.pending_request || request!=self.request){return 204;}
+        own page:Page=move(self.pending);own store:documents::Store=move(self.store);
+        val code:int=page.publish(store.candidate(),window);self.pending=move(page);self.store=move(store);if(code!=0){return code;}
+        assert(self.store.commit(self.pending_instance));own next:Page=move(self.pending);self.current=move(next);
+        self.pending_instance=0;self.revision++;return 0;
+    }
+    fn dispatch(borrow mut self,projection:int,event:window::Event):viewer::Change{
+        if(self.current==null || self.pending!=null){return new viewer::Change();}
+        own page:Page=move(self.current);own store:documents::Store=move(self.store);
+        val change:viewer::Change=page.dispatch(store.active_document(),projection,event);self.current=move(page);self.store=move(store);return change;
+    }
+    fn reflow(borrow mut self,width:int,height:int,scroll:int,scale:int,elapsed:int,visible:bool,policy:reader::Preferences,
+            metric:safe fn(borrow slice<byte>,int,int):int):int{
+        if(self.current==null || self.pending!=null || self.revision==9223372036854775807){return 204;}
+        own page:Page=move(self.current);own store:documents::Store=move(self.store);
+        val code:int=page.prepare(store.active_document(),self.revision+1,width,height,scroll,scale,elapsed,visible,policy,metric);self.current=move(page);self.store=move(store);return code;
+    }
+    fn abort_reflow(borrow mut self):void{if(self.current!=null){self.current.abort();}}
+    fn commit_reflow(borrow mut self):bool{
+        if(self.current==null || self.pending!=null){return false;}
+        own page:Page=move(self.current);own store:documents::Store=move(self.store);
+        val committed:bool=page.commit(store.active_document());self.current=move(page);self.store=move(store);
+        if(!committed){return false;}self.revision++;return true;
+    }
+    fn publish_reflow(borrow mut self,borrow window:window::Window):int{
+        if(self.current==null || self.pending!=null){return 204;}
+        own page:Page=move(self.current);own store:documents::Store=move(self.store);
+        val code:int=page.publish(store.active_document(),window);self.current=move(page);self.store=move(store);if(code==0){self.revision++;}return code;
+    }
+    fn cancel_gesture(borrow mut self):void{if(self.current!=null){self.current.cancel_gesture();}}
+    fn copy(borrow self,borrow window:window::Window):int{
+        if(self.current==null || self.pending!=null){return -2;}return self.current.copy(self.store.active_document(),window);
+    }
+    fn close(borrow mut self):void{
+        if(self.store!=null){self.store.close();}
+        own pending:Page=move(self.pending);own current:Page=move(self.current);
+    }
+}

@@ -1,0 +1,166 @@
+{
+  "schema": "frame-reading-host-evidence-v1",
+  "base": "a37a39a85a64e90543eecc668aeb796cee37b27e",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+  "checks": [
+    {
+      "name": "motionpage",
+      "command": [
+        "python",
+        "tests/test-motionpage.py"
+      ],
+      "returncode": 0,
+      "executed": 14,
+      "not_run": 0,
+      "seconds": 67.29,
+      "log": "windows-motionpage.log",
+      "sha256": "73d953be5966b2ba1e625d9c98d8bfc68ca8a6474ff63c2fb81be67d2e8eba18"
+    },
+    {
+      "name": "pageframe",
+      "command": [
+        "python",
+        "tests/test-pageframe.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 95.528,
+      "log": "windows-pageframe.log",
+      "sha256": "c1a19549ccf2c45d5a4e060ef4c779bde0834c05036c8bd215adf022afc37173"
+    },
+    {
+      "name": "pagepresent",
+      "command": [
+        "python",
+        "tests/test-pagepresent.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 29.697,
+      "log": "windows-pagepresent.log",
+      "sha256": "81d339aa2ceec31aa09d9742c430f2ff0688201b9a18c249357df6f427f87385"
+    },
+    {
+      "name": "flowpage",
+      "command": [
+        "python",
+        "tests/test-flowpage.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 46.948,
+      "log": "windows-flowpage.log",
+      "sha256": "84bb4860330fcda72b8d5ef8358ab52e5f53eb8a3185c83a298d2d204db3ab07"
+    },
+    {
+      "name": "fluxstyle",
+      "command": [
+        "python",
+        "tests/test-fluxstyle.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 25.428,
+      "log": "windows-fluxstyle.log",
+      "sha256": "98e0c71cc93fce65576e2c3a0c1dc68e8d479246c66748fc5fd7237d05093fe8"
+    },
+    {
+      "name": "sanscript",
+      "command": [
+        "python",
+        "tests/test-sanscript.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 0,
+      "seconds": 20.598,
+      "log": "windows-sanscript.log",
+      "sha256": "a6ff359c7aa27fcbac83ae9bb1bc4ff5fd8054b51cc5cbe94ed7a0e06c3aef78"
+    },
+    {
+      "name": "document-memory",
+      "command": [
+        "python",
+        "tests/test-document-memory.py"
+      ],
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 16.89,
+      "log": "windows-document-memory.log",
+      "sha256": "2d1d9ccaa760e2aeea1232f9317ac273c507e2446b9392ecd56df9bebea9fdf2"
+    },
+    {
+      "name": "htdl-parser",
+      "command": [
+        "python",
+        "tests/test-htdl-parser.py"
+      ],
+      "returncode": 0,
+      "executed": 16,
+      "not_run": 0,
+      "seconds": 70.919,
+      "log": "windows-htdl-parser.log",
+      "sha256": "25a94994cc9f73f79b7dcc5788ce9fd244c99291bbdac3efaa8de16845c86e59"
+    },
+    {
+      "name": "htdl-reader",
+      "command": [
+        "python",
+        "tests/test-htdl-reader.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 34.513,
+      "log": "windows-htdl-reader.log",
+      "sha256": "cad9e8a842b9549056275261cfc4ce1fa46e53acf7cf7826021a404ed76048e7"
+    },
+    {
+      "name": "reader-transactions",
+      "command": [
+        "python",
+        "tests/test-reader-transactions.py"
+      ],
+      "returncode": 0,
+      "executed": 15,
+      "not_run": 0,
+      "seconds": 40.038,
+      "log": "windows-reader-transactions.log",
+      "sha256": "951a6e183d80875cb3637d9bd323511255060c6ab6cb3fc9966d03389bd7145f"
+    },
+    {
+      "name": "framereader",
+      "command": [
+        "python",
+        "tests/test-framereader.py"
+      ],
+      "returncode": 0,
+      "executed": 14,
+      "not_run": 0,
+      "seconds": 75.033,
+      "log": "windows-framereader.log",
+      "sha256": "222355491aa1e358ad685df7a0426912c89a63a5a25568978efa9ff1c7fd6ba5"
+    },
+    {
+      "name": "framehost",
+      "command": [
+        "python",
+        "tests/test-framehost.py"
+      ],
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 0,
+      "seconds": 65.002,
+      "log": "windows-framehost.log",
+      "sha256": "0b5bd1c4b5849d6373f81a65c8e24f3f49728c80376b72d8096efd60465f68be"
+    }
+  ],
+  "passed": true
+}

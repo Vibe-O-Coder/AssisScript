@@ -68,6 +68,8 @@ test-pageframe:
 	python3 tests/test-motionpage.py
 	python3 tests/test-pageframe.py
 	python3 tests/test-pagepresent.py
+	python3 tests/test-framereader.py
+	python3 tests/test-framehost.py
 
 .PHONY: test-installer-retry
 test-installer-retry:

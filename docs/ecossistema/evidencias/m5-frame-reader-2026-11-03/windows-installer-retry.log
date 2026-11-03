@@ -1,0 +1,9 @@
+test_already_absent_managed_files_are_idempotent (__main__.InstallerRetry.test_already_absent_managed_files_are_idempotent) ... ok
+test_persistent_lock_is_bounded_and_detected_before_other_managed_files (__main__.InstallerRetry.test_persistent_lock_is_bounded_and_detected_before_other_managed_files) ... ok
+test_readonly_file_is_not_forced_or_scheduled_for_deletion (__main__.InstallerRetry.test_readonly_file_is_not_forced_or_scheduled_for_deletion) ... ok
+test_transient_sharing_lock_releases_and_uninstall_finishes (__main__.InstallerRetry.test_transient_sharing_lock_releases_and_uninstall_finishes) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.948s
+
+OK
