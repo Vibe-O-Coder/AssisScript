@@ -1,0 +1,119 @@
+namespace pagepresent;
+import "std/pageframe.assis";
+import "std/reader.assis";
+platform("windows-x64"){
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_version") fn native_version():int;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_current") fn native_current(window:int):int;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_measure") fn native_measure(borrow content:*byte,size:int,font:i32,weight:i32):int;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_commit") fn native_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32;
+}
+platform("linux"){
+pure fn native_version():int{return -3;}
+pure fn native_current(window:int):int{return -3;}
+safe fn native_measure(borrow content:*byte,size:int,font:i32,weight:i32):int{return -3;}
+safe fn native_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
+}
+platform("macos"){
+pure fn native_version():int{return -3;}
+pure fn native_current(window:int):int{return -3;}
+safe fn native_measure(borrow content:*byte,size:int,font:i32,weight:i32):int{return -3;}
+safe fn native_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
+}
+public safe fn available():bool{unsafe{return native_version()==1;}}
+public safe fn measure(borrow content:slice<byte>,size:int,weight:int):int{
+    val font:int=pageframe::pixels(size);val bold:int=pageframe::pixels(weight);
+    if(len(content)>4096 || font<1 || font>256 || bold<100 || bold>900){return -1;}
+    own buffer:*byte=try_alloc<byte>(len(content)+1);if(buffer==null){return -4;}
+    for(let i:int=0;i<len(content);i++){buffer[i]=content[i];}
+    unsafe{return native_measure(buffer,len(content),i32(font),i32(bold));}
+}
+public pure fn alpha(color:int,opacity:int):int{return (color&0xffffff00)|(((color&255)*opacity+32768)>>16);}
+/// Owned, provider-independent commands/names made from exactly one Frame.
+/// publish commits pixels and MSAA together; window.present displays them.
+public final class Packet{
+    private own commands:*int;private own content:*byte;private own access:*int;private own names:*byte;private own mapping:*int;
+    private let count:int;private let used:int;private let items:int;private let name_size:int;
+    private let frame_id:int;private let instance:int;private let semantic:int;private let background:u32;
+    private let window_token:int;
+    private let active:bool;private let published:bool;
+    private fn command(borrow mut self,type:int,bounds:pageframe::Rect,clip:pageframe::Rect,color:int,font:int,weight:int,start:int,size:int):void{
+        val p:int=self.count*14;self.commands[p]=type;self.commands[p+1]=bounds.x;self.commands[p+2]=bounds.y;
+        self.commands[p+3]=bounds.width;self.commands[p+4]=bounds.height;self.commands[p+5]=clip.x;self.commands[p+6]=clip.y;
+        self.commands[p+7]=clip.width;self.commands[p+8]=clip.height;self.commands[p+9]=color;
+        self.commands[p+10]=font;self.commands[p+11]=weight;self.commands[p+12]=start;self.commands[p+13]=size;self.count++;
+    }
+    fn init(borrow mut self,borrow frame:pageframe::Frame,focus:doctree::NodeId,policy:reader::Preferences,max_bytes:int):void{
+        if(!frame.is_open() || max_bytes<10000000 || policy.status!=0){return;}
+        self.commands=try_alloc<int>((frame.run_count()+frame.size()+4)*14);
+        self.content=try_alloc<byte>(2097216);self.access=try_alloc<int>(256*8);self.names=try_alloc<byte>(1048608);self.mapping=try_alloc<int>(256);
+        if(self.commands==null || self.content==null || self.access==null || self.names==null || self.mapping==null){return;}
+        self.frame_id=frame.version();self.instance=frame.instance();self.semantic=frame.semantic_version();self.background=policy.background;
+        val viewport:pageframe::Rect=frame.viewport();self.access[0]=1;self.access[4]=viewport.width;self.access[5]=viewport.height;
+        for(let i:int=0;i<len(frame.title());i++){self.names[self.name_size]=frame.title()[i];self.name_size++;}
+        self.access[7]=self.name_size;self.items=1;self.mapping[0]= -1;
+        for(let i:int=0;i<frame.size();i++){val b:pageframe::Box=frame.box(i);let color:int=pagepresent::alpha(b.background,b.opacity);
+            if(policy.high_contrast){color=int(policy.background);if(b.kind==9){color=int(policy.button);}}
+            val clip:pageframe::Rect=pageframe::intersect(b.bounds,b.clip);
+            if(clip.width>0 && clip.height>0 && (color&255)!=0){self.command(0,b.bounds,clip,color,0,0,0,0);}
+            if(b.kind==6 || b.kind==8 || b.kind==9){val p:int=self.items*8;
+                if(self.name_size+len(frame.name(i))>len(self.names)){return;}
+                self.access[p]=b.kind;let flags:int=int(b.disabled);
+                if(pageframe::same(b.node,focus) && !b.disabled && b.kind==9){flags|=2;}
+                if(clip.width==0 || clip.height==0){flags|=4;}
+                self.access[p+1]=flags;self.access[p+2]=clip.x;self.access[p+3]=clip.y;self.access[p+4]=clip.width;self.access[p+5]=clip.height;
+                self.access[p+6]=self.name_size;self.access[p+7]=len(frame.name(i));self.mapping[self.items]=i;self.items++;
+                for(let j:int=0;j<len(frame.name(i));j++){self.names[self.name_size]=frame.name(i)[j];self.name_size++;}
+            }
+            // Paint each node's text before the next semantic box: structural order.
+            for(let j:int=0;j<frame.run_count();j++){val run:pageframe::Run=frame.run(j);if(run.box!=i){continue;}
+                if(self.used+run.size>len(self.content)){return;}val start:int=self.used;
+                for(let k:int=0;k<run.size;k++){self.content[self.used]=frame.run_text(j)[k];self.used++;}
+                let foreground:int=pagepresent::alpha(b.foreground,b.opacity);
+                if(policy.high_contrast){foreground=int(policy.foreground);if(b.kind==9){foreground=int(policy.button_text);}}
+                if(b.disabled){foreground=int(policy.disabled_text);}
+                val text_clip:pageframe::Rect=pageframe::intersect(run.bounds,frame.content_clip(i));
+                if(text_clip.width>0 && text_clip.height>0){self.command(1,run.bounds,text_clip,foreground,pageframe::pixels(b.text_size),pageframe::pixels(b.weight),start,run.size);}
+            }
+        }
+        // Native focus indication wins over author opacity/color and draw order.
+        for(let i:int=0;i<frame.size();i++){val b:pageframe::Box=frame.box(i);
+            if(b.kind!=9 || b.disabled || !pageframe::same(b.node,focus)){continue;}
+            val r:pageframe::Rect=b.bounds;val color:int=int(policy.foreground);
+            val top:pageframe::Rect=new pageframe::Rect(r.x,r.y,r.width,pageframe::minimum(2,r.height));
+            val bottom:pageframe::Rect=new pageframe::Rect(r.x,r.y+pageframe::maximum(0,r.height-2),r.width,pageframe::minimum(2,r.height));
+            val left:pageframe::Rect=new pageframe::Rect(r.x,r.y,pageframe::minimum(2,r.width),r.height);
+            val right:pageframe::Rect=new pageframe::Rect(r.x+pageframe::maximum(0,r.width-2),r.y,pageframe::minimum(2,r.width),r.height);
+            self.command(0,top,pageframe::intersect(top,b.clip),color,0,0,0,0);self.command(0,bottom,pageframe::intersect(bottom,b.clip),color,0,0,0,0);
+            self.command(0,left,pageframe::intersect(left,b.clip),color,0,0,0,0);self.command(0,right,pageframe::intersect(right,b.clip),color,0,0,0,0);
+        }self.active=true;
+    }
+    fn is_open(borrow self):bool{return self.active;}
+    fn command_count(borrow self):int{return self.count;}
+    fn item_count(borrow self):int{return self.items;}
+    fn item_box(borrow self,index:int):int{if(index<0 || index>=self.items){return -1;}return self.mapping[index];}
+    fn item_bounds(borrow self,index:int):pageframe::Rect{
+        assert(self.active && index>=0 && index<self.items);val p:int=index*8;
+        return new pageframe::Rect(self.access[p+2],self.access[p+3],self.access[p+4],self.access[p+5]);
+    }
+    fn paint_bounds(borrow self,index:int):pageframe::Rect{
+        assert(self.active && index>=0 && index<self.count);val p:int=index*14;
+        return new pageframe::Rect(self.commands[p+5],self.commands[p+6],self.commands[p+7],self.commands[p+8]);
+    }
+    private fn matches(borrow self,borrow frame:pageframe::Frame,borrow document:documents::Document):bool{
+        return self.active && frame.current(document) && frame.version()==self.frame_id && frame.instance()==self.instance && frame.semantic_version()==self.semantic;
+    }
+    fn publish(borrow mut self,borrow window:window::Window,borrow frame:pageframe::Frame,borrow document:documents::Document):int{
+        if(!self.matches(frame,document) || self.published){return 204;}if(!window.opened()){return -2;}
+        let result:int=0;unsafe{result=int(native_commit(window.platform_token(),self.frame_id,self.background,self.commands,self.count,self.content,self.used,self.access,self.items,self.names,self.name_size));}
+        if(result==0){self.published=true;self.window_token=window.platform_token();}return result;
+    }
+    fn action(borrow self,borrow frame:pageframe::Frame,borrow document:documents::Document,projection:int,item:int):doctree::NodeId{
+        if(!self.published || !self.matches(frame,document) || projection!=self.frame_id || item<1 || item>=self.items){return new doctree::NodeId();}
+        unsafe{if(native_current(self.window_token)!=self.frame_id){return new doctree::NodeId();}}
+        val index:int=self.mapping[item];if(!frame.eligible(document,index)){return new doctree::NodeId();}return frame.box(index).node;
+    }
+    fn close(borrow mut self):void{
+        self.active=false;self.published=false;own commands:*int=move(self.commands);own content:*byte=move(self.content);
+        own access:*int=move(self.access);own names:*byte=move(self.names);own mapping:*int=move(self.mapping);
+    }
+}

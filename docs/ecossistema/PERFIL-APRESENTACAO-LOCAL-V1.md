@@ -1,3 +1,8 @@
+Continuação de 02/11/2026: [Frame local](PERFIL-FRAME-LOCAL-V1.md) acrescenta
+layout/snapshot comum e extensão frame 1 do provider Windows. Publicação de
+raster e MSAA é conjunta; Reader::Session/seleção, SSC agregado e catálogo
+visual completo continuam separados. Os contratos anteriores são preservados.
+
 Continuação 02/11/2026: [flowpage](../BIBLIOTECA-flowpage.md) oferece
 transação das saídas FS de até 256 elementos e cache exato por nó, mantendo
 semântica atual após falha. Não acrescenta geometria/SSC/Reader ou gate.

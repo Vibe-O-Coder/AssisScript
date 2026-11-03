@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+  "setup_sha256": "03def562830e63bd7d7a313b65287a7cfb9c1d8d54dc75294ee50926780256f5",
+  "selected_libraries": [
+    "buffers",
+    "doctree",
+    "documents",
+    "flowpage",
+    "fluxstyle",
+    "graphemes",
+    "htdl",
+    "owned",
+    "pageframe",
+    "pagepresent",
+    "reader",
+    "unicode",
+    "viewer",
+    "window"
+  ],
+  "checks": [
+    {
+      "command": [
+        "python",
+        "tests/test-installer-retry.py"
+      ],
+      "returncode": 0,
+      "executed": 4,
+      "log": "windows-installer-retry.log",
+      "sha256": "e04f1e8e7451b6c50756c9216742cb1176482982a2431e2a4985a97ff3674f88"
+    },
+    {
+      "command": [
+        "<TEMP>\\distribution\\bin\\assis-setup.exe",
+        "install",
+        "--prefix",
+        "<TEMP>\\prefix with spaces",
+        "--no-path",
+        "--no-associations",
+        "--with",
+        "pagepresent"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em C:\\Users\\babus\\Desktop\\AssisScript\\work\\page-layout-20261102\\build\\tmp\\assis-presentation-install-6v44kdxk\\prefix with spaces\\bin\\assis.exe\r\nO PATH foi preservado. Use o caminho completo ou adicione a pasta bin ao PATH.\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\assis.exe",
+        "run",
+        "<TEMP>\\prefix with spaces\\exemplos\\56_page_frame.assis",
+        "--safe",
+        "--debug"
+      ],
+      "returncode": 0,
+      "stdout": "FRAME 8 4 1 1\nLEFT 8 28 104 16\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\distribution\\bin\\assis-setup.exe",
+        "uninstall",
+        "--prefix",
+        "<TEMP>\\prefix with spaces",
+        "--no-path",
+        "--no-associations"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: desinstalado. Projetos e arquivos extras foram preservados.\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-isolation=none",
+        "tests/test-development.js",
+        "tests/test-v31.js"
+      ],
+      "returncode": 0,
+      "executed": 23,
+      "log": "windows-distribution-node.log",
+      "sha256": "15dcba387b52a2c48ac47b8cb22cbbb8ab4f9ba28106e8f87dd8089d88b9f246"
+    }
+  ],
+  "scope": "Fresh candidate and isolated offline prefix, optional indices 34/35 and transitive closure; installed immutable frame demo, uninstall and user file preservation; no PATH, associations or release changes"
+}

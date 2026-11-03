@@ -1,0 +1,20 @@
+import "std/pageframe.assis";
+safe fn cells(borrow content:slice<byte>,size:int,weight:int):int{
+    return (pageframe::pixels(size)<<32)+len(content)*pageframe::pixels(size)/2;
+}
+safe fn main():int{
+    own store:documents::Store=try_new documents::Store(4000000,4000,100);
+    own page:flowpage::Page=try_new flowpage::Page(utf8("flow Row{row(gap:12px) -> layout.children;}bind #panels to Row;flow Card{120px -> layout.width;8px -> layout.padding;column(gap:4px) -> layout.children;#d9e6e4 -> paint.background;}bind .card to Card;"),16,2048,4000000);
+    own input:fluxstyle::Inputs=try_new fluxstyle::Inputs(2048);
+    if(store==null || page==null || input==null || !page.is_open()){return 2;}
+    assert(htdl::load(store,1,utf8("<div type=document version=0.1 lang=en><div type=head><div type=title>Shared frame</div></div><div type=body><div type=container id=panels><div type=container class=card><div type=paragraph>Left panel</div><div type=button>Open left</div></div><div type=container class=card><div type=paragraph>Right panel</div><div type=button>Open right</div></div></div></div></div>")).code==0);
+    assert(page.refresh(store.active_document(),input)==0);
+    own frame:pageframe::Frame=try_new pageframe::Frame(store.active_document(),page,1,320,200,0,65536,10000000,cells);
+    if(frame==null || !frame.is_open()){return 3;}
+    print("FRAME",frame.size(),frame.run_count(),frame.version(),frame.style_version());
+    val focused:doctree::NodeId=frame.next_focus(store.active_document(),new doctree::NodeId(),false);
+    assert(pageframe::same(frame.hit(store.active_document(),1,12,30),focused));
+    val accessible:pageframe::Rect=frame.accessible_bounds(4);
+    print("LEFT",accessible.x,accessible.y,accessible.width,accessible.height);
+    return 0;
+}

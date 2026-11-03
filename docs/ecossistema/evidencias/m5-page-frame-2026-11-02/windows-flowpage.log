@@ -1,0 +1,22 @@
+test_absence_is_distinct_from_explicit_zero_and_abort_does_not_poison_cache (__main__.FlowPage.test_absence_is_distinct_from_explicit_zero_and_abort_does_not_poison_cache) ... ok
+test_all_five_formats_generate_without_ast_fallback_and_example_executes (__main__.FlowPage.test_all_five_formats_generate_without_ast_fallback_and_example_executes) ... ok
+test_capacity_and_reservation_boundaries_and_wrong_input_shape (__main__.FlowPage.test_capacity_and_reservation_boundaries_and_wrong_input_shape) ... ok
+test_changed_selector_removes_old_producer_only_on_successful_commit (__main__.FlowPage.test_changed_selector_removes_old_producer_only_on_successful_commit) ... ok
+test_commit_is_complete_and_private_until_success (__main__.FlowPage.test_commit_is_complete_and_private_until_success) ... ok
+test_document_mutation_clock_success_failure_and_no_layout_growth (__main__.FlowPage.test_document_mutation_clock_success_failure_and_no_layout_growth) ... ok
+test_duplicate_forged_stale_busy_and_closed_calls_are_rejected (__main__.FlowPage.test_duplicate_forged_stale_busy_and_closed_calls_are_rejected) ... ok
+test_exact_node_context_cache_and_independent_equal_input_objects (__main__.FlowPage.test_exact_node_context_cache_and_independent_equal_input_objects) ... ok
+test_failure_in_last_node_discards_every_candidate_output_and_retry_works (__main__.FlowPage.test_failure_in_last_node_discards_every_candidate_output_and_retry_works) ... ok
+test_hidden_nodes_are_evaluated_and_conflicting_producers_reject_whole_page (__main__.FlowPage.test_hidden_nodes_are_evaluated_and_conflicting_producers_reject_whole_page) ... ok
+test_live_semantic_mutation_invalidates_candidate_without_rolling_back_disabled (__main__.FlowPage.test_live_semantic_mutation_invalidates_candidate_without_rolling_back_disabled) ... ok
+test_page_cell_aliases_compare_effective_values_instead_of_presence (__main__.FlowPage.test_page_cell_aliases_compare_effective_values_instead_of_presence) ... ok
+test_randomized_per_node_transactions_against_rational_model (__main__.FlowPage.test_randomized_per_node_transactions_against_rational_model) ... ok
+test_real_allocator_denial_preserves_bank_and_cache_hits_need_no_allocation (__main__.FlowPage.test_real_allocator_denial_preserves_bank_and_cache_hits_need_no_allocation) ... ok
+test_recycled_slot_and_textual_id_never_inherit_old_outputs (__main__.FlowPage.test_recycled_slot_and_textual_id_never_inherit_old_outputs) ... ok
+test_semantic_edits_conservatively_dirty_all_nodes_and_removed_ids_expire (__main__.FlowPage.test_semantic_edits_conservatively_dirty_all_nodes_and_removed_ids_expire) ... ok
+test_shared_page_cells_require_one_effective_value_across_nodes (__main__.FlowPage.test_shared_page_cells_require_one_effective_value_across_nodes) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 54.163s
+
+OK

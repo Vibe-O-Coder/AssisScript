@@ -343,6 +343,26 @@
       "dependencies": [
         "fluxstyle"
       ]
+    },
+    {
+      "name": "pageframe",
+      "required": false,
+      "doc": "BIBLIOTECA-pageframe.md",
+      "description": "Layout local e snapshot imutavel de caixas, texto e acerto.",
+      "dependencies": [
+        "flowpage",
+        "graphemes"
+      ]
+    },
+    {
+      "name": "pagepresent",
+      "required": false,
+      "doc": "BIBLIOTECA-pagepresent.md",
+      "description": "Comandos do mesmo snapshot e publicacao atomica de pixels e MSAA Windows.",
+      "dependencies": [
+        "pageframe",
+        "reader"
+      ]
     }
   ]
 }

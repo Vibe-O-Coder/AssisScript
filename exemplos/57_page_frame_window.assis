@@ -1,0 +1,52 @@
+// Trusted local demonstration. Tab/Enter/Space and pointer activate buttons.
+// --once presents one frame and exits for an unattended smoke test.
+import "std/pagepresent.assis";
+struct Drawing{own frame:pageframe::Frame;own packet:pagepresent::Packet;}
+safe fn refresh(borrow mut drawing:Drawing,borrow document:documents::Document,borrow page:flowpage::Page,
+        borrow window:window::Window,version:int,width:int,height:int,focus:doctree::NodeId):bool{
+    own candidate:pageframe::Frame=try_new pageframe::Frame(document,page,version,width,height,0,65536,10000000,pagepresent::measure);
+    if(candidate==null || !candidate.is_open()){return false;}
+    val policy:reader::Preferences=reader::preferences(window);
+    own packet:pagepresent::Packet=try_new pagepresent::Packet(candidate,focus,policy,10000000);
+    if(packet==null || !packet.is_open()){return false;}
+    if(packet.publish(window,candidate,document)!=0){return false;}
+    drawing.frame=move(candidate);drawing.packet=move(packet);return true;
+}
+safe fn main():int{
+    if(!pagepresent::available()){print("Windows frame provider required");return 4;}
+    own store:documents::Store=try_new documents::Store(4000000,4000,100);
+    own page:flowpage::Page=try_new flowpage::Page(utf8("flow Body{16px -> layout.padding;}bind #body to Body;flow Row{row(gap:20px) -> layout.children;}bind #panels to Row;flow Card{220px -> layout.width;12px -> layout.padding;column(gap:12px) -> layout.children;#d9e6e4 -> paint.background;}bind .card to Card;flow Title{22px -> text.size;700 -> text.weight;}bind .title to Title;flow Button{8px -> layout.padding;#145563 -> paint.background;#fff -> paint.text;}bind .button to Button;"),32,2048,5000000);
+    own input:fluxstyle::Inputs=try_new fluxstyle::Inputs(2048);own drawing:Drawing=try_new Drawing();
+    if(store==null || page==null || input==null || drawing==null || !page.is_open()){return 2;}
+    assert(htdl::load(store,1,utf8("<div type=document version=0.1 lang=pt-BR><div type=head><div type=title>Paineis em um snapshot</div></div><div type=body id=body><div type=container id=panels><div type=container class=card><div type=heading level=2 class=title>Painel esquerdo</div><div type=paragraph>Texto, desenho e acerto usam a mesma geometria.</div><div type=button class=button>Ativar esquerdo</div></div><div type=container class=card><div type=heading level=2 class=title>Painel direito</div><div type=paragraph>Tab percorre a ordem semantica dos controles.</div><div type=button class=button>Ativar direito</div></div></div></div></div>")).code==0);
+    assert(page.refresh(store.active_document(),input)==0);
+    own window:window::Window=try_new window::Window(1,600,320,utf8("AssisScript - paineis FS"));
+    if(window==null || !window.opened()){return 4;}
+    let width:int=600;let height:int=320;let version:int=1;let focus:doctree::NodeId=new doctree::NodeId();
+    if(!refresh(drawing,store.active_document(),page,window,version,width,height,focus)){return 5;}
+    if(window.present()!=0){return 4;}print("FRAME",version,drawing.frame.size());
+    if(arg_count()>1){return int(window.close()!=0);}
+    let coherent:bool=true;let held:bool=false;let pressed:doctree::NodeId=new doctree::NodeId();let pressed_frame:int=0;
+    while(window.opened()){
+        val event:window::Event=window.poll(50);if(event.status<0){return 4;}if(event.status==1){continue;}if(event.kind==1){break;}
+        let dirty:bool=false;let activated:doctree::NodeId=new doctree::NodeId();
+        if(event.kind==2){width=event.arg0;height=event.arg1;dirty=true;pressed=new doctree::NodeId();}
+        if(event.kind==12){dirty=true;}
+        if(coherent){
+            if(event.kind==3 && event.arg0==9 && event.arg1==1){focus=drawing.frame.next_focus(store.active_document(),focus,false);dirty=true;}
+            if(event.kind==3 && (event.arg0==13 || event.arg0==32)){
+                if(event.arg1==0){held=false;}else if(!held){activated=focus;held=true;}}
+            if(event.kind==7){pressed=drawing.frame.hit(store.active_document(),drawing.frame.version(),event.arg0,event.arg1);pressed_frame=drawing.frame.version();}
+            if(event.kind==8){val hit:doctree::NodeId=drawing.frame.hit(store.active_document(),pressed_frame,event.arg0,event.arg1);
+                if(pageframe::same(hit,pressed)){activated=hit;}pressed=new doctree::NodeId();}
+            if(event.kind==10 || event.kind==5){pressed=new doctree::NodeId();held=false;}
+            if(event.kind==11){activated=drawing.packet.action(drawing.frame,store.active_document(),event.arg0,event.arg1);}
+            if(!doctree::absent(activated)){focus=activated;print("ACTIVATE",activated.slot,activated.generation);dirty=true;}
+        }
+        if(dirty){version++;
+            coherent=refresh(drawing,store.active_document(),page,window,version,width,height,focus);
+            if(!coherent){print("FRAME FAILED - content interaction blocked");}
+            else{if(window.present()!=0){return 4;}print("FRAME",version,drawing.frame.size());}
+        }
+    }return int(window.close()!=0);
+}

@@ -1,0 +1,70 @@
+{
+  "schema": "pageframe-summary-v1",
+  "base": "542827e43143c94a977d26e116308036cefc7f1d",
+  "validation": "pass",
+  "pending": [],
+  "counts": {
+    "windows": {
+      "executed": 119,
+      "not_run": 0,
+      "examples": 59
+    },
+    "linux": {
+      "executed": 108,
+      "not_run": 11,
+      "examples": 59
+    }
+  },
+  "points_before": "45.30",
+  "points_after": "45.70",
+  "gates_passed": 0,
+  "source_sha256": {
+    ".gitattributes": "7c8971c95c7cd410487198b1dd953269b15fdb63f762e5666140589b21378e36",
+    "Makefile": "619ae94899180c602018ed08cafed14d8ed9bf10236de15004f70ace3d738573",
+    ".github/workflows/ci.yml": "ad093b6fe281bd2897c4a16b91d401b2506b4f5181b62c87651f8665acb161fb",
+    "instalar-windows.cmd": "9199aba9b963d287bf6330f906f997ed50a74393f5ea8b845f1690621eeba64e",
+    "stdlib/flowpage.assis": "ecb247fa911b3e903aa8fd3e06139dbaf9f565326cbbbef34a5b48ec398c93d7",
+    "stdlib/pageframe.assis": "e0c1da5d2a169ef9592e7f366d0634657d9eca9799bb80a0c70e6efd702f93d2",
+    "stdlib/pagepresent.assis": "21963898ba95cd64652b0ebc69b5881202527b6212b54b521fe0cdaa3e23fd3e",
+    "stdlib/catalogo.json": "676459a7be4146e99cb1a2e26a1ffeb56106279bbc0eca22835b3475d9dad4f8",
+    "stdlib/catalogo.sh": "5487544382448e619661186abbed0ca49d50a46f7bb60f3c85af05a046b42d90",
+    "src/install_files.inc": "710264624ef95a393026ce277e632c76bd18df357fed5f5b82316ccabad014d9",
+    "src/install_optional.inc": "2dd63f3fe3be2e5714b44b97ec9966d24f6c1c14b54efc100cb9d9976c284572",
+    "providers/platform/windows.c": "4002147f5e20d49c1d235264260717f7f0f1e44007fac6a6f83d9a7c9b7d49a6",
+    "providers/platform/assis_platform_v1.h": "bd2cca97a562dd806c392381024ed74a277110930da87f0e09476371a4c2e4dd",
+    "providers/platform/frame.inc": "facdc59a61d450b50674912ec75443791b0c3ec2d063bcb782a99d48f043b79d",
+    "tests/test-pageframe.py": "b9d71646436fc15ae84df6061840fe78db6800490d939ab1018fb0e8dbac9c9d",
+    "tests/test-pagepresent.py": "25130cfecd6bc80e47b2e49997fa79273d689ca56933d1bdcc69fc2df175d759",
+    "tools/collect-pageframe-evidence.py": "6dce3e92c1154103c924b79d96aee602693ed71299fbaf1e8b53a8c58b498076",
+    "tools/verify-pageframe-evidence.py": "fd5a9d94c709f01980b64b965676ff5724ce7015eb6a7fa5a3eca7d59d4c50f8",
+    "tools/verify-pageframe-install.py": "c4a2cdd526d101339b4dce88e27039882355d8a670298af5a57a1c46bbd36519",
+    "tools/prepare-development-installer.py": "45e0a5c2088a5e2aeae6e8ff3560455d26829786ab787ccc944fd9a51dea6553",
+    "exemplos/56_page_frame.assis": "e6ffeeae01d445242ccd61fab27be741d801a063e1fba857aded580f7c082623",
+    "exemplos/57_page_frame_window.assis": "225317d8120315c2525e972951c8cbde3e27e57d0706a74c9e85c521e04f8270",
+    "docs/BIBLIOTECA-pageframe.md": "09427d9f239af24e127fd4cf3cb5d41ffe8b9faa01a7eab9ac5b6a13ff6b29f9",
+    "docs/BIBLIOTECA-pagepresent.md": "b8cd7698c5e1e77d663d96e99217c42e5aacf55fb9d0aa68fd25f5092b9be704",
+    "docs/ecossistema/PERFIL-FRAME-LOCAL-V1.md": "d8fc73abf7492f469cfb86c0eb06f18775467dbec6a3c6af46b880d5a91939eb"
+  },
+  "auxiliary_sha256": {
+    "desktop.json": "e683975829abf6c46acacfdcdf6185049847d5c4f6ec3ad9ff1a1ffb79e2323f",
+    "development-bundle.json": "59f6cbd5b275b84da5afac78f0d37ca6e90663f12c03d699163e7c4eb626ee2a",
+    "installed-compiler-diagnosis.json": "58411874f3f611548ccab1d5b0918f5dd57a1aa748d015e6fbe07e66b34fec00",
+    "linux-examples.json": "c641755b36305c15f9d4bb77c5f14803e212655f44f2c1863bddf70c62190a0a",
+    "linux-install.json": "e4cc38c0d88126873065f64f4bb31aa15082645c96ad0088b080cd2318ef348d",
+    "linux.json": "f99e30280ff73367b89c1c4d320edfed527001603199d5e62158af597a8f25fb",
+    "reference-integrity.json": "b573df6046f5f987a2f0d59d8a8f866060d0eca1f3efd3907255fb429f2058fe",
+    "windows-examples-historical-compiler.json": "6eebc4560fd4383d444567bca0afa5e0637ff5178ee3cf2179b1b5c6d53ca72e",
+    "windows-examples.json": "9206dc461a67ec01eb9a5f7b84411a4acf630db80ef010326c0a145ae6e53d51",
+    "windows-install.json": "90897283d2086c3e2212177094fe7448bf33e7f32d3ea3103f21e0e468097503",
+    "windows.json": "db82dad94f78c475365d17109b585c0b1206eb164b60af34326e8b615dbd2139"
+  },
+  "limitations": [
+    "Bootstrap visual catalog; no images, styled inline runs or rounded corners",
+    "Independent nested scroll, automatic FS parent.availableWidth and layout-wide incremental invalidation remain open",
+    "SSC aggregate quota/channels and Reader selection integration are not implemented by this unit",
+    "Integer-pixel layout; OS-specific font metrics; no cross-platform pixel equality promised",
+    "Desktop Computer Use did not expose a targetable window; no desktop, screen reader, DPI, multi-monitor or IME acceptance",
+    "Linux graphical provider unavailable; macOS and ARM native execution not-run",
+    "No new 24h soak, third-party acceptance, release, merge or remote CI approval"
+  ]
+}

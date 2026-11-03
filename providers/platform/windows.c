@@ -380,6 +380,7 @@ int32_t assisp_close(int64_t token) {
     free_surface(&w->surface); w->failure = 0; w->token = 0; unregister_if_idle(); return 0;
 }
 #include "reader.inc"
+#include "frame.inc"
 #ifdef ASSISP_TESTING
 ASSISP_API int64_t assisp_test_control(int64_t operation, int64_t value) {
     if (!on_owner()) return -5;

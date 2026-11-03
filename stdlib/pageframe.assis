@@ -1,0 +1,252 @@
+namespace pageframe;
+import "std/flowpage.assis";
+import "std/graphemes.assis";
+
+public value struct Rect{let x:int;let y:int;let width:int;let height:int;}
+public value struct Box{
+    let node:doctree::NodeId;let kind:int;let disabled:bool;
+    let bounds:Rect;let clip:Rect;let background:int;let foreground:int;let opacity:int;
+    let text_size:int;let weight:int;
+}
+public value struct Run{let box:int;let start:int;let size:int;let bounds:Rect;}
+public pure fn minimum(a:int,b:int):int{if(a<b){return a;}return b;}
+public pure fn maximum(a:int,b:int):int{if(a>b){return a;}return b;}
+public pure fn intersect(a:Rect,b:Rect):Rect{
+    val x:int=maximum(a.x,b.x);val y:int=maximum(a.y,b.y);
+    val width:int=maximum(0,minimum(a.x+a.width,b.x+b.width)-x);val height:int=maximum(0,minimum(a.y+a.height,b.y+b.height)-y);
+    if(width==0 || height==0){return new Rect();}return new Rect(x,y,width,height);
+}
+public pure fn contains(a:Rect,x:int,y:int):bool{
+    return x>=a.x && y>=a.y && x-a.x<a.width && y-a.y<a.height;
+}
+public pure fn pixels(q:int):int{return (q+32768)>>16;}
+public pure fn same(a:doctree::NodeId,b:doctree::NodeId):bool{
+    return a.instance==b.instance && a.slot==b.slot && a.generation==b.generation;
+}
+/// Immutable local geometry, text and accessible names, independent of providers.
+/// Construct a candidate and replace the previous owner only after is_open().
+public final class Frame{
+    // 40 words per box: identity, parent, kind, geometry, style, text and clip.
+    private own data:*int;private own content:*byte;private own runs:*Run;
+    private let count:int;private let used:int;private let lines:int;private let work:int;
+    private let instance_id:int;private let semantic:int;private let style:int;private let revision:int;
+    private let width:int;private let height:int;private let scroll:int;private let extent:int;
+    private let title_size:int;
+    private let code:int;private let failed:doctree::NodeId;private let active:bool;
+    private fn fail(borrow mut self,code:int,node:doctree::NodeId):void{
+        if(self.code==0){self.code=code;self.failed=node;}
+    }
+    private fn node(borrow self,i:int):doctree::NodeId{
+        return new doctree::NodeId(self.data[i*40],self.data[i*40+1],self.data[i*40+2]);
+    }
+    private fn find(borrow self,node:doctree::NodeId):int{
+        for(let i:int=0;i<self.count;i++){if(same(self.node(i),node)){return i;}}return -1;
+    }
+    private fn put(borrow mut self,c:byte):bool{
+        if(self.used==len(self.content)){self.fail(401,new doctree::NodeId());return false;}
+        self.content[self.used]=c;self.used++;return true;
+    }
+    private fn property(borrow self,borrow page:flowpage::Page,borrow document:documents::Document,node:doctree::NodeId,key:int,fallback:int):int{
+        if(page.has(document,node,key)){return page.value(document,node,key).value;}return fallback;
+    }
+    private fn hidden(borrow self,borrow tree:doctree::Tree,node:doctree::NodeId):bool{
+        let n:doctree::NodeId=node;
+        while(!doctree::absent(n)){
+            if(htdl::value_equals(tree,htdl::attribute(tree,n,7),utf8("true"))){return true;}n=tree.parent(n);
+        }return false;
+    }
+    private fn after(borrow self,borrow tree:doctree::Tree,node:doctree::NodeId):doctree::NodeId{
+        let n:doctree::NodeId=node;while(!doctree::absent(n)){
+            val sibling:doctree::NodeId=tree.next_sibling(n);if(!doctree::absent(sibling)){return sibling;}n=tree.parent(n);
+        }return new doctree::NodeId();
+    }
+    private fn collect(borrow mut self,borrow tree:doctree::Tree,node:doctree::NodeId):bool{
+        let n:doctree::NodeId=tree.first_child(node);val end:doctree::NodeId=self.after(tree,node);
+        val start:int=self.used;let pending:bool=false;
+        while(!doctree::absent(n) && !same(n,end)){
+            if(self.hidden(tree,n)){n=self.after(tree,n);continue;}
+            if(tree.kind(n)==2){for(let i:int=0;i<htdl::value_size(tree,n);i++){
+                val c:byte=htdl::value_byte(tree,n,i);
+                if(htdl::space(int(c))){pending=self.used>start;}
+                else{if(pending){if(!self.put(byte(32))){return false;}pending=false;}if(!self.put(c)){return false;}}
+            }}
+            val child:doctree::NodeId=tree.first_child(n);if(!doctree::absent(child)){n=child;}else{n=self.after(tree,n);}
+        }return true;
+    }
+    fn init(borrow mut self,borrow document:documents::Document,borrow page:flowpage::Page,
+            frame_version:int,width:int,height:int,scroll_y:int,text_scale:int,max_bytes:int,
+            metric:safe fn(borrow slice<byte>,int,int):int):void{
+        if(!document.is_open() || !document.has_root() || !page.is_open() || page.version()<1 ||
+           frame_version<1 || width<1 || width>16384 || height<1 || height>16384 || scroll_y<0 || scroll_y>16777216 ||
+           text_scale<65536 || text_scale>262144){self.fail(204,new doctree::NodeId());return;}
+        // Cap before arithmetic; includes bounded box/line storage and text workspace.
+        if(document.source_size()>1048576 || max_bytes<6000000+2*document.source_size()){self.fail(401,new doctree::NodeId());return;}
+        self.data=try_alloc<int>(256*40);self.content=try_alloc<byte>(2*document.source_size()+64);self.runs=try_alloc<pageframe::Run>(32768);
+        if(self.data==null || self.content==null || self.runs==null){self.fail(401,new doctree::NodeId());return;}
+        self.width=width;self.height=height;self.scroll=scroll_y;
+        self.instance_id=document.instance();self.semantic=document.semantic_version();self.revision=frame_version;
+        if(page.document_instance()==document.instance()){self.style=page.version();}
+        borrow tree:doctree::Tree=document.nodes();
+        val head:doctree::NodeId=htdl::first_element(tree,tree.root());val title:doctree::NodeId=htdl::first_element(tree,head);
+        if(!self.collect(tree,title)){return;}self.title_size=self.used;
+        let node:doctree::NodeId=htdl::query(tree,0,utf8(""),new doctree::NodeId());
+        while(!doctree::absent(node)){
+            val kind:int=htdl::kind(tree,node);
+            if(kind>=4 && kind!=10 && kind!=11 && !self.hidden(tree,node)){
+                if(kind==7){
+                    // Mixed inline author styles need shaped runs, outside this profile.
+                    for(let k:int=1;k<=15;k++){if(page.has(document,node,k)){self.fail(203,node);return;}}
+                }else{
+                    if(kind!=4 && kind!=5 && kind!=6 && kind!=8 && kind!=9){self.fail(203,node);return;}
+                    if(self.count==256){self.fail(401,node);return;}
+                    val p:int=self.count*40;val parent:int=self.find(tree.parent(node));
+                    if(kind!=4 && parent<0){self.fail(204,node);return;}
+                    self.data[p]=node.instance;self.data[p+1]=node.slot;self.data[p+2]=node.generation;
+                    self.data[p+3]=parent;self.data[p+4]=kind;self.data[p+5]=int(htdl::value_equals(tree,htdl::attribute(tree,node,8),utf8("true")));
+                    self.data[p+10]=pixels(self.property(page,document,node,3,0));
+                    self.data[p+11]=self.property(page,document,node,4,0)%4;
+                    self.data[p+12]=pixels(self.property(page,document,node,4,0)/4);
+                    self.data[p+13]=self.property(page,document,node,5,0);self.data[p+14]=self.property(page,document,node,6,0);
+                    let background:int=0;if(kind==9){background=0xd9e6e4ff;}
+                    self.data[p+15]=self.property(page,document,node,7,background);self.data[p+16]=self.property(page,document,node,8,0x223143ff);
+                    // Rounded corners require a matching clipping/raster provider.
+                    if(self.property(page,document,node,9,0)!=0){self.fail(203,node);return;}
+                    self.data[p+17]=self.property(page,document,node,10,65536);
+                    val size:int=self.property(page,document,node,11,16*65536);
+                    self.data[p+18]=(size*text_scale+32768)>>16;self.data[p+19]=self.property(page,document,node,12,400*65536);
+                    self.data[p+20]=self.property(page,document,node,13,0);
+                    self.data[p+21]=pixels(self.property(page,document,node,14,0));self.data[p+22]=pixels(self.property(page,document,node,15,0));
+                    self.data[p+23]=int(page.has(document,node,1));self.data[p+24]=int(page.has(document,node,2));
+                    self.data[p+8]=pixels(self.property(page,document,node,1,width*65536));self.data[p+9]=pixels(self.property(page,document,node,2,0));
+                    if(self.data[p+18]<65536 || self.data[p+18]>256*65536){self.fail(303,node);return;}
+                    if(parent>=0){val q:int=parent*40;val available:int=maximum(0,self.data[q+8]-2*self.data[q+10]-self.data[q+36]);
+                        if(self.data[q+11]==1 && self.data[p+23]==0){self.fail(303,node);return;}
+                        if(self.data[p+23]==0){self.data[p+8]=available;}
+                    }
+                    if(self.data[p+14]==2){self.data[p+36]=12;}
+                    self.data[p+25]=self.used;
+                    if(kind==6 || kind==8 || kind==9){
+                        if(!self.collect(tree,node)){return;}self.data[p+26]=self.used-self.data[p+25];
+                        self.data[p+27]=self.lines;
+                        if(!self.wrap(self.count,metric)){return;}self.data[p+28]=self.lines-self.data[p+27];
+                    }
+                    self.data[p+29]=self.data[p+25];self.data[p+30]=self.data[p+26];
+                    val label:doctree::NodeId=htdl::attribute(tree,node,10);
+                    if(!doctree::absent(label)){self.data[p+29]=self.used;
+                        for(let i:int=0;i<htdl::value_size(tree,label);i++){if(!self.put(htdl::value_byte(tree,label,i))){return;}}
+                        self.data[p+30]=self.used-self.data[p+29];}
+                    self.count++;
+                }
+            }
+            node=htdl::query(tree,0,utf8(""),node);
+        }
+        if(self.count==0 || self.data[4]!=4){self.fail(204,new doctree::NodeId());return;}
+        // Automatic heights resolve only upwards, never back into FS inputs.
+        for(let i:int=self.count-1;i>=0;i--){val p:int=i*40;let content:int=self.data[p+37];let children:int=0;
+            for(let j:int=i+1;j<self.count;j++){val q:int=j*40;if(self.data[q+3]!=i){continue;}
+                if(self.data[p+11]==1){content=maximum(content,self.data[q+9]);}
+                else{if(children>0){content+=self.data[p+12];}content+=self.data[q+9];}children++;}
+            if(self.data[p+24]==0){self.data[p+9]=content+2*self.data[p+10];}
+            if(self.data[p+9]>16777216){self.fail(401,self.node(i));return;}
+        }
+        self.extent=self.data[9];self.scroll=minimum(self.scroll,maximum(0,self.extent-height));
+        // Parent positions and clips are final before descendants are positioned.
+        for(let i:int=0;i<self.count;i++){val p:int=i*40;val parent:int=self.data[p+3];let x:int=0;let y:int= -self.scroll;
+            if(parent>=0){val q:int=parent*40;x=self.data[q+6]+self.data[q+10];y=self.data[q+7]+self.data[q+10];
+                let previous:int=0;for(let j:int=parent+1;j<i;j++){val r:int=j*40;if(self.data[r+3]!=parent){continue;}
+                    if(self.data[q+11]==1){x+=self.data[r+8];}else{y+=self.data[r+9];}previous++;}
+                if(self.data[q+11]==1){x+=previous*self.data[q+12];
+                    val spare:int=maximum(0,self.data[q+9]-2*self.data[q+10]-self.data[p+9]);
+                    if(self.data[q+13]==1){y+=spare/2;}if(self.data[q+13]==2){y+=spare;}
+                    if(self.data[q+13]==3 && self.data[p+24]==0){self.data[p+9]+=spare;}
+                }else{y+=previous*self.data[q+12];val spare:int=maximum(0,self.data[q+8]-2*self.data[q+10]-self.data[q+36]-self.data[p+8]);
+                    if(self.data[q+13]==1){x+=spare/2;}if(self.data[q+13]==2){x+=spare;}}
+            }
+            self.data[p+6]=x+self.data[p+21];self.data[p+7]=y+self.data[p+22];
+            let clip:Rect=new Rect(0,0,width,height);
+            if(parent>=0){val q:int=parent*40;clip=new Rect(self.data[q+31],self.data[q+32],self.data[q+33],self.data[q+34]);
+                if(self.data[q+14]!=0){clip=intersect(clip,new Rect(self.data[q+6]+self.data[q+10],self.data[q+7]+self.data[q+10],maximum(0,self.data[q+8]-2*self.data[q+10]-self.data[q+36]),maximum(0,self.data[q+9]-2*self.data[q+10])));}}
+            self.data[p+31]=clip.x;self.data[p+32]=clip.y;self.data[p+33]=clip.width;self.data[p+34]=clip.height;
+            for(let j:int=self.data[p+27];j<self.data[p+27]+self.data[p+28];j++){val r:Run=self.runs[j];
+                self.runs[j]=new Run(i,r.start,r.size,new Rect(r.bounds.x+self.data[p+6]+self.data[p+10],r.bounds.y+self.data[p+7]+self.data[p+10],r.bounds.width,r.bounds.height));}
+        }
+        self.active=true;
+    }
+    private fn wrap(borrow mut self,index:int,metric:safe fn(borrow slice<byte>,int,int):int):bool{
+        val p:int=index*40;val start:int=self.data[p+25];val size:int=self.data[p+26];
+        val available:int=maximum(0,self.data[p+8]-2*self.data[p+10]-self.data[p+36]);
+        val sample:int=metric(utf8("M"),self.data[p+18],self.data[p+19]);
+        if(sample<0 || (sample>>32)<1 || (sample>>32)>1024){self.fail(304,self.node(index));return false;}
+        val row:int=sample>>32;let y:int=0;
+        own boundaries:graphemes::Index=try_new graphemes::Index(slice_of(self.content,start,size));
+        if(boundaries==null || boundaries.status()!=0){self.fail(401,self.node(index));return false;}
+        let at:int=0;
+        while(at<size){let end:int=at;let measured:int=0;
+            while(end<size){val stop:int=boundaries.next(end);if(stop-at>4096){break;}
+                self.work+=stop-at;if(self.work>8000000){self.fail(401,self.node(index));return false;}
+                val m:int=metric(slice_of(self.content,start+at,stop-at),self.data[p+18],self.data[p+19]);
+                if(m<0 || (m>>32)!=row){self.fail(304,self.node(index));return false;}
+                val w:int=m%4294967296;if(w>available){break;}end=stop;measured=w;
+            }
+            if(end==at || self.lines==32768){self.fail(303,self.node(index));return false;}
+            let x:int=0;if(self.data[p+20]==1){x=(available-measured)/2;}if(self.data[p+20]==2){x=available-measured;}
+            self.runs[self.lines]=new Run(index,start+at,end-at,new Rect(x,y,measured,row));self.lines++;y+=row;at=end;
+        }
+        if(size==0 && self.data[p+4]==9){y=row;}
+        self.data[p+37]=y;return true;
+    }
+    fn is_open(borrow self):bool{return self.active;}
+    fn status(borrow self):int{return self.code;}
+    fn diagnostic_node(borrow self):doctree::NodeId{return self.failed;}
+    fn instance(borrow self):int{return self.instance_id;}
+    fn semantic_version(borrow self):int{return self.semantic;}
+    fn style_version(borrow self):int{return self.style;}
+    fn version(borrow self):int{return self.revision;}
+    fn size(borrow self):int{return self.count;}
+    fn run_count(borrow self):int{return self.lines;}
+    fn viewport(borrow self):Rect{return new Rect(0,0,self.width,self.height);}
+    fn scroll_y(borrow self):int{return self.scroll;}
+    fn max_scroll(borrow self):int{return maximum(0,self.extent-self.height);}
+    fn box(borrow self,index:int):Box{
+        assert(self.active && index>=0 && index<self.count);val p:int=index*40;
+        return new Box(self.node(index),self.data[p+4],self.data[p+5]!=0,
+            new Rect(self.data[p+6],self.data[p+7],self.data[p+8],self.data[p+9]),
+            new Rect(self.data[p+31],self.data[p+32],self.data[p+33],self.data[p+34]),
+            self.data[p+15],self.data[p+16],self.data[p+17],self.data[p+18],self.data[p+19]);
+    }
+    fn accessible_bounds(borrow self,index:int):Rect{val b:Box=self.box(index);return intersect(b.bounds,b.clip);}
+    fn content_clip(borrow self,index:int):Rect{
+        val b:Box=self.box(index);val p:int=index*40;if(self.data[p+14]==0){return b.clip;}
+        return intersect(b.clip,new Rect(b.bounds.x+self.data[p+10],b.bounds.y+self.data[p+10],
+            maximum(0,b.bounds.width-2*self.data[p+10]-self.data[p+36]),maximum(0,b.bounds.height-2*self.data[p+10])));
+    }
+    fn name(borrow self,index:int):borrow(self) slice<byte>{
+        assert(self.active && index>=0 && index<self.count);return slice_of(self.content,self.data[index*40+29],self.data[index*40+30]);
+    }
+    fn run(borrow self,index:int):Run{assert(self.active && index>=0 && index<self.lines);return self.runs[index];}
+    fn run_text(borrow self,index:int):borrow(self) slice<byte>{val r:Run=self.run(index);return slice_of(self.content,r.start,r.size);}
+    fn title(borrow self):borrow(self) slice<byte>{assert(self.active);return slice_of(self.content,0,self.title_size);}
+    /// A stale snapshot is never an authority for interaction with changed semantics.
+    fn current(borrow self,borrow document:documents::Document):bool{
+        return self.active && document.is_open() && document.instance()==self.instance_id && document.semantic_version()==self.semantic;
+    }
+    fn eligible(borrow self,borrow document:documents::Document,index:int):bool{
+        if(!self.current(document) || index<0 || index>=self.count){return false;}
+        val b:Box=self.box(index);return b.kind==9 && !b.disabled && document.nodes().contains(b.node);
+    }
+    fn hit(borrow self,borrow document:documents::Document,frame_version:int,x:int,y:int):doctree::NodeId{
+        if(!self.current(document) || frame_version!=self.revision){return new doctree::NodeId();}
+        for(let i:int=self.count-1;i>=0;i--){if(contains(self.accessible_bounds(i),x,y)){
+            if(self.eligible(document,i)){return self.node(i);}return new doctree::NodeId();}}
+        return new doctree::NodeId();
+    }
+    fn next_focus(borrow self,borrow document:documents::Document,previous:doctree::NodeId,backward:bool):doctree::NodeId{
+        if(!self.current(document)){return new doctree::NodeId();}
+        let at:int=self.find(previous);if(at<0 && backward){at=0;}
+        for(let i:int=0;i<self.count;i++){
+            if(backward){at--;}else{at++;}if(at<0){at=self.count-1;}if(at>=self.count){at=0;}
+            if(self.eligible(document,at)){return self.node(at);}
+        }return new doctree::NodeId();
+    }
+    fn close(borrow mut self):void{self.active=false;own data:*int=move(self.data);own content:*byte=move(self.content);own runs:*Run=move(self.runs);}
+}

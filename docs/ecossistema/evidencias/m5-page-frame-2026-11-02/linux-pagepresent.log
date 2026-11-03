@@ -1,0 +1,11 @@
+test_all_native_allocation_boundaries_preserve_pixels_accessibility_and_gdi_objects (__main__.PagePresent.test_all_native_allocation_boundaries_preserve_pixels_accessibility_and_gdi_objects) ... skipped 'Windows native frame provider unavailable'
+test_focus_order_tracks_semantics_and_disabled_overlay_blocks_underlying_action (__main__.PagePresent.test_focus_order_tracks_semantics_and_disabled_overlay_blocks_underlying_action) ... ok
+test_native_publish_and_action_revalidate_projection_and_semantic_generation (__main__.PagePresent.test_native_publish_and_action_revalidate_projection_and_semantic_generation) ... skipped 'Windows native frame provider unavailable'
+test_packet_commands_and_accessibility_share_clipped_frame_bounds (__main__.PagePresent.test_packet_commands_and_accessibility_share_clipped_frame_bounds) ... ok
+test_real_font_metrics_feed_layout_and_native_render_at_two_scales (__main__.PagePresent.test_real_font_metrics_feed_layout_and_native_render_at_two_scales) ... skipped 'Windows native frame provider unavailable'
+test_two_panel_window_presents_and_closes_in_both_modes (__main__.PagePresent.test_two_panel_window_presents_and_closes_in_both_modes) ... skipped 'Windows native frame provider unavailable'
+
+----------------------------------------------------------------------
+Ran 6 tests in 9.734s
+
+OK (skipped=4)

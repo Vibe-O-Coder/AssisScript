@@ -1,0 +1,33 @@
+{
+  "installed_sha256": "c519e591eacb52f87593064879e93b98f12de69218e09acd79a821cb30d9e4c5",
+  "historical_bin_sha256": "c519e591eacb52f87593064879e93b98f12de69218e09acd79a821cb30d9e4c5",
+  "fresh_candidate_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+  "installed_matches_historical": true,
+  "cause": "New stdlib files copied beside an old compiler that predates try_new and increment syntax",
+  "user_workaround_backed_up": [
+    "stdlib\\arena.assis",
+    "stdlib\\buffers.assis",
+    "stdlib\\convert.assis",
+    "stdlib\\csv.assis",
+    "stdlib\\doctree.assis",
+    "stdlib\\documents.assis",
+    "stdlib\\encoding.assis",
+    "stdlib\\flowpage.assis",
+    "stdlib\\fluxstyle.assis",
+    "stdlib\\graphemes.assis",
+    "stdlib\\htdl.assis",
+    "stdlib\\json.assis",
+    "stdlib\\log.assis",
+    "stdlib\\pagecompiler.assis",
+    "stdlib\\pageframe.assis",
+    "stdlib\\pagehost.assis",
+    "stdlib\\pagepresent.assis",
+    "stdlib\\pagereader.assis",
+    "stdlib\\pageworker.assis",
+    "stdlib\\reader.assis",
+    "stdlib\\sanscript.assis",
+    "stdlib\\viewer.assis",
+    "exemplos\\57_page_frame_window.assis"
+  ],
+  "global_installation_modified": false
+}

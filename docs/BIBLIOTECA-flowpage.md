@@ -1,3 +1,8 @@
+Continuação: [pageframe](BIBLIOTECA-pageframe.md) consome o conjunto confirmado
+e constrói layout/snapshot; [pagepresent](BIBLIOTECA-pagepresent.md) publica
+desenho e projeção MSAA juntos no Windows. `document_instance()` identifica
+a origem do conjunto. Flowpage não reavalia entradas a partir da geometria.
+
 # flowpage — transações FS de página inteira, v1
 
 `import "std/flowpage.assis";` Biblioteca opcional em AssisScript, dependente

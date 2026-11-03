@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "setup_sha256": null,
+  "selected_libraries": [
+    "buffers",
+    "doctree",
+    "documents",
+    "flowpage",
+    "fluxstyle",
+    "graphemes",
+    "htdl",
+    "owned",
+    "pageframe",
+    "pagepresent",
+    "reader",
+    "unicode",
+    "viewer",
+    "window"
+  ],
+  "checks": [
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/instalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces",
+        "--no-path",
+        "--with",
+        "pagepresent"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em /tmp/assis-presentation-install-dcfaf1al/prefix with spaces/bin/assis\nInclua /tmp/assis-presentation-install-dcfaf1al/prefix with spaces/bin no PATH ou use o caminho completo.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/prefix with spaces/bin/assis",
+        "run",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/56_page_frame.assis",
+        "--safe",
+        "--debug"
+      ],
+      "returncode": 0,
+      "stdout": "FRAME 8 4 1 1\nLEFT 8 28 104 16\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/desinstalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: compilador desinstalado. Seus projetos foram preservados.\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Fresh candidate and isolated offline prefix, optional indices 34/35 and transitive closure; installed immutable frame demo, uninstall and user file preservation; no PATH, associations or release changes"
+}

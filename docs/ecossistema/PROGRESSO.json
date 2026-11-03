@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-02",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "native-whole-page-fs-transactions-windows-linux",
+  "assessment": "native-shared-layout-frame-and-atomic-windows-composition",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -269,7 +269,9 @@
             "docs/ecossistema/evidencias/m3-htdl-parser-2026-11-01/summary.json",
             "docs/relatorios/2026-11-02-m5-page-styles.md",
             "docs/ecossistema/evidencias/m5-page-styles-2026-11-02/summary.json",
-            "docs/BIBLIOTECA-flowpage.md"
+            "docs/BIBLIOTECA-flowpage.md",
+            "docs/relatorios/2026-11-02-m5-page-frame.md",
+            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json"
           ]
         },
         {
@@ -433,7 +435,9 @@
             "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
             "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
-            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json"
+            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json",
+            "docs/relatorios/2026-11-02-m5-page-frame.md",
+            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json"
           ]
         },
         {
@@ -693,7 +697,9 @@
             "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md",
             "docs/relatorios/2026-11-02-m5-page-styles.md",
             "docs/ecossistema/evidencias/m5-page-styles-2026-11-02/summary.json",
-            "docs/BIBLIOTECA-flowpage.md"
+            "docs/BIBLIOTECA-flowpage.md",
+            "docs/relatorios/2026-11-02-m5-page-frame.md",
+            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json"
           ]
         },
         {
@@ -769,9 +775,9 @@
         {
           "id": "E08-02",
           "name": "Layout e snapshots coerentes",
-          "level": 2,
+          "level": 3,
           "acceptance": "Definir constraints, distribuição row/column, texto, overflow/scroll e invalidações; provar ausência de ciclo geométrico e uso do mesmo snapshot por desenho, hit test e acessibilidade.",
-          "baseline": "Snapshot textual próprio agora alimenta desenho, seleção/hit testing, reflow 100/200% e geometria acessível MSAA dos mesmos blocos/linhas inteiras, com falha transacional de construção/publicação. Constraints row/column, FS/SSC e integração completa continuam abertos.",
+          "baseline": "Layout local em AssisScript com restricoes descendentes, alturas ascendentes, row/column, texto por grafemas, offsets e recortes. Frame imutavel compartilhado por desenho, hit test e limites MSAA; provider Windows publica raster e projecao juntos ou preserva ambos. Modelos independentes, OOM e versoes antigas executados Windows/Linux x64; casos nativos Windows. Scroll interno independente, estilos inline mistos, imagens, SSC agregado, ligacao automatica de parent.availableWidth e aceites desktop/leitor/DPI continuam abertos.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "local:htdl/docs/19-conformidade-e-cenarios.md",
@@ -780,7 +786,9 @@
             "docs/relatorios/2026-11-01-m3-leitura-acessivel.md",
             "docs/ecossistema/evidencias/m3-reader-2026-11-01/summary.json",
             "tests/test-htdl-reader.py",
-            "tests/reader_oracle.c"
+            "tests/reader_oracle.c",
+            "docs/relatorios/2026-11-02-m5-page-frame.md",
+            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json"
           ]
         },
         {
@@ -815,7 +823,9 @@
             "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md",
             "docs/relatorios/2026-11-02-m5-page-styles.md",
             "docs/ecossistema/evidencias/m5-page-styles-2026-11-02/summary.json",
-            "docs/BIBLIOTECA-flowpage.md"
+            "docs/BIBLIOTECA-flowpage.md",
+            "docs/relatorios/2026-11-02-m5-page-frame.md",
+            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json"
           ]
         },
         {
@@ -987,7 +997,9 @@
             "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md",
             "docs/relatorios/2026-11-02-m5-page-styles.md",
             "docs/ecossistema/evidencias/m5-page-styles-2026-11-02/summary.json",
-            "docs/BIBLIOTECA-flowpage.md"
+            "docs/BIBLIOTECA-flowpage.md",
+            "docs/relatorios/2026-11-02-m5-page-frame.md",
+            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json"
           ]
         },
         {
@@ -3186,7 +3198,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-02",
+      "rubric_version": 1,
+      "label": "Layout e snapshot comum, compositor Windows atomico: 45,70%, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 2,
+        "E07-03": 2,
+        "E07-04": 2,
+        "E07-05": 2,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 2,
+        "E08-04": 2,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "45,30%, 0/5 gates; meta 50% pendente. Transação FS de página inteira e dirtiness exato por nó, com testes Windows/Linux e instalação isolada. Base FS/SSC f274c9f confirmada pública pelo conector. Publicação dos 63 arquivos de 828d051/d6d0798 confirmada após autorização explícita, com SHA/árvore/paths/blobs/modos remotos conferidos. PR não criada: conector 403. O adendo documenta a confirmação. Layout/Reader/catálogo/desktop/leitor/DPI/IME, SSC agregado, SDK/loader/recursos, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h e aceites continuam na fila. Easy por último."
+  "assessment_note": "45,70%, 0/5 gates; meta 50% pendente. Layout e snapshot comum com commit atomico de pixels/MSAA: Windows 119/0, Linux 108/11 executados/not-run; 59 exemplos por host. Instalador historico misturava compilador antigo com bibliotecas novas; pacote Windows coerente reconstruido e validado em instalacao isolada, com DLL. Instalacao/remocao Windows/Linux, 4 testes de locks e 23 Node Windows passaram apos resolucao da falha temporaria da revisao por limite de uso. Publicacao sera confirmada no adendo. Desktop Computer Use sem janela alvo, sem aceite visual. Fila integral de SSC agregado/Reader/catalogo, desktop/leitor/DPI/IME, SDK/loader/recursos, RSS/disco/orfaos, macOS/ARM, rede/perfis/persistencia/busca, M4–M9, 24h, distribuicao e aceites preservada. Easy por ultimo."
 }

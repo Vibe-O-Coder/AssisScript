@@ -63,6 +63,11 @@ test-presentation-core:
 test-flowpage:
 	python3 tests/test-flowpage.py
 
+.PHONY: test-pageframe
+test-pageframe:
+	python3 tests/test-pageframe.py
+	python3 tests/test-pagepresent.py
+
 .PHONY: test-installer-retry
 test-installer-retry:
 	python3 tests/test-installer-retry.py

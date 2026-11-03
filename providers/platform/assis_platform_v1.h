@@ -41,4 +41,15 @@ ASSISP_API int32_t assisp_clipboard_utf8(int64_t window, const uint8_t *text, in
    offscreen=4. No pointers to caller memory survive the call. */
 ASSISP_API int32_t assisp_accessibility(int64_t window, int64_t document,
     const int64_t *words, int64_t count, const uint8_t *names, int64_t length);
+/* Additive frame extension 1. Font size is integer pixels, weight 100..900. */
+ASSISP_API int64_t assisp_frame_version(void);
+ASSISP_API int64_t assisp_frame_current(int64_t window);
+ASSISP_API int64_t assisp_frame_measure(const uint8_t *text, int64_t length, int32_t size, int32_t weight);
+/* Raster commands: 14 i64 per record, documented in PERFIL-FRAME-LOCAL-V1.md.
+   All commands and accessible projection commit together, or neither does.
+   projection increases strictly for every publication on this window.
+   Presentation to the physical desktop is a separate assisp_present call. */
+ASSISP_API int32_t assisp_frame_commit(int64_t window, int64_t projection, uint32_t background,
+    const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
+    const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length);
 #endif

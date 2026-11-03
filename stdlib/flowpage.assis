@@ -34,6 +34,7 @@ public final class Page{
     fn is_open(borrow self):bool{return self.active;}
     fn storage_reservation(borrow self):int{return self.reserved;}
     fn version(borrow self):int{return self.revision;}
+    fn document_instance(borrow self):int{return self.instance;}
     fn semantic_version(borrow self):int{return self.semantic;}
     fn size(borrow self):int{return self.count;}
     fn evaluations(borrow self):int{return self.evaluated;}

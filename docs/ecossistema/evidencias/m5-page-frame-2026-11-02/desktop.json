@@ -1,0 +1,16 @@
+{
+  "status": "not-run",
+  "acceptance": false,
+  "tool": "computer-use / @oai/sky",
+  "attempts": [
+    {
+      "action": "launch local frame-window.exe",
+      "result": "launched app did not expose a targetable window"
+    },
+    {
+      "action": "refresh list_windows",
+      "result": "target absent; no screenshot or input was performed"
+    }
+  ],
+  "native_smoke": "Example --once is tested separately; not desktop acceptance"
+}
