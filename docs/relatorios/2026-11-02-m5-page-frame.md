@@ -12,7 +12,7 @@ o novo retrato contém os 60 níveis e cinco gates. M5 continua parcial.
 
 **Estado local: implementação e pacote de desenvolvimento validados.** A falha
 de revisão por limite de uso foi resolvida e todas as verificações pendentes
-executaram. Publicação será confirmada no adendo; sem merge, release, nova CI
+executaram. Publicação confirmada no adendo; sem merge, release, nova CI
 remota afirmada ou alteração da instalação global.
 
 ## Problema e mudança
@@ -184,3 +184,32 @@ FS/SSC/recursos/versões, quota agregada/RSS/disco/perfis órfãos, macOS/ARM na
 rede/broker/perfis/cookies/cache, persistência/banco, crawler/índice/serviço de
 busca, M4–M9, corpus visual, 24h reais, distribuição, terceiro e cinco gates.
 Nenhum requisito foi dispensado para aproximar 50%. **Easy por último.**
+
+
+## Adendo — publicação confirmada
+
+Implementação e evidências publicadas em **dbf6f2bdc7f2d48e2bc96213da978544109f381e**,
+branch work/m5-page-layout-2026-11-02. O conector confirmou a cabeça remota e
+a árvore **97c61d57d6df3b587ed649b8a8cfe18b737c710f**, não truncada, com
+2582 entradas e 2494 blobs. Os **70 paths/blobs/modos/tipos** da alteração
+coincidem individualmente com o Git local. Bytes do índice e workspace foram
+conferidos antes do commit. Inventário e patch preservados em build/delivery.
+
+[Branch publicada](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m5-page-layout-2026-11-02).
+[Implementação](https://github.com/Vibe-O-Coder/AssisScript/commit/dbf6f2bdc7f2d48e2bc96213da978544109f381e).
+
+PR de rascunho foi solicitada sobre work/m5-page-presentation-2026-11-02, mas
+o conector retornou 403 Resource not accessible by integration. Não houve
+contorno por credencial/API. Push confirmado não significa merge, release ou
+CI aprovada. Este adendo recebe SHA pelo histórico e também será publicado
+e conferido; não modifica a implementação ou a pontuação.
+
+Pacote Windows local validado: build/AssisScript-development-20261102-windows-x64.zip,
+pasta build/development-windows-20261102. O instalador antigo do usuário não foi
+substituído automaticamente: execute o instalar-windows.cmd **desse pacote**
+para atualizar a instalação. Imports std/ foram restaurados; o backup dos
+23 arquivos do workaround permanece local. [Guia](../INSTALACAO-DESENVOLVIMENTO.md).
+
+Resultado: **45,70%, 0/5 gates; 50% pendente**, com fila integral preservada.
+Próximo: SSC agregado/canais no Frame e seleção/Reader, sem dispensar os demais
+aceites. Easy continua a última etapa do projeto.

@@ -1,4 +1,4 @@
-> **Continuação validada — 45,70%, 02/11/2026, 0/5 gates; meta 50% pendente.**
+> **Publicação confirmada — 45,70%, 02/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/page-layout-20261102`,
 > branch `work/m5-page-layout-2026-11-02`, base pública 542827e conferida.
 > Layout/snapshot comum e commit Windows de raster/MSAA: 119/0 nativos Windows,
@@ -7,7 +7,7 @@
 > Pacote Windows de desenvolvimento com compilador/bibliotecas/DLL coerentes
 > passou instalação/execução/remoção isoladas; Linux também. 4 locks e 23 Node
 > Windows aprovados. Bloqueio temporário de revisão por limite de uso resolvido.
-> Publicação será confirmada no adendo. [Relatório](../relatorios/2026-11-02-m5-page-frame.md).
+> Implementação dbf6f2b publicada; SHA/árvore/70 paths conferidos. PR: conector 403. [Relatório](../relatorios/2026-11-02-m5-page-frame.md).
 > SSC agregado/Reader/catálogo, desktop/leitor/DPI/IME, SDK/loader/recursos,
 > RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h,
 > distribuição e aceites preservados na fila integral. Easy por último.
