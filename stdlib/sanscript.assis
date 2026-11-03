@@ -71,6 +71,16 @@ final class Channel{
     fn value(borrow self):int{return self.position;}
     fn speed(borrow self):int{return self.velocity;}
     fn asleep(borrow self):bool{return self.resting;}
+    fn compatible(borrow self,borrow previous:Channel):bool{
+        return previous.active && self.matrix.m11==previous.matrix.m11 && self.matrix.m12==previous.matrix.m12 &&
+           self.matrix.m21==previous.matrix.m21 && self.matrix.m22==previous.matrix.m22;
+    }
+    fn inherit(borrow mut self,borrow previous:Channel):bool{
+        if(!self.compatible(previous)){return false;}
+        val target:int=self.target;self.target=previous.target;self.position=previous.position;
+        self.velocity=previous.velocity;self.calm=previous.calm;self.resting=previous.resting;
+        self.retarget(target);return true;
+    }
     fn snap(borrow mut self):void{self.position=self.target;self.velocity=0;self.calm=0;self.resting=true;}
     fn freeze(borrow mut self):void{self.velocity=0;self.calm=0;self.resting=self.position==self.target;}
     fn retarget(borrow mut self,target:int):int{
@@ -110,6 +120,20 @@ public final class Motion{
     fn is_open(borrow self):bool{return self.active;}
     fn status(borrow self):int{return self.code;}
     fn version(borrow self):int{return self.revision;}
+    fn channels(borrow self):int{if(!self.active){return 0;}return int(self.x!=null)+int(self.y!=null);}
+    /// Trusted coordinator: preserve dynamics when rebuilding the same binding.
+    /// A different identity/channel profile starts at its own current target.
+    fn inherit(borrow mut self,borrow previous:Motion):bool{
+        if(!self.active || !previous.active || self.mask!=previous.mask || self.revision<previous.revision ||
+           self.bound.instance!=previous.bound.instance || self.bound.slot!=previous.bound.slot ||
+           self.bound.generation!=previous.bound.generation){return false;}
+        // Compare both axes before changing either channel.
+        if(self.x!=null && !self.x.compatible(previous.x)){return false;}
+        if(self.y!=null && !self.y.compatible(previous.y)){return false;}
+        if(self.x!=null){self.x.inherit(previous.x);}if(self.y!=null){self.y.inherit(previous.y);}
+        self.remainder=previous.remainder;self.tab_paused=previous.tab_paused;
+        self.node_hidden=previous.node_hidden;self.protected=previous.protected;return true;
+    }
     fn at(borrow self,axis:int):fluxstyle::Number{
         if(!self.active){return new fluxstyle::Number(403,0);}
         if(axis==1 && self.x!=null){return new fluxstyle::Number(0,self.x.value());}

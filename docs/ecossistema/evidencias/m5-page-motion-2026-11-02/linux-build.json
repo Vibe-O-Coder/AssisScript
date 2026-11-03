@@ -1,0 +1,17 @@
+{
+  "host": "linux-x64-wsl2",
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "compiler_build": [
+    "cc",
+    "-O2",
+    "-std=c11",
+    "src/assisc.c",
+    "-o",
+    "build/assis-linux"
+  ],
+  "gcc": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "python": "3.12.3",
+  "system": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "machine": "x86_64"
+}

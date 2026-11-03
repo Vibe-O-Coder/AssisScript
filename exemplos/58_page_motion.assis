@@ -1,0 +1,25 @@
+// Trusted host: FS targets, transactional SSC and one geometry snapshot.
+import "std/pageframe.assis";
+safe fn metric(borrow content:slice<byte>,size:int,weight:int):int{return (16<<32)+len(content)*8;}
+safe fn main():int{
+    own store:documents::Store=try_new documents::Store(4000000,4000,100);
+    own page:flowpage::Page=try_new flowpage::Page(utf8("flow Card{input expanded:bool=state(\"expanded\",false);80px -> layout.width;24px -> layout.height;choose(expanded,80px,0px) -> target.offsetX;}bind .card to Card;"),256,2048,40000000);
+    own input:fluxstyle::Inputs=try_new fluxstyle::Inputs(2048);
+    own motion:motionpage::Page=try_new motionpage::Page(utf8("motion Card{spring(target:fs.target.offsetX,frequency:4Hz,dampingRatio:0.8)->presentation.offsetX;}bind .card to Card;"),1000000);
+    assert(store!=null && page!=null && page.is_open() && input!=null && motion!=null && motion.is_open());
+    assert(htdl::load_catalog(store,1,utf8("<div type=document version=0.1 lang=pt-BR><div type=head><div type=title>Movimento coordenado</div></div><div type=body><div type=button id=card class=card>Mover</div></div></div>")).code==0);
+    val absent:doctree::NodeId=new doctree::NodeId();
+    assert(page.refresh(store.active_document(),input)==0);
+    assert(motion.prepare(store.active_document(),page,0,true,absent,absent,false)==0);
+    assert(motion.commit(store.active_document(),page)==0);
+    assert(input.set(page.input_index(utf8("Card"),utf8("expanded")),1,1));
+    assert(page.refresh(store.active_document(),input)==0);
+    for(let tick:int=0;tick<4;tick++){
+        assert(motion.prepare(store.active_document(),page,25,true,absent,absent,false)==0);
+        own frame:pageframe::Frame=try_new pageframe::Frame(store.active_document(),page,tick+1,320,200,0,65536,10000000,metric);
+        assert(frame!=null && frame.is_open());assert(frame.compose(store.active_document(),motion)==0);
+        print("MOTION",tick+1,frame.box(1).bounds.x,motion.candidate_channels());
+        // A graphical host publishes its Packet here before this no-allocation commit.
+        assert(motion.commit(store.active_document(),page)==0);
+    }return 0;
+}

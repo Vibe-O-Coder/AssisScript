@@ -1,3 +1,5 @@
+A coordenação agregada agora está em [motionpage](BIBLIOTECA-motionpage.md): cota de 256 canais, candidatos independentes, foco de ancestrais e composição no Frame. Os limites por nó descritos abaixo continuam válidos.
+
 # sanscript — SSC experimental finito, v1
 
 `import "std/sanscript.assis";` depende de fluxstyle. Instalação mínima:

@@ -1,0 +1,97 @@
+// Trusted local host. Space/Enter/click toggles each panel; Tab protects focus.
+// --once publishes one frame, --smoke exercises timed retargeting then closes.
+import "std/pagepresent.assis";
+struct Drawing{own frame:pageframe::Frame;own packet:pagepresent::Packet;}
+safe fn option(borrow name:slice<byte>):bool{
+    if(arg_count()!=2 || arg_size(1)!=len(name)){return false;}
+    own data:*byte=try_alloc<byte>(len(name)+1);if(data==null){return false;}
+    if(arg_copy(1,data,len(name)+1)!=len(name)){return false;}
+    for(let i:int=0;i<len(name);i++){if(data[i]!=name[i]){return false;}}return true;
+}
+safe fn refresh(borrow mut drawing:Drawing,borrow document:documents::Document,borrow page:flowpage::Page,
+        borrow mut motion:motionpage::Page,borrow window:window::Window,version:int,width:int,height:int,
+        elapsed:int,visible:bool,focus:doctree::NodeId):bool{
+    val policy:reader::Preferences=reader::preferences(window);if(policy.status!=0){return false;}
+    if(motion.prepare(document,page,elapsed,visible,focus,new doctree::NodeId(),policy.reduced_motion)!=0){return false;}
+    own candidate:pageframe::Frame=try_new pageframe::Frame(document,page,version,width,height,0,65536,10000000,pagepresent::measure);
+    if(candidate==null || !candidate.is_open()){motion.abort();return false;}
+    if(candidate.compose(document,motion)!=0){motion.abort();return false;}
+    own packet:pagepresent::Packet=try_new pagepresent::Packet(candidate,focus,policy,10000000);
+    if(packet==null || !packet.is_open()){motion.abort();return false;}
+    if(!motion.prepared(document,page)){motion.abort();return false;}
+    if(packet.publish(window,candidate,document)!=0){motion.abort();return false;}
+    // No page/event dispatch or allocation between native publication and commit.
+    assert(motion.commit(document,page)==0);
+    drawing.frame=move(candidate);drawing.packet=move(packet);return true;
+}
+safe fn evaluate(borrow mut page:flowpage::Page,borrow document:documents::Document,
+        borrow mut input:fluxstyle::Inputs,left:bool,right:bool):bool{
+    if(page.begin(document)!=0){return false;}
+    val index:int=page.input_index(utf8("Card"),utf8("expanded"));
+    let node:doctree::NodeId=htdl::query(document.nodes(),0,utf8(""),new doctree::NodeId());
+    while(!doctree::absent(node)){
+        val kind:int=htdl::kind(document.nodes(),node);
+        if(kind>=4 && kind!=10 && kind!=11){
+            let expanded:bool=false;if(htdl::value_equals(document.nodes(),htdl::attribute(document.nodes(),node,5),utf8("left"))){expanded=left;}
+            if(htdl::value_equals(document.nodes(),htdl::attribute(document.nodes(),node,5),utf8("right"))){expanded=right;}
+            if(!input.set(index,1,int(expanded))){page.abort();return false;}
+            if(page.stage(document,node,input)!=0){page.abort();return false;}
+        }node=htdl::query(document.nodes(),0,utf8(""),node);
+    }if(page.commit(document)!=0){page.abort();return false;}return true;
+}
+safe fn main():int{
+    if(!pagepresent::available()){print("Windows frame provider required");return 4;}
+    own store:documents::Store=try_new documents::Store(4000000,4000,100);
+    own page:flowpage::Page=try_new flowpage::Page(utf8("flow Body{16px -> layout.padding;}bind #body to Body;flow Row{row(gap:20px) -> layout.children;}bind #panels to Row;flow Card{input expanded:bool=state(\"expanded\",false,scope:node);220px -> layout.width;12px -> layout.padding;column(gap:12px) -> layout.children;#d9e6e4 -> paint.background;choose(expanded,28px,0px) -> target.offsetY;}bind .card to Card;flow Title{22px -> text.size;700 -> text.weight;}bind .title to Title;flow Button{8px -> layout.padding;#145563 -> paint.background;#fff -> paint.text;}bind .button to Button;"),32,2048,5000000);
+    own motion:motionpage::Page=try_new motionpage::Page(utf8("motion Card{spring(target:fs.target.offsetY,frequency:4Hz,dampingRatio:0.8)->presentation.offsetY;}bind .card to Card;"),1000000);
+    own input:fluxstyle::Inputs=try_new fluxstyle::Inputs(2048);own drawing:Drawing=try_new Drawing();
+    if(store==null || page==null || motion==null || input==null || drawing==null || !page.is_open() || !motion.is_open()){return 2;}
+    assert(htdl::load(store,1,utf8("<div type=document version=0.1 lang=pt-BR><div type=head><div type=title>Paineis FS e SSC</div></div><div type=body id=body><div type=container id=panels><div type=container class=card id=left><div type=heading level=2 class=title>Painel esquerdo</div><div type=paragraph>Clique alterna este painel. Tab estabiliza o controle focado.</div><div type=button id=leftButton class=button>Alternar esquerdo</div></div><div type=container class=card id=right><div type=heading level=2 class=title>Painel direito</div><div type=paragraph>Desenho, clique e acessibilidade compartilham o movimento.</div><div type=button id=rightButton class=button>Alternar direito</div></div></div></div></div>")).code==0);
+    let left:bool=false;let right:bool=false;assert(evaluate(page,store.active_document(),input,left,right));
+    own window:window::Window=try_new window::Window(1,600,360,utf8("AssisScript - paineis SSC"));
+    if(window==null || !window.opened()){return 4;}
+    let width:int=600;let height:int=360;let version:int=1;let focus:doctree::NodeId=new doctree::NodeId();
+    if(!refresh(drawing,store.active_document(),page,motion,window,version,width,height,0,true,focus)){return 5;}
+    if(window.present()!=0){return 4;}
+    if(option(utf8("--once"))){print("MOTION FRAME",motion.channels(),drawing.frame.size());return int(window.close()!=0);}
+    if(option(utf8("--smoke"))){
+        val before_left:int=drawing.frame.box(2).bounds.y;val before_right:int=drawing.frame.box(6).bounds.y;
+        assert(evaluate(page,store.active_document(),input,true,false));
+        for(let tick:int=0;tick<4;tick++){version++;
+            if(!refresh(drawing,store.active_document(),page,motion,window,version,width,height,25,true,focus)){return 5;}
+            if(window.present()!=0){return 4;}}
+        assert(drawing.frame.box(2).bounds.y>before_left && drawing.frame.box(6).bounds.y==before_right);
+        print("MOTION FRAME",motion.channels(),drawing.frame.size());return int(window.close()!=0);
+    }
+    let coherent:bool=true;let held:bool=false;let visible:bool=true;
+    let pressed:doctree::NodeId=new doctree::NodeId();let pressed_frame:int=0;let last:int=monotonic_ms();
+    while(window.opened()){
+        val event:window::Event=window.poll(16);if(event.status<0){return 4;}if(event.status==0 && event.kind==1){break;}
+        val now:int=monotonic_ms();let elapsed:int=now-last;last=now;if(elapsed<0 || elapsed>60000){elapsed=0;}
+        let activated:doctree::NodeId=new doctree::NodeId();
+        if(event.status==0){
+            if(event.kind==13){visible=event.arg0!=0;pressed=new doctree::NodeId();elapsed=0;}
+            if(event.kind==2){if(event.arg0>0 && event.arg1>0){width=event.arg0;height=event.arg1;visible=true;}else{visible=false;}pressed=new doctree::NodeId();}
+            if(coherent && visible){
+                if(event.kind==3 && event.arg0==9 && event.arg1==1){focus=drawing.frame.next_focus(store.active_document(),focus,false);}
+                if(event.kind==3 && (event.arg0==13 || event.arg0==32)){
+                    if(event.arg1==0){held=false;}else if(!held){activated=focus;held=true;}}
+                if(event.kind==7){pressed=drawing.frame.hit(store.active_document(),drawing.frame.version(),event.arg0,event.arg1);pressed_frame=drawing.frame.version();}
+                if(event.kind==8){val hit:doctree::NodeId=drawing.frame.hit(store.active_document(),pressed_frame,event.arg0,event.arg1);
+                    if(pageframe::same(hit,pressed)){activated=hit;}pressed=new doctree::NodeId();}
+                if(event.kind==11){activated=drawing.packet.action(drawing.frame,store.active_document(),event.arg0,event.arg1);}
+            }
+            if(event.kind==10 || event.kind==5){pressed=new doctree::NodeId();held=false;}
+        }
+        if(!doctree::absent(activated)){
+            if(htdl::value_equals(store.active_document().nodes(),htdl::attribute(store.active_document().nodes(),activated,5),utf8("leftButton"))){left=!left;}
+            if(htdl::value_equals(store.active_document().nodes(),htdl::attribute(store.active_document().nodes(),activated,5),utf8("rightButton"))){right=!right;}
+            if(!evaluate(page,store.active_document(),input,left,right)){print("FS FAILED - keeping surviving styles");}
+        }
+        // A gesture belongs to its published frame; timer replacement cancels it.
+        // Keep that frame stable during a pointer press, then resume without debt.
+        if(!doctree::absent(pressed)){continue;}
+        version++;coherent=refresh(drawing,store.active_document(),page,motion,window,version,width,height,elapsed,visible,focus);
+        if(coherent){if(window.present()!=0){return 4;}}else{print("FRAME FAILED - content interaction blocked");}
+    }return int(window.close()!=0);
+}

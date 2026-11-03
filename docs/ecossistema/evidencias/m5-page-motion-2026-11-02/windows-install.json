@@ -1,0 +1,89 @@
+{
+  "passed": true,
+  "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+  "setup_sha256": "7217b0771522de5d55e4468e55ba896fa1bbcd9eff091d8093adea1ff4983f4a",
+  "selected_libraries": [
+    "buffers",
+    "doctree",
+    "documents",
+    "flowpage",
+    "fluxstyle",
+    "graphemes",
+    "htdl",
+    "motionpage",
+    "owned",
+    "pageframe",
+    "pagepresent",
+    "reader",
+    "sanscript",
+    "unicode",
+    "viewer",
+    "window"
+  ],
+  "checks": [
+    {
+      "command": [
+        "python",
+        "tests/test-installer-retry.py"
+      ],
+      "returncode": 0,
+      "executed": 4,
+      "log": "windows-installer-retry.log",
+      "sha256": "18df6e9f9fd5e651265fe9c3a88467b2c2cb67e93682c1bd4bdb48024290af53"
+    },
+    {
+      "command": [
+        "<TEMP>\\distribution\\bin\\assis-setup.exe",
+        "install",
+        "--prefix",
+        "<TEMP>\\prefix with spaces",
+        "--no-path",
+        "--no-associations",
+        "--with",
+        "pagepresent"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em C:\\Users\\babus\\AppData\\Local\\Temp\\assis-presentation-install-6gh46tbc\\prefix with spaces\\bin\\assis.exe\r\nO PATH foi preservado. Use o caminho completo ou adicione a pasta bin ao PATH.\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\assis.exe",
+        "run",
+        "<TEMP>\\prefix with spaces\\exemplos\\58_page_motion.assis",
+        "--safe",
+        "--debug"
+      ],
+      "returncode": 0,
+      "stdout": "MOTION 1 11 1\nMOTION 2 32 1\nMOTION 3 51 1\nMOTION 4 65 1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\distribution\\bin\\assis-setup.exe",
+        "uninstall",
+        "--prefix",
+        "<TEMP>\\prefix with spaces",
+        "--no-path",
+        "--no-associations"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: desinstalado. Projetos e arquivos extras foram preservados.\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-isolation=none",
+        "tests/test-development.js",
+        "tests/test-v31.js"
+      ],
+      "returncode": 0,
+      "executed": 23,
+      "log": "windows-distribution-node.log",
+      "sha256": "0e735cfaff617fa07447c70749a96fb46ddd1ffa10c810c50a58924f53e0028a"
+    }
+  ],
+  "scope": "Fresh candidate and isolated offline prefix, new optional module 36 and pageframe dependency closure and transitive closure; installed coordinated SSC demo, uninstall and user file preservation; no PATH, associations or release changes"
+}

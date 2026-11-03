@@ -65,6 +65,7 @@ test-flowpage:
 
 .PHONY: test-pageframe
 test-pageframe:
+	python3 tests/test-motionpage.py
 	python3 tests/test-pageframe.py
 	python3 tests/test-pagepresent.py
 

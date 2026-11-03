@@ -1,3 +1,5 @@
+Continuação 03/11/2026: [movimento agregado](PERFIL-MOVIMENTO-PAGINA-V1.md) compõe o Frame candidato antes do selo de Packet. Layout e ABI frame 1 permanecem; o item SSC agregado na lista histórica abaixo foi implementado nesse perfil finito. Reader/seleção e aceites continuam abertos.
+
 # Frame local v1 — contrato de desenvolvimento
 
 02/11/2026. Perfil `frame-local-bootstrap-1`, fundação M5/E08-02, sem gate.

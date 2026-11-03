@@ -1,0 +1,13 @@
+{
+  "name": "motionpage",
+  "command": [
+    "python",
+    "tests/test-motionpage.py"
+  ],
+  "returncode": 0,
+  "executed": 14,
+  "not_run": 0,
+  "seconds": 62.491,
+  "log": "windows-motionpage-final.log",
+  "sha256": "90c2310641d5db5f43b0bc33fe078bbd2b91c9d7f0305cae0af809e9d9e66a67"
+}

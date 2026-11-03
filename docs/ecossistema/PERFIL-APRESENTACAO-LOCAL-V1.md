@@ -1,3 +1,5 @@
+Continuação 03/11/2026: [page-motion-256-v1](PERFIL-MOVIMENTO-PAGINA-V1.md) acrescenta quota agregada, candidatos, proteção de ancestrais e composição compartilhada no host. Não muda o perfil de 42 matrizes ou a gramática; Reader/IME/loader e aceites continuam pendentes.
+
 Continuação de 02/11/2026: [Frame local](PERFIL-FRAME-LOCAL-V1.md) acrescenta
 layout/snapshot comum e extensão frame 1 do provider Windows. Publicação de
 raster e MSAA é conjunta; Reader::Session/seleção, SSC agregado e catálogo

@@ -29,6 +29,7 @@ jobs:
           python3 tests/test-flowpage.py
           python3 tests/test-pageframe.py
           python3 tests/test-pagepresent.py
+          python3 tests/test-motionpage.py
           python3 tests/test-sanscript.py
           python3 tests/test-install-mask.py
           python3 tools/generate-ssc-coefficients.py --check
@@ -117,7 +118,7 @@ jobs:
           $env:ASSIS_BIN = (Resolve-Path bin/assis.exe).Path
           $env:CC = Join-Path $env:ASSIS_TOOLCHAIN_BIN 'gcc.exe'
           $env:PYTHONUTF8 = '1'
-          foreach ($suite in @('htdl-recovery','htdl-catalog','fluxstyle','flowpage','sanscript','pageframe','pagepresent','install-mask')) {
+          foreach ($suite in @('htdl-recovery','htdl-catalog','fluxstyle','flowpage','sanscript','pageframe','pagepresent','motionpage','install-mask')) {
             python "tests/test-$suite.py"
             if ($LASTEXITCODE -ne 0) { throw "Local presentation profile failed: $suite" }
           }

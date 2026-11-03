@@ -1,0 +1,19 @@
+test_abort_preserves_active_dynamics_and_candidate_time (__main__.MotionPage.test_abort_preserves_active_dynamics_and_candidate_time) ... ok
+test_composition_shifts_descendants_clips_runs_and_hit_but_not_flow (__main__.MotionPage.test_composition_shifts_descendants_clips_runs_and_hit_but_not_flow) ... ok
+test_demo_and_five_formats_are_generation_separate_from_native (__main__.MotionPage.test_demo_and_five_formats_are_generation_separate_from_native) ... ok
+test_fs_error_keeps_last_targets_with_current_disabled_semantics (__main__.MotionPage.test_fs_error_keeps_last_targets_with_current_disabled_semantics) ... ok
+test_hidden_tab_reduced_motion_and_long_frames_have_no_backlog (__main__.MotionPage.test_hidden_tab_reduced_motion_and_long_frames_have_no_backlog) ... ok
+test_missing_producer_conflict_and_closed_program_are_reported (__main__.MotionPage.test_missing_producer_conflict_and_closed_program_are_reported) ... ok
+test_multinode_trajectory_and_retarget_against_pinned_integer_oracle (__main__.MotionPage.test_multinode_trajectory_and_retarget_against_pinned_integer_oracle) ... ok
+test_outside_physical_range_has_explicit_safe_fallback (__main__.MotionPage.test_outside_physical_range_has_explicit_safe_fallback) ... ok
+test_page_quota_counts_hidden_channels_and_rejects_257th_atomically (__main__.MotionPage.test_page_quota_counts_hidden_channels_and_rejects_257th_atomically) ... ok
+test_protects_focus_and_editing_ancestors_without_freezing_other_panel (__main__.MotionPage.test_protects_focus_and_editing_ancestors_without_freezing_other_panel) ... ok
+test_real_allocator_refusal_leaves_active_bank_and_neighbor (__main__.MotionPage.test_real_allocator_refusal_leaves_active_bank_and_neighbor) ... ok
+test_removal_navigation_and_recycled_id_do_not_transfer_motion (__main__.MotionPage.test_removal_navigation_and_recycled_id_do_not_transfer_motion) ... ok
+test_sealed_frame_refuses_late_composition (__main__.MotionPage.test_sealed_frame_refuses_late_composition) ... ok
+test_semantic_or_fs_change_invalidates_pending_commit (__main__.MotionPage.test_semantic_or_fs_change_invalidates_pending_commit) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 64.464s
+
+OK

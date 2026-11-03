@@ -42,7 +42,7 @@ public final class Packet{
         self.commands[p+7]=clip.width;self.commands[p+8]=clip.height;self.commands[p+9]=color;
         self.commands[p+10]=font;self.commands[p+11]=weight;self.commands[p+12]=start;self.commands[p+13]=size;self.count++;
     }
-    fn init(borrow mut self,borrow frame:pageframe::Frame,focus:doctree::NodeId,policy:reader::Preferences,max_bytes:int):void{
+    fn init(borrow mut self,borrow mut frame:pageframe::Frame,focus:doctree::NodeId,policy:reader::Preferences,max_bytes:int):void{
         if(!frame.is_open() || max_bytes<10000000 || policy.status!=0){return;}
         self.commands=try_alloc<int>((frame.run_count()+frame.size()+4)*14);
         self.content=try_alloc<byte>(2097216);self.access=try_alloc<int>(256*8);self.names=try_alloc<byte>(1048608);self.mapping=try_alloc<int>(256);
@@ -85,7 +85,7 @@ public final class Packet{
             val right:pageframe::Rect=new pageframe::Rect(r.x+pageframe::maximum(0,r.width-2),r.y,pageframe::minimum(2,r.width),r.height);
             self.command(0,top,pageframe::intersect(top,b.clip),color,0,0,0,0);self.command(0,bottom,pageframe::intersect(bottom,b.clip),color,0,0,0,0);
             self.command(0,left,pageframe::intersect(left,b.clip),color,0,0,0,0);self.command(0,right,pageframe::intersect(right,b.clip),color,0,0,0,0);
-        }self.active=true;
+        }frame.seal();self.active=true;
     }
     fn is_open(borrow self):bool{return self.active;}
     fn command_count(borrow self):int{return self.count;}

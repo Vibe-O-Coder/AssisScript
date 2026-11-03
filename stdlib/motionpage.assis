@@ -1,0 +1,121 @@
+namespace motionpage;
+import "std/sanscript.assis";
+import "std/flowpage.assis";
+
+public pure fn same(a:doctree::NodeId,b:doctree::NodeId):bool{
+    return a.instance==b.instance && a.slot==b.slot && a.generation==b.generation;
+}
+/// Requested-body ceiling for program, two banks, up to 256 nodes/512 channels
+/// transiently, sparse OwnedArray paths and one Style. Not an RSS budget.
+public pure fn reservation(source_bytes:int):int{
+    if(source_bytes<0 || source_bytes>65536){return -1;}return 600000+source_bytes;
+}
+/// Transactional whole-page SSC. Candidate state is copied, never moved from
+/// the active bank; a failed frame/provider may abort without advancing time.
+public final class Page{
+    private own program:sanscript::Program;
+    private own active_motions:owned::OwnedArray<sanscript::Motion>;
+    private own pending_motions:owned::OwnedArray<sanscript::Motion>;
+    private own nodes:*doctree::NodeId;
+    private let count:int;private let pending_count:int;private let channel_count:int;private let pending_channels:int;
+    private let instance:int;private let semantic:int;private let style:int;private let revision:int;
+    private let next_instance:int;private let next_semantic:int;private let next_style:int;
+    private let code:int;private let warning:int;private let failed:doctree::NodeId;
+    private let begun:bool;private let active:bool;
+    fn init(borrow mut self,borrow source:slice<byte>,max_bytes:int):void{
+        self.code=403;val need:int=reservation(len(source));if(need<0 || max_bytes<need){return;}
+        self.program=try_new sanscript::Program(source,20000+len(source));
+        if(self.program==null){return;}if(!self.program.is_open()){self.code=self.program.diagnostic().code;return;}
+        self.nodes=try_alloc<doctree::NodeId>(512);if(self.nodes==null){return;}
+        self.active=true;self.code=0;
+    }
+    fn is_open(borrow self):bool{return self.active;}
+    fn status(borrow self):int{return self.code;}
+    fn fallback(borrow self):int{return self.warning;}
+    fn diagnostic_node(borrow self):doctree::NodeId{return self.failed;}
+    fn version(borrow self):int{return self.revision;}
+    fn channels(borrow self):int{return self.channel_count;}
+    fn candidate_channels(borrow self):int{if(!self.begun){return 0;}return self.pending_channels;}
+    fn candidate_version(borrow self):int{if(!self.begun){return 0;}return self.revision+1;}
+    fn candidate_style(borrow self):int{if(!self.begun){return 0;}return self.next_style;}
+    private fn fail(borrow mut self,code:int,node:doctree::NodeId):int{
+        self.code=code;self.failed=node;self.abort();return code;
+    }
+    private fn ancestor(borrow self,borrow tree:doctree::Tree,node:doctree::NodeId,child:doctree::NodeId):bool{
+        if(!tree.contains(child)){return false;}let n:doctree::NodeId=child;
+        while(!doctree::absent(n)){if(same(n,node)){return true;}n=tree.parent(n);}return false;
+    }
+    private fn visible(borrow self,borrow tree:doctree::Tree,node:doctree::NodeId):bool{
+        let n:doctree::NodeId=node;while(!doctree::absent(n)){
+            if(htdl::value_equals(tree,htdl::attribute(tree,n,7),utf8("true"))){return false;}n=tree.parent(n);
+        }return true;
+    }
+    /// Latest surviving FS outputs may be reapplied after an FS error. Current
+    /// semantics (hidden/removal/disabled) still win. Both identities are checked.
+    fn prepare(borrow mut self,borrow document:documents::Document,borrow styles:flowpage::Page,
+               elapsed_ms:int,tab_visible:bool,focus:doctree::NodeId,editing:doctree::NodeId,reduced:bool):int{
+        if(!self.active || self.begun){return 403;}
+        self.code=0;self.warning=0;self.failed=new doctree::NodeId();
+        if(elapsed_ms<0 || elapsed_ms>60000){return self.fail(401,new doctree::NodeId());}
+        if(!document.is_open() || !document.has_root() || !styles.is_open() || styles.version()<1 ||
+           styles.document_instance()!=document.instance() || self.revision==9223372036854775807){return self.fail(403,new doctree::NodeId());}
+        self.next_instance=document.instance();self.next_semantic=document.semantic_version();self.next_style=styles.version();
+        self.pending_motions=try_new owned::OwnedArray<sanscript::Motion>();
+        own values:*int=try_alloc<int>(15);
+        if(self.pending_motions==null || values==null){return self.fail(403,new doctree::NodeId());}
+        let node:doctree::NodeId=htdl::query(document.nodes(),0,utf8(""),new doctree::NodeId());
+        while(!doctree::absent(node)){
+            val kind:int=htdl::kind(document.nodes(),node);
+            if(kind>=4 && kind!=10 && kind!=11){
+                if(self.pending_count==256){return self.fail(403,node);}
+                own scratch:fluxstyle::Style=try_new fluxstyle::Style();
+                if(scratch==null || !scratch.is_ready()){return self.fail(403,node);}
+                let mask:int=0;for(let key:int=1;key<=15;key++){
+                    values[key-1]=0;if(styles.has(document,node,key)){mask|=1<<(key-1);values[key-1]=styles.value(document,node,key).value;}}
+                if(!scratch.commit(node,styles.version(),mask,slice_of(values,0,15))){return self.fail(403,node);}
+                own motion:sanscript::Motion=self.program.attach(document,node,scratch);
+                if(motion==null){return self.fail(403,node);}if(!motion.is_open()){return self.fail(motion.status(),node);}
+                self.pending_channels+=motion.channels();if(self.pending_channels>256){return self.fail(403,node);}
+                if(self.active_motions!=null && self.instance==document.instance()){
+                    for(let i:int=0;i<self.count;i++){if(same(self.nodes[i],node)){motion.inherit(self.active_motions.get(i));break;}}}
+                if(motion.status()!=0){self.warning=motion.status();}
+                val protected:bool=self.ancestor(document.nodes(),node,focus) || self.ancestor(document.nodes(),node,editing);
+                val status:int=motion.advance(document,elapsed_ms,tab_visible,self.visible(document.nodes(),node),protected,reduced);
+                if(status!=0 && status!=401){return self.fail(status,node);}if(status==401){self.warning=401;}
+                self.nodes[256+self.pending_count]=node;
+                if(!self.pending_motions.try_push(move(motion))){return self.fail(403,node);}self.pending_count++;
+            }
+            node=htdl::query(document.nodes(),0,utf8(""),node);
+        }self.begun=true;return 0;
+    }
+    fn ready(borrow self,borrow document:documents::Document):bool{
+        return self.active && self.begun && document.is_open() && document.instance()==self.next_instance &&
+            document.semantic_version()==self.next_semantic;
+    }
+    fn prepared(borrow self,borrow document:documents::Document,borrow styles:flowpage::Page):bool{
+        return self.ready(document) && styles.is_open() && styles.document_instance()==self.next_instance && styles.version()==self.next_style;
+    }
+    fn value(borrow self,borrow document:documents::Document,node:doctree::NodeId,axis:int):fluxstyle::Number{
+        if(!self.ready(document) || !document.nodes().contains(node)){return new fluxstyle::Number(403,0);}
+        for(let i:int=0;i<self.pending_count;i++){if(same(self.nodes[256+i],node)){return self.pending_motions.get(i).at(axis);}}
+        return new fluxstyle::Number(302,0);
+    }
+    fn commit(borrow mut self,borrow document:documents::Document,borrow styles:flowpage::Page):int{
+        if(!self.prepared(document,styles)){return self.fail(403,new doctree::NodeId());}
+        {own previous:owned::OwnedArray<sanscript::Motion>=move(self.active_motions);}
+        own candidate:owned::OwnedArray<sanscript::Motion>=move(self.pending_motions);
+        self.active_motions=move(candidate);self.count=self.pending_count;self.channel_count=self.pending_channels;
+        for(let i:int=0;i<self.count;i++){self.nodes[i]=self.nodes[256+i];}
+        self.instance=self.next_instance;self.semantic=self.next_semantic;self.style=self.next_style;self.revision++;
+        self.begun=false;self.pending_count=0;self.pending_channels=0;return 0;
+    }
+    fn abort(borrow mut self):void{
+        self.begun=false;self.pending_count=0;self.pending_channels=0;
+        own pending:owned::OwnedArray<sanscript::Motion>=move(self.pending_motions);
+    }
+    fn close(borrow mut self):void{
+        self.abort();self.active=false;self.count=0;self.channel_count=0;
+        own motions:owned::OwnedArray<sanscript::Motion>=move(self.active_motions);
+        own nodes:*doctree::NodeId=move(self.nodes);own program:sanscript::Program=move(self.program);
+    }
+}

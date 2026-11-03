@@ -28,8 +28,8 @@ class PagePresent(unittest.TestCase):
     def invoke(self,*args,**kwargs):
         if args and args[0] in ('check','build','run','ir'):args=(*args,'--safe')
         return base.Evolution.invoke(self,*args,**kwargs)
-    def execute(self,body):
-        self.accepted(frame.PREFIX+'import "std/pagepresent.assis";safe fn main():int{'+body+'return 0;}')
+    def execute(self,body,prefix=''):
+        self.accepted(frame.PREFIX+'import "std/pagepresent.assis";'+prefix+'safe fn main():int{'+body+'return 0;}')
 
     def test_packet_commands_and_accessibility_share_clipped_frame_bounds(self):
         source='flow B{100px -> layout.width;40px -> layout.height;12px -> target.offsetX;}bind #b to B;'
@@ -49,11 +49,52 @@ class PagePresent(unittest.TestCase):
             'assert(pageframe::same(frame.next_focus(store.candidate(),a,true),a));'
             'assert(doctree::absent(frame.hit(store.candidate(),1,2,2)));')
 
+    def test_animated_packet_copies_composed_bounds_and_seals_candidate(self):
+        motion_tests=module('motion_tests',Path(__file__).with_name('test-motionpage.py'))
+        self.execute(motion_tests.setup()+motion_tests.prepare()+motion_tests.commit()+motion_tests.target(8*65536)+motion_tests.prepare(25)+
+            'own animated:pageframe::Frame=try_new pageframe::Frame(store.candidate(),page,2,320,200,0,65536,10000000,metric);'
+            'assert(animated!=null && animated.is_open());assert(animated.compose(store.candidate(),motion)==0);'
+            'own packet:pagepresent::Packet=try_new pagepresent::Packet(animated,new doctree::NodeId(),reader::default_preferences(),10000000);'
+            'assert(packet!=null && packet.is_open());val rect_a:pageframe::Rect=packet.item_bounds(1);val rect_b:pageframe::Rect=animated.accessible_bounds(1);'
+            'assert(rect_a.x==rect_b.x && rect_a.y==rect_b.y && rect_a.width==rect_b.width && rect_a.height==rect_b.height && rect_a.x>0);'
+            'assert(animated.compose(store.candidate(),motion)==204);motion.abort();')
+
+    @unittest.skipUnless(os.name=='nt','Windows native frame provider unavailable')
+    def test_failed_native_animated_publication_does_not_commit_time_or_revoke_old_action(self):
+        motion_tests=module('motion_tests',Path(__file__).with_name('test-motionpage.py'))
+        self.execute(motion_tests.setup()+motion_tests.prepare()+motion_tests.commit()+
+            'own w:window::Window=try_new window::Window(7,320,200,utf8("Atomic motion"));assert(w!=null && w.opened());'
+            'own previous:pagepresent::Packet=try_new pagepresent::Packet(frame,new doctree::NodeId(),reader::default_preferences(),10000000);'
+            'assert(previous!=null && previous.is_open());assert(previous.publish(w,frame,store.candidate())==0);'+
+            motion_tests.target(8*65536)+motion_tests.prepare(25)+
+            'val x:int=motion.value(store.candidate(),a,1).value;'
+            'own next:pageframe::Frame=try_new pageframe::Frame(store.candidate(),page,2,320,200,0,65536,10000000,metric);'
+            'assert(next.compose(store.candidate(),motion)==0);'
+            'own packet:pagepresent::Packet=try_new pagepresent::Packet(next,new doctree::NodeId(),reader::default_preferences(),10000000);'
+            'assert(packet!=null && packet.is_open());unsafe{assert(motion_test_control(0,0)==0);}'
+            'assert(packet.publish(w,next,store.candidate())== -4);unsafe{motion_test_control(0,-1);}'
+            'motion.abort();assert(motion.version()==1);'
+            'assert(pageframe::same(previous.action(frame,store.candidate(),1,1),a));'+motion_tests.prepare(25)+
+            'assert(motion.value(store.candidate(),a,1).value==x);assert(packet.publish(w,next,store.candidate())==0);'+motion_tests.commit()+
+            'assert(doctree::absent(previous.action(frame,store.candidate(),1,1)));assert(w.close()==0);',
+            prefix='extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_test_control") fn motion_test_control(op:int,arg:int):int;')
+
+    @unittest.skipUnless(os.name=='nt','Windows native frame provider unavailable')
+    def test_two_panel_ssc_window_retargets_presents_and_closes_in_both_modes(self):
+        for number,flags in enumerate([[],['--no-opt']]):
+            binary=self.temp/f'motion-panels-{number}.exe'
+            result=self.invoke('build',base.ROOT/'exemplos/59_page_motion_window.assis','--debug','-o',binary,*flags)
+            self.assertEqual(result.returncode,0,result.stderr)
+            for option in ('--once','--smoke'):
+                result=subprocess.run([str(binary),option],cwd=self.temp,capture_output=True,text=True,timeout=20)
+                self.assertEqual((result.returncode,result.stdout,result.stderr),(0,'MOTION FRAME 2 10\n',''))
+
     @unittest.skipUnless(os.name=='nt','Windows native frame provider unavailable')
     def test_native_publish_and_action_revalidate_projection_and_semantic_generation(self):
         self.execute(frame.setup('<div type=button id=b>B</div>')+
             'own w:window::Window=try_new window::Window(7,320,200,utf8("Frame integration"));assert(w!=null && w.opened());'
-            'own packet:pagepresent::Packet=try_new pagepresent::Packet(frame,frame.box(1).node,reader::default_preferences(),10000000);'
+            'val focus:doctree::NodeId=frame.box(1).node;'
+            'own packet:pagepresent::Packet=try_new pagepresent::Packet(frame,focus,reader::default_preferences(),10000000);'
             'assert(packet!=null && packet.is_open());assert(packet.publish(w,frame,store.candidate())==0);assert(w.present()==0);'
             'assert(pageframe::same(packet.action(frame,store.candidate(),1,1),frame.box(1).node));'
             'assert(doctree::absent(packet.action(frame,store.candidate(),2,1)));'

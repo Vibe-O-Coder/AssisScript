@@ -1,0 +1,22 @@
+test_accessible_label_and_text_are_owned_after_document_close (__main__.PageFrame.test_accessible_label_and_text_are_owned_after_document_close) ... ok
+test_clip_hit_and_accessible_bounds_use_the_same_final_rectangle (__main__.PageFrame.test_clip_hit_and_accessible_bounds_use_the_same_final_rectangle) ... ok
+test_column_padding_gaps_and_transforms_do_not_change_flow (__main__.PageFrame.test_column_padding_gaps_and_transforms_do_not_change_flow) ... ok
+test_current_semantics_disabled_hidden_and_removal_override_failed_fs (__main__.PageFrame.test_current_semantics_disabled_hidden_and_removal_override_failed_fs) ... ok
+test_examples_generate_all_five_formats_and_use_ir_in_both_modes (__main__.PageFrame.test_examples_generate_all_five_formats_and_use_ir_in_both_modes) ... ok
+test_graphemes_are_never_split_and_oversized_cluster_is_diagnosed (__main__.PageFrame.test_graphemes_are_never_split_and_oversized_cluster_is_diagnosed) ... ok
+test_hidden_subtree_is_absent_and_never_clickable (__main__.PageFrame.test_hidden_subtree_is_absent_and_never_clickable) ... ok
+test_nested_widths_and_bottom_up_heights_do_not_feed_back (__main__.PageFrame.test_nested_widths_and_bottom_up_heights_do_not_feed_back) ... ok
+test_new_document_uses_defaults_and_never_inherits_previous_style_version (__main__.PageFrame.test_new_document_uses_defaults_and_never_inherits_previous_style_version) ... ok
+test_real_allocator_refusal_preserves_owned_frame_and_neighbor (__main__.PageFrame.test_real_allocator_refusal_preserves_owned_frame_and_neighbor) ... ok
+test_reservation_and_oom_preserve_previous_snapshot_and_neighbor (__main__.PageFrame.test_reservation_and_oom_preserve_previous_snapshot_and_neighbor) ... ok
+test_row_cross_axis_alignment_and_reserved_scroll_gutter (__main__.PageFrame.test_row_cross_axis_alignment_and_reserved_scroll_gutter) ... ok
+test_scroll_is_clamped_and_does_not_modify_flow_extent (__main__.PageFrame.test_scroll_is_clamped_and_does_not_modify_flow_extent) ... ok
+test_seeded_rows_and_columns_against_independent_stack_model (__main__.PageFrame.test_seeded_rows_and_columns_against_independent_stack_model) ... ok
+test_semantic_order_is_independent_of_visual_overlap (__main__.PageFrame.test_semantic_order_is_independent_of_visual_overlap) ... ok
+test_unrepresentable_metric_row_width_and_unsupported_types_reject_candidate (__main__.PageFrame.test_unrepresentable_metric_row_width_and_unsupported_types_reject_candidate) ... ok
+test_zoom_is_applied_once_and_text_align_uses_measured_run (__main__.PageFrame.test_zoom_is_applied_once_and_text_align_uses_measured_run) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 112.920s
+
+OK

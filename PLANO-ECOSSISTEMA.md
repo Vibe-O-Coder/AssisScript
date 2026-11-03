@@ -1,3 +1,17 @@
+> **Continuação validada — 46,50%, 03/11/2026, 0/5 gates; meta 50% pendente.**
+> Cópia `C:/Users/babus/Desktop/AssisScript/work/page-motion-20261102`,
+> branch `work/m5-page-motion-2026-11-02`, base pública 3a58c8f conferida.
+> SSC agregado em AssisScript: cota de 256 canais, candidatos independentes,
+> proteção de ancestrais e composição no Frame selado; dois painéis Windows.
+> Windows 136/0, Linux 123/13 executados/not-run; 61 exemplos por host.
+> Instalação/execução/remoção isoladas em ambos, 4 locks e 23 Node Windows.
+> Publicação será confirmada no adendo. Computer Use: app approval timed out,
+> sem janela alvo, screenshot ou aceite desktop/leitor/DPI/IME. [Relatório](docs/relatorios/2026-11-03-m5-page-motion.md).
+> Reader/seleção/catálogo, identidade incremental/editor, SDK/loader/recursos,
+> RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h,
+> distribuição e aceites seguem na fila integral. Easy por último.
+> Entradas seguintes são históricas; não repetir bases antigas.
+
 > **Publicação confirmada — 45,70%, 02/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/page-layout-20261102`,
 > branch `work/m5-page-layout-2026-11-02`, base pública 542827e conferida.

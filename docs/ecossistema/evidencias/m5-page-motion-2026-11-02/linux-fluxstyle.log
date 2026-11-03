@@ -1,0 +1,22 @@
+test_all_native_formats_generated_without_ast_fallback (__main__.FluxStyle.test_all_native_formats_generated_without_ast_fallback) ... ok
+test_budget_and_depth_are_explicit_refusals (__main__.FluxStyle.test_budget_and_depth_are_explicit_refusals) ... ok
+test_decimal_conversion_against_fraction_oracle (__main__.FluxStyle.test_decimal_conversion_against_fraction_oracle) ... ok
+test_dimensional_arithmetic_and_closed_types (__main__.FluxStyle.test_dimensional_arithmetic_and_closed_types) ... ok
+test_forward_references_resolution_and_cycle_in_unselected_branch (__main__.FluxStyle.test_forward_references_resolution_and_cycle_in_unselected_branch) ... ok
+test_host_context_and_semantic_control_applicability (__main__.FluxStyle.test_host_context_and_semantic_control_applicability) ... ok
+test_lexical_grammar_nested_comments_colors_and_unicode_positions (__main__.FluxStyle.test_lexical_grammar_nested_comments_colors_and_unicode_positions) ... ok
+test_no_cascade_disjoint_producers_and_idempotent_binding (__main__.FluxStyle.test_no_cascade_disjoint_producers_and_idempotent_binding) ... ok
+test_numeric_operations_against_unbounded_rational_oracle (__main__.FluxStyle.test_numeric_operations_against_unbounded_rational_oracle) ... ok
+test_pinned_fs_corpus_and_reference_card_with_host_constraint (__main__.FluxStyle.test_pinned_fs_corpus_and_reference_card_with_host_constraint) ... ok
+test_property_domain_failures_do_not_publish (__main__.FluxStyle.test_property_domain_failures_do_not_publish) ... ok
+test_real_allocation_denial_preserves_neighbor_and_last_style (__main__.FluxStyle.test_real_allocation_denial_preserves_neighbor_and_last_style) ... ok
+test_reference_card_and_all_fifteen_property_domains (__main__.FluxStyle.test_reference_card_and_all_fifteen_property_domains) ... ok
+test_shared_state_uses_one_value_and_rejects_host_conflict (__main__.FluxStyle.test_shared_state_uses_one_value_and_rejects_host_conflict) ... ok
+test_short_circuit_still_checks_unselected_types_and_names (__main__.FluxStyle.test_short_circuit_still_checks_unselected_types_and_names) ... ok
+test_state_schema_and_host_source_catalog (__main__.FluxStyle.test_state_schema_and_host_source_catalog) ... ok
+test_transaction_failure_retry_stale_node_and_shared_state (__main__.FluxStyle.test_transaction_failure_retry_stale_node_and_shared_state) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 18.623s
+
+OK

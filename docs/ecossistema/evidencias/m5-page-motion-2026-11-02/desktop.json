@@ -1,0 +1,25 @@
+{
+  "status": "not-run",
+  "acceptance": false,
+  "skill": "computer-use:computer-use",
+  "date": "2026-11-03",
+  "attempts": [
+    {
+      "action": "sky.list_apps filtered task app",
+      "result": "no matching app"
+    },
+    {
+      "action": "sky.launch_app explicit local motion-window.exe",
+      "result": "Computer Use app approval timed out"
+    },
+    {
+      "action": "sky.list_windows filtered target",
+      "result": "no targetable window"
+    }
+  ],
+  "screenshots": 0,
+  "inputs": 0,
+  "limitations": [
+    "No desktop visual acceptance, real screen reader, OS DPI, multiple monitors or IME"
+  ]
+}

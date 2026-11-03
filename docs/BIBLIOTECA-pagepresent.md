@@ -1,3 +1,5 @@
+Continuação: o construtor de Packet recebe `borrow mut frame`, sela o candidato depois de construir comandos/nomes e recusa composição tardia. Guarde em variável separada um foco lido do próprio Frame antes de passá-lo ao construtor. [Movimento agregado](BIBLIOTECA-motionpage.md).
+
 # pagepresent — composição Windows do snapshot local v1
 
 `import "std/pagepresent.assis";` / `--with pagepresent`. Lógica de composição,

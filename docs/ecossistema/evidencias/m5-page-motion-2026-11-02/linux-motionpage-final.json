@@ -1,0 +1,13 @@
+{
+  "name": "motionpage",
+  "command": [
+    "python",
+    "tests/test-motionpage.py"
+  ],
+  "returncode": 0,
+  "executed": 14,
+  "not_run": 0,
+  "seconds": 74.87,
+  "log": "linux-motionpage-final.log",
+  "sha256": "ae093597a1b8cba26811f925a2327e5578e978cc0575519a795190d913d85cde"
+}

@@ -1,3 +1,5 @@
+Continuação: `compose(document,motionpage)` compõe uma vez no candidato; Packet toma empréstimo exclusivo e sela o Frame. [Contrato agregado](BIBLIOTECA-motionpage.md). As posições finais continuam compartilhadas por desenho, hit test e acessibilidade.
+
 # pageframe — layout e snapshot local v1
 
 `import "std/pageframe.assis";` / `--with pageframe`. Implementação em

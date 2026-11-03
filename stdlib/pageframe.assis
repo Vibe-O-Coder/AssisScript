@@ -1,6 +1,7 @@
 namespace pageframe;
 import "std/flowpage.assis";
 import "std/graphemes.assis";
+import "std/motionpage.assis";
 
 public value struct Rect{let x:int;let y:int;let width:int;let height:int;}
 public value struct Box{
@@ -33,6 +34,7 @@ public final class Frame{
     private let width:int;private let height:int;private let scroll:int;private let extent:int;
     private let title_size:int;
     private let code:int;private let failed:doctree::NodeId;private let active:bool;
+    private let composed:bool;private let sealed:bool;private let motion_revision:int;
     private fn fail(borrow mut self,code:int,node:doctree::NodeId):void{
         if(self.code==0){self.code=code;self.failed=node;}
     }
@@ -196,6 +198,31 @@ public final class Frame{
         self.data[p+37]=y;return true;
     }
     fn is_open(borrow self):bool{return self.active;}
+    /// Compose exactly once on an unpublished candidate. Packet seals the Frame.
+    /// Deltas propagate down the tree; flow sizes/scroll extent never change.
+    fn compose(borrow mut self,borrow document:documents::Document,borrow motion:motionpage::Page):int{
+        if(!self.current(document) || self.composed || self.sealed || !motion.ready(document) ||
+           motion.candidate_style()!=self.style){return 204;}
+        // Preflight every displacement before touching bounds, clips or runs.
+        for(let i:int=0;i<self.count;i++){val p:int=i*40;val parent:int=self.data[p+3];
+            val x:fluxstyle::Number=motion.value(document,self.node(i),1);val y:fluxstyle::Number=motion.value(document,self.node(i),2);
+            if((x.code!=0 && x.code!=302) || (y.code!=0 && y.code!=302)){return 204;}
+            let dx:int=0;let dy:int=0;if(x.code==0){dx=pixels(x.value)-self.data[p+21];}if(y.code==0){dy=pixels(y.value)-self.data[p+22];}
+            if(parent>=0){dx+=self.data[parent*40+38];dy+=self.data[parent*40+39];}
+            if(self.data[p+6]+dx< -16777216 || self.data[p+6]+dx>16777216 ||
+               self.data[p+7]+dy< -16777216 || self.data[p+7]+dy>16777216){return 401;}
+            self.data[p+38]=dx;self.data[p+39]=dy;
+        }
+        for(let i:int=0;i<self.count;i++){val p:int=i*40;val parent:int=self.data[p+3];
+            val dx:int=self.data[p+38];val dy:int=self.data[p+39];self.data[p+6]+=dx;self.data[p+7]+=dy;
+            let clip:Rect=self.viewport();if(parent>=0){clip=self.content_clip(parent);}
+            self.data[p+31]=clip.x;self.data[p+32]=clip.y;self.data[p+33]=clip.width;self.data[p+34]=clip.height;
+            for(let j:int=self.data[p+27];j<self.data[p+27]+self.data[p+28];j++){val run:Run=self.runs[j];
+                self.runs[j]=new Run(i,run.start,run.size,new Rect(run.bounds.x+dx,run.bounds.y+dy,run.bounds.width,run.bounds.height));}
+        }self.motion_revision=motion.candidate_version();self.composed=true;return 0;
+    }
+    fn seal(borrow mut self):void{self.sealed=true;}
+    fn motion_version(borrow self):int{return self.motion_revision;}
     fn status(borrow self):int{return self.code;}
     fn diagnostic_node(borrow self):doctree::NodeId{return self.failed;}
     fn instance(borrow self):int{return self.instance_id;}

@@ -1,0 +1,66 @@
+{
+  "schema": "motionpage-summary-v1",
+  "base": "3a58c8f5e64b0550f46f7ec1982afccde8a7a9cd",
+  "validation": "pass",
+  "counts": {
+    "windows": {
+      "executed": 136,
+      "not_run": 0,
+      "examples": 61
+    },
+    "linux": {
+      "executed": 123,
+      "not_run": 13,
+      "examples": 61
+    }
+  },
+  "points_before": "45.70",
+  "points_after": "46.50",
+  "gates_passed": 0,
+  "coefficient_validation": "42 SSC matrices: Decimal 90/110 and binary64 agree",
+  "source_sha256": {
+    ".gitattributes": "062a41873588f8b885b1e171b85be76fa5d33821989a536bfbab7dc0c80eb6b3",
+    "Makefile": "549281b216396c57dc105183563932263a2890ac093bea6a6ef40491a699071c",
+    ".github/workflows/ci.yml": "961c8364ba71cc016754968d0977bdcc9feb4bd06e242a8818758113695764dd",
+    "stdlib/sanscript.assis": "5dfa9ef628591b0245a0bec010cea8d171aa03f550a4a8c656be9472dbcdacdf",
+    "stdlib/motionpage.assis": "68cff54fbdaebc721e49e12f8f562b6f43d0165e7c7a296743051d52ab414779",
+    "stdlib/pageframe.assis": "6cfc5799b3547400e15fea1b0ec7d39b410bd3580b283536e29ce1462bf7d9f5",
+    "stdlib/pagepresent.assis": "7a8c6248c09ab937e94ce50ff8ffc9e7806f024382691a4207de28d508a49c39",
+    "stdlib/catalogo.json": "4f02a2b2a1fabf15bab0d2906ad8250addc6a0a549b620b299edc2ee5264a213",
+    "stdlib/catalogo.sh": "9d5a3ef862678264538d99b6b4f2b7a5f1507fa7a1daac82c1fc5e5d315c9add",
+    "src/install_files.inc": "be4c2cfb0439042d2c31438f60321de11009c28454ac89bdae8736e3853105f6",
+    "src/install_optional.inc": "9a7bbc5cd6cc2d225800808ebf8e2141fd5701bf6a42486edd1e3227a1024c2a",
+    "tests/test-motionpage.py": "c8d753232fd5a89391f6cd8ac038b139bc77372088a4cdb145ae4f2cc58ab660",
+    "tests/test-pagepresent.py": "78d61ce1e998c2c55e036ad2aebba2d36ccfffccdbf0fb25326e6de6277eaccd",
+    "tools/collect-motionpage-evidence.py": "9b394862020c9dcbcf4a156d8e681de96f36008ace227ccb94d6fc8c510f1021",
+    "tools/verify-motionpage-evidence.py": "511c4528444fd53de4586060e1816130728bdf08cf64658d8355e8be4a980955",
+    "tools/verify-motionpage-install.py": "e09f8f530ca2f6a2b2095d7a7f23cadefb7120271d6160a8ceff5bcd805a9d07",
+    "exemplos/58_page_motion.assis": "eeabf064c75bbbeeb8685055707bebf5e76d29431561cb792167785fd5106882",
+    "exemplos/59_page_motion_window.assis": "132cc177857be2fbf1c8b23f81752a5bff4fabc0c5c4a2ab6d427cd5a698db5c",
+    "docs/BIBLIOTECA-motionpage.md": "16c230bf986e96623b035e6f82d7034f7143dc3f0975781707c1024daf0bfdb7",
+    "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md": "354d95d41328406148c8627a207be1d02593aaaa205a6cd80a2bf629f070b55d"
+  },
+  "auxiliary_sha256": {
+    "desktop.json": "76240cea757cf94fa27ab218410662242ca4616ff411c11dd008e80cb6d0d733",
+    "linux-build.json": "2276139a33b83b531c4758c1a15cf3e75df354ef65f65e4cd2da947daf67cf62",
+    "linux-examples.json": "71dfc536123f2498338270b0aaa4a615ef1a57224c527e3ea83cc88504e7c551",
+    "linux-install.json": "8733b9c3c79d9fcc1b69fe85563a254cf500dddcc6e22ac73a9a46973422a122",
+    "linux-motionpage-final.json": "9988aaee75ce8141d6a5a50d5fa501d7ed221d45c26ae777b5b0d13183f8108b",
+    "linux.json": "d17dde86625a80624636b4b4a365bf0a4bbf58f62618328de642fca586a8d6ea",
+    "reference-integrity.json": "dbf475ac81588897e48fab4ea57d0f21001dcd0a2b260ed5d4830be1892d84b5",
+    "windows-build.json": "63be6c76f8c146fe8f2052c754bac34a26915007e86cc7a81c5d11977cff6bc8",
+    "windows-examples.json": "e15f7ee38e8d34abaa7693757c14063d6fb250bed98ac2acf1fa2f1cc42a5873",
+    "windows-install.json": "57e4b3573a6ca19678364f18b02e3d250aa87280373f7d02ba7484cd3e3bc31c",
+    "windows-motionpage-final.json": "6cde94b371f6879d77969c4e38fca75c6b667d4c29e0500426f57b31fae8d62f",
+    "windows.json": "11c5b336d35baccf7bbad16c47b35ae696336e45834ea14335a1b68572e654c0"
+  },
+  "limitations": [
+    "Finite 42-matrix SSC profile; no continuous physical domain or global error bound",
+    "Bootstrap visual catalog; Reader selection, editing and IME are not integrated",
+    "Host owns semantic focus, clock rebasing and non-dispatching publish/commit boundary",
+    "Per-frame candidate allocation/work is bounded but no UI latency SLA or aggregate RSS quota is claimed",
+    "No targetable desktop window after Computer Use app approval timed out; no screen reader, DPI, multiple monitor or IME acceptance",
+    "Linux graphical provider unavailable; macOS and ARM native execution not-run",
+    "No new 24h soak, third-party acceptance, release, merge or remote CI approval"
+  ]
+}

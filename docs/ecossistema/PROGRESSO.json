@@ -1,9 +1,9 @@
 {
   "schema": "assisscript-ecosystem-progress-v1",
   "rubric_version": 1,
-  "date": "2026-11-02",
+  "date": "2026-11-03",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "native-shared-layout-frame-and-atomic-windows-composition",
+  "assessment": "native-whole-page-ssc-and-transactional-frame-composition",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -239,7 +239,7 @@
           "name": "Alocação e quotas recuperáveis",
           "level": 2,
           "acceptance": "Disponibilizar alocação fallível/reserve, checagem de tamanho e quotas por instância; injetar OOM em cada fronteira e conservar estado válido sem abortar serviços vizinhos.",
-          "baseline": "try_alloc/try_new, inserções/remoções recuperáveis, BufferPool e árvore/texto demonstrados. Teto opcional cobre corpos nativos de controladores/slots/índice; documents acrescenta fonte própria e candidato/ativo, com abort completo e commit sem alocação. OOM por fronteira em Windows/Linux; overhead/RSS, atributos e recursos futuros/integração HTDL permanecem abertos. Nova evidência: bancos FS com reserva explícita, recusa real do alocador e cache sem alocação; Document mantém 64 bytes. Não é quota agregada de RSS.",
+          "baseline": "try_alloc/try_new, inserções/remoções recuperáveis, BufferPool e árvore/texto demonstrados. Teto opcional cobre corpos nativos de controladores/slots/índice; documents acrescenta fonte própria e candidato/ativo, com abort completo e commit sem alocação. OOM por fronteira em Windows/Linux; overhead/RSS, atributos e recursos futuros/integração HTDL permanecem abertos. Nova evidência: bancos FS com reserva explícita, recusa real do alocador e cache sem alocação; Document mantém 64 bytes. Não é quota agregada de RSS. Continuação: candidatos SSC inteiros com cota de canais e recusa real de slabs sob suprimentos finitos; falhas preservam o banco ativo e vizinho. Sem quota agregada de RSS.",
           "evidence": [
             "docs/ALOCACAO-FALLIVEL.md",
             "stdlib/memory.assis",
@@ -271,7 +271,10 @@
             "docs/ecossistema/evidencias/m5-page-styles-2026-11-02/summary.json",
             "docs/BIBLIOTECA-flowpage.md",
             "docs/relatorios/2026-11-02-m5-page-frame.md",
-            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-03-m5-page-motion.md",
+            "docs/ecossistema/evidencias/m5-page-motion-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md"
           ]
         },
         {
@@ -777,7 +780,7 @@
           "name": "Layout e snapshots coerentes",
           "level": 3,
           "acceptance": "Definir constraints, distribuição row/column, texto, overflow/scroll e invalidações; provar ausência de ciclo geométrico e uso do mesmo snapshot por desenho, hit test e acessibilidade.",
-          "baseline": "Layout local em AssisScript com restricoes descendentes, alturas ascendentes, row/column, texto por grafemas, offsets e recortes. Frame imutavel compartilhado por desenho, hit test e limites MSAA; provider Windows publica raster e projecao juntos ou preserva ambos. Modelos independentes, OOM e versoes antigas executados Windows/Linux x64; casos nativos Windows. Scroll interno independente, estilos inline mistos, imagens, SSC agregado, ligacao automatica de parent.availableWidth e aceites desktop/leitor/DPI continuam abertos.",
+          "baseline": "Layout local em AssisScript com restricoes descendentes, alturas ascendentes, row/column, texto por grafemas, offsets e recortes. Frame imutavel compartilhado por desenho, hit test e limites MSAA; provider Windows publica raster e projecao juntos ou preserva ambos. Modelos independentes, OOM e versoes antigas executados Windows/Linux x64; casos nativos Windows. Scroll interno independente, estilos inline mistos, imagens, SSC agregado, ligacao automatica de parent.availableWidth e aceites desktop/leitor/DPI continuam abertos. Continuação: offsets SSC e deltas de descendentes compõem o mesmo Frame antes do selo de Packet; clipes/runs/hit/MSAA seguem a geometria composta, sem reflow por passo físico.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "local:htdl/docs/19-conformidade-e-cenarios.md",
@@ -788,29 +791,35 @@
             "tests/test-htdl-reader.py",
             "tests/reader_oracle.c",
             "docs/relatorios/2026-11-02-m5-page-frame.md",
-            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-03-m5-page-motion.md",
+            "docs/ecossistema/evidencias/m5-page-motion-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md"
           ]
         },
         {
           "id": "E08-03",
           "name": "Perfil numérico e temporal SSC",
-          "level": 2,
+          "level": 3,
           "acceptance": "Fixar representação/faixa, arredondamento, coeficientes e passo de tempo; implementar parser/canais com vetores independentes e fallback de erro numérico, sem prometer igualdade de float sem prova.",
-          "baseline": "Perfil experimental SSC finito de 42 matrizes canônicas Q16.16, parser/canais/tempo/fallback executados em AssisScript, com referência congelada e solução analítica em Windows/Linux x64. Domínio contínuo, quotas de página e integração visual permanecem abertos; publicação pendente.",
+          "baseline": "Perfil finito de 42 matrizes Q16.16 com parser, vetores/solução analítica e fallback explícito, agora integrado a candidatos de página inteira e cota de 256 canais vinculados, inclusive hidden/repouso. Execução otimizado/referência Windows/Linux x64. Domínio contínuo, tolerância global e aceite visual completo continuam abertos.",
           "evidence": [
             "local:htdl/docs/12-contrato-fs-ssc-e-assisscript.md",
             "local:htdl/docs/16-gramaticas-fs-e-ssc.md",
             "docs/relatorios/2026-11-02-m3-presentation-core.md",
             "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/summary.json",
-            "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md"
+            "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md",
+            "docs/relatorios/2026-11-03-m5-page-motion.md",
+            "docs/ecossistema/evidencias/m5-page-motion-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md"
           ]
         },
         {
           "id": "E08-04",
           "name": "Foco, movimento e falhas reativas",
-          "level": 2,
+          "level": 3,
           "acceptance": "Integrar transações semânticas e visuais, conservar último estilo válido com disabled atual, congelar movimento em edição, pausar aba oculta e respeitar reducedMotion sem backlog físico.",
-          "baseline": "Controlador local em AssisScript integra semântica, apresentação, foco e nomes acessíveis em candidato/ativo; falhas de parsing/medida/quota/OOM/publicação conservam a versão válida e bloqueiam ações pendentes. Relógio inteiro demonstrado descarta intervalos ocultos/em edição e conclui sob reducedMotion; exemplo consulta preferências Windows e usa contraste controlado. Subconjunto bootstrap, sem FS/SSC, editor, grafo reativo ou scheduler de abas; aceite final de usuário permanece aberto. Nova evidência: falha em qualquer nó impede todas as saídas candidatas; semântica disabled atual não é desfeita. Reaplicação geométrica/SSC/foco nativo continuam abertos.",
+          "baseline": "FS, semântica atual e SSC coordenados com Frame: proteção do foco/edição de nó e ancestrais, pausa/hidden/reducedMotion sem backlog, continuidade física e candidatos independentes. Falha nativa de raster/MSAA conserva quadro, ações e tempo ativo; erro FS conserva destinos válidos sem desfazer disabled atual. Execução Windows/Linux x64 e integração gráfica Windows. Reader/seleção, aquisição de foco/IME, scheduler geral e aceites desktop/leitor/DPI permanecem abertos.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "docs/relatorios/2026-11-01-m3-transacoes-preferencias.md",
@@ -825,7 +834,10 @@
             "docs/ecossistema/evidencias/m5-page-styles-2026-11-02/summary.json",
             "docs/BIBLIOTECA-flowpage.md",
             "docs/relatorios/2026-11-02-m5-page-frame.md",
-            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-03-m5-page-motion.md",
+            "docs/ecossistema/evidencias/m5-page-motion-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md"
           ]
         },
         {
@@ -999,7 +1011,10 @@
             "docs/ecossistema/evidencias/m5-page-styles-2026-11-02/summary.json",
             "docs/BIBLIOTECA-flowpage.md",
             "docs/relatorios/2026-11-02-m5-page-frame.md",
-            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-03-m5-page-motion.md",
+            "docs/ecossistema/evidencias/m5-page-motion-2026-11-02/summary.json",
+            "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md"
           ]
         },
         {
@@ -3272,7 +3287,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-03",
+      "rubric_version": 1,
+      "label": "SSC agregado e composição transacional: 46,50%, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 2,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 2,
+        "E07-03": 2,
+        "E07-04": 2,
+        "E07-05": 2,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "45,70%, 0/5 gates; meta 50% pendente. Layout e snapshot comum com commit atomico de pixels/MSAA: Windows 119/0, Linux 108/11 executados/not-run; 59 exemplos por host. Instalador historico misturava compilador antigo com bibliotecas novas; pacote Windows coerente reconstruido e validado em instalacao isolada, com DLL. Instalacao/remocao Windows/Linux, 4 testes de locks e 23 Node Windows passaram apos resolucao da falha temporaria da revisao por limite de uso. Implementacao dbf6f2b publicada: SHA remoto, arvore e 70 paths/blobs/modos conferidos; PR indisponivel pelo conector 403. Adendo documental pelo historico. Desktop Computer Use sem janela alvo, sem aceite visual. Fila integral de SSC agregado/Reader/catalogo, desktop/leitor/DPI/IME, SDK/loader/recursos, RSS/disco/orfaos, macOS/ARM, rede/perfis/persistencia/busca, M4–M9, 24h, distribuicao e aceites preservada. Easy por ultimo."
+  "assessment_note": "46,50%, 0/5 gates; meta 50% pendente. SSC agregado em AssisScript com cota de 256 canais, candidatos independentes, proteção de ancestrais e composição de Frame selado; Windows 136/0 e Linux 123/13 executados/not-run, 61 exemplos por host. Instalação/execução/remoção isoladas Windows/Linux, 4 locks e 23 Node Windows aprovados. Publicação será confirmada no adendo. Computer Use parou em app approval timed out e não expôs janela: sem aceite desktop/leitor/DPI/IME. Fila integral de Reader/seleção/catálogo, identidade incremental/editor, SDK/loader/recursos, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites preservada. Easy por último."
 }
