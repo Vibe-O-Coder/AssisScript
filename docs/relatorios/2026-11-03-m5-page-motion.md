@@ -10,7 +10,7 @@ limpeza, troca de branch de outra sessão, merge automático ou subagentes.
 **45,70% → 46,50%, 0/5 gates. Meta 50% pendente.** E08-03 e E08-04 sobem
 2→3, +0,40 cada. E02-03/E08-02/E11-01 recebem evidência sem promoção.
 Pesos, escopo, baseline, aceites e histórico preservados; novo retrato completo
-dos 60 critérios e cinco gates. M5 continua parcial. Publicação será confirmada
+dos 60 critérios e cinco gates. M5 continua parcial. Publicação confirmada
 no adendo; não se afirma release, merge ou aprovação nova de CI.
 
 ## Problema e resultado
@@ -151,3 +151,31 @@ SDK/strings/eventos gerais, RSS/disco/perfis órfãos, macOS/ARM nativos,
 rede/broker/perfis/cookies/cache, persistência/banco, crawler/índice/serviço de
 busca, M4–M9, corpus visual, 24h reais, distribuição, terceiro e cinco gates.
 Nenhum requisito foi dispensado para aproximar 50%. **Easy por último.**
+
+
+## Adendo — publicação confirmada
+
+Implementação, testes e evidências publicados em
+**658b831d4468a3b3e86bc86ff855df28dd66e001**, branch
+**work/m5-page-motion-2026-11-02**. O conector e git ls-remote confirmaram a
+cabeça remota. A árvore **79c9192f69e671d4ef690f5c5b9c91009dcca324**, não
+truncada, contém 2630 entradas e 2541 blobs. Os **70 paths/blobs/modos/tipos**
+da unidade coincidem individualmente com o Git local; bytes do índice e
+workspace foram conferidos antes do commit. Inventário e patch completos
+permanecem em build/delivery nesta cópia isolada.
+
+[Implementação publicada](https://github.com/Vibe-O-Coder/AssisScript/commit/658b831d4468a3b3e86bc86ff855df28dd66e001).
+[Branch publicada](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m5-page-motion-2026-11-02).
+
+PR de rascunho foi solicitada sobre work/m5-page-layout-2026-11-02. O conector
+retornou **403 Resource not accessible by integration**. A PR não foi criada;
+não houve contorno por credencial/API. Publicação da branch não significa merge,
+release ou nova CI aprovada. Este adendo documental recebe SHA pelo histórico
+e também é publicado e conferido, sem alterar implementação ou pontuação.
+
+O manifesto final com o relatório/evidências foi revalidado por instalação,
+execução e remoção isoladas em ambos os hosts; 4 locks e 23 Node Windows
+continuam aprovados. Nenhuma instalação global ou pacote de release alterado.
+Resultado: **46,50%, 0/5 gates; meta 50% pendente**, fila integral preservada.
+Próximo: Reader/seleção sobre o Frame composto e catálogo visual/loader,
+sem dispensar desktop/leitor/DPI/IME ou os demais aceites. **Easy por último.**
