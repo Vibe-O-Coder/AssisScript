@@ -1,11 +1,12 @@
-> **Continuação validada — 47,50%, 03/11/2026, 0/5 gates; meta 50% pendente.**
+> **Entrega local; publicação bloqueada — 47,50%, 03/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/catalog-frame-20261103`,
 > branch `work/m3-catalog-frame-2026-11-03`, base pública 6f4398c conferida.
 > Catálogo de leitura de 18 tipos no Frame FS/SSC; listas/marcadores medidos,
 > links #id, teclado e MSAA adicional com publicação conjunta e rollback.
 > Windows 199/0, Linux 180/19 executados/not-run; 65 exemplos por host.
 > Instalação/execução/remoção isoladas, 18 bibliotecas, 4 locks e 23 Node Windows.
-> Publicação será confirmada no adendo do [relatório](../relatorios/2026-11-03-m3-catalog-frame.md).
+> 8007b5c local; revisão automática exige autorização explícita dos 78 arquivos
+> para Vibe-O-Coder/AssisScript. Nada novo publicado. [Relatório e bloqueio](../relatorios/2026-11-03-m3-catalog-frame.md).
 > Computer Use expirou na abertura; sem aceite desktop/leitor real/DPI/IME.
 > Próximo: controles/imagens, loader de recursos externos e integração ASV2.
 > Identidade incremental/editor, SDK geral, RSS/disco/órfãos, macOS/ARM,

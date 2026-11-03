@@ -183,3 +183,32 @@ para alcançar 50%. **Easy por último.**
 Publicação normal autorizada pelo masterprompt para Vibe-O-Coder/AssisScript.
 SHA/árvore remotos e inventário serão confirmados no adendo após o envio.
 Sem afirmar release, merge ou CI remota nova.
+
+
+## Adendo — publicação bloqueada pela revisão automática
+
+Implementação, testes, documentação e evidências estão no commit local
+**8007b5c784829dbc43ebf74d9fb419bd6e0d20d1**, árvore
+**d17c93f8a8e76d9ec55dee53958ae30e3843ea33**, com **78 arquivos**.
+O índice e o workspace foram comparados byte a byte antes do commit.
+Inventário e patch revisáveis preservados em `build/delivery/files.json` e
+`build/delivery/catalog-frame.patch` nesta cópia.
+
+O envio normal foi solicitado para a nova branch
+**work/m3-catalog-frame-2026-11-03**, remoto público
+**https://github.com/Vibe-O-Coder/AssisScript.git**. A revisão automática
+recusou antes da execução: classificou o envio público dos 78 arquivos de
+fontes, documentação e evidências como divulgação externa sensível e exigiu
+autorização explícita nesta conversa para esse conteúdo/destino. Considerou
+insuficiente a autorização constante do masterprompt lido pelo assistente.
+Não houve push, PR ou uso de API/credencial alternativa para contornar a recusa.
+
+Ação pendente exata: o usuário autorizar publicar os **78 arquivos desta unidade**
+e o adendo de bloqueio na branch **work/m3-catalog-frame-2026-11-03** de
+**Vibe-O-Coder/AssisScript**, sem merge ou force push. Após a autorização, enviar,
+conferir SHA/árvore/inventário no remoto e tentar PR de rascunho sobre a base
+work/m5-frame-reader-2026-11-03. O adendo tem SHA próprio obtido pelo histórico.
+
+Resultado validado **localmente: 47,50%, 0/5 gates**; última base publicada
+permanece em **47,10%**. A meta de 50% e toda a fila de aceites continuam
+pendentes. Pacote local aprovado não equivale a publicação ou release.
