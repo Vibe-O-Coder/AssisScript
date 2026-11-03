@@ -183,3 +183,39 @@ O usuário autorizou explicitamente publicação no GitHub nesta conversa, além
 da autorização do masterprompt para Vibe-O-Coder/AssisScript. Commit, envio,
 SHA/árvore/inventário remotos e tentativa de PR serão registrados em adendo.
 Não se afirma merge, release ou CI remota nova aprovada.
+
+
+## Adendo — publicação e conferência integral
+
+Implementação, testes, exemplos, documentação e evidências publicados no commit
+**efc16b0af55b04b083bebd93be4525c4067318d8**, árvore
+**478a8b51aa4365d5efbad218d42e8a92a870fe78**, em **72 arquivos**.
+O push normal criou **work/m3-frame-worker-2026-11-03** no remoto público
+**Vibe-O-Coder/AssisScript**, conforme autorização explícita do usuário.
+
+O conector confirmou a cabeça remota e retornou a árvore recursiva completa,
+sem truncamento: **2782 entradas, 2690 blobs**. Todos os paths, modos, tipos e
+SHAs foram comparados com a árvore Git local; coincidem integralmente, inclusive
+os 72 arquivos da unidade. A base pública 52ef3ea também foi confirmada.
+A primeira comparação automatizada excedeu o limite de tamanho da ferramenta;
+a mesma comparação foi concluída em 14 lotes, sem omitir entradas.
+
+Antes do commit, a comparação índice/workspace detectou normalização de CRLF
+nos logs Windows. A regra específica -text/-whitespace, como nas evidências
+anteriores, preserva seus bytes originais. Os 72 arquivos foram novamente
+comparados byte a byte com o índice antes do commit; os hashes rastreados dos
+logs foram conservados. O ZIP teve seus **819 hashes de arquivos** conferidos,
+com relatório/API/fontes finais idênticos no momento do empacotamento. Este
+adendo posterior é canônico no Git e não altera o pacote validado da implementação.
+
+[Branch publicada](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m3-frame-worker-2026-11-03).
+[Implementação](https://github.com/Vibe-O-Coder/AssisScript/commit/efc16b0af55b04b083bebd93be4525c4067318d8).
+
+A PR de rascunho foi solicitada sobre work/m3-catalog-frame-2026-11-03, mas o
+conector retornou **403 Resource not accessible by integration**. A PR não foi
+criada; não houve tentativa de contornar a permissão com outra credencial/API.
+Publicação não equivale a merge, release ou nova CI remota aprovada.
+
+Resultado publicado **47,90%, 0/5 gates; meta 50% pendente**. Fila integral,
+limitações de plataforma/desktop e Easy por último preservados. O adendo recebe
+seu próprio SHA pelo histórico, sem hash autorreferente dentro do relatório.

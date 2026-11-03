@@ -1,11 +1,12 @@
-> **Continuação local — 47,90%, 03/11/2026, 0/5 gates; meta 50% pendente.**
+> **Publicação confirmada — 47,90%, 03/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/frame-worker-20261103`,
 > branch `work/m3-frame-worker-2026-11-03`, base pública 52ef3ea conferida.
 > Frame HTDL/FS/SSC/leitura e worker ASV2 com compilação limitada, ativação
 > conjunta, FIFO/backpressure e reflow sem reiniciar estado/programa.
 > LOAD_CATALOG explícito conserva LOAD bootstrap estrito. Evidência nativa
 > Windows/Linux x64, 67 exemplos por host e instalações isoladas no relatório.
-> Publicação desta unidade em preparação; conferir adendo antes de afirmar push.
+> Implementação efc16b0 publicada; SHA/árvore completa, 2690 blobs e 72 paths
+> conferidos. PR não criada: conector 403. Adendo documental pelo histórico.
 > A demonstração anterior abriu; duas capturas Computer Use expiraram nesta
 > sessão. Sem aceite desktop/leitor real/DPI/IME/monitores.
 > [Relatório](docs/relatorios/2026-11-03-m3-frame-worker.md).
