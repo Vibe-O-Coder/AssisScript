@@ -1,0 +1,221 @@
+{
+  "schema": "frame-worker-host-v1",
+  "base": "52ef3ead2e059395dafb17771214126f578ed19c",
+  "host": "linux",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "checks": [
+    {
+      "suite": "frame-worker",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-frame-worker.py"
+      ],
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 2,
+      "seconds": 84.66,
+      "log": "linux-frame-worker-optimized.log",
+      "sha256": "ada8e1a60f90d659e79d0d54bf7ceb0d26b38d6470dd8cbb164dc9de9c2170ec",
+      "status": "executed"
+    },
+    {
+      "suite": "frame-worker",
+      "worker_mode": "reference",
+      "command": [
+        "python",
+        "tests/test-frame-worker.py"
+      ],
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 2,
+      "seconds": 82.673,
+      "log": "linux-frame-worker-reference.log",
+      "sha256": "9dbc5b839675d48d7a060ea1c3e3a4835b00e6281a1c249b3b036094ba040316",
+      "status": "executed"
+    },
+    {
+      "suite": "page-worker",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-page-worker.py"
+      ],
+      "returncode": 0,
+      "executed": 18,
+      "not_run": 2,
+      "seconds": 11.383,
+      "log": "linux-page-worker-optimized.log",
+      "sha256": "12f137e481a5f32e75ea250feb930178486efef8f8ee47a14794e567a0ff43f1",
+      "status": "executed"
+    },
+    {
+      "suite": "page-worker",
+      "worker_mode": "reference",
+      "command": [
+        "python",
+        "tests/test-page-worker.py"
+      ],
+      "returncode": 0,
+      "executed": 18,
+      "not_run": 2,
+      "seconds": 11.522,
+      "log": "linux-page-worker-reference.log",
+      "sha256": "e39fb87144b76174d65818b32c67daf5a446c71e622fe2237da2f33757c6e4fb",
+      "status": "executed"
+    },
+    {
+      "suite": "page-reader",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-page-reader.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 1,
+      "seconds": 11.811,
+      "log": "linux-page-reader-optimized.log",
+      "sha256": "2b3b798308fcca7630f3c0284a65b2b4e54127835018493db720264153f7191a",
+      "status": "executed"
+    },
+    {
+      "suite": "page-reader",
+      "worker_mode": "reference",
+      "command": [
+        "python",
+        "tests/test-page-reader.py"
+      ],
+      "returncode": 0,
+      "executed": 9,
+      "not_run": 1,
+      "seconds": 12.275,
+      "log": "linux-page-reader-reference.log",
+      "sha256": "5fe651597d038a054eba8686789d692ff59bb8465cea77bac83d71361a5861c7",
+      "status": "executed"
+    },
+    {
+      "suite": "page-compiler",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-page-compiler.py"
+      ],
+      "returncode": 0,
+      "executed": 13,
+      "not_run": 0,
+      "seconds": 9.302,
+      "log": "linux-page-compiler-optimized.log",
+      "sha256": "a23563233811cf4e9020b78bc3a74e623518c5b208d18a89cd2d2a31a6b73480",
+      "status": "executed"
+    },
+    {
+      "suite": "page-host",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-page-host.py"
+      ],
+      "returncode": 0,
+      "executed": 13,
+      "not_run": 0,
+      "seconds": 24.194,
+      "log": "linux-page-host-optimized.log",
+      "sha256": "53d527ef4b74d1aa2634d509e658300c38ac2711bf077f2afa8e7f743e5b38b2",
+      "status": "executed"
+    },
+    {
+      "suite": "page-backend",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-page-backend.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 6.534,
+      "log": "linux-page-backend-optimized.log",
+      "sha256": "fe3e2c3167c425343c8e6b817c3b14841cf28e52430fb8c8ff964e0898c5c873",
+      "status": "executed"
+    },
+    {
+      "suite": "pagevm",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-pagevm.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 0,
+      "seconds": 5.743,
+      "log": "linux-pagevm-optimized.log",
+      "sha256": "b393696408eba1530948be3f2b4d30e3c52ad26befe5b0f441045f992ba5c010",
+      "status": "executed"
+    },
+    {
+      "suite": "windows-isolation",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-windows-isolation.py"
+      ],
+      "returncode": 0,
+      "executed": 0,
+      "not_run": 4,
+      "seconds": 0.405,
+      "log": "linux-windows-isolation-optimized.log",
+      "sha256": "a7fd276b3f379739ef79d23c3c339a80ffd1a11fc2f940ed43bb507998409f48",
+      "status": "not-run"
+    },
+    {
+      "suite": "framehost",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-framehost.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 2,
+      "seconds": 92.237,
+      "log": "linux-framehost-optimized.log",
+      "sha256": "7ac5e63db8faedaaefa1d12164e0257361d1ae59bb5b0b6e9e56ab6b256366c3",
+      "status": "executed"
+    },
+    {
+      "suite": "catalog-frame",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-catalog-frame.py"
+      ],
+      "returncode": 0,
+      "executed": 18,
+      "not_run": 3,
+      "seconds": 183.013,
+      "log": "linux-catalog-frame-optimized.log",
+      "sha256": "b884cf0912ec47fc769ff988ebf8139b8e52f44ae55a25e7d9010cc8dac8be97",
+      "status": "executed"
+    },
+    {
+      "suite": "install-mask",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-install-mask.py"
+      ],
+      "returncode": 0,
+      "executed": 2,
+      "not_run": 0,
+      "seconds": 1.86,
+      "log": "linux-install-mask-optimized.log",
+      "sha256": "4b587a6c59d1f39e71e73740bb42d1d662ed610e4adf3713fb932b107d11c022",
+      "status": "executed"
+    }
+  ],
+  "passed": true
+}

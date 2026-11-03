@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "setup_sha256": null,
+  "provider_sha256": null,
+  "runtime_sha256": {
+    "page-worker": "25a701c1bd460360270c801e3b20b43abf66d6213fe293525fef880db0c3a106",
+    "libassis_worker_v1.so": "61da1a0745b1d8b67e72c9c2489cffe8db9687241598b801d9671027c69342eb"
+  },
+  "selected_libraries": [
+    "buffers",
+    "doctree",
+    "documents",
+    "flowpage",
+    "fluxstyle",
+    "framehost",
+    "framereader",
+    "frameworker",
+    "graphemes",
+    "htdl",
+    "motionpage",
+    "owned",
+    "pagecompiler",
+    "pageframe",
+    "pagepresent",
+    "pagevm",
+    "pagewire",
+    "pageworker",
+    "reader",
+    "sanscript",
+    "unicode",
+    "viewer",
+    "window"
+  ],
+  "checks": [
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/instalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces",
+        "--no-path",
+        "--with",
+        "frameworker"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em /tmp/assis-presentation-install-88_ph6kc/prefix with spaces/bin/assis\nInclua /tmp/assis-presentation-install-88_ph6kc/prefix with spaces/bin no PATH ou use o caminho completo.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/prefix with spaces/bin/assis",
+        "build",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/64_frame_worker.assis",
+        "--safe",
+        "--debug",
+        "-o",
+        "<TEMP>/granted runtime/installed-example"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: execut\u00e1vel nativo gerado em /tmp/assis-presentation-install-88_ph6kc/granted runtime/installed-example\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/granted runtime/installed-example",
+        "<TEMP>/prefix with spaces/bin/assis",
+        "<TEMP>/granted runtime/page-worker"
+      ],
+      "returncode": 0,
+      "stdout": "FRAME WORKER 42 1 1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/desinstalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: compilador desinstalado. Seus projetos foram preservados.\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Fresh candidate and isolated offline prefix, frameworker transitive closure; installed Frame/worker demo with explicit runtime paths (Linux runtime is separately granted and staged in the test prefix parent), uninstall and user file preservation; no PATH, associations or release changes"
+}

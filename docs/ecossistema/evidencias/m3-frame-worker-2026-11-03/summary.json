@@ -1,0 +1,79 @@
+{
+  "schema": "frame-worker-evidence-v1",
+  "base": "52ef3ead2e059395dafb17771214126f578ed19c",
+  "points_before": 47.5,
+  "points_after": 47.9,
+  "level_changes": {
+    "E07-04": [
+      2,
+      3
+    ]
+  },
+  "gates_passed": 0,
+  "native": {
+    "windows": {
+      "executed": 169,
+      "not_run": 4,
+      "examples": 67,
+      "libraries": 23,
+      "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+      "record_sha256": "176d48ac253c2c80e80f29d9e90679b0a603c384cb2bdd9cd30f7e8f4674fd50"
+    },
+    "linux": {
+      "executed": 154,
+      "not_run": 19,
+      "examples": 67,
+      "libraries": 23,
+      "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+      "record_sha256": "2d96c4e70db892f6648d2bc45b13d552b13fa391fce00b9bc48e85c0fae7b7f5"
+    }
+  },
+  "source_sha256": {
+    "stdlib/frameworker.assis": "e15e43370023a401514c9144cd738bdc4e82a4380e14a713cf2b073aea29e91e",
+    "stdlib/pageworker.assis": "f0b164501bb8088037ec25ae5c9cf9a16487e9600587b21202f48488bb33d995",
+    "stdlib/pagehost.assis": "731bcbefb2fcf08ae41b4f19bf2922b5079886ffeec68e6c431e05656f8ab834",
+    "stdlib/pageframe.assis": "8420b5728231fe0968c9066e6e0b3ccc85a067737d6060efdb7cef24bbaa349d",
+    "stdlib/framehost.assis": "7e74d4594c9cb63c45cb6feffd546ee874d37e820bad333359e6c986f4bfe0a7",
+    "stdlib/pagepresent.assis": "d908e512de460928540fe1d0d860adc65bd78358191c78f1cc316aad95cd2ec8",
+    "stdlib/framereader.assis": "772f3fe1557a7a9855fe110151b829dca9d997ce17752b93cfd38491741ab6ac",
+    "stdlib/pagecompiler.assis": "c6cf2da589cc45e9fddc2a8401989ea260c57205ee3b3ba870937c2a2e369fdf",
+    "stdlib/pagewire.assis": "ccce42f10284630553d2bea8934642f9821772a7a6880cb49d53075084847463",
+    "stdlib/catalogo.json": "a5520046a4634adc25bb82472f0a6e58f6225b7031291b54cab3c0671158ded1",
+    "stdlib/catalogo.sh": "e27275b42ca907815e32abb670987656d678cb5d2aa85484c1e505824cab7218",
+    "tools/page-worker.assis": "80ff90e9d3428ee0c952c768b9d4034ae799978380c5b0b0d70d69a6ab332057",
+    "tests/test-frame-worker.py": "891b6ac438efef0d45a76ad8f85c0bbc5fb8f3da5174f9d7dcb66df2a06ace2d",
+    "tests/test-page-worker.py": "1b479601d855afc27a10252208e1e607b7147752489d3d4e54794443383f7a74",
+    "exemplos/64_frame_worker.assis": "8177ea9e1cbfa29abd9dbc82b2d01218986825b28fe8e02bcbe767e5f162c0bc",
+    "exemplos/65_frame_worker_window.assis": "a2dfae9494e0e09e6cafd40ea90c09751b29abbc7b92ee6d025d39de3014f4b6",
+    "tools/collect-frame-worker-evidence.py": "e10d61dae6b9d3cb0fd9f3654857bee62a96ef01275bdf3ec69439de1f6004c5",
+    "tools/verify-frame-worker-evidence.py": "dc7cbf13f936bf9dfde2e4d0c51d3030ded988a74f16f22292503187b07eae2b",
+    "tools/verify-frame-worker-install.py": "4c97e0ec94a1ca1ffd0650261d1467283f134345a0db64d73209ced91ff7491e",
+    "tools/prepare-development-installer.py": "09e58e7221745f72aaa415d1c238737cb63941436e79e4befd4dc90d67d5e914",
+    "docs/BIBLIOTECA-frameworker.md": "a749c1ca95b444a7a24d07664427e7d31e9c3df631bd1a97ff5d0e2dfb65d522",
+    "docs/ecossistema/PERFIL-FRAME-WORKER-V1.md": "8baaf8fc27155940dfbdb11b746c838fa3d18e63ac5716f8fe5bae3ca2bf58ae"
+  },
+  "auxiliary_sha256": {
+    "desktop.json": "c10cac4470320ad5b75d6d9b0533367326637c360f59524a6ef260db6c7e4ea0",
+    "development-bundle.json": "5e73e843117de3e339d38b88d10711090f105c8f6b9f0f77306bb5a733bb8ec2",
+    "linux-examples.json": "d6e3c533499f54b228b2cba624f28cf9b802f891a36ad03590a418ce994816dd",
+    "linux-install.json": "2e614208ec71bf99031b53a50a572c90d764430b4e992b74d899b9cd782b0bf8",
+    "linux.json": "2d96c4e70db892f6648d2bc45b13d552b13fa391fce00b9bc48e85c0fae7b7f5",
+    "reference-integrity.json": "b573df6046f5f987a2f0d59d8a8f866060d0eca1f3efd3907255fb429f2058fe",
+    "windows-examples.json": "308eca9c36208d93ff914ecf5b71bbe3ff77bf6a9063611552a7e513b705a26e",
+    "windows-install.json": "02670dcff9af499f13f08eb211369e1d8cf8c42a88d31c9cc607f8c905e97830",
+    "windows.json": "176d48ac253c2c80e80f29d9e90679b0a603c384cb2bdd9cd30f7e8f4674fd50"
+  },
+  "initial_fixture_failures_sha256": {
+    "linux-initial-page-worker-fixture.log": "559c1b4db0f57f04d1a5e4bd3fad99019dfacb40dff4d6c220116967a88c099f",
+    "windows-initial-page-worker-fixture.log": "c13d6deb4b472e94be26d6a5083f1e78b6444c345ce7bdd493d092d162a356fa"
+  },
+  "limitations": [
+    "Local scalar ASV2/read-only SDK; per-node cells, subscriptions, strings and visual mutation remain open",
+    "External resources, complete HTDL controls/images/live regions, network/profile/search are separate",
+    "Both Computer Use captures of previous catalog demo timed out; new window has native once/smoke tests only, no desktop/screen-reader/DPI/IME acceptance",
+    "Windows/Linux x64 native only; Windows-isolation is not-run on Linux, Linux graphical tests and native ARM/macOS are not-run",
+    "Slab refusal supplies 0/1/2/4/8 are not exhaustive per-allocation failure injection or aggregate RSS quotas",
+    "Linux installer selects compiler/libraries; native worker/provider explicitly granted and staged separately",
+    "Matched Windows development package is not a release, merge, new CI approval, third-party acceptance or 24h soak"
+  ]
+}

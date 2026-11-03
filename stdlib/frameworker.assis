@@ -1,0 +1,207 @@
+namespace frameworker;
+import "std/framehost.assis";
+import "std/pageworker.assis";
+import "std/pagecompiler.assis";
+
+public value struct Limits{let memory:int;let frames:int;let fuel:int;let calls:int;let timeout:int;}
+public value struct Grants{let document:bool;let counter:bool;}
+public value struct Action{let status:int;let change:viewer::Change;}
+
+/// Trusted local coordinator. HTDL/FS/SSC/Frame and worker are prepared separately,
+/// then committed together. No native page binary, filename or origin from HTDL.
+/// The UI host calls advance once per turn and handles explicit backpressure.
+public final class Session{
+    private own visual:framehost::Session;private own workers:pageworker::Session;
+    private own source:*byte;private own code:*byte;private own events:*int;
+    private own compilation:pagecompiler::Task;private own compile_path:*byte;
+    private let compile_width:int;private let compile_height:int;private let compile_scale:int;private let compile_profile:framehost::Versions;private let compile_policy:reader::Preferences;
+    private own compile_fs:*byte;private own compile_ssc:*byte;private let compile_restricted:bool;
+    private let compile_metric:safe fn(borrow slice<byte>,int,int):int;
+    private let page_instance:int;private let origin:int;private let next_document:int;
+    private let pending_document:int;private let active_document:int;private let phase:int;
+    private let limits:Limits;private let grants:Grants;private let first:int;private let count:int;
+    private let active_command:int;private let active_timeout:int;private let running:bool;private let opened:bool;private let failure:int;
+    private let answer:pageworker::Reply;
+    fn init(borrow mut self,max_bytes:int,max_nodes:int,window_instance:int,page_instance:int,origin:int):void{
+        if(page_instance<=0 || origin<=0){return;}
+        self.visual=try_new framehost::Session(max_bytes,max_nodes,window_instance);
+        self.workers=try_new pageworker::Session();self.events=try_alloc<int>(32);
+        if(self.visual==null || !self.visual.is_open() || self.workers==null || self.events==null){return;}
+        self.page_instance=page_instance;self.origin=origin;self.opened=true;
+    }
+    fn is_open(borrow self):bool{return self.opened;}
+    fn has_active(borrow self):bool{return self.opened && self.visual.has_active();}
+    fn has_pending(borrow self):bool{return self.phase!=0;}
+    fn ready(borrow self):bool{return self.phase==5 && self.workers.has_pending();}
+    fn document_id(borrow self):int{return self.active_document;}
+    fn candidate_id(borrow self):int{return self.pending_document;}
+    fn error(borrow self):int{return self.failure;}
+    fn queued(borrow self):int{return self.count;}
+    fn result(borrow self):pageworker::Reply{return self.answer;}
+    fn worker_alive(borrow self):bool{return self.opened && self.workers.has_active() && self.workers.current().is_open();}
+    fn document(borrow self):borrow(self) documents::Document{assert(self.has_active());return self.visual.document();}
+    fn snapshot(borrow self):borrow(self) framehost::Drawing{assert(self.has_active());return self.visual.snapshot();}
+    /// Compile a single source under OS budgets before preparing Reader/SDK.
+    /// advance keeps the previous worker alive; abort/close cancels compilation.
+    fn prepare_source(borrow mut self,borrow compiler:slice<byte>,borrow path:slice<byte>,borrow source:slice<byte>,borrow program:slice<byte>,borrow fs:slice<byte>,borrow ssc:slice<byte>,profile:framehost::Versions,reference:bool,mib:int,cpu_seconds:int,restricted:bool,
+            width:int,height:int,scale:int,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int,limits:Limits,grants:Grants,now:int):int{
+        if(!self.opened){return -9;}if(self.phase!=0){return -12;}
+        if(len(fs)>65536 || len(ssc)>65536 || len(source)>65536 || len(path)<2 || len(path)>4096 || limits.memory<0 || limits.memory>65536 || limits.frames<1 || limits.frames>128 ||
+            limits.fuel<1 || limits.fuel>1000000 || limits.calls<0 || limits.calls>10000 || limits.timeout<1 || limits.timeout>60000){return -1;}
+        own fs_copy:*byte=try_alloc<byte>(len(fs));own ssc_copy:*byte=try_alloc<byte>(len(ssc));
+        if(fs_copy==null || ssc_copy==null){return -4;}
+        for(let i:int=0;i<len(fs);i++){fs_copy[i]=fs[i];}for(let i:int=0;i<len(ssc);i++){ssc_copy[i]=ssc[i];}
+        own source_copy:*byte=try_alloc<byte>(len(source));own path_copy:*byte=try_alloc<byte>(len(path));
+        if(source_copy==null || path_copy==null){return -4;}
+        for(let i:int=0;i<len(source);i++){source_copy[i]=source[i];}for(let i:int=0;i<len(path);i++){path_copy[i]=path[i];}
+        own task:pagecompiler::Task=try_new pagecompiler::Task(compiler,program,reference,mib,cpu_seconds,now,limits.timeout);
+        if(task==null){return -4;}if(task.status()!=0){return task.status();}
+        self.source=move(source_copy);self.compile_path=move(path_copy);self.compilation=move(task);
+        self.compile_width=width;self.compile_height=height;self.compile_scale=scale;self.compile_profile=profile;self.compile_policy=policy;self.compile_fs=move(fs_copy);self.compile_ssc=move(ssc_copy);self.compile_metric=metric;self.compile_restricted=restricted;
+        self.limits=limits;self.grants=grants;self.failure=0;self.phase=6;return 0;
+    }
+    /// 0 staging started; 1..Hxxx parser errors; negative local errors. Every
+    /// attempt after limits validation reserves an identity, even if it aborts.
+    fn prepare(borrow mut self,borrow path:slice<byte>,borrow source:slice<byte>,borrow fs:slice<byte>,borrow ssc:slice<byte>,profile:framehost::Versions,borrow code:slice<byte>,restricted:bool,
+            width:int,height:int,scale:int,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int,limits:Limits,grants:Grants,now:int):int{
+        if(!self.opened){return -9;}if(self.phase!=0){return -12;}
+        if(self.next_document==4503599627370495){return -13;}
+        if(len(source)>65536 || len(code)<16 || len(code)>131088 || limits.memory<0 || limits.memory>65536 ||
+           limits.frames<1 || limits.frames>128 || limits.fuel<1 || limits.fuel>1000000 || limits.calls<0 || limits.calls>10000 ||
+           limits.timeout<1 || limits.timeout>60000){return -1;}
+        self.next_document++;val document:int=self.next_document;
+        own source_copy:*byte=try_alloc<byte>(len(source));own code_copy:*byte=try_alloc<byte>(len(code));
+        if(source_copy==null || code_copy==null){return -4;}
+        for(let i:int=0;i<len(source);i++){source_copy[i]=source[i];}for(let i:int=0;i<len(code);i++){code_copy[i]=code[i];}
+        val parsed:int=self.visual.prepare(document,document,profile,source,fs,ssc,width,height,scale,policy,metric);if(parsed!=0){return parsed;}
+        val spawned:int=self.workers.prepare(path,self.page_instance,self.origin,restricted,now,limits.timeout);
+        if(spawned!=0){self.visual.abort(document);return spawned;}
+        self.source=move(source_copy);self.code=move(code_copy);self.pending_document=document;
+        self.compile_profile=profile;self.limits=limits;self.grants=grants;self.phase=1;self.failure=0;return 0;
+    }
+    fn abort(borrow mut self):void{
+        if(self.visual!=null){self.visual.abort(self.pending_document);}if(self.workers!=null){self.workers.abort();}
+        if(self.compilation!=null){self.compilation.close();}own compiled:pagecompiler::Task=move(self.compilation);own path:*byte=move(self.compile_path);
+        own fs:*byte=move(self.compile_fs);own ssc:*byte=move(self.compile_ssc);
+        own source:*byte=move(self.source);own code:*byte=move(self.code);self.phase=0;self.pending_document=0;
+    }
+    private fn candidate_failure(borrow mut self,status:int):int{self.abort();self.failure=status;return status;}
+    private fn prepare_grants(borrow mut self,now:int):int{
+        if(self.phase==2 && self.grants.document){
+            val status:int=self.workers.candidate_mut().command(4,0,0,now,self.limits.timeout);
+            if(status!=0){return self.candidate_failure(status);}self.phase=3;return 0;
+        }
+        if(self.phase<=3 && self.grants.counter){
+            val status:int=self.workers.candidate_mut().command(3,0,0,now,self.limits.timeout);
+            if(status!=0){return self.candidate_failure(status);}self.phase=4;return 0;
+        }
+        self.phase=5;return 1;
+    }
+    private fn advance_candidate(borrow mut self,now:int):int{
+        if(self.phase==0){return 0;}
+        if(self.phase==6){
+            val polled:int=self.compilation.poll(now);if(polled<0){return self.candidate_failure(polled);}if(polled==0){return 0;}
+            own compiled:pagecompiler::Task=move(self.compilation);own source:*byte=move(self.source);own path:*byte=move(self.compile_path);
+            self.compilation=try_new pagecompiler::Task(utf8(""),utf8(""),false,0,0,0,0);
+            self.source=try_alloc<byte>(0);self.compile_path=try_alloc<byte>(0);
+            val width:int=self.compile_width;val height:int=self.compile_height;val scale:int=self.compile_scale;val policy:reader::Preferences=self.compile_policy;val profile:framehost::Versions=self.compile_profile;
+            own fs:*byte=move(self.compile_fs);own ssc:*byte=move(self.compile_ssc);val restricted:bool=self.compile_restricted;
+            self.compile_fs=try_alloc<byte>(0);self.compile_ssc=try_alloc<byte>(0);
+            val metric:safe fn(borrow slice<byte>,int,int):int=self.compile_metric;val limits:Limits=self.limits;val grants:Grants=self.grants;self.phase=0;
+            val prepared:int=self.prepare(slice_of(path,0,len(path)),slice_of(source,0,len(source)),slice_of(fs,0,len(fs)),slice_of(ssc,0,len(ssc)),profile,compiled.code(),restricted,width,height,scale,policy,metric,limits,grants,now);
+            if(prepared!=0){return self.candidate_failure(prepared);}return 0;
+        }
+        val polled:int=self.workers.candidate_mut().poll(now);
+        if(polled<0){return self.candidate_failure(polled);}if(self.phase==5){return 1;}if(polled==0){return 0;}
+        if(self.phase==1){
+            own source:*byte=move(self.source);own code:*byte=move(self.code);val limits:Limits=self.limits;
+            self.source=try_alloc<byte>(0);self.code=try_alloc<byte>(0);
+            let loaded:int=0;if(self.compile_profile.document==2){loaded=self.workers.candidate_mut().load_catalog(slice_of(source,0,len(source)),slice_of(code,0,len(code)),
+                limits.memory,limits.frames,limits.fuel,limits.calls,now,limits.timeout);}
+            else{loaded=self.workers.candidate_mut().load(slice_of(source,0,len(source)),slice_of(code,0,len(code)),limits.memory,limits.frames,limits.fuel,limits.calls,now,limits.timeout);}
+            if(loaded!=0){return self.candidate_failure(loaded);}
+            self.phase=2;return 0;
+        }
+        val reply:pageworker::Reply=self.workers.candidate_mut().reply();
+        if(reply.code!=0){return self.candidate_failure(reply.code);}return self.prepare_grants(now);
+    }
+    private fn complete_commit(borrow mut self):void{
+        assert(self.workers.commit());self.active_document=self.pending_document;self.pending_document=0;self.phase=0;
+        self.first=0;self.count=0;self.active_command=0;self.active_timeout=self.limits.timeout;self.running=true;self.failure=0;self.answer=new pageworker::Reply();
+    }
+    /// Headless transaction. Native UI hosts publish the accessible projection
+    /// first; after success the two in-memory commits allocate nothing.
+    fn commit(borrow mut self):bool{
+        if(!self.opened || !self.ready() || !self.workers.candidate_mut().activatable()){return false;}
+        assert(self.visual.commit(self.pending_document));self.complete_commit();return true;
+    }
+    fn publish(borrow mut self,borrow window:window::Window):int{
+        if(!self.opened || !self.ready() || !self.workers.candidate_mut().activatable()){return -12;}
+        val status:int=self.visual.publish(self.pending_document,window);if(status!=0){return status;}self.complete_commit();return 0;
+    }
+    private fn worker_failure(borrow mut self,status:int):void{
+        self.workers.current_mut().close();self.failure=status;self.first=0;self.count=0;self.running=false;self.active_command=0;
+    }
+    /// One bounded provider poll/command per active worker, plus one candidate
+    /// step. The shell owns the clock; no blocking wait or page callback here.
+    /// Negative candidate error preserves the active worker/document.
+    fn advance(borrow mut self,now:int):int{
+        if(!self.opened){return -9;}val candidate:int=self.advance_candidate(now);
+        if(self.worker_alive()){
+            val polled:int=self.workers.current_mut().poll(now);
+            if(polled<0){self.worker_failure(polled);return polled;}
+            if(polled==1){
+                self.answer=self.workers.current().reply();val reply:pageworker::Reply=self.answer;
+                if(reply.code<0 || reply.status<0){let error:int=reply.code;if(error>=0){error=reply.status;}self.worker_failure(error);return error;}
+                if(self.active_command==2 && (reply.code==0 || reply.code==2)){self.running=false;}
+                if(self.active_command==5){
+                    // A post is removed only after ACK=0. ACK=1 retains the
+                    // event while a tick makes room in the worker's queue.
+                    if(reply.code==0){self.first=(self.first+1)%32;self.count--;}
+                    self.running=true;
+                }self.active_command=0;
+            }else if(!self.workers.current().busy()){
+                let status:int=0;
+                if(self.running){status=self.workers.current_mut().command(2,1000,0,now,self.active_timeout);if(status==0){self.active_command=2;}}
+                else if(self.count>0){
+                    status=self.workers.current_mut().command(5,2,self.events[self.first],now,self.active_timeout);
+                    if(status==0){self.active_command=5;}
+                }
+                if(status!=0){self.worker_failure(status);return status;}
+            }
+        }return candidate;
+    }
+    /// Payload is the immutable semantic projection index, not a global NodeId
+    /// or a grant. Reader validates hidden/disabled/focus/window/request first.
+    fn dispatch(borrow mut self,document:int,projection:int,event:window::Event):Action{
+        if(!self.has_active() || document!=self.active_document || self.phase!=0){return new Action(-2,new viewer::Change());}
+        val change:viewer::Change=self.visual.dispatch(projection,event);
+        if(change.kind==3){self.close();return new Action(0,change);}if(change.kind!=2){return new Action(0,change);}
+        if(!self.worker_alive()){return new Action(-9,change);}if(self.count==32){return new Action(1,change);}
+        let node:doctree::NodeId=new doctree::NodeId();let index:int=0;
+        while(index<1024){
+            node=htdl::query(self.visual.document().nodes(),0,utf8(""),node);if(doctree::absent(node)){return new Action(-2,change);}
+            if(viewer::same(node,change.node)){self.events[(self.first+self.count)%32]=index;self.count++;return new Action(0,change);}index++;
+        }return new Action(-2,change);
+    }
+    /// Reflow prepares only a visual candidate. It never replaces/restarts code.
+    fn reflow(borrow mut self,width:int,height:int,scroll:int,scale:int,elapsed:int,visible:bool,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int):int{
+        if(!self.opened || self.phase!=0){return -12;}return self.visual.reflow(width,height,scroll,scale,elapsed,visible,policy,metric);
+    }
+    fn abort_reflow(borrow mut self):void{self.visual.abort_reflow();}
+    fn commit_reflow(borrow mut self):bool{return self.opened && self.phase==0 && self.visual.commit_reflow();}
+    fn publish_reflow(borrow mut self,borrow window:window::Window):int{
+        if(!self.opened || self.phase!=0){return -12;}return self.visual.publish_reflow(window);
+    }
+    fn cancel_gesture(borrow mut self):void{self.visual.cancel_gesture();}
+    fn fragment_scroll(borrow self,projection:int,link:doctree::NodeId):int{
+        if(!self.has_active() || self.phase!=0){return -1;}return self.visual.fragment_scroll(projection,link);
+    }
+    fn copy(borrow self,borrow window:window::Window):int{
+        if(!self.has_active() || self.phase!=0){return -2;}return self.visual.copy(window);
+    }
+    fn close(borrow mut self):void{
+        self.opened=false;self.abort();if(self.workers!=null){self.workers.close();}if(self.visual!=null){self.visual.close();}
+        self.count=0;self.running=false;self.active_document=0;
+    }
+}

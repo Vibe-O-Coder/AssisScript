@@ -70,6 +70,7 @@ test-pageframe:
 	python3 tests/test-pagepresent.py
 	python3 tests/test-framereader.py
 	python3 tests/test-framehost.py
+	python3 tests/test-frame-worker.py
 	python3 tests/test-catalog-frame.py
 
 .PHONY: test-installer-retry

@@ -1,3 +1,19 @@
+> **Continuação local — 47,90%, 03/11/2026, 0/5 gates; meta 50% pendente.**
+> Cópia `C:/Users/babus/Desktop/AssisScript/work/frame-worker-20261103`,
+> branch `work/m3-frame-worker-2026-11-03`, base pública 52ef3ea conferida.
+> Frame HTDL/FS/SSC/leitura e worker ASV2 com compilação limitada, ativação
+> conjunta, FIFO/backpressure e reflow sem reiniciar estado/programa.
+> LOAD_CATALOG explícito conserva LOAD bootstrap estrito. Evidência nativa
+> Windows/Linux x64, 67 exemplos por host e instalações isoladas no relatório.
+> Publicação desta unidade em preparação; conferir adendo antes de afirmar push.
+> A demonstração anterior abriu; duas capturas Computer Use expiraram nesta
+> sessão. Sem aceite desktop/leitor real/DPI/IME/monitores.
+> [Relatório](../relatorios/2026-11-03-m3-frame-worker.md).
+> Próximo: loader externo, controles/imagens/live regions; células por nó,
+> inscrições/strings SDK, identidade incremental/editor, RSS/disco/órfãos,
+> macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites
+> continuam integralmente na fila. Easy por último. Entradas abaixo históricas.
+
 > **Publicação confirmada — 47,50%, 03/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/catalog-frame-20261103`,
 > branch `work/m3-catalog-frame-2026-11-03`, implementação 8007b5c e revisão

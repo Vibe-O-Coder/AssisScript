@@ -1,0 +1,21 @@
+ASSIS: executável nativo gerado em C:\Users\babus\AppData\Local\Temp\assis-page-reader-c30bhyp_\page-worker.exe
+PAGE_READER_CANDIDATE {"worker_sha256": "994cc1a9a933394c099aada70084df0a81226288e6e189268029a92b7e86d6f1", "mode": "optimized"}
+test_catalog_sdk_preorder_includes_nonvisual_inline_and_hidden_nodes (__main__.FrameWorker.test_catalog_sdk_preorder_includes_nonvisual_inline_and_hidden_nodes) ... ok
+test_composed_frame_sdk_keyboard_and_reflow_use_distinct_identities (__main__.FrameWorker.test_composed_frame_sdk_keyboard_and_reflow_use_distinct_identities) ... ok
+test_examples_and_five_generated_formats_have_separate_native_acceptance (__main__.FrameWorker.test_examples_and_five_generated_formats_have_separate_native_acceptance) ... ok
+test_fifo_backpressure_enter_repeat_hidden_disabled_and_close (__main__.FrameWorker.test_fifo_backpressure_enter_repeat_hidden_disabled_and_close) ... ok
+test_interactive_example_native_once_and_smoke (__main__.FrameWorker.test_interactive_example_native_once_and_smoke) ... ok
+test_links_remain_local_host_actions_and_never_post_sdk_button_events (__main__.FrameWorker.test_links_remain_local_host_actions_and_never_post_sdk_button_events) ... ok
+test_mutable_source_code_style_and_motion_are_copied_before_return (__main__.FrameWorker.test_mutable_source_code_style_and_motion_are_copied_before_return) ... ok
+test_native_publication_failure_retry_reflow_and_accessible_activation (__main__.FrameWorker.test_native_publication_failure_retry_reflow_and_accessible_activation) ... ok
+test_navigation_freezes_actions_and_discards_old_queue_selection_and_frame (__main__.FrameWorker.test_navigation_freezes_actions_and_discards_old_queue_selection_and_frame) ... ok
+test_parse_style_motion_metric_worker_failures_and_abort_preserve_active (__main__.FrameWorker.test_parse_style_motion_metric_worker_failures_and_abort_preserve_active) ... ok
+test_real_os_allocation_refusal_preserves_active_worker_and_frame (__main__.FrameWorker.test_real_os_allocation_refusal_preserves_active_worker_and_frame) ... ok
+test_source_compilation_copies_bundle_and_abort_preserves_previous (__main__.FrameWorker.test_source_compilation_copies_bundle_and_abort_preserves_previous) ... ok
+test_transformed_pointer_targets_the_same_sdk_node_and_rejects_forged_events (__main__.FrameWorker.test_transformed_pointer_targets_the_same_sdk_node_and_rejects_forged_events) ... ok
+test_worker_fuel_failure_keeps_reading_and_independent_neighbor_and_recovers (__main__.FrameWorker.test_worker_fuel_failure_keeps_reading_and_independent_neighbor_and_recovers) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 117.377s
+
+OK

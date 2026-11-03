@@ -1,0 +1,36 @@
+{
+  "schema": "frame-worker-desktop-attempt-v1",
+  "date": "2026-11-03",
+  "status": "not-run",
+  "application": "AssisScript - catalogo de leitura",
+  "attempts": [
+    {
+      "operation": "sky.launch_app unconfirmed build/catalog-reader-visual.exe path",
+      "result": "Computer Use app approval timed out; no target window"
+    },
+    {
+      "operation": "sky.launch_app confirmed development bundle bin/catalog-reader-visual.exe path",
+      "result": "success; unique target selected from sky.list_windows"
+    },
+    {
+      "operation": "sky.get_window_state screenshot only",
+      "result": "FrameArrived timed out: timed out waiting on channel"
+    },
+    {
+      "operation": "sky.list_windows / sky.get_window reselection / screenshot only",
+      "result": "window capture timed out: timed out waiting on channel"
+    }
+  ],
+  "screenshots": 0,
+  "inputs": 0,
+  "application_opened": true,
+  "artifacts_sha256": {
+    "build/catalog-development-windows-20261103/bin/catalog-reader-visual.exe": "bc8d1fd9be72ae46cbfd7c42079728e2b64de99844c5300bc3a4a0dceffd2717",
+    "build/catalog-development-windows-20261103/bin/assis_platform_v1.dll": "08a4023f9cb1b09bb19752ebbd9a5e63421e6e0b9f63feed9e88341196dd1789",
+    "exemplos/63_catalog_reader_window.assis": "0f258d7cbcf17258ea92d3d1afa4d025d2d1eb3696fdb9be9225abefd73ddfaf"
+  },
+  "limitations": [
+    "Previous published catalog demonstration was opened; the new Frame/worker window is covered only by native once/smoke tests.",
+    "No desktop appearance, real screen reader, OS DPI, multiple monitor, IME or production acceptance."
+  ]
+}

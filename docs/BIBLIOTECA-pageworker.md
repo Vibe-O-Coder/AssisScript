@@ -91,3 +91,12 @@ macOS/ARM64/provider ausente não recebem fallback com isolamento anunciado.
 G2 e a escolha geral VM/Wasm continuam abertos. Linux é prova delimitada,
 sem páginas remotas, broker, partição de produto ou FS/SSC. Reader usa a mesma
 transação nos testes; aceites reais de desktop e leitor continuam pendentes.
+# Continuação LOAD_CATALOG
+
+03/11/2026: `Worker.load_catalog(...)` tem os mesmos argumentos de `load`, mas
+envia ASIP/1 operação 9/resposta 137 para a projeção estática do catálogo HTDL.
+`load` conserva LOAD/1 bootstrap estrito. Não há fallback nem execução de
+scripts HTDL. O provider C/ABI 1 e imports SDK não mudam; o código do worker
+precisa corresponder ao [perfil](ecossistema/PERFIL-FRAME-WORKER-V1.md).
+O coordenador [frameworker](BIBLIOTECA-frameworker.md) integra esse caminho ao
+Frame FS/SSC com publicação conjunta e preservação do ativo em falhas.

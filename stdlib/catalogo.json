@@ -380,14 +380,30 @@
       "required": false,
       "doc": "BIBLIOTECA-framereader.md",
       "description": "Selecao por grafemas sobre Frame composto, eventos versionados e copia explicita.",
-      "dependencies": ["pageframe", "reader"]
+      "dependencies": [
+        "pageframe",
+        "reader"
+      ]
     },
     {
       "name": "framehost",
       "required": false,
       "doc": "BIBLIOTECA-framehost.md",
       "description": "Ativacao conjunta local de HTDL bootstrap/catalogo de leitura, FS, SSC e Frame.",
-      "dependencies": ["pagepresent"]
+      "dependencies": [
+        "pagepresent"
+      ]
+    },
+    {
+      "name": "frameworker",
+      "required": false,
+      "doc": "BIBLIOTECA-frameworker.md",
+      "description": "Frame HTDL/FS/SSC e worker ASV2 com compilacao limitada, ativacao conjunta e eventos versionados.",
+      "dependencies": [
+        "framehost",
+        "pageworker",
+        "pagecompiler"
+      ]
     }
   ]
 }

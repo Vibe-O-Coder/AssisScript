@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-03",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "native-local-reading-catalog-fragments-and-accessibility",
+  "assessment": "native-local-frame-worker-atomic-events",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -33,7 +33,9 @@
             "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md",
             "docs/relatorios/2026-11-03-m3-catalog-frame.md",
             "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
-            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md"
+            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md",
+            "docs/relatorios/2026-11-03-m3-frame-worker.md",
+            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json"
           ]
         },
         {
@@ -84,7 +86,9 @@
             "docs/ecossistema/evidencias/m3-presentation-core-2026-11-02/summary.json",
             "docs/ecossistema/PERFIL-APRESENTACAO-LOCAL-V1.md",
             "docs/relatorios/2026-11-03-m5-frame-reader.md",
-            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json",
+            "docs/relatorios/2026-11-03-m3-frame-worker.md",
+            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json"
           ]
         },
         {
@@ -486,7 +490,9 @@
             "tests/reader_oracle.c",
             "docs/relatorios/2026-11-03-m3-catalog-frame.md",
             "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
-            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md"
+            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md",
+            "docs/relatorios/2026-11-03-m3-frame-worker.md",
+            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json"
           ]
         }
       ]
@@ -732,21 +738,25 @@
             "local:htdl/docs/03-assisscript-no-navegador.md",
             "docs/ENGLISH-API.md",
             "docs/relatorios/2026-11-02-m0-page-runtime.md",
-            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m0-page-runtime-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-03-m3-frame-worker.md",
+            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json"
           ]
         },
         {
           "id": "E07-04",
           "name": "Estado, eventos e transações",
-          "level": 2,
+          "level": 3,
           "acceptance": "Implementar células por página/nó, inscrição/desinscrição, snapshot e fila determinística; cobrir teclado/ponteiro, disabled/hidden, remoção e falhas sem handlers tardios.",
-          "baseline": "Estado de foco/gestos/scroll por documento e eventos determinísticos com identidade/seq, hidden/disabled e fechamento. Sem células/inscrições, handlers de página, mutação ou transações completas.",
+          "baseline": "Células por página e handlers ASV2 agora integrados ao Frame HTDL/FS/SSC: ações de teclado/ponteiro/MSAA chegam ao preorder semântico completo; FIFO/ACK/backpressure, revisão visual separada, navegação/abort/close e falhas preservam ou revogam juntos o estado. Windows/Linux x64 e ambos modos executados. Células por nó, inscrições, valores gerais e mutação pelo SDK permanecem abertos.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
             "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json",
             "docs/relatorios/2026-11-03-m5-frame-reader.md",
-            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json",
+            "docs/relatorios/2026-11-03-m3-frame-worker.md",
+            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json"
           ]
         },
         {
@@ -754,7 +764,7 @@
           "name": "Loader e ativação atômica",
           "level": 3,
           "acceptance": "Carregar HTDL, código, FS/SSC e recursos locais/remotos sob política; resolver versões/dependências, validar antes de ativar e descartar resultados atrasados; cache somente de artefato imutável.",
-          "baseline": "Além do bundle bootstrap já validado, catálogo de leitura negociado e destinos #id são validados antes da ativação conjunta. Referências ausentes, versões desconhecidas e recursos fora do perfil preservam ativo; loader externo e integração ASV2 continuam abertos.",
+          "baseline": "Ativação conjunta local de HTDL bootstrap/catálogo de leitura, FS/SSC, Frame/Reader/Packet e worker ASV2 com compilação limitada opcional, concessões e publicação nativa antes das transferências sem alocação. Falhas, cancelamento e respostas antigas executados; loader de recursos externos/remotos e cache geral continuam abertos.",
           "evidence": [
             "local:htdl/docs/15-htdl-0.2-e-carregamento.md",
             "docs/relatorios/2026-11-01-m3-parser-htdl.md",
@@ -766,7 +776,9 @@
             "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json",
             "docs/relatorios/2026-11-03-m3-catalog-frame.md",
             "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
-            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md"
+            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md",
+            "docs/relatorios/2026-11-03-m3-frame-worker.md",
+            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json"
           ]
         }
       ]
@@ -1048,7 +1060,9 @@
             "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json",
             "docs/relatorios/2026-11-03-m3-catalog-frame.md",
             "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
-            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md"
+            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md",
+            "docs/relatorios/2026-11-03-m3-frame-worker.md",
+            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json"
           ]
         },
         {
@@ -3543,7 +3557,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-03",
+      "rubric_version": 1,
+      "label": "Frame e worker ASV2 com eventos/estado transacionais: 47,90%, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 3,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 3,
+        "E07-03": 2,
+        "E07-04": 3,
+        "E07-05": 3,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 1,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "47,50%, 0/5 gates; meta 50% pendente. Catálogo de leitura de 18 tipos no Frame FS/SSC, listas com marcadores medidos, links #id, teclado e MSAA adicional com rollback. Windows/Linux x64 executados; resultados exatos no relatório. Autorização explícita resolveu o bloqueio: implementação 8007b5c e revisão 9f4a23a publicadas, SHA/árvore completa e 2638 blobs/78 paths conferidos. PR não criada: conector 403. Na repetição solicitada, a janela final abriu pelo Computer Use, mas as duas capturas expiraram; sem aceite desktop/leitor real/DPI/IME. Adendo documental pelo histórico. Controles/imagens/live regions, loader externo/ASV2, identidade incremental/editor, SDK geral, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites seguem integralmente na fila. Easy por último."
+  "assessment_note": "47,90%, 0/5 gates; meta 50% pendente. Frame/HTDL/FS/SSC/leitura e programa ASV2 isolado preparados e ativados juntos; compilação com orçamento, FIFO/backpressure, reflow sem reiniciar o programa e LOAD_CATALOG explícito conservando LOAD bootstrap. Evidência Windows/Linux x64, exemplos e instalação isolada no relatório; geração ARM/macOS não é execução. Nova tentativa Computer Use abriu a demonstração publicada anterior, mas ambas capturas expiraram; sem aceite desktop/leitor/DPI/IME. Publicação desta unidade em preparação; não afirmar push antes da conferência remota. Controles/imagens/live regions, loader externo, células por nó/inscrições/strings SDK, identidade incremental/editor, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites seguem integralmente na fila. Easy por último."
 }

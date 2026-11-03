@@ -133,6 +133,31 @@ class PageWorker(unittest.TestCase):
         self.send(a,frame(8,5,identity=(9,11,1)));self.eof(a)
         _,body=self.request(b,frame(2,2,identity=(8,12,3),args=(10000,0,0,0)));self.assertEqual(body[1],42)
 
+    def test_catalog_load_is_explicit_and_bootstrap_remains_strict(self):
+        source=HOST.parser.document('<div type="main"><div type="list"><div type="item"><div type="paragraph">Text</div></div></div><div type="button">Add</div></div>').encode()
+        code=self.compile_page('import "std/page.assis";safe fn main():int{return htdl_v1::node_count();}')
+        payload=struct.pack('<I',len(source))+source+code
+        old=self.start();self.hello(old)
+        header,_=self.request(old,frame(1,payload=payload,args=(0,16,100000,1000)))
+        self.assertEqual(header[8],-1203);self.eof(old)
+        current=self.start();self.hello(current)
+        header,_=self.request(current,frame(9,payload=payload,args=(0,16,100000,1000)))
+        self.assertEqual((header[2],header[8]),(137,0))
+        self.request(current,frame(4,2))
+        for request in range(3,103):
+            header,body=self.request(current,frame(2,request,args=(10000,0,0,0)))
+            if header[8]==2:break
+        else:self.fail('catalog SDK event did not finish')
+        # XML element count is independent of the product's query/box encoding.
+        import xml.etree.ElementTree as ET
+        self.assertEqual(body[1],sum(1 for _ in ET.fromstring(source).iter()))
+        self.send(current,frame(9,request+1,payload=payload,args=(0,16,100000,1000)));self.eof(current)
+        for damaged in [b'',struct.pack('<I',65537)+code,struct.pack('<I',len(source))+source+bytes(16)]:
+            token=self.start();self.hello(token);self.send(token,frame(9,payload=damaged,args=(0,16,100000,1000)))
+            if len(damaged)<20 or damaged[:4]==struct.pack('<I',65537):self.eof(token)
+            else:
+                header,_=self.receive(token);self.assertLess(header[8],0);self.eof(token)
+
     def test_native_tokens_limits_slots_and_release(self):
         token=ctypes.c_int64(99);self.assertEqual(self.lib.assw_open(b'relative',8,0,ctypes.byref(token)),-1);self.assertEqual(token.value,0)
         self.assertEqual(self.lib.assw_close(9223372036854775807),-2)

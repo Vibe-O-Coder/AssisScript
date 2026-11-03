@@ -38,11 +38,20 @@ public final class Worker{
     /// LOAD is single-use. Navigation prepares another Worker and swaps owners
     /// only after its successful load; closing the old owner revokes all work.
     fn load(borrow mut self,borrow source:slice<byte>,borrow code:slice<byte>,memory:int,frames:int,fuel:int,calls:int,now:int,timeout:int):int{
+        return self.load_profile(source,code,memory,frames,fuel,calls,now,timeout,false);
+    }
+    /// Additional ASIP/1 LOAD_CATALOG (9). Older workers reject it; LOAD (1)
+    /// remains bootstrap-strict. Neither operation executes HTDL scripts.
+    fn load_catalog(borrow mut self,borrow source:slice<byte>,borrow code:slice<byte>,memory:int,frames:int,fuel:int,calls:int,now:int,timeout:int):int{
+        return self.load_profile(source,code,memory,frames,fuel,calls,now,timeout,true);
+    }
+    private fn load_profile(borrow mut self,borrow source:slice<byte>,borrow code:slice<byte>,memory:int,frames:int,fuel:int,calls:int,now:int,timeout:int,catalog:bool):int{
         if(!self.ready_flag || self.loaded || self.kind>=0){return -12;}
         if(len(source)>65536 || len(code)>131088 || len(code)<16 || memory<0 || memory>65536 || frames<1 || frames>128 || fuel<1 || fuel>1000000 || calls<0 || calls>10000){return -1;}
-        val result:int=self.start(1,now,timeout);if(result!=0){return result;}
+        let kind:int=1;if(catalog){kind=9;}
+        val result:int=self.start(kind,now,timeout);if(result!=0){return result;}
         val length:int=4+len(source)+len(code);val instance:int=self.instance;val origin:int=self.origin;val epoch:int=self.epoch;val request:int=self.request;
-        pagewire::header(self.output,1,length,instance,origin,epoch,request);
+        pagewire::header(self.output,kind,length,instance,origin,epoch,request);
         for(let i:int=0;i<4;i++){self.output[80+i]=byte((len(source)>>(8*i))&255);}
         for(let i:int=0;i<len(source);i++){self.output[84+i]=source[i];}
         for(let i:int=0;i<len(code);i++){self.output[84+len(source)+i]=code[i];}
@@ -94,8 +103,8 @@ public final class Worker{
             }
         }
         if(!valid){return self.fail(-22);}if(self.require_isolation && reply.isolation!=1){return self.fail(-3);}
-        self.answer=reply;if(self.kind==0){self.ready_flag=true;}if(self.kind==1 && reply.code==0){self.loaded=true;}
-        val closed:bool=self.kind==7 || (self.kind==1 && reply.code!=0);self.kind=-1;if(closed){self.close();}return 1;
+        self.answer=reply;if(self.kind==0){self.ready_flag=true;}if((self.kind==1 || self.kind==9) && reply.code==0){self.loaded=true;}
+        val closed:bool=self.kind==7 || ((self.kind==1 || self.kind==9) && reply.code!=0);self.kind=-1;if(closed){self.close();}return 1;
     }
 }
 

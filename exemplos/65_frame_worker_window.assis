@@ -1,0 +1,61 @@
+// Trusted catalog reader. Lists have markers, Tab/Enter activates a fragment;
+// Space scrolls, drag selects, and Ctrl+A/C copies explicitly.
+import "std/frameworker.assis";
+safe fn option(borrow name:slice<byte>):bool{
+    if(arg_count()!=4 || arg_size(3)!=len(name)){return false;}
+    own data:*byte=try_alloc<byte>(len(name)+1);if(data==null){return false;}
+    if(arg_copy(3,data,len(name)+1)!=len(name)){return false;}
+    for(let i:int=0;i<len(name);i++){if(data[i]!=name[i]){return false;}}return true;
+}
+safe fn argument(index:int):own *byte{unsafe{
+    val length:int=arg_size(index);if(length<1 || length>4096){return try_alloc<byte>(0);}
+    own data:*byte=try_alloc<byte>(length+1);if(data==null){return move(data);}
+    if(arg_copy(index,data,length+1)!=length){return try_alloc<byte>(0);}return move(data);
+}}
+safe fn main():int{
+    own compiler:*byte=argument(1);own worker:*byte=argument(2);if(compiler==null || worker==null || len(compiler)<2 || len(worker)<2){return 2;}
+    if(!pagepresent::available() || !pagepresent::catalog_available()){print("Windows frame provider required");return 4;}
+    own s:frameworker::Session=try_new frameworker::Session(32000000,250000,7,19,23);
+    own w:window::Window=try_new window::Window(7,640,420,utf8("AssisScript - Frame e programa isolado"));
+    if(s==null || !s.is_open() || w==null || !w.opened()){return 4;}
+    let policy:reader::Preferences=reader::preferences(w);if(policy.status!=0){return 4;}
+    val result:int=s.prepare_source(slice_of(compiler,0,len(compiler)-1),slice_of(worker,0,len(worker)-1),utf8("<div type=document version=0.1 lang=pt-BR><div type=head><div type=meta name=description content=\"Leitura local\"></div><div type=title>Catalogo de leitura</div></div><div type=body id=body><div type=main><div type=heading level=1 id=title>Catalogo de leitura</div><div type=button id=add>Incrementar estado isolado</div><div type=link id=jump href=\"#end\">Ir para o final</div><div type=list ordered=true><div type=item><div type=paragraph id=first>Primeiro item: texto selecionavel e acessivel.</div></div><div type=item><div type=paragraph>Segundo item com marcador fora da copia.</div></div></div><div type=paragraph id=end>Fim do documento.</div></div></div></div>"),
+        utf8("import \"std/page.assis\";safe fn main():int{if(htdl_v1::event_get(0)==2){return htdl_v1::state_set(0,htdl_v1::state_get(0)+1);}return htdl_v1::state_get(0);}"),utf8("flow Body{20px -> layout.padding;column(gap:12px) -> layout.children;#f4f1ea -> paint.background;}bind #body to Body;flow Title{24px -> text.size;700 -> text.weight;}bind #title to Title;flow First{360px -> layout.height;}bind #first to First;"),
+        utf8(""),framehost::reading_versions(),false,128,3,true,640,420,65536,policy,pagepresent::measure,new frameworker::Limits(0,16,100000,1000,5000),new frameworker::Grants(true,false),monotonic_ms());
+    if(result!=0){print("PREPARE",result);return 5;}
+    val deadline:int=monotonic_ms()+10000;while(!s.ready() && monotonic_ms()<deadline){if(s.advance(monotonic_ms())<0){return 5;}sleep_ms(1);}
+    if(!s.ready() || s.publish(w)!=0 || w.present()!=0){return 5;}
+    if(option(utf8("--once"))){print("FRAME WORKER WINDOW",s.snapshot().frame.version(),s.snapshot().frame.size());return int(w.close()!=0);}
+    if(option(utf8("--smoke"))){
+        s.dispatch(1,1,new window::Event(0,3,7,1,17,1,1));s.dispatch(1,1,new window::Event(0,3,7,1,65,1,2));
+        val selected:int=len(s.snapshot().reading.selected_text());
+        if(s.reflow(640,420,0,131072,25,true,policy,pagepresent::measure)!=0 || s.publish_reflow(w)!=0 || w.present()!=0){return 5;}
+        assert(len(s.snapshot().reading.selected_text())==selected);print("FRAME WORKER WINDOW",s.snapshot().frame.version(),s.snapshot().frame.size());return int(w.close()!=0);
+    }
+    let width:int=640;let height:int=420;let scale:int=65536;let visible:bool=true;let coherent:bool=true;
+    while(w.opened()){
+        val step:int=s.advance(monotonic_ms());if(step<0){print("PROGRAM ERROR",step);}
+        val event:window::Event=w.poll(10);if(event.status<0){return 4;}if(event.status!=0){continue;}
+        if(event.kind==1){break;}
+        let repaint:bool=false;let scroll:int=s.snapshot().frame.scroll_y();
+        if(event.kind==13){visible=event.arg0!=0;s.cancel_gesture();}
+        if(event.kind==2 && event.arg0>0 && event.arg1>0){width=event.arg0;height=event.arg1;s.cancel_gesture();repaint=true;}
+        if(event.kind==12){policy=reader::preferences(w);s.cancel_gesture();repaint=true;}
+        if(coherent && visible){
+            val projection:int=s.snapshot().frame.version();val action:frameworker::Action=s.dispatch(s.document_id(),projection,event);val change:viewer::Change=action.change;
+            if(change.kind==4){if(s.copy(w)!=0){print("COPY FAILED");}}
+            if(change.kind==5){scale=131072;repaint=true;}if(change.kind==6){scale=65536;repaint=true;}
+            if(change.kind==8){val target:int=s.fragment_scroll(projection,change.node);if(target>=0){scroll=target;repaint=true;}}
+            if(change.kind==7){scroll=s.snapshot().reading.scroll_target();repaint=true;}
+            if(change.kind==1){repaint=true;}
+        }
+        // Hold the published frame for the whole gesture; discard timer debt.
+        if(s.snapshot().reading.gesture_active()){continue;}
+        if(repaint){
+            val code:int=s.reflow(width,height,scroll,scale,0,visible,policy,pagepresent::measure);
+            coherent=code==0;
+            if(coherent){coherent=s.publish_reflow(w)==0;if(coherent){if(w.present()!=0){return 4;}}}
+            if(!coherent){s.abort_reflow();print("FRAME FAILED - retry on resize");}
+        }
+    }s.close();return int(w.close()!=0);
+}
