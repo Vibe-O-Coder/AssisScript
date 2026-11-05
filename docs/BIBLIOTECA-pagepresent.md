@@ -63,3 +63,10 @@ publicar e fechar, ou sem argumento para teclado/ponteiro/redimensionamento.
 O instalador seleciona bibliotecas e exemplos; não instala automaticamente a
 DLL de desenvolvimento. SSC, seleção de leitura, IME, catálogo completo visual,
 DPI/monitores/leitor real e aceites finais continuam separados.
+
+Continuação 04/11/2026: `clock_ms()` usa QueryPerformanceCounter no Windows e
+monotonic_ms nos fallbacks sem provider; erro -5 thread/-6 OS. Sua época é
+diferente do builtin: não misturar em deadlines. Novo símbolo assisp_frame_clock
+exige DLL correspondente, preservando versões/imports antigos. Métricas curtas
+têm cache exato de 512 entradas de até 256 bytes, limpo em mudanças do OS e
+fechamento da última janela; não retém recursos GDI.

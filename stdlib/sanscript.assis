@@ -145,6 +145,9 @@ public final class Motion{
         if(axis==2 && self.y!=null){return new fluxstyle::Number(0,self.y.speed());}return new fluxstyle::Number(302,0);
     }
     fn asleep(borrow self):bool{return self.active && (self.x==null || self.x.asleep()) && (self.y==null || self.y.asleep());}
+    /// Whether another timer sample can advance dynamics. Protected/hidden and
+    /// paused states keep no scheduling debt and do not request busy redraws.
+    fn moving(borrow self):bool{return self.active && !self.tab_paused && !self.node_hidden && !self.protected && !self.asleep();}
     fn close(borrow mut self):void{
         self.active=false;self.remainder=0;own x:Channel=move(self.x);own y:Channel=move(self.y);
     }

@@ -1,0 +1,32 @@
+// Trusted demo shell. Every OS path is a separate explicit command-line grant;
+// logical keys/HTDL never choose a path. File's legacy path allocation remains
+// outside the loader's recoverable payload budget.
+import "std/frameworker.assis";
+namespace resource_demo;
+safe fn open_argument(index:int):own File{unsafe{
+    val size:int=arg_size(index);if(size<1 || size>32767){return file_open("",9);}
+    let path:*byte=alloc<byte>(size+1);defer free(path);
+    if(arg_copy(index,path,size+1)!=size){return file_open("",9);}return file_open(text(path),0);
+}}
+safe fn deliver_file(borrow mut bundle:pageresources::Batch,index:int,argument:int):int{
+    own input:File=open_argument(argument);if(input==null){return -17;}
+    own data:*byte=try_alloc<byte>(65536);own chunk:*byte=try_alloc<byte>(4096);
+    if(data==null || chunk==null){return -4;}let size:int=0;
+    while(true){
+        val read:int=file_read(input,chunk,4096);if(read<0){return -17;}if(read==0){break;}
+        if(read>65536-size){return -3;}for(let i:int=0;i<read;i++){data[size+i]=chunk[i];}size+=read;
+    }
+    if(file_close(input)!=0){return -17;}
+    return bundle.deliver(bundle.envelope(index),slice_of(data,0,size),monotonic_ms());
+}
+public safe fn load():own pageresources::Batch{
+    own bundle:pageresources::Batch=try_new pageresources::Batch(19,23,1,4,262144,monotonic_ms()+10000);
+    if(bundle==null || !bundle.is_open()){return move(bundle);}
+    if(bundle.add(1,2,utf8(""),utf8("index.htdl"))!=1 ||
+       bundle.add(2,1,utf8("index.htdl"),utf8("styles/main.fxs"))!=2 ||
+       bundle.add(3,1,utf8("styles/main.fxs"),utf8("./main.sscr"))!=3 ||
+       bundle.add(4,1,utf8("index.htdl"),utf8("code/main.assis"))!=4 || bundle.seal(monotonic_ms())!=0){bundle.cancel();return move(bundle);}
+    // Completion order is independent of the deterministic manifest order.
+    for(let i:int=3;i>=0;i--){if(deliver_file(bundle,i,i+3)!=0){bundle.cancel();break;}}
+    return move(bundle);
+}

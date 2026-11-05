@@ -2,6 +2,7 @@ namespace pagepresent;
 import "std/pageframe.assis";
 import "std/framereader.assis";
 platform("windows-x64"){
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_clock") fn native_clock():int;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_version") fn native_version():int;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_current") fn native_current(window:int):int;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_measure") fn native_measure(borrow content:*byte,size:int,font:i32,weight:i32):int;
@@ -10,6 +11,7 @@ extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_catalog_ver
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_catalog_commit") fn native_catalog_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32;
 }
 platform("linux"){
+safe fn native_clock():int{return monotonic_ms();}
 pure fn native_version():int{return -3;}
 pure fn native_catalog_version():int{return -3;}
 safe fn native_catalog_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
@@ -18,6 +20,7 @@ safe fn native_measure(borrow content:*byte,size:int,font:i32,weight:i32):int{re
 safe fn native_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
 }
 platform("macos"){
+safe fn native_clock():int{return monotonic_ms();}
 pure fn native_version():int{return -3;}
 pure fn native_catalog_version():int{return -3;}
 safe fn native_catalog_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
@@ -25,6 +28,9 @@ pure fn native_current(window:int):int{return -3;}
 safe fn native_measure(borrow content:*byte,size:int,font:i32,weight:i32):int{return -3;}
 safe fn native_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
 }
+/// Milliseconds from a high-resolution monotonic clock for native animation.
+/// Separate epoch from monotonic_ms; never mix the two in one deadline.
+public safe fn clock_ms():int{unsafe{return native_clock();}}
 public safe fn available():bool{unsafe{return native_version()==1;}}
 public safe fn catalog_available():bool{unsafe{return native_catalog_version()==1;}}
 public safe fn measure(borrow content:slice<byte>,size:int,weight:int):int{

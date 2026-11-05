@@ -50,3 +50,7 @@ Quota agregada de 256 canais por página, composição, geometria compartilhada
 com desenho/hit test/acessibilidade, foco nativo/IME, loader, LSP e ciclo de
 vida de todos os nós ainda exigem integração do host. Este perfil por nó não
 declara `motion-0.1-experimental` completo nem um gate visual aprovado.
+
+Continuação 04/11/2026: `Motion.moving()` distingue dinâmica ativa de repouso,
+pausa, hidden e proteção. É consulta para o agendador do shell; não muda
+coeficientes, frequência, rounding ou o limite de oito passos por amostra.

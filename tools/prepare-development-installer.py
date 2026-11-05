@@ -19,10 +19,11 @@ sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--prepare-only',action='store_true')
-    parser.add_argument('--profile',choices=['frame','catalog','worker'],default='frame')
+    parser.add_argument('--profile',choices=['frame','catalog','worker','resources'],default='frame')
     args=parser.parse_args()
-    worker_reading=args.profile=='worker'
-    catalog_reading=args.profile in ('catalog','worker')
+    resources=args.profile=='resources'
+    worker_reading=args.profile in ('worker','resources')
+    catalog_reading=args.profile in ('catalog','worker','resources')
     evidence=ROOT/('docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03' if catalog_reading else 'docs/ecossistema/evidencias/m5-page-frame-2026-11-02')
     stage=ROOT/('build/catalog-development-windows-20261103' if catalog_reading else 'build/development-windows-20261102')
     headless_example='62_catalog_reader.assis' if catalog_reading else '56_page_frame.assis'
@@ -34,8 +35,13 @@ def main():
         stage=ROOT/'build/frameworker-development-windows-20261103'
         headless_example='64_frame_worker.assis';window_example='65_frame_worker_window.assis'
         headless_output=b'FRAME WORKER 42 1 1\n';window_output=b'FRAME WORKER WINDOW 1 11\n'
-    date='20261103' if catalog_reading else '20261102'
-    shown_date='03/11/2026' if catalog_reading else '02/11/2026'
+    if resources:
+        evidence=ROOT/'docs/ecossistema/evidencias/m3-local-resources-2026-11-04'
+        stage=ROOT/'build/resources-development-windows-20261104'
+        headless_example='66_resource_frame.assis';window_example='67_resource_frame_window.assis'
+        headless_output=b'RESOURCE FRAME 4 0 1\n';window_output=b'FRAME WORKER WINDOW 1 11\n'
+    date='20261104' if resources else '20261103' if catalog_reading else '20261102'
+    shown_date='04/11/2026' if resources else '03/11/2026' if catalog_reading else '02/11/2026'
 
     if os.name!='nt':raise SystemExit('This development bundle targets Windows x64')
     candidate=ROOT/'build/assis.exe'
@@ -54,6 +60,8 @@ def main():
         names.difference_update({'docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json','docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/development-bundle.json'})
     if worker_reading:
         names.difference_update({'docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json','docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/development-bundle.json'})
+    if resources:
+        names.difference_update({'docs/ecossistema/evidencias/m3-local-resources-2026-11-04/summary.json','docs/ecossistema/evidencias/m3-local-resources-2026-11-04/development-bundle.json','docs/ecossistema/evidencias/m3-local-resources-2026-11-04/publication.json'})
     for name in sorted(names-{'bin/assis_platform_v1.dll','BUILD-INFO.json'}):
         source=candidate if name=='bin/assis.exe' else ROOT/name
         target=stage/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target)
@@ -75,7 +83,7 @@ def main():
         names.update({'bin/assis_worker_v1.dll','bin/page-worker.exe'})
     # Private manifest adds the matching provider and build identity only to this
     # Windows development distribution, preserving the cross-platform release.
-    source_dir=ROOT/('build/frameworker-development-installer-source' if worker_reading else 'build/catalog-development-installer-source' if catalog_reading else 'build/development-installer-source');source_dir.mkdir(parents=True,exist_ok=True)
+    source_dir=ROOT/('build/resources-development-installer-source' if resources else 'build/frameworker-development-installer-source' if worker_reading else 'build/catalog-development-installer-source' if catalog_reading else 'build/development-installer-source');source_dir.mkdir(parents=True,exist_ok=True)
     for name in ['windows_setup.c','install_optional.inc','version.h']:
         shutil.copyfile(ROOT/'src'/name,source_dir/name)
     manifest='/* Matched development bundle; not a release manifest. */\n'
@@ -97,6 +105,16 @@ def main():
         f'Para teste sem instalar: bin\\assis.exe build exemplos\\{window_example} --safe -o bin\\paineis.exe\n'
         'Depois: bin\\paineis.exe --once (ou sem argumento para interagir).\n'
         'Preserve import "std/..."; -I nao atualiza um compilador antigo.\n',encoding='utf-8')
+    if resources:
+        launchers=[('Abrir-Leitura.cmd','65_frame_worker_window.assis','leitura.exe',False,True),
+            ('Abrir-Paineis.cmd','59_page_motion_window.assis','paineis.exe',False,False),
+            ('Abrir-Recursos.cmd','67_resource_frame_window.assis','recursos.exe',True,True)]
+        for name,example,output,external,worker_args in launchers:
+            command='@echo off\nsetlocal\n"%~dp0bin\\assis.exe" build "%~dp0exemplos\\'+example+'" --safe -o "%~dp0bin\\'+output+'"\nif errorlevel 1 exit /b %errorlevel%\n"%~dp0bin\\'+output+'"'
+            if worker_args:command+=' "%~dp0bin\\assis.exe" "%~dp0bin\\page-worker.exe"'
+            if external:
+                command+=''.join(' "%~dp0exemplos\\resource-demo\\'+asset+'"' for asset in ('index.htdl','main.fxs','main.sscr','main.assis'))
+            (stage/name).write_text(command+'\n',encoding='ascii');files.add(name)
     info=dict(schema='assisscript-development-bundle-v1',release=False,base=native['base'],
         compiler_sha256=sha(stage/'bin/assis.exe'),provider_sha256=sha(stage/'bin/assis_platform_v1.dll'),
         setup_sha256=sha(stage/'bin/assis-setup.exe'),native_validation=dict(executed=sum(c['executed'] for c in native['checks']),not_run=sum(c['not_run'] for c in native['checks'])),
@@ -121,11 +139,12 @@ def main():
             if worker_reading:
                 assert sha(prefix/'bin/assis_worker_v1.dll')==sha(stage/'bin/assis_worker_v1.dll') and sha(prefix/'bin/page-worker.exe')==sha(stage/'bin/page-worker.exe')
                 run([installed,'build',prefix/'exemplos'/headless_example,'--safe','--debug','-o',prefix/'bin/headless.exe'])
-                headless=run([prefix/'bin/headless.exe',installed,prefix/'bin/page-worker.exe'])
+                resource_paths=[prefix/'exemplos/resource-demo'/name for name in ('index.htdl','main.fxs','main.sscr','main.assis')] if resources else []
+                headless=run([prefix/'bin/headless.exe',installed,prefix/'bin/page-worker.exe',*resource_paths])
             else:headless=run([installed,'run',prefix/'exemplos'/headless_example,'--safe','--debug'])
             assert headless.stdout==headless_output
             run([installed,'build',prefix/'exemplos'/window_example,'--safe','--debug','-o',prefix/'bin/panels.exe'])
-            gui=run([prefix/'bin/panels.exe',installed,prefix/'bin/page-worker.exe','--once'] if worker_reading else [prefix/'bin/panels.exe','--once']);assert gui.stdout==window_output
+            gui=run([prefix/'bin/panels.exe',installed,prefix/'bin/page-worker.exe',*resource_paths,'--once'] if worker_reading else [prefix/'bin/panels.exe','--once']);assert gui.stdout==window_output
             personal=prefix/'personal.txt';personal.write_text('preserve')
             run([stage/'bin/assis-setup.exe','uninstall','--prefix',prefix,'--no-path','--no-associations'])
             assert personal.read_text()=='preserve' and not installed.exists() and not (prefix/'bin/assis_platform_v1.dll').exists()
@@ -133,7 +152,10 @@ def main():
     if worker_reading:
         (stage/'LEIA-PRIMEIRO.txt').write_text('AssisScript - desenvolvimento Windows x64. Nao e release.\nCompilador, provider grafico e worker isolado preparados juntos.\nInstalar: instalar-windows.cmd --no-path --no-associations --with frameworker\nTeste sem instalar: bin\\assis.exe build exemplos\\65_frame_worker_window.assis --safe -o bin\\demo.exe\nAbrir: bin\\demo.exe <caminho absoluto bin\\assis.exe> <caminho absoluto bin\\page-worker.exe> --once\nRemova --once para interagir. Leia BUILD-INFO.json e o relatorio.\n',encoding='utf-8')
         info['files_sha256']['LEIA-PRIMEIRO.txt']=sha(stage/'LEIA-PRIMEIRO.txt');write_info()
-    archive=ROOT/(f'build/AssisScript-frameworker-development-{date}-windows-x64.zip' if worker_reading else f'build/AssisScript-catalog-development-{date}-windows-x64.zip' if catalog_reading else 'build/AssisScript-development-20261102-windows-x64.zip')
+    if resources:
+        (stage/'LEIA-PRIMEIRO.txt').write_text('AssisScript - desenvolvimento Windows x64, 04/11/2026. Nao e release.\nInstalar: instalar-windows.cmd --no-path --no-associations --with frameworker\nCompilar: bin\\assis.exe build exemplos\\67_resource_frame_window.assis --safe -o bin\\recursos.exe\nExecutar: bin\\recursos.exe <compilador absoluto> <worker absoluto> <index.htdl absoluto> <main.fxs absoluto> <main.sscr absoluto> <main.assis absoluto>\nOs quatro arquivos de exemplo estao em exemplos\\resource-demo. Acrescente --once para smoke.\nSem instalar, use Abrir-Leitura.cmd, Abrir-Paineis.cmd ou Abrir-Recursos.cmd na pasta extraida.\n',encoding='utf-8')
+        info['files_sha256']['LEIA-PRIMEIRO.txt']=sha(stage/'LEIA-PRIMEIRO.txt');write_info()
+    archive=ROOT/(f'build/AssisScript-resources-development-{date}-windows-x64.zip' if resources else f'build/AssisScript-frameworker-development-{date}-windows-x64.zip' if worker_reading else f'build/AssisScript-catalog-development-{date}-windows-x64.zip' if catalog_reading else 'build/AssisScript-development-20261102-windows-x64.zip')
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as output:
         for name in sorted(files):output.write(stage/name,'AssisScript-development/'+name)
     print(archive);print('Installation validation:',info['installation_validation'])

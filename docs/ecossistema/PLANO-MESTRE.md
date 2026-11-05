@@ -1,3 +1,21 @@
+> **Continuação local — 48,30%, 04/11/2026, 0/5 gates; meta 50% pendente.**
+> Cópia `C:/Users/babus/Desktop/AssisScript/work/local-resources-20261104`,
+> branch `work/m3-local-resources-2026-11-04`, base pública 33b7431 conferida.
+> Lotes imutáveis de recursos locais, versões/envelopes/cotas/deadline e
+> ativação conjunta Frame/worker; exemplos com quatro arquivos concedidos.
+> Corrigidos atraso de leitura/contador, fila IPC, Ctrl mantido, visibilidade,
+> métricas e cadência SSC. Usuário aprovou leitura/contador/atalhos suaves;
+> painéis receberam nova cadência após feedback. Capturas Computer Use falharam;
+> sem screenshot desktop/leitor real/DPI/IME. Windows 149/0 e Linux 120/29
+> executados/not-run aprovados; 69 exemplos/host e instalações isoladas.
+> Publicação em preparação. Fluidez fina SSC permanece sem aceite.
+> [Relatório](../relatorios/2026-11-04-m3-recursos-responsividade.md).
+> Próximo: loader físico/recursos declarados, controles/imagens/live regions,
+> SDK geral/células por nó/inscrições, identidade incremental/editor, RSS/disco/
+> órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h, distribuição
+> e todos os aceites continuam integralmente na fila. Easy por último.
+> Entradas abaixo históricas; não republicar a pasta original antiga/suja.
+
 > **Publicação confirmada — 47,90%, 03/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/frame-worker-20261103`,
 > branch `work/m3-frame-worker-2026-11-03`, base pública 52ef3ea conferida.

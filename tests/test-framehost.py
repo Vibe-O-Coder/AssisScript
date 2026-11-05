@@ -65,7 +65,7 @@ class FrameHost(unittest.TestCase):
             'assert(s.reflow(100,40,12,131072,25,true,reader::default_preferences(),metric)==0);'
             'assert(s.commit_reflow());assert(s.snapshot().frame.version()==2 && len(s.snapshot().reading.selected_text())==7);'
             'assert(s.dispatch(1,ev(3,65,1,3)).kind==0);'
-            'assert(s.dispatch(2,ev(3,67,1,3)).kind==0);')
+            'assert(s.dispatch(2,ev(3,67,1,3)).kind==4);')
 
     def test_gesture_freezes_timer_until_explicit_cancel_or_release(self):
         self.execute(setup()+f'assert({prepare()}==0);assert(s.commit(1));'

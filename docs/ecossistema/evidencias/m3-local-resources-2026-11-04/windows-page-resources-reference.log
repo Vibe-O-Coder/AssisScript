@@ -1,0 +1,21 @@
+ASSIS: executável nativo gerado em C:\Users\babus\AppData\Local\Temp\assis-page-reader-ft7eaha4\page-worker.exe
+PAGE_READER_CANDIDATE {"worker_sha256": "a18986558235c6d6cbcf43b5a3744e41c1a8a2ae88befd488ff86c6301573dad", "mode": "reference"}
+test_deadline_empty_payload_exact_budget_and_independent_neighbor (__main__.ResourceBatch.test_deadline_empty_payload_exact_budget_and_independent_neighbor) ... ok
+test_out_of_order_envelopes_replay_copy_and_immutable_completion (__main__.ResourceBatch.test_out_of_order_envelopes_replay_copy_and_immutable_completion) ... ok
+test_paths_against_independent_segment_stack_and_invalid_authority (__main__.ResourceBatch.test_paths_against_independent_segment_stack_and_invalid_authority) ... ok
+test_paths_exact_length_and_local_keys_preserve_case (__main__.ResourceBatch.test_paths_exact_length_and_local_keys_preserve_case) ... ok
+test_per_kind_limits_and_retained_quota_after_failure (__main__.ResourceBatch.test_per_kind_limits_and_retained_quota_after_failure) ... ok
+test_plan_deduplicates_exact_keys_versions_and_single_role_roots (__main__.ResourceBatch.test_plan_deduplicates_exact_keys_versions_and_single_role_roots) ... ok
+test_asv2_bundle_commit_reflow_host_data_and_legacy_navigation (__main__.ResourceIntegration.test_asv2_bundle_commit_reflow_host_data_and_legacy_navigation) ... ok
+test_external_file_examples_load_the_exact_grants_and_reject_missing_files (__main__.ResourceIntegration.test_external_file_examples_load_the_exact_grants_and_reject_missing_files) ... ok
+test_external_resource_window_native_once_and_zoom_smoke (__main__.ResourceIntegration.test_external_resource_window_native_once_and_zoom_smoke) ... ok
+test_held_control_shortcuts_survive_zoom_and_focus_loss_cancels_them (__main__.ResourceIntegration.test_held_control_shortcuts_survive_zoom_and_focus_loss_cancels_them) ... ok
+test_native_resource_publish_failure_retry_and_abort_preserve_active_owners (__main__.ResourceIntegration.test_native_resource_publish_failure_retry_and_abort_preserve_active_owners) ... ok
+test_os_allocation_refusal_keeps_a_delivered_resource_and_retryable_slot (__main__.ResourceIntegration.test_os_allocation_refusal_keeps_a_delivered_resource_and_retryable_slot) ... ok
+test_resource_example_emits_five_formats_without_claiming_their_execution (__main__.ResourceIntegration.test_resource_example_emits_five_formats_without_claiming_their_execution) ... ok
+test_source_bundle_compile_abort_failure_and_generation_authority (__main__.ResourceIntegration.test_source_bundle_compile_abort_failure_and_generation_authority) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 43.863s
+
+OK

@@ -1,0 +1,12 @@
+{
+  "status": "initial-failures-not-counted",
+  "notes": [
+    "Initial local Git clone required ordinary escalation because Git sh could not create its signal pipe; isolated clone then succeeded.",
+    "First GUI process lacked its compiler process permissions; ordinary escalation allowed once/smoke and manual GUI execution.",
+    "Test fixtures initially used a reserved bytes method name and conservative borrow expressions; corrected before final matrix.",
+    "External window expected ten boxes, but independent document preorder has eleven visual boxes; fixture corrected, product unchanged.",
+    "First resource test subclass accidentally inherited unrelated compiler tests; changed to explicit test helpers. Restricted temporary directory runs were not counted as passes.",
+    "First graphics rebuild targeted an in-use DLL; moved comparison and corrected demo to separate directories, preserving user windows.",
+    "Final staged whitespace check found one blank line with spaces in the new Python fixture. Removed before publication; Python AST was compared and is identical, so native passing runs were not repeated for whitespace only."
+  ]
+}

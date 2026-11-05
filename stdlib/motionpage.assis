@@ -113,6 +113,12 @@ public final class Page{
         self.begun=false;self.pending_count=0;self.pending_channels=0;
         own pending:owned::OwnedArray<sanscript::Motion>=move(self.pending_motions);
     }
+    /// Only the committed bank controls scheduling; an aborted candidate cannot
+    /// start a timer. This query does not advance time or change either bank.
+    fn moving(borrow self):bool{
+        if(!self.active || self.active_motions==null){return false;}
+        for(let i:int=0;i<self.count;i++){if(self.active_motions.get(i).moving()){return true;}}return false;
+    }
     fn close(borrow mut self):void{
         self.abort();self.active=false;self.count=0;self.channel_count=0;
         own motions:owned::OwnedArray<sanscript::Motion>=move(self.active_motions);

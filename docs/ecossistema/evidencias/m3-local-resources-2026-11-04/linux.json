@@ -1,0 +1,179 @@
+{
+  "schema": "local-resource-host-v1",
+  "base": "33b7431da1e84c8cdc26a8639290e42ba5a14e72",
+  "host": "linux",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "checks": [
+    {
+      "suite": "page-resources",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-page-resources.py"
+      ],
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 2,
+      "seconds": 41.996,
+      "log": "linux-page-resources-optimized.log",
+      "sha256": "50ea1badf73b6084d77fac8109a02ff6329db6279a10cbaff4bb684f221cbda2"
+    },
+    {
+      "suite": "page-resources",
+      "worker_mode": "reference",
+      "command": [
+        "python",
+        "tests/test-page-resources.py"
+      ],
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 2,
+      "seconds": 39.139,
+      "log": "linux-page-resources-reference.log",
+      "sha256": "8e42b4e09ad9d12a49c75b25ff33bf70db1f6e3ba7228cf52204f870b7eac0d9"
+    },
+    {
+      "suite": "frame-responsiveness",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-frame-responsiveness.py"
+      ],
+      "returncode": 0,
+      "executed": 0,
+      "not_run": 5,
+      "seconds": 0.176,
+      "log": "linux-frame-responsiveness-optimized.log",
+      "sha256": "ae5b1ddd45e71b2ae51c476488b34dc075ac311deca9b1a6958314ad50c4d76b"
+    },
+    {
+      "suite": "frame-worker",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-frame-worker.py"
+      ],
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 2,
+      "seconds": 80.549,
+      "log": "linux-frame-worker-optimized.log",
+      "sha256": "952143b6e106a9f857f2fd1e83b0542c1e057a5b3a01b50bafdfa6e0fe47fb4f"
+    },
+    {
+      "suite": "frame-worker",
+      "worker_mode": "reference",
+      "command": [
+        "python",
+        "tests/test-frame-worker.py"
+      ],
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 2,
+      "seconds": 100.032,
+      "log": "linux-frame-worker-reference.log",
+      "sha256": "e484bc1e6551aab0b11d99002ac2dd2d424fe23072711f763562dfef8b5f8ae1"
+    },
+    {
+      "suite": "framehost",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-framehost.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 2,
+      "seconds": 83.021,
+      "log": "linux-framehost-optimized.log",
+      "sha256": "cd214cba4afebc25f73a459e1cf9ddfb46a9a27e3edf42f8544eea16da50d899"
+    },
+    {
+      "suite": "framereader",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-framereader.py"
+      ],
+      "returncode": 0,
+      "executed": 13,
+      "not_run": 1,
+      "seconds": 98.355,
+      "log": "linux-framereader-optimized.log",
+      "sha256": "dec86b5d957b5d2e2126440d6ee5c7ff995b4d9972718924c0c4e20352176493"
+    },
+    {
+      "suite": "catalog-frame",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-catalog-frame.py"
+      ],
+      "returncode": 0,
+      "executed": 18,
+      "not_run": 3,
+      "seconds": 174.451,
+      "log": "linux-catalog-frame-optimized.log",
+      "sha256": "1af4a96f3f839205ee07f3b2564f57e8f98fd18b37ef7cb1e421ac3cb3fb0218"
+    },
+    {
+      "suite": "reader-transactions",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-reader-transactions.py"
+      ],
+      "returncode": 0,
+      "executed": 11,
+      "not_run": 4,
+      "seconds": 30.222,
+      "log": "linux-reader-transactions-optimized.log",
+      "sha256": "92c34d9e07cc0c9b702d491e4344e53167d6252ccc3963c6efd48ad0733d77a4"
+    },
+    {
+      "suite": "motionpage",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-motionpage.py"
+      ],
+      "returncode": 0,
+      "executed": 15,
+      "not_run": 0,
+      "seconds": 84.435,
+      "log": "linux-motionpage-optimized.log",
+      "sha256": "c1d4eff96b5061593dcf85aedfb8024177d934bd38c80cab5436af2e93ddacb3"
+    },
+    {
+      "suite": "pagepresent",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-pagepresent.py"
+      ],
+      "returncode": 0,
+      "executed": 3,
+      "not_run": 6,
+      "seconds": 20.603,
+      "log": "linux-pagepresent-optimized.log",
+      "sha256": "f5456166f37fead56445803beeb3297305a29beb94ffcff1e33e6bebb3186ed5"
+    },
+    {
+      "suite": "install-mask",
+      "worker_mode": "optimized",
+      "command": [
+        "python",
+        "tests/test-install-mask.py"
+      ],
+      "returncode": 0,
+      "executed": 2,
+      "not_run": 0,
+      "seconds": 2.0,
+      "log": "linux-install-mask-optimized.log",
+      "sha256": "b6fc520adf9317a7443d220b81836d23028c729d0f962dc8a36fbfcde454772a"
+    }
+  ],
+  "passed": true
+}

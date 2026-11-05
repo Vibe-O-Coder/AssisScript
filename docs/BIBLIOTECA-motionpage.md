@@ -71,3 +71,9 @@ sem seleção de leitura integrada, edição/IME, shaping/bidi, DPI/monitores,
 inspector/LSP SSC, loader/recursos, RSS agregado ou conformidade visual completa.
 Linux/macOS não têm provider gráfico por esta mudança. Nenhum gate fechado.
 Easy permanece por último.
+
+Continuação 04/11/2026: `moving()` consulta apenas o banco ativo. Retorna false
+para repouso, pausa, hidden/proteção, sem avançar física ou criar dívida de
+tempo. A demo 59 espera eventos em repouso e remove a espera extra durante
+animação, usando pagepresent::clock_ms. As 42 matrizes e a integração de 120 Hz
+permanecem iguais.

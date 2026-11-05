@@ -48,7 +48,7 @@ safe fn main():int{
     if(store==null || page==null || motion==null || input==null || drawing==null || !page.is_open() || !motion.is_open()){return 2;}
     assert(htdl::load(store,1,utf8("<div type=document version=0.1 lang=pt-BR><div type=head><div type=title>Paineis FS e SSC</div></div><div type=body id=body><div type=container id=panels><div type=container class=card id=left><div type=heading level=2 class=title>Painel esquerdo</div><div type=paragraph>Clique alterna este painel. Tab estabiliza o controle focado.</div><div type=button id=leftButton class=button>Alternar esquerdo</div></div><div type=container class=card id=right><div type=heading level=2 class=title>Painel direito</div><div type=paragraph>Desenho, clique e acessibilidade compartilham o movimento.</div><div type=button id=rightButton class=button>Alternar direito</div></div></div></div></div>")).code==0);
     let left:bool=false;let right:bool=false;assert(evaluate(page,store.active_document(),input,left,right));
-    own window:window::Window=try_new window::Window(1,600,360,utf8("AssisScript - paineis SSC"));
+    own window:window::Window=try_new window::Window(1,600,360,utf8("AssisScript - Paineis SSC com cadencia ativa"));
     if(window==null || !window.opened()){return 4;}
     let width:int=600;let height:int=360;let version:int=1;let focus:doctree::NodeId=new doctree::NodeId();
     if(!refresh(drawing,store.active_document(),page,motion,window,version,width,height,0,true,focus)){return 5;}
@@ -64,10 +64,11 @@ safe fn main():int{
         print("MOTION FRAME",motion.channels(),drawing.frame.size());return int(window.close()!=0);
     }
     let coherent:bool=true;let held:bool=false;let visible:bool=true;
-    let pressed:doctree::NodeId=new doctree::NodeId();let pressed_frame:int=0;let last:int=monotonic_ms();
+    let pressed:doctree::NodeId=new doctree::NodeId();let pressed_frame:int=0;let last:int=pagepresent::clock_ms();
     while(window.opened()){
-        val event:window::Event=window.poll(16);if(event.status<0){return 4;}if(event.status==0 && event.kind==1){break;}
-        val now:int=monotonic_ms();let elapsed:int=now-last;last=now;if(elapsed<0 || elapsed>60000){elapsed=0;}
+        let wait:int=16;if(motion.moving()){wait=0;}
+        val event:window::Event=window.poll(wait);if(event.status<0){return 4;}if(event.status==0 && event.kind==1){break;}
+        val now:int=pagepresent::clock_ms();let elapsed:int=now-last;last=now;if(elapsed<0 || elapsed>60000){elapsed=0;}
         let activated:doctree::NodeId=new doctree::NodeId();
         if(event.status==0){
             if(event.kind==13){visible=event.arg0!=0;pressed=new doctree::NodeId();elapsed=0;}
@@ -91,6 +92,7 @@ safe fn main():int{
         // A gesture belongs to its published frame; timer replacement cancels it.
         // Keep that frame stable during a pointer press, then resume without debt.
         if(!doctree::absent(pressed)){continue;}
+        if(event.status==1 && !motion.moving()){continue;}
         version++;coherent=refresh(drawing,store.active_document(),page,motion,window,version,width,height,elapsed,visible,focus);
         if(coherent){if(window.present()!=0){return 4;}}else{print("FRAME FAILED - content interaction blocked");}
     }return int(window.close()!=0);

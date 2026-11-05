@@ -41,6 +41,13 @@ class MotionPage(base.Evolution):
         return super().invoke(*args,**kwargs)
     def execute(self,body,stdout=''):self.accepted(PREFIX+'safe fn main():int{'+body+'return 0;}',stdout)
 
+    def test_committed_moving_query_stops_idle_hidden_protected_and_aborted_timers(self):
+        self.execute(setup(body='<div type=button id=a class=card>A</div>')+prepare()+commit()+'assert(!motion.moving());'+
+            target(32*65536)+prepare()+'assert(!motion.moving());motion.abort();assert(!motion.moving());'+
+            prepare()+commit()+'assert(motion.moving());'+prepare(9,focus='a')+commit()+'assert(!motion.moving());'+
+            prepare(9)+commit()+'assert(motion.moving());'+prepare(9,visible='false')+commit()+'assert(!motion.moving());'+
+            prepare(9)+commit()+'assert(motion.moving());'+prepare(9,reduced='true')+commit()+'assert(!motion.moving());')
+
     def test_multinode_trajectory_and_retarget_against_pinned_integer_oracle(self):
         events=[(1,8),(17,-5),(41,12),(70,0)]
         code=setup()+prepare()+commit()

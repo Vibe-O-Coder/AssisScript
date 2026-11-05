@@ -1,0 +1,6 @@
+flow Body{20px -> layout.padding;column(gap:12px) -> layout.children;#f4f1ea -> paint.background;}
+bind #body to Body;
+flow Title{24px -> text.size;700 -> text.weight;}
+bind #title to Title;
+flow First{360px -> layout.height;}
+bind #first to First;

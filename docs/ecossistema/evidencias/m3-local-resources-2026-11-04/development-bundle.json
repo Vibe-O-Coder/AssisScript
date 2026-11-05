@@ -1,0 +1,10 @@
+{
+  "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+  "provider_sha256": "a99486109a44f00912100c0ca47e53c210bb561c468adc8732e521a66a74b882",
+  "setup_sha256": "9aa2f1602bcbd590b9ef247c31aaa06ca38c7f44ce98de82d51cec81af06e1c1",
+  "zip_sha256": "ef08ef6720d88ff0f07c9e1e0e390e9e7b6bd61548c1c96a7025b04158358db2",
+  "installation_validation": "pass",
+  "release": false,
+  "hash_inventory_verified": 843,
+  "verification": "All BUILD-INFO file hashes and archive SHA-256 checked against the final candidate"
+}

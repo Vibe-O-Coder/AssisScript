@@ -1,0 +1,10 @@
+test_animation_clock_matches_independent_elapsed_time_and_owner_thread (__main__.FrameResponsiveness.test_animation_clock_matches_independent_elapsed_time_and_owner_thread) ... skipped 'Windows native graphics provider unavailable'
+test_bounded_eviction_uses_exact_text_length_size_and_weight (__main__.FrameResponsiveness.test_bounded_eviction_uses_exact_text_length_size_and_weight) ... skipped 'Windows native graphics provider unavailable'
+test_exact_metric_cache_matches_uncached_font_oracle_and_failures (__main__.FrameResponsiveness.test_exact_metric_cache_matches_uncached_font_oracle_and_failures) ... skipped 'Windows native graphics provider unavailable'
+test_resize_burst_coalesces_without_redundant_visibility_or_lost_keys (__main__.FrameResponsiveness.test_resize_burst_coalesces_without_redundant_visibility_or_lost_keys) ... skipped 'Windows native graphics provider unavailable'
+test_theme_dpi_and_last_window_close_invalidate_private_metrics (__main__.FrameResponsiveness.test_theme_dpi_and_last_window_close_invalidate_private_metrics) ... skipped 'Windows native graphics provider unavailable'
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.000s
+
+OK (skipped=5)

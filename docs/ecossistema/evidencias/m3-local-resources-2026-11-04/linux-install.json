@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+  "setup_sha256": null,
+  "provider_sha256": null,
+  "runtime_sha256": {
+    "page-worker": "d8ba9daaadf80cfde74e28c1e3a4a1e56e977137b6b410ab51d760d3cd2a1d1d",
+    "libassis_worker_v1.so": "61da1a0745b1d8b67e72c9c2489cffe8db9687241598b801d9671027c69342eb"
+  },
+  "selected_libraries": [
+    "buffers",
+    "doctree",
+    "documents",
+    "flowpage",
+    "fluxstyle",
+    "framehost",
+    "framereader",
+    "frameworker",
+    "graphemes",
+    "htdl",
+    "motionpage",
+    "owned",
+    "pagecompiler",
+    "pageframe",
+    "pagepresent",
+    "pageresources",
+    "pagevm",
+    "pagewire",
+    "pageworker",
+    "reader",
+    "sanscript",
+    "unicode",
+    "viewer",
+    "window"
+  ],
+  "checks": [
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/instalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces",
+        "--no-path",
+        "--with",
+        "frameworker"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em /tmp/assis-presentation-install-9h865qzi/prefix with spaces/bin/assis\nInclua /tmp/assis-presentation-install-9h865qzi/prefix with spaces/bin no PATH ou use o caminho completo.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/prefix with spaces/bin/assis",
+        "build",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/66_resource_frame.assis",
+        "--safe",
+        "--debug",
+        "-o",
+        "<TEMP>/granted runtime/installed-example"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: execut\u00e1vel nativo gerado em /tmp/assis-presentation-install-9h865qzi/granted runtime/installed-example\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/granted runtime/installed-example",
+        "<TEMP>/prefix with spaces/bin/assis",
+        "<TEMP>/granted runtime/page-worker",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/resource-demo/index.htdl",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/resource-demo/main.fxs",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/resource-demo/main.sscr",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/resource-demo/main.assis"
+      ],
+      "returncode": 0,
+      "stdout": "RESOURCE FRAME 4 0 1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/desinstalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: compilador desinstalado. Seus projetos foram preservados.\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Fresh candidate and isolated offline prefix, frameworker transitive closure; installed external-resource Frame/worker demo with explicit runtime paths (Linux runtime is separately granted and staged in the test prefix parent), uninstall and user file preservation; no PATH, associations or release changes"
+}

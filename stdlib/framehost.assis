@@ -19,15 +19,11 @@ safe fn build_drawing(borrow document:documents::Document,borrow styles:flowpage
     own reading:framereader::Reader=try_new framereader::Reader(frame,document,window_instance,20000000,metric);
     if(reading==null){return 401;}if(!reading.is_open()){return reading.status();}
     if(previous!=null){
-        val restored:bool=reading.restore(frame,document,previous.reading);
-        let same:bool=restored && frame.size()==previous.frame.size() && frame.run_count()==previous.frame.run_count() &&
-            frame.viewport().width==previous.frame.viewport().width && frame.viewport().height==previous.frame.viewport().height && frame.scroll_y()==previous.frame.scroll_y();
-        for(let i:int=0;i<frame.size() && same;i++){
-            val a:pageframe::Box=frame.box(i);val b:pageframe::Box=previous.frame.box(i);
-            same=a.bounds.x==b.bounds.x && a.bounds.y==b.bounds.y && a.bounds.width==b.bounds.width && a.bounds.height==b.bounds.height &&
-                a.text_size==b.text_size && a.weight==b.weight;
+        if(reading.restore(frame,document,previous.reading)){
+            // Modifiers describe physical keys, not geometry. Keep them across
+            // zoom/scroll reflow of the same document and native window.
+            reading.restore_keys(frame,document,previous.reading);
         }
-        if(same){reading.restore_keys(frame,document,previous.reading);}
     }
     val selected_focus:doctree::NodeId=reading.focus_node();
     own packet:pagepresent::Packet=try_new pagepresent::Packet(frame,selected_focus,policy,10000000);

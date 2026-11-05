@@ -1,0 +1,5 @@
+import "std/page.assis";
+safe fn main():int{
+    if(htdl_v1::event_get(0)==2){return htdl_v1::state_set(0,htdl_v1::state_get(0)+1);}
+    return htdl_v1::state_get(0);
+}

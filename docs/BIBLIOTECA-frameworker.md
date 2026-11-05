@@ -73,3 +73,9 @@ formulários, live regions, rede/perfis, macOS/ARM e aceites desktop/leitor/DPI
 permanecem tarefas próprias. Consulte o
 [perfil](ecossistema/PERFIL-FRAME-WORKER-V1.md) e o
 [relatório](relatorios/2026-11-03-m3-frame-worker.md).
+
+Continuação 04/11/2026: `prepare_bundle`/`has_resources`/`resources` integram
+[pageresources](BIBLIOTECA-pageresources.md) sem mudar ASIP/SDK. Os exemplos 66/67
+usam quatro arquivos externos concedidos separadamente. A demo 65 mostra o
+resultado no rodapé do shell e bombeia até oito passos IPC não bloqueantes
+por turno. Não oferece edição/colagem nem live region do rodapé.

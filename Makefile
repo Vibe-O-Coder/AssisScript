@@ -277,3 +277,10 @@ test-page-compiler: bin/assis
 .PHONY: test-windows-isolation
 test-windows-isolation: bin/assis
 	python3 tests/test-windows-isolation.py
+
+.PHONY: test-page-resources test-frame-responsiveness
+test-page-resources: bin/assis
+	python3 tests/test-page-resources.py
+test-frame-responsiveness: bin/assis
+	python3 tests/test-frame-responsiveness.py
+test-alpha15: test-page-resources test-frame-responsiveness

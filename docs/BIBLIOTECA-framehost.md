@@ -53,3 +53,7 @@ commit determinístico e janela local com seleção/cópia/zoom.
 Catálogo visual completo, estado mutável/eventos de página gerais, loader de
 recursos remotos, atualização incremental dos grafos, RSS, latência, dispositivos,
 desktop/leitor/DPI/IME e gates permanecem na fila. Easy continua por último.
+
+Correção 04/11/2026: Ctrl/Shift do mesmo documento/janela são preservados também
+quando zoom/scroll muda a geometria. Perda de foco/captura e navegação continuam
+cancelando os modificadores; gestos/ativação de ponteiro não são transferidos.

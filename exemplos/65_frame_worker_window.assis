@@ -12,11 +12,23 @@ safe fn argument(index:int):own *byte{unsafe{
     own data:*byte=try_alloc<byte>(length+1);if(data==null){return move(data);}
     if(arg_copy(index,data,length+1)!=length){return try_alloc<byte>(0);}return move(data);
 }}
+// Host diagnostic, outside document text/selection and the page SDK.
+safe fn status_line(borrow mut w:window::Window,value:int,width:int,height:int,policy:reader::Preferences):int{
+    own buffer:*byte=try_alloc<byte>(64);if(buffer==null){return -4;}
+    borrow prefix:slice<byte>=utf8("Estado isolado: ");for(let i:int=0;i<len(prefix);i++){buffer[i]=prefix[i];}
+    let number:int=value;if(number>0){number= -number;}let size:int=0;
+    own digits:*byte=try_alloc<byte>(20);if(digits==null){return -4;}
+    while(true){digits[size]=byte(48-number%10);size++;number/=10;if(number==0){break;}}
+    let used:int=len(prefix);if(value<0){buffer[used]=byte(45);used++;}
+    while(size>0){size--;buffer[used]=digits[size];used++;}
+    val background:int=viewer::rect(w,0,height-28,width,28,policy.background);if(background!=0){return background;}
+    return w.draw_text(12,height-23,slice_of(buffer,0,used),policy.foreground);
+}
 safe fn main():int{
     own compiler:*byte=argument(1);own worker:*byte=argument(2);if(compiler==null || worker==null || len(compiler)<2 || len(worker)<2){return 2;}
     if(!pagepresent::available() || !pagepresent::catalog_available()){print("Windows frame provider required");return 4;}
     own s:frameworker::Session=try_new frameworker::Session(32000000,250000,7,19,23);
-    own w:window::Window=try_new window::Window(7,640,420,utf8("AssisScript - Frame e programa isolado"));
+    own w:window::Window=try_new window::Window(7,640,420,utf8("AssisScript - Leitura e contador"));
     if(s==null || !s.is_open() || w==null || !w.opened()){return 4;}
     let policy:reader::Preferences=reader::preferences(w);if(policy.status!=0){return 4;}
     val result:int=s.prepare_source(slice_of(compiler,0,len(compiler)-1),slice_of(worker,0,len(worker)-1),utf8("<div type=document version=0.1 lang=pt-BR><div type=head><div type=meta name=description content=\"Leitura local\"></div><div type=title>Catalogo de leitura</div></div><div type=body id=body><div type=main><div type=heading level=1 id=title>Catalogo de leitura</div><div type=button id=add>Incrementar estado isolado</div><div type=link id=jump href=\"#end\">Ir para o final</div><div type=list ordered=true><div type=item><div type=paragraph id=first>Primeiro item: texto selecionavel e acessivel.</div></div><div type=item><div type=paragraph>Segundo item com marcador fora da copia.</div></div></div><div type=paragraph id=end>Fim do documento.</div></div></div></div>"),
@@ -32,10 +44,19 @@ safe fn main():int{
         if(s.reflow(640,420,0,131072,25,true,policy,pagepresent::measure)!=0 || s.publish_reflow(w)!=0 || w.present()!=0){return 5;}
         assert(len(s.snapshot().reading.selected_text())==selected);print("FRAME WORKER WINDOW",s.snapshot().frame.version(),s.snapshot().frame.size());return int(w.close()!=0);
     }
+    let displayed:int= -1;let last_result:int=0;
     let width:int=640;let height:int=420;let scale:int=65536;let visible:bool=true;let coherent:bool=true;
     while(w.opened()){
-        val step:int=s.advance(monotonic_ms());if(step<0){print("PROGRAM ERROR",step);}
-        val event:window::Event=w.poll(10);if(event.status<0){return 4;}if(event.status!=0){continue;}
+        // Bounded pump: progress IPC without paying a 10 ms UI wait for every
+        // request/send/ACK/tick step. Yield after eight nonblocking advances.
+        for(let pump:int=0;pump<8;pump++){
+            val step:int=s.advance(monotonic_ms());if(step<0){print("PROGRAM ERROR",step);break;}
+        }
+        val reply:pageworker::Reply=s.result();
+        if(reply.code==2){last_result=reply.result;}
+        if(last_result!=displayed){if(status_line(w,last_result,width,height,policy)!=0 || w.present()!=0){return 4;}displayed=last_result;}
+        let wait:int=10;if(s.queued()>0 || reply.code!=2){wait=1;}
+        val event:window::Event=w.poll(wait);if(event.status<0){return 4;}if(event.status!=0){continue;}
         if(event.kind==1){break;}
         let repaint:bool=false;let scroll:int=s.snapshot().frame.scroll_y();
         if(event.kind==13){visible=event.arg0!=0;s.cancel_gesture();}
@@ -54,7 +75,7 @@ safe fn main():int{
         if(repaint){
             val code:int=s.reflow(width,height,scroll,scale,0,visible,policy,pagepresent::measure);
             coherent=code==0;
-            if(coherent){coherent=s.publish_reflow(w)==0;if(coherent){if(w.present()!=0){return 4;}}}
+            if(coherent){coherent=s.publish_reflow(w)==0;if(coherent){if(status_line(w,last_result,width,height,policy)!=0 || w.present()!=0){return 4;}displayed=last_result;}}
             if(!coherent){s.abort_reflow();print("FRAME FAILED - retry on resize");}
         }
     }s.close();return int(w.close()!=0);

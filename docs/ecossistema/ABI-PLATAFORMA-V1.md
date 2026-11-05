@@ -159,3 +159,8 @@ surfaces reais são dumps, não screenshots de desktop. Computer Use parou em
 app approval timed out. Leitor real, contraste/movimento, DPI multimonitor,
 grafemas/edição/IME e UIA TextPattern continuam sem aceite. A escala 200% da
 fonte não é escala do OS. Nenhum gate aprovado. O not-run anterior é histórico.
+
+Continuação 04/11/2026: assisp_frame_clock oferece o relógio QPC e o cache de
+métricas é limitado/invalida por mudanças do OS. Versões e símbolos antigos
+permanecem; novos callers exigem DLL correspondente. Contrato em
+[local-resource-batch-1](PERFIL-RECURSOS-LOCAIS-V1.md).

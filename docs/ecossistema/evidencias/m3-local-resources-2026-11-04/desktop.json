@@ -1,0 +1,34 @@
+{
+  "schema": "manual-desktop-feedback-v1",
+  "date": "2026-11-04",
+  "automatic_capture": {
+    "status": "not-run",
+    "screenshots": 0,
+    "inputs": 0,
+    "errors": [
+      "Computer Use app approval timed out",
+      "window capture timed out: timed out waiting on channel"
+    ]
+  },
+  "manual": {
+    "status": "partial",
+    "reading_counter_shortcuts": "accepted-by-user",
+    "ssc_panels": "residual-small-stutter-not-accepted",
+    "feedback": [
+      "Funciona, não sei bem o que deveria ser \"incrementar estado isolado\", mas ele não faz nada. O real problema é um \"lag\" imenso, com delays de 1s pra cima! Mas as funcionalidades estão ok.",
+      "ainda há alguns delays, especialmente quando acontece várias ações, mas ficou bem mais fluído e o contador no rodapé sobe a cada clique (ele é o que justamente está tendo bastante atraso ao fazer vários cliques de uma só vez). Os comandos com ctrl infelizmente não tem sobreposição, então se eu fizer ctrl + eu tenho que soltar as teclas para fazer ctrl - e o mesmo vale para o ctrl c e ctrl v",
+      "A parte do leitura e contador está perfeita! Sem atrasos e bem suave, entretanto os paineis SSC se movem, mas ele parecem estar travados, vendo de longe até está bom, mas se você estiver olhando de perto dá para ver que está travado e não dá nenhuma sensação de fluídez.",
+      "Não são travadas grandes, são pequenas e difíceis de perceber, mas também pode ser por ser um movimento linear em um espaço pequeno, mas em geral eu não percebi nenhuma diferença."
+    ]
+  },
+  "executables": {
+    "build\\demo-v2\\frame-demo-v3.exe": "eac574365950ced6af150afa82fd4f6b4d78cdf6b8ecd4e4fcfa72c1b7c6bfcd",
+    "build\\demo-v4\\panels.exe": "566b29bb47c9f3ba412524225289a12112c976cf6a19fee92281d79c10e19361"
+  },
+  "limitations": [
+    "Manual report is not a desktop screenshot",
+    "Screen reader, DPI/multiple monitors and IME not-run",
+    "SSC timing improved, but final manual feedback did not confirm a perceptible improvement; residual small-stutter acceptance remains open.",
+    "Read-only selection/copy, not editable input/paste or a live status region"
+  ]
+}

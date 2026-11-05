@@ -1,0 +1,143 @@
+namespace pageresources;
+import "std/owned.assis";
+
+/// Logical application keys, never OS paths or grants. Deliberately ASCII in v1.
+/// Resolve against an importer, remove dot segments, reject escape and aliases.
+public final class Path{
+    private own data:*byte;private let count:int;private let failure:int;
+    fn init(borrow mut self,borrow importer:slice<byte>,borrow reference:slice<byte>):void{
+        self.failure=-1;
+        if(len(importer)>1024 || len(reference)<1 || len(reference)>1024){return;}
+        own joined:*byte=try_alloc<byte>(2049);own result:*byte=try_alloc<byte>(1024);
+        if(joined==null || result==null){self.failure=-4;return;}
+        let prefix:int=0;
+        for(let i:int=0;i<len(importer);i++){
+            val c:int=int(importer[i]);if(!key_char(c)){return;}if(c==47){prefix=i+1;}
+        }
+        if(len(importer)>0 && (importer[0]==47 || importer[len(importer)-1]==47)){return;}
+        for(let i:int=0;i<prefix;i++){joined[i]=importer[i];}
+        if(reference[0]==47 || reference[len(reference)-1]==47){return;}
+        for(let i:int=0;i<len(reference);i++){if(!key_char(int(reference[i]))){return;}joined[prefix+i]=reference[i];}
+        let at:int=0;let used:int=0;val size:int=prefix+len(reference);
+        while(at<size){
+            let end:int=at;while(end<size && joined[end]!=47){end++;}
+            val n:int=end-at;if(n==0){return;}
+            if(n==1 && joined[at]==46){}
+            else if(n==2 && joined[at]==46 && joined[at+1]==46){
+                if(used==0){return;}while(used>0 && result[used-1]!=47){used--;}
+                if(used>0){used--;}
+            }else{
+                if(joined[end-1]==46 || reserved(slice_of(joined,at,n))){return;}
+                if(used>0){if(used==1024){return;}result[used]=byte(47);used++;}
+                if(n>1024-used){return;}
+                for(let i:int=0;i<n;i++){result[used+i]=joined[at+i];}used+=n;
+            }at=end+1;
+        }
+        if(used==0){return;}self.data=move(result);self.count=used;self.failure=0;
+    }
+    fn status(borrow self):int{return self.failure;}
+    fn content(borrow self):borrow(self) slice<byte>{return slice_of(self.data,0,self.count);}
+}
+pure fn key_char(c:int):bool{
+    return (c>=65 && c<=90) || (c>=97 && c<=122) || (c>=48 && c<=57) || c==47 || c==46 || c==45 || c==95;
+}
+pure fn upper(c:int):int{if(c>=97 && c<=122){return c-32;}return c;}
+safe fn reserved(borrow segment:slice<byte>):bool{
+    let n:int=0;while(n<len(segment) && segment[n]!=46){n++;}
+    if(n==3){
+        val a:int=upper(int(segment[0]));val b:int=upper(int(segment[1]));val c:int=upper(int(segment[2]));
+        if((a==67 && b==79 && c==78) || (a==80 && b==82 && c==78) || (a==65 && b==85 && c==88) || (a==78 && b==85 && c==76)){return true;}
+    }
+    if(n==4 && segment[3]>=49 && segment[3]<=57){
+        val a:int=upper(int(segment[0]));val b:int=upper(int(segment[1]));val c:int=upper(int(segment[2]));
+        if((a==67 && b==79 && c==77) || (a==76 && b==80 && c==84)){return true;}
+    }return false;
+}
+public safe fn equal(borrow a:slice<byte>,borrow b:slice<byte>):bool{
+    if(len(a)!=len(b)){return false;}for(let i:int=0;i<len(a);i++){if(a[i]!=b[i]){return false;}}return true;
+}
+
+/// Host-created envelope; IDs select a pending slot, never authorize I/O.
+/// kinds: 1 HTDL, 2 FS, 3 SSC, 4 page source, 5 ASV2, 6 opaque host data.
+public value struct Request{let instance:int;let origin:int;let generation:int;let request:int;let kind:int;let version:int;}
+struct Entry{own path:Path;own data:*byte;let kind:int;let version:int;let supplied:bool;let size:int;}
+public pure fn supported(kind:int,version:int):bool{
+    if(kind==1){return version==1 || version==2;}return kind>=2 && kind<=6 && version==1;
+}
+public pure fn byte_limit(kind:int):int{if(kind==5){return 131088;}if(kind==6){return 1048576;}return 65536;}
+
+/// Bounded single-producer loader. Planning -> sealed -> complete -> cancelled.
+/// Host supplies already granted bytes, possibly out of order. No OS/file/URL API.
+/// Exact keys and kinds/versions deduplicate only within this immutable batch.
+public final class Batch{
+    private own entries:owned::OwnedArray<Entry>;
+    private let instance_id:int;private let origin_id:int;private let generation_id:int;
+    private let capacity:int;private let limit:int;private let used:int;private let received:int;
+    private let phase:int;private let deadline:int;private let failure:int;
+    fn init(borrow mut self,instance:int,origin:int,generation:int,max_entries:int,max_bytes:int,deadline:int):void{
+        self.failure=-1;
+        if(instance<1 || origin<1 || generation<1 || max_entries<1 || max_entries>64 || max_bytes<0 || max_bytes>4194304 || deadline<1){return;}
+        self.entries=try_new owned::OwnedArray<Entry>();if(self.entries==null){self.failure=-4;return;}
+        self.instance_id=instance;self.origin_id=origin;self.generation_id=generation;self.capacity=max_entries;self.limit=max_bytes;self.deadline=deadline;self.phase=1;self.failure=0;
+    }
+    fn is_open(borrow self):bool{return self.phase>=1 && self.phase<=3;}
+    fn complete(borrow self):bool{return self.phase==3;}
+    fn status(borrow self):int{return self.failure;}
+    fn size(borrow self):int{if(self.entries==null){return 0;}return self.entries.size();}
+    fn used_bytes(borrow self):int{return self.used;}
+    fn envelope(borrow self,index:int):Request{
+        if(!self.is_open() || index<0 || index>=self.size()){return new Request();}
+        return new Request(self.instance_id,self.origin_id,self.generation_id,index+1,self.entries.get(index).kind,self.entries.get(index).version);
+    }
+    fn path(borrow self,index:int):borrow(self) slice<byte>{assert(self.is_open() && index>=0 && index<self.size());return self.entries.get(index).path.content();}
+    /// Positive request, 0 never used; negative errors preserve the plan.
+    fn add(borrow mut self,kind:int,version:int,borrow importer:slice<byte>,borrow reference:slice<byte>):int{
+        if(self.phase!=1){return -12;}if(!supported(kind,version)){return -16;}
+        own key:Path=try_new Path(importer,reference);if(key==null){return -4;}if(key.status()!=0){return key.status();}
+        for(let i:int=0;i<self.size();i++){
+            if(equal(key.content(),self.entries.get(i).path.content())){
+                if(self.entries.get(i).kind==kind && self.entries.get(i).version==version){return i+1;}return -16;
+            }
+            // Single roots for each active role. Source and ASV2 are exclusive.
+            val other:int=self.entries.get(i).kind;
+            if(kind!=6 && (other==kind || ((kind==4 || kind==5) && (other==4 || other==5)))){return -16;}
+        }
+        if(self.size()==self.capacity){return -3;}
+        own entry:Entry=try_new Entry();if(entry==null){return -4;}
+        entry.path=move(key);entry.kind=kind;entry.version=version;
+        if(!self.entries.try_push(move(entry))){return -4;}return self.size();
+    }
+    fn seal(borrow mut self,now:int):int{
+        if(self.phase!=1){return -12;}if(now<0 || now>=self.deadline){self.cancel();self.failure=-8;return -8;}
+        if(self.size()==0){return -1;}self.phase=2;return 0;
+    }
+    /// Envelope and quotas precede allocation/copy. A failed delivery is retryable.
+    fn deliver(borrow mut self,request:Request,borrow payload:slice<byte>,now:int):int{
+        if(self.phase!=2){return -12;}
+        if(now<0 || now>=self.deadline){self.cancel();self.failure=-8;return -8;}
+        if(request.instance!=self.instance_id || request.origin!=self.origin_id || request.generation!=self.generation_id || request.request<1 || request.request>self.size()){return -2;}
+        val index:int=request.request-1;{borrow entry:Entry=self.entries.get(index);
+        if(entry.kind!=request.kind || entry.version!=request.version){return -16;}if(entry.supplied){return -2;}
+        if(len(payload)>byte_limit(entry.kind) || len(payload)>self.limit-self.used){return -3;}}
+        own data:*byte=try_alloc<byte>(len(payload));if(data==null){return -4;}
+        for(let i:int=0;i<len(payload);i++){data[i]=payload[i];}
+        own empty:Entry=try_new Entry();if(empty==null){return -4;}
+        own supplied:Entry=self.entries.replace(index,move(empty));
+        supplied.data=move(data);supplied.size=len(payload);supplied.supplied=true;
+        own placeholder:Entry=self.entries.replace(index,move(supplied));
+        self.used+=len(payload);self.received++;if(self.received==self.size()){self.phase=3;}return 0;
+    }
+    /// Poll a pending producer even when no responses arrive. Complete artifacts
+    /// do not expire: the deadline belongs to loading, not to borrowed bytes.
+    fn poll(borrow mut self,now:int):int{
+        if(!self.is_open()){return -9;}if(self.complete()){return 1;}
+        if(now<0 || now>=self.deadline){self.cancel();self.failure=-8;return -8;}return 0;
+    }
+    fn role(borrow self,kind:int):int{
+        if(!self.complete()){return -1;}for(let i:int=0;i<self.size();i++){if(self.entries.get(i).kind==kind){return i;}}return -1;
+    }
+    fn content(borrow self,index:int):borrow(self) slice<byte>{assert(self.complete() && index>=0 && index<self.size());return slice_of(self.entries.get(index).data,0,self.entries.get(index).size);}
+    fn cancel(borrow mut self):void{
+        own discarded:owned::OwnedArray<Entry>=move(self.entries);self.phase=4;self.used=0;self.received=0;self.failure=-9;
+    }
+}

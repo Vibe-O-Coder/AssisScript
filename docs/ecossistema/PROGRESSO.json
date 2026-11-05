@@ -1,9 +1,9 @@
 {
   "schema": "assisscript-ecosystem-progress-v1",
   "rubric_version": 1,
-  "date": "2026-11-03",
+  "date": "2026-11-04",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "native-local-frame-worker-atomic-events",
+  "assessment": "native-local-resource-batches-responsive-frame",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -764,7 +764,7 @@
           "name": "Loader e ativação atômica",
           "level": 3,
           "acceptance": "Carregar HTDL, código, FS/SSC e recursos locais/remotos sob política; resolver versões/dependências, validar antes de ativar e descartar resultados atrasados; cache somente de artefato imutável.",
-          "baseline": "Ativação conjunta local de HTDL bootstrap/catálogo de leitura, FS/SSC, Frame/Reader/Packet e worker ASV2 com compilação limitada opcional, concessões e publicação nativa antes das transferências sem alocação. Falhas, cancelamento e respostas antigas executados; loader de recursos externos/remotos e cache geral continuam abertos.",
+          "baseline": "Ativação conjunta local de HTDL bootstrap/catálogo de leitura, FS/SSC, Frame/Reader/Packet e worker ASV2 com compilação limitada opcional, concessões e publicação nativa antes das transferências sem alocação. Falhas, cancelamento e respostas antigas executados; loader de recursos externos/remotos e cache geral continuam abertos. Lotes locais imutáveis agora resolvem chaves lógicas, papéis/versões, respostas fora de ordem, envelopes/cotas/deadline e ativação de arquivos externos explicitamente concedidos; não é confinamento de disco nem loader remoto.",
           "evidence": [
             "local:htdl/docs/15-htdl-0.2-e-carregamento.md",
             "docs/relatorios/2026-11-01-m3-parser-htdl.md",
@@ -778,7 +778,11 @@
             "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
             "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md",
             "docs/relatorios/2026-11-03-m3-frame-worker.md",
-            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json"
+            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json",
+            "stdlib/pageresources.assis",
+            "docs/BIBLIOTECA-pageresources.md",
+            "docs/relatorios/2026-11-04-m3-recursos-responsividade.md",
+            "tests/test-page-resources.py"
           ]
         }
       ]
@@ -884,13 +888,17 @@
         {
           "id": "E08-05",
           "name": "Corpus visual e inspeção",
-          "level": 1,
+          "level": 2,
           "acceptance": "Executar contador, leitura e dois painéis com screenshots controladas, árvores/eventos e leitor de tela; inspecionar grafo, custos e versões com diagnóstico de origem.",
-          "baseline": "Artigo HTDL em três dumps reais da superfície Windows, inspecionados e iguais entre modos, com entrada nativa. Captura de desktop falhou; contador/dois painéis/leitor de tela/grafo permanecem pendentes.",
+          "baseline": "Corpus funcional local de leitura, contador e dois painéis executado nesta sessão; usuário confirmou leitura/contador/atalhos suaves após corrigir fila e modificadores. Painéis executados e falta de fluidez tratada com relógio/cadência; evidência nativa de árvores/eventos, fontes, medições e testes adversos Windows/Linux. Capturas Computer Use expiraram: sem screenshots desktop, leitor real, DPI/monitores/IME ou inspetor completo de grafo. Aceite integral e nível 3/4 permanecem abertos.",
           "evidence": [
             "local:htdl/docs/19-conformidade-e-cenarios.md",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
-            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json"
+            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json",
+            "docs/relatorios/2026-11-04-m3-recursos-responsividade.md",
+            "docs/ecossistema/evidencias/m3-local-resources-2026-11-04/desktop.json",
+            "docs/ecossistema/evidencias/m3-local-resources-2026-11-04/response.json",
+            "tests/test-frame-responsiveness.py"
           ]
         }
       ]
@@ -3631,7 +3639,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-04",
+      "rubric_version": 1,
+      "label": "Recursos locais e corpus funcional com responsividade corrigida: 48,30%, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 3,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 3,
+        "E07-03": 2,
+        "E07-04": 3,
+        "E07-05": 3,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 2,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "47,90%, 0/5 gates; meta 50% pendente. Frame/HTDL/FS/SSC/leitura e programa ASV2 isolado preparados e ativados juntos; compilação com orçamento, FIFO/backpressure, reflow sem reiniciar o programa e LOAD_CATALOG explícito conservando LOAD bootstrap. Evidência Windows/Linux x64, exemplos e instalação isolada no relatório; geração ARM/macOS não é execução. Nova tentativa Computer Use abriu a demonstração publicada anterior, mas ambas capturas expiraram; sem aceite desktop/leitor/DPI/IME. Implementação efc16b0af55b04b083bebd93be4525c4067318d8 publicada na branch work/m3-frame-worker-2026-11-03; SHA/árvore completa, 2782 entradas/2690 blobs e 72 paths conferidos no remoto. PR não criada: conector 403 Resource not accessible by integration. Adendo documental pelo histórico. Controles/imagens/live regions, loader externo, células por nó/inscrições/strings SDK, identidade incremental/editor, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites seguem integralmente na fila. Easy por último."
+  "assessment_note": "48,30%, 0/5 gates; meta 50% pendente. Lotes locais imutáveis e ativação conjunta de recursos/Frame/worker; arquivos externos concedidos separadamente. Correções de fila IPC, métricas, visibilidade, Ctrl mantido e cadência SSC. Usuário aprovou leitura/contador suaves; painéis receberam tratamento após feedback. Capturas Computer Use expiraram, sem screenshots desktop/leitor/DPI/IME. Windows 149/0, Linux 120/29 executados/not-run; 69 exemplos por host, instalações isoladas/24 bibliotecas e testes de distribuição passaram. Medianas locais de leitura 109→16 ms e intervalos SSC 94→22 ms; usuário ainda percebe pequenas travadas SSC, sem aceite de fluidez. Publicação em preparação; conferir adendo antes de afirmar push. Loader físico/recursos declarados, SDK geral, controles/imagens/live regions, identidade incremental/editor, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites seguem integralmente na fila. Easy por último."
 }

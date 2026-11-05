@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "assis_platform_v1.h"
+static void frame_metrics_reset(void);
 
 #define WINDOWS 32
 #define EVENTS 256
@@ -29,6 +30,7 @@ typedef struct {
 typedef struct {
     int active, failure;
     int preferences;
+    int visibility_known, visible;
     int64_t token, instance, request;
     uint64_t generation;
     HWND hwnd;
@@ -130,6 +132,13 @@ static void enqueue(Window *w, int64_t kind, int64_t a, int64_t b) {
     }
     w->events[w->count++] = (Event){kind, a, b, ++w->request};
 }
+static void visibility(Window *w, int visible) {
+    if (!w->preferences) return;
+    if (!w->visibility_known || w->visible != visible) {
+        w->visibility_known = 1; w->visible = visible;
+        enqueue(w, 13, visible, 0);
+    }
+}
 static LRESULT CALLBACK procedure(HWND hwnd, UINT message, WPARAM wp, LPARAM lp) {
     Window *w = (Window *)GetWindowLongPtrW(hwnd, GWLP_USERDATA);
     if (message == WM_NCCREATE) {
@@ -141,7 +150,7 @@ static LRESULT CALLBACK procedure(HWND hwnd, UINT message, WPARAM wp, LPARAM lp)
     case WM_CLOSE: enqueue(w, 1, 0, 0); return 0;
     case WM_SIZE: {
         int width = LOWORD(lp), height = HIWORD(lp);
-        if (w->preferences) enqueue(w, 13, wp != SIZE_MINIMIZED, 0);
+        visibility(w, wp != SIZE_MINIMIZED);
         if (wp == SIZE_MINIMIZED || !width || !height) return 0;
         if (width != w->surface.width || height != w->surface.height) {
             Surface next = {0}; size_t previous = (size_t)w->surface.width * w->surface.height;
@@ -155,11 +164,12 @@ static LRESULT CALLBACK procedure(HWND hwnd, UINT message, WPARAM wp, LPARAM lp)
     case WM_GETOBJECT:
         if ((LONG)lp == OBJID_CLIENT && w->access) return accessible_object(w, wp);
         break;
-    case WM_SETTINGCHANGE: case WM_SYSCOLORCHANGE: case WM_THEMECHANGED:
+    case WM_SETTINGCHANGE: case WM_SYSCOLORCHANGE: case WM_THEMECHANGED: case WM_FONTCHANGE:
+        frame_metrics_reset();
         if (w->preferences) enqueue(w, 12, 0, 0);
         break;
     case WM_SHOWWINDOW:
-        if (w->preferences) enqueue(w, 13, wp != 0 && !IsIconic(hwnd), 0);
+        visibility(w, wp != 0 && !IsIconic(hwnd));
         break;
     case WM_KEYDOWN: case WM_KEYUP: enqueue(w, 3, (int64_t)wp, message == WM_KEYDOWN); return 0;
     case WM_MOUSEMOVE: enqueue(w, 4, GET_X_LPARAM(lp), GET_Y_LPARAM(lp)); return 0;
@@ -172,7 +182,7 @@ static LRESULT CALLBACK procedure(HWND hwnd, UINT message, WPARAM wp, LPARAM lp)
     case WM_MOUSEWHEEL: enqueue(w, 9, GET_WHEEL_DELTA_WPARAM(wp), 0); return 0;
     case WM_CAPTURECHANGED: enqueue(w, 10, 0, 0); return 0;
     case WM_SETFOCUS: case WM_KILLFOCUS: enqueue(w, 5, message == WM_SETFOCUS, 0); return 0;
-    case WM_DPICHANGED: enqueue(w, 6, ((int64_t)HIWORD(wp) * 1000 + 48) / 96, 0); return 0;
+    case WM_DPICHANGED: frame_metrics_reset(); enqueue(w, 6, ((int64_t)HIWORD(wp) * 1000 + 48) / 96, 0); return 0;
     case WM_ERASEBKGND: return 1;
     case WM_PAINT: {
         PAINTSTRUCT paint; HDC dc = BeginPaint(hwnd, &paint);
@@ -193,6 +203,7 @@ static int initialize(void) {
 }
 static void unregister_if_idle(void) {
     for (unsigned i = 0; i < WINDOWS; i++) if (windows[i].active) return;
+    frame_metrics_reset();
     if (window_class && UnregisterClassW(class_name, module)) window_class = 0;
 }
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved) {
@@ -384,7 +395,9 @@ int32_t assisp_close(int64_t token) {
 #ifdef ASSISP_TESTING
 ASSISP_API int64_t assisp_test_control(int64_t operation, int64_t value) {
     if (!on_owner()) return -5;
-    if (operation == 0) {fail_after = value; checkpoints = 0; return 0;}
+    if (operation == 0) {frame_metrics_reset(); fail_after = value; checkpoints = 0; return 0;}
+    if (operation == 10) return frame_metric_hits;
+    if (operation == 11) return frame_metric_misses;
     if (operation == 1) return checkpoints;
     if (operation == 2) {unavailable = value != 0; return 0;}
     if (operation == 3) return (int64_t)total_pixels;

@@ -1,0 +1,13 @@
+<div type="document" version="0.1" lang="pt-BR">
+  <div type="head"><div type="title">Recursos locais</div></div>
+  <div type="body" id="body"><div type="main">
+    <div type="heading" level="1" id="title">Leitura com recursos locais</div>
+    <div type="button" id="add">Incrementar estado isolado</div>
+    <div type="link" href="#end">Ir para o final</div>
+    <div type="list" ordered="true">
+      <div type="item"><div type="paragraph" id="first">Documento, estilo e programa vieram de arquivos separados.</div></div>
+      <div type="item"><div type="paragraph">Selecione o texto e mantenha Ctrl nos atalhos.</div></div>
+    </div>
+    <div type="paragraph" id="end">Fim do documento local.</div>
+  </div></div>
+</div>

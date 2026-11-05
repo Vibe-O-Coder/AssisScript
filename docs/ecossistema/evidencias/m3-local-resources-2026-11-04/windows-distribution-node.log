@@ -1,0 +1,31 @@
+✔ compilação estática: build não executa e binário roda sozinho (276.2058ms)
+✔ comentários, delimitadores, strings, BOM e CRLF (220.0827ms)
+✔ módulos: importação transitiva, repetida e herança entre arquivos (298.9514ms)
+✔ errors de importação: ciclos, ausência, colisões e fronteiras de arquivo (403.2787ms)
+✔ diagnóstico do módulo aponta arquivo e linha corretos (74.3596ms)
+✔ stdin, overlays e colunas UTF-16 usam posições do editor (197.0924ms)
+✔ diretórios de bibliotecas via -I e ASSIS_PATH (327.6093ms)
+✔ fontes importados e extensão exe final são protegidos contra sobrescrita (68.7757ms)
+✔ bibliotecas padrão: matemática, texto UTF-8 e memória (213.6971ms)
+✔ falhas de runtime em bibliotecas incluem arquivo e linha (532.9816ms)
+✔ decimal: limites, overflow, posição e formatação int64 (408.8732ms)
+✔ errors recuperáveis: soma, divisão, mapas e arrays preservam saída em falha (374.7785ms)
+✔ String: autoacréscimo com/sem realocação, vida própria, UTF-8 e KMP (366.0911ms)
+✔ heapsort e busca: comparação com ordenação independente em entradas adversas (528.9099ms)
+✔ CSV: campos vazios, CRLF, aspas escapadas, multilinha e errors recuperáveis (415.7577ms)
+✔ Base64 e hexadecimal: comparação com Buffer, todos os bytes e padding inválido (473.7135ms)
+✔ otimizador: aritmética int64 confrontada com BigInt e ordem dos efeitos (732.8245ms)
+✔ diagnósticos incluem ajuda e intervalo UTF-16; ponteiros de strings exigem tipos corretos (192.0697ms)
+✔ funções com quadro grande podem chamar antes de inicializar variáveis locais (1458.8885ms)
+✔ assert aceita mensagem e só a avalia na falha (301.9568ms)
+✔ exemplos de aplicação produzem relatório e transporte binário corretos (421.1855ms)
+✔ instalação: núcleo obrigatório, seleção de opcionais e remoção isolada (32643.8253ms)
+✔ catálogo: cada biblioteca e documento existe e a análise de tipos passa (6155.1751ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47157.5759

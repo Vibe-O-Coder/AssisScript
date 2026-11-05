@@ -1,0 +1,19 @@
+test_command_ceiling_rejects_large_selection_without_modifying_packet (__main__.FrameReader.test_command_ceiling_rejects_large_selection_without_modifying_packet) ... ok
+test_empty_document_and_empty_buttons_have_valid_zero_length_selection (__main__.FrameReader.test_empty_document_and_empty_buttons_have_valid_zero_length_selection) ... ok
+test_metric_failure_and_budget_keep_previous_reader_usable (__main__.FrameReader.test_metric_failure_and_budget_keep_previous_reader_usable) ... ok
+test_native_highlight_failure_keeps_previous_projection_then_retries (__main__.FrameReader.test_native_highlight_failure_keeps_previous_projection_then_retries) ... ok
+test_os_refusal_during_reader_preparation_conserves_selection (__main__.FrameReader.test_os_refusal_during_reader_preparation_conserves_selection) ... ok
+test_overlapping_disabled_button_occludes_text_selection_and_activation (__main__.FrameReader.test_overlapping_disabled_button_occludes_text_selection_and_activation) ... ok
+test_pointer_keyboard_focus_press_release_copy_zoom_and_capture_loss (__main__.FrameReader.test_pointer_keyboard_focus_press_release_copy_zoom_and_capture_loss) ... ok
+test_reading_order_soft_wraps_labels_hidden_and_copied_text (__main__.FrameReader.test_reading_order_soft_wraps_labels_hidden_and_copied_text) ... ok
+test_reflow_restores_reading_offsets_but_cancels_gestures_and_modifiers (__main__.FrameReader.test_reflow_restores_reading_offsets_but_cancels_gestures_and_modifiers) ... ok
+test_selection_rectangle_uses_aligned_composed_clipped_run (__main__.FrameReader.test_selection_rectangle_uses_aligned_composed_clipped_run) ... ok
+test_soft_wrap_terminal_width_is_distinct_from_next_run_zero (__main__.FrameReader.test_soft_wrap_terminal_width_is_distinct_from_next_run_zero) ... ok
+test_ssc_displacement_is_applied_once_to_selection_and_packet (__main__.FrameReader.test_ssc_displacement_is_applied_once_to_selection_and_packet) ... ok
+test_stale_projection_generation_request_and_semantic_mutation_are_refused (__main__.FrameReader.test_stale_projection_generation_request_and_semantic_mutation_are_refused) ... ok
+test_unicode_selection_against_independent_grapheme_ranges (__main__.FrameReader.test_unicode_selection_against_independent_grapheme_ranges) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 83.050s
+
+OK

@@ -99,7 +99,7 @@ public final class Reader{
             if(pageframe::same(frame.box(i).node,previous.focus) && frame.eligible(document,i)){self.focus=previous.focus;}
         }return true;
     }
-    /// A repaint of unchanged geometry may retain held modifier keys. Pointer
+    /// A reflow of the same document/window may retain held modifier keys. Pointer
     /// and activation gestures never transfer to a replacement projection.
     fn restore_keys(borrow mut self,borrow frame:pageframe::Frame,borrow document:documents::Document,borrow previous:Reader):bool{
         if(!self.current(frame,document) || !previous.active || self.instance!=previous.instance || self.semantic!=previous.semantic ||

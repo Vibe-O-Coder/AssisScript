@@ -1,0 +1,10 @@
+{
+  "status": "awaiting-normal-push",
+  "base": "33b7431da1e84c8cdc26a8639290e42ba5a14e72",
+  "branch": "work/m3-local-resources-2026-11-04",
+  "repository": "Vibe-O-Coder/AssisScript",
+  "authorization": "Explicit user authorization in this session and masterprompt",
+  "merge": false,
+  "release": false,
+  "remote_ci_claimed": false
+}

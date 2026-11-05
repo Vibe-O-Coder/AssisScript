@@ -2,6 +2,7 @@ namespace frameworker;
 import "std/framehost.assis";
 import "std/pageworker.assis";
 import "std/pagecompiler.assis";
+import "std/pageresources.assis";
 
 public value struct Limits{let memory:int;let frames:int;let fuel:int;let calls:int;let timeout:int;}
 public value struct Grants{let document:bool;let counter:bool;}
@@ -14,6 +15,8 @@ public final class Session{
     private own visual:framehost::Session;private own workers:pageworker::Session;
     private own source:*byte;private own code:*byte;private own events:*int;
     private own compilation:pagecompiler::Task;private own compile_path:*byte;
+    private own active_resources:pageresources::Batch;private own pending_resources:pageresources::Batch;
+    private let resource_generation:int;
     private let compile_width:int;private let compile_height:int;private let compile_scale:int;private let compile_profile:framehost::Versions;private let compile_policy:reader::Preferences;
     private own compile_fs:*byte;private own compile_ssc:*byte;private let compile_restricted:bool;
     private let compile_metric:safe fn(borrow slice<byte>,int,int):int;
@@ -41,6 +44,25 @@ public final class Session{
     fn worker_alive(borrow self):bool{return self.opened && self.workers.has_active() && self.workers.current().is_open();}
     fn document(borrow self):borrow(self) documents::Document{assert(self.has_active());return self.visual.document();}
     fn snapshot(borrow self):borrow(self) framehost::Drawing{assert(self.has_active());return self.visual.snapshot();}
+    fn has_resources(borrow self):bool{return self.active_resources!=null;}
+    fn resources(borrow self):borrow(self) pageresources::Batch{assert(self.has_resources());return self.active_resources;}
+    /// Consume an immutable batch selected by the trusted shell. Opaque data
+    /// stays host-only; source declarations never grant paths or native I/O.
+    fn prepare_bundle(borrow mut self,own bundle:pageresources::Batch,borrow compiler:slice<byte>,borrow path:slice<byte>,reference:bool,mib:int,cpu_seconds:int,restricted:bool,
+            width:int,height:int,scale:int,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int,limits:Limits,grants:Grants,now:int):int{
+        if(!self.opened){return -9;}if(self.phase!=0){return -12;}
+        if(bundle==null || !bundle.complete()){return -12;}
+        val identity:pageresources::Request=bundle.envelope(0);
+        if(identity.instance!=self.page_instance || identity.origin!=self.origin || identity.generation<=self.resource_generation){return -2;}
+        val doc:int=bundle.role(1);val fs:int=bundle.role(2);val ssc:int=bundle.role(3);val source:int=bundle.role(4);val code:int=bundle.role(5);
+        if(doc<0 || fs<0 || ssc<0 || (source<0 && code<0)){return -16;}
+        self.resource_generation=identity.generation;
+        val profile:framehost::Versions=new framehost::Versions(bundle.envelope(doc).version,bundle.envelope(fs).version,bundle.envelope(ssc).version);
+        let status:int=0;
+        if(source>=0){status=self.prepare_source(compiler,path,bundle.content(doc),bundle.content(source),bundle.content(fs),bundle.content(ssc),profile,reference,mib,cpu_seconds,restricted,width,height,scale,policy,metric,limits,grants,now);}
+        else{status=self.prepare(path,bundle.content(doc),bundle.content(fs),bundle.content(ssc),profile,bundle.content(code),restricted,width,height,scale,policy,metric,limits,grants,now);}
+        if(status==0){self.pending_resources=move(bundle);}return status;
+    }
     /// Compile a single source under OS budgets before preparing Reader/SDK.
     /// advance keeps the previous worker alive; abort/close cancels compilation.
     fn prepare_source(borrow mut self,borrow compiler:slice<byte>,borrow path:slice<byte>,borrow source:slice<byte>,borrow program:slice<byte>,borrow fs:slice<byte>,borrow ssc:slice<byte>,profile:framehost::Versions,reference:bool,mib:int,cpu_seconds:int,restricted:bool,
@@ -83,6 +105,7 @@ public final class Session{
         if(self.visual!=null){self.visual.abort(self.pending_document);}if(self.workers!=null){self.workers.abort();}
         if(self.compilation!=null){self.compilation.close();}own compiled:pagecompiler::Task=move(self.compilation);own path:*byte=move(self.compile_path);
         own fs:*byte=move(self.compile_fs);own ssc:*byte=move(self.compile_ssc);
+        own resources:pageresources::Batch=move(self.pending_resources);
         own source:*byte=move(self.source);own code:*byte=move(self.code);self.phase=0;self.pending_document=0;
     }
     private fn candidate_failure(borrow mut self,status:int):int{self.abort();self.failure=status;return status;}
@@ -127,6 +150,7 @@ public final class Session{
     }
     private fn complete_commit(borrow mut self):void{
         assert(self.workers.commit());self.active_document=self.pending_document;self.pending_document=0;self.phase=0;
+        own resources:pageresources::Batch=move(self.pending_resources);self.active_resources=move(resources);
         self.first=0;self.count=0;self.active_command=0;self.active_timeout=self.limits.timeout;self.running=true;self.failure=0;self.answer=new pageworker::Reply();
     }
     /// Headless transaction. Native UI hosts publish the accessible projection
@@ -202,6 +226,7 @@ public final class Session{
     }
     fn close(borrow mut self):void{
         self.opened=false;self.abort();if(self.workers!=null){self.workers.close();}if(self.visual!=null){self.visual.close();}
+        own resources:pageresources::Batch=move(self.active_resources);
         self.count=0;self.running=false;self.active_document=0;
     }
 }

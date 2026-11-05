@@ -402,7 +402,17 @@
       "dependencies": [
         "framehost",
         "pageworker",
-        "pagecompiler"
+        "pagecompiler",
+        "pageresources"
+      ]
+    },
+    {
+      "name": "pageresources",
+      "required": false,
+      "doc": "BIBLIOTECA-pageresources.md",
+      "description": "Lotes locais imutaveis, chaves relativas, envelopes versionados, cotas e cancelamento sem I/O implicito.",
+      "dependencies": [
+        "owned"
       ]
     }
   ]

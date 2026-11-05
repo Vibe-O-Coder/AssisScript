@@ -1,0 +1,88 @@
+{
+  "schema": "local-resource-evidence-v1",
+  "base": "33b7431da1e84c8cdc26a8639290e42ba5a14e72",
+  "points_before": 47.9,
+  "points_after": 48.3,
+  "level_changes": {
+    "E08-05": [
+      1,
+      2
+    ]
+  },
+  "gates_passed": 0,
+  "native": {
+    "windows": {
+      "executed": 149,
+      "not_run": 0,
+      "examples": 69,
+      "libraries": 24,
+      "compiler_sha256": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f"
+    },
+    "linux": {
+      "executed": 120,
+      "not_run": 29,
+      "examples": 69,
+      "libraries": 24,
+      "compiler_sha256": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b"
+    }
+  },
+  "source_sha256": {
+    "stdlib/pageresources.assis": "2d3329d4dc16f6594fdc31230d6ab1b6d5c154dc4f3f5ff47e599de2deb95637",
+    "stdlib/frameworker.assis": "1579d8f69509d7ee02a950e1947f9cc8d1516494badc009f0a55a99eea0e2fd1",
+    "stdlib/framehost.assis": "bfbd1905de8ecf01b675ca6f4692be3483a654eacbcdfc75325ccd7077576c92",
+    "stdlib/framereader.assis": "b7e424db75857e1fce4a772b97b29db69a550862504cb395311fab999e4545e5",
+    "stdlib/pagepresent.assis": "e12ff9f6e542a04d0e496047ac5ae5e2e82530bd55da2731c2234859617e5e2a",
+    "stdlib/motionpage.assis": "83dce9653d3405da62d937857f180755565327a2be746298c34507ecd48c9db6",
+    "stdlib/sanscript.assis": "8de75c6c85beba2bfa091926e392e8ae5ab708cfbce49fdbe822ecf3cda9932f",
+    "providers/platform/windows.c": "cabac5da8bc0e0792633dd1c3fe95f09b522925ca9499fd2e3af2462f1da66e7",
+    "providers/platform/frame.inc": "8c8a4cf00df8428e1ab231aeeb3c91d4f125855d7c83792e654a79978a836026",
+    "providers/platform/assis_platform_v1.h": "19f37197ab3191647d6dce8ed3bf169f61fc1b6ac32e18be9508d4f97bad3892",
+    "tests/test-page-resources.py": "196404ef28bf56eabcc78e9a0851828c7b422a60396efb3873fdc2a7a9be51fd",
+    "tests/test-frame-responsiveness.py": "4cd49f58f65b18d3dec30b09b05198019e971ce79d5031056f5088c432c3c26f",
+    "tests/test-framehost.py": "359f1271aeba384824d3e71d5a48eef44b7056245a435a6986ffbd5e3e0890e5",
+    "tests/test-motionpage.py": "132add2da52a1636a3763cdd5bf84a01016b2a88ef6892358c55f009187f5ca9",
+    "exemplos/59_page_motion_window.assis": "bc9a3f29e60bc4e60463f2e43498e0cb73b10939ec57ce5eb6e514bfd656bbc4",
+    "exemplos/65_frame_worker_window.assis": "47f8b657cb623ec749b9a21696842fc5d635027fc68475c4b0b5419759b16f81",
+    "exemplos/66_resource_frame.assis": "3654109077df8d773790f617d87bf9c6a8d24a93a922a08f6da42c09ef0e41ee",
+    "exemplos/67_resource_frame_window.assis": "cbe3b93b7da57560bf2204b6e7611f051fe870fba67468c7b61f5dc55d1177bc",
+    "exemplos/resource-demo/index.htdl": "01f7b4b6eda3c54815b27ed908060b68e0386b497cf30979357fdef90ebe45e1",
+    "exemplos/resource-demo/inputs.assis": "814538b89cdf8bfbf480a2c8b952be6ae76b6da1ddf0083aee480e60f0629a3e",
+    "exemplos/resource-demo/main.assis": "c1971108be9522c493d9d15006022f0fea119ee387154cc89ec634689437439e",
+    "exemplos/resource-demo/main.fxs": "566a60f2a6234e5f92b0f2668f93196d11cd0da79e6e186dfb3cbc6f9c3814c8",
+    "exemplos/resource-demo/main.sscr": "8ead85b8702bdbdd454b57bc61e76c9830ae130d4ed656a8c6f574040275bff3",
+    "stdlib/catalogo.json": "301bf28d67c0f71cdbe331f35f0cc0c01782ecf47ab5355b311fba8f604d9c39",
+    "stdlib/catalogo.sh": "708eeee8a3954c9104de2598ffeb71142ef84595e9fde9c0476753a32099d3e8",
+    "src/install_files.inc": "7efbbc7a603ca41bb8f763f87af6688877dd0eed9c4c87645086ac402f896025",
+    "src/install_optional.inc": "5572ffb62aa8e004c04ecd00618fb03e2f9c73004e09939acbe209108b091744",
+    "Makefile": "bd03e584967ab16ad650ad005a707e66f8219db6bf95becbe2087e5791812f94",
+    ".github/workflows/ci.yml": "97e3e933860924396dd87798d3ac9bd3d44c75957bb8c940b4757ec16e36fc77",
+    "tools/collect-local-resource-evidence.py": "a398ec1f7a6b8eb70dfdd8498067393807524c4d8d73e2e901e3daa1b1fb66e4",
+    "tools/verify-local-resource-evidence.py": "15d349bff6a94bf062f39e72a263bcfa8ed4ebe57aaab393fa8cc3cb1943f376",
+    "tools/verify-local-resource-install.py": "68101b2d667988e42d2a73e2277a3f52c5504bd1f123f478d10e11048bd93ae6",
+    "tools/prepare-development-installer.py": "6d91f4ab22f0ba1af0530f24fa8734415250efa83e6a717bf243e5e1b760a2f5",
+    "tools/measure-frame-response.py": "ab5cda73d0a6c97a7796348381811183abc99ad0aff3578e464ffe60b8ae45d4",
+    "docs/BIBLIOTECA-pageresources.md": "67c3b1f3731783d03544b3193bb157b27d055b55f2e1fafa93e4fead2aea860f",
+    "docs/ecossistema/PERFIL-RECURSOS-LOCAIS-V1.md": "8c6ab6e987ea1420338dcb31cc12ce378c4026f96969ade05736418e14a70c30"
+  },
+  "auxiliary_sha256": {
+    "desktop.json": "31536784c644b8e52269ae27dedf30cae452a58c296c6d53673ed0c2a2ed54ba",
+    "development-bundle.json": "3aa69d7adc445682aaaddf787adffbccd7254e55800417b9e9083818b24711f3",
+    "iteration-notes.json": "1c8abad949a0c5d90e4337205595103d45fdcb44676b300848cdc5eec0ce651b",
+    "linux-examples.json": "052a599b521be650759a149c18b8b6c6d26b59a0f589714dbf46503903d735c2",
+    "linux-install.json": "08e0eb4f3cd61bc232ea5ec7dc5f72edebcd088d0a7bf0a751e8d28588df4632",
+    "linux.json": "15cb83a9e401f59672f2893d00ddd24f5c242e7dc0f527912dc1bbe5562d0f99",
+    "reference-integrity.json": "b573df6046f5f987a2f0d59d8a8f866060d0eca1f3efd3907255fb429f2058fe",
+    "response.json": "629a2f560617fa7d9ef90c3c74ca044c90252ada1af7d867a31f800453c3ce7c",
+    "windows-examples.json": "5a8a123219bacf9b96702db868e127cfc60801396a6224c5a08772834d591652",
+    "windows-install.json": "135557b218f442ae4804a56d82b0788b73a18f159ae4e50bc4b0474d3cc85a32",
+    "windows.json": "21f334f350e6dbfc4eed4476766d401b9ad720afb4fcc65334a124345009e741"
+  },
+  "limitations": [
+    "Local immutable batches and explicit OS file grants; no directory-root confinement, symlink/TOCTOU guarantee, src/import resolver or network",
+    "ASCII logical keys and host-only opaque data; SDK strings/cells/subscriptions/mutations and controls/images/live regions remain open",
+    "Manual reading/counter/shortcuts acceptance is separate from absent desktop screenshots, screen reader, DPI/multiple monitors and IME",
+    "One Windows timing comparison; not a universal latency/FPS or 24h promise",
+    "Windows/Linux x64 native; graphics Linux and ARM/macOS native remain not-run",
+    "Matched Windows development bundle; no release, merge or new remote CI approval"
+  ]
+}
