@@ -1,4 +1,4 @@
-> **Continuação local — 48,30%, 04/11/2026, 0/5 gates; meta 50% pendente.**
+> **Publicação confirmada — 48,30%, 04/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/local-resources-20261104`,
 > branch `work/m3-local-resources-2026-11-04`, base pública 33b7431 conferida.
 > Lotes imutáveis de recursos locais, versões/envelopes/cotas/deadline e
@@ -8,7 +8,9 @@
 > painéis receberam nova cadência após feedback. Capturas Computer Use falharam;
 > sem screenshot desktop/leitor real/DPI/IME. Windows 149/0 e Linux 120/29
 > executados/not-run aprovados; 69 exemplos/host e instalações isoladas.
-> Publicação em preparação. Fluidez fina SSC permanece sem aceite.
+> Implementação bd56af5 publicada; SHA/árvore e os 96 paths conferidos.
+> PR não criada: conector 403. Adendo documental pelo histórico.
+> Fluidez fina SSC permanece sem aceite.
 > [Relatório](../relatorios/2026-11-04-m3-recursos-responsividade.md).
 > Próximo: loader físico/recursos declarados, controles/imagens/live regions,
 > SDK geral/células por nó/inscrições, identidade incremental/editor, RSS/disco/

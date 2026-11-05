@@ -1,10 +1,28 @@
 {
-  "status": "awaiting-normal-push",
+  "status": "implementation-published-and-verified",
   "base": "33b7431da1e84c8cdc26a8639290e42ba5a14e72",
   "branch": "work/m3-local-resources-2026-11-04",
   "repository": "Vibe-O-Coder/AssisScript",
   "authorization": "Explicit user authorization in this session and masterprompt",
   "merge": false,
   "release": false,
-  "remote_ci_claimed": false
+  "remote_ci_claimed": false,
+  "implementation_commit": "bd56af5d8f00e0234a27a4985aa61eabf923d296",
+  "implementation_tree": "0062aa43c7f5162076a31576cc3a22026cb8784b",
+  "verification": {
+    "remote_head_matches": true,
+    "root_tree_matches": true,
+    "recursive_tree_truncated": false,
+    "remote_entries": 2844,
+    "remote_blobs": 2750,
+    "changed_paths_verified": 96,
+    "comparison": "Root tree SHA plus every changed path/type/mode/blob checked through GitHub connector"
+  },
+  "pull_request": {
+    "created": false,
+    "error": "403 Resource not accessible by integration",
+    "base": "work/m3-frame-worker-2026-11-03"
+  },
+  "development_zip_sha256": "ef08ef6720d88ff0f07c9e1e0e390e9e7b6bd61548c1c96a7025b04158358db2",
+  "development_file_hashes_verified": 843
 }

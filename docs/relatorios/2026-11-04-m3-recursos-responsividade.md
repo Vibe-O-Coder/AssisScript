@@ -170,3 +170,40 @@ compilador/provider/worker/bibliotecas são reconstruídos juntos. O ZIP oferece
 Abrir-Leitura.cmd, Abrir-Paineis.cmd e Abrir-Recursos.cmd para uso sem instalar.
 Resumo, identidade do ZIP e evidência de publicação ficam canônicos no Git,
 fora do ZIP para evitar dependência do próprio hash. Não é release.
+
+
+## Adendo — publicação confirmada
+
+A implementação, regressões, exemplos, contratos e evidências foram publicados
+em **bd56af5d8f00e0234a27a4985aa61eabf923d296**, árvore
+**0062aa43c7f5162076a31576cc3a22026cb8784b**, em **96 arquivos**.
+[Branch](https://github.com/Vibe-O-Coder/AssisScript/tree/work/m3-local-resources-2026-11-04)
+e [commit](https://github.com/Vibe-O-Coder/AssisScript/commit/bd56af5d8f00e0234a27a4985aa61eabf923d296).
+O envio normal criou a branch, sem force push, merge ou release.
+
+O conector confirmou a cabeça remota e a árvore recursiva completa, sem
+truncamento: 2844 entradas e 2750 blobs. O SHA da árvore raiz coincide com o
+local; os 96 paths modificados foram também comparados individualmente por
+path/tipo/modo/blob. Os arquivos selecionados foram comparados com os bytes
+do índice. O primeiro check de espaço em branco do índice encontrou uma linha
+vazia com espaços no teste Python: corrigida antes do envio, com AST Python
+idêntica e sem repetir testes nativos por formatação. O commit local ainda
+não publicado foi corrigido; não houve reescrita de histórico remoto.
+
+O pacote Windows passou instalação/execução/remoção isoladas. Todos os **843
+hashes de arquivos** de BUILD-INFO e o ZIP foram conferidos; SHA-256 do ZIP:
+`ef08ef6720d88ff0f07c9e1e0e390e9e7b6bd61548c1c96a7025b04158358db2`.
+Resumo, registro de publicação e hash do ZIP ficam fora do arquivo para evitar
+ciclos de hash. Este adendo documental é canônico no Git e posterior ao pacote;
+o runtime/bibliotecas do candidato validado não foram alterados. Não é release.
+
+A criação de PR de rascunho sobre work/m3-frame-worker-2026-11-03 foi tentada;
+o conector respondeu **403 Resource not accessible by integration**. PR não
+criada; não houve tentativa por outra credencial/API. Push não significa CI
+remota nova aprovada, merge ou aceite de todos os destinos.
+
+Resultado publicado: **48,30%, 0/5 gates; meta 50% pendente**. Leitura/contador/
+atalhos aprovados manualmente; pequenas travadas SSC continuam sem aceite,
+apesar da melhora medida. Demais pendências integrais preservadas. Próximo:
+loader físico confinado/recursos declarados; Easy por último. O SHA deste
+adendo é obtido pelo histórico, sem hash autorreferente dentro do relatório.
