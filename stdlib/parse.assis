@@ -1,0 +1,294 @@
+namespace parse;
+
+import "std/unicode.assis";
+
+/// code: 0 success, 1 empty, 2 syntax/UTF-8, 3 overflow, 4 allocation.
+/// position is a zero-based byte offset, or -1 when it does not apply.
+public value struct Parsed<T> {
+    let ok: bool;
+    let value: T;
+    let code: int;
+    let position: int;
+}
+
+public pure fn success<T>(value: T): Parsed<T> {
+    return new Parsed<T>(true, value, 0, -1);
+}
+
+public pure fn failure<T>(zero: T, code: int, position: int): Parsed<T> {
+    return new Parsed<T>(false, zero, code, position);
+}
+
+value struct Magnitude {
+    let value: u64;
+    let negative: bool;
+    let code: int;
+    let position: int;
+}
+
+safe fn integer(borrow data: slice<byte>, positive: u64, negative_limit: u64): Magnitude {
+    val size: int = len(data);
+    if (size == 0) { return new Magnitude(u64(0), false, 1, 0); }
+    val negative: bool = data[0] == '-';
+    if (negative && negative_limit == u64(0)) { return new Magnitude(u64(0), false, 2, 0); }
+    let limit: u64 = positive;
+    if (negative) { limit = negative_limit; }
+    let i: int = 0;
+    if (negative || data[0] == '+') { i = 1; }
+    if (i == size) { return new Magnitude(u64(0), false, 2, i); }
+    val cutoff: u64 = limit / u64(10);
+    val remainder: u64 = limit % u64(10);
+    let value: u64 = u64(0);
+    while (i < size) {
+        val c: byte = data[i];
+        if (c < '0' || c > '9') { return new Magnitude(u64(0), false, 2, i); }
+        val digit: u64 = u64(c) - u64(48);
+        if (value > cutoff || (value == cutoff && digit > remainder)) {
+            return new Magnitude(u64(0), false, 3, i);
+        }
+        value = value * u64(10) + digit;
+        i += 1;
+    }
+    return new Magnitude(value, negative, 0, -1);
+}
+
+pure fn signed_value(result: Magnitude): int {
+    if (result.negative) { return int(u64(0) - result.value); }
+    return int(result.value);
+}
+
+public safe fn parse_i8(borrow data: slice<byte>): Parsed<i8> {
+    val result: Magnitude = integer(data, u64(0x7f), u64(0x80));
+    if (result.code != 0) { return failure::<i8>(i8(0), result.code, result.position); }
+    return success::<i8>(i8(signed_value(result)));
+}
+
+public safe fn parse_i16(borrow data: slice<byte>): Parsed<i16> {
+    val result: Magnitude = integer(data, u64(0x7fff), u64(0x8000));
+    if (result.code != 0) { return failure::<i16>(i16(0), result.code, result.position); }
+    return success::<i16>(i16(signed_value(result)));
+}
+
+public safe fn parse_i32(borrow data: slice<byte>): Parsed<i32> {
+    val result: Magnitude = integer(data, u64(0x7fffffff), u64(0x80000000));
+    if (result.code != 0) { return failure::<i32>(i32(0), result.code, result.position); }
+    return success::<i32>(i32(signed_value(result)));
+}
+
+public safe fn parse_i64(borrow data: slice<byte>): Parsed<i64> {
+    val result: Magnitude = integer(data, u64(0x7fffffffffffffff), u64(0x8000000000000000));
+    if (result.code != 0) { return failure::<i64>(i64(0), result.code, result.position); }
+    return success::<i64>(i64(signed_value(result)));
+}
+
+public safe fn parse_u8(borrow data: slice<byte>): Parsed<u8> {
+    val result: Magnitude = integer(data, u64(0xff), u64(0x0));
+    if (result.code != 0) { return failure::<u8>(u8(0), result.code, result.position); }
+    return success::<u8>(u8(result.value));
+}
+
+public safe fn parse_u16(borrow data: slice<byte>): Parsed<u16> {
+    val result: Magnitude = integer(data, u64(0xffff), u64(0x0));
+    if (result.code != 0) { return failure::<u16>(u16(0), result.code, result.position); }
+    return success::<u16>(u16(result.value));
+}
+
+public safe fn parse_u32(borrow data: slice<byte>): Parsed<u32> {
+    val result: Magnitude = integer(data, u64(0xffffffff), u64(0x0));
+    if (result.code != 0) { return failure::<u32>(u32(0), result.code, result.position); }
+    return success::<u32>(u32(result.value));
+}
+
+public safe fn parse_u64(borrow data: slice<byte>): Parsed<u64> {
+    val result: Magnitude = integer(data, u64(0xffffffffffffffff), u64(0x0));
+    if (result.code != 0) { return failure::<u64>(u64(0), result.code, result.position); }
+    return success::<u64>(u64(result.value));
+}
+
+safe fn boolean_word(borrow data: slice<byte>, borrow word: slice<byte>, value: bool): Parsed<bool> {
+    let i: int = 0;
+    while (i < len(data) && i < len(word) && data[i] == word[i]) { i += 1; }
+    if (i != len(word) || i != len(data)) { return failure::<bool>(false, 2, i); }
+    return success::<bool>(value);
+}
+
+/// Booleanos ASCII estritos, true e false, com offset da primeira diferença.
+public safe fn parse_bool(borrow data: slice<byte>): Parsed<bool> {
+    if (len(data) == 0) { return failure::<bool>(false, 1, 0); }
+    if (data[0] == 't') { return boolean_word(data, "true", true); }
+    return boolean_word(data, "false", false);
+}
+
+/// Valida texto UTF-8 com comprimento explícito, incluindo NUL e vazio.
+/// Retorna o tamanho em bytes, sem copiar a entrada.
+public safe fn parse_text(borrow data: slice<byte>): Parsed<int> {
+    val position: int = unicode::error(data);
+    if (position >= 0) { return failure::<int>(0, 2, position); }
+    return success::<int>(len(data));
+}
+
+/// Substitui a String por uma cópia UTF-8 independente. Falha preserva o destino.
+public safe fn parse_string(borrow data: slice<byte>, borrow mut value: unicode::String): bool {
+    return value.try_load(data);
+}
+
+value struct Decimal {
+    let count: int;
+    let point: int;
+    let sticky: bool;
+}
+
+safe fn trim_decimal(borrow mut digits: *byte, count: int, point: int, sticky: bool): Decimal {
+    let first: int = 0;
+    let last: int = count;
+    while (first < last && digits[first] == 0) { first += 1; }
+    if (first == last) { return new Decimal(0, 0, sticky); }
+    while (digits[last - 1] == 0) { last -= 1; }
+    if (first > 0) {
+        for (let i: int = first; i < last; i += 1) { digits[i - first] = digits[i]; }
+    }
+    return new Decimal(last - first, point - first, sticky);
+}
+
+safe fn half(borrow mut digits: *byte, decimal: Decimal): Decimal {
+    let remainder: int = 0;
+    let count: int = decimal.count;
+    let sticky: bool = decimal.sticky;
+    for (let i: int = 0; i < count; i += 1) {
+        val digit: int = remainder * 10 + int(digits[i]);
+        digits[i] = byte(digit / 2);
+        remainder = digit % 2;
+    }
+    if (remainder != 0) {
+        if (count < len(digits)) { digits[count] = byte(5); count += 1; }
+        else { sticky = true; }
+    }
+    return trim_decimal(digits, count, decimal.point, sticky);
+}
+
+safe fn twice(borrow mut digits: *byte, decimal: Decimal): Decimal {
+    let carry: int = 0;
+    let count: int = decimal.count;
+    let point: int = decimal.point;
+    let sticky: bool = decimal.sticky;
+    for (let i: int = count - 1; i >= 0; i -= 1) {
+        val digit: int = 2 * int(digits[i]) + carry;
+        digits[i] = byte(digit % 10);
+        carry = digit / 10;
+    }
+    if (carry != 0) {
+        if (count < len(digits)) { count += 1; }
+        else { sticky = sticky || digits[count - 1] != 0; }
+        for (let i: int = count - 1; i > 0; i -= 1) { digits[i] = digits[i - 1]; }
+        digits[0] = byte(carry);
+        point += 1;
+    }
+    return trim_decimal(digits, count, point, sticky);
+}
+
+safe fn rounded_binary(borrow mut digits: *byte, decimal: Decimal, precision: int,
+                       min_exponent: int, max_exponent: int): Parsed<f64> {
+    if (decimal.count == 0 || decimal.point < -325) { return success::<f64>(0.0); }
+    if (decimal.point > 309) { return failure::<f64>(0.0, 3, -1); }
+    let fraction: Decimal = decimal;
+    let exponent: int = 0;
+    while (fraction.point > 0) { fraction = half(digits, fraction); exponent += 1; }
+    while (fraction.point < 0 || (fraction.point == 0 && digits[0] < 5)) {
+        fraction = twice(digits, fraction);
+        exponent -= 1;
+    }
+    if (exponent > max_exponent + 1) { return failure::<f64>(0.0, 3, -1); }
+    if (exponent < min_exponent - precision + 1) { return success::<f64>(0.0); }
+    // Use the minimum normal exponent as the scale for subnormal mantissas.
+    while (exponent < min_exponent + 1) { fraction = half(digits, fraction); exponent += 1; }
+    let mantissa: int = 0;
+    for (let bit: int = 0; bit < precision; bit += 1) {
+        fraction = twice(digits, fraction);
+        mantissa *= 2;
+        if (fraction.point > 0) {
+            mantissa += 1;
+            digits[0] = byte(0);
+            fraction = trim_decimal(digits, fraction.count, fraction.point, fraction.sticky);
+        }
+    }
+    fraction = twice(digits, fraction);
+    if (fraction.point > 0 &&
+        (fraction.count > 1 || fraction.sticky || mantissa % 2 != 0)) { mantissa += 1; }
+    if (exponent == max_exponent + 1 && mantissa == (1 << precision)) {
+        return failure::<f64>(0.0, 3, -1);
+    }
+    // The mantissa and every power-of-two scaling step are exact in binary64.
+    let value: f64 = f64(mantissa);
+    let scale: int = exponent - precision;
+    while (scale < 0) { value *= 0.5; scale += 1; }
+    while (scale > 0) { value *= 2.0; scale -= 1; }
+    return success::<f64>(value);
+}
+
+safe fn decimal_real(borrow data: slice<byte>, precision: int, min_exp: int, max_exp: int): Parsed<f64> {
+    val size: int = len(data);
+    if (size == 0) { return failure::<f64>(0.0, 1, 0); }
+    // Every midpoint between finite binary64 values, including the zero and
+    // overflow boundaries, has fewer than 800 significant decimal digits.
+    own digits: *byte = try_alloc<byte>(800);
+    if (digits == null) { return failure::<f64>(0.0, 4, -1); }
+    val negative: bool = data[0] == '-';
+    let i: int = 0;
+    if (negative || data[0] == '+') { i = 1; }
+    let dot: bool = false;
+    let any_digit: bool = false;
+    let count: int = 0;
+    let point: int = 0;
+    let sticky: bool = false;
+    while (i < size) {
+        val c: byte = data[i];
+        if (c == '.' && !dot) { dot = true; i += 1; continue; }
+        if (c < '0' || c > '9') { break; }
+        any_digit = true;
+        if (count == 0 && c == '0') {
+            if (dot) { point -= 1; }
+        } else {
+            if (!dot) { point += 1; }
+            if (count < len(digits)) { digits[count] = byte(int(c) - 48); count += 1; }
+            else { sticky = sticky || c != '0'; }
+        }
+        i += 1;
+    }
+    if (!any_digit) { return failure::<f64>(0.0, 2, i); }
+    if (i < size && (data[i] == 'e' || data[i] == 'E')) {
+        i += 1;
+        let negative_exp: bool = false;
+        if (i < size && (data[i] == '+' || data[i] == '-')) {
+            negative_exp = data[i] == '-';
+            i += 1;
+        }
+        val start: int = i;
+        val limit: int = size + 1024;
+        let exponent: int = 0;
+        while (i < size && data[i] >= '0' && data[i] <= '9') {
+            if (exponent <= (limit - 9) / 10) { exponent = exponent * 10 + int(data[i]) - 48; }
+            else { exponent = limit; }
+            i += 1;
+        }
+        if (i == start) { return failure::<f64>(0.0, 2, i); }
+        if (negative_exp) { point -= exponent; }
+        else { point += exponent; }
+    }
+    if (i != size) { return failure::<f64>(0.0, 2, i); }
+    val decimal: Decimal = trim_decimal(digits, count, point, sticky);
+    val result: Parsed<f64> = rounded_binary(digits, decimal, precision, min_exp, max_exp);
+    if (negative && result.ok) { return success::<f64>(-result.value); }
+    return result;
+}
+
+/// Decimal de precisão dupla, com arredondamento ties-to-even.
+public safe fn parse_f64(borrow data: slice<byte>): Parsed<f64> {
+    return decimal_real(data, 53, -1022, 1023);
+}
+
+/// Decimal de precisão simples, sem arredondamento intermediário em f64.
+public safe fn parse_f32(borrow data: slice<byte>): Parsed<f32> {
+    val result: Parsed<f64> = decimal_real(data, 24, -126, 127);
+    if (!result.ok) { return failure::<f32>(f32(0.0), result.code, result.position); }
+    return success::<f32>(f32(result.value));
+}

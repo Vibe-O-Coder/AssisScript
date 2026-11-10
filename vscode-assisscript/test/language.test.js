@@ -260,3 +260,16 @@ test('enum Move e match consumidor mantêm o tipo do recurso extraído', () => {
     assert.equal(model.symbols.find(s => s.name === 'Some').params[0].ownership, 'own');
     assert.equal(model.symbols.find(s => s.name === 'data' && s.pattern).type, '*int');
 });
+
+test('typed stdin snippet resolves methods and parser types from the bundled stdlib', () => {
+    const fs = require('node:fs');
+    const root = path.resolve(__dirname, '../../stdlib');
+    const snippets = require('../snippets/assis.json');
+    const body = snippets['Leitura tipada de stdin'].body.join('\n');
+    const model = l.analyze(body, 'typed.assis');
+    const cli = l.analyze(fs.readFileSync(path.join(root, 'cli.assis'), 'utf8'), 'cli.assis');
+    const parse = l.analyze(fs.readFileSync(path.join(root, 'parse.assis'), 'utf8'), 'parse.assis');
+    const offset = body.indexOf('input.readint()') + 'input.readint('.length;
+    assert.match(l.signatureAt(model, offset, [model, cli, parse]).label, /readint.*Parsed<int>/);
+    assert(parse.symbols.some(symbol => symbol.name === 'parse::parse_u64' && !symbol.modulePrivate));
+});

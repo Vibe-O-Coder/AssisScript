@@ -245,5 +245,20 @@
   "Saída sem separador": {
     "prefix": "write",
     "body": "write(${0:\"Hello\"});"
+  },
+  "Leitura tipada de stdin": {
+    "prefix": "readint",
+    "body": [
+      "import \"std/cli.assis\";",
+      "",
+      "safe fn main(): int {",
+      "    own input: cli::Stdin = new cli::Stdin(256);",
+      "    val number: parse::Parsed<int> = input.readint();",
+      "    if (!number.ok) { print(number.code, number.position); return 1; }",
+      "    print(number.value);",
+      "    return 0;",
+      "}"
+    ],
+    "description": "Lê um int64 de stdin e trata EOF, formato e overflow."
   }
 }

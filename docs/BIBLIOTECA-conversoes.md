@@ -1,4 +1,4 @@
-# std/conversoes.assis
+# std/convert.assis
 
 **Atualização 3.3.0-alpha.7:** Alpha.7 adiciona formatar_int_buffer(numero, borrow mut destino), sem alocação e sem NUL, incluindo INT64_MIN. Capacidade mínima 20 bytes; retorna comprimento ou -1. [Contrato](IO-E-APLICACAO-A.md).
 
@@ -20,3 +20,5 @@ fn main(): int {
 ```
 
 Para aceitar espaços de uma interface, primeiro use `trim`, converta sua visualização e depois libere o Texto temporário. Veja [exemplo de relatório](../exemplos/12_relatorio_vendas.assis).
+
+Para código no perfil safe e entradas com comprimento explícito, consulte [std/parse.assis](BIBLIOTECA-parse.md).

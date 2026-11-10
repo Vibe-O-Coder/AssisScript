@@ -43,6 +43,19 @@ public final class String {
         self.data=move(novos);self.count=len(entrada);self.capacity=len(entrada);return true;
     }
 
+    /// Replaces the content only after validation and allocation succeed.
+    fn try_load(borrow mut self, borrow input: slice<byte>): bool {
+        if (error(input) >= 0) { return false; }
+        if (len(input) == 0) { self.clear(); return true; }
+        own data: *byte = try_alloc<byte>(len(input));
+        if (data == null) { return false; }
+        for (let i: int = 0; i < len(input); i += 1) { data[i] = input[i]; }
+        self.data = move(data);
+        self.count = len(input);
+        self.capacity = len(input);
+        return true;
+    }
+
     /// Grow geometrically; existing borrowed views must end before mutation.
     fn reserve(borrow mut self,capacity:int):void {
         assert(capacity>=0 && capacity<=0x3fff_ffff_ffff_ffff);

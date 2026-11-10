@@ -1,3 +1,13 @@
+> **10/11/2026 — entrada tipada e auditoria, 48,30%, 0/5 gates.**
+> `work/typed-input-audit-2026-11-10` parte de `29dc983`. Leitor de stdin
+> tipado, parsers de escalares/UTF-8 e VSIX x64 reconstruído. Os binários
+> rastreado e de desenvolvimento da base tinham a mesma versão e
+> compatibilidade diferente. Windows 116/0, Linux 109/2 executados/pulados,
+> 70 exemplos por host e 93 testes Node Windows. Sem novo aceite visual.
+> Meta 50% pendente. Próximo: loader físico confinado/recursos declarados.
+> A fila e a régua do ecossistema continuam vigentes. Easy por último.
+> [Relatório](../relatorios/2026-11-10-entrada-tipada.md).
+
 > **Publicação confirmada — 48,30%, 04/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/local-resources-20261104`,
 > branch `work/m3-local-resources-2026-11-04`, base pública 33b7431 conferida.
