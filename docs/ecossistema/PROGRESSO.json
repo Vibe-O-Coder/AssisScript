@@ -1,9 +1,9 @@
 {
   "schema": "assisscript-ecosystem-progress-v1",
   "rubric_version": 1,
-  "date": "2026-11-04",
+  "date": "2026-11-11",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "native-local-resource-batches-responsive-frame",
+  "assessment": "typed-stdin-parsers-local-constants-and-vsix",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -154,7 +154,9 @@
             "docs/FUNCOES-E-EFEITOS.md",
             "docs/relatorios/2026-10-29-m0-incremento.md",
             "docs/ecossistema/evidencias/m0-incremento-2026-10-29/windows-x64.json",
-            "docs/ecossistema/evidencias/m0-incremento-2026-10-29/linux-x64.json"
+            "docs/ecossistema/evidencias/m0-incremento-2026-10-29/linux-x64.json",
+            "docs/relatorios/2026-11-11-entrada-tipada-const.md",
+            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json"
           ]
         },
         {
@@ -182,7 +184,9 @@
           "evidence": [
             "docs/NUMEROS.md",
             "docs/VALORES-E-VARIANTES.md",
-            "docs/ERROS.md"
+            "docs/ERROS.md",
+            "docs/relatorios/2026-11-11-entrada-tipada-const.md",
+            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json"
           ]
         },
         {
@@ -299,7 +303,9 @@
             "docs/BIBLIOTECA-texto.md",
             "docs/relatorios/2026-11-01-m3-unicode-m0-vm.md",
             "docs/ecossistema/evidencias/m3-unicode-vm-2026-11-01/summary.json",
-            "docs/BIBLIOTECA-graphemes.md"
+            "docs/BIBLIOTECA-graphemes.md",
+            "docs/relatorios/2026-11-11-entrada-tipada-const.md",
+            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json"
           ]
         },
         {
@@ -898,7 +904,9 @@
             "docs/relatorios/2026-11-04-m3-recursos-responsividade.md",
             "docs/ecossistema/evidencias/m3-local-resources-2026-11-04/desktop.json",
             "docs/ecossistema/evidencias/m3-local-resources-2026-11-04/response.json",
-            "tests/test-frame-responsiveness.py"
+            "tests/test-frame-responsiveness.py",
+            "docs/relatorios/2026-11-11-entrada-tipada-const.md",
+            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json"
           ]
         }
       ]
@@ -1070,7 +1078,9 @@
             "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
             "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md",
             "docs/relatorios/2026-11-03-m3-frame-worker.md",
-            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json"
+            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json",
+            "docs/relatorios/2026-11-11-entrada-tipada-const.md",
+            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json"
           ]
         },
         {
@@ -1086,7 +1096,9 @@
             "docs/ecossistema/evidencias/m3-htdl-catalog-2026-11-02/summary.json",
             "docs/ecossistema/PERFIL-HTDL-CATALOGO-V1.md",
             "docs/relatorios/2026-11-02-m3-htdl-recovery.md",
-            "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-11-entrada-tipada-const.md",
+            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json"
           ]
         },
         {
@@ -1097,7 +1109,9 @@
           "baseline": "CI nativa histórica aprovada; testes novos do ecossistema ainda não existem.",
           "evidence": [
             "docs/VALIDACAO-TARGETS-V1.json",
-            ".github/workflows/ci.yml"
+            ".github/workflows/ci.yml",
+            "docs/relatorios/2026-11-11-entrada-tipada-const.md",
+            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json"
           ]
         },
         {
@@ -3713,7 +3727,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-11",
+      "rubric_version": 1,
+      "label": "Entrada tipada, parsers, const local e VSIX x64; evidência parcial, 48,30%, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 3,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 1,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 3,
+        "E07-03": 2,
+        "E07-04": 3,
+        "E07-05": 3,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 2,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "48,30%, 0/5 gates; meta 50% pendente. Lotes locais imutáveis e ativação conjunta de recursos/Frame/worker; arquivos externos concedidos separadamente. Correções de fila IPC, métricas, visibilidade, Ctrl mantido e cadência SSC. Usuário aprovou leitura/contador suaves; painéis receberam tratamento após feedback. Capturas Computer Use expiraram, sem screenshots desktop/leitor/DPI/IME. Windows 149/0, Linux 120/29 executados/not-run; 69 exemplos por host, instalações isoladas/24 bibliotecas e testes de distribuição passaram. Medianas locais de leitura 109→16 ms e intervalos SSC 94→22 ms; usuário ainda percebe pequenas travadas SSC, sem aceite de fluidez. Implementação bd56af5d8f00e0234a27a4985aa61eabf923d296 publicada; SHA/árvore completa e 96 paths/tipos/modos/blobs conferidos. PR não criada: conector 403 Resource not accessible by integration. Adendo documental pelo histórico. Loader físico/recursos declarados, SDK geral, controles/imagens/live regions, identidade incremental/editor, RSS/disco/órfãos, macOS/ARM, rede/perfis/persistência/busca, M4–M9, 24h, distribuição e aceites seguem integralmente na fila. Easy por último."
+  "assessment_note": "48,30%, 0/5 gates. Entrada tipada, parsers, const local e VSIX x64 validados em escopo nativo. Novas evidências incluem falha real de cópia no Linux, oráculo racional, instalação seletiva e resolução de bibliotecas no VS Code isolado. A árvore desktop confirmou foco inicial no SSC. Fluidez, leitor de tela, DPI, múltiplos monitores e IME seguem pendentes. Os níveis permanecem iguais. A fila integral e a meta de 50% seguem abertas."
 }

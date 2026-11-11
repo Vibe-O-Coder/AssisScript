@@ -1,3 +1,9 @@
+> **Continuação de 11/11/2026 — 48,30%, 0/5 gates.** Entrada tipada,
+> parsers de escalares/UTF-8, `const` em blocos e candidato VSIX x64.
+> [Relatório](../relatorios/2026-11-11-entrada-tipada-const.md).
+> Próxima unidade: loader físico confinado de recursos declarados.
+> Seguem os aceites e os itens da fila abaixo.
+
 > **Publicação confirmada — 48,30%, 04/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/local-resources-20261104`,
 > branch `work/m3-local-resources-2026-11-04`, base pública 33b7431 conferida.

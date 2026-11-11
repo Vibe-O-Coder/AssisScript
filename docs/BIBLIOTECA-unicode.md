@@ -10,6 +10,7 @@ Importação: `import "std/unicode.assis";`. Opcional, offline, sem dependência
 | `unicode::next(borrow slice<byte>,indice:int):int` | Próxima fronteira; pré-condição: texto válido e índice em início de ponto de código |
 | `new unicode::String()` | Cria texto vazio válido |
 | `load(borrow mut self,borrow entrada:slice<byte>):bool` | Valida e copia; false preserva o texto anterior; aceita a entrada binária com NUL |
+| `try_load(borrow mut self,borrow entrada:slice<byte>):int` | Valida e copia. Retorna -1 em sucesso, -2 em falha de alocação ou o offset de UTF-8 inválido. Preserva o destino nas duas falhas |
 | `size(borrow self):int` | Comprimento em bytes, O(1) |
 | `as_slice(borrow self):borrow(self) slice<byte>` | Fatia compartilhada da totalidade; sem alocar |
 | `slice_range(borrow self,start:int,count:int):borrow(self) slice<byte>` | Exige limites e fronteiras de pontos de código; sem alocar |

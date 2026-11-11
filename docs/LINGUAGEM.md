@@ -12,19 +12,23 @@ const ANSWER: int = 40 + 2;
 const MARKER: byte = '#';
 pure fn double(value: int): int { return value * 2; }
 safe fn main(): int {
+    const EXPECTED: int = ANSWER;
     own values: Array<int> = [1, 2, 3];
     for (let i: int = 0; i < len(values); i += 1) {
         print(double(values[i]));
     }
-    assert(ANSWER == 42 && MARKER == byte(35));
+    assert(EXPECTED == 42 && MARKER == byte(35));
     return 0;
 }
 ```
 
-`let` cria vínculo mutável; `val`, vínculo local imutável; `const`, constante
-global numérica, bool ou texto estático. Constantes podem referir outras
-constantes declaradas depois; ciclos e expressões com efeitos são rejeitados.
-`public const` exporta constantes de um namespace.
+`let` cria vínculo mutável. `val` cria vínculo local imutável e aceita valores
+calculados durante a execução. `const` declara uma constante numérica, bool ou
+texto estático no topo do módulo ou dentro de um bloco. O inicializador aceita
+literais, operadores escalares e referências a outras constantes. Uma constante
+local fica visível depois da declaração até o fim do bloco. Constantes globais
+podem referir outras globais declaradas depois e ciclos são rejeitados.
+`public const` exporta uma constante global de um namespace.
 
 Tipos: `int`/`i64`, `byte`/`u8`, `i8`, `i16`, `i32`, `u16`, `u32`, `u64`, `f32`,
 `f64`, `bool`, `text`, `void`, `File`, classes, registros, enums e slices.

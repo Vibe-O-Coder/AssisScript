@@ -1,10 +1,20 @@
 """Build an offline VSIX with Python's standard library only."""
+import argparse
 from pathlib import Path
 import json
 import zipfile
 from xml.sax.saxutils import escape
 
 root = Path(__file__).resolve().parent.parent
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--bin-dir", type=Path, default=root / "bin",
+                    help="directory containing the candidate Windows and Linux compilers")
+args = parser.parse_args()
+compiler_names = ["assis", "assis.exe", "assis-linux-arm64", "assis-macos-x64", "assis-macos-arm64"]
+for name in compiler_names[:2]:
+    source = args.bin_dir / name
+    if not source.is_file():
+        parser.error(f"missing candidate compiler: {source}")
 extension = root / "vscode-assisscript"
 package = json.loads((extension / "package.json").read_text(encoding="utf-8"))
 version = package["version"]
@@ -26,10 +36,9 @@ with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
     for file in sorted(extension.rglob("*")):
         if file.is_file() and "test" not in file.relative_to(extension).parts:
             archive.write(file, "extension/" + file.relative_to(extension).as_posix())
-    for name in ["assis", "assis.exe", "assis-linux-arm64", "assis-macos-x64", "assis-macos-arm64"]:
-        source = root / "bin" / name
+    for name in compiler_names:
+        source = args.bin_dir / name
         if not source.is_file():
-            if name in ("assis","assis.exe"): raise FileNotFoundError(source)
             continue
         info = zipfile.ZipInfo("extension/bin/" + name)
         info.create_system = 3

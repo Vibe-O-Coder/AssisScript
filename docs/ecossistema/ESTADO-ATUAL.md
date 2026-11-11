@@ -1,3 +1,13 @@
+> **Entrada tipada e `const` local — 11/11/2026, 48,30%, 0/5 gates.**
+> Base 29dc983, branch `work/typed-input-2026-11-10`. Stdin limitado,
+> parsers de escalares e UTF-8 e exemplo com escopo de `const` em bloco.
+> Compiladores x64 reconstruídos para o VSIX. Testes otimizados e `--no-opt`
+> em Windows/Linux x64. A inspeção desktop confirmou foco SSC no primeiro
+> botão pela árvore de acessibilidade. Capturas e aceites visuais pendentes.
+> [Relatório](../relatorios/2026-11-11-entrada-tipada-const.md).
+> A meta de 50% continua aberta. O loader físico confinado de recursos
+> declarados é a próxima unidade da [fila integral](FILA-M0-M1.md).
+
 > **Publicação confirmada — 48,30%, 04/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/local-resources-20261104`,
 > branch `work/m3-local-resources-2026-11-04`, base pública 33b7431 conferida.

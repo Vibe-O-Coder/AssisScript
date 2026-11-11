@@ -18,6 +18,22 @@ Sugestões após ponto, F12, assinaturas e símbolos reconhecem nomes livres, st
 
 O comando AssisScript: Abrir documentação da linguagem abre o manual incluído em pré-visualização Markdown, sem internet.
 
+## Entrada tipada e constantes locais
+
+Em um arquivo `.assis` vazio, expanda o snippet `readint` para criar um leitor
+e tratar erros de entrada. O VSIX inclui `exemplos/68_typed_input.assis` e os
+manuais de [stdin](BIBLIOTECA-cli.md) e [parsers](BIBLIOTECA-parse.md). Abra o
+exemplo em uma pasta confiável e use **AssisScript: Compilar e executar**.
+Informe nome, quantidade, preço com ponto decimal e `true` ou `false`, um valor
+por linha. Em um bloco, `const LIMITE: int = 256;` declara um vínculo imutável
+com inicializador constante. O editor limita navegação e sugestões ao escopo.
+
+Para validar um pacote de desenvolvimento, reconstrua os compiladores dos
+hosts a distribuir e execute `python tools/package-vscode.py --bin-dir build/vsix-compilers`.
+O candidato desta unidade usa Windows x64 e Linux x64.
+Em outros hosts, configure `assisscript.compilerPath` para um compilador
+compatível quando o pacote não incluir um para a plataforma.
+
 ## Ícones
 
 Execute AssisScript: Ativar ícones de arquivos ou selecione o tema AssisScript (Miyabi). A primeira imagem identifica .assis e .pillow. A contribuição da linguagem também fornece esse ícone como padrão quando o tema ativo permite. Temas de ícones de terceiros podem prevalecer; o tema incluído garante a associação. O workspace fornecido já seleciona esse tema.

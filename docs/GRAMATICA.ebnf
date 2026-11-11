@@ -25,7 +25,7 @@ tipo_closure = "closure", ["mut"], "(", [tipo_argumento, {",", tipo_argumento}],
 closure = "closure", ["mut"], "[", [captura, {",", captura}], "]", "(", [parametros], ")", ":", retorno, bloco ;
 captura = ("val" | "own" | "borrow"), nome, ":", tipo, "=", expressao ;
 bloco = "{", {instrucao}, "}" ;
-instrucao = bloco | ("let" | "val"), nome, ":", tipo, "=", expressao, ";"
+instrucao = bloco | constante | ("let" | "val"), nome, ":", tipo, "=", expressao, ";"
           | "unsafe", bloco
           | ("own" | "borrow", ["mut"]), nome, ":", tipo, "=", expressao, ";"
           | "defer", "free", "(", nome, ")", ";"
@@ -52,7 +52,7 @@ primaria = closure | caractere | inteiro | real_decimal | texto | "true" | "fals
          | "[", [expressao, {",", expressao}, [","]], "]" ;
 argumentos = "(", [expressao, {",", expressao}], ")" ;
 braco = nome, ["(", [nome, {",", nome}], ")"], bloco ;
-inicializacao = ("let" | "val" | "own" | "borrow", ["mut"]), nome, ":", tipo, "=", expressao, ";"
+inicializacao = constante | ("let" | "val" | "own" | "borrow", ["mut"]), nome, ":", tipo, "=", expressao, ";"
               | atribuicao, ";" | incremento, ";" | expressao, ";" ;
 atribuicao = expressao, operador_atribuicao, expressao ;
 incremento = ("++" | "--"), expressao | expressao, ("++" | "--") ;

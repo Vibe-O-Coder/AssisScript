@@ -81,7 +81,7 @@
     "c_callback": "c_callback(global_function): u64 cria ponte C para função global sem captura. Exige unsafe e callback síncrono na thread principal.",
     "drop": "fn drop(borrow mut self): void em final class é chamado automaticamente antes dos campos own. Chamadas manuais são rejeitadas.",
     "closure": "Closure safe com capturas explícitas val/own/borrow. Tipo closure(args): retorno; closure mut exige acesso exclusivo. Ambiente own com destruição determinística; capturas borrow são lexicais e não escapam por move/retorno.",
-    "const": "Constante global escalar ou texto estático; pode referenciar outras constantes.",
+    "const": "Constante de módulo ou bloco, numérica, bool ou texto estático, inicializada com expressão constante.",
     "super": "Acesso direto à classe base. super.init deve iniciar o construtor derivado.",
     "write": "Imprime os argumentos consecutivamente, sem separador ou quebra de linha.",
     "utf8": "utf8(literal) cria slice<byte> estático sem alocação, preservando bytes NUL.",

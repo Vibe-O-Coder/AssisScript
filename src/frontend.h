@@ -10,7 +10,7 @@ typedef struct { Token *t; DefId id; } TypeParameter;
 static DefId next_definition;
 static Vec type_identities,type_parameters;
 typedef struct Class Class;typedef struct Function Function;typedef struct Var Var;typedef struct Node Node;typedef struct IRExpr IRExpr;typedef struct IROperation IROperation;
-struct Var { Token *t;Type ty;int slot,length_slot,ownership,shared,loop,reg,uses;bool moved,exclusive,deferred,address_taken,immutable,static_text;Var *root,*parent;int field_slot;Vec capture_roots; };
+struct Var { Token *t;Type ty;int slot,length_slot,ownership,shared,loop,reg,uses;bool moved,exclusive,deferred,address_taken,immutable,constant,static_text;Var *root,*parent;int field_slot;Vec capture_roots; };
 typedef struct { Token *t;Type ty;int slot,offset;Class *owner;bool private,owned,borrowed; } Field;
 typedef struct { Token *t;Vec fields;int tag; } Variant;
 enum { N_INT,N_STR,N_BOOL,N_NULL,N_NAME,N_SELF,N_UNARY,N_BINARY,N_CALL,N_MEMBER,N_INDEX,N_NEW,N_BUILTIN,N_BLOCK,N_LET,N_ASSIGN,N_IF,N_WHILE,N_RETURN,N_PRINT,N_FREE,N_BREAK,N_CONTINUE,N_EXPR,N_ARRAY,N_DEFER,N_UNSAFE,N_MATCH,N_ARM,N_IS,N_CAST };
@@ -217,10 +217,11 @@ static Node *statement_inner(void){
     }
     if(accept(T_UNSAFE)){n=node(N_UNSAFE,t);n->a=block();return n;}
     if(accept(T_DIV))return block();
-    if(t->kind==T_LET||t->kind==T_VAL||t->kind==T_OWN||t->kind==T_BORROW){
+    if(t->kind==T_LET||t->kind==T_VAL||t->kind==T_CONST||t->kind==T_OWN||t->kind==T_BORROW){
         take();int ownership=t->kind==T_OWN?1:t->kind==T_BORROW?2:0;
         if(ownership==2&&accept(T_MUT))ownership=3;
-        Token *name=expect(T_ID);n=node(N_LET,name);n->ownership=ownership;n->immutable=t->kind==T_VAL;
+        Token *name=expect(T_ID);n=node(N_LET,name);n->ownership=ownership;
+        n->op=t->kind;n->immutable=t->kind==T_VAL||t->kind==T_CONST;
         expect(':');n->decl=parse_type();expect('=');n->a=expression(1);expect(';');return n;
     }
     if(accept(T_DEFER)){n=node(N_DEFER,t);expect(T_FREE);Vec a={0};args(&a);if(a.n!=1)error(t,"defer free recebe um argumento");n->a=a.v[0];free(a.v);expect(';');return n;}
@@ -472,9 +473,19 @@ static Node *copy_constant(Node *n,int depth){
     Node *out=mem(sizeof(*out));*out=*n;out->a=copy_constant(n->a,depth+1);out->b=copy_constant(n->b,depth+1);out->items=(Vec){0};
     for(int i=0;i<n->items.n;i++)push(&out->items,copy_constant(n->items.v[i],depth+1));return out;
 }
-static void expand_constant_names(Node *n){
+static bool constant_type(Type ty){
+    return numeric(ty)||floating(ty)||equal_type(ty,type_bool)||equal_type(ty,type_str);
+}
+static void expand_constant_names(Node *n,bool local){
     if(!n)return;
     if(n->kind==N_NAME){
+        if(local){
+            Var *binding=lookup(n->t->text);
+            if(binding){
+                if(!binding->constant)error(n->t,"const exige literais ou outras constantes");
+                return;
+            }
+        }
         GlobalConstant *g=find_constant(n->t->text);if(!g)error(n->t,"const exige literais ou outras constantes globais");
         Node *value=copy_constant(constant_source(g),0);
         /* Preserve the declared int type across a byte-to-int widening. An
@@ -485,12 +496,13 @@ static void expand_constant_names(Node *n){
     }
     if(n->kind!=N_INT&&n->kind!=N_STR&&n->kind!=N_BOOL&&n->kind!=N_UNARY&&n->kind!=N_BINARY&&!(n->kind==N_BUILTIN&&(n->op==T_I64||n->op==T_U8||n->op==T_BOOL||n->op==T_NUMTYPE)))error(n->t,"const exige expressão escalar constante, sem chamadas ou alocação");
     if(n->kind==N_UNARY&&(n->op=='&'||n->op=='*'))error(n->t,"const não permite ponteiros");
-    expand_constant_names(n->a);expand_constant_names(n->b);for(int i=0;i<n->items.n;i++)expand_constant_names(n->items.v[i]);
+    expand_constant_names(n->a,local);expand_constant_names(n->b,local);
+    for(int i=0;i<n->items.n;i++)expand_constant_names(n->items.v[i],local);
 }
 static Node *constant_source(GlobalConstant *g){
     if(g->state==1)error(g->t,"ciclo entre constantes globais");if(g->state==2)return g->value;
     if(++constant_dependency_depth>MAX_NEST)error(g->t,"limite de dependências de constantes excedido");
-    g->state=1;expand_constant_names(g->value);g->state=2;constant_dependency_depth--;return g->value;
+    g->state=1;expand_constant_names(g->value,false);g->state=2;constant_dependency_depth--;return g->value;
 }
 static Type expected_expr(Type expected,Node *n){
     if(n->kind==N_ARRAY)n->decl=expected;
@@ -717,10 +729,16 @@ static int check_statement(Node *n,bool scoped){
         if(scoped){bindings.n=old;scope_start=previous;}break;
     }
     case N_LET:{
-        valid_type(n->decl,n->t,false);Type value=expected_expr(n->decl,n->a);require_assign(n->decl,value,n->t);
+        valid_type(n->decl,n->t,false);
+        if(n->op==T_CONST){
+            if(!constant_type(n->decl))error(n->t,"const aceita números, bool ou texto estático");
+            expand_constant_names(n->a,true);
+        }
+        Type value=expected_expr(n->decl,n->a);require_assign(n->decl,value,n->t);
         if(n->immutable&&!pure_value(n->decl)&&!equal_type(n->decl,type_str)&&!function_value(n->decl))error(n->t,"val aceita int, byte, bool, text e funções nesta etapa");
         if(checking->pure&&(!pure_value(n->decl)||n->ownership))error(n->t,"local pure exige valor escalar sem own/borrow");
-        Var *v=mem(sizeof(*v));v->t=n->t;v->ty=n->decl;v->ownership=n->ownership;v->immutable=n->immutable;declare(v);n->var=v;break;
+        Var *v=mem(sizeof(*v));v->t=n->t;v->ty=n->decl;v->ownership=n->ownership;
+        v->immutable=n->immutable;v->constant=n->op==T_CONST;declare(v);n->var=v;break;
     }
     case N_ASSIGN:{
         Type left=check_expr(n->a);if(!n->a->lvalue)error(n->t,"lado esquerdo não é uma posição gravável");
@@ -799,7 +817,7 @@ static void check(void){
         GlobalConstant *g=global_constants.v[i];
         for(int j=0;j<i;j++)if(same(g->t->text,((GlobalConstant*)global_constants.v[j])->t->text))error(g->t,"constante global declarada duas vezes");
         if(find_fn(g->t->text)||find_class(g->t->text))error(g->t,"nome principal declarado duas vezes");
-        if(!numeric(g->ty)&&!floating(g->ty)&&!equal_type(g->ty,type_bool)&&!equal_type(g->ty,type_str))error(g->t,"const aceita números, bool ou texto estático");
+        if(!constant_type(g->ty))error(g->t,"const aceita números, bool ou texto estático");
         require_assign(g->ty,check_expr(clone_node(constant_source(g))),g->t);
     }
     main_function=test_driver?test_driver:find_fn(ENTRY);if(!main_function&&!library_check)error(tokens.v[0],"falta a entrada: fn main(): int { return 0; }");

@@ -183,7 +183,9 @@ function analyze(text, file) {
             if (symbols.some(s => s.kind === 'parameter' && s.start === token.start)) continue;
             const field = owner && scope?.open === owner.open;
             const capture = closures.find(c => i > c.open && i < c.close);
-            add(token, v(i)==='const'?'constant':field ? 'field' : 'variable', { type: typeAt(nameAt + 2), owner: field ? owner.name : undefined, private: field && v(i - 1) === 'private', immutable: !!capture || ['val', 'const'].includes(v(i)), capture: !!capture, scopeStart: capture ? tokens[capture.body].start : scope?.start ?? 0, scopeEnd: scope?.end ?? text.length });
+            const platformBlock = scope && v(scope.open - 1) === ')' && v(pairs.get(scope.open - 1) - 1) === 'platform';
+            const globalConstant = v(i) === 'const' && (!scope || platformBlock);
+            add(token, globalConstant ? 'constant' : field ? 'field' : 'variable', { type: typeAt(nameAt + 2), owner: field ? owner.name : undefined, private: field && v(i - 1) === 'private', immutable: !!capture || ['val', 'const'].includes(v(i)), capture: !!capture, scopeStart: capture ? tokens[capture.body].start : scope?.start ?? 0, scopeEnd: scope?.end ?? text.length });
         }
     }
     for (const c of closures) for (let j = c.params + 1; j < c.paramsEnd; j++) if (v(j + 1) === ':') {

@@ -1,0 +1,474 @@
+{
+  "schema": "assisscript-typed-input-validation-v1",
+  "date": "2026-11-11",
+  "base": "29dc9836ac4a8cd63daafe1c8657ca23471bc61a",
+  "reference": "76c7f3c789392b473a4c376268edec8271f11588",
+  "branch": "work/typed-input-2026-11-10",
+  "baselineZipSha256": "fbe5caac405074568fb372b179e29efc7deae8b6efad5c5e20afe84a1836a85f",
+  "baselineZipFiles": {
+    "bin/assis": "683804bb2d8685847bd0f635ea21b0df0f153a9cd976b68e474c7650e0a2e4f9",
+    "bin/assis.exe": "c519e591eacb52f87593064879e93b98f12de69218e09acd79a821cb30d9e4c5",
+    "build/assis-linux": "5d466b9faf280c36325a416b80579831e5408db946612a21eebaaf5be5d8688b",
+    "build/assis.exe": "8e89ae09a3a47e75e21e18edba8c8db9b48b9b009f2f5a57898dab53e256925f",
+    "assisscript-3.3.0-alpha.10.vsix": "012bbf7ae7e1df26c97054a2aafef0b91a0ed3f21284667307a2fb99601fbee9"
+  },
+  "native": {
+    "windows": {
+      "compilerSha256": "117b7c93bbeafb53d487255e587ea52015be7abbf14ee8dbbf9088cd50730b4e",
+      "suites": {
+        "typed-input": {
+          "executed": 7,
+          "notRun": 2,
+          "status": "pass"
+        },
+        "cli": {
+          "executed": 1,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "numbers": {
+          "executed": 11,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "text-bytes": {
+          "executed": 4,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "values": {
+          "executed": 21,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "safe-default": {
+          "executed": 5,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "usability": {
+          "executed": 11,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "increment": {
+          "executed": 10,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "install-mask": {
+          "executed": 2,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "packages": {
+          "executed": 12,
+          "notRun": 1,
+          "status": "pass"
+        }
+      },
+      "exampleChecks": 70,
+      "rpg": [
+        {
+          "seed": 1,
+          "ending": "victory",
+          "returnCode": 0,
+          "stderr": "",
+          "outputBytes": 12915
+        },
+        {
+          "seed": 5,
+          "ending": "defeat",
+          "returnCode": 0,
+          "stderr": "",
+          "outputBytes": 13754
+        }
+      ]
+    },
+    "linux": {
+      "compilerSha256": "8b6f0d66d8f4d3ea87d018579489345a936722d86b73f60614b6bccac9d53946",
+      "suites": {
+        "typed-input": {
+          "executed": 9,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "cli": {
+          "executed": 1,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "numbers": {
+          "executed": 11,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "text-bytes": {
+          "executed": 4,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "values": {
+          "executed": 21,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "safe-default": {
+          "executed": 5,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "usability": {
+          "executed": 11,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "increment": {
+          "executed": 10,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "install-mask": {
+          "executed": 2,
+          "notRun": 0,
+          "status": "pass"
+        },
+        "packages": {
+          "executed": 12,
+          "notRun": 1,
+          "status": "pass"
+        }
+      },
+      "exampleChecks": 70,
+      "rpg": [
+        {
+          "seed": 1,
+          "ending": "victory",
+          "returnCode": 0,
+          "stderr": "",
+          "outputBytes": 12915
+        },
+        {
+          "seed": 5,
+          "ending": "defeat",
+          "returnCode": 0,
+          "stderr": "",
+          "outputBytes": 13754
+        }
+      ]
+    }
+  },
+  "nativeExecutionTargets": [
+    "windows-x64",
+    "linux-x64"
+  ],
+  "generatedExampleBinaries": [
+    {
+      "target": "linux-arm64",
+      "mode": "optimized",
+      "sha256": "e020b0ef30720aabb89a8ed36294669113496b24b8db18ca8a8f29815ac798e4",
+      "status": "generated"
+    },
+    {
+      "target": "linux-arm64",
+      "mode": "reference",
+      "sha256": "d94521a13c14fc4b45accd6f2a00c3a9e22be40ebcc6e89bc170c0128a683edd",
+      "status": "generated"
+    },
+    {
+      "target": "linux-x64",
+      "mode": "optimized",
+      "sha256": "1397a96d35e239f4032a3c2727540df5f2064e51c6883cf7477cb5613f6c1865",
+      "status": "generated"
+    },
+    {
+      "target": "linux-x64",
+      "mode": "reference",
+      "sha256": "7d3dd87a94efbd214a8949730244cdee6f13bb70c4ec56a1a58a664079e8a823",
+      "status": "generated"
+    },
+    {
+      "target": "macos-arm64",
+      "mode": "optimized",
+      "sha256": "7aec40c8ba59adce8b555c678b82ce57fd4b9d42911066edfff30b6f8bd1191f",
+      "status": "generated"
+    },
+    {
+      "target": "macos-arm64",
+      "mode": "reference",
+      "sha256": "2227fff1d15ba9ea5efd1847d56bd5e8938ac5763293482d413330ebd0a73f15",
+      "status": "generated"
+    },
+    {
+      "target": "macos-x64",
+      "mode": "optimized",
+      "sha256": "84f5a1b7bdd7f4e7e693082aaf72ceefa981a56fa9439d9a4678212aac496654",
+      "status": "generated"
+    },
+    {
+      "target": "macos-x64",
+      "mode": "reference",
+      "sha256": "8113905644942f4b37baa2b37f5001e2d5e8a08f2a9c04b133f10f8027139f04",
+      "status": "generated"
+    },
+    {
+      "target": "windows-x64",
+      "mode": "optimized",
+      "sha256": "56fe81f5d26ae06d49b0aa4473f432f3e6f9ccdc97b76ff961fb42defbe33333",
+      "status": "generated"
+    },
+    {
+      "target": "windows-x64",
+      "mode": "reference",
+      "sha256": "51040c5a3d46356c4aa1b77accd5aafe9a1c35307782b4b6bceb935f3533afbb",
+      "status": "generated"
+    }
+  ],
+  "floatOracle": {
+    "precisionBits": [
+      24,
+      53
+    ],
+    "spellings": 514,
+    "seed": 99171,
+    "type": "exact Fraction"
+  },
+  "selectiveInstall": {
+    "windows": [
+      "cli",
+      "log"
+    ],
+    "linux": [
+      "cli"
+    ],
+    "dependencyChain": [
+      "cli",
+      "parse",
+      "unicode"
+    ],
+    "isolated": true,
+    "removal": "pass"
+  },
+  "nodeWindows": {
+    "executed": 94,
+    "passed": 94
+  },
+  "vsCodeHost": {
+    "passed": true,
+    "vscode": "1.144.1",
+    "extension": "3.3.0-alpha.15",
+    "checks": [
+      "activation",
+      "language association",
+      "F12",
+      "completion",
+      "check",
+      "run task executable and output"
+    ]
+  },
+  "desktop": {
+    "windowsOpened": [
+      "Paineis SSC com cadencia ativa",
+      "Leitura e contador"
+    ],
+    "accessibilityTrees": [
+      "panels",
+      "reading"
+    ],
+    "panelTabFocus": "Alternar esquerdo",
+    "screenshots": "not-run: FrameArrived timed out",
+    "pointer": "not-run: coordinate input geometry is unavailable",
+    "windowsProviderTests": {
+      "passed": 5
+    },
+    "visualAcceptance": "pending",
+    "realScreenReader": "not-run",
+    "systemDpi": "not-run",
+    "multipleMonitors": "not-run",
+    "ime": "not-run"
+  },
+  "rubric": {
+    "before": 48.3,
+    "after": 48.3,
+    "passedGates": 0,
+    "gates": 5,
+    "target": 50
+  },
+  "vsix": {
+    "path": "dist/assisscript-3.3.0-alpha.15.vsix",
+    "sha256": "f5ec72424635fe270d54a492d2cd51d2edeb05e811d1991728636507c22fa04f",
+    "entries": 1808,
+    "verifiedFiles": {
+      "bin/assis": "8b6f0d66d8f4d3ea87d018579489345a936722d86b73f60614b6bccac9d53946",
+      "bin/assis.exe": "117b7c93bbeafb53d487255e587ea52015be7abbf14ee8dbbf9088cd50730b4e",
+      "stdlib/algorithms.assis": "4581ab180921fa8e1b7a36cca9eead700b9a8658311c111613fda7af0d126239",
+      "stdlib/arena.assis": "9551fa65faa789f11b939a682b252d7898fcd096a8bab10bea833a5b08bd6fe4",
+      "stdlib/buffers.assis": "f04207110caa8373974167837a394b2a6c5a4e8a986ff2653096a4a105b56bf6",
+      "stdlib/catalogo.json": "c76ecd32d0e1d9942e696f6a2f5a3f2b5cccb3338f9b703f54e12e045e2f0712",
+      "stdlib/catalogo.sh": "1f1d989f17854a32f98925d91cce0c272ad8ebda116c1d23e90b14cc20c08706",
+      "stdlib/cli.assis": "d32e572346e462d89be51c9ef8407f107bde2da909a35badfe2ed73c9f5db80b",
+      "stdlib/convert.assis": "005f807feff6793aebb6a650fde152401d5581b8383624432f7170f15e6420ee",
+      "stdlib/csv.assis": "08d3a5c0fe0cafe7ff830d076b8c6a0750020a637481f705ae98589d117e74b4",
+      "stdlib/doctree.assis": "cb521e03c6bd05a7fd6154545f8c77778073fb454c48ad5d690ccf5e065637e7",
+      "stdlib/documents.assis": "1013f4c1874338cdcb75d7b378ec1f6f90f3f4f04ce8a1f842b53301fa150b03",
+      "stdlib/encoding.assis": "e1dbca19786f2b9b81fb62011992a2809e210030b7c000c9e9f03ee73b31dc95",
+      "stdlib/errors.assis": "ad9c4f1703d7cead9af736deca8de5ef9082b11a4b03aa503c29ede907f35e2e",
+      "stdlib/events.assis": "c463c7a13395f98448394639cbab4238662b25340dd106400b447a6bf7488225",
+      "stdlib/flowpage.assis": "ecb247fa911b3e903aa8fd3e06139dbaf9f565326cbbbef34a5b48ec398c93d7",
+      "stdlib/fluxstyle.assis": "6f989259e6d811afaeacecb0c36d3388494cade71c51a5dcc84616c25e2fc55a",
+      "stdlib/framehost.assis": "bfbd1905de8ecf01b675ca6f4692be3483a654eacbcdfc75325ccd7077576c92",
+      "stdlib/framereader.assis": "b7e424db75857e1fce4a772b97b29db69a550862504cb395311fab999e4545e5",
+      "stdlib/frameworker.assis": "1579d8f69509d7ee02a950e1947f9cc8d1516494badc009f0a55a99eea0e2fd1",
+      "stdlib/graphemes.assis": "0f5c4149d1a11e9d80da6a1a063f0cc783f06908fa3dc0d998cf47de8aae0ac5",
+      "stdlib/htdl.assis": "1b56b8fa7d9e8fcc0c2de4acad14d2c041521832e1e5782400f01ea77e5c756d",
+      "stdlib/http.assis": "2d2a5108f5d7b70929de77070e2b836a6adf33bdede7d01a28d40755ad9c7632",
+      "stdlib/iterators.assis": "57e7c46d1194ee22172a82da3c9339cca6c7de98f967eb6eac9f7a33ffff401f",
+      "stdlib/json.assis": "fe96539dd9967442cf186c719a12c105fb91b6593244d605e1dad48ce00a639a",
+      "stdlib/log.assis": "374dd08dd3df3c9c144ccccbf4b5b2c637be3025acded705261b3dddc48fccdf",
+      "stdlib/math.assis": "b790264d95cb89ea6f84f675b128eb965d0e932206eef0892e178b63b01dbe74",
+      "stdlib/memory.assis": "7ab9af05e7d9f1736d0c026eec76dbf30b005d40e1aa333306dc7e7c03f47e69",
+      "stdlib/motionpage.assis": "83dce9653d3405da62d937857f180755565327a2be746298c34507ecd48c9db6",
+      "stdlib/net.assis": "376ec5e6992d50520001b8689bf2f225deccd1df113f2f8a5d2a05d01ebbc2e0",
+      "stdlib/owned.assis": "23b6d8146a9616a42673a75e5c62ab5e48f379503fad192e726839b1b992c91c",
+      "stdlib/page.assis": "3c56b3e7af15df4513a2bc100a874a8fc85f17b1c13eef071249020daddf7f98",
+      "stdlib/pagecompiler.assis": "c6cf2da589cc45e9fddc2a8401989ea260c57205ee3b3ba870937c2a2e369fdf",
+      "stdlib/pageframe.assis": "8420b5728231fe0968c9066e6e0b3ccc85a067737d6060efdb7cef24bbaa349d",
+      "stdlib/pagehost.assis": "731bcbefb2fcf08ae41b4f19bf2922b5079886ffeec68e6c431e05656f8ab834",
+      "stdlib/pagepresent.assis": "e12ff9f6e542a04d0e496047ac5ae5e2e82530bd55da2731c2234859617e5e2a",
+      "stdlib/pagereader.assis": "a822a0df3257bed31ea4732b914d98b09f0388234c4b1cc4129a19c4b77f2514",
+      "stdlib/pageresources.assis": "2d3329d4dc16f6594fdc31230d6ab1b6d5c154dc4f3f5ff47e599de2deb95637",
+      "stdlib/pagevm.assis": "a97f07ac72e9c1eff4e4d75adf4dd8ff9e679367afbb1cfe497fa23ae07d28a8",
+      "stdlib/pagewire.assis": "ccce42f10284630553d2bea8934642f9821772a7a6880cb49d53075084847463",
+      "stdlib/pageworker.assis": "f0b164501bb8088037ec25ae5c9cf9a16487e9600587b21202f48488bb33d995",
+      "stdlib/parse.assis": "4d201f796bb9f78701f3d7e0dcdef577a7fb9f0778d0c6f9d8cd42fc512b26ee",
+      "stdlib/process.assis": "32799a30a80cadfefae7a6cd1ac9811a3bf42323764b0d144a286eff7e858d09",
+      "stdlib/random.assis": "22456db64cf65bd533be3fa509857f48f4026d314f95dba23170b3f1033d0f45",
+      "stdlib/reader.assis": "8762e170a071af90ea258e33f65b4a974f8b99b85f030682df93f7a254bf5c35",
+      "stdlib/sanscript.assis": "8de75c6c85beba2bfa091926e392e8ae5ab708cfbce49fdbe822ecf3cda9932f",
+      "stdlib/strings.assis": "05f3d4b9205648911cec49decf5e948530f53ee1c45b46e89284553fbcef39e9",
+      "stdlib/time.assis": "0a4fa74239155d2521b107c1f304885e3b0a3fe2e93b9542f9cdd09d28dfa062",
+      "stdlib/unicode.assis": "b5390968db44c5f916c1b61df2c4241600868377a62cf264907651b07c09cb33",
+      "stdlib/viewer.assis": "e65df7ad2502e4ace6df044c7e8d7c3fc2950af221cdd794cc0c00f0f36cc7a8",
+      "stdlib/window.assis": "333e712d2a563a70be842ccc33871491a81141849ccdc1413af5455ea21c040c",
+      "exemplos/68_typed_input.assis": "e18b0602007156e53eb933301c4302dfd9518c0914f7f5f13f317dfc623eb706",
+      "docs/BIBLIOTECA-cli.md": "b6e396bfe0d1cc704123d2b0c9b9a70f311693057dcf2f305da8443d3b0d1da7",
+      "docs/BIBLIOTECA-parse.md": "0b1c6d650f4f23795b5b9897c2e1f37b05900e4045cb2e963a6f7b91b280f902",
+      "docs/VSCODE.md": "95bad50373b22e8a3723b2dbb306a8369d0134d3baf2615afc637adad354b723",
+      "package.json": "40dc70acdde05efae47c2e61699ec68faa350486a7a66dc90f3f587a164e8ec1",
+      "snippets/assis.json": "e1f779183801c1d307f6ae4a86657aecd06cbb2b8105103f5d793c99c797bfe2",
+      "src/extension.js": "e252b60e0927445a3d0738801642751a977a911b05ad48a4438fa6afb42340fb",
+      "src/language.js": "7af576f5610cb6a4a027eb92ac0cf63e10ef46633406259891e71c72b3720874",
+      "src/reference.json": "4e63cf3bee396f686afcea98fe4660f523b70ad3f02c2ca5c79d41032e59f5e5"
+    },
+    "exampleCases": [
+      {
+        "case": "valid-crlf",
+        "mode": "optimized",
+        "exit": 0,
+        "lastLine": "Júlia 3 37.50"
+      },
+      {
+        "case": "declined",
+        "mode": "optimized",
+        "exit": 0,
+        "lastLine": "Pedido cancelado"
+      },
+      {
+        "case": "invalid-utf8",
+        "mode": "optimized",
+        "exit": 1,
+        "lastLine": "Nome inválido 2 1"
+      },
+      {
+        "case": "eof",
+        "mode": "optimized",
+        "exit": 1,
+        "lastLine": "Nome inválido 5 -1"
+      },
+      {
+        "case": "line-limit",
+        "mode": "optimized",
+        "exit": 1,
+        "lastLine": "Nome inválido 7 256"
+      },
+      {
+        "case": "integer-overflow",
+        "mode": "optimized",
+        "exit": 1,
+        "lastLine": "Quantidade inválida 3 18"
+      },
+      {
+        "case": "invalid-real",
+        "mode": "optimized",
+        "exit": 1,
+        "lastLine": "Preço inválido 2 1"
+      },
+      {
+        "case": "invalid-bool",
+        "mode": "optimized",
+        "exit": 1,
+        "lastLine": "Confirmação inválida 2 0"
+      },
+      {
+        "case": "valid-crlf",
+        "mode": "--no-opt",
+        "exit": 0,
+        "lastLine": "Júlia 3 37.50"
+      },
+      {
+        "case": "declined",
+        "mode": "--no-opt",
+        "exit": 0,
+        "lastLine": "Pedido cancelado"
+      },
+      {
+        "case": "invalid-utf8",
+        "mode": "--no-opt",
+        "exit": 1,
+        "lastLine": "Nome inválido 2 1"
+      },
+      {
+        "case": "eof",
+        "mode": "--no-opt",
+        "exit": 1,
+        "lastLine": "Nome inválido 5 -1"
+      },
+      {
+        "case": "line-limit",
+        "mode": "--no-opt",
+        "exit": 1,
+        "lastLine": "Nome inválido 7 256"
+      },
+      {
+        "case": "integer-overflow",
+        "mode": "--no-opt",
+        "exit": 1,
+        "lastLine": "Quantidade inválida 3 18"
+      },
+      {
+        "case": "invalid-real",
+        "mode": "--no-opt",
+        "exit": 1,
+        "lastLine": "Preço inválido 2 1"
+      },
+      {
+        "case": "invalid-bool",
+        "mode": "--no-opt",
+        "exit": 1,
+        "lastLine": "Confirmação inválida 2 0"
+      }
+    ],
+    "executed": {
+      "windows-x64": {
+        "extracted": 16,
+        "installed": 16,
+        "profile": "isolated"
+      },
+      "linux-x64": {
+        "extracted": 16,
+        "installed": 0
+      }
+    },
+    "archiveDocumentation": "Snapshot before recording the archive hash and publication"
+  }
+}

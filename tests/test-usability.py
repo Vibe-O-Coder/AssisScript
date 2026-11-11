@@ -59,6 +59,26 @@ class Usability(base.Evolution):
         for character in ["''","'ab'","'é'","'\\q'"]:
             self.rejected(main('val c:byte='+character+';'),'caractere')
 
+    def test_local_constants(self):
+        self.source('namespace limits;public const WIDTH:int=6;', 'limits.assis')
+        self.accepted('import "limits.assis";const WIDTH:int=99;'+main(
+            'const WIDTH:int=limits::WIDTH;const label:text="limit";'
+            '{const WIDTH:int=WIDTH+1;const scale:f32=f32(0.5);'
+            'assert(scale==f32(0.5));print(label,WIDTH);}'
+            'let i:int=0;for(const WIDTH:int=2;i<WIDTH;++i){}'
+            'print(WIDTH,i);'), 'limit 7\n6 2\n')
+        for body, diagnostic in [
+            ('const N:int=1;N=2;', 'imutável'),
+            ('const N:int=1;++N;', 'imutável'),
+            ('const N:int=1;&N;', 'endereço de vínculo imutável'),
+            ('val runtime:int=1;const N:int=runtime;', 'outras constantes'),
+            ('const N:int=monotonic_ms();', 'sem chamadas'),
+            ('const N:int=LATER;const LATER:int=1;', 'outras constantes'),
+            ('const N:int=1;const N:int=2;', 'já declarada'),
+        ]:
+            with self.subTest(body=body):
+                self.rejected(main(body), diagnostic)
+
     def test_constructor_chaining_dynamic_dispatch_and_downcasts(self):
         self.accepted(CLASS+'class Other{}'+main(
             'own b:Base=new Hero(40,1);assert(b is Hero);assert(b is Base);assert(!(b is Other));'

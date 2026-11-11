@@ -1,5 +1,7 @@
 namespace cli;
 
+import "std/parse.assis";
+
 public struct Argument { let ok: bool; own data: *byte; let size: int; }
 public value struct ParsedInt { let ok: bool; let value: int; let position: int; }
 
@@ -15,19 +17,9 @@ public safe fn argument(indice: int): own Argument {
 /// Decimal int64 estrito sobre bytes; não depende de terminador ou text C.
 public safe fn parse_integer(borrow data: *byte, size: int): ParsedInt {
     if (size <= 0 || size > len(data)) { return new ParsedInt(false, 0, 0); }
-    let i: int = 0;let negativo: bool = false;
-    if (data[0] == 45 || data[0] == 43) { negativo = data[0] == 45;i = 1; }
-    if (i == size) { return new ParsedInt(false, 0, i); }
-    let limite: int = -0x7fff_ffff_ffff_ffff;
-    if (negativo) { limite = -0x8000_0000_0000_0000; }
-    let value: int = 0;
-    while (i < size) {
-        val c: int = int(data[i]);if (c < 48 || c > 57) { return new ParsedInt(false, 0, i); }
-        val d: int = c - 48;
-        if (value < limite / 10) { return new ParsedInt(false, 0, i); }
-        value *= 10;if (value < limite + d) { return new ParsedInt(false, 0, i); }value -= d;i += 1;
-    }
-    if (!negativo) { value = -value; }return new ParsedInt(true, value, size);
+    val result: parse::Parsed<int> = parse::parse_i64(slice_of(data, 0, size));
+    if (!result.ok) { return new ParsedInt(false, 0, result.position); }
+    return new ParsedInt(true, result.value, size);
 }
 
 /// Lê até EOF; retorna -1 em falha ou se o arquivo exceder a capacidade.
@@ -63,4 +55,86 @@ public safe fn write_output(canal: int, borrow data: *byte, size: int): int {
         val escritos: int = write_bytes(canal, bloco, n);if (escritos <= 0) { return -1; }total += escritos;
     }
     return total;
+}
+
+/// Leitor exclusivo de stdin, com leitura antecipada de até 4096 bytes.
+/// Construa uma vez, com o limite de bytes por linha, e reutilize a instância.
+public final class Stdin {
+    private own chunk: *byte;
+    private own content: *byte;
+    private let limit: int;
+    private let setup_error: int;
+    private let cursor: int;
+    private let available: int;
+    private let count: int;
+    private let pending_size: int;
+    private let pending_overflow: bool;
+    private let eof: bool;
+
+    fn init(borrow mut self, limit: int): void {
+        if (limit < 0 || limit == 0x7fff_ffff_ffff_ffff) { self.setup_error = 7; return; }
+        self.limit = limit;
+        self.chunk = try_alloc<byte>(4096);
+        self.content = try_alloc<byte>(limit + 1);
+        if (self.chunk == null || self.content == null) { self.setup_error = 4; }
+    }
+
+    /// Linha lida com sucesso em readln, válida até a próxima leitura.
+    fn line(borrow self): borrow(self) slice<byte> {
+        return slice_of(self.content, 0, self.count);
+    }
+
+    /// Retorna o número de bytes da linha UTF-8, incluindo NUL, sem LF/CRLF.
+    /// 5 EOF, 6 IO, 7 limite inválido/excedido. Uma linha longa é descartada.
+    fn readln(borrow mut self): parse::Parsed<int> {
+        self.count = 0;
+        if (self.setup_error != 0) { return parse::failure::<int>(0, self.setup_error, -1); }
+        let size: int = self.pending_size;
+        let too_long: bool = self.pending_overflow;
+        self.pending_size = 0;
+        self.pending_overflow = false;
+        let newline: bool = false;
+        while (!self.eof) {
+            if (self.cursor == self.available) {
+                val got: int = read_bytes(self.chunk, 4096);
+                if (got < 0) {
+                    self.pending_size = size;
+                    self.pending_overflow = too_long;
+                    return parse::failure::<int>(0, 6, -1);
+                }
+                if (got == 0) { self.eof = true; break; }
+                self.cursor = 0;
+                self.available = got;
+            }
+            val c: byte = self.chunk[self.cursor];
+            self.cursor += 1;
+            if (c == 10) { newline = true; break; }
+            if (size < len(self.content)) { self.content[size] = c; size += 1; }
+            else { too_long = true; }
+        }
+        if (size == 0 && !newline) { return parse::failure::<int>(0, 5, -1); }
+        if (newline && size > 0 && self.content[size - 1] == 13) { size -= 1; }
+        if (too_long || size > self.limit) { return parse::failure::<int>(0, 7, self.limit); }
+        val result: parse::Parsed<int> = parse::parse_text(slice_of(self.content, 0, size));
+        if (result.ok) { self.count = size; }
+        return result;
+    }
+
+    fn readint(borrow mut self): parse::Parsed<int> {
+        val line: parse::Parsed<int> = self.readln();
+        if (!line.ok) { return line; }
+        return parse::parse_i64(self.line());
+    }
+
+    fn readfloat(borrow mut self): parse::Parsed<f64> {
+        val line: parse::Parsed<int> = self.readln();
+        if (!line.ok) { return parse::failure::<f64>(0.0, line.code, line.position); }
+        return parse::parse_f64(self.line());
+    }
+
+    fn readbool(borrow mut self): parse::Parsed<bool> {
+        val line: parse::Parsed<int> = self.readln();
+        if (!line.ok) { return parse::failure::<bool>(false, line.code, line.position); }
+        return parse::parse_bool(self.line());
+    }
 }
