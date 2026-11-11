@@ -140,3 +140,19 @@ critérios de rede, persistência, busca, distribuição e integração.
 A branch de trabalho foi autorizada para publicação. O SHA do relatório é
 obtido pelo histórico. O estado remoto observado é registrado nas evidências
 da unidade.
+
+### Publicação verificada
+
+O envio normal publicou **`67ae299cbacd4e41acc6c1c5b6f97bdc165da083`** na
+branch de trabalho. `git ls-remote` confirmou o SHA e a API do GitHub devolveu
+a mesma árvore do commit local, `75fddb57fe3e6f89db86e917f1adf9bb85faad83`,
+com os 34 arquivos da unidade. [Branch](https://github.com/Vibe-O-Coder/AssisScript/tree/work/typed-input-2026-11-10).
+
+Na consulta após o envio, o workflow **Native language checks** estava em
+execução. O filtro pela branch retornou zero PRs e a consulta de release e
+tags retornou zero associações com a revisão. O VSIX de desenvolvimento
+validado é o arquivo local com SHA-256
+`f5ec72424635fe270d54a492d2cd51d2edeb05e811d1991728636507c22fa04f`.
+Os binários de teste ficam em `build/` e o pacote em `dist/`. A publicação
+leva as fontes, os testes e a evidência dos artefatos reconstruídos.
+[Execução da CI](https://github.com/Vibe-O-Coder/AssisScript/actions/runs/43050037447).

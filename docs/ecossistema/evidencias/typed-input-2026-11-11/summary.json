@@ -470,5 +470,23 @@
       }
     },
     "archiveDocumentation": "Snapshot before recording the archive hash and publication"
+  },
+  "publication": {
+    "commit": "67ae299cbacd4e41acc6c1c5b6f97bdc165da083",
+    "tree": "75fddb57fe3e6f89db86e917f1adf9bb85faad83",
+    "ref": "work/typed-input-2026-11-10",
+    "pullRequests": [],
+    "workflowRuns": [
+      {
+        "id": 43050037447,
+        "name": "Native language checks",
+        "status": "in_progress",
+        "conclusion": null,
+        "event": "push",
+        "html_url": "https://github.com/Vibe-O-Coder/AssisScript/actions/runs/43050037447"
+      }
+    ],
+    "releases": [],
+    "tags": []
   }
 }
