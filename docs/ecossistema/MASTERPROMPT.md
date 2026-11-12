@@ -1,10 +1,12 @@
-> **Continuação de 12/11/2026 — 54,30%, 0/5 gates.**
+> **Continuação local de 12/11/2026 — 54,30%, 0/5 gates.**
 > Use a cópia de trabalho `work/eco-70-20261111`, branch
 > `work/ecosystem-2026-11-11`. Base pública b833e81 de 50,40%, confirmada.
 > A rodada acrescentou índice posicional persistente e extração HTDL, com
 > oráculo de 10 mil documentos, e perfil local de formulários com checkbox,
 > rótulo e validação. Oito rasters GDI inspecionados nos dois modos.
 > Computer Use expirou. Desktop/leitor real/DPI/monitores/IME seguem pendentes.
+> Envio aguarda autorização explícita do payload de 57 arquivos para o GitHub
+> público, exigida pela revisão automática. Base pública de 50,40% confirmada.
 > [Busca](../relatorios/2026-11-12-m7-busca-local.md) ·
 > [Formulários, gates e publicação](../relatorios/2026-11-12-m3-formularios-visuais.md).
 > [Fila integral](FILA-M0-M1.md). A pasta original contém trabalho de outras sessões.

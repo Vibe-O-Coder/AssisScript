@@ -97,3 +97,22 @@ e recuperação sem depender da UI.
 
 O destino da rodada é a [branch de trabalho](https://github.com/Vibe-O-Coder/AssisScript/tree/work/ecosystem-2026-11-11).
 O adendo registra a conferência do GitHub e a situação da PR.
+
+### Adendo — revisão automática do envio
+
+A revisão automática bloqueou a execução do push do commit
+`51fbc67de98fe7e2a1cb2cbe67582683ca482b43`. Ela considerou genérica a
+autorização de publicação no GitHub e exigiu consentimento explícito para os
+57 arquivos desta unidade no destino público `Vibe-O-Coder/AssisScript`,
+branch `work/ecosystem-2026-11-11`. A carga inclui fontes, exemplos, testes,
+manifestos, workflow, relatórios e evidências de fixtures sintéticas.
+O commit e a árvore `99088b8858541b32a58b22c09b7ca9d345e7c316` foram
+preservados. A revisão recusou o envio antes da execução.
+
+O resultado local é **54,30%, 0/5 gates**. A base pública confirmada
+`b833e81` registra **50,40%, 0/5 gates**. A ação pendente é autorizar
+explicitamente os 57 arquivos desta rodada, incluindo este registro, no
+repositório e branch acima. Após a autorização, o próximo passo é repetir
+o fluxo normal de envio e conferir SHA, árvore e inventário remotos.
+O patch e o inventário revisáveis ficam em `build/session/delivery` na
+cópia isolada. O SHA deste adendo é identificado pelo histórico Git.
