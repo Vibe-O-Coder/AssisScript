@@ -1,3 +1,18 @@
+> **Continuação de 11/11/2026 — 50,40%, 0/5 gates.**
+> Use `work/confined-loader-20261111`, branch
+> `work/m3-confined-loader-2026-11-11`, sobre a base publicada `5922558`.
+> Loader de manifesto confinado Windows/Linux x64, POST binário com
+> cabeçalhos, resolução HTTP(S) e redirects GET da mesma origem. A inspeção
+> de rasters GDI confirmou contador, zoom e SSC e motivou a correção da
+> quebra de palavras. Memória em debug, temporários x64 e testes legados
+> foram tratados na mesma continuação.
+> [Loader e visual](../relatorios/2026-11-11-m3-loader-confinado.md) ·
+> [HTTP](../relatorios/2026-11-11-http-post-url.md) ·
+> [Runtime e testes](../relatorios/2026-11-11-runtime-validacao.md).
+> O próximo incremento M3 é controles, imagens e live regions. Leitor
+> real, desktop/DPI/monitores/IME e os cinco gates seguem abertos. Use a
+> [fila integral](FILA-M0-M1.md). Easy por último.
+
 > **Publicação confirmada — 48,30%, 04/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/local-resources-20261104`,
 > branch `work/m3-local-resources-2026-11-04`, base pública 33b7431 conferida.

@@ -1,3 +1,15 @@
+> **Continuação de 11/11/2026 — 50,40%, 0/5 gates.** Loader físico local
+> declarado entregue no perfil Windows/Linux x64. HTTP POST e URLs
+> avançaram a fundação M6. [Loader e visual](../relatorios/2026-11-11-m3-loader-confinado.md) ·
+> [HTTP](../relatorios/2026-11-11-http-post-url.md) ·
+> [Runtime](../relatorios/2026-11-11-runtime-validacao.md).
+> Próxima unidade M3: controles/imagens/live regions. Continuam na fila
+> o SDK geral, células/inscrições, identidade incremental/editor,
+> recursos remotos, RSS/disco/perfis órfãos, macOS/ARM, rede/partição,
+> persistência/busca, M4–M9, carga de 24h, distribuição e todos os aceites.
+> Inspeção de raster concluída, com aceite desktop, leitor de tela real,
+> DPI, monitores, fluidez e IME ainda abertos. Easy por último.
+
 > **Continuação de 11/11/2026 — 48,30%, 0/5 gates.** Entrada tipada,
 > parsers de escalares/UTF-8, `const` em blocos e candidato VSIX x64.
 > [Relatório](../relatorios/2026-11-11-entrada-tipada-const.md).

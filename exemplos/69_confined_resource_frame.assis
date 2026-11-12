@@ -1,0 +1,46 @@
+// Trusted shell arguments: compiler, worker and one explicitly granted root.
+import "std/frameworker.assis";
+import "std/localresources.assis";
+
+safe fn argument(index:int):own *byte{unsafe{
+    val length:int=arg_size(index);
+    if(length<1 || length>4096){return try_alloc<byte>(0);}
+    own data:*byte=try_alloc<byte>(length+1);
+    if(data==null){return move(data);}
+    if(arg_copy(index,data,length+1)!=length){return try_alloc<byte>(0);}
+    return move(data);
+}}
+safe fn metric(borrow content:slice<byte>,size:int,weight:int):int{
+    return (pageframe::pixels(size)<<32)+len(content)*pageframe::pixels(size)/2;
+}
+safe fn main():int{
+    if(arg_count()!=4){return 2;}
+    own compiler:*byte=argument(1);own worker:*byte=argument(2);own root:*byte=argument(3);
+    if(compiler==null || worker==null || root==null || len(compiler)<2 || len(worker)<2 || len(root)<2){return 2;}
+    own load:localresources::Load=try_new localresources::Load(slice_of(root,0,len(root)-1),19,23,1,262144,monotonic_ms()+10000);
+    if(load==null){return 4;}
+    let step:int=load.advance();
+    while(step==0){step=load.advance();}
+    if(step<0){print("RESOURCE LOAD",step,load.line(),load.index());return 6;}
+    own bundle:pageresources::Batch=load.take();
+    own session:frameworker::Session=try_new frameworker::Session(32000000,250000,7,19,23);
+    if(session==null || !session.is_open()){return 4;}
+    if(session.prepare_bundle(move(bundle),slice_of(compiler,0,len(compiler)-1),slice_of(worker,0,len(worker)-1),false,128,3,true,
+        640,420,65536,reader::default_preferences(),metric,new frameworker::Limits(0,16,100000,1000,5000),
+        new frameworker::Grants(true,false),monotonic_ms())!=0){return 5;}
+    val deadline:int=monotonic_ms()+10000;
+    while(!session.ready() && monotonic_ms()<deadline){
+        if(session.advance(monotonic_ms())<0){return 5;}
+        sleep_ms(1);
+    }
+    if(!session.ready() || !session.commit()){return 5;}
+    while(monotonic_ms()<deadline){
+        if(session.advance(monotonic_ms())<0){return 5;}
+        if(session.result().code==2){
+            print("CONFINED FRAME",session.resources().size(),session.result().result,session.document_id());
+            return 0;
+        }
+        sleep_ms(1);
+    }
+    return 5;
+}

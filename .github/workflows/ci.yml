@@ -34,6 +34,7 @@ jobs:
           python3 tests/test-framehost.py
           python3 tests/test-frame-worker.py
           python3 tests/test-page-resources.py
+          python3 tests/test-localresources.py
           python3 tests/test-frame-responsiveness.py
           python3 tests/test-catalog-frame.py
           python3 tests/test-sanscript.py
@@ -124,7 +125,7 @@ jobs:
           $env:ASSIS_BIN = (Resolve-Path bin/assis.exe).Path
           $env:CC = Join-Path $env:ASSIS_TOOLCHAIN_BIN 'gcc.exe'
           $env:PYTHONUTF8 = '1'
-          foreach ($suite in @('htdl-recovery','htdl-catalog','fluxstyle','flowpage','sanscript','pageframe','pagepresent','motionpage','framereader','framehost','catalog-frame','frame-worker','page-resources','frame-responsiveness','install-mask')) {
+          foreach ($suite in @('htdl-recovery','htdl-catalog','fluxstyle','flowpage','sanscript','pageframe','pagepresent','motionpage','framereader','framehost','catalog-frame','frame-worker','page-resources','localresources','frame-responsiveness','install-mask')) {
             python "tests/test-$suite.py"
             if ($LASTEXITCODE -ne 0) { throw "Local presentation profile failed: $suite" }
           }
@@ -147,6 +148,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Collections AST tests failed' }
           python tests/test-ownership-functions.py
           if ($LASTEXITCODE -ne 0) { throw 'Ownership function tests failed' }
+          python tests/test-debug-large-free.py
+          if ($LASTEXITCODE -ne 0) { throw 'Debug heap residency or diagnostics regressed' }
           foreach ($suite in @('values','files','text-bytes','cli','numbers','packages','json','system','tooling','slices','managed-classes','backend-alpha9','optimization','english-api','release-policy','ffi','http','process','applications-bc','safe-default','net','move-enums','closures','usability','backend-evolution','complete-ir','increment','owned-mutation','htdl-readiness','arena','fallible-allocation','fallible-slots','arena-removal','shared-buffer-budget','buffer-preallocation','document-tree','document-memory','htdl-parser')) {
             python ('tests/test-' + $suite + '.py')
             if ($LASTEXITCODE -ne 0) { throw ('New suite failed: ' + $suite) }

@@ -11,7 +11,7 @@ import json
 import os
 
 root = Path(__file__).resolve().parent.parent
-compiler = root / 'bin' / ('assis.exe' if sys.platform == 'win32' else 'assis')
+compiler = Path(os.environ.get('ASSIS_BIN', root / 'bin' / ('assis.exe' if sys.platform == 'win32' else 'assis'))).resolve()
 fixtures = Path(os.environ.get('ASSIS_FIXTURE_DIR', root / 'build/v31-fixtures'))
 sources = sorted(fixtures.glob('*.assis'))
 assert len(sources) >= 7, 'Gere o corpus com ASSIS_FIXTURE_DIR antes de run'
@@ -28,17 +28,19 @@ for name in ['12_relatorio_vendas', '13_codificacao']:
     count += 1
 if sys.platform == 'linux':
     with tempfile.TemporaryDirectory(prefix='assis-v31-install-') as temp:
+        stage = Path(temp) / 'distribution'
+        subprocess.run(['sh', root/'tests/stage-posix-install.sh', compiler, stage], check=True)
         all_optional=[lib['name'] for lib in json.loads((root/'stdlib/catalogo.json').read_text())['libraries'] if not lib['required']]
-        for name, options, optional in [('minimal', ['--minimal'], []), ('selected', ['--with', 'csv,algorithms'], ['csv', 'algorithms']), ('full', [], all_optional), ('log', ['--with','log'], ['log','cli'])]:
+        for name, options, optional in [('minimal', ['--minimal'], []), ('selected', ['--with', 'csv,algorithms'], ['csv', 'algorithms']), ('full', [], all_optional), ('log', ['--with','log'], ['log','cli','parse','unicode'])]:
             prefix = Path(temp) / name
-            subprocess.run(['sh', root / 'instalar.sh', '--prefix', prefix, '--no-path', *options], check=True, capture_output=True)
+            subprocess.run(['sh', stage/'instalar.sh', '--prefix', prefix, '--no-path', *options], check=True, capture_output=True)
             catalog = json.loads((prefix / 'share/assisscript/stdlib/catalogo.json').read_text())
             for library in catalog['libraries']:
                 assert (prefix / 'share/assisscript/stdlib' / (library['name'] + '.assis')).exists() == (library['required'] or library['name'] in optional)
                 assert (prefix / 'share/assisscript/docs' / library['doc']).exists()
             result = subprocess.run([prefix / 'bin/assis', 'run', '--legacy', sources[0]], capture_output=True, timeout=30)
             assert result.returncode == 0, result.stderr.decode()
-            subprocess.run(['sh', root / 'desinstalar.sh', '--prefix', prefix], check=True, capture_output=True)
+            subprocess.run(['sh', stage/'desinstalar.sh', '--prefix', prefix], check=True, capture_output=True)
             assert not (prefix / 'share/assisscript').exists()
             count += 1
 print(f'ASSIS 3.1: {count} verificações adicionais aprovadas em {sys.platform}.')

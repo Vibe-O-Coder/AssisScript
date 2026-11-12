@@ -32,4 +32,16 @@ ASSW_API int64_t assw_child_write(const uint8_t*,int64_t);
  * 0 means an explicitly unrestricted Windows launch.
  * Linux failure is -4 and the worker must exit without reading page bytes. */
 ASSW_API int64_t assw_restrict(void);
+
+/* Trusted host only. Open an explicit absolute UTF-8 directory grant, then
+ * read canonical relative resource keys using that live grant. Successful
+ * root open returns a positive token, read returns its byte count (including
+ * zero). -1 invalid input, -2 stale token, -3 limit, -6 denied/I/O/changed,
+ * -10 unavailable, -11 wrong thread. Buffers are borrowed; ignore output
+ * bytes on failure. Close revokes the grant. No grant is inherited or sent
+ * to the page. Supported by the local file provider extension version 1. */
+ASSW_API int64_t assw_local_version(void);
+ASSW_API int64_t assw_local_open(const uint8_t*,int64_t);
+ASSW_API int64_t assw_local_read(int64_t,const uint8_t*,int64_t,uint8_t*,int64_t);
+ASSW_API int64_t assw_local_close(int64_t);
 #endif

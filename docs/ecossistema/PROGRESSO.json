@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-11",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "typed-stdin-parsers-local-constants-and-vsix",
+  "assessment": "confined-local-loader-http-and-runtime",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -172,7 +172,10 @@
             "docs/relatorios/2026-10-29-m0-owned.md",
             "docs/relatorios/2026-10-29-m1-arena.md",
             "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
-            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json"
+            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json",
+            "docs/relatorios/2026-11-11-runtime-validacao.md",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/windows.json",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/linux.json"
           ]
         },
         {
@@ -289,7 +292,10 @@
             "docs/ecossistema/evidencias/m5-page-motion-2026-11-02/summary.json",
             "docs/ecossistema/PERFIL-MOVIMENTO-PAGINA-V1.md",
             "docs/relatorios/2026-11-03-m5-frame-reader.md",
-            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json",
+            "docs/relatorios/2026-11-11-runtime-validacao.md",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/windows.json",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/linux.json"
           ]
         },
         {
@@ -336,12 +342,16 @@
         {
           "id": "E03-01",
           "name": "Arquivos, caminhos e diretórios",
-          "level": 1,
+          "level": 2,
           "acceptance": "Oferecer enumeração/metadados, caminhos Unicode, operações relativas a raiz e permissões; testar links, traversal, TOCTOU e cancelamento sem expor pastas à página.",
-          "baseline": "Arquivos/argumentos existem; API geral de diretórios e confinamento ainda aberta.",
+          "baseline": "Loader lê arquivos declarados com handle relativo em Windows/Linux x64, raiz Unicode, recusa de links, corrida adversa, limites e revogação. Enumeração geral e cancelamento de I/O físico em voo permanecem abertos.",
           "evidence": [
             "docs/IO-E-APLICACAO-A.md",
-            "docs/BIBLIOTECA-cli.md"
+            "docs/BIBLIOTECA-cli.md",
+            "docs/relatorios/2026-11-11-m3-loader-confinado.md",
+            "docs/BIBLIOTECA-localresources.md",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/windows.json",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/linux.json"
           ]
         },
         {
@@ -516,32 +526,42 @@
         {
           "id": "E05-01",
           "name": "Cliente HTTP(S) geral",
-          "level": 1,
+          "level": 2,
           "acceptance": "Adicionar métodos, status, cabeçalhos, corpos/upload, autenticação explicitamente concedida e TLS verificado; provar cancelamento e reutilização sem bloquear UI ou vazar estado entre origens.",
-          "baseline": "GET cooperativo limitado existe; não é cliente de navegação completo.",
+          "baseline": "HTTP(S) com GET/POST binário, cabeçalhos validados, status e limites em WinHTTP/libcurl. Oráculo loopback e verificação TLS. Net conserva GET cooperativo. POST cancelável e credenciais por capacidade continuam abertos.",
           "evidence": [
             "docs/BIBLIOTECA-net.md",
-            "docs/BIBLIOTECA-http.md"
+            "docs/BIBLIOTECA-http.md",
+            "docs/relatorios/2026-11-11-http-post-url.md",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/windows.json",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/linux.json"
           ]
         },
         {
           "id": "E05-02",
           "name": "Políticas de navegação e origem",
-          "level": 0,
+          "level": 1,
           "acceptance": "Aplicar redirects limitados, cookies, cache/validadores, partição, proxy explícito e proteção de conteúdo misto; revalidar destino e autoridade em cada salto e após resolução DNS.",
-          "baseline": "Esses serviços estão desabilitados ou ausentes no cliente delimitado.",
+          "baseline": "Redirecionamento GET explicitamente habilitado, com limite e comparação textual de origem a cada salto. Corpo e cabeçalhos POST nunca são reenviados por essa API. DNS/partição, cookies, cache e política de rede permanecem abertos.",
           "evidence": [
-            "docs/BIBLIOTECA-net.md"
+            "docs/BIBLIOTECA-net.md",
+            "docs/relatorios/2026-11-11-http-post-url.md",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/windows.json",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/linux.json"
           ]
         },
         {
           "id": "E05-03",
           "name": "URL, DNS e codificação",
-          "level": 0,
+          "level": 2,
           "acceptance": "Criar parser/serializer de URLs com relativos, percent encoding, IPv6, IDNA e origem opaca local; separar canonicalização para busca de autorização; testar corpus externo e DNS hostil.",
-          "baseline": "Aceitar URL via libcurl não é biblioteca pública de URL/origem.",
+          "baseline": "Parser e resolução HTTP(S) em AssisScript com autoridade, IPv4/IPv6, porta, escapes, referências relativas e oráculo RFC 3986. IDNA, origem opaca local e resolvedor/DNS adversarial permanecem abertos.",
           "evidence": [
-            "docs/BIBLIOTECA-net.md"
+            "docs/BIBLIOTECA-net.md",
+            "docs/relatorios/2026-11-11-http-post-url.md",
+            "docs/BIBLIOTECA-httpurl.md",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/windows.json",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/linux.json"
           ]
         },
         {
@@ -788,7 +808,9 @@
             "stdlib/pageresources.assis",
             "docs/BIBLIOTECA-pageresources.md",
             "docs/relatorios/2026-11-04-m3-recursos-responsividade.md",
-            "tests/test-page-resources.py"
+            "tests/test-page-resources.py",
+            "docs/relatorios/2026-11-11-m3-loader-confinado.md",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/visual.json"
           ]
         }
       ]
@@ -845,7 +867,9 @@
             "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json",
             "docs/relatorios/2026-11-03-m3-catalog-frame.md",
             "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
-            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md"
+            "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md",
+            "docs/relatorios/2026-11-11-m3-loader-confinado.md",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/visual.json"
           ]
         },
         {
@@ -906,7 +930,9 @@
             "docs/ecossistema/evidencias/m3-local-resources-2026-11-04/response.json",
             "tests/test-frame-responsiveness.py",
             "docs/relatorios/2026-11-11-entrada-tipada-const.md",
-            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json"
+            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json",
+            "docs/relatorios/2026-11-11-m3-loader-confinado.md",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/visual.json"
           ]
         }
       ]
@@ -1111,7 +1137,10 @@
             "docs/VALIDACAO-TARGETS-V1.json",
             ".github/workflows/ci.yml",
             "docs/relatorios/2026-11-11-entrada-tipada-const.md",
-            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json"
+            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json",
+            "docs/relatorios/2026-11-11-runtime-validacao.md",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/windows.json",
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/linux.json"
           ]
         },
         {
@@ -3801,7 +3830,229 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-11",
+      "rubric_version": 1,
+      "label": "Loader físico confinado e raster do Frame; 48,80%, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 3,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 2,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 1,
+        "E05-02": 0,
+        "E05-03": 0,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 3,
+        "E07-03": 2,
+        "E07-04": 3,
+        "E07-05": 3,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 2,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
+    },
+    {
+      "date": "2026-11-11",
+      "rubric_version": 1,
+      "label": "HTTP GET/POST e endereços; 50,40%, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 3,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 2,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 2,
+        "E05-02": 1,
+        "E05-03": 2,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 3,
+        "E07-03": 2,
+        "E07-04": 3,
+        "E07-05": 3,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 2,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
+    },
+    {
+      "date": "2026-11-11",
+      "rubric_version": 1,
+      "label": "Memória debug, emissão escalar x64 e testes restaurados; 50,40%, 0/5 gates",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 3,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 2,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 2,
+        "E05-02": 1,
+        "E05-03": 2,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 3,
+        "E07-03": 2,
+        "E07-04": 3,
+        "E07-05": 3,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 2,
+        "E09-01": 1,
+        "E09-02": 1,
+        "E09-03": 0,
+        "E09-04": 0,
+        "E09-05": 0,
+        "E10-01": 1,
+        "E10-02": 0,
+        "E10-03": 0,
+        "E10-04": 0,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "48,30%, 0/5 gates. Entrada tipada, parsers, const local e VSIX x64 validados em escopo nativo. Novas evidências incluem falha real de cópia no Linux, oráculo racional, instalação seletiva e resolução de bibliotecas no VS Code isolado. A árvore desktop confirmou foco inicial no SSC. Fluidez, leitor de tela, DPI, múltiplos monitores e IME seguem pendentes. Os níveis permanecem iguais. A fila integral e a meta de 50% seguem abertas."
+  "assessment_note": "50,40%, 0/5 gates. O loader confinado e HTTP/URL avançam E03-01 e E05-01 a E05-03. Rasters do Windows validaram zoom, contador e painéis e revelaram a quebra corrigida. Desktop, leitor real, DPI, monitores e IME aguardam aceite. Memória debug, emissão x64 e corpus foram verificados nos hosts x64; demais plataformas e a fila integral continuam abertos."
 }

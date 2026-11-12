@@ -1,0 +1,221 @@
+namespace httpurl;
+
+/// Byte offsets into a validated, explicit-length HTTP(S) address.
+public value struct Parts{
+    let status:int;let secure:bool;let host_start:int;let host_end:int;
+    let port:int;let path_start:int;let path_end:int;let query_end:int;
+}
+
+public pure fn lower(c:int):int{if(c>=65 && c<=90){return c+32;}return c;}
+pure fn digit(c:int):bool{return c>=48 && c<=57;}
+pure fn letter(c:int):bool{return lower(c)>=97 && lower(c)<=122;}
+pure fn hex(c:int):bool{return digit(c) || (lower(c)>=97 && lower(c)<=102);}
+
+safe fn prefix(borrow input:slice<byte>,borrow expected:slice<byte>):bool{
+    if(len(input)<len(expected)){return false;}
+    for(let i:int=0;i<len(expected);i++){if(lower(int(input[i]))!=int(expected[i])){return false;}}
+    return true;
+}
+
+safe fn ipv4(borrow host:slice<byte>):bool{
+    let start:int=0;
+    for(let part:int=0;part<4;part++){
+        let end:int=start;let value:int=0;
+        while(end<len(host) && digit(int(host[end])) && end-start<3){
+            value=value*10+int(host[end])-48;end++;
+        }
+        if(end==start || value>255 || (end-start>1 && host[start]==48)){return false;}
+        if(part==3){return end==len(host);}
+        if(end==len(host) || host[end]!=46){return false;}
+        start=end+1;
+    }
+    return false;
+}
+
+safe fn ipv6(borrow host:slice<byte>):bool{
+    if(len(host)<2){return false;}
+    let at:int=0;let groups:int=0;let compressed:bool=false;
+    if(host[0]==58){
+        if(host[1]!=58){return false;}
+        compressed=true;at=2;
+    }
+    while(at<len(host)){
+        val start:int=at;let dotted:bool=false;
+        while(at<len(host) && host[at]!=58){
+            if(host[at]==46){dotted=true;}
+            else if(!hex(int(host[at]))){return false;}
+            at++;
+        }
+        if(dotted){
+            if(at!=len(host) || !ipv4(slice_of(host,start,at-start))){return false;}
+            groups+=2;
+        }else{
+            if(at==start || at-start>4){return false;}
+            groups++;
+        }
+        if(at<len(host)){
+            at++;
+            if(at==len(host)){return false;}
+            if(host[at]==58){
+                if(compressed){return false;}
+                compressed=true;at++;
+            }
+        }
+    }
+    if(compressed){return groups<8;}
+    return groups==8;
+}
+
+safe fn dns_name(borrow host:slice<byte>):bool{
+    if(len(host)<1 || len(host)>253){return false;}
+    let numeric:bool=true;let start:int=0;
+    for(let i:int=0;i<=len(host);i++){
+        if(i==len(host) && i==start && i>0){break;} // Optional DNS root dot.
+        if(i==len(host) || host[i]==46){
+            if(i==start || i-start>63 || host[start]==45 || host[i-1]==45){return false;}
+            start=i+1;
+        }else{
+            val c:int=int(host[i]);
+            if(!digit(c)){numeric=false;if(!letter(c) && c!=45){return false;}}
+        }
+    }
+    if(numeric){return ipv4(host);}
+    return true;
+}
+
+pure fn path_char(c:int):bool{
+    return letter(c) || digit(c) || c==45 || c==46 || c==95 || c==126 ||
+        c==33 || c==36 || c==38 || c==39 || c==40 || c==41 || c==42 ||
+        c==43 || c==44 || c==59 || c==61 || c==58 || c==64 || c==47;
+}
+
+safe fn valid_tail(borrow input:slice<byte>,start:int):bool{
+    let section:int=0;
+    for(let i:int=start;i<len(input);i++){
+        val c:int=int(input[i]);
+        if(c==37){
+            if(i+2>=len(input) || !hex(int(input[i+1])) || !hex(int(input[i+2]))){return false;}
+            i+=2;
+        }else if(c==63 && section!=0){}
+        else if(c==63){section=1;}
+        else if(c==35 && section<2){section=2;}
+        else if(!path_char(c)){return false;}
+    }
+    return true;
+}
+
+/// RFC 3986 hierarchical HTTP profile. No userinfo or IPv6 zone identifier.
+/// Percent triplets are checked and retained byte for byte.
+public safe fn parse(borrow input:slice<byte>):Parts{
+    val invalid:Parts=new Parts(-1,false,0,0,0,0,0,0);
+    if(len(input)>8191){return invalid;}
+    val secure:bool=prefix(input,utf8("https://"));
+    let start:int=7;
+    if(secure){start=8;}
+    else if(!prefix(input,utf8("http://"))){return invalid;}
+    let end:int=start;
+    while(end<len(input) && input[end]!=47 && input[end]!=63 && input[end]!=35){end++;}
+    if(end==start){return invalid;}
+    let host_end:int=start;
+    if(input[start]==91){
+        host_end++;
+        while(host_end<end && input[host_end]!=93){host_end++;}
+        if(host_end==end || !ipv6(slice_of(input,start+1,host_end-start-1))){return invalid;}
+        host_end++;
+    }else{
+        while(host_end<end && input[host_end]!=58){host_end++;}
+        if(!dns_name(slice_of(input,start,host_end-start))){return invalid;}
+    }
+    let port:int=80;
+    if(secure){port=443;}
+    if(host_end<end){
+        if(input[host_end]!=58 || end-host_end<2 || end-host_end>6){return invalid;}
+        port=0;
+        for(let i:int=host_end+1;i<end;i++){
+            if(!digit(int(input[i]))){return invalid;}
+            port=port*10+int(input[i])-48;
+        }
+        if(port<1 || port>65535){return invalid;}
+    }
+    if(!valid_tail(input,end)){return invalid;}
+    let path_end:int=end;
+    while(path_end<len(input) && input[path_end]!=63 && input[path_end]!=35){path_end++;}
+    let query_end:int=path_end;
+    while(query_end<len(input) && input[query_end]!=35){query_end++;}
+    return new Parts(0,secure,start,host_end,port,end,path_end,query_end);
+}
+
+/// Conservative textual origin comparison. Case and default port normalize.
+/// Different spellings of an IPv6 address may compare unequal.
+public safe fn same_origin(borrow a:slice<byte>,borrow b:slice<byte>):bool{
+    val x:Parts=parse(a);val y:Parts=parse(b);
+    val length:int=x.host_end-x.host_start;
+    if(x.status!=0 || y.status!=0 || x.secure!=y.secure || x.port!=y.port ||
+       length!=y.host_end-y.host_start){return false;}
+    for(let i:int=0;i<length;i++){
+        if(lower(int(a[x.host_start+i]))!=lower(int(b[y.host_start+i]))){return false;}
+    }
+    return true;
+}
+
+safe fn append(borrow mut out:*byte,at:int,borrow part:slice<byte>):int{
+    for(let i:int=0;i<len(part);i++){out[at+i]=part[i];}
+    return at+len(part);
+}
+
+safe fn clean(borrow input:slice<byte>,parts:Parts):own *byte{
+    own scratch:*byte=try_alloc<byte>(len(input)+2);
+    if(scratch==null){return move(scratch);}
+    let used:int=append(scratch,0,slice_of(input,0,parts.path_start));
+    let at:int=parts.path_start;
+    if(at==parts.path_end){scratch[used]=byte(47);used++;}
+    while(at<parts.path_end){
+        let end:int=at+1;
+        while(end<parts.path_end && input[end]!=47){end++;}
+        val dots:int=end-at-1;
+        if(dots==1 && input[at+1]==46){
+            if(end==parts.path_end){scratch[used]=byte(47);used++;}
+        }else if(dots==2 && input[at+1]==46 && input[at+2]==46){
+            while(used>parts.path_start && scratch[used-1]!=47){used--;}
+            if(used>parts.path_start){used--;}
+            if(end==parts.path_end){scratch[used]=byte(47);used++;}
+        }else{used=append(scratch,used,slice_of(input,at,end-at));}
+        at=end;
+    }
+    used=append(scratch,used,slice_of(input,parts.path_end,len(input)-parts.path_end));
+    if(used>8191){return try_alloc<byte>(0);}
+    own result:*byte=try_alloc<byte>(used+1);
+    if(result!=null){for(let i:int=0;i<used;i++){result[i]=scratch[i];}}
+    return move(result);
+}
+
+/// Resolve a reference against a validated absolute base. The result is an
+/// exact-size NUL-terminated buffer. Empty allocation is invalid, null is OOM.
+public safe fn resolve(borrow base:slice<byte>,borrow reference:slice<byte>):own *byte{
+    val parts:Parts=parse(base);
+    if(parts.status!=0 || len(reference)>8191){return try_alloc<byte>(0);}
+    let prefix_length:int=parts.path_start;
+    let add_slash:bool=false;
+    let first:int=0;
+    while(first<len(reference) && reference[first]!=47 && reference[first]!=63 &&
+          reference[first]!=35 && reference[first]!=58){first++;}
+    if(first<len(reference) && reference[first]==58){prefix_length=0;}
+    else if(len(reference)==0 || reference[0]==35){prefix_length=parts.query_end;}
+    else if(reference[0]==63){prefix_length=parts.path_end;}
+    else if(reference[0]==47){
+        if(len(reference)>1 && reference[1]==47){prefix_length=parts.host_start-2;}
+    }else{
+        prefix_length=parts.path_end;
+        while(prefix_length>parts.path_start && base[prefix_length-1]!=47){prefix_length--;}
+        add_slash=prefix_length==parts.path_start;
+    }
+    own combined:*byte=try_alloc<byte>(prefix_length+len(reference)+1);
+    if(combined==null){return move(combined);}
+    let size:int=append(combined,0,slice_of(base,0,prefix_length));
+    if(add_slash){combined[size]=byte(47);size++;}
+    size=append(combined,size,reference);
+    borrow input:slice<byte>=slice_of(combined,0,size);
+    val target:Parts=parse(input);
+    if(target.status!=0){return try_alloc<byte>(0);}
+    return clean(input,target);
+}

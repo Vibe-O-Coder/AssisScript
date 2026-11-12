@@ -1,0 +1,320 @@
+{
+  "format": "AssisScript-backend-v1",
+  "host": {
+    "system": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "logicalCpus": 8
+  },
+  "samples": 11,
+  "iterations": 3000000,
+  "reference": "Python integer formulas; both compilers checked before and during measurement",
+  "compilers": {
+    "candidate": {
+      "sha256": "4ae10529f28c5a6a28a0d7597f2ef1fd27c1d6ee7271bb2da6ec0fc12970adab",
+      "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)",
+      "mode": "optimized"
+    },
+    "baseline": {
+      "sha256": "c7b4b5e15370a6e0346ac19934c1cf6f6a4cd44b3bc9486177947cf381b51d00",
+      "version": "AssisScript 3.3.0-alpha.15 (nativo, Linux x86_64)",
+      "mode": "optimized"
+    }
+  },
+  "workloads": {
+    "disjoint_loops": {
+      "expected": 54000180000000,
+      "sourceSha256": "260004a9550787de6b5971f9a9b9b782da2d7b27802eb4dc0e99e822700b67c9",
+      "measurements": {
+        "candidate": {
+          "compileMs": 12.043955,
+          "bytes": 12289,
+          "binarySha256": "a45b711466a73ac2d254aaf891eaca0c5d37a8a2debf6ce6dd0300f96b3617ff",
+          "runMs": [
+            61.862146,
+            62.191271,
+            61.695759,
+            59.17757,
+            59.487855,
+            60.623545,
+            56.172513,
+            58.30575,
+            61.693849,
+            60.296882,
+            58.065764
+          ],
+          "medianMs": 60.296882,
+          "minMs": 56.172513,
+          "maxMs": 62.191271
+        },
+        "baseline": {
+          "compileMs": 12.593417,
+          "bytes": 12289,
+          "binarySha256": "536092ed416959e9cdb7a24f9526fab0ff1b2f249a00be577246aaaa090e6646",
+          "runMs": [
+            86.085574,
+            93.331831,
+            82.700831,
+            89.497834,
+            82.314957,
+            79.866604,
+            87.157168,
+            81.494612,
+            84.689603,
+            83.362017,
+            88.500772
+          ],
+          "medianMs": 84.689603,
+          "minMs": 79.866604,
+          "maxMs": 93.331831
+        }
+      },
+      "speedup": 1.404543654512683
+    },
+    "stencil_offsets": {
+      "expected": 294734828115,
+      "sourceSha256": "42aaff4ea922076f90fb1a4bc6e802dfb020da274ab2c169a9d38df3fd686d4c",
+      "measurements": {
+        "candidate": {
+          "compileMs": 11.089057,
+          "bytes": 8193,
+          "binarySha256": "e38a30034dcb6f0451e13a557f2e5053d0ca6e5cd58663d5223fd405ca073a80",
+          "runMs": [
+            355.245568,
+            333.639508,
+            354.283169,
+            340.062116,
+            318.052149,
+            323.889044,
+            317.918693,
+            324.227401,
+            320.494556,
+            316.721357,
+            316.077903
+          ],
+          "medianMs": 323.889044,
+          "minMs": 316.077903,
+          "maxMs": 355.245568
+        },
+        "baseline": {
+          "compileMs": 15.808377,
+          "bytes": 8193,
+          "binarySha256": "45ba3fc5ba838db266658dfe611bd86d31aae67661c4c7aaa1dc5bfedf703cd0",
+          "runMs": [
+            356.484019,
+            372.552528,
+            336.260578,
+            328.79312,
+            303.410384,
+            302.738779,
+            307.049967,
+            309.655018,
+            319.365485,
+            306.597611,
+            307.900528
+          ],
+          "medianMs": 309.655018,
+          "minMs": 302.738779,
+          "maxMs": 372.552528
+        }
+      },
+      "speedup": 0.9560527709606627
+    },
+    "reverse_traversal": {
+      "expected": 98268934144,
+      "sourceSha256": "68e140e5812f996a29cff25959792b8e35c23a89220f35d38b63003698c47459",
+      "measurements": {
+        "candidate": {
+          "compileMs": 30.293274,
+          "bytes": 16912,
+          "binarySha256": "0e966034cb7f72c00d4cca18b7d0e28dd9e2d30ab68f7a5cc1ad96ec0d8b3aba",
+          "runMs": [
+            46.537437,
+            45.110899,
+            49.682301,
+            46.402099,
+            47.665506,
+            46.979197,
+            45.137711,
+            46.548338,
+            46.440501,
+            50.126517,
+            45.631229
+          ],
+          "medianMs": 46.537437,
+          "minMs": 45.110899,
+          "maxMs": 50.126517
+        },
+        "baseline": {
+          "compileMs": 22.511401,
+          "bytes": 16912,
+          "binarySha256": "ca8e46cb11231afce2e9ae920f4d399e307e44b1b8a90b5747fc927ddc11c801",
+          "runMs": [
+            52.416736,
+            53.998743,
+            53.015734,
+            53.138794,
+            53.662071,
+            51.606187,
+            53.476253,
+            50.823727,
+            52.150972,
+            52.818916,
+            50.545
+          ],
+          "medianMs": 52.818916,
+          "minMs": 50.545,
+          "maxMs": 53.998743
+        }
+      },
+      "speedup": 1.13497690042535
+    },
+    "scalar_leaf": {
+      "expected": 863999988000000,
+      "sourceSha256": "1bb998bf735b1cf94f63d5240265f2c2f7380cc4142b7513e10d63391a6d854a",
+      "measurements": {
+        "candidate": {
+          "compileMs": 17.956793,
+          "bytes": 8193,
+          "binarySha256": "752eb22e706e59d489eca5d304ea87fdaef293bab8033d1acc3d6f16e8a420b6",
+          "runMs": [
+            45.664032,
+            44.918795,
+            45.337672,
+            51.510233,
+            43.744664,
+            43.646157,
+            47.051284,
+            42.613942,
+            43.858394,
+            45.748888,
+            45.406715
+          ],
+          "medianMs": 45.337672,
+          "minMs": 42.613942,
+          "maxMs": 51.510233
+        },
+        "baseline": {
+          "compileMs": 20.543221,
+          "bytes": 8193,
+          "binarySha256": "3408302c28ed27c248d40e0e4dc422c927601a4171431ec6d296721e9053c6e3",
+          "runMs": [
+            45.80919,
+            46.946786,
+            46.710585,
+            46.926358,
+            45.399546,
+            44.713335,
+            45.632898,
+            44.948161,
+            44.459946,
+            44.074167,
+            42.129755
+          ],
+          "medianMs": 45.399546,
+          "minMs": 42.129755,
+          "maxMs": 46.946786
+        }
+      },
+      "speedup": 1.0013647370336969
+    },
+    "nested_scalar": {
+      "expected": -31500148504096,
+      "sourceSha256": "672afe20e18f36b7fe52702e3aa38574187e8345ccb266243215c590c8a95ea1",
+      "measurements": {
+        "candidate": {
+          "compileMs": 22.986259,
+          "bytes": 8193,
+          "binarySha256": "f5bd61359fd2340885400b9a0989e6e23c139ec93097cf07ca109abe2bcfc2ff",
+          "runMs": [
+            7.296408,
+            8.246124,
+            7.052448,
+            8.057163,
+            7.311336,
+            7.131902,
+            8.003932,
+            6.863782,
+            7.791301,
+            8.123948,
+            7.823515
+          ],
+          "medianMs": 7.791301,
+          "minMs": 6.863782,
+          "maxMs": 8.246124
+        },
+        "baseline": {
+          "compileMs": 16.076022,
+          "bytes": 8193,
+          "binarySha256": "636389ca3ad89bb2189902d9d58f6a66805c63ddc3748ae83791c4433117da24",
+          "runMs": [
+            9.333632,
+            11.302401,
+            9.694071,
+            9.061386,
+            10.959147,
+            11.695447,
+            8.778141,
+            9.930568,
+            10.813793,
+            9.665787,
+            9.226383
+          ],
+          "medianMs": 9.694071,
+          "minMs": 8.778141,
+          "maxMs": 11.695447
+        }
+      },
+      "speedup": 1.2442172366335225
+    },
+    "float_values": {
+      "expected": 12000000,
+      "sourceSha256": "451d80e67cdff63ca80a90a9928dd7880710aa1e14aedbd0b353f0e426655c98",
+      "measurements": {
+        "candidate": {
+          "compileMs": 18.333929,
+          "bytes": 8193,
+          "binarySha256": "bd9743bca8da4441c4517b2fbc331f54b577cddfa04c7672d459dd9b7a4b691b",
+          "runMs": [
+            76.818041,
+            75.925682,
+            73.258818,
+            74.493644,
+            74.515349,
+            76.635268,
+            75.283862,
+            75.649901,
+            75.382763,
+            74.925682,
+            75.792014
+          ],
+          "medianMs": 75.382763,
+          "minMs": 73.258818,
+          "maxMs": 76.818041
+        },
+        "baseline": {
+          "compileMs": 20.873412,
+          "bytes": 8193,
+          "binarySha256": "ea72dda8582820eb71b630a04c20c7fe1b1d2a6349e47527dcafdfa62a7a8e00",
+          "runMs": [
+            73.4466,
+            74.486868,
+            73.862039,
+            73.390029,
+            71.730237,
+            73.423323,
+            75.016528,
+            73.699399,
+            75.168561,
+            75.677695,
+            75.247131
+          ],
+          "medianMs": 73.862039,
+          "minMs": 71.730237,
+          "maxMs": 75.677695
+        }
+      },
+      "speedup": 0.9798266349032603
+    }
+  }
+}

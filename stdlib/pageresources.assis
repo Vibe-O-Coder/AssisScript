@@ -85,6 +85,7 @@ public final class Batch{
     fn status(borrow self):int{return self.failure;}
     fn size(borrow self):int{if(self.entries==null){return 0;}return self.entries.size();}
     fn used_bytes(borrow self):int{return self.used;}
+    fn remaining_bytes(borrow self):int{return self.limit-self.used;}
     fn envelope(borrow self,index:int):Request{
         if(!self.is_open() || index<0 || index>=self.size()){return new Request();}
         return new Request(self.instance_id,self.origin_id,self.generation_id,index+1,self.entries.get(index).kind,self.entries.get(index).version);

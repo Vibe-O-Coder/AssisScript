@@ -38,10 +38,10 @@ class FrameWorker(unittest.TestCase):
     source=base.Evolution.source
     invoke=base.Evolution.invoke
     fault_program=fr.frame.PageFrame.fault_program
-    def execute(self,body):
+    def execute(self,body,imports=''):
         prelude=''.join(f'own {key}:*byte=try_alloc<byte>({len(data)});assert({key}!=null);'+''.join(f'{key}[{i}]=byte({b});' for i,b in enumerate(data)) for key,data in self.data.items())
         source=self.temp/'host.assis'
-        code=PREFIX+'safe fn main():int{'+prelude+body+'return 0;}'
+        code=imports+PREFIX+'safe fn main():int{'+prelude+body+'return 0;}'
         code=re.sub(r'("(?:\\.|[^"\\])*")|;',lambda m:m[0] if m[1] else ';\n',code)
         source.write_text(code,encoding='utf-8')
         for flags in ([],['--no-opt']):

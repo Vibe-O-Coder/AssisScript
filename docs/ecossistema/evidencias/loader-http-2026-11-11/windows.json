@@ -1,0 +1,538 @@
+{
+  "base": "592255811b447ab9ea918c32e371384167e30c4d",
+  "system": "Windows x64, MinGW UCRT64",
+  "compiler_build": "gcc -O2 -std=c11 -Wall -Wextra -Wpedantic -Wno-misleading-indentation -Werror -municode -static -static-libgcc -Wl,--no-insert-timestamp src/assisc.c",
+  "compiler_sha256": "0afad2bd14e7f7f98fcccbe9ca89d4bd7c5f0a54141d302e3eb76fbc182d69b7",
+  "checks": [
+    {
+      "executed": 8,
+      "not_run": 0,
+      "log_sha256": "ec1bf58b16b4c43b13c0f7b7dcb8fe049784f8b117b1bb5773c8c2931fd10338",
+      "methods": [
+        {
+          "name": "test_bounds_redirects_and_invalid_urls",
+          "result": "ok"
+        },
+        {
+          "name": "test_explicit_same_origin_redirect_and_bounded_header_capture",
+          "result": "ok"
+        },
+        {
+          "name": "test_independent_process_load_and_released_handles",
+          "result": "ok"
+        },
+        {
+          "name": "test_post_binary_empty_body_headers_and_no_method_leak_into_get",
+          "result": "ok"
+        },
+        {
+          "name": "test_success_binary_status_and_exact_limit",
+          "result": "ok"
+        },
+        {
+          "name": "test_timeouts_disconnect_and_recovery",
+          "result": "ok"
+        },
+        {
+          "name": "test_untrusted_tls_certificate_is_rejected",
+          "result": "ok"
+        },
+        {
+          "name": "test_url_resolution_uses_rfc_examples_and_rejects_ambiguous_authority",
+          "result": "ok"
+        }
+      ],
+      "command": "python tests/test-http.py"
+    },
+    {
+      "executed": 8,
+      "not_run": 0,
+      "log_sha256": "e9732ad3d5d0b9e5baa28ae76b7a42c978c16f9216e4a670a2af0e030f48d7c9",
+      "methods": [
+        {
+          "name": "test_application_b_polls_and_preserves_output_on_cancel",
+          "result": "ok"
+        },
+        {
+          "name": "test_cancel_before_start_during_io_and_repeated_cancel",
+          "result": "ok"
+        },
+        {
+          "name": "test_completion_bounds_errors_and_request_retains_inputs",
+          "result": "ok"
+        },
+        {
+          "name": "test_invalid_input_is_recoverable",
+          "result": "ok"
+        },
+        {
+          "name": "test_native_handles_and_buffers_are_released_in_one_live_process",
+          "result": "ok"
+        },
+        {
+          "name": "test_partial_body_stops_changing_after_cancel",
+          "result": "ok"
+        },
+        {
+          "name": "test_timeout_parallel_requests_and_drop_while_pending",
+          "result": "ok"
+        },
+        {
+          "name": "test_tls_positive_untrusted_and_hostname_verification",
+          "result": "ok"
+        }
+      ],
+      "command": "python tests/test-net.py"
+    },
+    {
+      "executed": 7,
+      "not_run": 0,
+      "log_sha256": "a9c16a8deaa6ea69e3f6419789ad9527bc51503a16f5b8ceda698e7554a2ac31",
+      "methods": [
+        {
+          "name": "test_immediates_scaled_addresses_and_leaf_calls",
+          "result": "ok"
+        },
+        {
+          "name": "test_inline_preserves_effects_and_argument_order",
+          "result": "ok"
+        },
+        {
+          "name": "test_nested_integer_operands_spill_and_preserve_effects",
+          "result": "ok"
+        },
+        {
+          "name": "test_optimized_bounds_and_traps_are_retained",
+          "result": "ok"
+        },
+        {
+          "name": "test_range_proof_and_mutation_call_unsafe_fallbacks",
+          "result": "ok"
+        },
+        {
+          "name": "test_strided_negative_extreme_keys_and_tombstones",
+          "result": "ok"
+        },
+        {
+          "name": "test_zeroed_fresh_and_reused_allocations",
+          "result": "ok"
+        }
+      ],
+      "command": "python tests/test-optimization.py"
+    },
+    {
+      "executed": 2,
+      "not_run": 0,
+      "log_sha256": "c65e67f8ec394e72459ecb53eff2393b4800149cd7bd09bbc4eae479e0d35b77",
+      "methods": [
+        {
+          "name": "test_large_double_free_and_leak_diagnostics_are_preserved",
+          "result": "ok"
+        },
+        {
+          "name": "test_resident_memory_with_two_thousand_frees",
+          "result": "ok"
+        }
+      ],
+      "command": "python tests/test-debug-large-free.py"
+    },
+    {
+      "executed": 1,
+      "not_run": 0,
+      "log_sha256": "c4f1059a1a3e4f4ac4e9e94bbd791ba2f39db44ca08bedda9127507198456fd5",
+      "methods": [
+        {
+          "name": "test_application_a",
+          "result": "ok"
+        }
+      ],
+      "command": "python tests/test-cli.py"
+    },
+    {
+      "executed": 5,
+      "not_run": 0,
+      "log_sha256": "951a51da4106f1cee04ded388ed51987b71a236a654d35064befc9a2d188e37d",
+      "methods": [
+        {
+          "name": "test_canonical_catalog_and_every_module",
+          "result": "ok"
+        },
+        {
+          "name": "test_english_builtin_aliases_remain_compatible",
+          "result": "ok"
+        },
+        {
+          "name": "test_entry_constructor_import_and_callbacks",
+          "result": "ok"
+        },
+        {
+          "name": "test_managed_english_libraries",
+          "result": "ok"
+        },
+        {
+          "name": "test_shipped_function_names_follow_the_english_migration",
+          "result": "ok"
+        }
+      ],
+      "command": "python tests/test-english-api.py"
+    },
+    {
+      "executed": 7,
+      "not_run": 1,
+      "log_sha256": "1fa21b9c8e2049228588e659e5e36bc34cc652f4b69d08a08cb48381fb92d565",
+      "methods": [
+        {
+          "name": "test_bad_manifest_cancellation_quota_and_deadline",
+          "result": "ok"
+        },
+        {
+          "name": "test_complete_manifest_activates_then_io_or_style_failure_preserves_frame",
+          "result": "ok"
+        },
+        {
+          "name": "test_example_runs_from_a_copied_root_in_both_modes",
+          "result": "ok"
+        },
+        {
+          "name": "test_authority_reparse_hardlinks_and_escape",
+          "result": "ok"
+        },
+        {
+          "name": "test_grant_limit_wrong_thread_stale_tokens_and_reuse",
+          "result": "ok"
+        },
+        {
+          "name": "test_mount_symlink_and_special_file_denied",
+          "result": "skipped"
+        },
+        {
+          "name": "test_racing_directory_replacement_never_reads_outside",
+          "result": "ok"
+        },
+        {
+          "name": "test_unicode_root_binary_zero_exact_size_and_limits",
+          "result": "ok"
+        }
+      ],
+      "command": "python tests/test-localresources.py"
+    },
+    {
+      "executed": 15,
+      "not_run": 0,
+      "log_sha256": "4d585ebdad85c0ea7fd2c30de65d4229de5f1821aa93b50d008da0995f9a91ab",
+      "methods": [
+        {
+          "name": "test_command_ceiling_rejects_large_selection_without_modifying_packet",
+          "result": "ok"
+        },
+        {
+          "name": "test_empty_document_and_empty_buttons_have_valid_zero_length_selection",
+          "result": "ok"
+        },
+        {
+          "name": "test_metric_failure_and_budget_keep_previous_reader_usable",
+          "result": "ok"
+        },
+        {
+          "name": "test_native_highlight_failure_keeps_previous_projection_then_retries",
+          "result": "ok"
+        },
+        {
+          "name": "test_os_refusal_during_reader_preparation_conserves_selection",
+          "result": "ok"
+        },
+        {
+          "name": "test_overlapping_disabled_button_occludes_text_selection_and_activation",
+          "result": "ok"
+        },
+        {
+          "name": "test_pointer_keyboard_focus_press_release_copy_zoom_and_capture_loss",
+          "result": "ok"
+        },
+        {
+          "name": "test_reading_order_soft_wraps_labels_hidden_and_copied_text",
+          "result": "ok"
+        },
+        {
+          "name": "test_reflow_restores_reading_offsets_but_cancels_gestures_and_modifiers",
+          "result": "ok"
+        },
+        {
+          "name": "test_selection_rectangle_uses_aligned_composed_clipped_run",
+          "result": "ok"
+        },
+        {
+          "name": "test_soft_wrap_terminal_width_is_distinct_from_next_run_zero",
+          "result": "ok"
+        },
+        {
+          "name": "test_ssc_displacement_is_applied_once_to_selection_and_packet",
+          "result": "ok"
+        },
+        {
+          "name": "test_stale_projection_generation_request_and_semantic_mutation_are_refused",
+          "result": "ok"
+        },
+        {
+          "name": "test_unicode_selection_against_independent_grapheme_ranges",
+          "result": "ok"
+        },
+        {
+          "name": "test_word_wrap_preserves_spaces_in_copy_and_uses_grapheme_fallback",
+          "result": "ok"
+        }
+      ],
+      "retest_sha256": "bf320ff684f90b3a55a17d6bcd52f48023f8b5b0b1118e8a5cff9e406d3f0f0b",
+      "command": "python tests/test-framereader.py"
+    },
+    {
+      "executed": 17,
+      "not_run": 0,
+      "log_sha256": "4d1c3cf4637f066c6687e4f52831f613780267a1c246e8abc87e1872e07264ce",
+      "methods": [
+        {
+          "name": "test_accessible_label_and_text_are_owned_after_document_close",
+          "result": "ok"
+        },
+        {
+          "name": "test_clip_hit_and_accessible_bounds_use_the_same_final_rectangle",
+          "result": "ok"
+        },
+        {
+          "name": "test_column_padding_gaps_and_transforms_do_not_change_flow",
+          "result": "ok"
+        },
+        {
+          "name": "test_current_semantics_disabled_hidden_and_removal_override_failed_fs",
+          "result": "ok"
+        },
+        {
+          "name": "test_examples_generate_all_five_formats_and_use_ir_in_both_modes",
+          "result": "ok"
+        },
+        {
+          "name": "test_graphemes_are_never_split_and_oversized_cluster_is_diagnosed",
+          "result": "ok"
+        },
+        {
+          "name": "test_hidden_subtree_is_absent_and_never_clickable",
+          "result": "ok"
+        },
+        {
+          "name": "test_nested_widths_and_bottom_up_heights_do_not_feed_back",
+          "result": "ok"
+        },
+        {
+          "name": "test_new_document_uses_defaults_and_never_inherits_previous_style_version",
+          "result": "ok"
+        },
+        {
+          "name": "test_real_allocator_refusal_preserves_owned_frame_and_neighbor",
+          "result": "ok"
+        },
+        {
+          "name": "test_reservation_and_oom_preserve_previous_snapshot_and_neighbor",
+          "result": "ok"
+        },
+        {
+          "name": "test_row_cross_axis_alignment_and_reserved_scroll_gutter",
+          "result": "ok"
+        },
+        {
+          "name": "test_scroll_is_clamped_and_does_not_modify_flow_extent",
+          "result": "ok"
+        },
+        {
+          "name": "test_seeded_rows_and_columns_against_independent_stack_model",
+          "result": "ok"
+        },
+        {
+          "name": "test_semantic_order_is_independent_of_visual_overlap",
+          "result": "ok"
+        },
+        {
+          "name": "test_unrepresentable_metric_row_width_and_unsupported_types_reject_candidate",
+          "result": "ok"
+        },
+        {
+          "name": "test_zoom_is_applied_once_and_text_align_uses_measured_run",
+          "result": "ok"
+        }
+      ],
+      "command": "python tests/test-pageframe.py"
+    },
+    {
+      "executed": 21,
+      "not_run": 0,
+      "log_sha256": "b52a5e6fc954270736abb63ca1651ff4dc7594be8abbfbc5786314ac2b87dd05",
+      "methods": [
+        {
+          "name": "test_all_structural_reading_types_keep_semantic_order",
+          "result": "ok"
+        },
+        {
+          "name": "test_box_and_fragment_work_limits_preserve_previous_document",
+          "result": "ok"
+        },
+        {
+          "name": "test_examples_use_both_modes_and_generate_all_five_formats",
+          "result": "ok"
+        },
+        {
+          "name": "test_explicit_reading_profile_and_arbitrary_valid_head_order",
+          "result": "ok"
+        },
+        {
+          "name": "test_fragment_target_can_be_offscreen_inline_or_structural",
+          "result": "ok"
+        },
+        {
+          "name": "test_hidden_fragment_target_is_valid_but_never_scrolled_or_focused",
+          "result": "ok"
+        },
+        {
+          "name": "test_hidden_items_do_not_consume_ordinal_or_copy_marker_bytes",
+          "result": "ok"
+        },
+        {
+          "name": "test_independent_native_com_roles_actions_hits_revocation_and_allocation_rollback",
+          "result": "ok"
+        },
+        {
+          "name": "test_item_clip_keeps_marker_and_child_content_in_one_inner_rectangle",
+          "result": "ok"
+        },
+        {
+          "name": "test_keyboard_and_pointer_gestures_do_not_complete_each_other",
+          "result": "ok"
+        },
+        {
+          "name": "test_link_enter_once_space_scrolls_and_button_space_releases_once",
+          "result": "ok"
+        },
+        {
+          "name": "test_list_wrapping_indents_before_text_measurement_and_zoom",
+          "result": "ok"
+        },
+        {
+          "name": "test_native_catalog_actions_and_failure_keep_previous_frame",
+          "result": "ok"
+        },
+        {
+          "name": "test_numbered_markers_and_geometry_against_independent_stack_model",
+          "result": "ok"
+        },
+        {
+          "name": "test_os_refusal_of_catalog_candidate_preserves_neighbor",
+          "result": "ok"
+        },
+        {
+          "name": "test_pointer_link_activation_and_requests_revalidate_snapshot",
+          "result": "ok"
+        },
+        {
+          "name": "test_real_font_catalog_window_selects_reflows_and_closes",
+          "result": "ok"
+        },
+        {
+          "name": "test_repaint_while_enter_is_held_does_not_repeat_activation",
+          "result": "ok"
+        },
+        {
+          "name": "test_seeded_hidden_list_matches_plain_text_and_ordinal_model",
+          "result": "ok"
+        },
+        {
+          "name": "test_tree_mutation_revokes_fragment_focus_and_old_reading_projection",
+          "result": "ok"
+        },
+        {
+          "name": "test_unsupported_resources_live_hints_and_missing_fragments_preserve_active",
+          "result": "ok"
+        }
+      ],
+      "command": "python tests/test-catalog-frame.py"
+    },
+    {
+      "executed": 5,
+      "not_run": 0,
+      "log_sha256": "181298b174a689e5f44bacc32cc4b91b87e371d2c011bea6312445afdaa8f466",
+      "methods": [
+        {
+          "name": "test_animation_clock_matches_independent_elapsed_time_and_owner_thread",
+          "result": "ok"
+        },
+        {
+          "name": "test_bounded_eviction_uses_exact_text_length_size_and_weight",
+          "result": "ok"
+        },
+        {
+          "name": "test_exact_metric_cache_matches_uncached_font_oracle_and_failures",
+          "result": "ok"
+        },
+        {
+          "name": "test_resize_burst_coalesces_without_redundant_visibility_or_lost_keys",
+          "result": "ok"
+        },
+        {
+          "name": "test_theme_dpi_and_last_window_close_invalidate_private_metrics",
+          "result": "ok"
+        }
+      ],
+      "command": "python tests/test-frame-responsiveness.py"
+    },
+    {
+      "executed": 2,
+      "not_run": 0,
+      "log_sha256": "48d640aa7a3daf72db1d34e6ac0ac237cff314202c0e345e4017970f1f9a4d41",
+      "methods": [
+        {
+          "name": "test_native_mask_boundaries_and_transitive_dependency_closure",
+          "result": "ok"
+        },
+        {
+          "name": "test_rejects_64_entries_before_touching_generated_files",
+          "result": "ok"
+        }
+      ],
+      "command": "python tests/test-install-mask.py"
+    }
+  ],
+  "executed": 98,
+  "not_run": 1,
+  "examples": 71,
+  "rpg": [
+    {
+      "seed": 1,
+      "ending": "victory",
+      "returnCode": 0,
+      "stderr": "",
+      "outputBytes": 12915
+    },
+    {
+      "seed": 5,
+      "ending": "defeat",
+      "returnCode": 0,
+      "stderr": "",
+      "outputBytes": 13754
+    }
+  ],
+  "debug_rss_bytes": [
+    [
+      5443584,
+      13672448
+    ],
+    [
+      4947968,
+      13148160
+    ]
+  ],
+  "tls_public": {
+    "endpoint": "https://example.com/",
+    "downloaded_bytes": 577,
+    "exit_status": 0
+  },
+  "installer_selected_optional_count": 29,
+  "installer_lock_tests": 4,
+  "node_tests": 40
+}

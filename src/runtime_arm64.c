@@ -63,7 +63,22 @@ static U allocate(U a,State*s){
 R(try_alloc){UNUSED;return allocate(a,s);}
 R(alloc){UNUSED;if((I)a<0||a>0x7fffffffffffffdfUL)error(4,b);U p=allocate(a,s);if(!p)error(5,b);return p;}
 R(free){
-    UNUSED;if(!a)return 0;U*p=(U*)a-4;if(p[3]!=0x41534953)error(12,0);p[3]=0x46524545;s->live--;if(p[1]==10){if(!s->debug)unmap(p,p[0]);return 0;}if(s->debug){char*q=(char*)a;for(U i=0;i<p[2];i++)q[i]=(char)0xdd;}p[2]=s->pool[p[1]];s->pool[p[1]]=(U)p;return 0;
+    UNUSED;
+    if(!a)return 0;
+    U*p=(U*)a-4;
+    if(p[3]!=0x41534953)error(12,0);
+    p[3]=0x46524545;
+    s->live--;
+    if(p[1]==10){
+        /* This prefix is aligned on kernels using 4, 16 or 64 KiB pages.
+         * It keeps the freed header reachable for repeat-free diagnostics. */
+        const U prefix=65536;
+        if(!s->debug)unmap(p,p[0]);
+        else if(p[0]>prefix)unmap((char*)p+prefix,p[0]-prefix);
+        return 0;
+    }
+    if(s->debug){char*q=(char*)a;for(U i=0;i<p[2];i++)q[i]=(char)0xdd;}
+    p[2]=s->pool[p[1]];s->pool[p[1]]=(U)p;return 0;
 }
 R(finish){UNUSED;if(s->debug&&s->live)error(13,0);return 0;}
 R(len){UNUSED;return length((char*)a);}

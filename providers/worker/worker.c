@@ -41,6 +41,7 @@ static int owner_thread(void){
     return syscall(SYS_gettid)==getpid();
 #endif
 }
+#include "local_resources.inc"
 static Slot *find(int64_t token){for(int i=0;i<SLOTS;i++)if(token>0&&slots[i].token==token)return &slots[i];return NULL;}
 int64_t assw_version(void){return owner_thread()?1:-6;}
 int64_t assw_close(int64_t token){

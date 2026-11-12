@@ -10,7 +10,7 @@ import json
 import subprocess
 import sys
 root=Path(__file__).resolve().parent.parent
-compiler=root/'bin'/('assis.exe' if sys.platform=='win32' else 'assis')
+compiler=Path(os.environ.get('ASSIS_BIN',root/'bin'/('assis.exe' if sys.platform=='win32' else 'assis'))).resolve()
 fixtures=sorted(Path(os.environ.get('ASSIS_V32_FIXTURE_DIR',root/'build/v32-fixtures')).resolve().glob('*.json'))
 assert len(fixtures)>=70, 'Gere o corpus Node 3.2 antes de run'
 for file in fixtures:

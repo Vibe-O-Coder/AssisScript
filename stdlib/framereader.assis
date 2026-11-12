@@ -26,9 +26,16 @@ public final class Reader{
         self.advances=try_alloc<int>(capacity+1);
         if(self.content==null || self.starts==null || self.advances==null){return;}
         for(let i:int=0;i<self.lines;i++){
-            if(i>0 && frame.run(i).box!=frame.run(i-1).box){self.content[self.used]=byte(10);self.used++;}
+            val run:pageframe::Run=frame.run(i);
+            if(i>0){
+                val previous:pageframe::Run=frame.run(i-1);
+                if(run.box!=previous.box){self.content[self.used]=byte(10);self.used++;}
+                else if(run.start==previous.start+previous.size+1){
+                    self.content[self.used]=byte(32);self.used++;
+                }
+            }
             self.starts[i]=self.used;
-            for(let j:int=0;j<frame.run(i).size;j++){self.content[self.used]=frame.run_text(i)[j];self.used++;}
+            for(let j:int=0;j<run.size;j++){self.content[self.used]=frame.run_text(i)[j];self.used++;}
         }self.starts[self.lines]=self.used;
         self.boundaries=try_new graphemes::Index(slice_of(self.content,0,self.used));
         if(self.boundaries==null || self.boundaries.status()!=0){return;}

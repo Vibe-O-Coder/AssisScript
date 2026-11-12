@@ -226,16 +226,27 @@ public final class Frame{
         own boundaries:graphemes::Index=try_new graphemes::Index(slice_of(self.content,start,size));
         if(boundaries==null || boundaries.status()!=0){self.fail(401,self.node(index));return false;}
         let at:int=0;
-        while(at<size){let end:int=at;let measured:int=0;
-            while(end<size){val stop:int=boundaries.next(end);if(stop-at>4096){break;}
+        while(at<size){
+            let end:int=at;let measured:int=0;
+            let separator:int= -1;let before_space:int=0;
+            while(end<size){
+                val stop:int=boundaries.next(end);
+                // Break at a complete space grapheme, even if its advance
+                // would not fit. The reader preserves it in copied text.
+                if(end>at && stop==end+1 && self.content[start+end]==32){
+                    separator=end;before_space=measured;
+                }
+                if(stop-at>4096){break;}
                 self.work+=stop-at;if(self.work>8000000){self.fail(401,self.node(index));return false;}
                 val m:int=metric(slice_of(self.content,start+at,stop-at),self.data[p+18],self.data[p+19]);
                 if(m<0 || (m>>32)!=row){self.fail(304,self.node(index));return false;}
                 val w:int=m%4294967296;if(w>available){break;}end=stop;measured=w;
             }
+            let resume:int=end;
+            if(end<size && separator>at){end=separator;resume=separator+1;measured=before_space;}
             if(end==at || self.lines==32768){self.fail(303,self.node(index));return false;}
             let x:int=0;if(self.data[p+20]==1){x=(available-measured)/2;}if(self.data[p+20]==2){x=available-measured;}
-            self.runs[self.lines]=new Run(index,start+at,end-at,new Rect(x,y,measured,row));self.lines++;y+=row;at=end;
+            self.runs[self.lines]=new Run(index,start+at,end-at,new Rect(x,y,measured,row));self.lines++;y+=row;at=resume;
         }
         if(size==0 && self.data[p+4]==9){y=row;}
         self.data[p+37]=y;return true;

@@ -27,9 +27,48 @@ static IRExpr *ir_substitute(IRExpr *v,IRExpr *call,IRExpr *values,int *count){
     if(v->a)out->a=ir_substitute(v->a,call,values,count);
     if(v->b)out->b=ir_substitute(v->b,call,values,count);return out;
 }
+/* Local allocation for a call-free right operand. RAX holds the left result.
+ * These scratch registers do not overlap the CFG allocator's callee-saved
+ * locals. A subtree with effects, traps, conversions or excess pressure
+ * takes the existing stack path. All operations retain source order. */
+static const int ir_scratch[]={RCX,RDX,RSI,RDI};
+static unsigned ir_alu_opcode(int op){
+    switch(op){
+    case '+':return 0x01;
+    case '-':return 0x29;
+    case '&':return 0x21;
+    case '|':return 0x09;
+    case '^':return 0x31;
+    default:return 0;
+    }
+}
+static bool ir_fits_scratch(IRExpr *v,int available,int *budget){
+    if(available<1||--*budget<0||!equal_type(v->type,type_i64))return false;
+    if(v->kind==IV_CONSTANT||v->kind==IV_LOCAL)return true;
+    if(v->kind!=IV_BINARY||(!ir_alu_opcode(v->op)&&v->op!='*'))return false;
+    if(!ir_fits_scratch(v->a,available,budget))return false;
+    return ir_fits_scratch(v->b,available-1,budget);
+}
+static void ir_emit_scratch(IRExpr *v,int slot){
+    int dest=ir_scratch[slot];
+    if(v->kind==IV_CONSTANT){immediate(dest,v->value);return;}
+    if(v->kind==IV_LOCAL){load_local(dest,v->local);return;}
+    ir_emit_scratch(v->a,slot);
+    if(v->op=='*'&&v->b->kind==IV_CONSTANT&&scale_by_shift(dest,v->b->value))return;
+    ir_emit_scratch(v->b,slot+1);
+    int src=ir_scratch[slot+1];
+    if(v->op=='*'){
+        INS(0x48,0x0f,0xaf);u8(&code,0xc0+(unsigned)(dest*8+src));
+    }else{
+        u8(&code,0x48);u8(&code,ir_alu_opcode(v->op));u8(&code,0xc0+(unsigned)(src*8+dest));
+    }
+}
 static bool ir_operand_rcx(IRExpr *v){
     if(v->kind==IV_CONSTANT){immediate(RCX,v->value);return true;}
-    if(v->kind==IV_LOCAL){load_local(RCX,v->local);return true;}return false;
+    if(v->kind==IV_LOCAL){load_local(RCX,v->local);return true;}
+    int budget=24;
+    if(!ir_fits_scratch(v,(int)(sizeof(ir_scratch)/sizeof(*ir_scratch)),&budget))return false;
+    ir_emit_scratch(v,0);return true;
 }
 static void ir_emit_expr(IRExpr *v){
     switch(v->kind){

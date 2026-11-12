@@ -64,6 +64,18 @@ class Optimization(base.Evolution):
         self.accepted('pure fn duplicate(a:int):int{return a+a;}'+main('let a:int=21;print(duplicate(a));'),'42\n')
         self.accepted('pure fn choose(a:bool,b:bool):bool{return a&&b;}'+main('assert(choose(true,true));assert(!choose(true,false));'))
 
+    def test_nested_integer_operands_spill_and_preserve_effects(self):
+        values=[-2**63,-2**60,-17,-1,0,1,22,2**60,2**63-1]
+        wrap=lambda n:(n+2**63)%2**64-2**63
+        source='pure fn nested(x:int,y:int,z:int):int{return x-((y^3)+((z*8)-(y*4)));}'
+        source+='pure fn deep(a:int,b:int,c:int):int{return a-(b-(c-(a-(b-(c-a)))));}'
+        body=''
+        for x,y,z in zip(values,values[1:]+values[:1],list(reversed(values))):
+            body+=f'assert(nested({x},{y},{z})=={wrap(x-((y^3)+((z*8)-(y*4))))});'
+            body+=f'assert(deep({x},{y},{z})=={wrap(x-(y-(z-(x-(y-(z-x))))))});'
+        source+='fn effect(x:int):int{print(x);return x;}'
+        self.accepted(source+main(body+'print(effect(1)-(effect(2)+effect(3)));'),'1\n2\n3\n-4\n')
+
     def test_optimized_bounds_and_traps_are_retained(self):
         source=self.source(main('own p:*int=alloc<int>(1);print(p[1]);'))
         for flags in [[],['--no-opt']]:

@@ -37,8 +37,11 @@ host: este módulo consome saídas confirmadas e não reavalia o grafo.
 Overflow clip recorta conteúdo e descendentes; scroll também reserva sempre
 12px horizontais. Há rolagem vertical do documento, com clamp e max_scroll().
 Rolagem independente de contêineres internos ainda não está implementada.
-Texto usa colapso de whitespace e quebra por grafemas Unicode 17, sem hifenação
-ou política completa de palavras. Escala 1..4 aplica-se uma vez ao tamanho base.
+Texto colapsa whitespace e prefere quebrar em espaços inteiros. Palavras que
+excedem a largura quebram entre grafemas Unicode 17. O Reader recompõe o espaço
+na cópia e conserva os offsets ao redimensionar. A escala 1..4 aplica-se uma
+vez ao tamanho base. Hifenação e regras completas de quebra Unicode ficam fora
+do perfil.
 Pixels inteiros são arredondados por `(q+32768)>>16`; não é layout subpixel.
 
 `box(i)` retorna Box com NodeId, tipo, disabled, bounds/clip, cores, opacidade,

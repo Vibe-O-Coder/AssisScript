@@ -5,7 +5,7 @@ import "std/strings";
 import "std/memory";
 fn main(): int {
     let AssisAssis: Assis_Fodase = new Assis_Fodase(21);
-    print(AssisAssis.AssisFodase());
+    print(AssisAssis.double());
     print(legacy_clamp(99, 0, 10));
     print(legacy_starts_with("ação", "aç"), legacy_ends_with("ação", "ão"));
     let AssisFodase: *byte = alloc<byte>(2);

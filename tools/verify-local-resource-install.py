@@ -1,4 +1,5 @@
 """Install the fresh presentation libraries in an isolated prefix, run and remove."""
+import argparse
 import hashlib
 import json
 import os
@@ -9,7 +10,14 @@ import subprocess
 import sys
 import tempfile
 
-ROOT=Path(__file__).resolve().parent.parent;OUT=ROOT/'docs/ecossistema/evidencias/m3-local-resources-2026-11-04'
+ROOT=Path(__file__).resolve().parent.parent
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--confined',action='store_true')
+parser.add_argument('--output',type=Path)
+args=parser.parse_args()
+OUT=args.output or ROOT/'docs/ecossistema/evidencias/m3-local-resources-2026-11-04'
+selected=['frameworker','localresources','http','cli'] if args.confined else ['frameworker']
+selection=','.join(selected)
 OUT.mkdir(parents=True,exist_ok=True);host='windows' if os.name=='nt' else 'linux';compiler=Path(os.environ['ASSIS_BIN']).resolve();records=[]
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 with tempfile.TemporaryDirectory(prefix='assis-presentation-install-') as temp:
@@ -48,21 +56,23 @@ with tempfile.TemporaryDirectory(prefix='assis-presentation-install-') as temp:
         total=re.search(rb'Ran (\d+) tests? in',log);assert r.returncode==0,log.decode(errors='replace')
         records.append(dict(command=['python','tests/test-installer-retry.py'],returncode=r.returncode,
             executed=int(total[1]) if total else 0,log=path.name,sha256=hashlib.sha256(log).hexdigest()))
-        install=[setup,'install','--prefix',prefix,'--no-path','--no-associations','--with','frameworker']
+        install=[setup,'install','--prefix',prefix,'--no-path','--no-associations','--with',selection]
         uninstall=[setup,'uninstall','--prefix',prefix,'--no-path','--no-associations']
         data=prefix;installed=prefix/'bin/assis.exe'
         environment['PATH']=str(prefix/'bin')+os.pathsep+environment['PATH']
     else:
         target=stage/'bin/assis';shutil.copyfile(compiler,target);target.chmod(0o755);setup_hash=None;provider_hash=None
-        install=['sh',stage/'instalar.sh','--prefix',prefix,'--no-path','--with','frameworker']
+        install=['sh',stage/'instalar.sh','--prefix',prefix,'--no-path','--with',selection]
         uninstall=['sh',stage/'desinstalar.sh','--prefix',prefix];data=prefix/'share/assisscript';installed=prefix/'bin/assis'
     def run(command,input=None):
         r=subprocess.run(list(map(str,command)),env=environment,cwd=ROOT,input=input,capture_output=True,timeout=90)
-        record=dict(command=[str(x).replace(str(temp),'<TEMP>') for x in command],returncode=r.returncode,stdout=r.stdout.decode(errors='replace'),stderr=r.stderr.decode(errors='replace'));records.append(record)
+        record=dict(command=[str(x).replace(str(temp),'<TEMP>') for x in command],returncode=r.returncode,
+            stdout=r.stdout.decode(errors='replace').replace(str(temp),'<TEMP>'),
+            stderr=r.stderr.decode(errors='replace').replace(str(temp),'<TEMP>'));records.append(record)
         assert r.returncode==0,record;return r
     run(install);assert sha(installed)==sha(compiler)
     if os.name=='nt':assert sha(prefix/'bin/assis_platform_v1.dll')==provider_hash
-    chosen={'frameworker'};lookup={x['name']:x for x in catalog['libraries']};pending=['frameworker']
+    chosen=set(selected);lookup={x['name']:x for x in catalog['libraries']};pending=list(selected)
     while pending:
         for dep in lookup[pending.pop()].get('dependencies',[]):
             if dep not in chosen:chosen.add(dep);pending.append(dep)
@@ -75,18 +85,25 @@ with tempfile.TemporaryDirectory(prefix='assis-presentation-install-') as temp:
     environment['LD_LIBRARY_PATH']=str(runtime)
     worker_path=runtime/('page-worker.exe' if os.name=='nt' else 'page-worker')
     binary=runtime/('installed-example.exe' if os.name=='nt' else 'installed-example')
-    run([installed,'build',data/'exemplos/66_resource_frame.assis','--safe','--debug','-o',binary])
-    paths=[data/'exemplos/resource-demo'/name for name in ('index.htdl','main.fxs','main.sscr','main.assis')]
-    r=run([binary,installed,worker_path,*paths]);assert r.stdout==b'RESOURCE FRAME 4 0 1\n'
+    root=data/'exemplos/resource-demo'
+    if args.confined:
+        run([installed,'check',data/'exemplos/27_http_client.assis','--safe'])
+        run([installed,'build',data/'exemplos/69_confined_resource_frame.assis','--safe','--debug','-o',binary])
+        assert run([binary,installed,worker_path,root]).stdout==b'CONFINED FRAME 4 0 1\n'
+    else:
+        run([installed,'build',data/'exemplos/66_resource_frame.assis','--safe','--debug','-o',binary])
+        paths=[root/name for name in ('index.htdl','main.fxs','main.sscr','main.assis')]
+        assert run([binary,installed,worker_path,*paths]).stdout==b'RESOURCE FRAME 4 0 1\n'
     user=prefix/'personal.txt';user.write_text('preserve');run(uninstall);assert user.read_text()=='preserve' and not installed.exists()
     if os.name=='nt':
         command=['node','--test','--test-isolation=none','tests/test-development.js','tests/test-v31.js']
+        if args.confined:command.append('tests/test-v32.js')
         r=subprocess.run(command,cwd=ROOT,env=dict(environment,ASSIS_BIN=str(compiler),ASSIS_SETUP_BIN=str(setup)),capture_output=True,timeout=240)
         log=r.stdout+r.stderr;(OUT/'windows-distribution-node.log').write_bytes(log)
         total=re.search(rb'(?:# )?tests (\d+)',log);assert r.returncode==0,log.decode(errors='replace')
         records.append(dict(command=command,returncode=r.returncode,executed=int(total[1]) if total else 0,
             log='windows-distribution-node.log',sha256=hashlib.sha256(log).hexdigest()))
 report=dict(passed=True,compiler_sha256=sha(compiler),setup_sha256=setup_hash,provider_sha256=provider_hash,runtime_sha256=runtime_hashes,selected_libraries=sorted(chosen),checks=records,
-    scope='Fresh candidate and isolated offline prefix, frameworker transitive closure; installed external-resource Frame/worker demo with explicit runtime paths (Linux runtime is separately granted and staged in the test prefix parent), uninstall and user file preservation; no PATH, associations or release changes')
+    scope=f'Fresh candidate and isolated offline prefix, transitive closure of {selection}; installed resource Frame/worker demo, uninstall and user file preservation')
 (OUT/f'{host}-install.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(f'{host} isolated resource Frame/worker install/run/uninstall: PASS')

@@ -176,24 +176,51 @@ asrt_free:
     jne .Linvalid_free
     mov qword ptr [r8+24], 0x46524545
     dec qword ptr [r15+80]
+    mov rdx, qword ptr [r8+8]
+    cmp rdx, 10
+    jae .Lfree_large
     cmp qword ptr [r15+88], 0
     je .Lfree_link
     mov rcx, qword ptr [r8+16]
     mov al, 0xdd
     rep stosb
 .Lfree_link:
-    mov rdx, qword ptr [r8+8]
-    cmp rdx, 10
-    jae .Lfree_large
     mov rcx, qword ptr [r15+rdx*8]
     mov qword ptr [r8+16], rcx
     mov qword ptr [r15+rdx*8], r8
 .Lfree_done:
     ret
 .Lfree_large:
-    /* Debug retains large freed blocks so a second free has a diagnostic. */
+    /* Keep the freed header readable in debug, but release the payload
+     * pages. Poisoning the entire mapping commits even untouched pages. */
     cmp qword ptr [r15+88], 0
-    jne .Lfree_done
+    je .Lfree_large_release
+.ifdef AS_WINDOWS
+    push rbp
+    mov rbp, rsp
+    and rsp, -16
+    sub rsp, 32
+    lea rcx, [r8+4096]
+    mov rdx, qword ptr [r8]
+    sub rdx, 4096
+    mov r8d, 0x4000  /* MEM_DECOMMIT, preserves the reservation and header. */
+    api VirtualFree
+    mov rsp, rbp
+    pop rbp
+.else
+.ifdef AS_MACOS
+    .set ASRT_FREE_HEADER, 16384
+.else
+    .set ASRT_FREE_HEADER, 4096
+.endif
+    lea rdi, [r8+ASRT_FREE_HEADER]
+    mov rsi, qword ptr [r8]
+    sub rsi, ASRT_FREE_HEADER
+    mov eax, 11
+    syscall
+.endif
+    ret
+.Lfree_large_release:
 .ifdef AS_WINDOWS
     push rbp
     mov rbp, rsp

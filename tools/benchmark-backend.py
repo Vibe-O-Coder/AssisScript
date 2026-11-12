@@ -37,6 +37,8 @@ programs = {
         rounds*size*(size-1)//2),
     'scalar_leaf': ('pure fn step(n:int):int{return n*3+1;}'+main(f'let sum:int=0;for(let i:int=0;i<{n*8};i+=1){{sum+=step(i);}}print(sum);'),
         3*(n*8)*(n*8-1)//2+n*8),
+    'nested_scalar': (main(f'let sum:int=0;for(let i:int=0;i<{n};i+=1){{sum+=i-((i^123)+((i+7)*8-(i+3)));}}print(sum);'),
+        sum(i-((i^123)+((i+7)*8-(i+3))) for i in range(n))),
     'float_values': (main(f'let sum:f64=0.0;for(let i:int=0;i<{n*8};i+=1){{sum+=0.5;}}print(int(sum));'), n*4),
 }
 compilers = {'candidate': args.compiler.resolve(), 'baseline': (args.baseline or args.compiler).resolve()}

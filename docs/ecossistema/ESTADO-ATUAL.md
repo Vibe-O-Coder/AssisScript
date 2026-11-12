@@ -1,3 +1,14 @@
+> **Loader confinado, HTTP e runtime — 11/11/2026, 50,40%, 0/5 gates.**
+> Base `5922558`, branch `work/m3-confined-loader-2026-11-11`. Manifesto
+> local com concessão física por handle e ativação conjunta. HTTP(S) com
+> POST, campos e redirects GET explícitos. Rasters GDI inspecionados,
+> contador 0→10, zoom 200%, painéis SSC e quebra em espaços corrigida.
+> [Loader](../relatorios/2026-11-11-m3-loader-confinado.md) ·
+> [HTTP](../relatorios/2026-11-11-http-post-url.md) ·
+> [Runtime e validação](../relatorios/2026-11-11-runtime-validacao.md).
+> Próximo M3: controles, imagens e live regions. A
+> [fila integral](FILA-M0-M1.md) conserva os aceites e dependências.
+
 > **Entrada tipada e `const` local — 11/11/2026, 48,30%, 0/5 gates.**
 > Base 29dc983, branch `work/typed-input-2026-11-10`. Stdin limitado,
 > parsers de escalares e UTF-8 e exemplo com escopo de `const` em bloco.

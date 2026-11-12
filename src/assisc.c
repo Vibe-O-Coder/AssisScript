@@ -352,10 +352,19 @@ static void gen_address(Node *n){
 }
 #include "numeric_emit.h"
 #include "ffi_emit.h"
+static bool scale_by_shift(int reg,uint64_t scale){
+    if(!scale||(scale&(scale-1)))return false;
+    if(scale==1)return true;
+    unsigned shift=0;
+    while((UINT64_C(1)<<shift)!=scale)shift++;
+    INS(0x48,0xc1);u8(&code,0xe0+(unsigned)reg);u8(&code,shift);
+    return true;
+}
 static void gen_operation(int op,Type left,Type right,Token *t){
     if(floating(left)){gen_float_operation(op,left);return;}
     if(left.depth&&(op=='+'||op=='-')){
-        if(value_size(pointed(left))>1){INS(0x48,0x69,0xc9);u32(&code,(uint32_t)value_size(pointed(left)));}
+        uint64_t scale=(uint64_t)value_size(pointed(left));
+        if(scale>1&&(!optimize||!scale_by_shift(RCX,scale))){INS(0x48,0x69,0xc9);u32(&code,(uint32_t)scale);}
         if(op=='+'){INS(0x48,0x01,0xc8);}else{INS(0x48,0x29,0xc8);}return;
     }
     if((op==T_EQ||op==T_NE)&&equal_type(left,type_str)&&equal_type(right,type_str)){
@@ -398,6 +407,7 @@ static bool immediate_operation(int op,uint64_t value){
         if(opcode<8){INS(0x48,0x81);u8(&code,0xc0+opcode*8);u32(&code,(uint32_t)value);return true;}
     }
     if(op=='*'&&(value==3||value==5||value==9)){INS(0x48,0x8d,0x04);u8(&code,value==3?0x40:value==5?0x80:0xc0);return true;}
+    if(op=='*'&&scale_by_shift(RAX,value))return true;
     if((op!='/'&&op!='%')||!value)return false;
     uint64_t magnitude=(int64_t)value<0?0-value:value;
     if(!(magnitude&(magnitude-1))){

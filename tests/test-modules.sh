@@ -36,15 +36,17 @@ expect 0 "$assis" check --legacy "$tmp/main.assis" --overlay "$tmp/lib.assis" "$
 printf 'fn main(): int { return true; }\n' > "$tmp/stdin.assis"
 expect 1 "$assis" check --legacy "$tmp/main.assis" --stdin --diagnostics=json < "$tmp/stdin.assis"
 expect 0 "$assis" run --legacy "$root/exemplos/08_modulos.assis"
-mkdir "$tmp/install"
-HOME="$tmp/install" sh "$root/instalar.sh" > "$tmp/install-out"
-expect 0 "$tmp/install/.local/bin/assis" run --legacy "$tmp/install/.local/share/assisscript/exemplos/08_modulos.assis"
-expect 0 "$tmp/install/.local/bin/assis" run "$tmp/install/.local/share/assisscript/exemplos/20_valores_e_resultados.assis" --safe --debug
-expect 0 "$tmp/install/.local/bin/assis" run "$tmp/install/.local/share/assisscript/exemplos/25_recursos_e_unicode.assis" --safe --debug
-cmp "$root/docs/PROGRESSO.json" "$tmp/install/.local/share/assisscript/docs/PROGRESSO.json"
-printf '%s\n' pessoal > "$tmp/install/.local/share/assisscript/docs/pessoal.txt"
-HOME="$tmp/install" sh "$root/desinstalar.sh" > "$tmp/remove-out"
-[ -f "$tmp/install/.local/share/assisscript/docs/pessoal.txt" ]
+sh "$root/tests/stage-posix-install.sh" "$assis" "$tmp/dist"
+prefix="$tmp/install with spaces"
+sh "$tmp/dist/instalar.sh" --prefix "$prefix" --no-path > "$tmp/install-out"
+data="$prefix/share/assisscript"
+expect 0 "$prefix/bin/assis" run --legacy "$data/exemplos/08_modulos.assis"
+expect 0 "$prefix/bin/assis" run "$data/exemplos/20_valores_e_resultados.assis" --safe --debug
+expect 0 "$prefix/bin/assis" run "$data/exemplos/25_recursos_e_unicode.assis" --safe --debug
+cmp "$root/docs/PROGRESSO.json" "$data/docs/PROGRESSO.json"
+printf '%s\n' pessoal > "$data/docs/pessoal.txt"
+sh "$tmp/dist/desinstalar.sh" --prefix "$prefix" > "$tmp/remove-out"
+[ -f "$data/docs/pessoal.txt" ]
 for marker in 'AssisScript 2.2.0' 'AssisScript 3.2.0' 'AssisScript 3.3.0-alpha.1' 'AssisScript 3.3.0-alpha.2' 'AssisScript 3.3.0-alpha.3' 'AssisScript 3.3.0-alpha.4' 'AssisScript 3.3.0-alpha.5' 'AssisScript 3.3.0-alpha.6' 'AssisScript 3.3.0-alpha.7' 'AssisScript 3.3.0-alpha.8' 'AssisScript 3.3.0-alpha.9' 'AssisScript 3.3.0-alpha.10' 'AssisScript 3.3.0-alpha.11' 'AssisScript 3.3.0-alpha.12' 'AssisScript 3.3.0-alpha.13'; do
     prefix="$tmp/marker"
     mkdir -p "$prefix/bin" "$prefix/share/assisscript"

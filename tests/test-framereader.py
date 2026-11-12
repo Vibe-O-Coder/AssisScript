@@ -66,6 +66,18 @@ class FrameReader(unittest.TestCase):
             'r.dispatch(frame,store.candidate(),1,ev(7,15,2,1));assert(r.selection_end()==2);'
             'r.dispatch(frame,store.candidate(),1,ev(8,0,18,2));assert(r.selection_start()==2 && r.selection_end()==2);',prefix=EVENT)
 
+    def test_word_wrap_preserves_spaces_in_copy_and_uses_grapheme_fallback(self):
+        body=frame.setup('<div type=paragraph>alpha beta verylongword</div>',width=56)+reading()
+        body+=('assert(frame.run_count()==4);'
+            'print(frame.run_text(0));print(frame.run_text(1));print(frame.run_text(2));print(frame.run_text(3));'
+            'assert(r.run_start(1)==6 && r.run_start(2)==11);'
+            'val copied:int=len(r.text_bytes());assert(r.select(frame,store.candidate(),0,copied));print(r.selected_text());'
+            'own next:pageframe::Frame=try_new pageframe::Frame(store.candidate(),page,2,240,200,0,65536,10000000,metric);'
+            'own after:framereader::Reader=try_new framereader::Reader(next,store.candidate(),7,20000000,metric);'
+            'assert(after!=null);assert(after.restore(next,store.candidate(),r));print(after.selected_text());')
+        self.accepted(frame.PREFIX+'import "std/framereader.assis";safe fn main():int{'+body+'return 0;}',
+            'alpha\nbeta\nverylon\ngword\nalpha beta verylongword\nalpha beta verylongword\n')
+
     def test_pointer_keyboard_focus_press_release_copy_zoom_and_capture_loss(self):
         self.execute(frame.setup('<div type=paragraph>abcd</div><div type=button id=b>Go</div>')+reading()+
             'assert(r.dispatch(frame,store.candidate(),1,ev(7,0,2,1)).kind==1);'

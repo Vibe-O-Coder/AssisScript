@@ -1,0 +1,81 @@
+{
+  "source": "native GDI client raster from test-only provider",
+  "desktop_capture": false,
+  "compiler_sha256": "0afad2bd14e7f7f98fcccbe9ca89d4bd7c5f0a54141d302e3eb76fbc182d69b7",
+  "provider_sha256": "62eb01fb5412316eb6a36a01b8e292c75c6a599af76c8fc5c09d254747858e87",
+  "worker_sha256": "3ccf6885537bd64c6d5fa9faedc858ccd5a635c950487d2f819261b3d4730eda",
+  "native_runs": {
+    "optimized": {
+      "reading": {
+        "stdout": "FRAME WORKER WINDOW 2 11",
+        "stderr": "",
+        "sha256": "eb3a5e9b09098582ae1c9450e614e13ce3a27464b56ff7fe13469320e3bcc8eb"
+      },
+      "panels": {
+        "stdout": "MOTION FRAME 2 10",
+        "stderr": "",
+        "sha256": "7ab2375a289769d7506b200c18d7e5eefc7b95eb9df242b4c7a0319bfd104982"
+      }
+    },
+    "reference": {
+      "reading": {
+        "stdout": "FRAME WORKER WINDOW 2 11",
+        "stderr": "",
+        "sha256": "dfe60e1232e99109c43b26377e3efa6b8c9e321b46b7c9f288d547baa8756629"
+      },
+      "panels": {
+        "stdout": "MOTION FRAME 2 10",
+        "stderr": "",
+        "sha256": "225f7c3420eb14b39222677952880ec739cf211459d08fb1f4384ec5524ddab3"
+      }
+    }
+  },
+  "artifacts": {
+    "reading-100.png": {
+      "width": 640,
+      "height": 420,
+      "sha256": "3cbd029d9dfee79d0843d2af62d97d9c20fc24df6dba80b3048d6b4c4306ccbc"
+    },
+    "reading-counter.png": {
+      "width": 640,
+      "height": 420,
+      "sha256": "b757fbab3f61925e0c8204a5f6cc49137dc5e3f4f74587ddbf04edca662b7f60"
+    },
+    "reading-200.png": {
+      "width": 640,
+      "height": 420,
+      "sha256": "efb754478e29cc5f0aa3f519ab08c5d0d479b382651642538b91ed84464f6353"
+    },
+    "panels-initial.png": {
+      "width": 600,
+      "height": 360,
+      "sha256": "c07a3fe01ae5eaa8bf1cfd153b12dce200c2390d987fa7931b1a0f88e2d8ee6a"
+    },
+    "panels-moved.png": {
+      "width": 600,
+      "height": 360,
+      "sha256": "54067ac128973a801afabfe93e6525c148e42df46f1fa5699fed5580dc4df024"
+    }
+  },
+  "difference_boxes": {
+    "counter": [
+      87,
+      398,
+      99,
+      409
+    ],
+    "panels": [
+      16,
+      16,
+      236,
+      209
+    ],
+    "zoom": [
+      20,
+      20,
+      620,
+      409
+    ]
+  },
+  "byte_identical_modes": true
+}

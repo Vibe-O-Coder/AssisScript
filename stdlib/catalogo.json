@@ -139,8 +139,8 @@
       "name": "http",
       "required": false,
       "doc": "BIBLIOTECA-http.md",
-      "description": "HTTP(S) limitado com TLS nativo, timeout e respostas binárias.",
-      "dependencies": [],
+      "description": "HTTP(S) com GET/POST binário, cabeçalhos, TLS e redirects GET opt-in.",
+      "dependencies": ["httpurl"],
       "externalDependencies": {
         "linux-x64": [
           "glibc x86_64",
@@ -425,6 +425,23 @@
       "dependencies": [
         "owned"
       ]
+    },
+    {
+      "name": "localresources",
+      "required": false,
+      "doc": "BIBLIOTECA-localresources.md",
+      "description": "Carregamento de recursos declarados a partir de uma raiz local concedida.",
+      "dependencies": [
+        "pageresources",
+        "unicode"
+      ]
+    },
+    {
+      "name": "httpurl",
+      "required": false,
+      "doc": "BIBLIOTECA-httpurl.md",
+      "description": "Parser de endereços HTTP(S), resolução de referências e comparação de origem.",
+      "dependencies": []
     }
   ]
 }

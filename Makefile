@@ -49,6 +49,12 @@ test-pe: bin/assis build/pe_probe
 test-dev:
 	node --test --test-isolation=none tests/test-development.js tests/test-v3.js tests/test-v31.js tests/test-v32.js tests/test-lsp.js tests/test-htdl-editor.js vscode-assisscript/test/language.test.js vscode-assisscript/test/extension.test.js
 
+.PHONY: test-portable
+test-portable: bin/assis
+	ASSIS_FIXTURE_DIR=build/v31-fixtures ASSIS_V32_FIXTURE_DIR=build/v32-fixtures node --test --test-isolation=none tests/test-v31.js tests/test-v32.js
+	ASSIS_FIXTURE_DIR=build/v31-fixtures python3 tests/test-v31-portable.py
+	ASSIS_V32_FIXTURE_DIR=build/v32-fixtures python3 tests/test-v32-portable.py
+
 .PHONY: test-htdl-recovery
 test-htdl-recovery:
 	python3 tests/test-htdl-recovery.py
@@ -178,6 +184,7 @@ test-increment: bin/assis
 test-alpha15: bin/assis
 	python3 tests/test-backend-evolution.py
 	python3 tests/test-complete-ir.py
+	python3 tests/test-debug-large-free.py
 	python3 tests/test-increment.py
 	python3 tests/test-owned-mutation.py
 	python3 tests/test-htdl-readiness.py
@@ -278,9 +285,11 @@ test-page-compiler: bin/assis
 test-windows-isolation: bin/assis
 	python3 tests/test-windows-isolation.py
 
-.PHONY: test-page-resources test-frame-responsiveness
+.PHONY: test-page-resources test-localresources test-frame-responsiveness
 test-page-resources: bin/assis
 	python3 tests/test-page-resources.py
+test-localresources: bin/assis
+	python3 tests/test-localresources.py
 test-frame-responsiveness: bin/assis
 	python3 tests/test-frame-responsiveness.py
-test-alpha15: test-page-resources test-frame-responsiveness
+test-alpha15: test-page-resources test-localresources test-frame-responsiveness

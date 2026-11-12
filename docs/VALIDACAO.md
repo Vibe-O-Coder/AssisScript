@@ -24,6 +24,12 @@ Os [resultados atuais](../benchmarks/resultados/nativo-3.2.md) incluem ambiente,
 
 ## Reproduzir 3.2
 
+`make test-portable` gera os corpora 3.1 e 3.2 com Node e executa as
+duas suítes de replay. Para reproduzir em outro host sem Node, transfira
+as pastas geradas e informe `ASSIS_FIXTURE_DIR` e `ASSIS_V32_FIXTURE_DIR`
+para os respectivos testes Python. `ASSIS_BIN` seleciona o compilador
+usado no replay, inclusive na prova de instalação POSIX da suíte 3.1.
+
 ```powershell
 tools/build-windows.ps1 -Compiler C:/msys64/ucrt64/bin/gcc.exe
 tests/test-windows.ps1

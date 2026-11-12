@@ -1,0 +1,175 @@
+namespace localresources;
+import "std/pageresources.assis";
+import "std/unicode.assis";
+
+platform("linux-x64") {
+    extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_local_version") fn native_version():int;
+    extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_local_open") fn native_open(borrow path:*byte,size:int):int;
+    extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_local_read") fn native_read(grant:int,borrow key:*byte,length:int,borrow mut out:*byte,capacity:int):int;
+    extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_local_close") fn native_close(grant:int):int;
+}
+platform("windows-x64") {
+    extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_local_version") fn native_version():int;
+    extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_local_open") fn native_open(borrow path:*byte,size:int):int;
+    extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_local_read") fn native_read(grant:int,borrow key:*byte,length:int,borrow mut out:*byte,capacity:int):int;
+    extern("libassis_worker_v1.so","assis_worker_v1.dll","assw_local_close") fn native_close(grant:int):int;
+}
+platform("linux-arm64") {
+    safe fn native_version():int{return -10;}
+    safe fn native_open(borrow path:*byte,size:int):int{return -10;}
+    safe fn native_read(grant:int,borrow key:*byte,length:int,borrow mut out:*byte,capacity:int):int{return -10;}
+    safe fn native_close(grant:int):int{return -10;}
+}
+platform("macos") {
+    safe fn native_version():int{return -10;}
+    safe fn native_open(borrow path:*byte,size:int):int{return -10;}
+    safe fn native_read(grant:int,borrow key:*byte,length:int,borrow mut out:*byte,capacity:int):int{return -10;}
+    safe fn native_close(grant:int):int{return -10;}
+}
+
+safe fn kind(borrow name:slice<byte>):int{
+    if(pageresources::equal(name,utf8("htdl"))){return 1;}
+    if(pageresources::equal(name,utf8("fs"))){return 2;}
+    if(pageresources::equal(name,utf8("ssc"))){return 3;}
+    if(pageresources::equal(name,utf8("source"))){return 4;}
+    if(pageresources::equal(name,utf8("asv2"))){return 5;}
+    if(pageresources::equal(name,utf8("data"))){return 6;}
+    return 0;
+}
+
+safe fn read_file(grant:int,borrow path:slice<byte>,borrow mut buffer:*byte,capacity:int):int{
+    own key:*byte=try_alloc<byte>(len(path));
+    if(key==null){return -4;}
+    for(let i:int=0;i<len(path);i++){key[i]=path[i];}
+    unsafe{return native_read(grant,key,len(path),buffer,capacity);}
+}
+
+final class Grant{
+    private let handle:int;
+    fn init(borrow mut self,borrow path:*byte,length:int):void{
+        unsafe{
+            val version:int=native_version();
+            if(version==1){self.handle=native_open(path,length);}
+            else if(version<0){self.handle=version;}
+            else{self.handle= -10;}
+        }
+    }
+    fn token(borrow self):int{return self.handle;}
+    fn close(borrow mut self):void{
+        if(self.handle>0){
+            unsafe{native_close(self.handle);}
+            self.handle=0;
+        }
+    }
+    fn drop(borrow mut self):void{self.close();}
+}
+
+/// A bounded declaration file in the root selected by the trusted caller.
+/// The caller activates the resulting batch through frameworker::Session.
+public final class Load{
+    private own batch:pageresources::Batch;
+    private own grant:Grant;
+    private let failure:int;
+    private let next_resource:int;
+    private let line_number:int;
+
+    fn init(borrow mut self,borrow root:slice<byte>,instance:int,origin:int,generation:int,
+            max_bytes:int,deadline:int):void{
+        self.failure=-1;
+        if(len(root)<1 || len(root)>4096 || unicode::error(root)>=0){return;}
+        if(monotonic_ms()>=deadline){self.failure=-8;return;}
+        own plan:pageresources::Batch=try_new pageresources::Batch(instance,origin,generation,64,max_bytes,deadline);
+        own path:*byte=try_alloc<byte>(len(root));
+        if(plan==null || path==null){self.failure=-4;return;}
+        if(!plan.is_open()){self.failure=plan.status();return;}
+        for(let i:int=0;i<len(root);i++){path[i]=root[i];}
+        self.grant=try_new Grant(path,len(root));
+        if(self.grant==null){self.failure=-4;return;}
+        if(self.grant.token()<0){self.failure=self.grant.token();return;}
+        self.batch=move(plan);
+        own manifest:*byte=try_alloc<byte>(65536);
+        if(manifest==null){self.fail(-4);return;}
+        val count:int=read_file(self.grant.token(),utf8("resources.assr"),manifest,65536);
+        if(count<0){self.fail(count);return;}
+        val parsed:int=self.declarations(slice_of(manifest,0,count));
+        if(parsed!=0){self.fail(parsed);return;}
+        val sealed:int=self.batch.seal(monotonic_ms());
+        if(sealed!=0){self.fail(sealed);return;}
+        self.failure=0;
+    }
+
+    private fn declarations(borrow mut self,borrow input:slice<byte>):int{
+        let start:int=0;
+        let seen:int=0;
+        while(start<len(input)){
+            let end:int=start;
+            while(end<len(input) && input[end]!=10){end++;}
+            let stop:int=end;
+            if(end<len(input) && stop>start && input[stop-1]==13){stop--;}
+            self.line_number++;
+            if(self.line_number==1){
+                if(!pageresources::equal(slice_of(input,start,stop-start),utf8("ASSIS-LOCAL/1"))){return -16;}
+            }else if(stop>start){
+                let split:int=start;
+                while(split<stop && input[split]!=32){split++;}
+                if(stop-split<4 || input[split+2]!=32){return -1;}
+                val role:int=kind(slice_of(input,start,split-start));
+                val version:int=int(input[split+1])-48;
+                if(!pageresources::supported(role,version)){return -16;}
+                borrow key:slice<byte>=slice_of(input,split+3,stop-split-3);
+                val expected:int=self.batch.size()+1;
+                val added:int=self.batch.add(role,version,utf8(""),key);
+                if(added<0){return added;}
+                if(added!=expected || !pageresources::equal(self.batch.path(added-1),key)){return -1;}
+                seen|=1<<role;
+            }
+            start=end+1;
+        }
+        if((seen&14)!=14 || (seen&48)==0){return -16;}
+        self.line_number=0;
+        return 0;
+    }
+
+    fn status(borrow self):int{return self.failure;}
+    /// One-based manifest line on a declaration error, zero otherwise.
+    fn line(borrow self):int{return self.line_number;}
+    /// Index of the current resource, or the number read on completion.
+    fn index(borrow self):int{return self.next_resource;}
+
+    /// Read at most one file. Returns 1 when complete, 0 for more, or a
+    /// terminal negative status. Deadline checks bound acceptance of bytes.
+    fn advance(borrow mut self):int{
+        if(self.failure!=0){return self.failure;}
+        if(self.batch==null){return -9;}
+        val state:int=self.batch.poll(monotonic_ms());
+        if(state==1){return 1;}
+        if(state<0){return self.fail(state);}
+        val request:pageresources::Request=self.batch.envelope(self.next_resource);
+        let capacity:int=pageresources::byte_limit(request.kind);
+        if(capacity>self.batch.remaining_bytes()){capacity=self.batch.remaining_bytes();}
+        own buffer:*byte=try_alloc<byte>(capacity);
+        if(buffer==null){return self.fail(-4);}
+        val count:int=read_file(self.grant.token(),self.batch.path(self.next_resource),buffer,capacity);
+        if(count<0){return self.fail(count);}
+        val delivered:int=self.batch.deliver(request,slice_of(buffer,0,count),monotonic_ms());
+        if(delivered!=0){return self.fail(delivered);}
+        self.next_resource++;
+        if(!self.batch.complete()){return 0;}
+        self.grant.close();
+        return 1;
+    }
+
+    fn take(borrow mut self):own pageresources::Batch{
+        assert(self.batch!=null && self.batch.complete());
+        own completed:pageresources::Batch=move(self.batch);
+        return move(completed);
+    }
+    fn cancel(borrow mut self):void{self.fail(-9);}
+
+    private fn fail(borrow mut self,error:int):int{
+        if(self.grant!=null){self.grant.close();}
+        own discarded:pageresources::Batch=move(self.batch);
+        self.failure=error;
+        return error;
+    }
+}
