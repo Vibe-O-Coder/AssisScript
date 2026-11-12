@@ -1,0 +1,93 @@
+{
+  "schema": "assisscript-ecosystem-session-v1",
+  "date": "2026-11-12",
+  "base": "b833e8182eb0c63d7e0fc58754decd5012220a5f",
+  "branch": "work/ecosystem-2026-11-11",
+  "scope": "Windows x64 and Linux x64 (Ubuntu WSL2); Windows is the graphics provider",
+  "percent_before": 50.4,
+  "percent_after": 54.3,
+  "gates_passed": 0,
+  "hosts": {
+    "windows": {
+      "executed": 155,
+      "not_run": 4,
+      "examples": 73,
+      "installation": "pass",
+      "selected_libraries": 32,
+      "compiler_sha256": "0afad2bd14e7f7f98fcccbe9ca89d4bd7c5f0a54141d302e3eb76fbc182d69b7"
+    },
+    "linux": {
+      "executed": 138,
+      "not_run": 21,
+      "examples": 73,
+      "installation": "pass",
+      "selected_libraries": 32,
+      "compiler_sha256": "4ae10529f28c5a6a28a0d7597f2ef1fd27c1d6ee7271bb2da6ec0fc12970adab"
+    }
+  },
+  "forms_formats_generated": {
+    "forms-linux-arm64": "c7a5e59e657465c35c9148c19bfa32a5d522058c7717b39d99b415d325a30b2a",
+    "forms-linux-x64": "1a35f3fb8693ec1fc619aec6820f3e04299aa5dc9ff8c34e96d699625f704c98",
+    "forms-macos-arm64": "3bf3e754b6c67901bb50f92e2e61ad78c26696ccf1d65f908082452dcb48adcd",
+    "forms-macos-x64": "ad193255efad53b9f35e4e71552dd244b412290e38e6f3059c940356e98e824d",
+    "forms-windows-x64.exe": "02f578a977d0fec231d3e66d59cccb4c72bf464f70d6d4e7550d9a1fda5b2ee8"
+  },
+  "snapshot_sha256": "389b62200227646cedf56919e19edb5477144213a3b3e2b64efa57fd2111e3b7",
+  "updated_snapshot_sha256": "a1306671a1bd9682f005efd13d80cbc54c2da453b21430d5a4d491a95af95962",
+  "commands": {
+    "windows_compiler": "gcc -O2 -std=c11 -municode -static -static-libgcc -Wl,--no-insert-timestamp src/assisc.c -o build/session/assis.exe",
+    "linux_compiler": "cc -O2 -std=c11 src/assisc.c -o build/session/assis-linux",
+    "compiler_location": "Candidate copied one level up to resolve ../stdlib without global install",
+    "examples": "python tools/validate-examples.py --output build/session/examples-HOST.json",
+    "installation": "python tools/verify-local-resource-install.py --confined --search-forms --output build/session/install-HOST",
+    "raster": "python tools/check-frame-visual.py --output build/session/visual-verified",
+    "references": "python tools/check-ecosystem-references.py --output build/session/reference-integrity.json"
+  },
+  "source_sha256": {
+    "stdlib/searchindex.assis": "2d3be6f354b22850a3edf5a53ab9046b3e7ee216badb7bcebd1574774d6d6fd7",
+    "stdlib/htdlsearch.assis": "b3d6687b28f5168800e6ad17aee7a41850e8a53cb503f5382388b65d1ff17171",
+    "exemplos/71_search_index.assis": "d2c345cdaf24088520d2018b323088e7e2ed4c6cd3012e063005f0ed6cc9c089",
+    "stdlib/pageframe.assis": "11e2959e028686167110dca031efa62514b1c88f6eaaed01d36ae73bec77e371",
+    "stdlib/pagepresent.assis": "012f0ea3bb2f98f1a216e4cc07747be87f8ffa6f04ff007d4d854e6595aed66b",
+    "stdlib/framereader.assis": "973606cdabf2b04204ac9445d415117532af6b0925767cf485b77fa3891ed426",
+    "stdlib/framehost.assis": "44c322733783e05162aecf987bc055542e274636151bcc0bb6b248035791f482",
+    "stdlib/frameworker.assis": "29f69b012bef95d235ee7faec61fcb402891fd7b7fbb56b87fc7ca700726fb5b",
+    "providers/platform/assis_platform_v1.h": "c2b38d66fd4110f940662d312431e110e35e3f99f9a892b9ad1b6d1a718d253f",
+    "providers/platform/reader.inc": "f47981c5157ab7d78ed1cfe47b6aad57c204b35e49b3f7926e56f22e1b4577d1",
+    "providers/platform/frame.inc": "a7d0a4e6e972c0b5cfa76a1f65bdd32913fcc7dc514ec2e2e7bc59d04cc96cb0",
+    "exemplos/72_local_forms_window.assis": "242812d6c4efd489d41759069297bfc1d03327bebd1ced894b16432bca6fc129",
+    "tests/test-searchindex.py": "733216c353eb25a668d7d3165e3686562abd70f9207a035337cf5c8a8c1b417b",
+    "tests/test-frame-forms.py": "bdd12ea7939ef6f327238d9d11529f9a604463881d1d4053ee14e52f48df6123",
+    "tests/catalog_frame_oracle.c": "c5bf958a6ea5c0785f149669558f89a0d82a6b54ff9ac7e1c60c35bce7588e56",
+    "tests/test-catalog-frame.py": "8eb9a2675a001db665571bedb534fac4476b63945520dabe4b6c3a4de1c5ab25",
+    "tests/test-frame-worker.py": "258ed6c5d7d1bef37bfa10bacc14078455eb8b5fa4ad14047ff2fade5dbbb0b0",
+    "tools/check-frame-visual.py": "4fe6297159d506f42ff0ecd7a91dab2c6b5b07a590ce2782b76e4ee3a4147c3a",
+    "tools/verify-local-resource-install.py": "613b12d97d7c70641d752aec38b8233344fdc98273eb2d2f4b9e28f29006906d",
+    "stdlib/catalogo.json": "5faaff9541757d1be89a69a18cbfc828e69e02e7afd5d56abd7378bc86be5689",
+    ".github/workflows/ci.yml": "81238198f641a9df026d261bac961f7b0f5932cf8a363aab66234d5c4c2ac769",
+    "src/install_files.inc": "b04f47ee277d4931e39157e5e075fd13375ec5dc9e3bdc6cb443a1a41cc3a528",
+    "src/install_optional.inc": "82185d7b156848e13db33531e184b3ca38f8641a847d9fe8d2456b5af4bfb356",
+    "stdlib/catalogo.sh": "362bc0bca86c0264c367fc0d393586b4ae33f48299107a7a54b187a32a15778d"
+  },
+  "evidence_sha256": {
+    "desktop.json": "c32f85d899228d501a10b86a839d0fa888e242f7777ccf6cf051ac043fc2e21a",
+    "examples-linux.json": "9ce95eeb3641d9e4b5c6d52e0d0a247d060044914dade3a536461be22b738be9",
+    "examples-windows.json": "2b67b08a9d5eda235a6f4024f57d803a10c6e82c0a16a23a5abb0aaabb2b2367",
+    "forms-200.png": "833036b33afa3a580e5c50bac21b676b750bfdb116a2abe8d5e95ca7e11f2dc1",
+    "forms-checked.png": "7fbda097a331e142a21e86a06eeea494c73ca89331d91c907c226178ee060112",
+    "forms-unchecked.png": "a49e974efd115f57660cb4f024b0a7e340fb5e166d8eba680fefb2bc63360e30",
+    "install-linux.json": "52e6b6461a0f61e6741443080a83a00b6c4a410428578b7250640daa2e2ae39c",
+    "install-windows.json": "f01aa64020d8e9cffe98116bd4c7cfaf64ec183211f561d6af862a657262d2cb",
+    "matrix-linux.json": "eb33256cf123cc9c4d3bb710f7ae16cf6c4aee48a9c6d7a551414d0cb5b17724",
+    "matrix-windows.json": "e1a19a18f70923bf1b3bd4955e627a63251151a2e45acf7bbf474ed090695278",
+    "panels-initial.png": "c07a3fe01ae5eaa8bf1cfd153b12dce200c2390d987fa7931b1a0f88e2d8ee6a",
+    "panels-moved.png": "54067ac128973a801afabfe93e6525c148e42df46f1fa5699fed5580dc4df024",
+    "reading-100.png": "3cbd029d9dfee79d0843d2af62d97d9c20fc24df6dba80b3048d6b4c4306ccbc",
+    "reading-200.png": "efb754478e29cc5f0aa3f519ab08c5d0d479b382651642538b91ed84464f6353",
+    "reading-counter.png": "b757fbab3f61925e0c8204a5f6cc49137dc5e3f4f74587ddbf04edca662b7f60",
+    "reference-integrity.json": "b573df6046f5f987a2f0d59d8a8f866060d0eca1f3efd3907255fb429f2058fe",
+    "search-linux.json": "e900831d3edd2a6556ff8eacf53edff2fa99dc72444f93c5c4627d0e650f30f2",
+    "search-windows.json": "d33ef0d955d252c6669bcd6c8f4eefa80376e9e8fd92cec7d70a89b79742bddb",
+    "visual.json": "f3fab9a00149af90e9a47bc67c098d6e7fb362be8bf9230e705dae7ac73e47f9"
+  }
+}

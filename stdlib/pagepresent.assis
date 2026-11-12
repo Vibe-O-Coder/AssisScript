@@ -8,13 +8,17 @@ extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_current") f
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_measure") fn native_measure(borrow content:*byte,size:int,font:i32,weight:i32):int;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_commit") fn native_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_catalog_version") fn native_catalog_version():int;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_forms_version") fn native_forms_version():int;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_catalog_commit") fn native_catalog_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_forms_commit") fn native_forms_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32;
 }
 platform("linux"){
 safe fn native_clock():int{return monotonic_ms();}
 pure fn native_version():int{return -3;}
 pure fn native_catalog_version():int{return -3;}
+pure fn native_forms_version():int{return -3;}
 safe fn native_catalog_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
+safe fn native_forms_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
 pure fn native_current(window:int):int{return -3;}
 safe fn native_measure(borrow content:*byte,size:int,font:i32,weight:i32):int{return -3;}
 safe fn native_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
@@ -23,7 +27,9 @@ platform("macos"){
 safe fn native_clock():int{return monotonic_ms();}
 pure fn native_version():int{return -3;}
 pure fn native_catalog_version():int{return -3;}
+pure fn native_forms_version():int{return -3;}
 safe fn native_catalog_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
+safe fn native_forms_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
 pure fn native_current(window:int):int{return -3;}
 safe fn native_measure(borrow content:*byte,size:int,font:i32,weight:i32):int{return -3;}
 safe fn native_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
@@ -33,6 +39,7 @@ safe fn native_commit(window:int,projection:int,background:u32,borrow commands:*
 public safe fn clock_ms():int{unsafe{return native_clock();}}
 public safe fn available():bool{unsafe{return native_version()==1;}}
 public safe fn catalog_available():bool{unsafe{return native_catalog_version()==1;}}
+public safe fn forms_available():bool{unsafe{return native_forms_version()==1;}}
 public safe fn measure(borrow content:slice<byte>,size:int,weight:int):int{
     val font:int=pageframe::pixels(size);val bold:int=pageframe::pixels(weight);
     if(len(content)>4096 || font<1 || font>256 || bold<100 || bold>900){return -1;}
@@ -48,9 +55,9 @@ public final class Packet{
     private let count:int;private let used:int;private let items:int;private let name_size:int;
     private let frame_id:int;private let instance:int;private let semantic:int;private let background:u32;
     private let window_token:int;
-    private let active:bool;private let published:bool;private let highlighted:bool;private let catalog:bool;private let failed:bool;
+    private let active:bool;private let published:bool;private let highlighted:bool;private let catalog:bool;private let forms:bool;private let failed:bool;
     private fn command(borrow mut self,type:int,bounds:pageframe::Rect,clip:pageframe::Rect,color:int,font:int,weight:int,start:int,size:int):void{
-        if(self.count==33028){self.failed=true;return;}
+        if(self.count==33028 || self.count==len(self.commands)/14){self.failed=true;return;}
         val p:int=self.count*14;self.commands[p]=type;self.commands[p+1]=bounds.x;self.commands[p+2]=bounds.y;
         self.commands[p+3]=bounds.width;self.commands[p+4]=bounds.height;self.commands[p+5]=clip.x;self.commands[p+6]=clip.y;
         self.commands[p+7]=clip.width;self.commands[p+8]=clip.height;self.commands[p+9]=color;
@@ -58,8 +65,10 @@ public final class Packet{
     }
     fn init(borrow mut self,borrow mut frame:pageframe::Frame,focus:doctree::NodeId,policy:reader::Preferences,max_bytes:int):void{
         if(!frame.is_open() || max_bytes<10000000 || policy.status!=0){return;}
-        self.commands=try_alloc<int>((frame.run_count()+2*frame.size()+4)*14);
-        self.run_map=try_alloc<int>(frame.run_count()+2*frame.size()+4);
+        let capacity:int=frame.run_count()+2*frame.size()+4;
+        for(let i:int=0;i<frame.size();i++){if(frame.box(i).kind==21){capacity+=8;}}
+        self.commands=try_alloc<int>(capacity*14);
+        self.run_map=try_alloc<int>(capacity);
         self.content=try_alloc<byte>(2097216);self.access=try_alloc<int>(256*8);self.names=try_alloc<byte>(1048608);self.mapping=try_alloc<int>(256);
         if(self.commands==null || self.content==null || self.access==null || self.names==null || self.mapping==null || self.run_map==null){return;}
         self.frame_id=frame.version();self.instance=frame.instance();self.semantic=frame.semantic_version();self.background=policy.background;
@@ -72,13 +81,37 @@ public final class Packet{
             if(clip.width>0 && clip.height>0 && (color&255)!=0){self.command(0,b.bounds,clip,color,0,0,0,0);}
             if(b.kind==6 || b.kind==8 || b.kind==9 || b.kind>=12){val p:int=self.items*8;
                 if(self.items==256){return;}if(b.kind>=12){self.catalog=true;}
+                if(b.kind>=20){self.forms=true;}
                 if(self.name_size+len(frame.name(i))>len(self.names)){return;}
                 self.access[p]=b.kind;let flags:int=int(b.disabled);
+                if(b.kind==21 && frame.checked(b.node)==1){flags|=8;}
                 if(pageframe::same(b.node,focus) && !b.disabled && pageframe::interactive(b.kind)){flags|=2;}
                 if(clip.width==0 || clip.height==0){flags|=4;}
                 self.access[p+1]=flags;self.access[p+2]=clip.x;self.access[p+3]=clip.y;self.access[p+4]=clip.width;self.access[p+5]=clip.height;
                 self.access[p+6]=self.name_size;self.access[p+7]=len(frame.name(i));self.mapping[self.items]=i;self.items++;
                 for(let j:int=0;j<len(frame.name(i));j++){self.names[self.name_size]=frame.name(i)[j];self.name_size++;}
+            }
+            if(b.kind==21){
+                val mark:pageframe::Rect=frame.checkbox_mark(i);
+                val clip:pageframe::Rect=pageframe::intersect(mark,pageframe::intersect(b.bounds,frame.content_clip(i)));
+                let border:int=pagepresent::alpha(b.foreground,b.opacity);
+                let fill:int=pagepresent::alpha(0xffffffff,b.opacity);
+                if(policy.high_contrast){border=int(policy.foreground);fill=int(policy.background);}
+                if(b.disabled){border=int(policy.disabled_text);}
+                self.command(0,mark,clip,border,0,0,0,0);
+                val inside:pageframe::Rect=new pageframe::Rect(mark.x+2,mark.y+2,mark.width-4,mark.height-4);
+                self.command(0,inside,pageframe::intersect(inside,clip),fill,0,0,0,0);
+                if(frame.checked(b.node)==1){
+                    val step:int=mark.width/8;
+                    val x:int=mark.x+(mark.width-6*step)/2;
+                    val y:int=mark.y+(mark.height-5*step)/2;
+                    for(let column:int=0;column<6;column++){
+                        let row:int=5-column;
+                        if(column<2){row=2+column;}
+                        val stroke:pageframe::Rect=new pageframe::Rect(x+column*step,y+row*step,step,2*step);
+                        self.command(0,stroke,pageframe::intersect(stroke,clip),border,0,0,0,0);
+                    }
+                }
             }
             if(len(frame.marker(i))>0){
                 if(self.used+len(frame.marker(i))>len(self.content)){return;}val start:int=self.used;
@@ -101,7 +134,11 @@ public final class Packet{
         // Native focus indication wins over author opacity/color and draw order.
         for(let i:int=0;i<frame.size();i++){val b:pageframe::Box=frame.box(i);
             if(!pageframe::interactive(b.kind) || b.disabled || !pageframe::same(b.node,focus)){continue;}
-            val r:pageframe::Rect=b.bounds;val color:int=int(policy.foreground);
+            let r:pageframe::Rect=b.bounds;val color:int=int(policy.foreground);
+            if(b.kind==21){
+                val mark:pageframe::Rect=frame.checkbox_mark(i);
+                r=pageframe::intersect(b.bounds,new pageframe::Rect(mark.x-3,mark.y-3,mark.width+6,mark.height+6));
+            }
             val top:pageframe::Rect=new pageframe::Rect(r.x,r.y,r.width,pageframe::minimum(2,r.height));
             val bottom:pageframe::Rect=new pageframe::Rect(r.x,r.y+pageframe::maximum(0,r.height-2),r.width,pageframe::minimum(2,r.height));
             val left:pageframe::Rect=new pageframe::Rect(r.x,r.y,pageframe::minimum(2,r.width),r.height);
@@ -154,7 +191,9 @@ public final class Packet{
     fn publish(borrow mut self,borrow window:window::Window,borrow frame:pageframe::Frame,borrow document:documents::Document):int{
         if(!self.matches(frame,document) || self.published){return 204;}if(!window.opened()){return -2;}
         let result:int=0;unsafe{
-            if(self.catalog){if(native_catalog_version()!=1){return -3;}
+            if(self.forms){if(native_forms_version()!=1){return -3;}
+                result=int(native_forms_commit(window.platform_token(),self.frame_id,self.background,self.commands,self.count,self.content,self.used,self.access,self.items,self.names,self.name_size));}
+            else if(self.catalog){if(native_catalog_version()!=1){return -3;}
                 result=int(native_catalog_commit(window.platform_token(),self.frame_id,self.background,self.commands,self.count,self.content,self.used,self.access,self.items,self.names,self.name_size));}
             else{result=int(native_commit(window.platform_token(),self.frame_id,self.background,self.commands,self.count,self.content,self.used,self.access,self.items,self.names,self.name_size));}
         }

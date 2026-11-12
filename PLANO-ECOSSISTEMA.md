@@ -1,3 +1,10 @@
+> **Continuação de 12/11/2026 — 54,30%, 0/5 gates.**
+> [Estado atual](docs/ecossistema/ESTADO-ATUAL.md) ·
+> [Busca local](docs/relatorios/2026-11-12-m7-busca-local.md) ·
+> [Formulários, visual e gates](docs/relatorios/2026-11-12-m3-formularios-visuais.md).
+> Continuação em `work/ecosystem-2026-11-11`. A régua conserva os requisitos
+> dos cinco gates e a [fila integral](docs/ecossistema/FILA-M0-M1.md).
+
 > **Publicação confirmada — 48,30%, 04/11/2026, 0/5 gates; meta 50% pendente.**
 > Cópia `C:/Users/babus/Desktop/AssisScript/work/local-resources-20261104`,
 > branch `work/m3-local-resources-2026-11-04`, base pública 33b7431 conferida.

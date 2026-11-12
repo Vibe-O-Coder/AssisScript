@@ -1,0 +1,90 @@
+// Local checkbox form. Tab moves focus, Space toggles, and Enter activates Validate.
+import "std/framehost.assis";
+
+safe fn option(borrow expected:slice<byte>):bool {
+    if(arg_count()!=2 || arg_size(1)!=len(expected)){return false;}
+    val capacity:int=len(expected)+1;
+    own data:*byte=try_alloc<byte>(capacity);
+    if(data==null){return false;}
+    if(arg_copy(1,data,capacity)!=len(expected)){return false;}
+    for(let i:int=0;i<len(expected);i++){if(data[i]!=expected[i]){return false;}}
+    return true;
+}
+safe fn status_line(borrow mut window:window::Window,status:int,width:int,height:int,policy:reader::Preferences):int {
+    if(height<28){return 0;}
+    val code:int=viewer::rect(window,0,height-28,width,28,policy.background);
+    if(code!=0){return code;}
+    if(status==10){return window.draw_text(16,height-22,utf8("Validação local concluída."),policy.foreground);}
+    if(status==11){return window.draw_text(16,height-22,utf8("Marque o campo obrigatório."),policy.foreground);}
+    return 0;
+}
+safe fn smoke(borrow mut session:framehost::Session,borrow mut window:window::Window,policy:reader::Preferences):int {
+    val check:doctree::NodeId=htdl::find_id(session.document().nodes(),utf8("confirm"));
+    assert(session.snapshot().frame.checked(check)==0);
+    assert(session.dispatch(1,new window::Event(0,3,7,1,9,1,1)).kind==1);
+    assert(session.dispatch(1,new window::Event(0,3,7,1,32,1,2)).kind==0);
+    val action:viewer::Change=session.dispatch(1,new window::Event(0,3,7,1,32,0,3));
+    assert(action.kind==9 && pageframe::same(action.node,check));
+    assert(session.toggle_checkbox(1,check,620,360,0,65536,policy,pagepresent::measure)==0);
+    assert(session.snapshot().frame.checked(check)==0);
+    assert(session.publish_reflow(window)==0 && window.present()==0);
+    assert(session.snapshot().frame.checked(check)==1);
+    assert(session.dispatch(2,new window::Event(0,3,7,1,9,1,4)).kind==1);
+    assert(session.dispatch(2,new window::Event(0,3,7,1,13,1,5)).kind==10);
+    assert(session.reflow(620,360,0,131072,0,true,policy,pagepresent::measure)==0);
+    assert(session.publish_reflow(window)==0 && status_line(window,10,620,360,policy)==0 && window.present()==0);
+    assert(session.snapshot().frame.checked(check)==1);
+    print("FORMS WINDOW",session.snapshot().frame.version(),session.snapshot().frame.checked(check));
+    return 0;
+}
+safe fn main():int {
+    if(!pagepresent::available() || !pagepresent::forms_available()){print("Windows forms provider required");return 4;}
+    own session:framehost::Session=try_new framehost::Session(8000000,4000,7);
+    own window:window::Window=try_new window::Window(7,620,360,utf8("AssisScript - formulário local"));
+    if(session==null || !session.is_open() || window==null || !window.opened()){return 4;}
+    let policy:reader::Preferences=reader::preferences(window);
+    val result:int=session.prepare(1,1,framehost::forms_versions(),
+        utf8("<div type=document version=0.1 lang=pt-BR><div type=head><div type=title>Confirmação local</div></div><div type=body id=body><div type=heading id=title level=1>Confirmação local</div><div type=paragraph>Marque a caixa para validar o formulário.</div><div type=form a11y-label=Confirmação id=form><div type=container id=row><div type=input kind=checkbox id=confirm required=true></div><div type=label id=label for=confirm>Confirmo a leitura</div></div><div type=button id=submit action=submit>Validar</div></div></div></div>"),
+        utf8("flow Body{24px -> layout.padding;column(gap:16px) -> layout.children;#f4f1ea -> paint.background;}bind #body to Body;flow Title{24px -> text.size;700 -> text.weight;}bind #title to Title;flow Form{column(gap:14px) -> layout.children;}bind #form to Form;flow Row{row(gap:10px) -> layout.children;center -> layout.align;}bind #row to Row;flow Check{40px -> layout.width;}bind #confirm to Check;flow Label{290px -> layout.width;}bind #label to Label;flow Submit{160px -> layout.width;8px -> layout.padding;center -> text.align;#125560 -> paint.background;#ffffff -> paint.text;}bind #submit to Submit;"),
+        utf8(""),620,360,65536,policy,pagepresent::measure);
+    if(result!=0){print("PREPARE",result);return 5;}
+    if(session.publish(1,window)!=0 || window.present()!=0){return 5;}
+    if(option(utf8("--smoke"))){val done:int=smoke(session,window,policy);return done+int(window.close()!=0);}
+    let width:int=620;let height:int=360;let scale:int=65536;
+    let status:int=0;let visible:bool=true;
+    while(window.opened()){
+        val event:window::Event=window.poll(50);
+        if(event.status<0){return 4;}if(event.status!=0){continue;}
+        if(event.kind==1){break;}
+        let repaint:bool=false;let scroll:int=session.snapshot().frame.scroll_y();
+        if(event.kind==2 && event.arg0>0 && event.arg1>0){
+            width=event.arg0;height=event.arg1;session.cancel_gesture();repaint=true;
+        }
+        if(event.kind==12){policy=reader::preferences(window);session.cancel_gesture();repaint=true;}
+        if(event.kind==13){visible=event.arg0!=0;session.cancel_gesture();}
+        let toggle:doctree::NodeId=new doctree::NodeId();
+        val projection:int=session.snapshot().frame.version();
+        if(visible){
+            val action:viewer::Change=session.dispatch(projection,event);
+            if(action.kind==1){repaint=true;}
+            if(action.kind==4){session.copy(window);}
+            if(action.kind==5){scale=131072;repaint=true;}
+            if(action.kind==6){scale=65536;repaint=true;}
+            if(action.kind==7){scroll=session.snapshot().reading.scroll_target();repaint=true;}
+            if(action.kind==9){toggle=action.node;repaint=true;status=0;}
+            if(action.kind==10 || action.kind==11){status=action.kind;repaint=true;}
+        }
+        if(!repaint || session.snapshot().reading.gesture_active()){continue;}
+        let code:int=0;
+        if(doctree::absent(toggle)){
+            code=session.reflow(width,height,scroll,scale,0,visible,policy,pagepresent::measure);
+        }else{
+            code=session.toggle_checkbox(projection,toggle,width,height,scroll,scale,policy,pagepresent::measure);
+        }
+        if(code==0){code=session.publish_reflow(window);}
+        if(code!=0){session.abort_reflow();continue;}
+        if(status_line(window,status,width,height,policy)!=0 || window.present()!=0){return 4;}
+    }
+    session.close();
+    return int(window.close()!=0);
+}

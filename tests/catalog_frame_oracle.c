@@ -15,9 +15,10 @@ typedef int32_t (*Commit)(int64_t,int64_t,uint32_t,const int64_t *,int64_t,const
 static VARIANT child(LONG n){VARIANT v;VariantInit(&v);V_VT(&v)=VT_I4;V_I4(&v)=n;return v;}
 int main(int argc,char **argv){
     CHECK(argc==2);HMODULE dll=LoadLibraryA(argv[1]);CHECK(dll);
-    Open open_window;Close close_window;Control control;Poll poll;Commit commit,legacy;
+    Open open_window;Close close_window;Control control;Poll poll;Commit commit,legacy,forms;
     LOAD(open_window,"assisp_open");LOAD(close_window,"assisp_close");LOAD(control,"assisp_test_control");
     LOAD(poll,"assisp_poll");LOAD(commit,"assisp_frame_catalog_commit");LOAD(legacy,"assisp_frame_commit");
+    LOAD(forms,"assisp_frame_forms_commit");
     int64_t token=0;CHECK(open_window(51,320,240,(const uint8_t *)"Catalog oracle",14,&token)==0);
     HWND hwnd=(HWND)(uintptr_t)control(4,token);
     int64_t words[9*8]={1,0,0,0,320,240,0,3};
@@ -61,6 +62,37 @@ int main(int argc,char **argv){
         CHECK(GetGuiResources(GetCurrentProcess(),0)==baseline);
     }
     CHECK(success && failures>=5);CHECK(FAILED(IAccessible_get_accChildCount(a,&total)));IAccessible_Release(a);
+    int64_t controls[] = {
+        1,0,0,0,320,240,0,3,
+        22,0,10,10,150,100,3,4,
+        20,0,16,24,90,20,3,4,
+        21,2,110,24,24,20,3,4,
+        21,9,16,56,24,20,3,4
+    };
+    CHECK(commit(token,4,0,NULL,0,NULL,0,controls,5,names,7)==-1);
+    controls[2*8+1]=8; /* Only checkboxes can carry the checked bit. */
+    CHECK(forms(token,4,0,NULL,0,NULL,0,controls,5,names,7)==-1);
+    controls[2*8+1]=0;
+    CHECK(forms(token,4,0,NULL,0,NULL,0,controls,5,names,7)==0);
+    CHECK(AccessibleObjectFromWindow(hwnd,OBJID_CLIENT,&IID_IAccessible,(void **)&a)==S_OK);
+    VARIANT v;
+    CHECK(IAccessible_get_accRole(a,child(1),&v)==S_OK && V_I4(&v)==ROLE_SYSTEM_GROUPING);
+    CHECK(IAccessible_get_accRole(a,child(2),&v)==S_OK && V_I4(&v)==ROLE_SYSTEM_STATICTEXT);
+    CHECK(IAccessible_get_accRole(a,child(3),&v)==S_OK && V_I4(&v)==ROLE_SYSTEM_CHECKBUTTON);
+    CHECK(IAccessible_get_accState(a,child(3),&v)==S_OK && (V_I4(&v)&STATE_SYSTEM_FOCUSABLE) && !(V_I4(&v)&STATE_SYSTEM_CHECKED));
+    CHECK(IAccessible_get_accState(a,child(4),&v)==S_OK && (V_I4(&v)&STATE_SYSTEM_UNAVAILABLE) && (V_I4(&v)&STATE_SYSTEM_CHECKED));
+    CHECK(IAccessible_accDoDefaultAction(a,child(4))==E_ACCESSDENIED);
+    CHECK(IAccessible_accDoDefaultAction(a,child(3))==S_OK);
+    found=0;for(int i=0;i<30;i++){int64_t event[8];int code=poll(token,0,event,8);CHECK(code>=0);
+        if(!code && event[1]==11){CHECK(event[5]==4 && event[6]==3);found++;}}
+    CHECK(found==1);
+    controls[3*8+1]|=8;
+    CHECK(forms(token,5,0,NULL,0,NULL,0,controls,5,names,7)==0);
+    CHECK(FAILED(IAccessible_get_accState(a,child(3),&v)));IAccessible_Release(a);
+    CHECK(AccessibleObjectFromWindow(hwnd,OBJID_CLIENT,&IID_IAccessible,(void **)&a)==S_OK);
+    CHECK(IAccessible_get_accState(a,child(3),&v)==S_OK && (V_I4(&v)&STATE_SYSTEM_CHECKED));
+    action=NULL;CHECK(IAccessible_get_accDefaultAction(a,child(3),&action)==S_OK && !wcscmp(action,L"Uncheck"));SysFreeString(action);
+    IAccessible_Release(a);
     CHECK(close_window(token)==0);CHECK(close_window(token)==-2);FreeLibrary(dll);
-    puts("PASS catalog roles actions hits revocation allocation rollback");return 0;
+    puts("PASS catalog and forms roles actions hits revocation allocation rollback");return 0;
 }

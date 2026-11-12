@@ -70,6 +70,7 @@ public final class Session{
         if(!self.opened){return -9;}if(self.phase!=0){return -12;}
         if(len(fs)>65536 || len(ssc)>65536 || len(source)>65536 || len(path)<2 || len(path)>4096 || limits.memory<0 || limits.memory>65536 || limits.frames<1 || limits.frames>128 ||
             limits.fuel<1 || limits.fuel>1000000 || limits.calls<0 || limits.calls>10000 || limits.timeout<1 || limits.timeout>60000){return -1;}
+        if(profile.document<1 || profile.document>2){return 200;}
         own fs_copy:*byte=try_alloc<byte>(len(fs));own ssc_copy:*byte=try_alloc<byte>(len(ssc));
         if(fs_copy==null || ssc_copy==null){return -4;}
         for(let i:int=0;i<len(fs);i++){fs_copy[i]=fs[i];}for(let i:int=0;i<len(ssc);i++){ssc_copy[i]=ssc[i];}
@@ -91,6 +92,7 @@ public final class Session{
         if(len(source)>65536 || len(code)<16 || len(code)>131088 || limits.memory<0 || limits.memory>65536 ||
            limits.frames<1 || limits.frames>128 || limits.fuel<1 || limits.fuel>1000000 || limits.calls<0 || limits.calls>10000 ||
            limits.timeout<1 || limits.timeout>60000){return -1;}
+        if(profile.document<1 || profile.document>2){return 200;}
         self.next_document++;val document:int=self.next_document;
         own source_copy:*byte=try_alloc<byte>(len(source));own code_copy:*byte=try_alloc<byte>(len(code));
         if(source_copy==null || code_copy==null){return -4;}

@@ -5,16 +5,20 @@ import "std/pagepresent.assis";
 public value struct Versions{let document:int;let style:int;let motion:int;}
 public pure fn versions():Versions{return new Versions(1,1,1);}
 public pure fn reading_versions():Versions{return new Versions(2,1,1);}
+public pure fn forms_versions():Versions{return new Versions(3,1,1);}
 public final class Drawing{
     own frame:pageframe::Frame;own reading:framereader::Reader;own packet:pagepresent::Packet;
 }
 safe fn build_drawing(borrow document:documents::Document,borrow styles:flowpage::Page,borrow mut motion:motionpage::Page,
         borrow previous:Drawing,borrow mut drawing:Drawing,window_instance:int,revision:int,width:int,height:int,scroll:int,scale:int,
-        elapsed:int,visible:bool,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int):int{
+        elapsed:int,visible:bool,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int,toggle:doctree::NodeId):int{
     let focus:doctree::NodeId=new doctree::NodeId();if(previous!=null){focus=previous.reading.focus_node();}
     let code:int=motion.prepare(document,styles,elapsed,visible,focus,new doctree::NodeId(),policy.reduced_motion);if(code!=0){return code;}
     own frame:pageframe::Frame=try_new pageframe::Frame(document,styles,revision,width,height,scroll,scale,10000000,metric);
     if(frame==null){return 401;}if(!frame.is_open()){return frame.status();}
+    if(previous!=null && previous.frame.current(document)){
+        if(!frame.prepare_checks(document,previous.frame,toggle)){return 204;}
+    }else if(!doctree::absent(toggle)){return 204;}
     code=frame.compose(document,motion);if(code!=0){return code;}
     own reading:framereader::Reader=try_new framereader::Reader(frame,document,window_instance,20000000,metric);
     if(reading==null){return 401;}if(!reading.is_open()){return reading.status();}
@@ -57,6 +61,10 @@ public final class Page{
     fn cancel_gesture(borrow mut self):void{if(self.current!=null){self.current.reading.cancel_gesture();}}
     fn prepare(borrow mut self,borrow document:documents::Document,revision:int,width:int,height:int,scroll:int,scale:int,
             elapsed:int,visible:bool,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int):int{
+        return self.prepare_checked(document,revision,width,height,scroll,scale,elapsed,visible,policy,metric,new doctree::NodeId());
+    }
+    fn prepare_checked(borrow mut self,borrow document:documents::Document,revision:int,width:int,height:int,scroll:int,scale:int,
+            elapsed:int,visible:bool,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int,toggle:doctree::NodeId):int{
         if(!self.active){return 204;}if(self.pending!=null){return 407;}
         if(self.current!=null){
             if(revision<=self.current.frame.version()){return 204;}
@@ -64,7 +72,7 @@ public final class Page{
         }
         own drawing:Drawing=try_new Drawing();if(drawing==null){return 401;}
         own styles:flowpage::Page=move(self.styles);own motion:motionpage::Page=move(self.motion);own previous:Drawing=move(self.current);
-        val code:int=build_drawing(document,styles,motion,previous,drawing,self.window_instance,revision,width,height,scroll,scale,elapsed,visible,policy,metric);
+        val code:int=build_drawing(document,styles,motion,previous,drawing,self.window_instance,revision,width,height,scroll,scale,elapsed,visible,policy,metric,toggle);
         self.styles=move(styles);self.motion=move(motion);self.current=move(previous);
         if(code!=0){self.motion.abort();return code;}
         self.pending=move(drawing);return 0;
@@ -96,7 +104,7 @@ public final class Page{
             val accepted:bool=reading.accept(frame,document,projection,event);self.current.reading=move(reading);self.current.frame=move(frame);
             if(!accepted){return new viewer::Change();}
             val node:doctree::NodeId=self.current.packet.action(self.current.frame,document,event.arg0,event.arg1);
-            if(!doctree::absent(node)){if(htdl::kind(document.nodes(),node)==17){return new viewer::Change(8,node);}return new viewer::Change(2,node);}return new viewer::Change();
+            return self.current.reading.activate(self.current.frame,document,node);
         }
         own reading:framereader::Reader=move(self.current.reading);
         own frame:pageframe::Frame=move(self.current.frame);
@@ -129,12 +137,16 @@ public final class Session{
         if(self.pending!=null || self.store.has_candidate()){return 407;}
         if(self.current!=null){if(self.current.has_pending()){return 407;}}
         self.request=request;
-        if((profile.document!=1 && profile.document!=2) || profile.style!=1 || profile.motion!=1){return 200;}
+        if((profile.document<1 || profile.document>3) || profile.style!=1 || profile.motion!=1){return 200;}
         if(len(fs)>65536 || len(ssc)>65536){return 401;}
         let diagnostic:htdl::Diagnostic=new htdl::Diagnostic();
         if(profile.document==1){diagnostic=htdl::stage(self.store,instance,source,len(fs)+len(ssc));}
         else{diagnostic=htdl::stage_catalog(self.store,instance,source,len(fs)+len(ssc));}
         if(diagnostic.code!=0){return diagnostic.code;}
+        if(profile.document<3){
+            val profile_code:int=pageframe::reading_profile(self.store.candidate());
+            if(profile_code!=0){self.store.abort(instance);return profile_code;}
+        }
         own page:Page=try_new Page(self.store.candidate(),fs,ssc,self.window_instance);
         if(page==null){self.store.abort(instance);return 401;}
         if(!page.is_open()){val code:int=page.status();self.store.abort(instance);return code;}
@@ -168,9 +180,19 @@ public final class Session{
     }
     fn reflow(borrow mut self,width:int,height:int,scroll:int,scale:int,elapsed:int,visible:bool,policy:reader::Preferences,
             metric:safe fn(borrow slice<byte>,int,int):int):int{
+        return self.prepare_reflow(width,height,scroll,scale,elapsed,visible,policy,metric,new doctree::NodeId());
+    }
+    fn toggle_checkbox(borrow mut self,projection:int,node:doctree::NodeId,width:int,height:int,scroll:int,scale:int,
+            policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int):int{
+        if(projection!=self.revision || doctree::absent(node)){return 204;}
+        return self.prepare_reflow(width,height,scroll,scale,0,true,policy,metric,node);
+    }
+    private fn prepare_reflow(borrow mut self,width:int,height:int,scroll:int,scale:int,elapsed:int,visible:bool,policy:reader::Preferences,
+            metric:safe fn(borrow slice<byte>,int,int):int,toggle:doctree::NodeId):int{
         if(self.current==null || self.pending!=null || self.revision==9223372036854775807){return 204;}
         own page:Page=move(self.current);own store:documents::Store=move(self.store);
-        val code:int=page.prepare(store.active_document(),self.revision+1,width,height,scroll,scale,elapsed,visible,policy,metric);self.current=move(page);self.store=move(store);return code;
+        val code:int=page.prepare_checked(store.active_document(),self.revision+1,width,height,scroll,scale,elapsed,visible,policy,metric,toggle);
+        self.current=move(page);self.store=move(store);return code;
     }
     fn abort_reflow(borrow mut self):void{if(self.current!=null){self.current.abort();}}
     fn commit_reflow(borrow mut self):bool{

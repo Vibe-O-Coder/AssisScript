@@ -1,0 +1,138 @@
+// Run in a dedicated, trusted directory. See docs/BIBLIOTECA-searchindex.md.
+import "std/searchindex.assis";
+import "std/cli.assis";
+import "std/process.assis";
+import "std/htdlsearch.assis";
+
+platform("linux") {
+    extern("libc.so.6","unused.dll","open") fn open_directory(path:text,flags:i32,mode:i32):i32;
+    extern("libc.so.6","unused.dll","fsync") fn sync_directory(fd:i32):i32;
+    extern("libc.so.6","unused.dll","close") fn close_directory(fd:i32):i32;
+    safe fn flush_parent():bool {
+        unsafe {
+            val fd:i32=open_directory(".",i32(0),i32(0));
+            if(fd<i32(0)){return false;}
+            val synced:i32=sync_directory(fd);
+            val closed:i32=close_directory(fd);
+            return synced==i32(0) && closed==i32(0);
+        }
+    }
+}
+platform("windows-x64") {
+    // file_replace already requests MoveFileExW with WRITE_THROUGH.
+    pure fn flush_parent():bool {return true;}
+}
+
+safe fn argument_is(borrow arg:cli::Argument,borrow expected:slice<byte>):bool {
+    if(!arg.ok || arg.size!=len(expected)){return false;}
+    for(let i:int=0;i<arg.size;i++){if(arg.data[i]!=expected[i]){return false;}}
+    return true;
+}
+safe fn read_snapshot(borrow mut index:searchindex::Index):int {
+    own file:File=file_open("webassis.asix",0);
+    if(file==null){return 4;}
+    return index.read(file);
+}
+safe fn index_page(borrow mut index:searchindex::Index,doc:int,borrow source:slice<byte>):int {
+    own store:documents::Store=try_new documents::Store(2000000,4000,1);
+    if(store==null || !store.is_open()){return 4;}
+    val diagnostic:htdl::Diagnostic=htdl::stage_catalog(store,1,source,0);
+    if(diagnostic.code!=0){return 1;}
+    own page:htdlsearch::Page=try_new htdlsearch::Page(store.candidate(),16384,256,65536);
+    if(page==null){return 4;}
+    if(page.status()!=0){return 2;}
+    return index.upsert(doc,page.content_bytes());
+}
+safe fn apply_input(borrow mut index:searchindex::Index,htdl_input:bool):int {
+    own input:cli::Stdin=try_new cli::Stdin(16390);
+    if(input==null){return 4;}
+    let records:int=0;
+    while(true){
+        val result:parse::Parsed<int>=input.readln();
+        if(result.code==5){return 0;}
+        if(!result.ok){return result.code;}
+        records++;
+        if(records>65535){return 2;}
+        borrow line:slice<byte>=input.line();
+        let tab:int=0;
+        while(tab<len(line) && line[tab]!=9){tab++;}
+        val doc:parse::Parsed<int>=parse::parse_i64(slice_of(line,0,tab));
+        if(!doc.ok || doc.value<1 || doc.value>65535){return 1;}
+        if(tab==len(line)){index.remove(doc.value);}
+        else{
+            borrow source:slice<byte>=slice_of(line,tab+1,len(line)-tab-1);
+            let code:int=0;
+            if(htdl_input){code=index_page(index,doc.value,source);}
+            else{code=index.upsert(doc.value,source);}
+            if(code!=0){return code;}
+        }
+    }
+}
+safe fn publish(borrow index:searchindex::Index):int {
+    // The caller holds the writer lock. A pending file from a crashed writer
+    // is never read. Only replace the snapshot after writing and flushing.
+    file_remove("webassis.asix.pending");
+    own pending:File=file_open("webassis.asix.pending",3);
+    if(pending==null){return 4;}
+    let status:int=index.write(pending);
+    if(status==0 && file_sync(pending)!=0){status=4;}
+    if(file_close(pending)!=0){status=4;}
+    if(status==0 && file_replace("webassis.asix.pending","webassis.asix")!=0){status=4;}
+    if(status!=0){file_remove("webassis.asix.pending");return status;}
+    if(!flush_parent()){return 9;}
+    return status;
+}
+safe fn mutate(borrow mut index:searchindex::Index,reset:bool,htdl_input:bool):int {
+    own lock_name:*byte=try_alloc<byte>(19);
+    if(lock_name==null){return 4;}
+    borrow name:slice<byte>=utf8("webassis.asix.lock");
+    for(let i:int=0;i<len(name);i++){lock_name[i]=name[i];}
+    own lock:process::Lock=process::lock(lock_name);
+    if(!lock.acquired()){return 8;}
+    if(!reset){
+        val status:int=read_snapshot(index);
+        if(status!=0){return status;}
+    }
+    val status:int=apply_input(index,htdl_input);
+    if(status!=0){return status;}
+    if(!index.seal()){return 5;}
+    return publish(index);
+}
+safe fn search(borrow index:searchindex::Index):int {
+    own mode_name:cli::Argument=cli::argument(2);
+    own query_text:cli::Argument=cli::argument(3);
+    let mode:int=0;
+    if(argument_is(mode_name,utf8("and"))){mode=1;}
+    if(argument_is(mode_name,utf8("or"))){mode=2;}
+    if(argument_is(mode_name,utf8("phrase"))){mode=3;}
+    let offset:int=0;
+    if(arg_count()==5){
+        own page:cli::Argument=cli::argument(4);
+        val value:parse::Parsed<int>=parse::parse_i64(slice_of(page.data,0,page.size));
+        if(!page.ok || !value.ok){return 1;}
+        offset=value.value;
+    }
+    own hits:*searchindex::Hit=try_alloc<searchindex::Hit>(10);
+    if(hits==null){return 4;}
+    if(!query_text.ok){return 1;}
+    val count:int=index.query(slice_of(query_text.data,0,query_text.size),mode,offset,hits);
+    if(count<0){return -count;}
+    for(let i:int=0;i<count;i++){print(hits[i].doc,hits[i].score,hits[i].position);}
+    return 0;
+}
+safe fn main():int {
+    own command:cli::Argument=cli::argument(1);
+    own index:searchindex::Index=try_new searchindex::Index(65535,262144,8388608);
+    if(index==null || !index.is_open()){return 4;}
+    if(arg_count()==2 && argument_is(command,utf8("build"))){return mutate(index,true,false);}
+    if(arg_count()==2 && argument_is(command,utf8("apply"))){return mutate(index,false,false);}
+    if(arg_count()==2 && argument_is(command,utf8("build-htdl"))){return mutate(index,true,true);}
+    if(arg_count()==2 && argument_is(command,utf8("apply-htdl"))){return mutate(index,false,true);}
+    if((arg_count()==4 || arg_count()==5) && argument_is(command,utf8("query"))){
+        val status:int=read_snapshot(index);
+        if(status!=0){return status;}
+        return search(index);
+    }
+    print("Usage: build | apply | build-htdl | apply-htdl | query and|or|phrase TEXT [OFFSET]");
+    return 1;
+}

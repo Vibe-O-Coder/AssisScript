@@ -1,3 +1,12 @@
+> **Busca persistente, formulários e inspeção visual — 12/11/2026.**
+> `work/ecosystem-2026-11-11`, base pública b833e81. **54,30%, 0/5 gates**.
+> ASIX 1, lotes de texto/HTDL, ranking inicial, restart/kill e 10 mil documentos
+> em Windows/Linux x64. Novo perfil de checkbox local com commit raster/MSAA.
+> Rasters de leitura, contador, dois painéis e formulário a 100% e 200%.
+> [M7](../relatorios/2026-11-12-m7-busca-local.md) ·
+> [M3, gates e publicação](../relatorios/2026-11-12-m3-formularios-visuais.md) ·
+> [Próximos itens](FILA-M0-M1.md).
+
 > **Loader confinado, HTTP e runtime — 11/11/2026, 50,40%, 0/5 gates.**
 > Base `5922558`, branch `work/m3-confined-loader-2026-11-11`. Manifesto
 > local com concessão física por handle e ativação conjunta. HTTP(S) com

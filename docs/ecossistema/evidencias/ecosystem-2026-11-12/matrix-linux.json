@@ -1,0 +1,205 @@
+{
+  "system": "Linux",
+  "release": "6.18.58.1-microsoft-standard-WSL2",
+  "arch": "x86_64",
+  "python": "3.12.3",
+  "compiler_sha256": "4ae10529f28c5a6a28a0d7597f2ef1fd27c1d6ee7271bb2da6ec0fc12970adab",
+  "suites": [
+    {
+      "suite": "searchindex",
+      "command": [
+        "python",
+        "tests/test-searchindex.py"
+      ],
+      "returncode": 0,
+      "executed": 7,
+      "not_run": 0,
+      "seconds": 13.533,
+      "log_sha256": "dca45346ca3ffeb47151b226bd8ea2648d183d49d1c8588e25effc103aa7d6c3"
+    },
+    {
+      "suite": "frame-forms",
+      "command": [
+        "python",
+        "tests/test-frame-forms.py"
+      ],
+      "returncode": 0,
+      "executed": 3,
+      "not_run": 2,
+      "seconds": 19.36,
+      "log_sha256": "d655b58f34112e2846a5d6933a608c9b4f3ff52a23e329351d259d43375abee7"
+    },
+    {
+      "suite": "catalog-frame",
+      "command": [
+        "python",
+        "tests/test-catalog-frame.py"
+      ],
+      "returncode": 0,
+      "executed": 18,
+      "not_run": 3,
+      "seconds": 157.859,
+      "log_sha256": "00f68145b5fea4c6604b378b81513ed8c490f29e2a46b6236b0a3482232d3e95"
+    },
+    {
+      "suite": "pageframe",
+      "command": [
+        "python",
+        "tests/test-pageframe.py"
+      ],
+      "returncode": 0,
+      "executed": 17,
+      "not_run": 0,
+      "seconds": 102.187,
+      "log_sha256": "76ce5e79a20fbe2104a8c63fd533740d56c3ac11df7019e4afe4adcdb992d922"
+    },
+    {
+      "suite": "pagepresent",
+      "command": [
+        "python",
+        "tests/test-pagepresent.py"
+      ],
+      "returncode": 0,
+      "executed": 3,
+      "not_run": 6,
+      "seconds": 20.303,
+      "log_sha256": "39c5dc9d05a55b03c1cc71c03798d3c43b995741ef9bbffe4e7d4f00ddf04cda"
+    },
+    {
+      "suite": "framereader",
+      "command": [
+        "python",
+        "tests/test-framereader.py"
+      ],
+      "returncode": 0,
+      "executed": 14,
+      "not_run": 1,
+      "seconds": 97.241,
+      "log_sha256": "2101d3eb263bf0551b97a46ee6aa68124e39c978261c35f2d3153fa2ba411673"
+    },
+    {
+      "suite": "framehost",
+      "command": [
+        "python",
+        "tests/test-framehost.py"
+      ],
+      "returncode": 0,
+      "executed": 10,
+      "not_run": 2,
+      "seconds": 76.539,
+      "log_sha256": "ee6f039099145abf08adeb55ed6b2227ab2bcc3d2197c585c1c547b2106c5e0e"
+    },
+    {
+      "suite": "motionpage",
+      "command": [
+        "python",
+        "tests/test-motionpage.py"
+      ],
+      "returncode": 0,
+      "executed": 15,
+      "not_run": 0,
+      "seconds": 73.476,
+      "log_sha256": "572d593f53a267269637b5d35e5bd3c81d72d935648e0311b7e061588b589bcd"
+    },
+    {
+      "suite": "frame-worker",
+      "command": [
+        "python",
+        "tests/test-frame-worker.py"
+      ],
+      "returncode": 0,
+      "executed": 12,
+      "not_run": 2,
+      "seconds": 73.466,
+      "log_sha256": "4232bfff4d21b9a68d48e6742423895d0bc0d0c38abee12aa72b96d1e03ec1c5"
+    },
+    {
+      "suite": "localresources",
+      "command": [
+        "python",
+        "tests/test-localresources.py"
+      ],
+      "returncode": 0,
+      "executed": 8,
+      "not_run": 0,
+      "seconds": 14.075,
+      "log_sha256": "9b6a1373047cfd88b7018fbcdf3fece0f6f960e3f378ea80c19365450b247840"
+    },
+    {
+      "suite": "frame-responsiveness",
+      "command": [
+        "python",
+        "tests/test-frame-responsiveness.py"
+      ],
+      "returncode": 0,
+      "executed": 0,
+      "not_run": 5,
+      "seconds": 0.178,
+      "log_sha256": "ae5b1ddd45e71b2ae51c476488b34dc075ac311deca9b1a6958314ad50c4d76b"
+    },
+    {
+      "suite": "install-mask",
+      "command": [
+        "python",
+        "tests/test-install-mask.py"
+      ],
+      "returncode": 0,
+      "executed": 2,
+      "not_run": 0,
+      "seconds": 1.605,
+      "log_sha256": "12fe6b631ed665ac278f27963e7cb5242792bc28e485630c00d3ce21a925a004"
+    }
+  ],
+  "adjacent_regressions": [
+    {
+      "suite": "files",
+      "command": [
+        "python",
+        "tests/test-files.py"
+      ],
+      "executed": 10,
+      "not_run": 0,
+      "sha256": "d4435bce7c74b75c807d19b2484040b2fb83ec603a805327d23e006355c2fa7d"
+    },
+    {
+      "suite": "cli",
+      "command": [
+        "python",
+        "tests/test-cli.py"
+      ],
+      "executed": 1,
+      "not_run": 0,
+      "sha256": "55f537eebc1e0e4a2a304b3b71006682e0d18c3c09c45c83c99a9150fe63f074"
+    },
+    {
+      "suite": "typed-input",
+      "command": [
+        "python",
+        "tests/test-typed-input.py"
+      ],
+      "executed": 9,
+      "not_run": 0,
+      "sha256": "82ab6ccfca13f115292742ab22e7ba434910d0e7742c34887cc4899d3e7d4b68"
+    },
+    {
+      "suite": "process",
+      "command": [
+        "python",
+        "tests/test-process.py"
+      ],
+      "executed": 4,
+      "not_run": 0,
+      "sha256": "4a30bb4908f619f0018ecd2fb6033d711d6aecaae0ec982994223f348be973c8"
+    },
+    {
+      "suite": "english-api",
+      "command": [
+        "python",
+        "tests/test-english-api.py"
+      ],
+      "executed": 5,
+      "not_run": 0,
+      "sha256": "71192dc49cac5fae309c67fb83ff49dc0efbfed43a47cd49bae95a9bd5ebdb2d"
+    }
+  ]
+}

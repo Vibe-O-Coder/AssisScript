@@ -1,0 +1,424 @@
+namespace searchindex;
+
+import "std/unicode.assis";
+
+/// The index tokenizes UTF-8 with a deliberately finite separator and case policy.
+/// Positions are zero-based UTF-8 byte offsets in the caller's original source.
+value struct Token { let start:int; let end:int; }
+value struct Posting {
+    let hash:int; let doc:int; let ordinal:int; let position:int;
+    let start:int; let size:int; let generation:int;
+}
+public value struct Hit { let doc:int; let score:int; let position:int; }
+
+pure fn separator(cp:int):bool {
+    if(cp<128){return !((cp>=48 && cp<=57) || (cp>=65 && cp<=90) || (cp>=97 && cp<=122));}
+    return cp==0x85 || cp==0xa0 || cp==0xab || cp==0xad || cp==0xb7 || cp==0xbb ||
+        cp==0x1680 || (cp>=0x2000 && cp<=0x206f) || cp==0x3000 ||
+        (cp>=0x3001 && cp<=0x3003) || (cp>=0x3008 && cp<=0x3011);
+}
+safe fn codepoint(borrow source:slice<byte>,start:int,end:int):int {
+    if(end==start+1){return int(source[start]);}
+    let value:int=int(source[start]) & (127>>(end-start));
+    for(let i:int=start+1;i<end;i++){value=(value<<6)|(int(source[i])&63);}
+    return value;
+}
+safe fn token(borrow source:slice<byte>,cursor:int):Token {
+    let start:int=cursor;
+    while(start<len(source)){
+        val end:int=unicode::next(source,start);
+        if(!separator(codepoint(source,start,end))){break;}
+        start=end;
+    }
+    let end:int=start;
+    while(end<len(source)){
+        val next:int=unicode::next(source,end);
+        if(separator(codepoint(source,end,next))){break;}
+        end=next;
+    }
+    return new Token(start,end);
+}
+safe fn folded(borrow source:slice<byte>,start:int,i:int):byte {
+    val c:int=int(source[i]);
+    if(c>=65 && c<=90){return byte(c+32);}
+    if(i>start && source[i-1]==0xc3 && c>=0x80 && c<=0x9e && c!=0x97){return byte(c+32);}
+    return byte(c);
+}
+pure fn step(hash:int,c:byte):int { return ((hash^int(c))*16777619)&0xffffffff; }
+safe fn token_hash(borrow source:slice<byte>,t:Token):int {
+    let hash:int=2166136261;
+    for(let i:int=t.start;i<t.end;i++){hash=step(hash,folded(source,t.start,i));}
+    return hash;
+}
+safe fn equal_tokens(borrow source:slice<byte>,a:Token,b:Token):bool {
+    if(a.end-a.start!=b.end-b.start){return false;}
+    for(let i:int=0;i<a.end-a.start;i++){
+        if(folded(source,a.start,a.start+i)!=folded(source,b.start,b.start+i)){return false;}
+    }
+    return true;
+}
+pure fn less(a:Posting,b:Posting):bool {
+    if(a.hash!=b.hash){return a.hash<b.hash;}
+    if(a.doc!=b.doc){return a.doc<b.doc;}
+    return a.ordinal<b.ordinal;
+}
+pure fn better(a:Hit,b:Hit):bool {
+    return a.score>b.score || (a.score==b.score && a.doc<b.doc);
+}
+safe fn word(borrow data:*byte,at:int):int {
+    return int(data[at]) | (int(data[at+1])<<8) | (int(data[at+2])<<16) | (int(data[at+3])<<24);
+}
+safe fn put_word(borrow mut data:*byte,at:int,value:int):void {
+    for(let i:int=0;i<4;i++){data[at+i]=byte((value>>(8*i))&255);}
+}
+safe fn checksum(borrow data:*byte,size:int):int {
+    let hash:int=2166136261;
+    for(let i:int=0;i<size;i++){hash=step(hash,data[i]);}
+    return hash;
+}
+safe fn read_exact(borrow mut source:File,borrow mut data:*byte,offset:int,size:int,borrow mut chunk:*byte):int {
+    let total:int=0;
+    while(total<size){
+        let take:int=size-total;
+        if(take>len(chunk)){take=len(chunk);}
+        val amount:int=file_read(source,chunk,take);
+        if(amount<0){return 4;}
+        if(amount==0){return 3;}
+        for(let i:int=0;i<amount;i++){data[offset+total+i]=chunk[i];}
+        total+=amount;
+    }
+    return 0;
+}
+safe fn write_exact(borrow mut target:File,borrow data:*byte):int {
+    own chunk:*byte=try_alloc<byte>(4096);
+    if(chunk==null){return 4;}
+    let total:int=0;
+    while(total<len(data)){
+        let take:int=len(data)-total;
+        if(take>len(chunk)){take=len(chunk);}
+        for(let i:int=0;i<take;i++){chunk[i]=data[total+i];}
+        val amount:int=file_write(target,chunk,take);
+        if(amount<=0){return 4;}
+        total+=amount;
+    }
+    return 0;
+}
+
+/// Bounded positional index for a trusted local corpus. The caller chooses
+/// quotas and owns the snapshot file. No file or network access in queries.
+public final class Index {
+    private own documents:*int;
+    private own postings:*Posting;
+    private own terms:*byte;
+    private let count:int;
+    private let used:int;
+    private let ready:bool;
+    private let sorted:bool;
+
+    fn init(borrow mut self,max_document_id:int,max_postings:int,max_term_bytes:int):void {
+        if(max_document_id<1 || max_document_id>65535 || max_postings<1 || max_postings>524288 ||
+           max_term_bytes<1 || max_term_bytes>16777216){return;}
+        self.documents=try_alloc<int>(max_document_id+1);
+        self.postings=try_alloc<searchindex::Posting>(max_postings);
+        self.terms=try_alloc<byte>(max_term_bytes);
+        self.ready=self.documents!=null && self.postings!=null && self.terms!=null;
+        self.sorted=self.ready;
+    }
+    fn is_open(borrow self):bool {return self.ready;}
+    fn contains(borrow self,doc:int):bool {
+        return self.ready && doc>0 && doc<len(self.documents) && self.documents[doc]>0;
+    }
+    /// Status: 0 success, 1 invalid argument/UTF-8, 2 quota, 3 bad snapshot,
+    /// 4 IO or allocation, 5 invalid state. Input is limited to 16 KiB.
+    fn upsert(borrow mut self,doc:int,borrow source:slice<byte>):int {
+        if(!self.ready){return 5;}
+        if(doc<1 || doc>=len(self.documents) || len(source)>16384 || unicode::error(source)>=0){return 1;}
+        let generation:int=self.documents[doc];
+        if(generation<0){generation= -generation;}
+        if(generation==9223372036854775807){return 2;}
+        generation++;
+        let total:int=0;
+        let term_bytes:int=0;
+        let cursor:int=0;
+        while(cursor<len(source)){
+            val t:Token=token(source,cursor);
+            if(t.start==t.end){break;}
+            val size:int=t.end-t.start;
+            if(size>128){return 2;}
+            total++;
+            term_bytes+=size;
+            cursor=t.end;
+        }
+        if(total>len(self.postings)-self.count || term_bytes>len(self.terms)-self.used){return 2;}
+        cursor=0;
+        for(let ordinal:int=0;ordinal<total;ordinal++){
+            val t:Token=token(source,cursor);
+            val size:int=t.end-t.start;
+            self.postings[self.count]=new Posting(token_hash(source,t),doc,ordinal,t.start,self.used,size,generation);
+            self.count++;
+            for(let i:int=t.start;i<t.end;i++){
+                self.terms[self.used]=folded(source,t.start,i);
+                self.used++;
+            }
+            cursor=t.end;
+        }
+        self.documents[doc]=generation;
+        self.sorted=false;
+        return 0;
+    }
+    fn remove(borrow mut self,doc:int):bool {
+        if(!self.contains(doc)){return false;}
+        self.documents[doc]= -self.documents[doc];
+        self.sorted=false;
+        return true;
+    }
+    private fn sift(borrow mut self,start:int,end:int):void {
+        let parent:int=start;
+        while(parent<end/2){
+            let child:int=parent*2+1;
+            if(child+1<end && less(self.postings[child],self.postings[child+1])){child++;}
+            val value:Posting=self.postings[parent];
+            if(!less(value,self.postings[child])){break;}
+            self.postings[parent]=self.postings[child];
+            self.postings[child]=value;
+            parent=child;
+        }
+    }
+    /// Compact obsolete postings and order live entries for lookup and export.
+    /// Reopening the resulting snapshot also reclaims obsolete term storage.
+    fn seal(borrow mut self):bool {
+        if(!self.ready){return false;}
+        if(self.sorted){return true;}
+        let live:int=0;
+        for(let i:int=0;i<self.count;i++){
+            val row:Posting=self.postings[i];
+            if(self.documents[row.doc]==row.generation){
+                self.postings[live]=row;
+                live++;
+            }
+        }
+        self.count=live;
+        for(let i:int=live/2-1;i>=0;i--){self.sift(i,live);}
+        for(let end:int=live-1;end>0;end--){
+            val root:Posting=self.postings[0];
+            self.postings[0]=self.postings[end];
+            self.postings[end]=root;
+            self.sift(0,end);
+        }
+        self.sorted=true;
+        return true;
+    }
+    private fn lower(borrow self,key:Posting):int {
+        let lo:int=0;
+        let hi:int=self.count;
+        while(lo<hi){
+            val mid:int=lo+(hi-lo)/2;
+            if(less(self.postings[mid],key)){lo=mid+1;}
+            else{hi=mid;}
+        }
+        return lo;
+    }
+    private fn matches(borrow self,row:Posting,borrow source:slice<byte>,t:Token):bool {
+        if(row.size!=t.end-t.start){return false;}
+        for(let i:int=0;i<row.size;i++){
+            if(self.terms[row.start+i]!=folded(source,t.start,t.start+i)){return false;}
+        }
+        return true;
+    }
+    private fn phrase(borrow self,row:Posting,borrow source:slice<byte>,borrow tokens:*Token,borrow hashes:*int,count:int):bool {
+        for(let i:int=1;i<count;i++){
+            val key:Posting=new Posting(hashes[i],row.doc,row.ordinal+i,0,0,0,0);
+            val index:int=self.lower(key);
+            if(index==self.count){return false;}
+            val next:Posting=self.postings[index];
+            if(less(key,next) || !self.matches(next,source,tokens[i])){return false;}
+        }
+        return true;
+    }
+    /// Mode 1 intersects distinct terms, 2 unions, 3 matches adjacent tokens.
+    /// Score is total frequency of matched terms or number of phrase occurrences.
+    /// Returns the number copied to hits or negative status. The caller can page
+    /// through the first 256 ranked rows. Only returned rows are written.
+    fn query(borrow self,borrow source:slice<byte>,mode:int,offset:int,borrow mut hits:*Hit):int {
+        if(!self.ready || !self.sorted){return -5;}
+        if(mode<1 || mode>3 || offset<0 || offset>256 || len(hits)<1 || len(hits)>256-offset ||
+           len(source)>2048 || unicode::error(source)>=0){return -1;}
+        own tokens:*Token=try_alloc<searchindex::Token>(16);
+        own hashes:*int=try_alloc<int>(16);
+        own scores:*int=try_alloc<int>(len(self.documents));
+        own matches:*int=try_alloc<int>(len(self.documents));
+        own first:*int=try_alloc<int>(len(self.documents));
+        own ranked:*Hit=try_alloc<searchindex::Hit>(offset+len(hits));
+        if(tokens==null || hashes==null || scores==null || matches==null || first==null || ranked==null){return -4;}
+        let cursor:int=0;
+        let count:int=0;
+        while(cursor<len(source)){
+            val t:Token=token(source,cursor);
+            if(t.start==t.end){break;}
+            cursor=t.end;
+            let repeated:bool=false;
+            if(mode!=3){
+                for(let i:int=0;i<count;i++){if(equal_tokens(source,t,tokens[i])){repeated=true;break;}}
+            }
+            if(repeated){continue;}
+            if(count==len(tokens) || t.end-t.start>128){return -2;}
+            tokens[count]=t;
+            hashes[count]=token_hash(source,t);
+            count++;
+        }
+        if(count==0){return 0;}
+        let scans:int=count;
+        if(mode==3){scans=1;}
+        for(let i:int=0;i<scans;i++){
+            let previous:int=0;
+            let j:int=self.lower(new Posting(hashes[i],0,0,0,0,0,0));
+            while(j<self.count && self.postings[j].hash==hashes[i]){
+                val row:Posting=self.postings[j];
+                j++;
+                if(!self.matches(row,source,tokens[i])){continue;}
+                if(mode==3 && !self.phrase(row,source,tokens,hashes,count)){continue;}
+                if(previous!=row.doc){matches[row.doc]++;previous=row.doc;}
+                if(scores[row.doc]==0 || row.position<first[row.doc]){first[row.doc]=row.position;}
+                scores[row.doc]++;
+            }
+        }
+        let length:int=0;
+        for(let id:int=1;id<len(self.documents);id++){
+            if(scores[id]==0 || (mode==1 && matches[id]!=count)){continue;}
+            val result:Hit=new Hit(id,scores[id],first[id]);
+            let insert:int=length;
+            if(insert==len(ranked)){insert--;if(!better(result,ranked[insert])){continue;}}
+            else{length++;}
+            while(insert>0 && better(result,ranked[insert-1])){
+                ranked[insert]=ranked[insert-1];
+                insert--;
+            }
+            ranked[insert]=result;
+        }
+        if(length<=offset){return 0;}
+        for(let i:int=offset;i<length;i++){hits[i-offset]=ranked[i];}
+        return length-offset;
+    }
+    /// ASIX v1: fixed little-endian words plus normalized term bytes. The
+    /// checksum detects accidental corruption; the format has no authority.
+    fn write(borrow self,borrow mut target:File):int {
+        if(!self.ready || !self.sorted){return 5;}
+        let docs:int=0;
+        for(let id:int=1;id<len(self.documents);id++){if(self.documents[id]>0){docs++;}}
+        let size:int=24+docs*4+self.count*16;
+        for(let i:int=0;i<self.count;i++){size+=self.postings[i].size;}
+        own data:*byte=try_alloc<byte>(size);
+        if(data==null){return 4;}
+        put_word(data,0,0x58495341);
+        put_word(data,4,1);
+        put_word(data,8,docs);
+        put_word(data,12,self.count);
+        put_word(data,16,size);
+        let cursor:int=20;
+        for(let id:int=1;id<len(self.documents);id++){
+            if(self.documents[id]>0){put_word(data,cursor,id);cursor+=4;}
+        }
+        for(let i:int=0;i<self.count;i++){
+            val row:Posting=self.postings[i];
+            put_word(data,cursor,row.doc);
+            put_word(data,cursor+4,row.ordinal);
+            put_word(data,cursor+8,row.position);
+            put_word(data,cursor+12,row.size);
+            cursor+=16;
+            for(let j:int=0;j<row.size;j++){data[cursor+j]=self.terms[row.start+j];}
+            cursor+=row.size;
+        }
+        val digest:int=checksum(data,cursor);
+        put_word(data,cursor,digest);
+        return write_exact(target,data);
+    }
+    private fn verify_positions(borrow self,rows:int):int {
+        own offsets:*int=try_alloc<int>(len(self.documents)+1);
+        own order:*int=try_alloc<int>(rows);
+        if(offsets==null || order==null){return 4;}
+        for(let i:int=0;i<rows;i++){offsets[self.postings[i].doc+1]++;}
+        for(let i:int=1;i<len(offsets);i++){offsets[i]+=offsets[i-1];}
+        for(let i:int=0;i<rows;i++){
+            val row:Posting=self.postings[i];
+            val position:int=offsets[row.doc]+row.ordinal;
+            if(position>=offsets[row.doc+1] || order[position]!=0){return 3;}
+            order[position]=i+1;
+        }
+        for(let doc:int=1;doc<len(self.documents);doc++){
+            let previous_end:int= -1;
+            for(let i:int=offsets[doc];i<offsets[doc+1];i++){
+                val row:Posting=self.postings[order[i]-1];
+                if(row.position<=previous_end){return 3;}
+                previous_end=row.position+row.size;
+            }
+        }
+        return 0;
+    }
+    /// Load only into a newly allocated index. A rejected snapshot leaves it
+    /// unusable so no prefix can be queried, sealed, or re-published.
+    fn read(borrow mut self,borrow mut source:File):int {
+        if(!self.ready || !self.sorted || self.count!=0){return 5;}
+        for(let id:int=1;id<len(self.documents);id++){if(self.documents[id]!=0){return 5;}}
+        self.ready=false;
+        own header:*byte=try_alloc<byte>(20);
+        own chunk:*byte=try_alloc<byte>(4096);
+        if(header==null || chunk==null){return 4;}
+        let result:int=read_exact(source,header,0,20,chunk);
+        if(result!=0){return result;}
+        if(word(header,0)!=0x58495341 || word(header,4)!=1){return 3;}
+        val docs:int=word(header,8);
+        val rows:int=word(header,12);
+        val size:int=word(header,16);
+        if(docs>=len(self.documents) || rows>len(self.postings)){return 3;}
+        val base:int=24+docs*4+rows*16;
+        if(size<base+rows || size>base+len(self.terms) || size>base+128*rows){return 3;}
+        own data:*byte=try_alloc<byte>(size);
+        if(data==null){return 4;}
+        for(let i:int=0;i<20;i++){data[i]=header[i];}
+        result=read_exact(source,data,20,size-20,chunk);
+        if(result!=0){return result;}
+        val trailing:int=file_read(source,chunk,1);
+        if(trailing<0){return 4;}if(trailing!=0){return 3;}
+        val end:int=size-4;
+        if(checksum(data,end)!=word(data,end)){return 3;}
+        let cursor:int=20;
+        let last:int=0;
+        for(let i:int=0;i<docs;i++){
+            val id:int=word(data,cursor);
+            if(id<=last || id>=len(self.documents)){return 3;}
+            self.documents[id]=1;
+            last=id;
+            cursor+=4;
+        }
+        for(let i:int=0;i<rows;i++){
+            if(end-cursor<16){return 3;}
+            val doc:int=word(data,cursor);
+            val ordinal:int=word(data,cursor+4);
+            val position:int=word(data,cursor+8);
+            val length:int=word(data,cursor+12);
+            cursor+=16;
+            if(doc==0 || doc>=len(self.documents) || self.documents[doc]!=1 || ordinal>position ||
+               position>=16384 || length<1 || length>128 || length>16384-position ||
+               length>end-cursor || length>len(self.terms)-self.used){return 3;}
+            borrow term:slice<byte>=slice_of(data,cursor,length);
+            if(unicode::error(term)>=0){return 3;}
+            val t:Token=token(term,0);
+            if(t.start!=0 || t.end!=length){return 3;}
+            val row:Posting=new Posting(token_hash(term,t),doc,ordinal,position,self.used,length,1);
+            if(i>0 && !less(self.postings[i-1],row)){return 3;}
+            self.postings[i]=row;
+            for(let j:int=0;j<length;j++){
+                if(folded(term,0,j)!=term[j]){return 3;}
+                self.terms[self.used+j]=term[j];
+            }
+            self.used+=length;
+            cursor+=length;
+        }
+        if(cursor!=end){return 3;}
+        result=self.verify_positions(rows);
+        if(result!=0){return result;}
+        self.count=rows;
+        self.ready=true;
+        return 0;
+    }
+}

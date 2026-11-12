@@ -1,3 +1,7 @@
+Continuação de 12/11/2026. `forms_versions()` negocia `(3,1,1)` e
+`toggle_checkbox` prepara a atualização com o mesmo commit do reflow.
+[Perfil de formulários locais](ecossistema/PERFIL-FORMULARIOS-LOCAIS-V1.md).
+
 Continuação 03/11/2026: `reading_versions()` negocia `(2,1,1)`, com 18 tipos do catálogo de leitura, listas e fragmentos locais. `fragment_scroll(projection,link)` consulta o destino no mesmo Frame. [Perfil e limites](ecossistema/PERFIL-LEITURA-CATALOGO-V1.md). As entradas abaixo descrevem o bootstrap histórico.
 
 # std/framehost.assis

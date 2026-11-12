@@ -228,6 +228,6 @@ class CatalogFrame(unittest.TestCase):
         r=subprocess.run(command,capture_output=True,text=True,env=dict(os.environ,PATH=str(Path(cc).parent)+os.pathsep+os.environ['PATH']))
         self.assertEqual(r.returncode,0,r.stderr)
         r=subprocess.run([binary,self.provider],capture_output=True,text=True,timeout=30)
-        self.assertEqual((r.returncode,r.stdout,r.stderr),(0,'PASS catalog roles actions hits revocation allocation rollback\n',''))
+        self.assertEqual((r.returncode,r.stdout,r.stderr),(0,'PASS catalog and forms roles actions hits revocation allocation rollback\n',''))
 
 if __name__=='__main__':unittest.main(verbosity=2)

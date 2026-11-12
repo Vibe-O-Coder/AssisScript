@@ -442,6 +442,24 @@
       "doc": "BIBLIOTECA-httpurl.md",
       "description": "Parser de endereços HTTP(S), resolução de referências e comparação de origem.",
       "dependencies": []
+    },
+    {
+      "name": "searchindex",
+      "required": false,
+      "doc": "BIBLIOTECA-searchindex.md",
+      "description": "Índice local posicional com snapshot versionado e consultas ordenadas.",
+      "dependencies": [
+        "unicode"
+      ]
+    },
+    {
+      "name": "htdlsearch",
+      "required": false,
+      "doc": "BIBLIOTECA-htdlsearch.md",
+      "description": "Extração limitada de texto e links de árvores HTDL validadas.",
+      "dependencies": [
+        "htdl"
+      ]
     }
   ]
 }

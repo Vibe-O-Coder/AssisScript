@@ -40,6 +40,7 @@ def replace_once(source, before, after):
 def build_sources(output):
     reading = (ROOT/'exemplos/65_frame_worker_window.assis').read_text(encoding='utf-8')
     panels = (ROOT/'exemplos/59_page_motion_window.assis').read_text(encoding='utf-8')
+    forms = (ROOT/'exemplos/72_local_forms_window.assis').read_text(encoding='utf-8')
     reading = replace_once(reading, '\nsafe fn main():int{', CAPTURE+'\nsafe fn main():int{')
     reading = replace_once(reading, 'if(option(utf8("--smoke"))){', '''if(option(utf8("--smoke"))){
         assert(status_line(w,0,640,420,policy)==0 && w.present()==0);
@@ -78,8 +79,18 @@ def build_sources(output):
         '{own picture:File=file_open("panels-moved.raw",1);assert(picture!=null);'
         'visual_capture(picture,600,360);assert(file_close(picture)==0);}'
         'assert(drawing.frame.box(2).bounds.y>before_left')
+    forms = replace_once(forms, '\nsafe fn smoke(', CAPTURE+'\nsafe fn smoke(')
+    for state, marker in [('unchecked', '    assert(session.snapshot().frame.checked(check)==0);\n    assert(session.dispatch(1'),
+                          ('checked', '    assert(session.publish_reflow(window)==0 && window.present()==0);'),
+                          ('200', '    print("FORMS WINDOW"')]:
+        capture = (f'    {{own picture:File=file_open("forms-{state}.raw",1);assert(picture!=null);'
+                   'visual_capture(picture,620,360);assert(file_close(picture)==0);}\n')
+        if state == 'checked':
+            forms = replace_once(forms, marker, marker+'\n'+capture)
+        else:
+            forms = replace_once(forms, marker, capture+marker)
     paths = []
-    for name, source in [('reading', reading), ('panels', panels)]:
+    for name, source in [('reading', reading), ('panels', panels), ('forms', forms)]:
         path = output/f'{name}.assis'
         path.write_text(source, encoding='utf-8', newline='\n')
         paths.append(path)
@@ -106,7 +117,8 @@ def main():
     worker = module('build-page-worker.py').build(work, compiler)
     paths = build_sources(work)
     sizes = {'reading-100': (640,420), 'reading-counter': (640,420), 'reading-200': (640,420),
-             'panels-initial': (600,360), 'panels-moved': (600,360)}
+             'panels-initial': (600,360), 'panels-moved': (600,360),
+             'forms-unchecked': (620,360), 'forms-checked': (620,360), 'forms-200': (620,360)}
     modes = {}
     runs = {}
     for mode in ('optimized', 'reference'):
@@ -124,7 +136,8 @@ def main():
             extra = [compiler, worker['worker']] if path.stem == 'reading' else []
             run = subprocess.run([binary,*extra,'--smoke'], cwd=run_dir, env=environment,
                                  check=True, capture_output=True, text=True, timeout=30)
-            expected = 'FRAME WORKER WINDOW 2 11' if path.stem == 'reading' else 'MOTION FRAME 2 10'
+            expected = {'reading': 'FRAME WORKER WINDOW 2 11', 'panels': 'MOTION FRAME 2 10',
+                        'forms': 'FORMS WINDOW 3 1'}[path.stem]
             assert run.stdout.strip() == expected and not run.stderr, (path.stem, run.stdout, run.stderr)
             runs[mode][path.stem] = dict(stdout=run.stdout.strip(), stderr=run.stderr, sha256=sha(binary))
         for name, size in sizes.items():
@@ -137,9 +150,13 @@ def main():
     counter = ImageChops.difference(images['reading-100'], images['reading-counter']).getbbox()
     panels = ImageChops.difference(images['panels-initial'], images['panels-moved']).getbbox()
     zoom = ImageChops.difference(images['reading-100'], images['reading-200']).getbbox()
+    checkbox = ImageChops.difference(images['forms-unchecked'], images['forms-checked']).getbbox()
+    form_zoom = ImageChops.difference(images['forms-checked'], images['forms-200']).getbbox()
     assert counter and counter[1] >= 392 and counter[3] <= 420
     assert panels and panels[2] <= 240
     assert zoom and zoom[1] < 100
+    assert checkbox and checkbox[0] >= 24 and checkbox[2] <= 64 and checkbox[3] < 180
+    assert form_zoom and form_zoom[1] < 100 and form_zoom[3] >= 339
     artifacts = {}
     for name, image in images.items():
         target = out/f'{name}.png'
@@ -148,7 +165,7 @@ def main():
     summary = dict(source='native GDI client raster from test-only provider', desktop_capture=False,
                    compiler_sha256=sha(compiler), provider_sha256=sha(provider),
                    worker_sha256=sha(Path(worker['worker'])), native_runs=runs, artifacts=artifacts,
-                   difference_boxes=dict(counter=counter,panels=panels,zoom=zoom),
+                   difference_boxes=dict(counter=counter,panels=panels,zoom=zoom,checkbox=checkbox,form_zoom=form_zoom),
                    byte_identical_modes=True)
     (out/'visual.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(summary['difference_boxes']))

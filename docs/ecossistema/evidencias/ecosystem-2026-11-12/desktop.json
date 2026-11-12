@@ -1,0 +1,32 @@
+{
+  "status": "not-run",
+  "mechanism": "Computer Use Windows",
+  "desktop_captures": 0,
+  "inputs": 0,
+  "attempts": [
+    {
+      "target": "reading.exe",
+      "launch_error": "Computer Use app approval timed out",
+      "target_windows_returned": 0
+    },
+    {
+      "target": "catalog-reader.exe",
+      "launch_error": "Computer Use app approval timed out",
+      "target_windows_returned": 0
+    },
+    {
+      "target": "local-forms.exe",
+      "launch_error": "Computer Use app approval timed out",
+      "target_windows_returned": 0
+    }
+  ],
+  "native_raster_evidence": "visual.json",
+  "pending": [
+    "real desktop interaction",
+    "screen reader",
+    "OS DPI",
+    "multiple monitors",
+    "IME",
+    "perceived SSC fluidity"
+  ]
+}

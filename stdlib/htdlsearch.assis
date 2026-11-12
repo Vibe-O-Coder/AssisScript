@@ -1,0 +1,109 @@
+namespace htdlsearch;
+
+import "std/htdl.assis";
+
+/// Headless extraction from a validated HTDL document. The view owns its
+/// bytes and is bound to the document revision from which they were taken.
+public final class Page {
+    private own content:*byte;
+    private own addresses:*byte;
+    private own links:*Span;
+    private let content_size:int;
+    private let address_size:int;
+    private let count:int;
+    private let pending_space:bool;
+    private let instance:int;
+    private let revision:int;
+    private let code:int;
+
+    fn init(borrow mut self,borrow document:documents::Document,max_text:int,max_links:int,max_link_bytes:int):void {
+        self.code=204;
+        if(!document.is_open() || !document.has_root() || max_text<0 || max_text>16384 ||
+           max_links<0 || max_links>256 || max_link_bytes<0 || max_link_bytes>65536){return;}
+        borrow tree:doctree::Tree=document.nodes();
+        val body:doctree::NodeId=htdl::query(tree,4,utf8(""),new doctree::NodeId());
+        if(doctree::absent(body)){return;}
+        self.code=401;
+        self.content=try_alloc<byte>(max_text);
+        self.addresses=try_alloc<byte>(max_link_bytes);
+        self.links=try_alloc<htdlsearch::Span>(max_links);
+        if(self.content==null || self.addresses==null || self.links==null){return;}
+        let node:doctree::NodeId=body;
+        while(!doctree::absent(node)){
+            val is_element:bool=tree.kind(node)==1;
+            let descend:bool=true;
+            if(is_element){
+                val kind:int=htdl::kind(tree,node);
+                if(htdl::value_equals(tree,htdl::attribute(tree,node,7),utf8("true"))){descend=false;}
+                else{
+                    if(kind!=7){self.pending_space=self.content_size>0;}
+                    if(kind==17 && !self.add_link(tree,htdl::attribute(tree,node,15))){return;}
+                    if(kind==23 && !self.add_text(tree,htdl::attribute(tree,node,23))){return;}
+                }
+            }else if(tree.kind(node)==2 && !self.add_text(tree,node)){return;}
+            node=next(tree,body,node,descend);
+        }
+        self.instance=document.instance();
+        self.revision=document.semantic_version();
+        self.code=0;
+    }
+    private fn put(borrow mut self,c:byte):bool {
+        if(self.content_size==len(self.content)){return false;}
+        self.content[self.content_size]=c;
+        self.content_size++;
+        return true;
+    }
+    private fn add_text(borrow mut self,borrow tree:doctree::Tree,value:doctree::NodeId):bool {
+        for(let i:int=0;i<htdl::value_size(tree,value);i++){
+            val c:byte=htdl::value_byte(tree,value,i);
+            if(htdl::space(int(c))){self.pending_space=self.content_size>0;}
+            else{
+                if(self.pending_space && !self.put(byte(32))){return false;}
+                self.pending_space=false;
+                if(!self.put(c)){return false;}
+            }
+        }
+        return true;
+    }
+    private fn add_link(borrow mut self,borrow tree:doctree::Tree,value:doctree::NodeId):bool {
+        val size:int=htdl::value_size(tree,value);
+        if(size<1 || size>len(self.addresses)-self.address_size || self.count==len(self.links)){return false;}
+        self.links[self.count]=new Span(self.address_size,size);
+        self.count++;
+        for(let i:int=0;i<size;i++){self.addresses[self.address_size+i]=htdl::value_byte(tree,value,i);}
+        self.address_size+=size;
+        return true;
+    }
+    fn status(borrow self):int{return self.code;}
+    fn current(borrow self,borrow document:documents::Document):bool {
+        return self.code==0 && document.is_open() && document.instance()==self.instance && document.semantic_version()==self.revision;
+    }
+    fn content_bytes(borrow self):borrow(self) slice<byte>{
+        assert(self.code==0);return slice_of(self.content,0,self.content_size);
+    }
+    fn link_count(borrow self):int{
+        if(self.code!=0){return 0;}return self.count;
+    }
+    fn link(borrow self,index:int):borrow(self) slice<byte>{
+        assert(self.code==0 && index>=0 && index<self.count);
+        val span:Span=self.links[index];
+        return slice_of(self.addresses,span.start,span.size);
+    }
+}
+value struct Span { let start:int; let size:int; }
+pure fn same(a:doctree::NodeId,b:doctree::NodeId):bool {
+    return a.instance==b.instance && a.slot==b.slot && a.generation==b.generation;
+}
+safe fn next(borrow tree:doctree::Tree,body:doctree::NodeId,node:doctree::NodeId,descend:bool):doctree::NodeId {
+    if(descend){
+        val child:doctree::NodeId=tree.first_child(node);
+        if(!doctree::absent(child)){return child;}
+    }
+    let cursor:doctree::NodeId=node;
+    while(!doctree::absent(cursor) && !same(cursor,body)){
+        val sibling:doctree::NodeId=tree.next_sibling(cursor);
+        if(!doctree::absent(sibling)){return sibling;}
+        cursor=tree.parent(cursor);
+    }
+    return new doctree::NodeId();
+}

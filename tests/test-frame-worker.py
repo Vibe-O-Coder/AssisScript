@@ -73,6 +73,10 @@ class FrameWorker(unittest.TestCase):
         body=self.setup()+'drain(s,0);'
         for kw in [dict(body='<div>bad'),dict(fs=literal('bad')),dict(ssc=literal('bad')),dict(metric='bad_metric'),dict(path='relative-worker'),dict(profile='new framehost::Versions(2,2,1)')]:
             body+='assert('+self.prepare(**kw)+'!=0 && !s.has_pending() && s.document_id()==1 && s.worker_alive());'
+        body+='assert('+self.prepare(profile='framehost::forms_versions()')+'==200 && !s.has_pending() && s.document_id()==1);'
+        body+=('assert(s.prepare_source(utf8("invalid-compiler"),utf8("invalid-worker"),'+literal(document('<div type=paragraph>Read</div>'))+
+            ',utf8("safe fn main():int{return 0;}"),utf8(""),utf8(""),framehost::forms_versions(),false,128,3,true,'
+            '320,220,65536,reader::default_preferences(),metric,limits,new frameworker::Grants(false,false),monotonic_ms())==200 && !s.has_pending());')
         body+='assert('+self.prepare(code=bytes(20))+'==0);let rejected:bool=false;for(let i:int=0;i<5000;i++){if(s.advance(monotonic_ms())<0){rejected=true;break;}sleep_ms(1);}assert(rejected && s.document_id()==1 && s.worker_alive());'
         body+='assert('+self.prepare()+'==0);ready(s);val used:int=s.candidate_id();s.abort();assert(!s.has_pending());'
         body+='assert('+self.prepare()+'==0);ready(s);assert(s.candidate_id()>used && s.commit());drain(s,0);'

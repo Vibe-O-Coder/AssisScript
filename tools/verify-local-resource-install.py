@@ -13,10 +13,13 @@ import tempfile
 ROOT=Path(__file__).resolve().parent.parent
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--confined',action='store_true')
+parser.add_argument('--search-forms',action='store_true')
 parser.add_argument('--output',type=Path)
 args=parser.parse_args()
 OUT=args.output or ROOT/'docs/ecossistema/evidencias/m3-local-resources-2026-11-04'
 selected=['frameworker','localresources','http','cli'] if args.confined else ['frameworker']
+if args.search_forms:selected+=['searchindex','htdlsearch','cli','process']
+selected=list(dict.fromkeys(selected))
 selection=','.join(selected)
 OUT.mkdir(parents=True,exist_ok=True);host='windows' if os.name=='nt' else 'linux';compiler=Path(os.environ['ASSIS_BIN']).resolve();records=[]
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
@@ -64,8 +67,8 @@ with tempfile.TemporaryDirectory(prefix='assis-presentation-install-') as temp:
         target=stage/'bin/assis';shutil.copyfile(compiler,target);target.chmod(0o755);setup_hash=None;provider_hash=None
         install=['sh',stage/'instalar.sh','--prefix',prefix,'--no-path','--with',selection]
         uninstall=['sh',stage/'desinstalar.sh','--prefix',prefix];data=prefix/'share/assisscript';installed=prefix/'bin/assis'
-    def run(command,input=None):
-        r=subprocess.run(list(map(str,command)),env=environment,cwd=ROOT,input=input,capture_output=True,timeout=90)
+    def run(command,input=None,cwd=ROOT):
+        r=subprocess.run(list(map(str,command)),env=environment,cwd=cwd,input=input,capture_output=True,timeout=90)
         record=dict(command=[str(x).replace(str(temp),'<TEMP>') for x in command],returncode=r.returncode,
             stdout=r.stdout.decode(errors='replace').replace(str(temp),'<TEMP>'),
             stderr=r.stderr.decode(errors='replace').replace(str(temp),'<TEMP>'));records.append(record)
@@ -94,6 +97,16 @@ with tempfile.TemporaryDirectory(prefix='assis-presentation-install-') as temp:
         run([installed,'build',data/'exemplos/66_resource_frame.assis','--safe','--debug','-o',binary])
         paths=[root/name for name in ('index.htdl','main.fxs','main.sscr','main.assis')]
         assert run([binary,installed,worker_path,*paths]).stdout==b'RESOURCE FRAME 4 0 1\n'
+    if args.search_forms:
+        search=temp/('search-index.exe' if os.name=='nt' else 'search-index')
+        sample=temp/'local index';sample.mkdir()
+        run([installed,'build',data/'exemplos/71_search_index.assis','--safe','--debug','-o',search])
+        run([search,'build'],input=b'1\tlocal index\n2\tindex index\n',cwd=sample)
+        assert run([search,'query','phrase','local index'],cwd=sample).stdout.splitlines()==[b'1 1 0']
+        if os.name=='nt':
+            forms=prefix/'bin/forms.exe'
+            run([installed,'build',data/'exemplos/72_local_forms_window.assis','--safe','--debug','-o',forms])
+            assert run([forms,'--smoke']).stdout.splitlines()==[b'FORMS WINDOW 3 1']
     user=prefix/'personal.txt';user.write_text('preserve');run(uninstall);assert user.read_text()=='preserve' and not installed.exists()
     if os.name=='nt':
         command=['node','--test','--test-isolation=none','tests/test-development.js','tests/test-v31.js']
@@ -103,7 +116,7 @@ with tempfile.TemporaryDirectory(prefix='assis-presentation-install-') as temp:
         total=re.search(rb'(?:# )?tests (\d+)',log);assert r.returncode==0,log.decode(errors='replace')
         records.append(dict(command=command,returncode=r.returncode,executed=int(total[1]) if total else 0,
             log='windows-distribution-node.log',sha256=hashlib.sha256(log).hexdigest()))
-report=dict(passed=True,compiler_sha256=sha(compiler),setup_sha256=setup_hash,provider_sha256=provider_hash,runtime_sha256=runtime_hashes,selected_libraries=sorted(chosen),checks=records,
+report=dict(passed=True,compiler_sha256=sha(compiler),setup_sha256=setup_hash,provider_sha256=provider_hash,runtime_sha256=runtime_hashes,selected_libraries=sorted(chosen),search_forms=args.search_forms,checks=records,
     scope=f'Fresh candidate and isolated offline prefix, transitive closure of {selection}; installed resource Frame/worker demo, uninstall and user file preservation')
 (OUT/f'{host}-install.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(f'{host} isolated resource Frame/worker install/run/uninstall: PASS')

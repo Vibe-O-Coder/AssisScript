@@ -1,3 +1,14 @@
+> **Continuação de 12/11/2026 — 54,30%, 0/5 gates.**
+> [M3 formulários](../relatorios/2026-11-12-m3-formularios-visuais.md) e
+> [M7 busca local](../relatorios/2026-11-12-m7-busca-local.md) parciais.
+> Próximo M3: buffer de edição por nó, texto/número e IME, seguido por
+> imagens, importação HTML e live regions. Leitor de tela real, desktop,
+> DPI, monitores e fluidez SSC seguem para aceite no candidato.
+> Identidade incremental/editor, SDK geral, células/inscrições, recursos
+> remotos, RSS/disco/órfãos, macOS/ARM64, rede/perfis, persistência maior
+> que RAM, crawler/serviço, M4–M9, 24 h, distribuição e gates seguem na
+> fila integral. Easy por último. As entradas abaixo são históricas.
+
 > **Continuação de 11/11/2026 — 50,40%, 0/5 gates.** Loader físico local
 > declarado entregue no perfil Windows/Linux x64. HTTP POST e URLs
 > avançaram a fundação M6. [Loader e visual](../relatorios/2026-11-11-m3-loader-confinado.md) ·

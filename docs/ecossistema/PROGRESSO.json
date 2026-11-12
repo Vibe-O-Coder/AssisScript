@@ -1,9 +1,9 @@
 {
   "schema": "assisscript-ecosystem-progress-v1",
   "rubric_version": 1,
-  "date": "2026-11-11",
+  "date": "2026-11-12",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "confined-local-loader-http-and-runtime",
+  "assessment": "persistent-local-search-and-checkbox-forms",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -467,7 +467,10 @@
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
             "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json",
             "docs/relatorios/2026-11-02-m5-page-frame.md",
-            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m5-page-frame-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json"
           ]
         },
         {
@@ -508,7 +511,10 @@
             "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
             "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md",
             "docs/relatorios/2026-11-03-m3-frame-worker.md",
-            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json"
+            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json",
+            "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json"
           ]
         }
       ]
@@ -774,7 +780,7 @@
           "name": "Estado, eventos e transações",
           "level": 3,
           "acceptance": "Implementar células por página/nó, inscrição/desinscrição, snapshot e fila determinística; cobrir teclado/ponteiro, disabled/hidden, remoção e falhas sem handlers tardios.",
-          "baseline": "Células por página e handlers ASV2 agora integrados ao Frame HTDL/FS/SSC: ações de teclado/ponteiro/MSAA chegam ao preorder semântico completo; FIFO/ACK/backpressure, revisão visual separada, navegação/abort/close e falhas preservam ou revogam juntos o estado. Windows/Linux x64 e ambos modos executados. Células por nó, inscrições, valores gerais e mutação pelo SDK permanecem abertos.",
+          "baseline": "Células por página e handlers ASV2 agora integrados ao Frame HTDL/FS/SSC: ações de teclado/ponteiro/MSAA chegam ao preorder semântico completo; FIFO/ACK/backpressure, revisão visual separada, navegação/abort/close e falhas preservam ou revogam juntos o estado. Windows/Linux x64 e ambos modos executados. Células por nó, inscrições, valores gerais e mutação pelo SDK permanecem abertos. O perfil local 3 acrescenta checkbox por nó, alternância transacional, rótulo e validação; SDK geral e inscrição continuam abertos.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
@@ -782,7 +788,10 @@
             "docs/relatorios/2026-11-03-m5-frame-reader.md",
             "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json",
             "docs/relatorios/2026-11-03-m3-frame-worker.md",
-            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json"
+            "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json",
+            "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json"
           ]
         },
         {
@@ -869,7 +878,10 @@
             "docs/ecossistema/evidencias/m3-catalog-frame-2026-11-03/summary.json",
             "docs/ecossistema/PERFIL-LEITURA-CATALOGO-V1.md",
             "docs/relatorios/2026-11-11-m3-loader-confinado.md",
-            "docs/ecossistema/evidencias/loader-http-2026-11-11/visual.json"
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/visual.json",
+            "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json"
           ]
         },
         {
@@ -920,7 +932,7 @@
           "name": "Corpus visual e inspeção",
           "level": 2,
           "acceptance": "Executar contador, leitura e dois painéis com screenshots controladas, árvores/eventos e leitor de tela; inspecionar grafo, custos e versões com diagnóstico de origem.",
-          "baseline": "Corpus funcional local de leitura, contador e dois painéis executado nesta sessão; usuário confirmou leitura/contador/atalhos suaves após corrigir fila e modificadores. Painéis executados e falta de fluidez tratada com relógio/cadência; evidência nativa de árvores/eventos, fontes, medições e testes adversos Windows/Linux. Capturas Computer Use expiraram: sem screenshots desktop, leitor real, DPI/monitores/IME ou inspetor completo de grafo. Aceite integral e nível 3/4 permanecem abertos.",
+          "baseline": "Oito rasters nativos GDI de leitura, contador, painéis e formulário com zoom de texto a 200% foram inspecionados nos dois modos. Foco, geometria e mudança de estado têm oráculos nativos. Computer Use expirou; fluidez percebida, desktop, leitor real, DPI, monitores, IME e inspetor completo aguardam aceite.",
           "evidence": [
             "local:htdl/docs/19-conformidade-e-cenarios.md",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
@@ -932,7 +944,10 @@
             "docs/relatorios/2026-11-11-entrada-tipada-const.md",
             "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json",
             "docs/relatorios/2026-11-11-m3-loader-confinado.md",
-            "docs/ecossistema/evidencias/loader-http-2026-11-11/visual.json"
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/visual.json",
+            "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json"
           ]
         }
       ]
@@ -950,33 +965,42 @@
         {
           "id": "E09-01",
           "name": "Commit durável e recuperação",
-          "level": 1,
+          "level": 2,
           "acceptance": "Implementar WAL/transação ou provider testado, flush de arquivo/diretório, commit e recuperação; injetar interrupções, disco cheio e corrupção, definindo diferença entre kill e perda de energia.",
-          "baseline": "Substituição atômica e serviço C existem; durabilidade física não certificada.",
+          "baseline": "Snapshot ASIX em arquivo candidato, lock exclusivo, flush e troca atômica. Linux também solicita flush do diretório. Há teste nativo de kill e de falha parcial de gravação Linux. Perda de energia e disco cheio físico continuam abertos.",
           "evidence": [
             "docs/EVENTOS-E-PERSISTENCIA.md",
-            "docs/BIBLIOTECA-process.md"
+            "docs/BIBLIOTECA-process.md",
+            "docs/relatorios/2026-11-12-m7-busca-local.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
           ]
         },
         {
           "id": "E09-02",
           "name": "Serialização e formatos versionados",
-          "level": 1,
+          "level": 2,
           "acceptance": "Oferecer leitores/escritores binários e texto incrementais, checksums, endianness, limites e migrações; testar entrada truncada, versão desconhecida e snapshot independente do layout de memória.",
-          "baseline": "JSON limitado e arquivos existem; formatos do perfil/índice não.",
+          "baseline": "ASIX 1 little-endian com checksum, limites, verificação de ordem/posições e rejeição de versão/truncamento. Lotes TSV incrementais e verificação independente de 65.058 postings. Migração e mais formatos estão abertos.",
           "evidence": [
             "docs/BIBLIOTECA-json.md",
-            "docs/IO-E-APLICACAO-A.md"
+            "docs/IO-E-APLICACAO-A.md",
+            "docs/relatorios/2026-11-12-m7-busca-local.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
           ]
         },
         {
           "id": "E09-03",
           "name": "Banco, segmentos e consultas",
-          "level": 0,
+          "level": 2,
           "acceptance": "Integrar provider de banco ou implementar segmentos/índices transacionais com iteração, compactação e leitura concorrente; demonstrar conjunto maior que RAM sob limites definidos.",
-          "baseline": "Sem mecanismo geral de banco ou índice persistente demonstrado.",
+          "baseline": "Índice invertido em snapshot persistente com consulta e compactação de ocorrências obsoletas ao publicar. Oráculo de 10 mil documentos, reinício e escritor concorrente recusado. Segmentos, merge e escala maior que RAM continuam abertos.",
           "evidence": [
-            "docs/BIBLIOTECAS.md"
+            "docs/BIBLIOTECAS.md",
+            "docs/relatorios/2026-11-12-m7-busca-local.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
           ]
         },
         {
@@ -992,11 +1016,14 @@
         {
           "id": "E09-05",
           "name": "Quotas, migração e concorrência",
-          "level": 0,
+          "level": 2,
           "acceptance": "Definir locks, ownership de arquivo, tamanho máximo, backup/restore e migração reversível; testar dois processos, crash durante upgrade e revogação de armazenamento de origem.",
-          "baseline": "Locks nativos delimitados não resolvem ciclo de vida do perfil.",
+          "baseline": "CLI com cota de IDs, ocorrências e bytes, lock por corpus, publicação atômica, leitor da versão anterior, concorrente recusado e retomada após kill. Backup, migração e revogação por origem continuam abertos.",
           "evidence": [
-            "docs/BIBLIOTECA-process.md"
+            "docs/BIBLIOTECA-process.md",
+            "docs/relatorios/2026-11-12-m7-busca-local.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
           ]
         }
       ]
@@ -1015,14 +1042,17 @@
         {
           "id": "E10-01",
           "name": "Extração e análise linguística",
-          "level": 1,
+          "level": 2,
           "acceptance": "Extrair texto/links de vários documentos, preservar docId e posições, normalizar e tokenizar por política; comparar termos e offsets a um oráculo multilingue.",
-          "baseline": "Prova local conta palavras em um documento com conversão ASCII.",
+          "baseline": "Extração de texto HTDL visível, links como dados, alt, texto inline e valores de controle excluídos. Corpus multilíngue com posições UTF-8 e normalização limitada ASCII/Latin-1 comparados a modelo independente. Normalização linguística ampla segue aberta.",
           "evidence": [
             "local:assis/docs/AUDITORIA-HTDL.md",
             "docs/relatorios/2026-10-29-m0-microparser.md",
             "tests/fixtures/htdl-core.assis",
-            "tests/test-htdl-readiness.py"
+            "tests/test-htdl-readiness.py",
+            "docs/relatorios/2026-11-12-m7-busca-local.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
           ]
         },
         {
@@ -1038,21 +1068,27 @@
         {
           "id": "E10-03",
           "name": "Índice invertido em disco",
-          "level": 0,
+          "level": 2,
           "acceptance": "Implementar postings por doc/posição, segmentos, compressão, merge, update/delete e tombstones; recuperar crash e conferir consultas após reinício contra modelo independente.",
-          "baseline": "Mapa de contagem local não é índice multidocumento.",
+          "baseline": "Postings posicionais em ASIX com atualização, exclusão, compactação e reapertura por processo distinto. Modelo independente confirma todos os registros e offsets antes/depois. Segmentação, compressão e escala em disco continuam abertos.",
           "evidence": [
-            "local:assis/docs/AUDITORIA-HTDL.md"
+            "local:assis/docs/AUDITORIA-HTDL.md",
+            "docs/relatorios/2026-11-12-m7-busca-local.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
           ]
         },
         {
           "id": "E10-04",
           "name": "Consulta, ranking e avaliação",
-          "level": 0,
+          "level": 2,
           "acceptance": "Definir sintaxe de consulta, interseção/união/frases, ranking inicial explicável, paginação, snippets seguros e cache; medir precisão/recall ou NDCG em corpus rotulado e comparar consultas exatas ao oráculo.",
-          "baseline": "Sem serviço/algoritmo de busca multidocumento demonstrado.",
+          "baseline": "Consultas AND/OR/frase e paginação com frequência e desempate por ID. Oráculo em 10 mil documentos, colisão real e amostras de latência. Avaliação de relevância, snippets e cache permanecem abertos.",
           "evidence": [
-            "local:htdl/docs/08-navegador-assisscript-privacidade-e-busca.md"
+            "local:htdl/docs/08-navegador-assisscript-privacidade-e-busca.md",
+            "docs/relatorios/2026-11-12-m7-busca-local.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
           ]
         },
         {
@@ -1106,7 +1142,10 @@
             "docs/relatorios/2026-11-03-m3-frame-worker.md",
             "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json",
             "docs/relatorios/2026-11-11-entrada-tipada-const.md",
-            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json"
+            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json",
+            "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
+            "docs/relatorios/2026-11-12-m7-busca-local.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json"
           ]
         },
         {
@@ -1140,7 +1179,10 @@
             "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json",
             "docs/relatorios/2026-11-11-runtime-validacao.md",
             "docs/ecossistema/evidencias/loader-http-2026-11-11/windows.json",
-            "docs/ecossistema/evidencias/loader-http-2026-11-11/linux.json"
+            "docs/ecossistema/evidencias/loader-http-2026-11-11/linux.json",
+            "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
+            "docs/relatorios/2026-11-12-m7-busca-local.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json"
           ]
         },
         {
@@ -1153,7 +1195,10 @@
             "docs/HANDOFF-3.3-ALPHA.15.md",
             "docs/DESEMPENHO.md",
             "docs/relatorios/2026-11-02-m0-page-integration.md",
-            "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/summary.json"
+            "docs/ecossistema/evidencias/m0-page-integration-2026-11-02/summary.json",
+            "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
+            "docs/relatorios/2026-11-12-m7-busca-local.md",
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json"
           ]
         },
         {
@@ -4052,7 +4097,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-12",
+      "rubric_version": 1,
+      "label": "Índice persistente e formulários locais com evidência visual",
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 3,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 2,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 2,
+        "E05-02": 1,
+        "E05-03": 2,
+        "E05-04": 0,
+        "E05-05": 0,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 3,
+        "E07-03": 2,
+        "E07-04": 3,
+        "E07-05": 3,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 2,
+        "E09-01": 2,
+        "E09-02": 2,
+        "E09-03": 2,
+        "E09-04": 0,
+        "E09-05": 2,
+        "E10-01": 2,
+        "E10-02": 0,
+        "E10-03": 2,
+        "E10-04": 2,
+        "E10-05": 0,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "50,40%, 0/5 gates. O loader confinado e HTTP/URL avançam E03-01 e E05-01 a E05-03. Rasters do Windows validaram zoom, contador e painéis e revelaram a quebra corrigida. Desktop, leitor real, DPI, monitores e IME aguardam aceite. Memória debug, emissão x64 e corpus foram verificados nos hosts x64; demais plataformas e a fila integral continuam abertos."
+  "assessment_note": "54,30%, 0/5 gates. Índice persistente e extração HTDL avançam E09/E10. Formulários locais e oito rasters GDI acrescentam evidência visual. Desktop, leitor real, DPI, monitores, IME e demais aceites continuam na fila."
 }

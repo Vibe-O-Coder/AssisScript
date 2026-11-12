@@ -137,13 +137,25 @@ public final class Reader{
            (self.generation!=0 && event.generation!=self.generation) || event.request_id<=self.request){return false;}
         self.request=event.request_id;self.generation=event.generation;return true;
     }
-    /// Host supplies the projection that owned the event. Reflow cancels gestures.
-    /// Change kinds: repaint=1, button=2, close=3, copy=4, zoom=5/6,
-    /// scroll=7, fragment link=8. The trusted host decides when to reflow.
-    private fn activation(borrow self,borrow document:documents::Document,node:doctree::NodeId):viewer::Change{
-        if(doctree::absent(node) || !document.nodes().contains(node)){return new viewer::Change();}
-        if(htdl::kind(document.nodes(),node)==17){return new viewer::Change(8,node);}return new viewer::Change(2,node);
+    /// Change kinds 9..11 request a checkbox toggle, a validated local
+    /// submit, or report the first invalid checkbox. The host owns the commit.
+    fn activate(borrow self,borrow frame:pageframe::Frame,borrow document:documents::Document,node:doctree::NodeId):viewer::Change{
+        val target:doctree::NodeId=frame.activation_target(document,node);
+        if(doctree::absent(target)){return new viewer::Change();}
+        val kind:int=htdl::kind(document.nodes(),target);
+        if(kind==17){return new viewer::Change(8,target);}
+        if(kind==21){return new viewer::Change(9,target);}
+        if(htdl::value_equals(document.nodes(),htdl::attribute(document.nodes(),target,9),utf8("submit"))){
+            val form:doctree::NodeId=frame.form_of(document,target);
+            if(doctree::absent(form)){return new viewer::Change();}
+            val invalid:doctree::NodeId=frame.invalid_checkbox(document,form);
+            if(!doctree::absent(invalid)){return new viewer::Change(11,invalid);}
+            return new viewer::Change(10,form);
+        }
+        return new viewer::Change(2,target);
     }
+    /// Host supplies the projection that owned the event. Reflow cancels gestures.
+    /// Change kinds 1..8 retain repaint, button, close, copy, zoom, scroll and link.
     fn dispatch(borrow mut self,borrow frame:pageframe::Frame,borrow document:documents::Document,projection:int,event:window::Event):viewer::Change{
         val none:viewer::Change=new viewer::Change();
         if(!self.accept(frame,document,projection,event)){return none;}
@@ -165,16 +177,19 @@ public final class Reader{
             if(down && event.arg0==9){self.keyboard=new doctree::NodeId();self.pressed=new doctree::NodeId();self.focus=frame.next_focus(document,self.focus,self.shift);return new viewer::Change(1,self.focus);}
             if(event.arg0==13){
                 if(!down){self.enter=false;return none;}if(self.enter){return none;}self.enter=true;
-                self.keyboard=new doctree::NodeId();self.pressed=new doctree::NodeId();return self.activation(document,self.focus);
+                self.keyboard=new doctree::NodeId();self.pressed=new doctree::NodeId();
+                if(htdl::kind(document.nodes(),self.focus)==21){return none;}
+                return self.activate(frame,document,self.focus);
             }
             if(event.arg0==32){
                 if(down){if(self.space){return none;}self.space=true;self.pressed=new doctree::NodeId();
-                    if(!doctree::absent(self.focus) && htdl::kind(document.nodes(),self.focus)==9){self.keyboard=self.focus;return none;}
+                    val kind:int=htdl::kind(document.nodes(),self.focus);
+                    if(kind==9 || kind==21){self.keyboard=self.focus;return none;}
                     self.scroll=pageframe::minimum(frame.max_scroll(),self.scroll+pageframe::maximum(1,frame.viewport().height/2));
                     return new viewer::Change(7,new doctree::NodeId());
                 }
                 self.space=false;val target:doctree::NodeId=self.keyboard;self.keyboard=new doctree::NodeId();
-                if(!doctree::absent(target) && pageframe::same(target,self.focus)){return self.activation(document,target);}return none;
+                if(!doctree::absent(target) && pageframe::same(target,self.focus)){return self.activate(frame,document,target);}return none;
             }
         }
         if(event.kind==9 && event.arg0>= -2147483648 && event.arg0<=2147483647){
@@ -183,7 +198,11 @@ public final class Reader{
         }
         if(event.kind==7){
             self.dragging=false;self.keyboard=new doctree::NodeId();self.pressed=frame.hit(document,projection,event.arg0,event.arg1);
-            if(!doctree::absent(self.pressed)){self.focus=self.pressed;return new viewer::Change(1,self.focus);}
+            if(!doctree::absent(self.pressed)){
+                val kind:int=htdl::kind(document.nodes(),self.pressed);
+                if(kind==20 || kind==21){return none;}
+                self.focus=self.pressed;return new viewer::Change(1,self.focus);
+            }
             val at:int=self.point(frame,event.arg0,event.arg1);
             if(at>=0){if(!self.shift){self.anchor=at;}self.caret=at;self.dragging=true;return new viewer::Change(1,new doctree::NodeId());}
         }
@@ -191,7 +210,11 @@ public final class Reader{
             if(self.dragging){val at:int=self.point(frame,event.arg0,event.arg1);if(at>=0){self.caret=at;}
                 if(event.kind==8){self.dragging=false;}return new viewer::Change(1,new doctree::NodeId());}
             if(event.kind==8){val pressed:doctree::NodeId=self.pressed;self.pressed=new doctree::NodeId();
-                if(!doctree::absent(pressed) && pageframe::same(pressed,frame.hit(document,projection,event.arg0,event.arg1))){return self.activation(document,pressed);}}
+                if(!doctree::absent(pressed) && pageframe::same(pressed,frame.hit(document,projection,event.arg0,event.arg1))){
+                    val action:viewer::Change=self.activate(frame,document,pressed);
+                    if(action.kind==9){self.focus=action.node;}
+                    return action;
+                }}
         }return none;
     }
     fn copy(borrow self,borrow frame:pageframe::Frame,borrow document:documents::Document,borrow window:window::Window):int{
