@@ -1,3 +1,14 @@
+> **Continuação de 13/11/2026 — 58,50%, 0/5 gates.**
+> Use `work/eco-70-20261112`, branch `work/ecosystem-2026-11-12`. A busca
+> HTTP e o índice segmentado foram publicados em `48a18b7`. A edição local
+> de texto/número tem buffer por nó e commit de valor, raster e MSAA.
+> A demo passou nos rasters a 100% e 200% e recebeu entrada de teclado
+> no desktop. Composição IME, capturas, leitor real, DPI, monitores e fluidez
+> SSC permanecem no aceite.
+> [Campos editáveis](../relatorios/2026-11-13-m3-campos-editaveis.md) ·
+> [Compilador e VSIX alpha.15](../relatorios/2026-11-13-compilador-vsix.md).
+> Meta 70% a 11,50 pontos. [Fila integral](FILA-M0-M1.md). Easy por último.
+
 > **Continuação de 12/11/2026 — 58,00%, 0/5 gates.**
 > Use `work/eco-70-20261112`, branch `work/ecosystem-2026-11-12`. A base de
 > 54,30% está publicada em `13e81a897388e694d9a02bcfb4b3984665d7c3c9`,

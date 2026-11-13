@@ -10,6 +10,8 @@ A implementação é desenvolvida com assistência de IA (**GPT-6.1 Sol, racioc�
 
 Versão atual: **3.3.0-alpha.15**, experimental. Consulte [handoff](docs/HANDOFF-3.3-ALPHA.15.md), [validação](docs/VALIDACAO-ALPHA15.json) e [progresso auditável](docs/PROGRESSO.md).
 
+Instale o [VSIX alpha.15](assisscript-3.3.0-alpha.15.vsix) pelo menu de extensões do VS Code. [Manual do editor](docs/VSCODE.md).
+
 Versão para testes: consulte o [guia Windows/Linux](docs/TESTES-GITHUB.md) para baixar a branch `testing/alpha15` e registrar resultados. A publicação mantém o estado experimental e as pendências documentadas.
 
 [Closures, variantes Move e resultados proprietários](docs/CAPTURAS-E-VARIANTES-MOVE.md).

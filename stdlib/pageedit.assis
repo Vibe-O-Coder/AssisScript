@@ -1,0 +1,193 @@
+namespace pageedit;
+
+import "std/htdl.assis";
+import "std/graphemes.assis";
+import "std/parse.assis";
+
+public value struct Edit {let command:int;let argument:int;let extend:bool;}
+public value struct Selection {let anchor:int;let caret:int;}
+value struct Field {
+    let node:doctree::NodeId;
+    let length:int;
+    let selection:Selection;
+}
+
+public pure fn byte_limit():int {return 1024;}
+pure fn field_limit():int {return 64;}
+
+/// 0 other, 1 checkbox, 2 text (including the default), 3 number.
+public safe fn kind(borrow tree:doctree::Tree,node:doctree::NodeId):int {
+    if(htdl::kind(tree,node)!=21){return 0;}
+    val type:doctree::NodeId=htdl::attribute(tree,node,18);
+    if(htdl::value_equals(tree,type,utf8("checkbox"))){return 1;}
+    if(htdl::value_equals(tree,type,utf8("number"))){return 3;}
+    return 2;
+}
+
+public safe fn valid_number(borrow value:slice<byte>):bool {
+    if(len(value)==0 || value[0]==43){return false;}
+    return parse::parse_i64(value).ok;
+}
+
+public pure fn printable(cp:int):bool {
+    return cp>=32 && cp<=1114111 && !(cp>=127 && cp<=159) &&
+        !(cp>=55296 && cp<=57343) && cp!=8232 && cp!=8233;
+}
+
+safe fn encode(borrow mut buffer:*byte,at:int,cp:int):int {
+    if(cp<128){buffer[at]=byte(cp);return 1;}
+    if(cp<2048){
+        buffer[at]=byte(192|(cp>>6));
+        buffer[at+1]=byte(128|(cp&63));
+        return 2;
+    }
+    if(cp<65536){
+        buffer[at]=byte(224|(cp>>12));
+        buffer[at+1]=byte(128|((cp>>6)&63));
+        buffer[at+2]=byte(128|(cp&63));
+        return 3;
+    }
+    buffer[at]=byte(240|(cp>>18));
+    buffer[at+1]=byte(128|((cp>>12)&63));
+    buffer[at+2]=byte(128|((cp>>6)&63));
+    buffer[at+3]=byte(128|(cp&63));
+    return 4;
+}
+
+public safe fn single_line(borrow content:slice<byte>):bool {
+    if(unicode::error(content)>=0){return false;}
+    let at:int=0;
+    while(at<len(content)){
+        val end:int=unicode::next(content,at);
+        let cp:int=int(content[at]);
+        if(end-at>1){
+            cp&=127>>(end-at);
+            for(let i:int=at+1;i<end;i++){cp=(cp<<6)|(int(content[i])&63);}
+        }
+        if(!printable(cp)){return false;}
+        at=end;
+    }
+    return true;
+}
+
+/// An unpublished buffer set owns its values and selections. A frame may
+/// transfer state from a prior snapshot of the same document only.
+public final class Fields {
+    private own fields:*Field;
+    private own content:*byte;
+    private let used:int;
+    private let code:int;
+    private let failed:doctree::NodeId;
+
+    fn init(borrow mut self,borrow tree:doctree::Tree):void {
+        self.code=401;
+        self.fields=try_alloc<pageedit::Field>(field_limit());
+        self.content=try_alloc<byte>(field_limit()*byte_limit());
+        if(self.fields==null || self.content==null){return;}
+        let node:doctree::NodeId=htdl::query(tree,21,utf8(""),new doctree::NodeId());
+        while(!doctree::absent(node)){
+            if(kind(tree,node)>1){
+                self.failed=node;
+                if(self.used==field_limit()){return;}
+                val initial:doctree::NodeId=htdl::attribute(tree,node,19);
+                let length:int=0;
+                if(!doctree::absent(initial)){length=htdl::value_size(tree,initial);}
+                if(length>byte_limit()){return;}
+                val start:int=self.used*byte_limit();
+                for(let i:int=0;i<length;i++){self.content[start+i]=htdl::value_byte(tree,initial,i);}
+                if(!single_line(slice_of(self.content,start,length))){self.code=206;return;}
+                self.fields[self.used]=new Field(node,length,new Selection(length,length));
+                self.used++;
+            }
+            node=htdl::query(tree,21,utf8(""),node);
+        }
+        self.failed=new doctree::NodeId();self.code=0;
+    }
+    fn status(borrow self):int {return self.code;}
+    fn failed_node(borrow self):doctree::NodeId {return self.failed;}
+    private fn find(borrow self,node:doctree::NodeId):int {
+        for(let i:int=0;i<self.used;i++){
+            val key:doctree::NodeId=self.fields[i].node;
+            if(key.instance==node.instance && key.slot==node.slot && key.generation==node.generation){return i;}
+        }
+        return -1;
+    }
+    fn has(borrow self,node:doctree::NodeId):bool {return self.code==0 && self.find(node)>=0;}
+    fn value(borrow self,node:doctree::NodeId):borrow(self) slice<byte> {
+        val index:int=self.find(node);
+        if(index<0){return slice_of(self.content,0,0);}
+        return slice_of(self.content,index*byte_limit(),self.fields[index].length);
+    }
+    fn selection(borrow self,node:doctree::NodeId):Selection {
+        val index:int=self.find(node);
+        if(index<0){return new Selection();}
+        return self.fields[index].selection;
+    }
+    fn restore(borrow mut self,borrow previous:Fields):void {
+        for(let i:int=0;i<self.used;i++){
+            val node:doctree::NodeId=self.fields[i].node;
+            if(!previous.has(node)){continue;}
+            borrow value:slice<byte>=previous.value(node);
+            for(let j:int=0;j<len(value);j++){self.content[i*byte_limit()+j]=value[j];}
+            self.fields[i]=new Field(node,len(value),previous.selection(node));
+        }
+    }
+    /// Command 1 inserts a Unicode scalar, 2/3 erase, 4/5 move, 6/7
+    /// move to start/end, 8 selects all and 9 places the caret at a boundary.
+    fn apply(borrow mut self,node:doctree::NodeId,edit:Edit):int {
+        val index:int=self.find(node);
+        if(self.code!=0 || index<0 || edit.command<1 || edit.command>9){return 204;}
+        val field:Field=self.fields[index];
+        val start:int=index*byte_limit();
+        own boundaries:graphemes::Index=try_new graphemes::Index(slice_of(self.content,start,field.length));
+        if(boundaries==null || boundaries.status()!=0){return 401;}
+        let left:int=field.selection.anchor;
+        let right:int=field.selection.caret;
+        if(left>right){left=right;right=field.selection.anchor;}
+        if(edit.command>=4){
+            let caret:int=field.selection.caret;
+            let anchor:int=field.selection.anchor;
+            if(edit.command==4){
+                if(!edit.extend && left!=right){caret=left;}
+                else{caret=boundaries.previous(caret);}
+            }
+            if(edit.command==5){
+                if(!edit.extend && left!=right){caret=right;}
+                else{caret=boundaries.next(caret);}
+            }
+            if(edit.command==6){caret=0;}
+            if(edit.command==7 || edit.command==8){caret=field.length;}
+            if(edit.command==9){caret=edit.argument;if(!boundaries.boundary(caret)){return 204;}}
+            if(!edit.extend){anchor=caret;}
+            if(edit.command==8){anchor=0;}
+            self.fields[index]=new Field(node,field.length,new Selection(anchor,caret));
+            return 0;
+        }
+        let inserted:int=0;
+        own scalar:*byte=try_alloc<byte>(4);
+        if(scalar==null){return 401;}
+        if(edit.command==1){
+            if(!printable(edit.argument)){return 206;}
+            inserted=encode(scalar,0,edit.argument);
+        }
+        if(left==right){
+            if(edit.command==2){left=boundaries.previous(left);}
+            if(edit.command==3){right=boundaries.next(right);}
+        }
+        val length:int=field.length+inserted-(right-left);
+        if(length>byte_limit()){return 401;}
+        own candidate:*byte=try_alloc<byte>(byte_limit());
+        if(candidate==null){return 401;}
+        for(let i:int=0;i<left;i++){candidate[i]=self.content[start+i];}
+        for(let i:int=0;i<inserted;i++){candidate[left+i]=scalar[i];}
+        for(let i:int=right;i<field.length;i++){candidate[left+inserted+i-right]=self.content[start+i];}
+        own updated:graphemes::Index=try_new graphemes::Index(slice_of(candidate,0,length));
+        if(updated==null || updated.status()!=0){return 401;}
+        // A joining character can turn the splice point into a non-boundary.
+        let caret:int=left+inserted;
+        while(!updated.boundary(caret)){caret++;}
+        for(let i:int=0;i<length;i++){self.content[start+i]=candidate[i];}
+        self.fields[index]=new Field(node,length,new Selection(caret,caret));
+        return 0;
+    }
+}

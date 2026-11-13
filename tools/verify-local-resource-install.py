@@ -131,6 +131,9 @@ with tempfile.TemporaryDirectory(prefix='assis-presentation-install-') as temp:
             forms=prefix/'bin/forms.exe'
             run([installed,'build',data/'exemplos/72_local_forms_window.assis','--safe','--debug','-o',forms])
             assert run([forms,'--smoke']).stdout.splitlines()==[b'FORMS WINDOW 3 1']
+            editing=prefix/'bin/editing.exe'
+            run([installed,'build',data/'exemplos/74_editable_forms_window.assis','--safe','--debug','-o',editing])
+            assert run([editing,'--smoke']).stdout.splitlines()==[b'EDITABLE FORM 8']
     user=prefix/'personal.txt';user.write_text('preserve');run(uninstall);assert user.read_text()=='preserve' and not installed.exists()
     if os.name=='nt':
         command=['node','--test','--test-isolation=none','tests/test-development.js','tests/test-v31.js']

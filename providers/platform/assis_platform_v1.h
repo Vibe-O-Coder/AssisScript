@@ -58,6 +58,14 @@ ASSISP_API int64_t assisp_frame_forms_version(void);
 ASSISP_API int32_t assisp_frame_forms_commit(int64_t window, int64_t projection, uint32_t background,
     const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
     const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length);
+/* Editing extension 1. Roles 24/25 follow the name with a little-endian
+   u16 value length and UTF-8 bytes. Event 14 is (scalar, document instance).
+   Text events are opt-in per window and require a committed editable frame. */
+ASSISP_API int64_t assisp_frame_editing_version(void);
+ASSISP_API int32_t assisp_text_events(int64_t window, int32_t enabled);
+ASSISP_API int32_t assisp_frame_editing_commit(int64_t window, int64_t projection, int64_t instance, uint32_t background,
+    const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
+    const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length);
 /* Catalog-reading extension 1: same records and limits, additional roles 12..19. */
 ASSISP_API int64_t assisp_frame_catalog_version(void);
 ASSISP_API int32_t assisp_frame_catalog_commit(int64_t window, int64_t projection, uint32_t background,

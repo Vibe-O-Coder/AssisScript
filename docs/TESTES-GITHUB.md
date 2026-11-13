@@ -94,11 +94,11 @@ desde o manifesto anterior. Os relatórios completos da alpha.15 são histórico
 daquela entrega; o manifesto de instalação mudou desde os hashes ali registrados.
 Os jobs de CI regeneram os inventários e a validação dos pacotes que produzirem.
 
-O arquivo `assisscript-3.3.0-alpha.10.vsix` já existente na raiz pertence à versão
-antiga e foi preservado. Use os binários desta branch ou os artefatos de CI do
-mesmo commit para testar a alpha.15; mantenha compilador, stdlib e editor da
-mesma versão. `SHA256SUMS` pertence ao pacote preparado pela ferramenta de
-distribuição, não é uma lista de verificação do ZIP de fontes do GitHub.
+O [VSIX alpha.15](../assisscript-3.3.0-alpha.15.vsix) inclui os compiladores
+x64 e as bibliotecas da revisão indicada no
+[relatório de atualização](relatorios/2026-11-13-compilador-vsix.md).
+O arquivo alpha.10 na raiz é histórico. `SHA256SUMS` pertence ao pacote
+preparado pela ferramenta de distribuição.
 
 ## Informar resultados
 

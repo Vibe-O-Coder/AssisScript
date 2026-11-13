@@ -33,6 +33,7 @@ jobs:
           python3 tests/test-framereader.py
           python3 tests/test-framehost.py
           python3 tests/test-frame-forms.py
+          python3 tests/test-frame-editing.py
           python3 tests/test-frame-worker.py
           python3 tests/test-page-resources.py
           python3 tests/test-localresources.py
@@ -129,7 +130,7 @@ jobs:
           $env:ASSIS_BIN = (Resolve-Path bin/assis.exe).Path
           $env:CC = Join-Path $env:ASSIS_TOOLCHAIN_BIN 'gcc.exe'
           $env:PYTHONUTF8 = '1'
-          foreach ($suite in @('htdl-recovery','htdl-catalog','fluxstyle','flowpage','sanscript','pageframe','pagepresent','motionpage','framereader','framehost','frame-forms','catalog-frame','frame-worker','page-resources','localresources','frame-responsiveness','install-mask','searchindex','searchsegments','searchservice')) {
+          foreach ($suite in @('htdl-recovery','htdl-catalog','fluxstyle','flowpage','sanscript','pageframe','pagepresent','motionpage','framereader','framehost','frame-forms','frame-editing','catalog-frame','frame-worker','page-resources','localresources','frame-responsiveness','install-mask','searchindex','searchsegments','searchservice')) {
             python "tests/test-$suite.py"
             if ($LASTEXITCODE -ne 0) { throw "Local presentation profile failed: $suite" }
           }

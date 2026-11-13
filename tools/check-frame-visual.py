@@ -41,6 +41,7 @@ def build_sources(output):
     reading = (ROOT/'exemplos/65_frame_worker_window.assis').read_text(encoding='utf-8')
     panels = (ROOT/'exemplos/59_page_motion_window.assis').read_text(encoding='utf-8')
     forms = (ROOT/'exemplos/72_local_forms_window.assis').read_text(encoding='utf-8')
+    editing = (ROOT/'exemplos/74_editable_forms_window.assis').read_text(encoding='utf-8')
     reading = replace_once(reading, '\nsafe fn main():int{', CAPTURE+'\nsafe fn main():int{')
     reading = replace_once(reading, 'if(option(utf8("--smoke"))){', '''if(option(utf8("--smoke"))){
         assert(status_line(w,0,640,420,policy)==0 && w.present()==0);
@@ -89,8 +90,13 @@ def build_sources(output):
             forms = replace_once(forms, marker, marker+'\n'+capture)
         else:
             forms = replace_once(forms, marker, capture+marker)
+    editing = replace_once(editing, '\nsafe fn smoke(', CAPTURE+'\nsafe fn smoke(')
+    for state, marker in [('initial', '    if(option()){'), ('200', '    print("EDITABLE FORM"')]:
+        editing = replace_once(editing, marker,
+            f'    {{own picture:File=file_open("editing-{state}.raw",1);assert(picture!=null);\n'
+            '     visual_capture(picture,640,400);assert(file_close(picture)==0);}\n'+marker)
     paths = []
-    for name, source in [('reading', reading), ('panels', panels), ('forms', forms)]:
+    for name, source in [('reading', reading), ('panels', panels), ('forms', forms), ('editing', editing)]:
         path = output/f'{name}.assis'
         path.write_text(source, encoding='utf-8', newline='\n')
         paths.append(path)
@@ -118,7 +124,8 @@ def main():
     paths = build_sources(work)
     sizes = {'reading-100': (640,420), 'reading-counter': (640,420), 'reading-200': (640,420),
              'panels-initial': (600,360), 'panels-moved': (600,360),
-             'forms-unchecked': (620,360), 'forms-checked': (620,360), 'forms-200': (620,360)}
+             'forms-unchecked': (620,360), 'forms-checked': (620,360), 'forms-200': (620,360),
+             'editing-initial': (640,400), 'editing-200': (640,400)}
     modes = {}
     runs = {}
     for mode in ('optimized', 'reference'):
@@ -137,7 +144,7 @@ def main():
             run = subprocess.run([binary,*extra,'--smoke'], cwd=run_dir, env=environment,
                                  check=True, capture_output=True, text=True, timeout=30)
             expected = {'reading': 'FRAME WORKER WINDOW 2 11', 'panels': 'MOTION FRAME 2 10',
-                        'forms': 'FORMS WINDOW 3 1'}[path.stem]
+                        'forms': 'FORMS WINDOW 3 1', 'editing': 'EDITABLE FORM 8'}[path.stem]
             assert run.stdout.strip() == expected and not run.stderr, (path.stem, run.stdout, run.stderr)
             runs[mode][path.stem] = dict(stdout=run.stdout.strip(), stderr=run.stderr, sha256=sha(binary))
         for name, size in sizes.items():
@@ -152,11 +159,13 @@ def main():
     zoom = ImageChops.difference(images['reading-100'], images['reading-200']).getbbox()
     checkbox = ImageChops.difference(images['forms-unchecked'], images['forms-checked']).getbbox()
     form_zoom = ImageChops.difference(images['forms-checked'], images['forms-200']).getbbox()
+    edit_zoom = ImageChops.difference(images['editing-initial'], images['editing-200']).getbbox()
     assert counter and counter[1] >= 392 and counter[3] <= 420
     assert panels and panels[2] <= 240
     assert zoom and zoom[1] < 100
     assert checkbox and checkbox[0] >= 24 and checkbox[2] <= 64 and checkbox[3] < 180
     assert form_zoom and form_zoom[1] < 100 and form_zoom[3] >= 339
+    assert edit_zoom and edit_zoom[1] < 100 and edit_zoom[3] >= 385
     artifacts = {}
     for name, image in images.items():
         target = out/f'{name}.png'
@@ -165,7 +174,8 @@ def main():
     summary = dict(source='native GDI client raster from test-only provider', desktop_capture=False,
                    compiler_sha256=sha(compiler), provider_sha256=sha(provider),
                    worker_sha256=sha(Path(worker['worker'])), native_runs=runs, artifacts=artifacts,
-                   difference_boxes=dict(counter=counter,panels=panels,zoom=zoom,checkbox=checkbox,form_zoom=form_zoom),
+                   difference_boxes=dict(counter=counter,panels=panels,zoom=zoom,checkbox=checkbox,form_zoom=form_zoom,
+                                         edit_zoom=edit_zoom),
                    byte_identical_modes=True)
     (out/'visual.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(summary['difference_boxes']))

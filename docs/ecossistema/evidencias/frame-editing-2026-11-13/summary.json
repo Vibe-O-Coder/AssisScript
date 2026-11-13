@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-13",
+  "base": "48a18b7b3116940e00d008ac6b2610ba6a2dc175",
+  "branch": "work/ecosystem-2026-11-12",
+  "progress": {
+    "before": 58.0,
+    "after": 58.5,
+    "gatesApproved": 0
+  },
+  "visual": {
+    "rasters": 10,
+    "desktopCaptures": 0,
+    "optimizedAndReferenceMatch": true,
+    "desktopVerified": [
+      "Tab to name",
+      "name j",
+      "Tab to quantity",
+      "quantity -3"
+    ]
+  },
+  "commands": {
+    "windowsCompiler": "gcc -O2 -std=c11 -municode -static -static-libgcc -Wl,--no-insert-timestamp src/assisc.c -o build/session/assis.exe",
+    "linuxCompiler": "gcc -O2 -std=c11 src/assisc.c -o build/session/assis-linux",
+    "visual": "python tools/check-frame-visual.py --output build/session/visual-editing-final",
+    "examples": "python tools/validate-examples.py --output build/session/editing-examples-<host>.json",
+    "install": "python tools/verify-local-resource-install.py --confined --search-forms --output build/session/editing-install-<host>"
+  },
+  "tests": {
+    "windows": {
+      "executed": 32,
+      "not_run": 0,
+      "examples": 75,
+      "optionalLibraries": 36,
+      "rpg": [
+        "victory",
+        "defeat"
+      ],
+      "isolatedInstall": true
+    },
+    "linux": {
+      "executed": 24,
+      "not_run": 8,
+      "examples": 75,
+      "optionalLibraries": 36,
+      "rpg": [
+        "victory",
+        "defeat"
+      ],
+      "isolatedInstall": true
+    }
+  },
+  "evidenceSha256": {
+    "desktop.json": "cfee9df915f9f37b97d6f403e0646f950008c01698f90a2f7c9e5de1e534d760",
+    "editing-200.png": "7d1bdc8d0e18c69083825d16c8c9b5d093e28aebcb3ec30821894780c2b43f78",
+    "editing-initial.png": "bd4fdb0d615b6dbcf614e95d40c45561018a1726f373eb9b03b529e83fe9f8bc",
+    "examples-linux.json": "dfe4c7463c1c3c0cda34fe6223c40f8c1070df60eebfeb82e3252a889bf03c0a",
+    "examples-windows.json": "3ab38c6f188f569b8514984589d1469383b114f5f77af3a1f040fef58fe06607",
+    "linux-install.json": "970b1c0b0cf0289ae71eecea42973ad3745c722336888c904aacd1d24b0ba594",
+    "native-linux.json": "2fb880757d6befd075fb634e194f39317e97d9d0e1677583369ca4587c52b200",
+    "native-windows.json": "cf43c876efe00411e69a57d2489af56917beae9ea06dbe73ad21edfb866aa9f9",
+    "visual.json": "0d5dac001c0c604431f40a98b712ee74069df0f751070a581dd1a88774ecbeb0",
+    "windows-install.json": "4ac22a1e8c08125ff5afffb0e477219d823ef4309499c51b48afbc2a676be485"
+  }
+}

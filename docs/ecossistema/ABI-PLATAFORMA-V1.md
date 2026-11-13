@@ -167,3 +167,9 @@ Continuação 04/11/2026: assisp_frame_clock oferece o relógio QPC e o cache de
 métricas é limitado/invalida por mudanças do OS. Versões e símbolos antigos
 permanecem; novos callers exigem DLL correspondente. Contrato em
 [local-resource-batch-1](PERFIL-RECURSOS-LOCAIS-V1.md).
+
+## Entrada de campos editáveis
+
+O [perfil de edição HTDL](PERFIL-EDICAO-LOCAL-V1.md) documenta a extensão
+Windows x64 de texto confirmado, o evento 14 e os papéis MSAA editáveis.
+Os símbolos de janela e os formatos de Frame anteriores permanecem válidos.

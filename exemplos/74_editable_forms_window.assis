@@ -1,0 +1,102 @@
+// Local HTDL text and integer fields. Tab moves between fields and Validate.
+import "std/framehost.assis";
+import "std/cli.assis";
+
+safe fn option():bool{
+    if(arg_count()!=2){return false;}
+    own flag:cli::Argument=cli::argument(1);
+    borrow expected:slice<byte>=utf8("--smoke");
+    if(!flag.ok || flag.size!=len(expected)){return false;}
+    for(let i:int=0;i<len(expected);i++){if(flag.data[i]!=expected[i]){return false;}}
+    return true;
+}
+safe fn render_status(borrow mut window:window::Window,width:int,height:int,status:int,policy:reader::Preferences):int{
+    if(height<28){return 0;}
+    if(viewer::rect(window,0,height-28,width,28,policy.background)!=0){return -4;}
+    if(status==10){return window.draw_text(16,height-22,utf8("Validação local concluída."),policy.foreground);}
+    if(status==11){return window.draw_text(16,height-22,utf8("Preencha o nome e informe um inteiro válido."),policy.foreground);}
+    return 0;
+}
+safe fn edit(borrow mut session:framehost::Session,borrow window:window::Window,policy:reader::Preferences,seq:int,cp:int):void{
+    val projection:int=session.snapshot().frame.version();
+    val action:viewer::Change=session.dispatch(projection,new window::Event(0,14,7,1,cp,1,seq));
+    assert(action.kind==12);
+    assert(session.edit_field(projection,seq,action.node,640,400,0,65536,policy,pagepresent::measure)==0);
+    assert(session.publish_reflow(window)==0);
+}
+safe fn smoke(borrow mut session:framehost::Session,borrow mut window:window::Window,policy:reader::Preferences):int{
+    val name:doctree::NodeId=htdl::find_id(session.document().nodes(),utf8("name"));
+    val amount:doctree::NodeId=htdl::find_id(session.document().nodes(),utf8("amount"));
+    assert(session.dispatch(1,new window::Event(0,3,7,1,9,1,1)).kind==1);
+    edit(session,window,policy,2,74);
+    edit(session,window,policy,3,250);
+    edit(session,window,policy,4,108);
+    edit(session,window,policy,5,105);
+    edit(session,window,policy,6,97);
+    assert(session.dispatch(6,new window::Event(0,3,7,1,9,1,7)).kind==1);
+    edit(session,window,policy,8,51);
+    assert(session.dispatch(7,new window::Event(0,3,7,1,9,1,9)).kind==1);
+    assert(session.dispatch(7,new window::Event(0,3,7,1,13,1,10)).kind==10);
+    assert(session.reflow(640,400,0,131072,0,true,policy,pagepresent::measure)==0);
+    assert(session.publish_reflow(window)==0);
+    assert(render_status(window,640,400,10,policy)==0 && window.present()==0);
+    assert(len(session.snapshot().fields.value(name))==6 && len(session.snapshot().fields.value(amount))==2);
+    print("EDITABLE FORM",session.snapshot().frame.version());
+    return 0;
+}
+safe fn main():int{
+    if(!pagepresent::editing_available()){print("Windows editing provider required");return 4;}
+    own window:window::Window=try_new window::Window(7,640,400,utf8("AssisScript - formulário editável"));
+    own session:framehost::Session=try_new framehost::Session(8000000,4000,7);
+    if(window==null || !window.opened() || session==null || !session.is_open()){return 4;}
+    let policy:reader::Preferences=reader::preferences(window);
+    val prepared:int=session.prepare(1,1,framehost::editing_versions(),
+        utf8("<div type=document version=0.1 lang=pt-BR><div type=head><div type=title>Formulário editável</div></div><div type=body id=body><div type=heading id=heading level=1>Formulário editável</div><div type=form id=form a11y-label=Cadastro><div type=label for=name>Nome</div><div type=input id=name name=name required=true placeholder=\"Digite seu nome\"></div><div type=label for=amount>Quantidade inteira</div><div type=input kind=number id=amount name=amount value=- required=true></div><div type=button id=validate action=submit>Validar</div></div></div></div>"),
+        utf8("flow Body{24px -> layout.padding;column(gap:14px) -> layout.children;#f4f1ea -> paint.background;}bind #body to Body;flow Heading{24px -> text.size;700 -> text.weight;}bind #heading to Heading;flow Form{column(gap:10px) -> layout.children;}bind #form to Form;flow Button{160px -> layout.width;8px -> layout.padding;center -> text.align;#125560 -> paint.background;#ffffff -> paint.text;}bind #validate to Button;"),
+        utf8(""),640,400,65536,policy,pagepresent::measure);
+    if(prepared!=0){print("PREPARE",prepared);return 5;}
+    if(session.publish(1,window)!=0){return 5;}
+    if(pagepresent::text_events(window,true)!=0 || window.present()!=0){return 5;}
+    if(option()){val code:int=smoke(session,window,policy);return code+int(window.close()!=0);}
+    let width:int=640;let height:int=400;let scale:int=65536;
+    let status:int=0;let visible:bool=true;
+    while(window.opened()){
+        val event:window::Event=window.poll(50);
+        if(event.status<0){return 4;}if(event.status!=0){continue;}
+        if(event.kind==1){break;}
+        let repaint:bool=false;
+        let scroll:int=session.snapshot().frame.scroll_y();
+        if(event.kind==2 && event.arg0>0 && event.arg1>0){
+            width=event.arg0;height=event.arg1;session.cancel_gesture();repaint=true;
+        }
+        if(event.kind==12){policy=reader::preferences(window);session.cancel_gesture();repaint=true;}
+        if(event.kind==13){visible=event.arg0!=0;session.cancel_gesture();repaint=visible;}
+        let action:viewer::Change=new viewer::Change();
+        val projection:int=session.snapshot().frame.version();
+        if(visible){
+            action=session.dispatch(projection,event);
+            if(action.kind==1){repaint=true;}
+            if(action.kind==4){session.copy(window);}
+            if(action.kind==5){scale=131072;repaint=true;}
+            if(action.kind==6){scale=65536;repaint=true;}
+            if(action.kind==7){scroll=session.snapshot().reading.scroll_target();repaint=true;}
+            if(action.kind==9){repaint=true;}
+            if(action.kind==10 || action.kind==11){status=action.kind;repaint=true;}
+            if(action.kind==12){repaint=true;}
+        }
+        if(!repaint || session.snapshot().reading.gesture_active()){continue;}
+        let code:int=0;
+        if(action.kind==12){
+            code=session.edit_field(projection,event.request_id,action.node,width,height,scroll,scale,policy,pagepresent::measure);
+        }else if(action.kind==9){
+            code=session.toggle_checkbox(projection,action.node,width,height,scroll,scale,policy,pagepresent::measure);
+        }else{
+            code=session.reflow(width,height,scroll,scale,0,visible,policy,pagepresent::measure);
+        }
+        if(code==0){code=session.publish_reflow(window);}
+        if(code!=0){session.abort_reflow();continue;}
+        if(action.kind==12){status=0;}
+        if(render_status(window,width,height,status,policy)!=0 || window.present()!=0){return 4;}
+    }
+    session.close();return int(window.close()!=0);
+}

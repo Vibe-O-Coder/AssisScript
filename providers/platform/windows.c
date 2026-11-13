@@ -31,7 +31,11 @@ typedef struct {
     int active, failure;
     int preferences;
     int visibility_known, visible;
+    int text_input;
+    WCHAR high_surrogate;
     int64_t token, instance, request;
+    int64_t text_document;
+    int64_t surrogate_document;
     uint64_t generation;
     HWND hwnd;
     Surface surface;
@@ -132,6 +136,27 @@ static void enqueue(Window *w, int64_t kind, int64_t a, int64_t b) {
     }
     w->events[w->count++] = (Event){kind, a, b, ++w->request};
 }
+static void enqueue_scalar(Window *w, uint32_t value) {
+    if (w->text_document <= 0 || value < 32 || (value >= 127 && value <= 159) || (value >= 0xd800 && value <= 0xdfff) ||
+        value > 0x10ffff || value == 0x2028 || value == 0x2029) return;
+    enqueue(w, 14, value, w->text_document);
+}
+static void input_unit(Window *w, WCHAR unit) {
+    if (unit >= 0xd800 && unit <= 0xdbff) {
+        w->high_surrogate = unit;
+        w->surrogate_document = w->text_document;
+        return;
+    }
+    WCHAR high = w->high_surrogate;
+    w->high_surrogate = 0;
+    if (unit >= 0xdc00 && unit <= 0xdfff) {
+        if (high && w->surrogate_document == w->text_document) {
+            enqueue_scalar(w, 0x10000u + (((uint32_t)high - 0xd800u) << 10) + ((uint32_t)unit - 0xdc00u));
+        }
+        return;
+    }
+    enqueue_scalar(w, unit);
+}
 static void visibility(Window *w, int visible) {
     if (!w->preferences) return;
     if (!w->visibility_known || w->visible != visible) {
@@ -172,6 +197,17 @@ static LRESULT CALLBACK procedure(HWND hwnd, UINT message, WPARAM wp, LPARAM lp)
         visibility(w, wp != 0 && !IsIconic(hwnd));
         break;
     case WM_KEYDOWN: case WM_KEYUP: enqueue(w, 3, (int64_t)wp, message == WM_KEYDOWN); return 0;
+    case WM_CHAR:
+        if (w->text_input) {if (wp <= 0xffffu) input_unit(w, (WCHAR)wp); return 0;}
+        break;
+    case WM_UNICHAR:
+        if (w->text_input) {
+            if (wp == UNICODE_NOCHAR) return TRUE;
+            w->high_surrogate = 0;
+            if (wp <= 0x10ffffu) enqueue_scalar(w, (uint32_t)wp);
+            return 0;
+        }
+        break;
     case WM_MOUSEMOVE: enqueue(w, 4, GET_X_LPARAM(lp), GET_Y_LPARAM(lp)); return 0;
     case WM_LBUTTONDOWN:
         SetCapture(hwnd); enqueue(w, 7, GET_X_LPARAM(lp), GET_Y_LPARAM(lp)); return 0;
@@ -181,7 +217,8 @@ static LRESULT CALLBACK procedure(HWND hwnd, UINT message, WPARAM wp, LPARAM lp)
         return 0;
     case WM_MOUSEWHEEL: enqueue(w, 9, GET_WHEEL_DELTA_WPARAM(wp), 0); return 0;
     case WM_CAPTURECHANGED: enqueue(w, 10, 0, 0); return 0;
-    case WM_SETFOCUS: case WM_KILLFOCUS: enqueue(w, 5, message == WM_SETFOCUS, 0); return 0;
+    case WM_SETFOCUS: case WM_KILLFOCUS:
+        w->high_surrogate = 0; enqueue(w, 5, message == WM_SETFOCUS, 0); return 0;
     case WM_DPICHANGED: frame_metrics_reset(); enqueue(w, 6, ((int64_t)HIWORD(wp) * 1000 + 48) / 96, 0); return 0;
     case WM_ERASEBKGND: return 1;
     case WM_PAINT: {
@@ -256,6 +293,43 @@ static int access_window(int64_t token, Window **out) {
     *out = lookup(token); if (!*out) return -2;
     return (*out)->failure;
 }
+int32_t assisp_text_events(int64_t token, int32_t enabled) {
+    Window *w = NULL; int code = access_window(token, &w); if (code) return code;
+    if (enabled != 0 && enabled != 1) return -1;
+    if (enabled && w->text_document <= 0) return -2;
+    w->text_input = enabled;
+    w->high_surrogate = 0;
+    if (!enabled) {
+        unsigned kept = 0;
+        for (unsigned i = 0; i < w->count; i++) if (w->events[i].kind != 14) w->events[kept++] = w->events[i];
+        w->count = kept;
+    }
+    return 0;
+}
+static void pump_message(MSG *message) {
+    if (message->message == WM_QUIT) {
+        for (unsigned i = 0; i < WINDOWS; i++) enqueue(&windows[i], 1, 0, 0);
+        return;
+    }
+    Window *target = NULL;
+    for (unsigned i = 0; i < WINDOWS; i++) {
+        if (windows[i].active && windows[i].hwnd == message->hwnd) {target = &windows[i]; break;}
+    }
+    if (target && target->text_input && (message->message == WM_KEYDOWN || message->message == WM_SYSKEYDOWN)) {
+        /* TranslateMessage posts at the tail. Deliver its character directly
+           after this key, before a queued Tab/click can move HTDL focus. */
+        BOOL translated = TranslateMessage(message);
+        DispatchMessageW(message);
+        if (translated) {
+            MSG character;
+            while (!target->failure && PeekMessageW(&character, message->hwnd, WM_CHAR, WM_CHAR, PM_REMOVE))
+                DispatchMessageW(&character);
+        }
+        return;
+    }
+    TranslateMessage(message);
+    DispatchMessageW(message);
+}
 int32_t assisp_poll(int64_t token, int32_t timeout_ms, int64_t *words, int64_t capacity) {
     if (words && capacity >= 8) memset(words, 0, 8 * sizeof(int64_t));
     if (!on_owner()) return -5;
@@ -265,10 +339,9 @@ int32_t assisp_poll(int64_t token, int32_t timeout_ms, int64_t *words, int64_t c
     for (;;) {
         /* A finite batch prevents a native message flood starving the caller. */
         MSG message;
-        for (int i = 0; i < 512 && PeekMessageW(&message, NULL, 0, 0, PM_REMOVE); i++) {
-            if (message.message == WM_QUIT) {
-                for (unsigned j = 0; j < WINDOWS; j++) enqueue(&windows[j], 1, 0, 0);
-            } else {TranslateMessage(&message); DispatchMessageW(&message);}
+        for (int i = 0; i < 512 && (!w->text_input || (!w->count && !w->failure)) &&
+             PeekMessageW(&message, NULL, 0, 0, PM_REMOVE); i++) {
+            pump_message(&message);
         }
         if (w->failure) return w->failure;
         if (w->count) {

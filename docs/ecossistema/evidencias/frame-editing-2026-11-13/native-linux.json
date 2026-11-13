@@ -1,0 +1,32 @@
+{
+  "host": "linux",
+  "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3",
+  "compilerSha256": "4ae10529f28c5a6a28a0d7597f2ef1fd27c1d6ee7271bb2da6ec0fc12970adab",
+  "checks": [
+    {
+      "command": "python tests/test-frame-editing.py",
+      "executed": 4,
+      "not_run": 1,
+      "logSha256": "3d76e668fb72034da002b365a5dcb64b7b7a94b54e5e0c83571b4b1c1dc95727"
+    },
+    {
+      "command": "python tests/test-frame-forms.py",
+      "executed": 3,
+      "not_run": 2,
+      "logSha256": "43314556cdc278888e3095cab98003f19ce26c1dea95a9a0a21c7ed35d0b373d"
+    },
+    {
+      "command": "python tests/test-pageframe.py",
+      "executed": 17,
+      "not_run": 0,
+      "logSha256": "b249c29584246f3c5484466aab8f2e26051e818b64b97596f420dafaf99557a4"
+    },
+    {
+      "command": "python tests/test-frame-responsiveness.py",
+      "executed": 0,
+      "not_run": 5,
+      "logSha256": "ae5b1ddd45e71b2ae51c476488b34dc075ac311deca9b1a6958314ad50c4d76b"
+    }
+  ]
+}

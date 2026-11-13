@@ -1,0 +1,32 @@
+{
+  "host": "windows",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.14.6",
+  "compilerSha256": "0afad2bd14e7f7f98fcccbe9ca89d4bd7c5f0a54141d302e3eb76fbc182d69b7",
+  "checks": [
+    {
+      "command": "python tests/test-frame-editing.py",
+      "executed": 5,
+      "not_run": 0,
+      "logSha256": "ac7648d23faf1b1696aa1c070c983d5a6f31fc4567607db76181c0dd2ec09b3b"
+    },
+    {
+      "command": "python tests/test-frame-forms.py",
+      "executed": 5,
+      "not_run": 0,
+      "logSha256": "df409c0b274bbe72a99bbc13f1094088d5b6bba69fbd6f293380c5e5b50daa37"
+    },
+    {
+      "command": "python tests/test-pageframe.py",
+      "executed": 17,
+      "not_run": 0,
+      "logSha256": "bc0dc9cfd078ee31a38ec757d2e7a1ee5252ec1fd31340e548ca84857d95865f"
+    },
+    {
+      "command": "python tests/test-frame-responsiveness.py",
+      "executed": 5,
+      "not_run": 0,
+      "logSha256": "a814a2a2312cafb9b097574bdf9f3f6df1e39fea15f2dcaad2d37f70007fb875"
+    }
+  ]
+}

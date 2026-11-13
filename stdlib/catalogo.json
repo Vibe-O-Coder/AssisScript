@@ -361,6 +361,7 @@
       "doc": "BIBLIOTECA-pageframe.md",
       "description": "Layout local e snapshot imutavel de caixas, texto e acerto.",
       "dependencies": [
+        "pageedit",
         "flowpage",
         "graphemes",
         "motionpage"
@@ -475,6 +476,17 @@
       "description": "Índice local por faixas de IDs, com leitura e compactação de um segmento por vez.",
       "dependencies": [
         "searchindex"
+      ]
+    },
+    {
+      "name": "pageedit",
+      "required": false,
+      "doc": "BIBLIOTECA-pageedit.md",
+      "description": "Valores de campos HTDL com edição por grafemas e seleção por nó.",
+      "dependencies": [
+        "htdl",
+        "graphemes",
+        "parse"
       ]
     },
     {

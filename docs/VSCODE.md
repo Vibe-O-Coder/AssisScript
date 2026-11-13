@@ -1,6 +1,16 @@
 # AssisScript 3.3 alpha no VS Code
 
-Instale dist/assisscript-3.3.0-alpha.6.vsix em Extensões → menu … → Instalar do VSIX. Não é necessário Node, Python ou compilador C para usar o pacote. Ele contém os binários nativos, oito bibliotecas, referência de API, manuais e ícones. val/pure/private têm destaque, documentação e navegação; sugestões externas omitem membros privados. Há tipos de função aninhados e ajuda de parâmetros para callbacks tipados em variáveis/parâmetros. Na alpha.4, campos, métodos, construtores e bases genéricas recebem assinaturas concretas na navegação; o snippet genericaclasse cria uma classe parametrizada. Na alpha.5, a migração AST das coleções preserva a sintaxe e as assinaturas públicas. Na alpha.6, parâmetros own/borrow, retornos com origem de vida, tipos de callback safe e campos own preservam contratos na navegação e ajuda de assinatura. Snippets safeborrow e unsafe incluídos. A [estimativa de conclusão do plano é 45%](PROGRESSO.md). A integração foi validada pelos testes dos provedores, sem uma nova sessão visual do editor.
+O [VSIX atual](../assisscript-3.3.0-alpha.15.vsix) é `3.3.0-alpha.15`. Em Extensões, escolha
+**Instalar do VSIX** ou execute `code --install-extension <caminho-do-vsix> --force`
+para atualizar um build anterior da mesma versão. O compilador usado
+pelo editor vem do pacote quando `assisscript.compilerPath` está vazio.
+[Atualização e hashes do candidato](relatorios/2026-11-13-compilador-vsix.md).
+
+O pacote inclui binários nativos, bibliotecas, referência de API, manuais
+e ícones. `val`, `pure` e `private` têm destaque, documentação e navegação.
+O editor oferece assinaturas para callbacks, métodos e construtores
+genéricos. `own`, `borrow`, retornos com origem de vida e callbacks `safe`
+aparecem na navegação e na ajuda de assinatura.
 
 Funções `f<T>` e structs `Caixa<T>` são reconhecidas pelo editor. Navegação preserva a declaração original; ajuda de parâmetros em `f::<int>(...)` e `new Caixa<int>(...)` e campos de `Caixa<int>` exibem tipos substituídos. Os snippets `genericafuncao`, `genericstruct` e `genericachamada` inserem a sintaxe. O compilador é a autoridade para aridade, tipos, pureza e ownership; o editor não infere constraints ou vidas.
 

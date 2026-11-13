@@ -11,12 +11,18 @@ extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_catalog_ver
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_forms_version") fn native_forms_version():int;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_catalog_commit") fn native_catalog_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32;
 extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_forms_commit") fn native_forms_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_editing_version") fn native_editing_version():int;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_frame_editing_commit") fn native_editing_commit(window:int,projection:int,instance:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32;
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_text_events") fn native_text_events(window:int,enabled:i32):i32;
 }
 platform("linux"){
 safe fn native_clock():int{return monotonic_ms();}
 pure fn native_version():int{return -3;}
 pure fn native_catalog_version():int{return -3;}
 pure fn native_forms_version():int{return -3;}
+pure fn native_editing_version():int{return -3;}
+safe fn native_editing_commit(window:int,projection:int,instance:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
+pure fn native_text_events(window:int,enabled:i32):i32{return i32(-3);}
 safe fn native_catalog_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
 safe fn native_forms_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
 pure fn native_current(window:int):int{return -3;}
@@ -28,6 +34,9 @@ safe fn native_clock():int{return monotonic_ms();}
 pure fn native_version():int{return -3;}
 pure fn native_catalog_version():int{return -3;}
 pure fn native_forms_version():int{return -3;}
+pure fn native_editing_version():int{return -3;}
+safe fn native_editing_commit(window:int,projection:int,instance:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
+pure fn native_text_events(window:int,enabled:i32):i32{return i32(-3);}
 safe fn native_catalog_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
 safe fn native_forms_commit(window:int,projection:int,background:u32,borrow commands:*int,count:int,borrow content:*byte,size:int,borrow items:*int,item_count:int,borrow names:*byte,name_size:int):i32{return i32(-3);}
 pure fn native_current(window:int):int{return -3;}
@@ -40,6 +49,11 @@ public safe fn clock_ms():int{unsafe{return native_clock();}}
 public safe fn available():bool{unsafe{return native_version()==1;}}
 public safe fn catalog_available():bool{unsafe{return native_catalog_version()==1;}}
 public safe fn forms_available():bool{unsafe{return native_forms_version()==1;}}
+public safe fn editing_available():bool{unsafe{return native_editing_version()==1;}}
+public safe fn text_events(borrow window:window::Window,enabled:bool):int{
+    if(!window.opened()){return -2;}
+    unsafe{return int(native_text_events(window.platform_token(),i32(int(enabled))));}
+}
 public safe fn measure(borrow content:slice<byte>,size:int,weight:int):int{
     val font:int=pageframe::pixels(size);val bold:int=pageframe::pixels(weight);
     if(len(content)>4096 || font<1 || font>256 || bold<100 || bold>900){return -1;}
@@ -55,7 +69,9 @@ public final class Packet{
     private let count:int;private let used:int;private let items:int;private let name_size:int;
     private let frame_id:int;private let instance:int;private let semantic:int;private let background:u32;
     private let window_token:int;
-    private let active:bool;private let published:bool;private let highlighted:bool;private let catalog:bool;private let forms:bool;private let failed:bool;
+    private let active:bool;private let published:bool;private let highlighted:bool;private let catalog:bool;private let forms:bool;
+    private let editing:bool;private let edited:bool;private let failed:bool;
+    private own after_item:*int;
     private fn command(borrow mut self,type:int,bounds:pageframe::Rect,clip:pageframe::Rect,color:int,font:int,weight:int,start:int,size:int):void{
         if(self.count==33028 || self.count==len(self.commands)/14){self.failed=true;return;}
         val p:int=self.count*14;self.commands[p]=type;self.commands[p+1]=bounds.x;self.commands[p+2]=bounds.y;
@@ -66,11 +82,17 @@ public final class Packet{
     fn init(borrow mut self,borrow mut frame:pageframe::Frame,focus:doctree::NodeId,policy:reader::Preferences,max_bytes:int):void{
         if(!frame.is_open() || max_bytes<10000000 || policy.status!=0){return;}
         let capacity:int=frame.run_count()+2*frame.size()+4;
-        for(let i:int=0;i<frame.size();i++){if(frame.box(i).kind==21){capacity+=8;}}
+        for(let i:int=0;i<frame.size();i++){
+            val kind:int=frame.box(i).kind;
+            if(kind==21){capacity+=8;}
+            if(pageframe::editable(kind)){capacity+=9;}
+        }
         self.commands=try_alloc<int>(capacity*14);
         self.run_map=try_alloc<int>(capacity);
         self.content=try_alloc<byte>(2097216);self.access=try_alloc<int>(256*8);self.names=try_alloc<byte>(1048608);self.mapping=try_alloc<int>(256);
-        if(self.commands==null || self.content==null || self.access==null || self.names==null || self.mapping==null || self.run_map==null){return;}
+        self.after_item=try_alloc<int>(256);
+        if(self.commands==null || self.content==null || self.access==null || self.names==null || self.mapping==null ||
+           self.run_map==null || self.after_item==null){return;}
         self.frame_id=frame.version();self.instance=frame.instance();self.semantic=frame.semantic_version();self.background=policy.background;
         val viewport:pageframe::Rect=frame.viewport();self.access[0]=1;self.access[4]=viewport.width;self.access[5]=viewport.height;
         for(let i:int=0;i<len(frame.title());i++){self.names[self.name_size]=frame.title()[i];self.name_size++;}
@@ -82,7 +104,9 @@ public final class Packet{
             if(b.kind==6 || b.kind==8 || b.kind==9 || b.kind>=12){val p:int=self.items*8;
                 if(self.items==256){return;}if(b.kind>=12){self.catalog=true;}
                 if(b.kind>=20){self.forms=true;}
-                if(self.name_size+len(frame.name(i))>len(self.names)){return;}
+                if(pageframe::editable(b.kind)){self.editing=true;}
+                let extra:int=0;if(pageframe::editable(b.kind)){extra=2;}
+                if(self.name_size+len(frame.name(i))+extra>len(self.names)){return;}
                 self.access[p]=b.kind;let flags:int=int(b.disabled);
                 if(b.kind==21 && frame.checked(b.node)==1){flags|=8;}
                 if(pageframe::same(b.node,focus) && !b.disabled && pageframe::interactive(b.kind)){flags|=2;}
@@ -90,6 +114,7 @@ public final class Packet{
                 self.access[p+1]=flags;self.access[p+2]=clip.x;self.access[p+3]=clip.y;self.access[p+4]=clip.width;self.access[p+5]=clip.height;
                 self.access[p+6]=self.name_size;self.access[p+7]=len(frame.name(i));self.mapping[self.items]=i;self.items++;
                 for(let j:int=0;j<len(frame.name(i));j++){self.names[self.name_size]=frame.name(i)[j];self.name_size++;}
+                if(extra!=0){self.names[self.name_size]=byte(0);self.names[self.name_size+1]=byte(0);self.name_size+=2;}
             }
             if(b.kind==21){
                 val mark:pageframe::Rect=frame.checkbox_mark(i);
@@ -130,10 +155,12 @@ public final class Packet{
                 val text_clip:pageframe::Rect=pageframe::intersect(run.bounds,frame.content_clip(i));
                 if(text_clip.width>0 && text_clip.height>0){self.run_map[self.count]=j+1;self.command(1,run.bounds,text_clip,foreground,pageframe::pixels(b.text_size),pageframe::pixels(b.weight),start,run.size);}
             }
+            if(pageframe::editable(b.kind)){self.after_item[self.items-1]=self.count;}
         }
         // Native focus indication wins over author opacity/color and draw order.
         for(let i:int=0;i<frame.size();i++){val b:pageframe::Box=frame.box(i);
             if(!pageframe::interactive(b.kind) || b.disabled || !pageframe::same(b.node,focus)){continue;}
+            if(pageframe::editable(b.kind)){continue;}
             let r:pageframe::Rect=b.bounds;val color:int=int(policy.foreground);
             if(b.kind==21){
                 val mark:pageframe::Rect=frame.checkbox_mark(i);
@@ -147,7 +174,119 @@ public final class Packet{
             self.command(0,left,pageframe::intersect(left,b.clip),color,0,0,0,0);self.command(0,right,pageframe::intersect(right,b.clip),color,0,0,0,0);
         }if(self.failed){return;}frame.seal();self.active=true;
     }
-    fn is_open(borrow self):bool{return self.active;}
+    fn is_open(borrow self):bool{return self.active && !self.failed && (!self.editing || self.edited);}
+    fn edit_fields(borrow mut self,borrow frame:pageframe::Frame,borrow fields:pageedit::Fields,focus:doctree::NodeId,
+            policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int):int{
+        if(!self.active || self.published || self.highlighted || self.edited || policy.status!=0 || frame.version()!=self.frame_id ||
+           frame.instance()!=self.instance || frame.semantic_version()!=self.semantic){return 204;}
+        if(!self.editing){return 0;}
+        if(fields==null || fields.status()!=0){return 204;}
+        self.edited=true;
+        val base_count:int=self.count;
+        own edit_end:*int=try_alloc<int>(self.items);
+        if(edit_end==null){self.failed=true;return 401;}
+        for(let item:int=1;item<self.items;item++){
+            val index:int=self.mapping[item];
+            val box:pageframe::Box=frame.box(index);
+            if(!pageframe::editable(box.kind)){continue;}
+            if(!fields.has(box.node)){self.failed=true;return 204;}
+            borrow value:slice<byte>=fields.value(box.node);
+            val record:int=item*8;
+            val at:int=self.access[record+6]+self.access[record+7];
+            if(self.name_size+len(value)>len(self.names)){self.failed=true;return 401;}
+            for(let i:int=self.name_size-1;i>=at+2;i--){self.names[i+len(value)]=self.names[i];}
+            self.names[at]=byte(len(value)&255);self.names[at+1]=byte(len(value)>>8);
+            for(let i:int=0;i<len(value);i++){self.names[at+2+i]=value[i];}
+            self.name_size+=len(value);
+            for(let later:int=item+1;later<self.items;later++){self.access[later*8+6]+=len(value);}
+            val code:int=self.paint_field(box,frame.edit_bounds(index),frame.placeholder(index),value,fields.selection(box.node),
+                pageframe::same(box.node,focus) && !box.disabled,policy,metric);
+            if(code!=0){self.failed=true;return code;}
+            edit_end[item]=self.count;
+        }
+        if(self.failed){return 401;}
+        return self.order_fields(base_count,edit_end);
+    }
+    private fn order_fields(borrow mut self,base_count:int,borrow edit_end:*int):int{
+        own commands:*int=try_alloc<int>(self.count*14);
+        own run_map:*int=try_alloc<int>(self.count);
+        if(commands==null || run_map==null){self.failed=true;return 401;}
+        let base:int=0;let edit:int=base_count;let next:int=0;
+        for(let item:int=1;item<self.items;item++){
+            if(edit_end[item]==0){continue;}
+            val end:int=self.after_item[item];
+            while(base<end){
+                for(let word:int=0;word<14;word++){commands[next*14+word]=self.commands[base*14+word];}
+                run_map[next]=self.run_map[base];base++;next++;
+            }
+            while(edit<edit_end[item]){
+                for(let word:int=0;word<14;word++){commands[next*14+word]=self.commands[edit*14+word];}
+                edit++;next++;
+            }
+        }
+        while(base<base_count){
+            for(let word:int=0;word<14;word++){commands[next*14+word]=self.commands[base*14+word];}
+            run_map[next]=self.run_map[base];base++;next++;
+        }
+        assert(next==self.count);
+        self.commands=move(commands);self.run_map=move(run_map);
+        return 0;
+    }
+    private fn paint_field(borrow mut self,box:pageframe::Box,area:pageframe::Rect,borrow hint:slice<byte>,borrow value:slice<byte>,
+            select:pageedit::Selection,focused:bool,policy:reader::Preferences,
+            metric:safe fn(borrow slice<byte>,int,int):int):int{
+        val clip:pageframe::Rect=pageframe::intersect(box.bounds,box.clip);
+        if(clip.width==0 || clip.height==0){return 0;}
+        let border:int=int(policy.disabled_text);
+        if(focused){border=int(policy.foreground);}
+        self.command(0,box.bounds,clip,border,0,0,0,0);
+        val inset:int=1+int(focused);
+        val inside:pageframe::Rect=new pageframe::Rect(box.bounds.x+inset,box.bounds.y+inset,
+            pageframe::maximum(0,box.bounds.width-2*inset),pageframe::maximum(0,box.bounds.height-2*inset));
+        let fill:int=0xffffffff;if(policy.high_contrast){fill=int(policy.background);}
+        self.command(0,inside,pageframe::intersect(inside,clip),fill,0,0,0,0);
+        val content_clip:pageframe::Rect=pageframe::intersect(clip,area);
+        if(content_clip.width==0 || content_clip.height==0){return 0;}
+        val font:int=pageframe::pixels(box.text_size);val weight:int=pageframe::pixels(box.weight);
+        val full:int=metric(value,box.text_size,box.weight);
+        if(full<0 || (full>>32)<1 || (full>>32)>1024 || full%4294967296>16384){return 304;}
+        let shift:int=0;
+        let cursor:int=0;
+        let selection:pageframe::Rect=new pageframe::Rect();
+        if(focused){
+            val caret:int=metric(slice_of(value,0,select.caret),box.text_size,box.weight);
+            val anchor:int=metric(slice_of(value,0,select.anchor),box.text_size,box.weight);
+            if(caret<0 || anchor<0 || (caret>>32)!=(full>>32) || (anchor>>32)!=(full>>32)){return 304;}
+            cursor=caret%4294967296;val from:int=anchor%4294967296;
+            if(cursor>full%4294967296 || from>full%4294967296){return 304;}
+            shift=pageframe::maximum(0,cursor-area.width+1);
+            selection=new pageframe::Rect(area.x-shift+pageframe::minimum(from,cursor),area.y,
+                pageframe::maximum(from,cursor)-pageframe::minimum(from,cursor),full>>32);
+        }
+        let color:int=int(policy.foreground);if(box.disabled){color=int(policy.disabled_text);}
+        val selected_clip:pageframe::Rect=pageframe::intersect(selection,content_clip);
+        if(selected_clip.width>0 && selected_clip.height>0){self.command(0,selection,selected_clip,int(policy.selection),0,0,0,0);}
+        if(len(value)>0){
+            val start:int=self.used;
+            if(start+len(value)>len(self.content)){return 401;}
+            for(let i:int=0;i<len(value);i++){self.content[self.used]=value[i];self.used++;}
+            val text_box:pageframe::Rect=new pageframe::Rect(area.x-shift,area.y,full%4294967296,full>>32);
+            self.command(1,text_box,content_clip,color,font,weight,start,len(value));
+            if(selected_clip.width>0 && selected_clip.height>0){
+                self.command(1,text_box,selected_clip,int(policy.selection_text),font,weight,start,len(value));
+            }
+        }else if(len(hint)>0){
+            val start:int=self.used;
+            if(start+len(hint)>len(self.content)){return 401;}
+            for(let i:int=0;i<len(hint);i++){self.content[self.used]=hint[i];self.used++;}
+            self.command(1,area,content_clip,int(policy.disabled_text),font,weight,start,len(hint));
+        }
+        if(focused && select.anchor==select.caret){
+            val caret:pageframe::Rect=new pageframe::Rect(area.x+cursor-shift,area.y,1,full>>32);
+            self.command(0,caret,pageframe::intersect(caret,content_clip),int(policy.foreground),0,0,0,0);
+        }
+        return 0;
+    }
     /// Prepare selection in structural paint order. Full text is drawn through
     /// the selected clip, retaining the same glyph origins and font metrics.
     /// Failure keeps the unmodified packet usable; this is a one-shot operation.
@@ -186,12 +325,14 @@ public final class Packet{
         return new pageframe::Rect(self.commands[p+5],self.commands[p+6],self.commands[p+7],self.commands[p+8]);
     }
     private fn matches(borrow self,borrow frame:pageframe::Frame,borrow document:documents::Document):bool{
-        return self.active && frame.current(document) && frame.version()==self.frame_id && frame.instance()==self.instance && frame.semantic_version()==self.semantic;
+        return self.is_open() && frame.current(document) && frame.version()==self.frame_id && frame.instance()==self.instance && frame.semantic_version()==self.semantic;
     }
     fn publish(borrow mut self,borrow window:window::Window,borrow frame:pageframe::Frame,borrow document:documents::Document):int{
         if(!self.matches(frame,document) || self.published){return 204;}if(!window.opened()){return -2;}
         let result:int=0;unsafe{
-            if(self.forms){if(native_forms_version()!=1){return -3;}
+            if(self.editing){if(native_editing_version()!=1){return -3;}
+                result=int(native_editing_commit(window.platform_token(),self.frame_id,self.instance,self.background,self.commands,self.count,self.content,self.used,self.access,self.items,self.names,self.name_size));}
+            else if(self.forms){if(native_forms_version()!=1){return -3;}
                 result=int(native_forms_commit(window.platform_token(),self.frame_id,self.background,self.commands,self.count,self.content,self.used,self.access,self.items,self.names,self.name_size));}
             else if(self.catalog){if(native_catalog_version()!=1){return -3;}
                 result=int(native_catalog_commit(window.platform_token(),self.frame_id,self.background,self.commands,self.count,self.content,self.used,self.access,self.items,self.names,self.name_size));}
@@ -208,5 +349,6 @@ public final class Packet{
         self.active=false;self.published=false;own commands:*int=move(self.commands);own content:*byte=move(self.content);
         own access:*int=move(self.access);own names:*byte=move(self.names);own mapping:*int=move(self.mapping);
         own run_map:*int=move(self.run_map);
+        own after_item:*int=move(self.after_item);
     }
 }

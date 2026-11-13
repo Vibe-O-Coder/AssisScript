@@ -74,7 +74,7 @@ public final class Window {
         if(self.token==0){return new Event(-2,0,0,0,0,0,0);}
         let status:int=0;unsafe{status=int(native_poll(self.token,i32(timeout_ms),self.words,8));}
         if(status!=0){self.failure=status;return new Event(status,0,0,0,0,0,0);}
-        if(self.words[0]!=65536||self.words[1]<1||self.words[1]>13||self.words[2]!=self.token||
+        if(self.words[0]!=65536||self.words[1]<1||self.words[1]>14||self.words[2]!=self.token||
            self.words[3]!=self.instance||self.words[4]<=0||self.words[7]<=self.last_request||
            (self.generation!=0&&self.words[4]!=self.generation)){
             self.failure=-6;return new Event(-6,0,0,0,0,0,0);

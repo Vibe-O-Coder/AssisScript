@@ -1,0 +1,265 @@
+{
+  "passed": true,
+  "compiler_sha256": "0afad2bd14e7f7f98fcccbe9ca89d4bd7c5f0a54141d302e3eb76fbc182d69b7",
+  "setup_sha256": "eefe20f1296c3a34cd19ac4300bd03725158da684e0350384a98765b022097b5",
+  "provider_sha256": "b888731df4365289d2601939459cd8356e88205f0bfdbf5970f36f95da916e01",
+  "runtime_sha256": {
+    "page-worker.exe": "067431b12b338d83fa5e3e62c29a61b87b6d6dac3d7560ba985e3b1c5ca22681",
+    "assis_worker_v1.dll": "cb5155f7277fc36ee308451d2472e442b5f7cf68f1d8663e4e6675c2a66828fe"
+  },
+  "selected_libraries": [
+    "buffers",
+    "cli",
+    "doctree",
+    "documents",
+    "flowpage",
+    "fluxstyle",
+    "framehost",
+    "framereader",
+    "frameworker",
+    "graphemes",
+    "htdl",
+    "htdlsearch",
+    "http",
+    "httpurl",
+    "localresources",
+    "loopback",
+    "motionpage",
+    "owned",
+    "pagecompiler",
+    "pageedit",
+    "pageframe",
+    "pagepresent",
+    "pageresources",
+    "pagevm",
+    "pagewire",
+    "pageworker",
+    "parse",
+    "process",
+    "reader",
+    "sanscript",
+    "searchindex",
+    "searchsegments",
+    "searchservice",
+    "unicode",
+    "viewer",
+    "window"
+  ],
+  "search_forms": true,
+  "checks": [
+    {
+      "command": [
+        "python",
+        "tests/test-installer-retry.py"
+      ],
+      "returncode": 0,
+      "executed": 4,
+      "log": "windows-installer-retry.log",
+      "sha256": "2f2bb995a2b4ad6638b1c123c284f9cfff292addf8a960c221a21dd4a6599260"
+    },
+    {
+      "command": [
+        "<TEMP>\\distribution\\bin\\assis-setup.exe",
+        "install",
+        "--prefix",
+        "<TEMP>\\prefix with spaces",
+        "--no-path",
+        "--no-associations",
+        "--with",
+        "frameworker,localresources,http,cli,searchservice,htdlsearch,process"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em <TEMP>\\prefix with spaces\\bin\\assis.exe\r\nO PATH foi preservado. Use o caminho completo ou adicione a pasta bin ao PATH.\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\assis.exe",
+        "check",
+        "<TEMP>\\prefix with spaces\\exemplos\\27_http_client.assis",
+        "--safe"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: <TEMP>\\prefix with spaces\\exemplos\\27_http_client.assis passou na an\u00e1lise de sintaxe e tipos.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\assis.exe",
+        "build",
+        "<TEMP>\\prefix with spaces\\exemplos\\69_confined_resource_frame.assis",
+        "--safe",
+        "--debug",
+        "-o",
+        "<TEMP>\\prefix with spaces\\bin\\installed-example.exe"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: execut\u00e1vel nativo gerado em <TEMP>\\prefix with spaces\\bin\\installed-example.exe\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\installed-example.exe",
+        "<TEMP>\\prefix with spaces\\bin\\assis.exe",
+        "<TEMP>\\prefix with spaces\\bin\\page-worker.exe",
+        "<TEMP>\\prefix with spaces\\exemplos\\resource-demo"
+      ],
+      "returncode": 0,
+      "stdout": "CONFINED FRAME 4 0 1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\assis.exe",
+        "build",
+        "<TEMP>\\prefix with spaces\\exemplos\\71_search_index.assis",
+        "--safe",
+        "--debug",
+        "-o",
+        "<TEMP>\\search-index.exe"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: execut\u00e1vel nativo gerado em <TEMP>\\search-index.exe\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\search-index.exe",
+        "build"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\search-index.exe",
+        "query",
+        "phrase",
+        "local index"
+      ],
+      "returncode": 0,
+      "stdout": "1 1 0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\search-index.exe",
+        "build-segmented"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\search-index.exe",
+        "query-segmented",
+        "phrase",
+        "local index"
+      ],
+      "returncode": 0,
+      "stdout": "4096 1 0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\assis.exe",
+        "build",
+        "<TEMP>\\prefix with spaces\\exemplos\\73_search_service.assis",
+        "--safe",
+        "--debug",
+        "-o",
+        "<TEMP>\\search-service.exe"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: execut\u00e1vel nativo gerado em <TEMP>\\search-service.exe\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/search-service.exe",
+        "0",
+        "1200"
+      ],
+      "returncode": 0,
+      "httpStatus": 200,
+      "stdout": "1 1 0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\assis.exe",
+        "build",
+        "<TEMP>\\prefix with spaces\\exemplos\\72_local_forms_window.assis",
+        "--safe",
+        "--debug",
+        "-o",
+        "<TEMP>\\prefix with spaces\\bin\\forms.exe"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: execut\u00e1vel nativo gerado em <TEMP>\\prefix with spaces\\bin\\forms.exe\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\forms.exe",
+        "--smoke"
+      ],
+      "returncode": 0,
+      "stdout": "FORMS WINDOW 3 1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\assis.exe",
+        "build",
+        "<TEMP>\\prefix with spaces\\exemplos\\74_editable_forms_window.assis",
+        "--safe",
+        "--debug",
+        "-o",
+        "<TEMP>\\prefix with spaces\\bin\\editing.exe"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: execut\u00e1vel nativo gerado em <TEMP>\\prefix with spaces\\bin\\editing.exe\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\prefix with spaces\\bin\\editing.exe",
+        "--smoke"
+      ],
+      "returncode": 0,
+      "stdout": "EDITABLE FORM 8\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>\\distribution\\bin\\assis-setup.exe",
+        "uninstall",
+        "--prefix",
+        "<TEMP>\\prefix with spaces",
+        "--no-path",
+        "--no-associations"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: desinstalado. Projetos e arquivos extras foram preservados.\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-isolation=none",
+        "tests/test-development.js",
+        "tests/test-v31.js",
+        "tests/test-v32.js"
+      ],
+      "returncode": 0,
+      "executed": 40,
+      "log": "windows-distribution-node.log",
+      "sha256": "2cd7d9d564cbae6043de3011bbdd162a991062606e968b4bc20651ce3c7866d3"
+    }
+  ],
+  "scope": "Fresh candidate and isolated offline prefix, transitive closure of frameworker,localresources,http,cli,searchservice,htdlsearch,process; installed resource Frame/worker demo, uninstall and user file preservation"
+}

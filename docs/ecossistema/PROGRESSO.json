@@ -1,9 +1,9 @@
 {
   "schema": "assisscript-ecosystem-progress-v1",
   "rubric_version": 1,
-  "date": "2026-11-12",
+  "date": "2026-11-13",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "loopback-search-and-bounded-segments",
+  "assessment": "local-htdl-text-number-editing",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -303,7 +303,7 @@
           "name": "Unicode e edição de texto",
           "level": 2,
           "acceptance": "Ampliar UTF-8 com normalização, case folding, segmentação de palavras/grafemas, bidi e quebra de linha via providers versionados; testar NUL, acentos combinantes e entradas inválidas.",
-          "baseline": "String UTF-8 com vida/comprimento existe; processamento linguístico completo não existe.",
+          "baseline": "Leitura e edição local de UTF-8 em fronteiras de grafema Unicode 17. Inserção, remoção, seleção e rejeição de caracteres inválidos no perfil de uma linha. Normalização geral, segmentação de palavras e bidi continuam abertos.",
           "evidence": [
             "docs/BIBLIOTECA-unicode.md",
             "docs/BIBLIOTECA-texto.md",
@@ -311,7 +311,11 @@
             "docs/ecossistema/evidencias/m3-unicode-vm-2026-11-01/summary.json",
             "docs/BIBLIOTECA-graphemes.md",
             "docs/relatorios/2026-11-11-entrada-tipada-const.md",
-            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json"
+            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json",
+            "docs/relatorios/2026-11-13-m3-campos-editaveis.md",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/summary.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/desktop.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/visual.json"
           ]
         },
         {
@@ -435,12 +439,16 @@
           "name": "Ponte nativa segura e versionada",
           "level": 2,
           "acceptance": "Encapsular ABI C, handles, buffers e erros com ownership; usar shim para agregados/varargs ou thread estrangeira, ou ampliar FFI com testes independentes de ABI nos cinco destinos.",
-          "baseline": "ABI C escalar e callbacks síncronos existem; bibliotecas gráficas não integradas.",
+          "baseline": "ABI C escalar e callbacks síncronos existem; bibliotecas gráficas não integradas. Extensão Windows versionada para texto UTF-16 e valores MSAA com recusa de entradas inválidas.",
           "evidence": [
             "docs/FFI-C.md",
             "docs/ARM64-NATIVO.md",
             "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
-            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json"
+            "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json",
+            "docs/relatorios/2026-11-13-m3-campos-editaveis.md",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/summary.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/desktop.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/visual.json"
           ]
         },
         {
@@ -482,9 +490,9 @@
         {
           "id": "E04-04",
           "name": "Fontes, edição e entrada de texto",
-          "level": 2,
+          "level": 3,
           "acceptance": "Integrar shaping/fallback/bidi, medição e quebra, seleção, clipboard e IME; validar edição com graphemes, escala 200%, RTL e navegação por teclado em providers de cada OS.",
-          "baseline": "Seleção de leitura em fronteiras UTF-8, clipboard isolado e fonte 100/200% com reflow demonstrados no Reader Windows x64, além da medição anterior. Graphemes, shaping/bidi completos, edição/IME e DPI/monitores do OS permanecem abertos.",
+          "baseline": "Edição local de texto e int64 com valor/seleção por nó, grafemas, zoom 200%, entrada Win32 e confirmação nativa. Execução adversa Windows e Linux headless. Composição IME, bidi, outros providers e DPI do OS seguem abertos.",
           "evidence": [
             "docs/BIBLIOTECA-unicode.md",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
@@ -497,7 +505,11 @@
             "docs/ecossistema/evidencias/m3-unicode-vm-2026-11-01/summary.json",
             "docs/BIBLIOTECA-graphemes.md",
             "docs/relatorios/2026-11-03-m5-frame-reader.md",
-            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json"
+            "docs/ecossistema/evidencias/m5-frame-reader-2026-11-03/summary.json",
+            "docs/relatorios/2026-11-13-m3-campos-editaveis.md",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/summary.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/desktop.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/visual.json"
           ]
         },
         {
@@ -505,7 +517,7 @@
           "name": "Acessibilidade e políticas do usuário",
           "level": 2,
           "acceptance": "Exportar árvore semântica, nome/role/valor, foco e ações às APIs assistivas do OS; testar leitor de tela, contraste, zoom e movimento reduzido com usuário e automação.",
-          "baseline": "Projeção MSAA plana adicional com agrupamentos, links, listas e itens; oráculo independente testa papéis, ações, hit e revogação com rollback nativo. Leitor real, hierarquia completa, live regions e aceites desktop/DPI/IME seguem abertos. Reexecução Windows confirmou oito rasters GDI e o foco por teclado no formulário e catálogo. As capturas de desktop expiraram.",
+          "baseline": "Projeção MSAA plana adicional com agrupamentos, links, listas e itens; oráculo independente testa papéis, ações, hit e revogação com rollback nativo. Leitor real, hierarquia completa, live regions e aceites desktop/DPI/IME seguem abertos. Reexecução Windows confirmou oito rasters GDI e o foco por teclado no formulário e catálogo. As capturas de desktop expiraram. Campos editáveis têm valor e seleção publicados com o Frame, testados em raster e na árvore acessível Windows.",
           "evidence": [
             "local:htdl/docs/14-fundamentos-e-perfis.md",
             "local:htdl/docs/19-conformidade-e-cenarios.md",
@@ -523,7 +535,11 @@
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json",
             "docs/relatorios/2026-11-12-m3-revalidacao-visual.md",
             "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/desktop.json",
-            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/visual.json"
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/visual.json",
+            "docs/relatorios/2026-11-13-m3-campos-editaveis.md",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/summary.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/desktop.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/visual.json"
           ]
         }
       ]
@@ -795,7 +811,7 @@
           "name": "Estado, eventos e transações",
           "level": 3,
           "acceptance": "Implementar células por página/nó, inscrição/desinscrição, snapshot e fila determinística; cobrir teclado/ponteiro, disabled/hidden, remoção e falhas sem handlers tardios.",
-          "baseline": "Células por página e handlers ASV2 agora integrados ao Frame HTDL/FS/SSC: ações de teclado/ponteiro/MSAA chegam ao preorder semântico completo; FIFO/ACK/backpressure, revisão visual separada, navegação/abort/close e falhas preservam ou revogam juntos o estado. Windows/Linux x64 e ambos modos executados. Células por nó, inscrições, valores gerais e mutação pelo SDK permanecem abertos. O perfil local 3 acrescenta checkbox por nó, alternância transacional, rótulo e validação; SDK geral e inscrição continuam abertos.",
+          "baseline": "Células por página e handlers ASV2 agora integrados ao Frame HTDL/FS/SSC: ações de teclado/ponteiro/MSAA chegam ao preorder semântico completo; FIFO/ACK/backpressure, revisão visual separada, navegação/abort/close e falhas preservam ou revogam juntos o estado. Windows/Linux x64 e ambos modos executados. Células por nó, inscrições, valores gerais e mutação pelo SDK permanecem abertos. O perfil local 3 acrescenta checkbox por nó, alternância transacional, rótulo e validação; SDK geral e inscrição continuam abertos. Campos editáveis têm valor e seleção publicados com o Frame, testados em raster e na árvore acessível Windows.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
@@ -806,7 +822,11 @@
             "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json",
             "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json",
-            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json"
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json",
+            "docs/relatorios/2026-11-13-m3-campos-editaveis.md",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/summary.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/desktop.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/visual.json"
           ]
         },
         {
@@ -872,7 +892,7 @@
           "name": "Layout e snapshots coerentes",
           "level": 3,
           "acceptance": "Definir constraints, distribuição row/column, texto, overflow/scroll e invalidações; provar ausência de ciclo geométrico e uso do mesmo snapshot por desenho, hit test e acessibilidade.",
-          "baseline": "Regiões/listas/itens/link usam o Frame comum; marcador medido antes dos filhos, reserva horizontal, listas aninhadas, hidden, clip e zoom têm modelos independentes. Artefatos e seleção conservam ordem semântica. Layout integral e aceite visual permanecem abertos. Reexecução Windows confirmou oito rasters GDI e o foco por teclado no formulário e catálogo. As capturas de desktop expiraram.",
+          "baseline": "Regiões/listas/itens/link usam o Frame comum; marcador medido antes dos filhos, reserva horizontal, listas aninhadas, hidden, clip e zoom têm modelos independentes. Artefatos e seleção conservam ordem semântica. Layout integral e aceite visual permanecem abertos. Reexecução Windows confirmou oito rasters GDI e o foco por teclado no formulário e catálogo. As capturas de desktop expiraram. Campos editáveis têm valor e seleção publicados com o Frame, testados em raster e na árvore acessível Windows.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "local:htdl/docs/19-conformidade-e-cenarios.md",
@@ -899,7 +919,11 @@
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json",
             "docs/relatorios/2026-11-12-m3-revalidacao-visual.md",
             "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/desktop.json",
-            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/visual.json"
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/visual.json",
+            "docs/relatorios/2026-11-13-m3-campos-editaveis.md",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/summary.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/desktop.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/visual.json"
           ]
         },
         {
@@ -950,7 +974,7 @@
           "name": "Corpus visual e inspeção",
           "level": 2,
           "acceptance": "Executar contador, leitura e dois painéis com screenshots controladas, árvores/eventos e leitor de tela; inspecionar grafo, custos e versões com diagnóstico de origem.",
-          "baseline": "Oito rasters nativos GDI de leitura, contador, painéis e formulário com zoom de texto a 200% foram inspecionados nos dois modos. Foco, geometria e mudança de estado têm oráculos nativos. Computer Use expirou; fluidez percebida, desktop, leitor real, DPI, monitores, IME e inspetor completo aguardam aceite. Reexecução Windows confirmou oito rasters GDI e o foco por teclado no formulário e catálogo. As capturas de desktop expiraram.",
+          "baseline": "Oito rasters nativos GDI de leitura, contador, painéis e formulário com zoom de texto a 200% foram inspecionados nos dois modos. Foco, geometria e mudança de estado têm oráculos nativos. Computer Use expirou; fluidez percebida, desktop, leitor real, DPI, monitores, IME e inspetor completo aguardam aceite. Reexecução Windows confirmou oito rasters GDI e o foco por teclado no formulário e catálogo. As capturas de desktop expiraram. Campos editáveis têm valor e seleção publicados com o Frame, testados em raster e na árvore acessível Windows.",
           "evidence": [
             "local:htdl/docs/19-conformidade-e-cenarios.md",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
@@ -968,7 +992,11 @@
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json",
             "docs/relatorios/2026-11-12-m3-revalidacao-visual.md",
             "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/desktop.json",
-            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/visual.json"
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/visual.json",
+            "docs/relatorios/2026-11-13-m3-campos-editaveis.md",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/summary.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/desktop.json",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/visual.json"
           ]
         }
       ]
@@ -1163,7 +1191,7 @@
           "name": "Builds, pacotes e dependências",
           "level": 2,
           "acceptance": "Garantir build limpo reprodutível, manifestos/lockfiles, providers e hashes coerentes; distribuir SDK/runtime/stdlib/editor com instalação, atualização e remoção testadas por perfil.",
-          "baseline": "Novo perfil e exemplos recebem instalação/execução/remoção isoladas Windows/Linux; Windows reconstrói e inclui DLL correspondente em pacote de desenvolvimento privado. Não promove release, atualização global ou aceite por terceiro. O serviço e o índice segmentado têm suítes nativas, dependências instaláveis e evidência rastreada.",
+          "baseline": "Novo perfil e exemplos recebem instalação/execução/remoção isoladas Windows/Linux; Windows reconstrói e inclui DLL correspondente em pacote de desenvolvimento privado. Não promove release, atualização global ou aceite por terceiro. O serviço e o índice segmentado têm suítes nativas, dependências instaláveis e evidência rastreada. O Windows e o VS Code foram atualizados com os binários da revisão 48a18b7 e tiveram os hashes conferidos.",
           "evidence": [
             "docs/PACOTES-E-NAMESPACES.md",
             "docs/INSTALACAO.md",
@@ -1197,7 +1225,12 @@
             "docs/relatorios/2026-11-12-m7-indice-segmentado.md",
             "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-windows.json",
             "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-linux.json",
-            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/summary.json"
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/summary.json",
+            "docs/relatorios/2026-11-13-compilador-vsix.md",
+            "docs/ecossistema/evidencias/toolchain-update-2026-11-13/windows-update-installed.json",
+            "docs/ecossistema/evidencias/toolchain-update-2026-11-13/vsix-installed-windows.json",
+            "docs/relatorios/2026-11-13-m3-campos-editaveis.md",
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/summary.json"
           ]
         },
         {
@@ -1205,7 +1238,7 @@
           "name": "Editor, debugger e ferramentas web",
           "level": 2,
           "acceptance": "Ampliar LSP/fmt/check/test/doc com DSLs, source maps e depuração de página/host; mostrar erro de import/quota/handle com span e origem; integrar inspector local sem dar autoridade à página.",
-          "baseline": "Ferramentas da linguagem e SDK escalar existentes; LSP/VS Code agora analisam rascunhos HTDL pelo parser AssisScript, com UTF-16, recuperação semântica, limites e cancelamento por versão, sem executar script/recurso. Editor de FS/SSC, sugestões completas, inspector e depuração de página/host continuam abertos.",
+          "baseline": "Ferramentas da linguagem e SDK escalar existentes; LSP/VS Code agora analisam rascunhos HTDL pelo parser AssisScript, com UTF-16, recuperação semântica, limites e cancelamento por versão, sem executar script/recurso. Editor de FS/SSC, sugestões completas, inspector e depuração de página/host continuam abertos. VSIX alpha.15 com os dois compiladores x64 validado e instalado no VS Code Windows.",
           "evidence": [
             "docs/FERRAMENTAS-ALPHA.8.md",
             "docs/VSCODE.md",
@@ -1215,7 +1248,10 @@
             "docs/relatorios/2026-11-02-m3-htdl-recovery.md",
             "docs/ecossistema/evidencias/m3-htdl-recovery-2026-11-02/summary.json",
             "docs/relatorios/2026-11-11-entrada-tipada-const.md",
-            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json"
+            "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json",
+            "docs/relatorios/2026-11-13-compilador-vsix.md",
+            "docs/ecossistema/evidencias/toolchain-update-2026-11-13/vsix-extracted-linux.json",
+            "docs/ecossistema/evidencias/toolchain-update-2026-11-13/vsix-installed-windows.json"
           ]
         },
         {
@@ -4378,7 +4414,81 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-13",
+      "label": "M3 parcial: edição de campos HTDL, entrada Win32 e atualização do compilador/VSIX",
+      "rubric_version": 1,
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 3,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 2,
+        "E03-01": 2,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 3,
+        "E04-05": 2,
+        "E05-01": 2,
+        "E05-02": 1,
+        "E05-03": 2,
+        "E05-04": 1,
+        "E05-05": 2,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 3,
+        "E07-03": 2,
+        "E07-04": 3,
+        "E07-05": 3,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 2,
+        "E09-01": 2,
+        "E09-02": 3,
+        "E09-03": 3,
+        "E09-04": 1,
+        "E09-05": 2,
+        "E10-01": 2,
+        "E10-02": 0,
+        "E10-03": 3,
+        "E10-04": 2,
+        "E10-05": 2,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "58,00%, 0/5 gates. Serviço de consulta em loopback e índice segmentado ASIS validado sob cota de processo. Windows reexecutou rasters GDI e a navegação por teclado no formulário e catálogo. Captura desktop, leitor real, DPI, monitores, IME e os demais aceites continuam na fila."
+  "assessment_note": "58,50%, 0/5 gates. Busca segmentada e serviço local publicados. Campos HTDL de texto e número ganham edição por grafema, buffer por nó e projeção acessível. Compilador e VS Code alpha.15 atualizados com a revisão 48a18b7. Captura desktop, leitor real, DPI, monitores, IME e os demais aceites continuam na fila."
 }

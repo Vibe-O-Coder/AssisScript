@@ -1,3 +1,12 @@
+> **Continuação de 13/11/2026 — 58,50%, 0/5 gates.**
+> Base pública `48a18b7`. Edição local de texto e números por grafema,
+> com valores e seleção por nó. Campos e MSAA acompanhados pelo Frame.
+> [Relatório e aceite](../relatorios/2026-11-13-m3-campos-editaveis.md).
+> Compilador e extensão alpha.15 atualizados no Windows com a revisão
+> publicada de busca. [Artefatos e hashes](../relatorios/2026-11-13-compilador-vsix.md).
+> Próximo M3: composição IME, imagens, importação HTML e live regions.
+> [Fila integral](FILA-M0-M1.md). Easy por último.
+
 > **Continuação de 12/11/2026 — 58,00%, 0/5 gates.**
 > Use `work/eco-70-20261112`, branch `work/ecosystem-2026-11-12`, sobre
 > `13e81a897388e694d9a02bcfb4b3984665d7c3c9`. A base de 54,30% está pública na

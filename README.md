@@ -10,6 +10,8 @@ Development uses AI assistance (**GPT-6.1 Sol, Extra High reasoning / Extra Alto
 
 Current release: **3.3.0-alpha.15**, experimental. See the [handoff](docs/HANDOFF-3.3-ALPHA.15.md), [validation](docs/VALIDACAO-ALPHA15.json) and [weighted roadmap](docs/PROGRESSO.md).
 
+Install the alpha.15 editor package from the [VS Code extension](assisscript-3.3.0-alpha.15.vsix). See the [editor guide](docs/VSCODE.md).
+
 Testing snapshot: see the [Windows/Linux testing guide](docs/TESTES-GITHUB.md) for the `testing/alpha15` branch, download links and how to report results. This snapshot retains the experimental status and documented outstanding gates.
 
 [Closures, Move variants and owned results](docs/CAPTURAS-E-VARIANTES-MOVE.md).

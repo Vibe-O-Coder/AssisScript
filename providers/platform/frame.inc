@@ -76,9 +76,10 @@ int64_t assisp_frame_measure(const uint8_t *text, int64_t length, int32_t size, 
 }
 static int32_t frame_commit(int64_t token, int64_t projection, uint32_t background,
         const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
-        const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length, int projection_kind) {
+        const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length, int projection_kind, int64_t instance) {
     Window *w = NULL; int code = access_window(token, &w); if (code) return code;
     if (projection <= 0 || (w->access && projection <= w->access->document)) return -2;
+    if (instance > 0 && instance < w->text_document) return -2;
     if (count < 0 || count > 33028 || (!commands && count) || length < 0 || length > 2097216 || (!text && length)) return -1;
     /* Bound area before any draw; no command can make raster work unbounded. */
     uint64_t area = 0, bytes = 0;
@@ -135,24 +136,35 @@ static int32_t frame_commit(int64_t token, int64_t projection, uint32_t backgrou
     if (code) {free_surface(&next); return code;}
     /* No fallible operation follows the accessible commit; physical presentation
        is separate. Calls run on one owner thread, without user callbacks. */
-    Surface old = w->surface; w->surface = next; free_surface(&old); return 0;
+    Surface old = w->surface; w->surface = next; free_surface(&old);
+    if (w->text_document != instance) w->high_surrogate = 0;
+    w->text_document = instance;
+    return 0;
 }
 
 int64_t assisp_frame_catalog_version(void) {return on_owner() ? 1 : -5;}
 int32_t assisp_frame_commit(int64_t token, int64_t projection, uint32_t background,
         const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
         const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length) {
-    return frame_commit(token, projection, background, commands, count, text, length, access, items, names, names_length, 0);
+    return frame_commit(token, projection, background, commands, count, text, length, access, items, names, names_length, 0, 0);
 }
 int32_t assisp_frame_catalog_commit(int64_t token, int64_t projection, uint32_t background,
         const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
         const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length) {
-    return frame_commit(token, projection, background, commands, count, text, length, access, items, names, names_length, 1);
+    return frame_commit(token, projection, background, commands, count, text, length, access, items, names, names_length, 1, 0);
 }
 
 int64_t assisp_frame_forms_version(void) {return on_owner() ? 1 : -5;}
 int32_t assisp_frame_forms_commit(int64_t token, int64_t projection, uint32_t background,
         const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
         const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length) {
-    return frame_commit(token, projection, background, commands, count, text, length, access, items, names, names_length, 2);
+    return frame_commit(token, projection, background, commands, count, text, length, access, items, names, names_length, 2, 0);
+}
+
+int64_t assisp_frame_editing_version(void) {return on_owner() ? 1 : -5;}
+int32_t assisp_frame_editing_commit(int64_t token, int64_t projection, int64_t instance, uint32_t background,
+        const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
+        const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length) {
+    if (instance <= 0) return -1;
+    return frame_commit(token, projection, background, commands, count, text, length, access, items, names, names_length, 3, instance);
 }

@@ -13,6 +13,8 @@ public final class Reader{
     private let control:bool;private let shift:bool;private let dragging:bool;
     private let focus:doctree::NodeId;private let pressed:doctree::NodeId;private let keyboard:doctree::NodeId;
     private let enter:bool;private let space:bool;
+    private let editing:pageedit::Edit;
+    private let edit_request:int;
     private let scroll:int;private let active:bool;private let code:int;
     fn init(borrow mut self,borrow mut frame:pageframe::Frame,borrow document:documents::Document,
             window_instance:int,max_bytes:int,metric:safe fn(borrow slice<byte>,int,int):int):void{
@@ -80,9 +82,13 @@ public final class Reader{
         self.anchor=anchor;self.caret=caret;return true;
     }
     fn focus_node(borrow self):doctree::NodeId{return self.focus;}
+    fn pending_edit(borrow self):pageedit::Edit{return self.editing;}
+    fn edit_ready(borrow self,request:int,node:doctree::NodeId):bool{
+        return request>0 && self.edit_request==request && self.request==request && pageframe::same(self.focus,node);
+    }
     fn gesture_active(borrow self):bool{return self.dragging || !doctree::absent(self.pressed) || !doctree::absent(self.keyboard);}
     fn scroll_target(borrow self):int{return self.scroll;}
-    fn cancel_gesture(borrow mut self):void{self.dragging=false;self.pressed=new doctree::NodeId();self.keyboard=new doctree::NodeId();self.enter=false;self.space=false;self.control=false;self.shift=false;}
+    fn cancel_gesture(borrow mut self):void{self.dragging=false;self.pressed=new doctree::NodeId();self.keyboard=new doctree::NodeId();self.enter=false;self.space=false;self.control=false;self.shift=false;self.edit_request=0;}
     fn run_start(borrow self,index:int):int{assert(self.active && index>=0 && index<self.lines);return self.starts[index];}
     /// Selection geometry is cut from the exact run; author offsets are already composed.
     fn highlight(borrow self,borrow frame:pageframe::Frame,index:int):pageframe::Rect{
@@ -144,12 +150,13 @@ public final class Reader{
         if(doctree::absent(target)){return new viewer::Change();}
         val kind:int=htdl::kind(document.nodes(),target);
         if(kind==17){return new viewer::Change(8,target);}
-        if(kind==21){return new viewer::Change(9,target);}
+        if(kind==21){
+            if(pageedit::kind(document.nodes(),target)==1){return new viewer::Change(9,target);}
+            return new viewer::Change(12,target);
+        }
         if(htdl::value_equals(document.nodes(),htdl::attribute(document.nodes(),target,9),utf8("submit"))){
             val form:doctree::NodeId=frame.form_of(document,target);
             if(doctree::absent(form)){return new viewer::Change();}
-            val invalid:doctree::NodeId=frame.invalid_checkbox(document,form);
-            if(!doctree::absent(invalid)){return new viewer::Change(11,invalid);}
             return new viewer::Change(10,form);
         }
         return new viewer::Change(2,target);
@@ -216,6 +223,59 @@ public final class Reader{
                     return action;
                 }}
         }return none;
+    }
+    /// Editable profiles consume text and editing keys before reader shortcuts.
+    fn dispatch_fields(borrow mut self,borrow frame:pageframe::Frame,borrow document:documents::Document,
+            borrow fields:pageedit::Fields,projection:int,event:window::Event,
+            metric:safe fn(borrow slice<byte>,int,int):int):viewer::Change{
+        val none:viewer::Change=new viewer::Change();
+        val focused:bool=fields.has(self.focus);
+        if(event.kind==14){
+            if(event.arg1!=0 && event.arg1!=frame.instance()){return none;}
+            if(!self.accept(frame,document,projection,event) || !focused || self.dragging ||
+               !doctree::absent(self.pressed) || !pageedit::printable(event.arg0)){return none;}
+            self.editing=new pageedit::Edit(1,event.arg0,false);
+            self.edit_request=event.request_id;
+            return new viewer::Change(12,self.focus);
+        }
+        if(focused && event.kind==3 && (event.arg1==0 || event.arg1==1)){
+            let command:int=0;
+            if(event.arg0==8){command=2;}
+            if(event.arg0==46){command=3;}
+            if(event.arg0==37){command=4;}
+            if(event.arg0==39){command=5;}
+            if(event.arg0==36){command=6;}
+            if(event.arg0==35){command=7;}
+            if(self.control && event.arg0==65){command=8;}
+            val copy:bool=self.control && event.arg0==67;
+            if(command>0 || copy || event.arg0==32 || event.arg0==13){
+                if(!self.accept(frame,document,projection,event) || event.arg1==0){return none;}
+                if(copy){return new viewer::Change(4,self.focus);}
+                if(command==0 || self.dragging || !doctree::absent(self.pressed)){return none;}
+                self.editing=new pageedit::Edit(command,0,self.shift && command!=8);
+                self.edit_request=event.request_id;
+                return new viewer::Change(12,self.focus);
+            }
+        }
+        if(event.kind==8){
+            val pressed:doctree::NodeId=self.pressed;
+            val target:doctree::NodeId=frame.activation_target(document,pressed);
+            if(fields.has(target)){
+                if(!self.accept(frame,document,projection,event)){return none;}
+                self.pressed=new doctree::NodeId();
+                if(!pageframe::same(pressed,frame.hit(document,projection,event.arg0,event.arg1))){return none;}
+                let point:int=len(fields.value(target));
+                if(frame.edit_hit(document,target,event.arg0,event.arg1)){
+                    point=frame.edit_point(fields,target,event.arg0,pageframe::same(target,self.focus),metric);
+                    if(point<0){return none;}
+                }
+                self.focus=target;
+                self.editing=new pageedit::Edit(9,point,self.shift);
+                self.edit_request=event.request_id;
+                return new viewer::Change(12,target);
+            }
+        }
+        return self.dispatch(frame,document,projection,event);
     }
     fn copy(borrow self,borrow frame:pageframe::Frame,borrow document:documents::Document,borrow window:window::Window):int{
         if(!self.current(frame,document) || !window.opened()){return -2;}

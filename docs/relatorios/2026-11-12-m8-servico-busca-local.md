@@ -86,4 +86,8 @@ edição podem avançar independentemente. [Fila integral](../ecossistema/FILA-M
 ## Publicação
 
 Destino autorizado [Vibe-O-Coder/AssisScript](https://github.com/Vibe-O-Coder/AssisScript/tree/work/ecosystem-2026-11-12).
-A conferência do SHA remoto e a situação da PR entram no adendo.
+A autorização explícita permitiu publicar `48a18b7b3116940e00d008ac6b2610ba6a2dc175`.
+O GitHub retornou a árvore `feb1893d6b8ed0f0a622998c5d5ebf52d64fdc60`.
+Os 2.843 blobs e seus modos e caminhos coincidem com o Git local, incluindo
+os 43 arquivos da unidade. O conector retornou HTTP 403 ao abrir a PR de
+rascunho. [Commit publicado](https://github.com/Vibe-O-Coder/AssisScript/commit/48a18b7b3116940e00d008ac6b2610ba6a2dc175).

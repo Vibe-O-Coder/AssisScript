@@ -1,0 +1,94 @@
+{
+  "attempts": [
+    {
+      "action": "launch",
+      "result": "Computer Use app approval timed out"
+    },
+    {
+      "action": "launch retry",
+      "result": "returned"
+    },
+    {
+      "action": "screenshot",
+      "result": "FrameArrived timed out: timed out waiting on channel"
+    },
+    {
+      "action": "screenshot retry",
+      "result": "window capture timed out: timed out waiting on channel"
+    },
+    {
+      "action": "inspect accessibility",
+      "result": [
+        "\t\t9 text Nome",
+        "\t\t10 text field (editar) (settable, string) Nome",
+        "\t\t11 text Quantidade inteira",
+        "\t\t12 text field (editar) (settable, string) Quantidade inteira Value: -",
+        "\t\t13 button (botão) Validar",
+        "The focused UI element is 0 document (documento) Formulário editável Secondary Actions: Raise."
+      ]
+    },
+    {
+      "action": "Tab to name",
+      "result": "10 text field (editar) (settable, string) Nome"
+    },
+    {
+      "action": "type synthetic name",
+      "result": "10 text field (editar) (settable, string) Nome"
+    },
+    {
+      "action": "observe field after typing",
+      "result": [
+        "\t\t9 text Nome",
+        "\t\t10 text field (editar) (settable, string) Nome",
+        "\t\t11 text Quantidade inteira",
+        "\t\t12 text field (editar) (settable, string) Quantidade inteira Value: -",
+        "The focused UI element is 10 text field (editar) (settable, string) Nome."
+      ]
+    },
+    {
+      "action": "physical j key",
+      "result": [
+        "\t\t10 text field (editar) (settable, string) Nome",
+        "\t\t12 text field (editar) (settable, string) Quantidade inteira Value: -",
+        "The focused UI element is 10 text field (editar) (settable, string) Nome."
+      ]
+    },
+    {
+      "action": "delayed key result",
+      "result": [
+        "\t\t10 text field (editar) (settable, string) Nome Value: j",
+        "\t\t12 text field (editar) (settable, string) Quantidade inteira Value: -",
+        "The focused UI element is 10 text field (editar) (settable, string) Nome Value: j."
+      ]
+    },
+    {
+      "action": "type accented continuation",
+      "result": "10 text field (editar) (settable, string) Nome Value: j"
+    },
+    {
+      "action": "verify accented value",
+      "result": "10 text field (editar) (settable, string) Nome Value: j"
+    },
+    {
+      "action": "Tab to quantity",
+      "result": "10 text field (editar) (settable, string) Nome Value: j"
+    },
+    {
+      "action": "verify quantity focus",
+      "result": "12 text field (editar) (settable, string) Quantidade inteira Value: -"
+    },
+    {
+      "action": "physical 3 key",
+      "result": "12 text field (editar) (settable, string) Quantidade inteira Value: -3"
+    }
+  ],
+  "screenshots": 0,
+  "host": "Windows x64",
+  "binary_sha256": "3b584866d267454d163d27b7bd2d7ad3e2b281f4007fd32865aa69ac14862aed",
+  "pending": [
+    "IME composition",
+    "real screen reader audio",
+    "desktop DPI and monitors",
+    "SSC perceived smoothness"
+  ]
+}

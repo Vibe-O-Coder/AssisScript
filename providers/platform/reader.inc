@@ -115,6 +115,22 @@ static HRESULT STDMETHODCALLTYPE ac_no_string(IAccessible *self, VARIANT child, 
     if (FAILED(hr)) {return hr;} int64_t index;
     return child_index(as_access(self), child, &index) ? S_FALSE : E_INVALIDARG;
 }
+static int edit_role(int64_t role) {return role == 24 || role == 25;}
+static HRESULT STDMETHODCALLTYPE ac_value(IAccessible *self, VARIANT child, BSTR *out) {
+    HRESULT hr = ac_no_string(self, child, out); if (FAILED(hr)) return hr;
+    Access *a = as_access(self); int64_t index;
+    if (!child_index(a, child, &index)) return E_INVALIDARG;
+    const int64_t *r = a->words + index * 8;
+    if (!edit_role(r[0])) return S_FALSE;
+    const uint8_t *value = a->names + r[6] + r[7];
+    int64_t length = value[0] | ((int64_t)value[1] << 8);
+    wchar_t *wide = NULL; int count = 0;
+    int code = wide_text(value + 2, length, 1024, &wide, &count);
+    if (code) return code == -4 ? E_OUTOFMEMORY : E_INVALIDARG;
+    *out = SysAllocStringLen(wide, (UINT)count);
+    free(wide);
+    return *out ? S_OK : E_OUTOFMEMORY;
+}
 static HRESULT STDMETHODCALLTYPE ac_description(IAccessible *self, VARIANT child, BSTR *out) {
     HRESULT hr = ac_no_string(self, child, out); if (FAILED(hr)) {return hr;}
     int64_t index; Access *a = as_access(self); if (!child_index(a, child, &index)) {return E_INVALIDARG;}
@@ -134,16 +150,16 @@ static HRESULT STDMETHODCALLTYPE ac_role(IAccessible *self, VARIANT child, VARIA
     V_VT(out) = VT_I4; int64_t role = a->words[index * 8];
     V_I4(out) = role == 1 ? ROLE_SYSTEM_DOCUMENT : role == 9 ? ROLE_SYSTEM_PUSHBUTTON :
         role == 17 ? ROLE_SYSTEM_LINK : role == 18 ? ROLE_SYSTEM_LIST : role == 19 ? ROLE_SYSTEM_LISTITEM :
-        role == 21 ? ROLE_SYSTEM_CHECKBUTTON :
+        role == 21 ? ROLE_SYSTEM_CHECKBUTTON : edit_role(role) ? ROLE_SYSTEM_TEXT :
         ((role >= 12 && role <= 16) || role == 22) ? ROLE_SYSTEM_GROUPING : ROLE_SYSTEM_STATICTEXT; return S_OK;
 }
 static HRESULT STDMETHODCALLTYPE ac_state(IAccessible *self, VARIANT child, VARIANT *out) {
     if (!out) {return E_POINTER;} VariantInit(out); Window *w = NULL; HRESULT hr = access_live(self, &w);
     if (FAILED(hr)) {return hr;} int64_t index; Access *a = as_access(self);
     if (!child_index(a, child, &index)) {return E_INVALIDARG;}
-    int64_t *r = a->words + index * 8; LONG flags = r[0] == 21 ? 0 : STATE_SYSTEM_READONLY;
+    int64_t *r = a->words + index * 8; LONG flags = r[0] == 21 || edit_role(r[0]) ? 0 : STATE_SYSTEM_READONLY;
     if (r[1] & 1) flags |= STATE_SYSTEM_UNAVAILABLE;
-    if (action_role(r[0]) && !(r[1] & 1)) flags |= STATE_SYSTEM_FOCUSABLE;
+    if ((action_role(r[0]) || edit_role(r[0])) && !(r[1] & 1)) flags |= STATE_SYSTEM_FOCUSABLE;
     if (r[0] == 21 && (r[1] & 8)) flags |= STATE_SYSTEM_CHECKED;
     if ((r[1] & 2) && GetFocus() == w->hwnd) flags |= STATE_SYSTEM_FOCUSED;
     RECT rect; if (!access_rect(w, r, &rect)) flags |= STATE_SYSTEM_OFFSCREEN;
@@ -221,7 +237,7 @@ static HRESULT STDMETHODCALLTYPE ac_put(IAccessible *self, VARIANT child, BSTR v
 }
 static IAccessibleVtbl accessible_vtable = {
     ac_query, ac_add, ac_release, ac_type_count, ac_type, ac_ids, ac_invoke,
-    ac_parent, ac_count, ac_child, ac_name, ac_no_string, ac_description, ac_role, ac_state,
+    ac_parent, ac_count, ac_child, ac_name, ac_value, ac_description, ac_role, ac_state,
     ac_no_string, ac_help_topic, ac_no_string, ac_focus, ac_selection, ac_action_name,
     ac_select, ac_location, ac_navigate, ac_hit, ac_action, ac_put, ac_put
 };
@@ -267,20 +283,37 @@ static int32_t accessibility_commit(int64_t token, int64_t document, const int64
     if (w->access && document < w->access->document) {return -2;}
     // Validate every range before allocating/copying; slices must be UTF-8 boundaries.
     int focused = 0;
+    int64_t expected_name = 0;
     for (int64_t i = 0; i < count; i++) {
         const int64_t *r = words + i * 8;
         int allowed = i ? r[0] == 6 || r[0] == 8 || r[0] == 9 ||
             (projection_kind >= 1 && r[0] >= 12 && r[0] <= 19) ||
-            (projection_kind == 2 && r[0] >= 20 && r[0] <= 22) : r[0] == 1;
-        int mask = projection_kind == 2 && r[0] == 21 ? 15 : 7;
+            (projection_kind >= 2 && r[0] >= 20 && r[0] <= 22) ||
+            (projection_kind == 3 && edit_role(r[0])) : r[0] == 1;
+        int mask = projection_kind >= 2 && r[0] == 21 ? 15 : 7;
         if (!allowed || r[1] < 0 || r[1] > mask ||
             r[2] < 0 || r[2] > 16384 || r[3] < 0 || r[3] > 16384 || r[4] < 0 || r[4] > 16384 || r[5] < 0 || r[5] > 16384 ||
             r[6] < 0 || r[7] < 0 || r[7] > 1048576 || r[6] > length || r[7] > length - r[6]) return -1;
-        if ((r[6] < length && names[r[6]] >= 128 && names[r[6]] < 192) ||
-            (r[6]+r[7] < length && names[r[6]+r[7]] >= 128 && names[r[6]+r[7]] < 192)) return -1;
-        if (r[1] & 2) {if (!action_role(r[0]) || (r[1] & 1) || focused++) {return -1;}}
+        if (projection_kind == 3) {
+            if (r[6] != expected_name || (r[7] && !MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+                    (const char *)names+r[6], (int)r[7], NULL, 0))) return -1;
+            expected_name = r[6] + r[7];
+            if (edit_role(r[0])) {
+                if (length - expected_name < 2) return -1;
+                int size = names[expected_name] | (names[expected_name+1] << 8);
+                expected_name += 2;
+                if (size > 1024 || size > length - expected_name ||
+                    (size && (memchr(names+expected_name, 0, (size_t)size) ||
+                    !MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, (const char *)names+expected_name, size, NULL, 0)))) return -1;
+                expected_name += size;
+            }
+        } else if ((r[6] < length && names[r[6]] >= 128 && names[r[6]] < 192) ||
+                   (r[6]+r[7] < length && names[r[6]+r[7]] >= 128 && names[r[6]+r[7]] < 192)) return -1;
+        if (r[1] & 2) {if ((!action_role(r[0]) && !edit_role(r[0])) || (r[1] & 1) || focused++) return -1;}
     }
-    if (length && !MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, (const char *)names, (int)length, NULL, 0)) {return -1;}
+    if (projection_kind == 3) {
+        if (expected_name != length) return -1;
+    } else if (length && !MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, (const char *)names, (int)length, NULL, 0)) return -1;
     Access *old = w->access;
     if (old && old->document == document) {
         if (count != old->count || length != old->length || (length && memcmp(names, old->names, (size_t)length))) {return -1;}

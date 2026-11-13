@@ -1,0 +1,270 @@
+{
+  "platform": "Windows AMD64",
+  "archiveSha256": "54ac37dbfa99b29bf7568e3bd46a41899de50d558448ba0fdcfdfe736854c446",
+  "entryCount": 1883,
+  "verifiedFiles": {
+    "bin/assis": "3b566d122b6ad1e76748ae1ac0b912d2933b3ca20e6ecc71e73beaba7492214e",
+    "bin/assis.exe": "d5e3e4adf0e2fa152a52fac8941e50ecf736866d46a3bedf0be0c2cb3a64103c",
+    "stdlib/algorithms.assis": "4581ab180921fa8e1b7a36cca9eead700b9a8658311c111613fda7af0d126239",
+    "stdlib/arena.assis": "9551fa65faa789f11b939a682b252d7898fcd096a8bab10bea833a5b08bd6fe4",
+    "stdlib/buffers.assis": "f04207110caa8373974167837a394b2a6c5a4e8a986ff2653096a4a105b56bf6",
+    "stdlib/catalogo.json": "a33ce5192114542e68101e046de5f735116ec7f9e4886504d88d3c6446e5e290",
+    "stdlib/catalogo.sh": "5b0526953166a67e08fdf59ccb40defe8bbcb6390f18280b5a05f5e18c65fcbe",
+    "stdlib/cli.assis": "d32e572346e462d89be51c9ef8407f107bde2da909a35badfe2ed73c9f5db80b",
+    "stdlib/convert.assis": "005f807feff6793aebb6a650fde152401d5581b8383624432f7170f15e6420ee",
+    "stdlib/csv.assis": "08d3a5c0fe0cafe7ff830d076b8c6a0750020a637481f705ae98589d117e74b4",
+    "stdlib/doctree.assis": "cb521e03c6bd05a7fd6154545f8c77778073fb454c48ad5d690ccf5e065637e7",
+    "stdlib/documents.assis": "1013f4c1874338cdcb75d7b378ec1f6f90f3f4f04ce8a1f842b53301fa150b03",
+    "stdlib/encoding.assis": "e1dbca19786f2b9b81fb62011992a2809e210030b7c000c9e9f03ee73b31dc95",
+    "stdlib/errors.assis": "ad9c4f1703d7cead9af736deca8de5ef9082b11a4b03aa503c29ede907f35e2e",
+    "stdlib/events.assis": "c463c7a13395f98448394639cbab4238662b25340dd106400b447a6bf7488225",
+    "stdlib/flowpage.assis": "ecb247fa911b3e903aa8fd3e06139dbaf9f565326cbbbef34a5b48ec398c93d7",
+    "stdlib/fluxstyle.assis": "6f989259e6d811afaeacecb0c36d3388494cade71c51a5dcc84616c25e2fc55a",
+    "stdlib/framehost.assis": "44c322733783e05162aecf987bc055542e274636151bcc0bb6b248035791f482",
+    "stdlib/framereader.assis": "973606cdabf2b04204ac9445d415117532af6b0925767cf485b77fa3891ed426",
+    "stdlib/frameworker.assis": "29f69b012bef95d235ee7faec61fcb402891fd7b7fbb56b87fc7ca700726fb5b",
+    "stdlib/graphemes.assis": "0f5c4149d1a11e9d80da6a1a063f0cc783f06908fa3dc0d998cf47de8aae0ac5",
+    "stdlib/htdl.assis": "1b56b8fa7d9e8fcc0c2de4acad14d2c041521832e1e5782400f01ea77e5c756d",
+    "stdlib/htdlsearch.assis": "b3d6687b28f5168800e6ad17aee7a41850e8a53cb503f5382388b65d1ff17171",
+    "stdlib/http.assis": "e729703c30adead48b5d7375e43881313076ed5353993c17f12a986ad9e9b236",
+    "stdlib/httpurl.assis": "090a8c6f74fbb304c499e757160aec72a51c7841a8ae0457af4821810a287727",
+    "stdlib/iterators.assis": "57e7c46d1194ee22172a82da3c9339cca6c7de98f967eb6eac9f7a33ffff401f",
+    "stdlib/json.assis": "fe96539dd9967442cf186c719a12c105fb91b6593244d605e1dad48ce00a639a",
+    "stdlib/localresources.assis": "f8ff807f0772e18b23859ab905f69989807f3fd7f75ad9631f90c7ec7d406a9a",
+    "stdlib/log.assis": "374dd08dd3df3c9c144ccccbf4b5b2c637be3025acded705261b3dddc48fccdf",
+    "stdlib/loopback.assis": "8e5995264e45993ba70ff0a73003f858ad08d31a8a5110422c8db4fdb5177c49",
+    "stdlib/math.assis": "b790264d95cb89ea6f84f675b128eb965d0e932206eef0892e178b63b01dbe74",
+    "stdlib/memory.assis": "7ab9af05e7d9f1736d0c026eec76dbf30b005d40e1aa333306dc7e7c03f47e69",
+    "stdlib/motionpage.assis": "83dce9653d3405da62d937857f180755565327a2be746298c34507ecd48c9db6",
+    "stdlib/net.assis": "376ec5e6992d50520001b8689bf2f225deccd1df113f2f8a5d2a05d01ebbc2e0",
+    "stdlib/owned.assis": "23b6d8146a9616a42673a75e5c62ab5e48f379503fad192e726839b1b992c91c",
+    "stdlib/page.assis": "3c56b3e7af15df4513a2bc100a874a8fc85f17b1c13eef071249020daddf7f98",
+    "stdlib/pagecompiler.assis": "c6cf2da589cc45e9fddc2a8401989ea260c57205ee3b3ba870937c2a2e369fdf",
+    "stdlib/pageframe.assis": "11e2959e028686167110dca031efa62514b1c88f6eaaed01d36ae73bec77e371",
+    "stdlib/pagehost.assis": "731bcbefb2fcf08ae41b4f19bf2922b5079886ffeec68e6c431e05656f8ab834",
+    "stdlib/pagepresent.assis": "012f0ea3bb2f98f1a216e4cc07747be87f8ffa6f04ff007d4d854e6595aed66b",
+    "stdlib/pagereader.assis": "a822a0df3257bed31ea4732b914d98b09f0388234c4b1cc4129a19c4b77f2514",
+    "stdlib/pageresources.assis": "24a5e0ed6583fd347ab8616107f28e0b2e6f8e2d4089f09d45c333ca03ceca61",
+    "stdlib/pagevm.assis": "a97f07ac72e9c1eff4e4d75adf4dd8ff9e679367afbb1cfe497fa23ae07d28a8",
+    "stdlib/pagewire.assis": "ccce42f10284630553d2bea8934642f9821772a7a6880cb49d53075084847463",
+    "stdlib/pageworker.assis": "f0b164501bb8088037ec25ae5c9cf9a16487e9600587b21202f48488bb33d995",
+    "stdlib/parse.assis": "4d201f796bb9f78701f3d7e0dcdef577a7fb9f0778d0c6f9d8cd42fc512b26ee",
+    "stdlib/process.assis": "32799a30a80cadfefae7a6cd1ac9811a3bf42323764b0d144a286eff7e858d09",
+    "stdlib/random.assis": "22456db64cf65bd533be3fa509857f48f4026d314f95dba23170b3f1033d0f45",
+    "stdlib/reader.assis": "8762e170a071af90ea258e33f65b4a974f8b99b85f030682df93f7a254bf5c35",
+    "stdlib/sanscript.assis": "8de75c6c85beba2bfa091926e392e8ae5ab708cfbce49fdbe822ecf3cda9932f",
+    "stdlib/searchindex.assis": "bde7027050d04a6fe04d639d91059143a52d7785ed0e61525cadeadae2b62503",
+    "stdlib/searchsegments.assis": "9db4e162de11dec828088619851a318af7370c87511fdefcaf1e7cf24fa09cbb",
+    "stdlib/searchservice.assis": "257edcd1edeaa2e576df1a2192851bca9af2b16b4ce6b2fb38012a9774ec5fd1",
+    "stdlib/strings.assis": "05f3d4b9205648911cec49decf5e948530f53ee1c45b46e89284553fbcef39e9",
+    "stdlib/time.assis": "0a4fa74239155d2521b107c1f304885e3b0a3fe2e93b9542f9cdd09d28dfa062",
+    "stdlib/unicode.assis": "b5390968db44c5f916c1b61df2c4241600868377a62cf264907651b07c09cb33",
+    "stdlib/viewer.assis": "e65df7ad2502e4ace6df044c7e8d7c3fc2950af221cdd794cc0c00f0f36cc7a8",
+    "stdlib/window.assis": "333e712d2a563a70be842ccc33871491a81141849ccdc1413af5455ea21c040c",
+    "exemplos/68_typed_input.assis": "e18b0602007156e53eb933301c4302dfd9518c0914f7f5f13f317dfc623eb706",
+    "docs/BIBLIOTECA-cli.md": "b6e396bfe0d1cc704123d2b0c9b9a70f311693057dcf2f305da8443d3b0d1da7",
+    "docs/BIBLIOTECA-parse.md": "0b1c6d650f4f23795b5b9897c2e1f37b05900e4045cb2e963a6f7b91b280f902",
+    "docs/VSCODE.md": "95bad50373b22e8a3723b2dbb306a8369d0134d3baf2615afc637adad354b723",
+    "package.json": "40dc70acdde05efae47c2e61699ec68faa350486a7a66dc90f3f587a164e8ec1",
+    "snippets/assis.json": "e1f779183801c1d307f6ae4a86657aecd06cbb2b8105103f5d793c99c797bfe2",
+    "src/extension.js": "e252b60e0927445a3d0738801642751a977a911b05ad48a4438fa6afb42340fb",
+    "src/language.js": "7af576f5610cb6a4a027eb92ac0cf63e10ef46633406259891e71c72b3720874",
+    "src/reference.json": "4e63cf3bee396f686afcea98fe4660f523b70ad3f02c2ca5c79d41032e59f5e5"
+  },
+  "extractedRuns": [
+    {
+      "case": "valid-crlf",
+      "mode": "optimized",
+      "exit": 0,
+      "lastLine": "Júlia 3 37.50"
+    },
+    {
+      "case": "declined",
+      "mode": "optimized",
+      "exit": 0,
+      "lastLine": "Pedido cancelado"
+    },
+    {
+      "case": "invalid-utf8",
+      "mode": "optimized",
+      "exit": 1,
+      "lastLine": "Nome inválido 2 1"
+    },
+    {
+      "case": "eof",
+      "mode": "optimized",
+      "exit": 1,
+      "lastLine": "Nome inválido 5 -1"
+    },
+    {
+      "case": "line-limit",
+      "mode": "optimized",
+      "exit": 1,
+      "lastLine": "Nome inválido 7 256"
+    },
+    {
+      "case": "integer-overflow",
+      "mode": "optimized",
+      "exit": 1,
+      "lastLine": "Quantidade inválida 3 18"
+    },
+    {
+      "case": "invalid-real",
+      "mode": "optimized",
+      "exit": 1,
+      "lastLine": "Preço inválido 2 1"
+    },
+    {
+      "case": "invalid-bool",
+      "mode": "optimized",
+      "exit": 1,
+      "lastLine": "Confirmação inválida 2 0"
+    },
+    {
+      "case": "valid-crlf",
+      "mode": "--no-opt",
+      "exit": 0,
+      "lastLine": "Júlia 3 37.50"
+    },
+    {
+      "case": "declined",
+      "mode": "--no-opt",
+      "exit": 0,
+      "lastLine": "Pedido cancelado"
+    },
+    {
+      "case": "invalid-utf8",
+      "mode": "--no-opt",
+      "exit": 1,
+      "lastLine": "Nome inválido 2 1"
+    },
+    {
+      "case": "eof",
+      "mode": "--no-opt",
+      "exit": 1,
+      "lastLine": "Nome inválido 5 -1"
+    },
+    {
+      "case": "line-limit",
+      "mode": "--no-opt",
+      "exit": 1,
+      "lastLine": "Nome inválido 7 256"
+    },
+    {
+      "case": "integer-overflow",
+      "mode": "--no-opt",
+      "exit": 1,
+      "lastLine": "Quantidade inválida 3 18"
+    },
+    {
+      "case": "invalid-real",
+      "mode": "--no-opt",
+      "exit": 1,
+      "lastLine": "Preço inválido 2 1"
+    },
+    {
+      "case": "invalid-bool",
+      "mode": "--no-opt",
+      "exit": 1,
+      "lastLine": "Confirmação inválida 2 0"
+    }
+  ],
+  "installedRuns": [
+    {
+      "case": "valid-crlf",
+      "mode": "optimized",
+      "exit": 0,
+      "lastLine": "Júlia 3 37.50"
+    },
+    {
+      "case": "declined",
+      "mode": "optimized",
+      "exit": 0,
+      "lastLine": "Pedido cancelado"
+    },
+    {
+      "case": "invalid-utf8",
+      "mode": "optimized",
+      "exit": 1,
+      "lastLine": "Nome inválido 2 1"
+    },
+    {
+      "case": "eof",
+      "mode": "optimized",
+      "exit": 1,
+      "lastLine": "Nome inválido 5 -1"
+    },
+    {
+      "case": "line-limit",
+      "mode": "optimized",
+      "exit": 1,
+      "lastLine": "Nome inválido 7 256"
+    },
+    {
+      "case": "integer-overflow",
+      "mode": "optimized",
+      "exit": 1,
+      "lastLine": "Quantidade inválida 3 18"
+    },
+    {
+      "case": "invalid-real",
+      "mode": "optimized",
+      "exit": 1,
+      "lastLine": "Preço inválido 2 1"
+    },
+    {
+      "case": "invalid-bool",
+      "mode": "optimized",
+      "exit": 1,
+      "lastLine": "Confirmação inválida 2 0"
+    },
+    {
+      "case": "valid-crlf",
+      "mode": "--no-opt",
+      "exit": 0,
+      "lastLine": "Júlia 3 37.50"
+    },
+    {
+      "case": "declined",
+      "mode": "--no-opt",
+      "exit": 0,
+      "lastLine": "Pedido cancelado"
+    },
+    {
+      "case": "invalid-utf8",
+      "mode": "--no-opt",
+      "exit": 1,
+      "lastLine": "Nome inválido 2 1"
+    },
+    {
+      "case": "eof",
+      "mode": "--no-opt",
+      "exit": 1,
+      "lastLine": "Nome inválido 5 -1"
+    },
+    {
+      "case": "line-limit",
+      "mode": "--no-opt",
+      "exit": 1,
+      "lastLine": "Nome inválido 7 256"
+    },
+    {
+      "case": "integer-overflow",
+      "mode": "--no-opt",
+      "exit": 1,
+      "lastLine": "Quantidade inválida 3 18"
+    },
+    {
+      "case": "invalid-real",
+      "mode": "--no-opt",
+      "exit": 1,
+      "lastLine": "Preço inválido 2 1"
+    },
+    {
+      "case": "invalid-bool",
+      "mode": "--no-opt",
+      "exit": 1,
+      "lastLine": "Confirmação inválida 2 0"
+    }
+  ]
+}

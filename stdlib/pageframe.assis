@@ -2,6 +2,7 @@ namespace pageframe;
 import "std/flowpage.assis";
 import "std/graphemes.assis";
 import "std/motionpage.assis";
+import "std/pageedit.assis";
 
 public value struct Rect{let x:int;let y:int;let width:int;let height:int;}
 public value struct Box{
@@ -24,19 +25,21 @@ public pure fn pixels(q:int):int{return (q+32768)>>16;}
 public pure fn same(a:doctree::NodeId,b:doctree::NodeId):bool{
     return a.instance==b.instance && a.slot==b.slot && a.generation==b.generation;
 }
-public pure fn interactive(kind:int):bool{return kind==9 || kind==17 || kind==21;}
+public pure fn editable(kind:int):bool{return kind==24 || kind==25;}
+public pure fn interactive(kind:int):bool{return kind==9 || kind==17 || kind==21 || editable(kind);}
 public pure fn structural(kind:int):bool{return kind==4 || kind==5 || (kind>=12 && kind<=16) || kind==18 || kind==19 || kind==22;}
 /// Delimited reading catalog. Validate even hidden declarations: no resource or
 /// event is silently ignored. The parser remains responsible for HTDL validity.
-public safe fn reading_profile(borrow document:documents::Document):int{return local_profile(document,false);}
-public safe fn forms_profile(borrow document:documents::Document):int{return local_profile(document,true);}
-safe fn local_profile(borrow document:documents::Document,forms:bool):int{
+public safe fn reading_profile(borrow document:documents::Document):int{return local_profile(document,0);}
+public safe fn forms_profile(borrow document:documents::Document):int{return local_profile(document,1);}
+public safe fn editing_profile(borrow document:documents::Document):int{return local_profile(document,2);}
+safe fn local_profile(borrow document:documents::Document,forms:int):int{
     if(!document.is_open() || !document.has_root()){return 204;}
     let reference_work:int=0;borrow tree:doctree::Tree=document.nodes();let n:doctree::NodeId=htdl::query(tree,0,utf8(""),new doctree::NodeId());
     while(!doctree::absent(n)){
         val k:int=htdl::kind(tree,n);
-        if(k==11 || k>=23 || (!forms && k>=20)){return 203;}
-        if(k==21 && !htdl::value_equals(tree,htdl::attribute(tree,n,18),utf8("checkbox"))){return 203;}
+        if(k==11 || k>=23 || (forms==0 && k>=20)){return 203;}
+        if(k==21 && forms<2 && pageedit::kind(tree,n)!=1){return 203;}
         if(k==20){
             reference_work+=document.source_size();
             if(reference_work>8000000 || htdl::value_size(tree,htdl::attribute(tree,n,17))>256){return 401;}
@@ -112,7 +115,7 @@ public final class Frame{
            text_scale<65536 || text_scale>262144){self.fail(204,new doctree::NodeId());return;}
         // Cap before arithmetic; includes bounded box/line storage and text workspace.
         if(document.source_size()>1048576 || max_bytes<6000000+2*document.source_size()){self.fail(401,new doctree::NodeId());return;}
-        val profile:int=forms_profile(document);if(profile!=0){self.fail(profile,new doctree::NodeId());return;}
+        val profile:int=editing_profile(document);if(profile!=0){self.fail(profile,new doctree::NodeId());return;}
         self.data=try_alloc<int>(256*46);self.content=try_alloc<byte>(2*document.source_size()+2048);self.runs=try_alloc<pageframe::Run>(32768);
         if(self.data==null || self.content==null || self.runs==null){self.fail(401,new doctree::NodeId());return;}
         self.width=width;self.height=height;self.scroll=scroll_y;
@@ -123,13 +126,17 @@ public final class Frame{
         if(!self.collect(tree,title)){return;}self.title_size=self.used;
         let node:doctree::NodeId=htdl::query(tree,0,utf8(""),new doctree::NodeId());
         while(!doctree::absent(node)){
-            val kind:int=htdl::kind(tree,node);
+            let kind:int=htdl::kind(tree,node);
+            if(kind==21){
+                val field:int=pageedit::kind(tree,node);
+                if(field>1){kind=22+field;}
+            }
             if(kind>=4 && kind!=10 && kind!=11 && !self.hidden(tree,node)){
                 if(kind==7){
                     // Mixed inline author styles need shaped runs, outside this profile.
                     for(let k:int=1;k<=15;k++){if(page.has(document,node,k)){self.fail(203,node);return;}}
                 }else{
-                    if(!structural(kind) && kind!=6 && kind!=8 && kind!=9 && kind!=17 && kind!=20 && kind!=21){self.fail(203,node);return;}
+                    if(!structural(kind) && kind!=6 && kind!=8 && kind!=20 && !interactive(kind)){self.fail(203,node);return;}
                     if(self.count==256){self.fail(401,node);return;}
                     val p:int=self.count*46;val parent:int=self.find(tree.parent(node));
                     if(kind!=4 && parent<0){self.fail(204,node);return;}
@@ -186,6 +193,22 @@ public final class Frame{
                             self.fail(303,node);return;
                         }
                         self.data[p+44]=int(htdl::value_equals(tree,htdl::attribute(tree,node,22),utf8("true")));
+                    }
+                    if(editable(kind)){
+                        val sample:int=metric(utf8("M"),self.data[p+18],self.data[p+19]);
+                        if(sample<0 || (sample>>32)<1 || (sample>>32)>1024){self.fail(304,node);return;}
+                        self.data[p+37]=(sample>>32)+8;
+                        val hint:doctree::NodeId=htdl::attribute(tree,node,20);
+                        self.data[p+42]=self.used;
+                        if(!doctree::absent(hint)){
+                            val size:int=htdl::value_size(tree,hint);
+                            if(size>pageedit::byte_limit()){self.fail(401,node);return;}
+                            for(let i:int=0;i<size;i++){if(!self.put(htdl::value_byte(tree,hint,i))){return;}}
+                        }
+                        self.data[p+43]=self.used-self.data[p+42];
+                        if(!pageedit::single_line(slice_of(self.content,self.data[p+42],self.data[p+43]))){
+                            self.fail(206,node);return;
+                        }
                     }
                     self.data[p+29]=self.data[p+25];self.data[p+30]=self.data[p+26];
                     if(kind==19){self.data[p+29]=self.data[p+42];self.data[p+30]=self.data[p+43];}
@@ -244,7 +267,7 @@ public final class Frame{
             val target:int=self.find(htdl::find_id(tree,slice_of(id,0,size)));
             if(target<0){continue;}
             val q:int=target*46;
-            if(self.data[q+4]!=21){self.fail(207,label);return false;}
+            if(self.data[q+4]!=21 && !editable(self.data[q+4])){self.fail(207,label);return false;}
             self.data[p+45]=target+1;
             if(self.data[q+30]==0){
                 self.data[q+29]=self.data[p+29];self.data[q+30]=self.data[p+30];
@@ -252,7 +275,7 @@ public final class Frame{
         }
         for(let i:int=0;i<self.count;i++){
             val p:int=i*46;
-            if(self.data[p+4]==21 && self.data[p+30]==0){self.fail(207,self.node(i));return false;}
+            if((self.data[p+4]==21 || editable(self.data[p+4])) && self.data[p+30]==0){self.fail(207,self.node(i));return false;}
         }
         return true;
     }
@@ -364,6 +387,16 @@ public final class Frame{
         val b:Box=self.box(index);val p:int=index*46;val side:int=self.data[p+37];
         return new Rect(b.bounds.x+self.data[p+10]+3,b.bounds.y+self.data[p+10]+3,side,side);
     }
+    fn edit_bounds(borrow self,index:int):Rect{
+        val b:Box=self.box(index);
+        val padding:int=self.data[index*46+10];
+        return new Rect(b.bounds.x+padding+4,b.bounds.y+padding+4,
+            maximum(0,b.bounds.width-2*padding-8),maximum(0,b.bounds.height-2*padding-8));
+    }
+    fn placeholder(borrow self,index:int):borrow(self) slice<byte>{
+        val p:int=index*46;
+        return slice_of(self.content,self.data[p+42],self.data[p+43]);
+    }
     /// Copy state only within one document identity. Toggle before sealing.
     fn prepare_checks(borrow mut self,borrow document:documents::Document,borrow previous:Frame,toggle:doctree::NodeId):bool{
         if(!self.current(document) || !previous.current(document) || self.sealed || self.composed){return false;}
@@ -392,19 +425,28 @@ public final class Frame{
         while(!doctree::absent(ancestor) && htdl::kind(tree,ancestor)!=22){ancestor=tree.parent(ancestor);}
         return ancestor;
     }
-    fn invalid_checkbox(borrow self,borrow document:documents::Document,form:doctree::NodeId):doctree::NodeId{
+    fn invalid_input(borrow self,borrow document:documents::Document,form:doctree::NodeId,
+            borrow fields:pageedit::Fields):doctree::NodeId{
         if(!self.current(document) || htdl::kind(document.nodes(),form)!=22){return new doctree::NodeId();}
         borrow tree:doctree::Tree=document.nodes();
-        let node:doctree::NodeId=htdl::query(tree,21,utf8(""),form);
-        while(!doctree::absent(node) && same(form,self.form_of(document,node))){
-            if(htdl::value_equals(tree,htdl::attribute(tree,node,21),utf8("true")) &&
-               !htdl::value_equals(tree,htdl::attribute(tree,node,8),utf8("true"))){
-                val checked:int=self.checked(node);
-                if(checked==0 || (checked<0 && !htdl::value_equals(tree,htdl::attribute(tree,node,22),utf8("true")))){
-                    return node;
+        let node:doctree::NodeId=htdl::first_element(tree,form);
+        val end:doctree::NodeId=self.after(tree,form);
+        while(!doctree::absent(node) && !same(node,end)){
+            val kind:int=pageedit::kind(tree,node);
+            if(kind>0 && !htdl::value_equals(tree,htdl::attribute(tree,node,8),utf8("true"))){
+                val required:bool=htdl::value_equals(tree,htdl::attribute(tree,node,21),utf8("true"));
+                if(kind==1 && required){
+                    val checked:int=self.checked(node);
+                    if(checked==0 || (checked<0 && !htdl::value_equals(tree,htdl::attribute(tree,node,22),utf8("true")))){return node;}
+                }
+                if(kind>1 && fields!=null && fields.has(node)){
+                    borrow value:slice<byte>=fields.value(node);
+                    if((required && len(value)==0) || (len(value)>0 && kind==3 && !pageedit::valid_number(value))){return node;}
                 }
             }
-            node=htdl::query(tree,21,utf8(""),node);
+            val child:doctree::NodeId=htdl::first_element(tree,node);
+            if(doctree::absent(child)){node=self.after(tree,node);}
+            else{node=child;}
         }
         return new doctree::NodeId();
     }
@@ -413,6 +455,36 @@ public final class Frame{
         for(let i:int=self.count-1;i>=0;i--){if(contains(self.accessible_bounds(i),x,y)){
             if(!doctree::absent(self.activation_target(document,self.node(i)))){return self.node(i);}return new doctree::NodeId();}}
         return new doctree::NodeId();
+    }
+    fn edit_hit(borrow self,borrow document:documents::Document,node:doctree::NodeId,x:int,y:int):bool{
+        val index:int=self.find(node);
+        return self.eligible(document,index) && editable(self.data[index*46+4]) && contains(self.accessible_bounds(index),x,y);
+    }
+    fn edit_point(borrow self,borrow fields:pageedit::Fields,node:doctree::NodeId,x:int,focused:bool,
+            metric:safe fn(borrow slice<byte>,int,int):int):int{
+        val index:int=self.find(node);if(index<0 || !fields.has(node)){return -1;}
+        val box:Box=self.box(index);val area:Rect=self.edit_bounds(index);
+        if(area.width<1){return -1;}
+        borrow value:slice<byte>=fields.value(node);
+        own boundaries:graphemes::Index=try_new graphemes::Index(value);
+        if(boundaries==null || boundaries.status()!=0){return -1;}
+        let point:int=x-area.x;
+        if(focused){
+            val measured:int=metric(slice_of(value,0,fields.selection(node).caret),box.text_size,box.weight);
+            if(measured<0){return -1;}
+            point+=maximum(0,measured%4294967296-area.width+1);
+        }
+        let at:int=0;let prior:int=0;
+        while(at<len(value)){
+            val next:int=boundaries.next(at);
+            val measured:int=metric(slice_of(value,0,next),box.text_size,box.weight);
+            if(measured<0){return -1;}
+            val advance:int=measured%4294967296;
+            if(advance<prior){return -1;}
+            if(point<prior+(advance-prior)/2){return at;}
+            prior=advance;at=next;
+        }
+        return at;
     }
     fn next_focus(borrow self,borrow document:documents::Document,previous:doctree::NodeId,backward:bool):doctree::NodeId{
         if(!self.current(document)){return new doctree::NodeId();}
@@ -424,6 +496,7 @@ public final class Frame{
     }
     fn marker(borrow self,index:int):borrow(self) slice<byte>{
         assert(self.active && index>=0 && index<self.count);val p:int=index*46;
+        if(self.data[p+4]!=19){return slice_of(self.content,0,0);}
         return slice_of(self.content,self.data[p+42],self.data[p+43]);
     }
     fn marker_bounds(borrow self,index:int):Rect{
