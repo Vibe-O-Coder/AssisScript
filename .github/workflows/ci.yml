@@ -41,6 +41,8 @@ jobs:
           python3 tests/test-sanscript.py
           python3 tests/test-install-mask.py
           python3 tests/test-searchindex.py
+          python3 tests/test-searchsegments.py
+          python3 tests/test-searchservice.py
           python3 tools/generate-ssc-coefficients.py --check
           python3 tools/report-ecosystem-progress.py --check
       - run: |
@@ -127,7 +129,7 @@ jobs:
           $env:ASSIS_BIN = (Resolve-Path bin/assis.exe).Path
           $env:CC = Join-Path $env:ASSIS_TOOLCHAIN_BIN 'gcc.exe'
           $env:PYTHONUTF8 = '1'
-          foreach ($suite in @('htdl-recovery','htdl-catalog','fluxstyle','flowpage','sanscript','pageframe','pagepresent','motionpage','framereader','framehost','frame-forms','catalog-frame','frame-worker','page-resources','localresources','frame-responsiveness','install-mask','searchindex')) {
+          foreach ($suite in @('htdl-recovery','htdl-catalog','fluxstyle','flowpage','sanscript','pageframe','pagepresent','motionpage','framereader','framehost','frame-forms','catalog-frame','frame-worker','page-resources','localresources','frame-responsiveness','install-mask','searchindex','searchsegments','searchservice')) {
             python "tests/test-$suite.py"
             if ($LASTEXITCODE -ne 0) { throw "Local presentation profile failed: $suite" }
           }

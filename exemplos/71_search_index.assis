@@ -1,5 +1,6 @@
 // Run in a dedicated, trusted directory. See docs/BIBLIOTECA-searchindex.md.
 import "std/searchindex.assis";
+import "std/searchsegments.assis";
 import "std/cli.assis";
 import "std/process.assis";
 import "std/htdlsearch.assis";
@@ -43,6 +44,22 @@ safe fn index_page(borrow mut index:searchindex::Index,doc:int,borrow source:sli
     if(page.status()!=0){return 2;}
     return index.upsert(doc,page.content_bytes());
 }
+value struct Update {let doc:int;let tab:int;}
+safe fn decode_update(borrow line:slice<byte>):Update {
+    let tab:int=0;
+    while(tab<len(line) && line[tab]!=9){tab++;}
+    val doc:parse::Parsed<int>=parse::parse_i64(slice_of(line,0,tab));
+    if(!doc.ok || doc.value<1 || doc.value>65535){return new Update();}
+    return new Update(doc.value,tab);
+}
+safe fn apply_update(borrow mut index:searchindex::Index,borrow line:slice<byte>,
+        doc:int,tab:int,htdl_input:bool):int {
+    if(tab==len(line)){index.remove(doc);return 0;}
+    borrow source:slice<byte>=slice_of(line,tab+1,len(line)-tab-1);
+    if(htdl_input){return index_page(index,doc,source);}
+    return index.upsert(doc,source);
+}
+
 safe fn apply_input(borrow mut index:searchindex::Index,htdl_input:bool):int {
     own input:cli::Stdin=try_new cli::Stdin(16390);
     if(input==null){return 4;}
@@ -54,40 +71,42 @@ safe fn apply_input(borrow mut index:searchindex::Index,htdl_input:bool):int {
         records++;
         if(records>65535){return 2;}
         borrow line:slice<byte>=input.line();
-        let tab:int=0;
-        while(tab<len(line) && line[tab]!=9){tab++;}
-        val doc:parse::Parsed<int>=parse::parse_i64(slice_of(line,0,tab));
-        if(!doc.ok || doc.value<1 || doc.value>65535){return 1;}
-        if(tab==len(line)){index.remove(doc.value);}
-        else{
-            borrow source:slice<byte>=slice_of(line,tab+1,len(line)-tab-1);
-            let code:int=0;
-            if(htdl_input){code=index_page(index,doc.value,source);}
-            else{code=index.upsert(doc.value,source);}
-            if(code!=0){return code;}
-        }
+        val update:Update=decode_update(line);
+        if(update.doc==0){return 1;}
+        val code:int=apply_update(index,line,update.doc,update.tab,htdl_input);
+        if(code!=0){return code;}
     }
 }
-safe fn publish(borrow index:searchindex::Index):int {
-    // The caller holds the writer lock. A pending file from a crashed writer
-    // is never read. Only replace the snapshot after writing and flushing.
-    file_remove("webassis.asix.pending");
-    own pending:File=file_open("webassis.asix.pending",3);
-    if(pending==null){return 4;}
-    let status:int=index.write(pending);
+safe fn publish(borrow mut pending:File,segmented:bool,initial:int):int {
+    let status:int=initial;
     if(status==0 && file_sync(pending)!=0){status=4;}
     if(file_close(pending)!=0){status=4;}
-    if(status==0 && file_replace("webassis.asix.pending","webassis.asix")!=0){status=4;}
-    if(status!=0){file_remove("webassis.asix.pending");return status;}
+    if(status==0){
+        let replaced:int=0;
+        if(segmented){replaced=file_replace("webassis.asis.pending","webassis.asis");}
+        else{replaced=file_replace("webassis.asix.pending","webassis.asix");}
+        if(replaced!=0){status=4;}
+    }
+    if(status!=0){
+        if(segmented){file_remove("webassis.asis.pending");}
+        else{file_remove("webassis.asix.pending");}
+        return status;
+    }
     if(!flush_parent()){return 9;}
     return status;
 }
-safe fn mutate(borrow mut index:searchindex::Index,reset:bool,htdl_input:bool):int {
+safe fn lock_path():own *byte {
     own lock_name:*byte=try_alloc<byte>(19);
-    if(lock_name==null){return 4;}
-    borrow name:slice<byte>=utf8("webassis.asix.lock");
-    for(let i:int=0;i<len(name);i++){lock_name[i]=name[i];}
-    own lock:process::Lock=process::lock(lock_name);
+    if(lock_name!=null){
+        borrow name:slice<byte>=utf8("webassis.asix.lock");
+        for(let i:int=0;i<len(name);i++){lock_name[i]=name[i];}
+    }
+    return move(lock_name);
+}
+safe fn mutate(borrow mut index:searchindex::Index,reset:bool,htdl_input:bool):int {
+    own path:*byte=lock_path();
+    if(path==null){return 4;}
+    own lock:process::Lock=process::lock(path);
     if(!lock.acquired()){return 8;}
     if(!reset){
         val status:int=read_snapshot(index);
@@ -96,9 +115,87 @@ safe fn mutate(borrow mut index:searchindex::Index,reset:bool,htdl_input:bool):i
     val status:int=apply_input(index,htdl_input);
     if(status!=0){return status;}
     if(!index.seal()){return 5;}
-    return publish(index);
+    file_remove("webassis.asix.pending");
+    own pending:File=file_open("webassis.asix.pending",3);
+    if(pending==null){return 4;}
+    val written:int=index.write(pending);
+    return publish(pending,false,written);
 }
-safe fn search(borrow index:searchindex::Index):int {
+
+final class Previous {
+    private own file:File;
+    private let code:int;
+
+    fn init(borrow mut self,reset:bool):void {
+        if(reset){return;}
+        self.file=file_open("webassis.asis",0);
+        if(self.file==null){self.code=4;return;}
+        val code:int=searchsegments::read_header(self.file);
+        self.code=code;
+    }
+    fn status(borrow self):int {return self.code;}
+    fn load(borrow mut self,borrow mut index:searchindex::Index,part:int):int {
+        if(self.file==null){return 0;}
+        return index.read_part(self.file,part);
+    }
+    fn finish(borrow mut self):int {
+        if(self.file==null){return 0;}
+        own file:File=move(self.file);
+        val end:int=searchsegments::check_end(file);
+        if(file_close(file)!=0){return 4;}
+        return end;
+    }
+}
+safe fn write_segments(borrow mut previous:Previous,borrow mut pending:File,htdl_input:bool):int {
+    val header:int=searchsegments::write_header(pending);
+    if(header!=0){return header;}
+    own input:cli::Stdin=try_new cli::Stdin(16390);
+    if(input==null){return 4;}
+    let read:parse::Parsed<int>=input.readln();
+    let records:int=0;
+    for(let part:int=1;part<=searchsegments::count();part++){
+        own index:searchindex::Index=searchsegments::new_part(part);
+        if(index==null || !index.is_open()){return 4;}
+        val loaded:int=previous.load(index,part);
+        if(loaded!=0){return loaded;}
+        while(read.ok){
+            {
+                borrow line:slice<byte>=input.line();
+                val update:Update=decode_update(line);
+                val bucket:int=searchsegments::part_of(update.doc);
+                if(bucket>part){break;}
+                if(bucket<part){return 1;}
+                records++;
+                if(records>65535){return 2;}
+                val code:int=apply_update(index,line,searchsegments::local_id(update.doc),update.tab,htdl_input);
+                if(code!=0){return code;}
+            }
+            read=input.readln();
+        }
+        if(!read.ok && read.code!=5){return read.code;}
+        if(!index.seal()){return 5;}
+        val written:int=index.write_part(pending,part);
+        if(written!=0){return written;}
+    }
+    return previous.finish();
+}
+safe fn mutate_segments(reset:bool,htdl_input:bool):int {
+    own path:*byte=lock_path();
+    if(path==null){return 4;}
+    own lock:process::Lock=process::lock(path);
+    if(!lock.acquired()){return 8;}
+    own previous:Previous=try_new Previous(reset);
+    if(previous==null){return 4;}
+    if(previous.status()!=0){return previous.status();}
+    // A killed writer may leave a candidate. Only the published name is read.
+    file_remove("webassis.asis.pending");
+    own pending:File=file_open("webassis.asis.pending",3);
+    if(pending==null){return 4;}
+    val status:int=write_segments(previous,pending,htdl_input);
+    return publish(pending,true,status);
+}
+
+safe fn search(segmented:bool):int {
     own mode_name:cli::Argument=cli::argument(2);
     own query_text:cli::Argument=cli::argument(3);
     let mode:int=0;
@@ -112,27 +209,46 @@ safe fn search(borrow index:searchindex::Index):int {
         if(!page.ok || !value.ok){return 1;}
         offset=value.value;
     }
-    own hits:*searchindex::Hit=try_alloc<searchindex::Hit>(10);
+    if(offset<0 || offset>255){return 1;}
+    let limit:int=256-offset;
+    if(limit>10){limit=10;}
+    own hits:*searchindex::Hit=try_alloc<searchindex::Hit>(limit);
     if(hits==null){return 4;}
     if(!query_text.ok){return 1;}
-    val count:int=index.query(slice_of(query_text.data,0,query_text.size),mode,offset,hits);
+    borrow terms:slice<byte>=slice_of(query_text.data,0,query_text.size);
+    let count:int=0;
+    if(segmented){
+        own file:File=file_open("webassis.asis",0);
+        if(file==null){return 4;}
+        count=searchsegments::query(file,terms,mode,offset,hits);
+    }else{
+        own index:searchindex::Index=searchindex::local_index();
+        if(index==null || !index.is_open()){return 4;}
+        val status:int=read_snapshot(index);
+        if(status!=0){return status;}
+        count=index.query(terms,mode,offset,hits);
+    }
     if(count<0){return -count;}
     for(let i:int=0;i<count;i++){print(hits[i].doc,hits[i].score,hits[i].position);}
     return 0;
 }
 safe fn main():int {
     own command:cli::Argument=cli::argument(1);
-    own index:searchindex::Index=try_new searchindex::Index(65535,262144,8388608);
+    if(arg_count()==2 && argument_is(command,utf8("build-segmented"))){return mutate_segments(true,false);}
+    if(arg_count()==2 && argument_is(command,utf8("apply-segmented"))){return mutate_segments(false,false);}
+    if(arg_count()==2 && argument_is(command,utf8("build-segmented-htdl"))){return mutate_segments(true,true);}
+    if(arg_count()==2 && argument_is(command,utf8("apply-segmented-htdl"))){return mutate_segments(false,true);}
+    if((arg_count()==4 || arg_count()==5) && argument_is(command,utf8("query-segmented"))){
+        return search(true);
+    }
+    if((arg_count()==4 || arg_count()==5) && argument_is(command,utf8("query"))){return search(false);}
+    own index:searchindex::Index=searchindex::local_index();
     if(index==null || !index.is_open()){return 4;}
     if(arg_count()==2 && argument_is(command,utf8("build"))){return mutate(index,true,false);}
     if(arg_count()==2 && argument_is(command,utf8("apply"))){return mutate(index,false,false);}
     if(arg_count()==2 && argument_is(command,utf8("build-htdl"))){return mutate(index,true,true);}
     if(arg_count()==2 && argument_is(command,utf8("apply-htdl"))){return mutate(index,false,true);}
-    if((arg_count()==4 || arg_count()==5) && argument_is(command,utf8("query"))){
-        val status:int=read_snapshot(index);
-        if(status!=0){return status;}
-        return search(index);
-    }
     print("Usage: build | apply | build-htdl | apply-htdl | query and|or|phrase TEXT [OFFSET]");
+    print("Segmented: build-segmented[-htdl] | apply-segmented[-htdl] | query-segmented and|or|phrase TEXT [OFFSET]");
     return 1;
 }

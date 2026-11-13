@@ -1,6 +1,7 @@
 """Install the fresh presentation libraries in an isolated prefix, run and remove."""
 import argparse
 import hashlib
+import http.client
 import json
 import os
 from pathlib import Path
@@ -18,7 +19,7 @@ parser.add_argument('--output',type=Path)
 args=parser.parse_args()
 OUT=args.output or ROOT/'docs/ecossistema/evidencias/m3-local-resources-2026-11-04'
 selected=['frameworker','localresources','http','cli'] if args.confined else ['frameworker']
-if args.search_forms:selected+=['searchindex','htdlsearch','cli','process']
+if args.search_forms:selected+=['searchservice','htdlsearch','cli','process']
 selected=list(dict.fromkeys(selected))
 selection=','.join(selected)
 OUT.mkdir(parents=True,exist_ok=True);host='windows' if os.name=='nt' else 'linux';compiler=Path(os.environ['ASSIS_BIN']).resolve();records=[]
@@ -103,6 +104,29 @@ with tempfile.TemporaryDirectory(prefix='assis-presentation-install-') as temp:
         run([installed,'build',data/'exemplos/71_search_index.assis','--safe','--debug','-o',search])
         run([search,'build'],input=b'1\tlocal index\n2\tindex index\n',cwd=sample)
         assert run([search,'query','phrase','local index'],cwd=sample).stdout.splitlines()==[b'1 1 0']
+        run([search,'build-segmented'],input=b'4096\tlocal index\n4097\tindex index\n',cwd=sample)
+        assert run([search,'query-segmented','phrase','local index'],cwd=sample).stdout.splitlines()==[b'4096 1 0']
+        service=temp/('search-service.exe' if os.name=='nt' else 'search-service')
+        run([installed,'build',data/'exemplos/73_search_service.assis','--safe','--debug','-o',service])
+        key='0123456789abcdef'*4
+        command=[service,'0','1200']
+        with subprocess.Popen(command,cwd=sample,env=environment,stdin=subprocess.PIPE,
+                              stdout=subprocess.PIPE,stderr=subprocess.PIPE) as server:
+            server.stdin.write(key.encode()+b'\n')
+            server.stdin.close()
+            ready=server.stdout.readline().split()
+            assert len(ready)==2 and ready[0]==b'READY',ready
+            client=http.client.HTTPConnection('127.0.0.1',int(ready[1]),timeout=5)
+            try:
+                client.request('POST','/v1/search',b'phrase\t0\tlocal index',{
+                    'Content-Type':'text/plain; charset=utf-8','X-Assis-Search-Key':key})
+                reply=client.getresponse()
+                assert (reply.status,reply.read())==(200,b'1 1 0\n')
+            finally:
+                client.close()
+            assert server.wait(timeout=5)==0 and not server.stderr.read()
+        records.append(dict(command=['<TEMP>/'+service.name,'0','1200'],returncode=0,
+                            httpStatus=200,stdout='1 1 0\n',stderr=''))
         if os.name=='nt':
             forms=prefix/'bin/forms.exe'
             run([installed,'build',data/'exemplos/72_local_forms_window.assis','--safe','--debug','-o',forms])

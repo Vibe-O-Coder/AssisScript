@@ -11,6 +11,11 @@ value struct Posting {
 }
 public value struct Hit { let doc:int; let score:int; let position:int; }
 
+/// The limits shared by the local index writer and the loopback query service.
+public safe fn local_index():own Index {
+    return try_new Index(65535,262144,8388608);
+}
+
 pure fn separator(cp:int):bool {
     if(cp<128){return !((cp>=48 && cp<=57) || (cp>=65 && cp<=90) || (cp>=97 && cp<=122));}
     return cp==0x85 || cp==0xa0 || cp==0xab || cp==0xad || cp==0xb7 || cp==0xbb ||
@@ -62,7 +67,7 @@ pure fn less(a:Posting,b:Posting):bool {
     if(a.doc!=b.doc){return a.doc<b.doc;}
     return a.ordinal<b.ordinal;
 }
-pure fn better(a:Hit,b:Hit):bool {
+public pure fn ranks_before(a:Hit,b:Hit):bool {
     return a.score>b.score || (a.score==b.score && a.doc<b.doc);
 }
 safe fn word(borrow data:*byte,at:int):int {
@@ -71,8 +76,8 @@ safe fn word(borrow data:*byte,at:int):int {
 safe fn put_word(borrow mut data:*byte,at:int,value:int):void {
     for(let i:int=0;i<4;i++){data[at+i]=byte((value>>(8*i))&255);}
 }
-safe fn checksum(borrow data:*byte,size:int):int {
-    let hash:int=2166136261;
+safe fn checksum(borrow data:*byte,size:int,part:int):int {
+    let hash:int=2166136261^part;
     for(let i:int=0;i<size;i++){hash=step(hash,data[i]);}
     return hash;
 }
@@ -287,9 +292,9 @@ public final class Index {
             if(scores[id]==0 || (mode==1 && matches[id]!=count)){continue;}
             val result:Hit=new Hit(id,scores[id],first[id]);
             let insert:int=length;
-            if(insert==len(ranked)){insert--;if(!better(result,ranked[insert])){continue;}}
+            if(insert==len(ranked)){insert--;if(!ranks_before(result,ranked[insert])){continue;}}
             else{length++;}
-            while(insert>0 && better(result,ranked[insert-1])){
+            while(insert>0 && ranks_before(result,ranked[insert-1])){
                 ranked[insert]=ranked[insert-1];
                 insert--;
             }
@@ -302,6 +307,14 @@ public final class Index {
     /// ASIX v1: fixed little-endian words plus normalized term bytes. The
     /// checksum detects accidental corruption; the format has no authority.
     fn write(borrow self,borrow mut target:File):int {
+        return self.write_frame(target,0);
+    }
+    /// Bundle parts use a checksum tagged with their position in the bundle.
+    fn write_part(borrow self,borrow mut target:File,part:int):int {
+        if(part<1 || part>16){return 5;}
+        return self.write_frame(target,part);
+    }
+    private fn write_frame(borrow self,borrow mut target:File,part:int):int {
         if(!self.ready || !self.sorted){return 5;}
         let docs:int=0;
         for(let id:int=1;id<len(self.documents);id++){if(self.documents[id]>0){docs++;}}
@@ -328,7 +341,7 @@ public final class Index {
             for(let j:int=0;j<row.size;j++){data[cursor+j]=self.terms[row.start+j];}
             cursor+=row.size;
         }
-        val digest:int=checksum(data,cursor);
+        val digest:int=checksum(data,cursor,part);
         put_word(data,cursor,digest);
         return write_exact(target,data);
     }
@@ -357,6 +370,14 @@ public final class Index {
     /// Load only into a newly allocated index. A rejected snapshot leaves it
     /// unusable so no prefix can be queried, sealed, or re-published.
     fn read(borrow mut self,borrow mut source:File):int {
+        return self.read_frame(source,0);
+    }
+    /// Read exactly one bundle part. The bundle reader checks final EOF.
+    fn read_part(borrow mut self,borrow mut source:File,part:int):int {
+        if(part<1 || part>16){return 5;}
+        return self.read_frame(source,part);
+    }
+    private fn read_frame(borrow mut self,borrow mut source:File,part:int):int {
         if(!self.ready || !self.sorted || self.count!=0){return 5;}
         for(let id:int=1;id<len(self.documents);id++){if(self.documents[id]!=0){return 5;}}
         self.ready=false;
@@ -377,10 +398,12 @@ public final class Index {
         for(let i:int=0;i<20;i++){data[i]=header[i];}
         result=read_exact(source,data,20,size-20,chunk);
         if(result!=0){return result;}
-        val trailing:int=file_read(source,chunk,1);
-        if(trailing<0){return 4;}if(trailing!=0){return 3;}
+        if(part==0){
+            val trailing:int=file_read(source,chunk,1);
+            if(trailing<0){return 4;}if(trailing!=0){return 3;}
+        }
         val end:int=size-4;
-        if(checksum(data,end)!=word(data,end)){return 3;}
+        if(checksum(data,end,part)!=word(data,end)){return 3;}
         let cursor:int=20;
         let last:int=0;
         for(let i:int=0;i<docs;i++){

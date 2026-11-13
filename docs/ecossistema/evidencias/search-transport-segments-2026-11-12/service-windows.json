@@ -1,0 +1,18 @@
+{
+  "command": "python tests/test-searchservice.py",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.14.6",
+  "compilerSha256": "0afad2bd14e7f7f98fcccbe9ca89d4bd7c5f0a54141d302e3eb76fbc182d69b7",
+  "executed": 16,
+  "skipped": 0,
+  "optimized": {
+    "serviceSha256": "70a141147dbd2c247b78fd40d6de75dc05337d736479196e00118992e1b2ad54",
+    "indexSha256": "46c3a2710c8cbcf3ccc138251101631141190766e89723e1e4d0e67b62d4a9bf",
+    "queryWhilePeerPartialMs": 7.338
+  },
+  "reference": {
+    "serviceSha256": "72be7bf140d022332c686a585f86eb06a21dcd9dc5845ec0a7bb6ae946405835",
+    "indexSha256": "9a2fe1ed590a07244cb2abc7a4502546d525ee279cfe592627960dba1b405c66",
+    "queryWhilePeerPartialMs": 10.473
+  }
+}

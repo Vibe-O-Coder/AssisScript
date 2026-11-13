@@ -1,0 +1,108 @@
+{
+  "schema": "assisscript-desktop-observation-v1",
+  "host": "Windows x64",
+  "provider": "Computer Use",
+  "fixtures": {
+    "forms": {
+      "revision": "13e81a897388e694d9a02bcfb4b3984665d7c3c9",
+      "sha256": "c6264256ed44479b2ec26bdab830909b76207a95d2421ed2f5abe5897fcbd924"
+    },
+    "catalog": {
+      "revision": "13e81a897388e694d9a02bcfb4b3984665d7c3c9",
+      "sha256": "faff79a839584fb0d88ee0da103eaabcae5f083b8c515c92e0eca3fe412b6145"
+    },
+    "panels": {
+      "sha256": "71ced944c47179b35ffdbb8b3c1478c6afa52a28fdc3219e66c81f03b8afb2bb"
+    }
+  },
+  "screenshots": 0,
+  "keyboard_actions": 6,
+  "pointer_actions": 0,
+  "attempts": [
+    {
+      "action": "launch forms",
+      "result": "returned"
+    },
+    {
+      "action": "capture forms",
+      "result": "FrameArrived timed out: timed out waiting on channel"
+    },
+    {
+      "action": "retry forms screenshot",
+      "result": "window capture timed out: timed out waiting on channel"
+    },
+    {
+      "action": "forms accessibility only",
+      "result": "returned"
+    },
+    {
+      "action": "Tab",
+      "result": "10 checkbox (caixa de seleção) Confirmo a leitura"
+    },
+    {
+      "action": "Space",
+      "result": [
+        "\t\t10 checkbox (caixa de seleção) Confirmo a leitura",
+        "The focused UI element is 10 checkbox (caixa de seleção) Confirmo a leitura."
+      ]
+    },
+    {
+      "action": "Tab after Space",
+      "result": "12 button (botão) Validar"
+    },
+    {
+      "action": "Enter on Validate",
+      "result": "12 button (botão) Validar"
+    },
+    {
+      "action": "launch catalog",
+      "result": "returned"
+    },
+    {
+      "action": "capture catalog",
+      "result": "window capture timed out: timed out waiting on channel"
+    },
+    {
+      "action": "retry catalog capture",
+      "result": "window capture timed out: timed out waiting on channel"
+    },
+    {
+      "action": "catalog accessibility only",
+      "result": {
+        "focus": "0 document (documento) Catalogo de leitura Secondary Actions: Raise",
+        "tree": [
+          "\t\t9 hyperlink (link) Ir para o final",
+          "\t\t10 list (Lista)",
+          "\t\t11 list item (item de lista) (selectable) 1.",
+          "\t\t13 list item (item de lista) (selectable) 2."
+        ]
+      }
+    },
+    {
+      "action": "catalog Tab",
+      "result": "9 hyperlink (link) Ir para o final"
+    },
+    {
+      "action": "catalog Enter",
+      "result": {
+        "focus": "9 hyperlink (link) Ir para o final"
+      }
+    },
+    {
+      "action": "launch SSC",
+      "result": "Computer Use app approval timed out"
+    },
+    {
+      "action": "retry launch SSC",
+      "result": "launched app did not expose a targetable window: process:build/session/ssc-panels.exe"
+    }
+  ],
+  "close_followup": "Computer Use detected user input in the catalog window. No further window inputs were issued.",
+  "pending": [
+    "desktop capture",
+    "screen-reader audio",
+    "system DPI and monitor changes",
+    "IME",
+    "perceived SSC pacing"
+  ]
+}

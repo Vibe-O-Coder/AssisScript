@@ -1,0 +1,136 @@
+{
+  "date": "2026-11-12",
+  "base": "13e81a897388e694d9a02bcfb4b3984665d7c3c9",
+  "branch": "work/ecosystem-2026-11-12",
+  "platforms": {
+    "windows": "Windows x64",
+    "linux": "Ubuntu WSL2 x64"
+  },
+  "tests": {
+    "windows": {
+      "service": [
+        16,
+        0
+      ],
+      "segments": [
+        10,
+        1
+      ],
+      "asix": [
+        6,
+        1
+      ],
+      "examples": [
+        74,
+        74
+      ],
+      "isolatedInstall": true,
+      "optionalLibraries": 35,
+      "frame-forms": [
+        5,
+        0
+      ],
+      "catalog-frame": [
+        21,
+        0
+      ],
+      "frame-responsiveness": [
+        5,
+        0
+      ],
+      "install-mask": [
+        2,
+        0
+      ]
+    },
+    "linux": {
+      "service": [
+        16,
+        0
+      ],
+      "segments": [
+        11,
+        0
+      ],
+      "asix": [
+        7,
+        0
+      ],
+      "examples": [
+        74,
+        74
+      ],
+      "isolatedInstall": true,
+      "optionalLibraries": 35,
+      "frame-forms": [
+        3,
+        2
+      ],
+      "catalog-frame": [
+        18,
+        3
+      ],
+      "frame-responsiveness": [
+        0,
+        5
+      ],
+      "install-mask": [
+        2,
+        0
+      ]
+    },
+    "columns": [
+      "executed",
+      "skipped"
+    ]
+  },
+  "compilerCommands": {
+    "windows": "gcc -O2 -std=c11 -municode -static -static-libgcc -Wl,--no-insert-timestamp src/assisc.c -o build/session/assis.exe",
+    "linux": "gcc -O2 -std=c11 src/assisc.c -o build/session/assis-linux"
+  },
+  "visual": {
+    "rasters": 8,
+    "desktopCaptures": 0,
+    "keyboardInputs": 6,
+    "pngSource": "../ecosystem-2026-11-12/",
+    "byteIdenticalToPriorRun": true
+  },
+  "formatGeneration": {
+    "command": "assis build exemplos/73_search_service.assis --safe --target <target> -o build/session/search-service-<target>",
+    "scope": "Binary generation; no native execution on ARM64 or macOS",
+    "sha256": {
+      "search-service-linux-arm64": "1da7e8dffb812ec81070fdac87947d09309ba7535890a29e1efaa9b1911b1388",
+      "search-service-linux-x64": "1060584fc888b50ba992353a48bcff72ea0aa5ad6f0bef9519c91a98773e18b5",
+      "search-service-macos-arm64": "3e5b1f71505b76d5244740ab33b54716226d8cb52152692e0b976080d4fd87d0",
+      "search-service-macos-x64": "09cec199e6a747fa5d068233ec7ce9dd64a709dc969ab3fc0597b58c6299356b",
+      "search-service-windows-x64.exe": "a68bb036c99b7c78759564c42ceba826fcc0424770b9c58039285af199f53151"
+    }
+  },
+  "referenceIntegrity": {
+    "checked": 57,
+    "integratedScenariosNotRun": 16
+  },
+  "progress": {
+    "before": 54.3,
+    "afterService": 56.5,
+    "after": 58.0,
+    "gatesApproved": 0
+  },
+  "evidenceSha256": {
+    "desktop.json": "e377d77572df29d0baec52c36e5d9bec7958e2c113ce01faa41bdfffe1873a1e",
+    "examples-linux.json": "e8bcfe62eea6f0856557c5b32737e4d5cf2a112a339c1f8ada25316eec3867b7",
+    "examples-windows.json": "89c4a431836d7023dbeee151cb0cf65ffaf14014877677cfa126a07dd2e1c8c3",
+    "linux-install.json": "b2fcf8dee1e9cf189ebe7955c55bb0346dabd4cd670b77e5fa95813d8580546d",
+    "reference-integrity.json": "b573df6046f5f987a2f0d59d8a8f866060d0eca1f3efd3907255fb429f2058fe",
+    "search-linux.json": "dde3658be7be28fab6cf99c9ee7b3a849a7d611051b126764d438586cddb7d96",
+    "search-windows.json": "a9cb2d83569d8f8516a9d151b602b6cf19e86c2a309068f89281cedae08551ba",
+    "segments-linux.json": "638249cbf36bdfd942cecf4d84ee58071ad4cf42e885ede7466f3f960741b11b",
+    "segments-windows.json": "2609ce296b71f89dec9b192f6968f4d62bc3761dcc54b58898945b35f599556d",
+    "service-linux.json": "04b77f086478c937d751de1c4f9c677cf6736d9652e2b0556179dfe929e42e93",
+    "service-windows.json": "563b4a0fc85fc89a58a83167da473864aac63556818827cd0be46e1924199c55",
+    "visual-native-linux.json": "d1c3d0be87ac9c4961b6c616fc53a183209341e3a0cb75dae83651eb17e68d38",
+    "visual-native-windows.json": "f7b8d4919f8b11b062ff9ec231f37c6526b4ef27c94da93391da9fd784e3cb6f",
+    "visual.json": "af1e74b98a56b6187c0b450222366637b19638a6c6fb2cd28d75749f689e9801",
+    "windows-install.json": "d021cb611d58e332e053256be7ac5ae14f25da1400cd0a7fbe42fdfb5c8d6cf1"
+  }
+}

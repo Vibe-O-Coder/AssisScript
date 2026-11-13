@@ -1,0 +1,176 @@
+{
+  "schema": "assisscript-reference-integrity-v1",
+  "integrity": "pass",
+  "snapshot_files": 57,
+  "scenario_count": 16,
+  "runtime_conformance": "not-run",
+  "integration": "not-run",
+  "scenarios": [
+    {
+      "id": "L01",
+      "state": "not-run",
+      "phase": "presentation",
+      "inputs": {
+        "../leitura/index.htdl": "4f9a84446c0c4349be44fa82bb3b028a6e5f9e47bc91e7b74630ebf99502eba5",
+        "../leitura/reading.fxs": "636756b1bf839beb491e83830653cf514b57aacdb345ecea7dccdcb0ef648369"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "L02",
+      "state": "not-run",
+      "phase": "binding",
+      "inputs": {
+        "../paineis/index.htdl": "a15d028ce3de6b7c038bda4d98d9c00fcb67085c4ca014009f0007aed09589d4",
+        "../paineis/panels.fxs": "d0213605d0fd37820b2dcd1b5344d7e8dabb2354bfa8e7389f5780312cfe6604",
+        "../paineis/panels.sscr": "6e17613e0c59a89621ae6a2a5a41c359f6960909b47a274d1999b35136305dc5",
+        "../paineis/app.assis": "f80ad10196a32f9eeb748469476238f3d633cb71dbe7f7430c85afe471151d28"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "H01",
+      "state": "not-run",
+      "phase": "semantic-validation",
+      "inputs": {
+        "invalid/missing-type.htdl": "39fe86ff22f5a2953df3e898bdd4c7ef19a3b24debe9981f1c4340455d7dcd83"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "H02",
+      "state": "not-run",
+      "phase": "semantic-validation",
+      "inputs": {
+        "invalid/presentation-in-0.1.htdl": "de2052d27ce9dcc390e07ace724452f641f752c6b981298b1f249ce4eafe7783"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "F01",
+      "state": "not-run",
+      "phase": "type-check",
+      "inputs": {
+        "context.htdl": "d55cc8cef870789d936ddbb5b2c7415fa4b8fcd12330d3ddb13eb3b56cd05d1a",
+        "invalid/dimension.fxs": "d9336c7831739a1a93a6dc45cc34aa2db61c92bfd4a4bae227209860664688ec"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "F02",
+      "state": "not-run",
+      "phase": "binding",
+      "inputs": {
+        "context.htdl": "d55cc8cef870789d936ddbb5b2c7415fa4b8fcd12330d3ddb13eb3b56cd05d1a",
+        "invalid/writers.fxs": "9894193d07e1c79738b67816f4ebedc92daa48fd5516a1f662e880ea004fb0d6"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "F03",
+      "state": "not-run",
+      "phase": "evaluation",
+      "inputs": {
+        "context.htdl": "d55cc8cef870789d936ddbb5b2c7415fa4b8fcd12330d3ddb13eb3b56cd05d1a",
+        "valid/lazy-branch.fxs": "c75944974034cc48276690f0c6bcf4010750686fee30c8e16ea798667ee9e7a8"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "F04",
+      "state": "not-run",
+      "phase": "type-check",
+      "inputs": {
+        "context.htdl": "d55cc8cef870789d936ddbb5b2c7415fa4b8fcd12330d3ddb13eb3b56cd05d1a",
+        "invalid/branch-types.fxs": "334f55ec5f55cbe9e92aaabfb3bd70e9ee0ec1d6456321fd0de881789fe37ee1"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "F05",
+      "state": "not-run",
+      "phase": "binding",
+      "inputs": {
+        "context.htdl": "d55cc8cef870789d936ddbb5b2c7415fa4b8fcd12330d3ddb13eb3b56cd05d1a",
+        "invalid/state-defaults.fxs": "a1085e1c4291ab5ac976421ea4967893b02544ad271fad70efce439c07c94033"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "F06",
+      "state": "not-run",
+      "phase": "domain-check",
+      "inputs": {
+        "context.htdl": "d55cc8cef870789d936ddbb5b2c7415fa4b8fcd12330d3ddb13eb3b56cd05d1a",
+        "invalid/property-domain.fxs": "75c8fc8bcbfc10f297629beb8bc67dbd54ce0d7b954af30a95a12d32b0e6feb8"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "S01",
+      "state": "not-run",
+      "phase": "binding",
+      "inputs": {
+        "context.htdl": "d55cc8cef870789d936ddbb5b2c7415fa4b8fcd12330d3ddb13eb3b56cd05d1a",
+        "invalid/missing-target.sscr": "16bc8456c61497387c63c42a5a737c226b2b29312bf2737e18353b8afe37ab86"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "S02",
+      "state": "not-run",
+      "phase": "channel-validation",
+      "inputs": {
+        "context.htdl": "d55cc8cef870789d936ddbb5b2c7415fa4b8fcd12330d3ddb13eb3b56cd05d1a",
+        "invalid/channel-mismatch.sscr": "cc71a813e2011cb6ddf6df8f322bd76362a919ddfd71f71fcd2972a3d36c4718"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "R01",
+      "state": "not-run",
+      "phase": "interaction",
+      "inputs": {
+        "../paineis/index.htdl": "a15d028ce3de6b7c038bda4d98d9c00fcb67085c4ca014009f0007aed09589d4",
+        "../paineis/panels.fxs": "d0213605d0fd37820b2dcd1b5344d7e8dabb2354bfa8e7389f5780312cfe6604",
+        "../paineis/panels.sscr": "6e17613e0c59a89621ae6a2a5a41c359f6960909b47a274d1999b35136305dc5",
+        "../paineis/app.assis": "f80ad10196a32f9eeb748469476238f3d633cb71dbe7f7430c85afe471151d28"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "R02",
+      "state": "not-run",
+      "phase": "presentation-failure",
+      "inputs": {
+        "context.htdl": "d55cc8cef870789d936ddbb5b2c7415fa4b8fcd12330d3ddb13eb3b56cd05d1a",
+        "valid/fallback.fxs": "faa00282bcca68e8f702cb6888f5a677934fbca7b26b95d12a3df3cad97da523"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "R03",
+      "state": "not-run",
+      "phase": "visibility-and-scheduler",
+      "inputs": {
+        "../fluxstyle/index.htdl": "80a72a50a6636f89eb015c5d548907576919630874197cf04362b5891e762bd4",
+        "../fluxstyle/card.fxs": "6b353de95439aa0c708c891dd192b467a204b435cc9cb3a0cd6dafa0240f93c0",
+        "../fluxstyle/card.sscr": "dc8041dcffc7070b3f6e04f822042ba61e1675d9c96f2a0e006b2b0fd8bb4a7f",
+        "../fluxstyle/app.assis": "553022cbdea9eb7bcd3c1c9e0d693addf42deeb841cb0492d50a6856bba654e2"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    },
+    {
+      "id": "R04",
+      "state": "not-run",
+      "phase": "node-lifetime",
+      "inputs": {
+        "../paineis/index.htdl": "a15d028ce3de6b7c038bda4d98d9c00fcb67085c4ca014009f0007aed09589d4",
+        "../paineis/panels.fxs": "d0213605d0fd37820b2dcd1b5344d7e8dabb2354bfa8e7389f5780312cfe6604",
+        "../paineis/panels.sscr": "6e17613e0c59a89621ae6a2a5a41c359f6960909b47a274d1999b35136305dc5",
+        "../paineis/app.assis": "f80ad10196a32f9eeb748469476238f3d633cb71dbe7f7430c85afe471151d28"
+      },
+      "reason": "No HTDL/FS/SSC engine or integrated Browser driver in this unit"
+    }
+  ]
+}

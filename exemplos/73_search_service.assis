@@ -1,0 +1,44 @@
+// Run from the trusted directory containing webassis.asix. Read the local
+// search key on stdin. A port of zero selects a free loopback port.
+import "std/searchservice.assis";
+import "std/cli.assis";
+
+safe fn read_integer(at:int):int {
+    own argument:cli::Argument=cli::argument(at);
+    if(!argument.ok){return -1;}
+    val parsed:parse::Parsed<int>=parse::parse_i64(slice_of(argument.data,0,argument.size));
+    if(!parsed.ok){return -1;}
+    return parsed.value;
+}
+safe fn segmented_option():bool {
+    own argument:cli::Argument=cli::argument(3);
+    borrow expected:slice<byte>=utf8("--segments");
+    if(!argument.ok || argument.size!=len(expected)){return false;}
+    for(let i:int=0;i<len(expected);i++){if(argument.data[i]!=expected[i]){return false;}}
+    return true;
+}
+
+safe fn main():int {
+    if(arg_count()<2 || arg_count()>4){
+        print("Usage: search-service PORT [RUN_MS [--segments]]");
+        return 1;
+    }
+    val port:int=read_integer(1);
+    let duration:int=0;
+    if(arg_count()>=3){duration=read_integer(2);}
+    val segmented:bool=arg_count()==4;
+    if(segmented && !segmented_option()){return 1;}
+    if(port<0 || port>65535 || duration<0 || duration>86400000){return 1;}
+    own input:cli::Stdin=try_new cli::Stdin(64);
+    if(input==null){return 2;}
+    val read:parse::Parsed<int>=input.readln();
+    if(!read.ok || !searchservice::valid_key(input.line())){return 2;}
+    own service:searchservice::Service=try_new searchservice::Service(port,input.line(),segmented);
+    if(service==null || service.port()==0){return 4;}
+    print("READY",service.port());
+    val started:int=monotonic_ms();
+    while(duration==0 || monotonic_ms()-started<duration){
+        if(service.poll(25)!=0){return 4;}
+    }
+    return 0;
+}

@@ -1,0 +1,118 @@
+{
+  "source": "native GDI client raster from test-only provider",
+  "desktop_capture": false,
+  "compiler_sha256": "0afad2bd14e7f7f98fcccbe9ca89d4bd7c5f0a54141d302e3eb76fbc182d69b7",
+  "provider_sha256": "1907b09e05804603888e0b1c21dbce10102edb7aa7b22edceaa545c0f1fddbee",
+  "worker_sha256": "067431b12b338d83fa5e3e62c29a61b87b6d6dac3d7560ba985e3b1c5ca22681",
+  "native_runs": {
+    "optimized": {
+      "reading": {
+        "stdout": "FRAME WORKER WINDOW 2 11",
+        "stderr": "",
+        "sha256": "f905b3da4e148efc94517a89e44b201c89d50fb8b399c66a1336f5b0ca0596d5"
+      },
+      "panels": {
+        "stdout": "MOTION FRAME 2 10",
+        "stderr": "",
+        "sha256": "078c6fb0ac4da24466d25ed0e10abe76280b2005e0eb08f00bf5852a0fb3b0ce"
+      },
+      "forms": {
+        "stdout": "FORMS WINDOW 3 1",
+        "stderr": "",
+        "sha256": "00d3332cf5b6ae2bcf7b0141165df767fa3e49469838f57a811c772877513edf"
+      }
+    },
+    "reference": {
+      "reading": {
+        "stdout": "FRAME WORKER WINDOW 2 11",
+        "stderr": "",
+        "sha256": "cd7d58d616bec4d8201ba2960fc92075439ef4a807bb817be99003bc1ddc92cb"
+      },
+      "panels": {
+        "stdout": "MOTION FRAME 2 10",
+        "stderr": "",
+        "sha256": "c89356ed532c8aa73c4227b93d039e199a845e836f344f0cbb021c0cb2507c54"
+      },
+      "forms": {
+        "stdout": "FORMS WINDOW 3 1",
+        "stderr": "",
+        "sha256": "c1a09c5cb14cd4c3051996482dadb100eea0b72e3a50c44c294c8fb921a4cc7e"
+      }
+    }
+  },
+  "artifacts": {
+    "reading-100.png": {
+      "width": 640,
+      "height": 420,
+      "sha256": "3cbd029d9dfee79d0843d2af62d97d9c20fc24df6dba80b3048d6b4c4306ccbc"
+    },
+    "reading-counter.png": {
+      "width": 640,
+      "height": 420,
+      "sha256": "b757fbab3f61925e0c8204a5f6cc49137dc5e3f4f74587ddbf04edca662b7f60"
+    },
+    "reading-200.png": {
+      "width": 640,
+      "height": 420,
+      "sha256": "efb754478e29cc5f0aa3f519ab08c5d0d479b382651642538b91ed84464f6353"
+    },
+    "panels-initial.png": {
+      "width": 600,
+      "height": 360,
+      "sha256": "c07a3fe01ae5eaa8bf1cfd153b12dce200c2390d987fa7931b1a0f88e2d8ee6a"
+    },
+    "panels-moved.png": {
+      "width": 600,
+      "height": 360,
+      "sha256": "54067ac128973a801afabfe93e6525c148e42df46f1fa5699fed5580dc4df024"
+    },
+    "forms-unchecked.png": {
+      "width": 620,
+      "height": 360,
+      "sha256": "a49e974efd115f57660cb4f024b0a7e340fb5e166d8eba680fefb2bc63360e30"
+    },
+    "forms-checked.png": {
+      "width": 620,
+      "height": 360,
+      "sha256": "7fbda097a331e142a21e86a06eeea494c73ca89331d91c907c226178ee060112"
+    },
+    "forms-200.png": {
+      "width": 620,
+      "height": 360,
+      "sha256": "833036b33afa3a580e5c50bac21b676b750bfdb116a2abe8d5e95ca7e11f2dc1"
+    }
+  },
+  "difference_boxes": {
+    "counter": [
+      87,
+      398,
+      99,
+      409
+    ],
+    "panels": [
+      16,
+      16,
+      236,
+      209
+    ],
+    "zoom": [
+      20,
+      20,
+      620,
+      409
+    ],
+    "checkbox": [
+      24,
+      105,
+      46,
+      127
+    ],
+    "form_zoom": [
+      0,
+      29,
+      620,
+      351
+    ]
+  },
+  "byte_identical_modes": true
+}

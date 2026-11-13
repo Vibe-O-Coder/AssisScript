@@ -116,3 +116,10 @@ repositório e branch acima. Após a autorização, o próximo passo é repetir
 o fluxo normal de envio e conferir SHA, árvore e inventário remotos.
 O patch e o inventário revisáveis ficam em `build/session/delivery` na
 cópia isolada. O SHA deste adendo é identificado pelo histórico Git.
+
+### Adendo — estado do remoto verificado na continuação
+
+`git ls-remote` confirmou `13e81a897388e694d9a02bcfb4b3984665d7c3c9`
+como cabeça pública de `work/ecosystem-2026-11-11`. Essa revisão inclui
+`51fbc67` e registra **54,30%, 0/5 gates**. A recusa acima pertence à
+tentativa anterior. [Branch publicada](https://github.com/Vibe-O-Coder/AssisScript/tree/work/ecosystem-2026-11-11).

@@ -1,0 +1,362 @@
+namespace searchservice;
+import "std/loopback.assis";
+import "std/searchsegments.assis";
+
+pure fn slots():int {return 8;}
+pure fn header_limit():int {return 4096;}
+pure fn body_limit():int {return 2064;}
+pure fn request_capacity():int {return header_limit()+body_limit()+1;}
+pure fn reply_capacity():int {return 768;}
+
+value struct Head { let code:int; let length:int; }
+value struct Peer {
+    let received:int;
+    let head:int;
+    let body:int;
+    let sent:int;
+    let reply:int;
+    let deadline:int;
+}
+
+safe fn equal(borrow left:slice<byte>,borrow right:slice<byte>,ignore_case:bool):bool {
+    if(len(left)!=len(right)){return false;}
+    for(let i:int=0;i<len(left);i++){
+        let c:int=int(left[i]);
+        if(ignore_case && c>=65 && c<=90){c+=32;}
+        if(c!=int(right[i])){return false;}
+    }
+    return true;
+}
+pure fn field_character(c:int):bool {
+    return (c>=65 && c<=90) || (c>=97 && c<=122) || (c>=48 && c<=57) ||
+        c==33 || (c>=35 && c<=39) || c==42 || c==43 || c==45 || c==46 ||
+        c==94 || c==95 || c==96 || c==124 || c==126;
+}
+safe fn line_end(borrow data:slice<byte>,start:int):int {
+    for(let i:int=start;i<len(data);i++){
+        if(data[i]==10){return -1;}
+        if(data[i]==13){if(i+1<len(data) && data[i+1]==10){return i;}return -1;}
+    }
+    return -1;
+}
+safe fn header_end(borrow data:slice<byte>,previous:int):int {
+    let start:int=0;
+    if(previous>3){start=previous-3;}
+    for(let i:int=start;i+3<len(data) && i+4<=header_limit();i++){
+        if(data[i]==13 && data[i+1]==10 && data[i+2]==13 && data[i+3]==10){return i+4;}
+    }
+    return -1;
+}
+// A negative result is invalid syntax. The limit+1 result reports an
+// oversized value without integer overflow, even for very long numerals.
+safe fn decimal(borrow data:slice<byte>,limit:int):int {
+    if(len(data)==0){return -1;}
+    let value:int=0;
+    for(let i:int=0;i<len(data);i++){
+        val digit:int=int(data[i])-48;
+        if(digit<0 || digit>9){return -1;}
+        if(value<=limit){value=value*10+digit;}
+    }
+    if(value>limit){return limit+1;}
+    return value;
+}
+safe fn same_key(borrow input:slice<byte>,borrow key:*byte):bool {
+    if(len(input)!=len(key)){return false;}
+    let mismatch:int=0;
+    for(let i:int=0;i<len(key);i++){mismatch|=int(input[i])^int(key[i]);}
+    return mismatch==0;
+}
+safe fn parse_head(borrow data:slice<byte>,borrow host:slice<byte>,borrow key:*byte):Head {
+    val first:int=line_end(data,0);
+    if(first<0){return new Head(400,0);}
+    if(!equal(slice_of(data,0,first),utf8("POST /v1/search HTTP/1.1"),false)){return new Head(404,0);}
+    let cursor:int=first+2;
+    let fields:int=0;
+    let length:int= -1;
+    let has_host:bool=false;
+    let has_key:bool=false;
+    let has_type:bool=false;
+    while(cursor<len(data)-2){
+        val end:int=line_end(data,cursor);
+        if(end<=cursor){return new Head(400,0);}
+        let colon:int=cursor;
+        while(colon<end && field_character(int(data[colon]))){colon++;}
+        if(colon==cursor || colon==end || data[colon]!=58){return new Head(400,0);}
+        borrow name:slice<byte>=slice_of(data,cursor,colon-cursor);
+        let start:int=colon+1;
+        let stop:int=end;
+        for(let i:int=start;i<end;i++){
+            val c:int=int(data[i]);
+            if(c!=9 && (c<32 || c>126)){return new Head(400,0);}
+        }
+        while(start<stop && (data[start]==32 || data[start]==9)){start++;}
+        while(stop>start && (data[stop-1]==32 || data[stop-1]==9)){stop--;}
+        borrow value:slice<byte>=slice_of(data,start,stop-start);
+        if(equal(name,utf8("host"),true)){
+            if(has_host || !equal(value,host,false)){return new Head(400,0);}
+            has_host=true;
+        }else if(equal(name,utf8("content-length"),true)){
+            if(length>=0){return new Head(400,0);}
+            length=decimal(value,body_limit());
+            if(length<0){return new Head(400,0);}
+            if(length>body_limit()){return new Head(413,0);}
+        }else if(equal(name,utf8("x-assis-search-key"),true)){
+            if(has_key){return new Head(400,0);}
+            if(!same_key(value,key)){return new Head(403,0);}
+            has_key=true;
+        }else if(equal(name,utf8("content-type"),true)){
+            if(has_type){return new Head(400,0);}
+            if(!equal(value,utf8("text/plain; charset=utf-8"),true)){return new Head(415,0);}
+            has_type=true;
+        }else if(equal(name,utf8("origin"),true)){
+            return new Head(403,0);
+        }else if(equal(name,utf8("transfer-encoding"),true) || equal(name,utf8("content-encoding"),true)){
+            return new Head(400,0);
+        }else if(equal(name,utf8("expect"),true)){
+            return new Head(417,0);
+        }
+        cursor=end+2;
+        fields++;
+        if(fields>32){return new Head(431,0);}
+    }
+    if(!has_host){return new Head(400,0);}
+    if(!has_key){return new Head(403,0);}
+    if(length<0){return new Head(411,0);}
+    if(!has_type){return new Head(415,0);}
+    return new Head(200,length);
+}
+
+safe fn append(borrow mut output:*byte,at:int,borrow data:slice<byte>):int {
+    assert(len(data)<=len(output)-at);
+    for(let i:int=0;i<len(data);i++){output[at+i]=data[i];}
+    return at+len(data);
+}
+safe fn number(borrow mut output:*byte,at:int,value:int):int {
+    assert(value>=0);
+    let divisor:int=1;
+    while(divisor<=value/10){divisor*=10;}
+    let end:int=at;
+    while(divisor>0){
+        output[end]=byte(48+(value/divisor)%10);
+        end++;
+        divisor/=10;
+    }
+    return end;
+}
+safe fn result_line(borrow mut output:*byte,at:int,row:searchindex::Hit):int {
+    let end:int=number(output,at,row.doc);
+    output[end]=byte(32);
+    end=number(output,end+1,row.score);
+    output[end]=byte(32);
+    end=number(output,end+1,row.position);
+    output[end]=byte(10);
+    return end+1;
+}
+safe fn reason(borrow mut output:*byte,at:int,status:int):int {
+    if(status==200){return append(output,at,utf8(" OK"));}
+    if(status==403){return append(output,at,utf8(" Forbidden"));}
+    if(status==404){return append(output,at,utf8(" Not Found"));}
+    if(status==408){return append(output,at,utf8(" Request Timeout"));}
+    if(status==411){return append(output,at,utf8(" Length Required"));}
+    if(status==413){return append(output,at,utf8(" Content Too Large"));}
+    if(status==415){return append(output,at,utf8(" Unsupported Media Type"));}
+    if(status==417){return append(output,at,utf8(" Expectation Failed"));}
+    if(status==431){return append(output,at,utf8(" Request Header Fields Too Large"));}
+    if(status==503){return append(output,at,utf8(" Service Unavailable"));}
+    return append(output,at,utf8(" Bad Request"));
+}
+safe fn envelope(borrow mut output:*byte,status:int,borrow body:slice<byte>):int {
+    let at:int=append(output,0,utf8("HTTP/1.1 "));
+    at=number(output,at,status);
+    at=reason(output,at,status);
+    at=append(output,at,utf8("\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: "));
+    at=number(output,at,len(body));
+    at=append(output,at,utf8("\r\nConnection: close\r\nCache-Control: no-store\r\nX-Content-Type-Options: nosniff\r\n\r\n"));
+    return append(output,at,body);
+}
+
+// Query framing is mode, tab, rank offset, tab and the UTF-8 search text.
+// Open a fresh ASIX snapshot and release the file before executing the query.
+safe fn query(borrow request:slice<byte>,borrow mut output:*byte,segmented:bool):int {
+    let first:int= -1;
+    let second:int= -1;
+    for(let i:int=0;i<len(request);i++){
+        if(request[i]==9){
+            if(first<0){first=i;}
+            else if(second<0){second=i;}
+            else{return -400;}
+        }else if(request[i]<32 || request[i]==127){return -400;}
+    }
+    if(first<=0 || second<=first+1 || second+1>=len(request)){return -400;}
+    borrow name:slice<byte>=slice_of(request,0,first);
+    let mode:int=0;
+    if(equal(name,utf8("and"),false)){mode=1;}
+    if(equal(name,utf8("or"),false)){mode=2;}
+    if(equal(name,utf8("phrase"),false)){mode=3;}
+    val offset:int=decimal(slice_of(request,first+1,second-first-1),255);
+    borrow terms:slice<byte>=slice_of(request,second+1,len(request)-second-1);
+    if(mode==0 || offset<0 || offset>255 || len(terms)>2048 || unicode::error(terms)>=0){return -400;}
+    let limit:int=256-offset;
+    if(limit>10){limit=10;}
+    own rows:*searchindex::Hit=try_alloc<searchindex::Hit>(limit);
+    if(rows==null){return -503;}
+    let count:int=0;
+    if(segmented){
+        own bundle:File=file_open("webassis.asis",0);
+        if(bundle==null){return -503;}
+        count=searchsegments::query(bundle,terms,mode,offset,rows);
+        if(file_close(bundle)!=0){return -503;}
+    }else{
+        own index:searchindex::Index=searchindex::local_index();
+        if(index==null || !index.is_open()){return -503;}
+        own snapshot:File=file_open("webassis.asix",0);
+        if(snapshot==null){return -503;}
+        val loaded:int=index.read(snapshot);
+        val closed:int=file_close(snapshot);
+        if(loaded!=0 || closed!=0){return -503;}
+        count=index.query(terms,mode,offset,rows);
+    }
+    if(count== -1 || count== -2){return -400;}
+    if(count<0){return -503;}
+    let length:int=0;
+    for(let i:int=0;i<count;i++){length=result_line(output,length,rows[i]);}
+    return length;
+}
+
+public safe fn valid_key(borrow key:slice<byte>):bool {
+    if(len(key)!=64){return false;}
+    for(let i:int=0;i<len(key);i++){
+        val c:int=int(key[i]);
+        if(!((c>=48 && c<=57) || (c>=97 && c<=102))){return false;}
+    }
+    return true;
+}
+
+/// One event loop for one trusted corpus directory. Connection state and
+/// partial reads/writes have fixed bounds. A peer can never select a path.
+public final class Service {
+    private own server:loopback::Server;
+    private own key:*byte;
+    private own host:*byte;
+    private own peers:*Peer;
+    private own requests:*byte;
+    private own replies:*byte;
+    private own scratch:*byte;
+    private own results:*byte;
+    private let host_size:int;
+    private let segmented:bool;
+    private let active:bool;
+
+    fn init(borrow mut self,port:int,borrow key:slice<byte>,segmented:bool):void {
+        if(!valid_key(key)){return;}
+        self.key=try_alloc<byte>(64);
+        self.host=try_alloc<byte>(21);
+        self.peers=try_alloc<searchservice::Peer>(slots());
+        self.requests=try_alloc<byte>(slots()*request_capacity());
+        self.replies=try_alloc<byte>(slots()*reply_capacity());
+        self.scratch=try_alloc<byte>(1024);
+        self.results=try_alloc<byte>(320);
+        if(self.key==null || self.host==null || self.peers==null || self.requests==null ||
+           self.replies==null || self.scratch==null || self.results==null){return;}
+        for(let i:int=0;i<len(key);i++){self.key[i]=key[i];}
+        self.server=try_new loopback::Server(port,slots());
+        if(self.server==null || self.server.port()==0){return;}
+        val bound:int=self.server.port();
+        val prefix:int=append(self.host,0,utf8("127.0.0.1:"));
+        val host_size:int=number(self.host,prefix,bound);
+        self.host_size=host_size;
+        self.segmented=segmented;
+        self.active=true;
+    }
+    fn port(borrow self):int {
+        if(!self.active){return 0;}
+        return self.server.port();
+    }
+    private fn reply(borrow mut self,slot:int,status:int,length:int,now:int):void {
+        own results:*byte=move(self.results);
+        val size:int=envelope(self.scratch,status,slice_of(results,0,length));
+        self.results=move(results);
+        val start:int=slot*reply_capacity();
+        for(let i:int=0;i<size;i++){self.replies[start+i]=self.scratch[i];}
+        self.peers[slot]=new Peer(0,0,0,0,size,now+2000);
+    }
+    private fn send_reply(borrow mut self,slot:int,peer:Peer):void {
+        val size:int=peer.reply-peer.sent;
+        val start:int=slot*reply_capacity()+peer.sent;
+        for(let i:int=0;i<size;i++){self.scratch[i]=self.replies[start+i];}
+        val count:int=self.server.send(slot,self.scratch,size);
+        if(count== -2){return;}
+        if(count<=0 || count==size){self.server.disconnect(slot);return;}
+        self.peers[slot]=new Peer(0,0,0,peer.sent+count,peer.reply,peer.deadline);
+    }
+    private fn read_request(borrow mut self,slot:int,peer:Peer,now:int):void {
+        let limit:int=request_capacity()-peer.received;
+        if(peer.head>0){limit=peer.head+peer.body+1-peer.received;}
+        if(limit>len(self.scratch)){limit=len(self.scratch);}
+        own scratch:*byte=move(self.scratch);
+        val count:int=self.server.receive(slot,scratch,limit);
+        self.scratch=move(scratch);
+        if(count== -2){return;}
+        if(count==0){
+            if(peer.received==0){self.server.disconnect(slot);return;}
+            self.reply(slot,400,0,now);
+            return;
+        }
+        if(count<0){self.server.disconnect(slot);return;}
+        val start:int=slot*request_capacity();
+        val received:int=peer.received+count;
+        for(let i:int=0;i<count;i++){self.requests[start+peer.received+i]=self.scratch[i];}
+        let head:int=peer.head;
+        let body:int=peer.body;
+        if(head==0){
+            val end:int=header_end(slice_of(self.requests,start,received),peer.received);
+            if(end<0){
+                if(received>=header_limit()){self.reply(slot,431,0,now);return;}
+                self.peers[slot]=new Peer(received,0,0,0,0,peer.deadline);
+                return;
+            }
+            val parsed:Head=parse_head(slice_of(self.requests,start,end),slice_of(self.host,0,self.host_size),self.key);
+            if(parsed.code!=200){self.reply(slot,parsed.code,0,now);return;}
+            head=end;
+            body=parsed.length;
+        }
+        if(received<head+body){self.peers[slot]=new Peer(received,head,body,0,0,peer.deadline);return;}
+        if(received>head+body){self.reply(slot,400,0,now);return;}
+        own results:*byte=move(self.results);
+        val result:int=query(slice_of(self.requests,start+head,body),results,self.segmented);
+        self.results=move(results);
+        val finished:int=monotonic_ms();
+        if(result<0){self.reply(slot,-result,0,finished);return;}
+        self.reply(slot,200,result,finished);
+    }
+    fn poll(borrow mut self,wait_ms:int):int {
+        if(!self.active || wait_ms<0 || wait_ms>50){return -1;}
+        let writing:int=0;
+        for(let slot:int=0;slot<slots();slot++){
+            if(self.server.connected(slot) && self.peers[slot].reply>0){writing|=1<<slot;}
+        }
+        val ready:int=self.server.wait(writing,wait_ms);
+        if(ready== -1){return -1;}
+        for(let slot:int=0;slot<slots();slot++){
+            if(!self.server.connected(slot)){continue;}
+            val peer:Peer=self.peers[slot];
+            val now:int=monotonic_ms();
+            if(now>=peer.deadline){
+                if(peer.reply>0){self.server.disconnect(slot);}
+                else{self.reply(slot,408,0,now);}
+            }else if(ready>0){
+                if(peer.reply>0){self.send_reply(slot,peer);}
+                else{self.read_request(slot,peer,now);}
+            }
+        }
+        if(ready>0){
+            for(let i:int=0;i<slots();i++){
+                val slot:int=self.server.accept();
+                if(slot== -1){return -1;}
+                if(slot<0){break;}
+                self.peers[slot]=new Peer(0,0,0,0,0,monotonic_ms()+2000);
+            }
+        }
+        return 0;
+    }
+}

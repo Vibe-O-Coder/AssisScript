@@ -1,0 +1,27 @@
+{
+  "command": "python tests/test-searchsegments.py",
+  "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3",
+  "compilerSha256": "4ae10529f28c5a6a28a0d7597f2ef1fd27c1d6ee7271bb2da6ec0fc12970adab",
+  "executed": 11,
+  "skipped": 0,
+  "optimized": {
+    "binarySha256": "1a3fb1909fd4e0db78365b9822cc439f7297beea9c3fd3be7e784ec31e0b2a31",
+    "boundedRun": {
+      "addressSpaceLimit": 33554432,
+      "documents": 3200,
+      "snapshotBytes": 42963592,
+      "updatedSnapshotSha256": "8b2f930f8b1b8dca7044964686cdd53afbb2e1be3bede12b5e815a933e12a636",
+      "buildSeconds": 12.924,
+      "querySeconds": 5.761,
+      "updateSeconds": 12.641
+    },
+    "modelBundleSha256": "89b03fe213c0b77320982ea60d8b232f185e9a63fed72ee6c5eb219f6b3e28de",
+    "modelBundleBytes": 77927
+  },
+  "reference": {
+    "binarySha256": "9adf6e796401cb17863716adc2cb984e98a42f9713d3cd9fd952493eff496290",
+    "modelBundleSha256": "89b03fe213c0b77320982ea60d8b232f185e9a63fed72ee6c5eb219f6b3e28de",
+    "modelBundleBytes": 77927
+  }
+}

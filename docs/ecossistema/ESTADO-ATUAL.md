@@ -1,3 +1,17 @@
+> **Continuação de 12/11/2026 — 58,00%, 0/5 gates.**
+> Use `work/eco-70-20261112`, branch `work/ecosystem-2026-11-12`, sobre
+> `13e81a897388e694d9a02bcfb4b3984665d7c3c9`. A base de 54,30% está pública na
+> branch `work/ecosystem-2026-11-11`, conferida pelo SHA remoto.
+> Serviço de consulta HTTP em loopback com chave por corpus e limites.
+> ASIS 1 consulta e atualiza por faixas. O Linux verificou 42.963.592 bytes
+> sob 32 MiB de espaço de endereçamento. Rasters nativos revalidados,
+> formulário e catálogo percorridos pelo teclado no desktop.
+> [Serviço e publicação](../relatorios/2026-11-12-m8-servico-busca-local.md) ·
+> [Segmentos](../relatorios/2026-11-12-m7-indice-segmentado.md) ·
+> [Visual](../relatorios/2026-11-12-m3-revalidacao-visual.md).
+> Próximo M3: edição por nó, texto/número e IME. A
+> [fila integral](FILA-M0-M1.md) conserva todos os demais aceites. Easy por último.
+
 > **Busca persistente, formulários e inspeção visual — 12/11/2026, entrega local.**
 > `work/ecosystem-2026-11-11`, base pública b833e81. **54,30%, 0/5 gates**.
 > ASIX 1, lotes de texto/HTDL, ranking inicial, restart/kill e 10 mil documentos

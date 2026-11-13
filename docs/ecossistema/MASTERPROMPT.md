@@ -1,3 +1,18 @@
+> **Continuação de 12/11/2026 — 58,00%, 0/5 gates.**
+> Use `work/eco-70-20261112`, branch `work/ecosystem-2026-11-12`. A base de
+> 54,30% está publicada em `13e81a897388e694d9a02bcfb4b3984665d7c3c9`,
+> branch `work/ecosystem-2026-11-11`, conferida pelo SHA remoto.
+> Consulta HTTP local com chave por corpus, ASIX e ASIS. Índice segmentado
+> validado acima do limite de espaço de endereçamento do processo Linux.
+> Oito rasters GDI revalidados e foco/teclado nas janelas de formulário
+> e catálogo. Captura desktop, leitor real, DPI, monitores, IME e fluidez
+> SSC continuam no aceite.
+> [Serviço e publicação](../relatorios/2026-11-12-m8-servico-busca-local.md) ·
+> [Segmentos](../relatorios/2026-11-12-m7-indice-segmentado.md) ·
+> [Visual](../relatorios/2026-11-12-m3-revalidacao-visual.md) ·
+> [Fila integral](FILA-M0-M1.md). Meta 70% a 12 pontos. Easy por último.
+> As entradas abaixo registram as rodadas anteriores.
+
 > **Continuação local de 12/11/2026 — 54,30%, 0/5 gates.**
 > Use a cópia de trabalho `work/eco-70-20261111`, branch
 > `work/ecosystem-2026-11-11`. Base pública b833e81 de 50,40%, confirmada.

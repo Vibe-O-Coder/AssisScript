@@ -1,0 +1,91 @@
+namespace searchsegments;
+import "std/searchindex.assis";
+
+public pure fn count():int {return 16;}
+public pure fn part_of(document:int):int {
+    if(document<1 || document>65535){return 0;}
+    return 1+(document-1)/4096;
+}
+public pure fn local_id(document:int):int {
+    if(part_of(document)==0){return 0;}
+    return 1+(document-1)%4096;
+}
+public safe fn new_part(part:int):own searchindex::Index {
+    if(part<1 || part>count()){return try_new searchindex::Index(0,0,0);}
+    let maximum:int=4096;
+    if(part==count()){maximum=4095;}
+    return try_new searchindex::Index(maximum,65536,4194304);
+}
+pure fn magic():int {return 0x0000100153495341;}
+
+public safe fn write_header(borrow mut target:File):int {
+    own header:*byte=try_alloc<byte>(8);
+    if(header==null){return 4;}
+    for(let i:int=0;i<8;i++){header[i]=byte((magic()>>(8*i))&255);}
+    if(file_write(target,header,8)!=8){return 4;}
+    return 0;
+}
+public safe fn read_header(borrow mut source:File):int {
+    own header:*byte=try_alloc<byte>(8);
+    if(header==null){return 4;}
+    val length:int=file_read(source,header,8);
+    if(length<0){return 4;}
+    if(length!=8){return 3;}
+    for(let i:int=0;i<8;i++){if(header[i]!=byte((magic()>>(8*i))&255)){return 3;}}
+    return 0;
+}
+public safe fn check_end(borrow mut source:File):int {
+    own probe:*byte=try_alloc<byte>(1);
+    if(probe==null){return 4;}
+    val read:int=file_read(source,probe,1);
+    if(read<0){return 4;}
+    if(read!=0){return 3;}
+    return 0;
+}
+
+safe fn merge(borrow mut ranked:*searchindex::Hit,used:int,borrow rows:*searchindex::Hit,size:int,base:int):int {
+    let total:int=used;
+    for(let i:int=0;i<size;i++){
+        val row:searchindex::Hit=rows[i];
+        val hit:searchindex::Hit=new searchindex::Hit(base+row.doc,row.score,row.position);
+        let at:int=total;
+        if(total==len(ranked)){
+            at--;
+            if(!searchindex::ranks_before(hit,ranked[at])){break;}
+        }else{total++;}
+        while(at>0 && searchindex::ranks_before(hit,ranked[at-1])){
+            ranked[at]=ranked[at-1];
+            at--;
+        }
+        ranked[at]=hit;
+    }
+    return total;
+}
+
+/// Query an ASIS bundle from its first byte. Read and release one part at a
+/// time. Write caller rows only after every checksum and final EOF pass.
+public safe fn query(borrow mut source:File,borrow terms:slice<byte>,mode:int,offset:int,
+        borrow mut hits:*searchindex::Hit):int {
+    if(offset<0 || offset>255 || len(hits)<1 || len(hits)>256-offset){return -1;}
+    val header:int=read_header(source);
+    if(header!=0){return -header;}
+    val capacity:int=offset+len(hits);
+    own ranked:*searchindex::Hit=try_alloc<searchindex::Hit>(capacity);
+    own rows:*searchindex::Hit=try_alloc<searchindex::Hit>(capacity);
+    if(ranked==null || rows==null){return -4;}
+    let used:int=0;
+    for(let part:int=1;part<=count();part++){
+        own index:searchindex::Index=new_part(part);
+        if(index==null || !index.is_open()){return -4;}
+        val loaded:int=index.read_part(source,part);
+        if(loaded!=0){return -loaded;}
+        val length:int=index.query(terms,mode,0,rows);
+        if(length<0){return length;}
+        used=merge(ranked,used,rows,length,(part-1)*4096);
+    }
+    val end:int=check_end(source);
+    if(end!=0){return -end;}
+    if(used<=offset){return 0;}
+    for(let i:int=offset;i<used;i++){hits[i-offset]=ranked[i];}
+    return used-offset;
+}

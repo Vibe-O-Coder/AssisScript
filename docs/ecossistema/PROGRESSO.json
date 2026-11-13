@@ -3,7 +3,7 @@
   "rubric_version": 1,
   "date": "2026-11-12",
   "scope": "Capacidade do AssisScript nativo, runtime, bibliotecas e ferramentas para implementar Browser, buscador e ecossistema HTDL/FS/SSC, comprovada por integrações de referência.",
-  "assessment": "persistent-local-search-and-checkbox-forms",
+  "assessment": "loopback-search-and-bounded-segments",
   "formula": "sum(group.weight * sum(item.level) / (4 * len(group.items)))",
   "base_commit": "e9183e7f98447e97feb2f2e7f1953c035e24f7e6",
   "groups": [
@@ -317,15 +317,18 @@
         {
           "id": "E02-05",
           "name": "Mapas e armazenamento eficientes",
-          "level": 1,
+          "level": 2,
           "acceptance": "Definir hash resistente a colisões hostis, interning, buffers binários e vistas com invalidação explícita; medir arenas, segmentos e coleções sob crescimento/remoção.",
-          "baseline": "Há mapas e prova de colisões por correção; resistência de custo não comprovada.",
+          "baseline": "Postings posicionais segmentados com leitura e descarte por faixa. Construção, consulta e atualização de 42.963.592 bytes sob 32 MiB de espaço de endereçamento Linux. Hash resistente a colisão hostil, interning e compressão seguem abertos.",
           "evidence": [
             "docs/COLECOES.md",
             "local:assis/docs/AUDITORIA-HTDL.md",
             "docs/relatorios/2026-10-29-m0-microparser.md",
             "tests/fixtures/htdl-core.assis",
-            "tests/test-htdl-readiness.py"
+            "tests/test-htdl-readiness.py",
+            "docs/relatorios/2026-11-12-m7-indice-segmentado.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-linux.json"
           ]
         }
       ]
@@ -445,13 +448,16 @@
           "name": "Janela, monitores e eventos",
           "level": 2,
           "acceptance": "Abrir/redimensionar/fechar janela, integrar DPI, múltiplos monitores, foco, teclado/ponteiro/touch e suspensão; testar loop nativo sem espera ocupada e liberação de recursos.",
-          "baseline": "Janela Windows x64 integrada a HTDL local: teclado/clique/roda/resize/close e recursos contados. Captura desktop, monitores/200%, touch e suspensão seguem pendentes.",
+          "baseline": "Janela Windows x64 integrada a HTDL local: teclado/clique/roda/resize/close e recursos contados. Captura desktop, monitores/200%, touch e suspensão seguem pendentes. Reexecução Windows confirmou oito rasters GDI e o foco por teclado no formulário e catálogo. As capturas de desktop expiraram.",
           "evidence": [
             "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md",
             "docs/relatorios/2026-10-29-m1-plataforma-windows.md",
             "docs/ecossistema/evidencias/m1-plataforma-2026-10-29/windows-x64.json",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
-            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json"
+            "docs/ecossistema/evidencias/m2-viewer-2026-11-01/summary.json",
+            "docs/relatorios/2026-11-12-m3-revalidacao-visual.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/desktop.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/visual.json"
           ]
         },
         {
@@ -499,7 +505,7 @@
           "name": "Acessibilidade e políticas do usuário",
           "level": 2,
           "acceptance": "Exportar árvore semântica, nome/role/valor, foco e ações às APIs assistivas do OS; testar leitor de tela, contraste, zoom e movimento reduzido com usuário e automação.",
-          "baseline": "Projeção MSAA plana adicional com agrupamentos, links, listas e itens; oráculo independente testa papéis, ações, hit e revogação com rollback nativo. Leitor real, hierarquia completa, live regions e aceites desktop/DPI/IME seguem abertos.",
+          "baseline": "Projeção MSAA plana adicional com agrupamentos, links, listas e itens; oráculo independente testa papéis, ações, hit e revogação com rollback nativo. Leitor real, hierarquia completa, live regions e aceites desktop/DPI/IME seguem abertos. Reexecução Windows confirmou oito rasters GDI e o foco por teclado no formulário e catálogo. As capturas de desktop expiraram.",
           "evidence": [
             "local:htdl/docs/14-fundamentos-e-perfis.md",
             "local:htdl/docs/19-conformidade-e-cenarios.md",
@@ -514,7 +520,10 @@
             "docs/ecossistema/evidencias/m3-frame-worker-2026-11-03/summary.json",
             "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json",
-            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json"
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json",
+            "docs/relatorios/2026-11-12-m3-revalidacao-visual.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/desktop.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/visual.json"
           ]
         }
       ]
@@ -573,21 +582,27 @@
         {
           "id": "E05-04",
           "name": "Streaming e canais contínuos",
-          "level": 0,
+          "level": 1,
           "acceptance": "Oferecer leitura incremental, buffers limitados, backpressure, compressão com teto de expansão, downloads retomáveis e canais de atualização previstos no contrato; avaliar WebSocket por requisito.",
-          "baseline": "Corpo limitado em memória, sem streaming geral demonstrado.",
+          "baseline": "Transporte local de consulta lê e escreve em etapas com buffers, teto e prazo por conexão. Streaming do cliente, compressão, retomada e canais contínuos seguem abertos.",
           "evidence": [
-            "docs/BIBLIOTECA-net.md"
+            "docs/BIBLIOTECA-net.md",
+            "docs/relatorios/2026-11-12-m8-servico-busca-local.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/service-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/service-linux.json"
           ]
         },
         {
           "id": "E05-05",
           "name": "Servidor e serviço de consulta",
-          "level": 0,
+          "level": 2,
           "acceptance": "Disponibilizar escuta/aceitação e HTTP por provider ou serviço integrado, com concorrência, limites e encerramento; testar solicitações truncadas/lentas, framing, timeouts e autenticação administrativa.",
-          "baseline": "Não há servidor HTTP ou API socket geral demonstrados.",
+          "baseline": "Servidor HTTP em loopback com autenticação por chave, até oito conexões e framing limitado. Clientes lentos, truncados e ambíguos têm testes Windows/Linux x64. Operação remota e administração seguem abertas.",
           "evidence": [
-            "docs/BIBLIOTECA-net.md"
+            "docs/BIBLIOTECA-net.md",
+            "docs/relatorios/2026-11-12-m8-servico-busca-local.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/service-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/service-linux.json"
           ]
         }
       ]
@@ -857,7 +872,7 @@
           "name": "Layout e snapshots coerentes",
           "level": 3,
           "acceptance": "Definir constraints, distribuição row/column, texto, overflow/scroll e invalidações; provar ausência de ciclo geométrico e uso do mesmo snapshot por desenho, hit test e acessibilidade.",
-          "baseline": "Regiões/listas/itens/link usam o Frame comum; marcador medido antes dos filhos, reserva horizontal, listas aninhadas, hidden, clip e zoom têm modelos independentes. Artefatos e seleção conservam ordem semântica. Layout integral e aceite visual permanecem abertos.",
+          "baseline": "Regiões/listas/itens/link usam o Frame comum; marcador medido antes dos filhos, reserva horizontal, listas aninhadas, hidden, clip e zoom têm modelos independentes. Artefatos e seleção conservam ordem semântica. Layout integral e aceite visual permanecem abertos. Reexecução Windows confirmou oito rasters GDI e o foco por teclado no formulário e catálogo. As capturas de desktop expiraram.",
           "evidence": [
             "local:htdl/docs/17-execucao-transacoes-e-layout.md",
             "local:htdl/docs/19-conformidade-e-cenarios.md",
@@ -881,7 +896,10 @@
             "docs/ecossistema/evidencias/loader-http-2026-11-11/visual.json",
             "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json",
-            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json"
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json",
+            "docs/relatorios/2026-11-12-m3-revalidacao-visual.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/desktop.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/visual.json"
           ]
         },
         {
@@ -932,7 +950,7 @@
           "name": "Corpus visual e inspeção",
           "level": 2,
           "acceptance": "Executar contador, leitura e dois painéis com screenshots controladas, árvores/eventos e leitor de tela; inspecionar grafo, custos e versões com diagnóstico de origem.",
-          "baseline": "Oito rasters nativos GDI de leitura, contador, painéis e formulário com zoom de texto a 200% foram inspecionados nos dois modos. Foco, geometria e mudança de estado têm oráculos nativos. Computer Use expirou; fluidez percebida, desktop, leitor real, DPI, monitores, IME e inspetor completo aguardam aceite.",
+          "baseline": "Oito rasters nativos GDI de leitura, contador, painéis e formulário com zoom de texto a 200% foram inspecionados nos dois modos. Foco, geometria e mudança de estado têm oráculos nativos. Computer Use expirou; fluidez percebida, desktop, leitor real, DPI, monitores, IME e inspetor completo aguardam aceite. Reexecução Windows confirmou oito rasters GDI e o foco por teclado no formulário e catálogo. As capturas de desktop expiraram.",
           "evidence": [
             "local:htdl/docs/19-conformidade-e-cenarios.md",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
@@ -947,7 +965,10 @@
             "docs/ecossistema/evidencias/loader-http-2026-11-11/visual.json",
             "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json",
-            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json"
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/visual.json",
+            "docs/relatorios/2026-11-12-m3-revalidacao-visual.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/desktop.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/visual.json"
           ]
         }
       ]
@@ -967,50 +988,62 @@
           "name": "Commit durável e recuperação",
           "level": 2,
           "acceptance": "Implementar WAL/transação ou provider testado, flush de arquivo/diretório, commit e recuperação; injetar interrupções, disco cheio e corrupção, definindo diferença entre kill e perda de energia.",
-          "baseline": "Snapshot ASIX em arquivo candidato, lock exclusivo, flush e troca atômica. Linux também solicita flush do diretório. Há teste nativo de kill e de falha parcial de gravação Linux. Perda de energia e disco cheio físico continuam abertos.",
+          "baseline": "Snapshot ASIX em arquivo candidato, lock exclusivo, flush e troca atômica. Linux também solicita flush do diretório. Há teste nativo de kill e de falha parcial de gravação Linux. Perda de energia e disco cheio físico continuam abertos. ASIS 1 acrescenta evidência de limites, recuperação e ordenação global entre segmentos.",
           "evidence": [
             "docs/EVENTOS-E-PERSISTENCIA.md",
             "docs/BIBLIOTECA-process.md",
             "docs/relatorios/2026-11-12-m7-busca-local.md",
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
-            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json",
+            "docs/relatorios/2026-11-12-m7-indice-segmentado.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-linux.json"
           ]
         },
         {
           "id": "E09-02",
           "name": "Serialização e formatos versionados",
-          "level": 2,
+          "level": 3,
           "acceptance": "Oferecer leitores/escritores binários e texto incrementais, checksums, endianness, limites e migrações; testar entrada truncada, versão desconhecida e snapshot independente do layout de memória.",
-          "baseline": "ASIX 1 little-endian com checksum, limites, verificação de ordem/posições e rejeição de versão/truncamento. Lotes TSV incrementais e verificação independente de 65.058 postings. Migração e mais formatos estão abertos.",
+          "baseline": "ASIX 1 preservado e ASIS 1 segmentado com checksums vinculados às faixas, validação de ordem, posições, versão e EOF. Oráculos Windows/Linux x64 e corrupção rejeitada. Migração automática permanece aberta.",
           "evidence": [
             "docs/BIBLIOTECA-json.md",
             "docs/IO-E-APLICACAO-A.md",
             "docs/relatorios/2026-11-12-m7-busca-local.md",
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
-            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json",
+            "docs/relatorios/2026-11-12-m7-indice-segmentado.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-linux.json"
           ]
         },
         {
           "id": "E09-03",
           "name": "Banco, segmentos e consultas",
-          "level": 2,
+          "level": 3,
           "acceptance": "Integrar provider de banco ou implementar segmentos/índices transacionais com iteração, compactação e leitura concorrente; demonstrar conjunto maior que RAM sob limites definidos.",
-          "baseline": "Índice invertido em snapshot persistente com consulta e compactação de ocorrências obsoletas ao publicar. Oráculo de 10 mil documentos, reinício e escritor concorrente recusado. Segmentos, merge e escala maior que RAM continuam abertos.",
+          "baseline": "Índice posicional em segmentos, reabertura por processo, compactação e ranking global. Verificados crash após candidato parcial, exclusão e atualização sob limite inferior ao arquivo. Merge seletivo e testes de perda física seguem abertos.",
           "evidence": [
             "docs/BIBLIOTECAS.md",
             "docs/relatorios/2026-11-12-m7-busca-local.md",
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
-            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json",
+            "docs/relatorios/2026-11-12-m7-indice-segmentado.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-linux.json"
           ]
         },
         {
           "id": "E09-04",
           "name": "Perfil, partições e dados sensíveis",
-          "level": 0,
+          "level": 1,
           "acceptance": "Separar configurações, histórico, favoritos, cookies e cache por perfil/origem; proteger credenciais por provider do OS, testar limpeza completa e modo privado sem persistência incidental.",
-          "baseline": "Diretórios do Browser e WebAssis estão sem implementação.",
+          "baseline": "Dois corpora independentes em diretórios concedidos, com chaves distintas verificadas no serviço local. Partição por origem no Browser, dados sensíveis e revogação de perfis permanecem abertos.",
           "evidence": [
-            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md"
+            "local:htdl/docs/18-arquitetura-nativa-e-capacidades.md",
+            "docs/relatorios/2026-11-12-m8-servico-busca-local.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/service-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/service-linux.json"
           ]
         },
         {
@@ -1018,12 +1051,15 @@
           "name": "Quotas, migração e concorrência",
           "level": 2,
           "acceptance": "Definir locks, ownership de arquivo, tamanho máximo, backup/restore e migração reversível; testar dois processos, crash durante upgrade e revogação de armazenamento de origem.",
-          "baseline": "CLI com cota de IDs, ocorrências e bytes, lock por corpus, publicação atômica, leitor da versão anterior, concorrente recusado e retomada após kill. Backup, migração e revogação por origem continuam abertos.",
+          "baseline": "CLI com cota de IDs, ocorrências e bytes, lock por corpus, publicação atômica, leitor da versão anterior, concorrente recusado e retomada após kill. Backup, migração e revogação por origem continuam abertos. ASIS 1 acrescenta evidência de limites, recuperação e ordenação global entre segmentos.",
           "evidence": [
             "docs/BIBLIOTECA-process.md",
             "docs/relatorios/2026-11-12-m7-busca-local.md",
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
-            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json",
+            "docs/relatorios/2026-11-12-m7-indice-segmentado.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-linux.json"
           ]
         }
       ]
@@ -1068,14 +1104,17 @@
         {
           "id": "E10-03",
           "name": "Índice invertido em disco",
-          "level": 2,
+          "level": 3,
           "acceptance": "Implementar postings por doc/posição, segmentos, compressão, merge, update/delete e tombstones; recuperar crash e conferir consultas após reinício contra modelo independente.",
-          "baseline": "Postings posicionais em ASIX com atualização, exclusão, compactação e reapertura por processo distinto. Modelo independente confirma todos os registros e offsets antes/depois. Segmentação, compressão e escala em disco continuam abertos.",
+          "baseline": "ASIX e ASIS com 16 segmentos de postings por posição, consulta por faixa, atualização e remoção. Oráculo de 3.888 ocorrências e testes de reinício, kill, corrupção e escopo maior que o processo no Linux. Compressão e merge seletivo continuam abertos.",
           "evidence": [
             "local:assis/docs/AUDITORIA-HTDL.md",
             "docs/relatorios/2026-11-12-m7-busca-local.md",
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
-            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json",
+            "docs/relatorios/2026-11-12-m7-indice-segmentado.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-linux.json"
           ]
         },
         {
@@ -1083,22 +1122,28 @@
           "name": "Consulta, ranking e avaliação",
           "level": 2,
           "acceptance": "Definir sintaxe de consulta, interseção/união/frases, ranking inicial explicável, paginação, snippets seguros e cache; medir precisão/recall ou NDCG em corpus rotulado e comparar consultas exatas ao oráculo.",
-          "baseline": "Consultas AND/OR/frase e paginação com frequência e desempate por ID. Oráculo em 10 mil documentos, colisão real e amostras de latência. Avaliação de relevância, snippets e cache permanecem abertos.",
+          "baseline": "Consultas AND/OR/frase e paginação com frequência e desempate por ID. Oráculo em 10 mil documentos, colisão real e amostras de latência. Avaliação de relevância, snippets e cache permanecem abertos. ASIS 1 acrescenta evidência de limites, recuperação e ordenação global entre segmentos.",
           "evidence": [
             "local:htdl/docs/08-navegador-assisscript-privacidade-e-busca.md",
             "docs/relatorios/2026-11-12-m7-busca-local.md",
             "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-windows.json",
-            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json"
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/search-linux.json",
+            "docs/relatorios/2026-11-12-m7-indice-segmentado.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-linux.json"
           ]
         },
         {
           "id": "E10-05",
           "name": "Serviço de busca e operação",
-          "level": 0,
+          "level": 2,
           "acceptance": "Servir consultas pelo transporte escolhido, integrar submissão voluntária no Browser e demonstrar atualização concorrente do índice, limites, logs sem consultas privadas, recuperação e abuso controlado.",
-          "baseline": "Visão de produto, sem serviço em operação.",
+          "baseline": "Consulta HTTP local autenticada, observação de novo snapshot, recuperação, chaves por corpus e logs sem conteúdo de consulta, executados nos dois hosts x64. Integração voluntária no Browser e ensaio de carga continuam abertos.",
           "evidence": [
-            "local:htdl/docs/08-navegador-assisscript-privacidade-e-busca.md"
+            "local:htdl/docs/08-navegador-assisscript-privacidade-e-busca.md",
+            "docs/relatorios/2026-11-12-m8-servico-busca-local.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/service-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/service-linux.json"
           ]
         }
       ]
@@ -1118,7 +1163,7 @@
           "name": "Builds, pacotes e dependências",
           "level": 2,
           "acceptance": "Garantir build limpo reprodutível, manifestos/lockfiles, providers e hashes coerentes; distribuir SDK/runtime/stdlib/editor com instalação, atualização e remoção testadas por perfil.",
-          "baseline": "Novo perfil e exemplos recebem instalação/execução/remoção isoladas Windows/Linux; Windows reconstrói e inclui DLL correspondente em pacote de desenvolvimento privado. Não promove release, atualização global ou aceite por terceiro.",
+          "baseline": "Novo perfil e exemplos recebem instalação/execução/remoção isoladas Windows/Linux; Windows reconstrói e inclui DLL correspondente em pacote de desenvolvimento privado. Não promove release, atualização global ou aceite por terceiro. O serviço e o índice segmentado têm suítes nativas, dependências instaláveis e evidência rastreada.",
           "evidence": [
             "docs/PACOTES-E-NAMESPACES.md",
             "docs/INSTALACAO.md",
@@ -1145,7 +1190,14 @@
             "docs/ecossistema/evidencias/typed-input-2026-11-11/summary.json",
             "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
             "docs/relatorios/2026-11-12-m7-busca-local.md",
-            "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json"
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json",
+            "docs/relatorios/2026-11-12-m8-servico-busca-local.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/service-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/service-linux.json",
+            "docs/relatorios/2026-11-12-m7-indice-segmentado.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-linux.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/summary.json"
           ]
         },
         {
@@ -1171,7 +1223,7 @@
           "name": "CI, fuzzing e validação multiplataforma",
           "level": 2,
           "acceptance": "Executar suites semânticas e ABI por destino nativo, corpus/fuzzing diferencial e falhas injetadas; bloquear promoção por testes omitidos, incompatibilidade de provider ou erro de sandbox.",
-          "baseline": "CI nativa histórica aprovada; testes novos do ecossistema ainda não existem.",
+          "baseline": "CI nativa histórica aprovada; testes novos do ecossistema ainda não existem. O serviço e o índice segmentado têm suítes nativas, dependências instaláveis e evidência rastreada.",
           "evidence": [
             "docs/VALIDACAO-TARGETS-V1.json",
             ".github/workflows/ci.yml",
@@ -1182,7 +1234,14 @@
             "docs/ecossistema/evidencias/loader-http-2026-11-11/linux.json",
             "docs/relatorios/2026-11-12-m3-formularios-visuais.md",
             "docs/relatorios/2026-11-12-m7-busca-local.md",
-            "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json"
+            "docs/ecossistema/evidencias/ecosystem-2026-11-12/summary.json",
+            "docs/relatorios/2026-11-12-m8-servico-busca-local.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/service-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/service-linux.json",
+            "docs/relatorios/2026-11-12-m7-indice-segmentado.md",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-windows.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/segments-linux.json",
+            "docs/ecossistema/evidencias/search-transport-segments-2026-11-12/summary.json"
           ]
         },
         {
@@ -4171,7 +4230,155 @@
         "G4": false,
         "G5": false
       }
+    },
+    {
+      "date": "2026-11-12",
+      "label": "M8 parcial: serviço HTTP local com consultas, prazos e corpus autenticado",
+      "rubric_version": 1,
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 3,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 1,
+        "E03-01": 2,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 2,
+        "E05-02": 1,
+        "E05-03": 2,
+        "E05-04": 1,
+        "E05-05": 2,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 3,
+        "E07-03": 2,
+        "E07-04": 3,
+        "E07-05": 3,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 2,
+        "E09-01": 2,
+        "E09-02": 2,
+        "E09-03": 2,
+        "E09-04": 1,
+        "E09-05": 2,
+        "E10-01": 2,
+        "E10-02": 0,
+        "E10-03": 2,
+        "E10-04": 2,
+        "E10-05": 2,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
+    },
+    {
+      "date": "2026-11-12",
+      "label": "M7 parcial: índice segmentado sob cota de processo e revalidação visual M3/M5",
+      "rubric_version": 1,
+      "levels": {
+        "E00-01": 2,
+        "E00-02": 2,
+        "E00-03": 3,
+        "E00-04": 3,
+        "E00-05": 2,
+        "E01-01": 2,
+        "E01-02": 3,
+        "E01-03": 2,
+        "E01-04": 2,
+        "E01-05": 3,
+        "E02-01": 2,
+        "E02-02": 2,
+        "E02-03": 2,
+        "E02-04": 2,
+        "E02-05": 2,
+        "E03-01": 2,
+        "E03-02": 2,
+        "E03-03": 3,
+        "E03-04": 3,
+        "E03-05": 3,
+        "E04-01": 2,
+        "E04-02": 2,
+        "E04-03": 2,
+        "E04-04": 2,
+        "E04-05": 2,
+        "E05-01": 2,
+        "E05-02": 1,
+        "E05-03": 2,
+        "E05-04": 1,
+        "E05-05": 2,
+        "E06-01": 3,
+        "E06-02": 3,
+        "E06-03": 3,
+        "E06-04": 3,
+        "E06-05": 3,
+        "E07-01": 3,
+        "E07-02": 3,
+        "E07-03": 2,
+        "E07-04": 3,
+        "E07-05": 3,
+        "E08-01": 3,
+        "E08-02": 3,
+        "E08-03": 3,
+        "E08-04": 3,
+        "E08-05": 2,
+        "E09-01": 2,
+        "E09-02": 3,
+        "E09-03": 3,
+        "E09-04": 1,
+        "E09-05": 2,
+        "E10-01": 2,
+        "E10-02": 0,
+        "E10-03": 3,
+        "E10-04": 2,
+        "E10-05": 2,
+        "E11-01": 2,
+        "E11-02": 2,
+        "E11-03": 2,
+        "E11-04": 2,
+        "E11-05": 1
+      },
+      "gates": {
+        "G1": false,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      }
     }
   ],
-  "assessment_note": "54,30%, 0/5 gates. Índice persistente e extração HTDL avançam E09/E10. Formulários locais e oito rasters GDI acrescentam evidência visual. Desktop, leitor real, DPI, monitores, IME e demais aceites continuam na fila."
+  "assessment_note": "58,00%, 0/5 gates. Serviço de consulta em loopback e índice segmentado ASIS validado sob cota de processo. Windows reexecutou rasters GDI e a navegação por teclado no formulário e catálogo. Captura desktop, leitor real, DPI, monitores, IME e os demais aceites continuam na fila."
 }

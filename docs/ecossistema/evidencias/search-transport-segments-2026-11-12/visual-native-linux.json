@@ -1,0 +1,33 @@
+{
+  "host": "linux",
+  "suites": [
+    {
+      "name": "frame-forms",
+      "executed": 3,
+      "skipped": 2,
+      "command": "python tests/test-frame-forms.py",
+      "logSha256": "17052471b87a920b25181f6576b7fb01a38973932e06572707ec55b1be343e3d"
+    },
+    {
+      "name": "catalog-frame",
+      "executed": 18,
+      "skipped": 3,
+      "command": "python tests/test-catalog-frame.py",
+      "logSha256": "21a283c78ebe54637b2d0062f52762b878d78ed532073e4131875a0c28a01487"
+    },
+    {
+      "name": "frame-responsiveness",
+      "executed": 0,
+      "skipped": 5,
+      "command": "python tests/test-frame-responsiveness.py",
+      "logSha256": "ae5b1ddd45e71b2ae51c476488b34dc075ac311deca9b1a6958314ad50c4d76b"
+    },
+    {
+      "name": "install-mask",
+      "executed": 2,
+      "skipped": 0,
+      "command": "python tests/test-install-mask.py",
+      "logSha256": "434522d896d8882922acd7b2902d5ff0f13456fe64f321101e753fc14c151de2"
+    }
+  ]
+}

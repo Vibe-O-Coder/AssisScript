@@ -460,6 +460,32 @@
       "dependencies": [
         "htdl"
       ]
+    },
+    {
+      "name": "loopback",
+      "required": false,
+      "doc": "BIBLIOTECA-loopback.md",
+      "description": "Escuta TCP IPv4 local com sockets não bloqueantes e número fixo de conexões.",
+      "dependencies": []
+    },
+    {
+      "name": "searchsegments",
+      "required": false,
+      "doc": "BIBLIOTECA-searchsegments.md",
+      "description": "Índice local por faixas de IDs, com leitura e compactação de um segmento por vez.",
+      "dependencies": [
+        "searchindex"
+      ]
+    },
+    {
+      "name": "searchservice",
+      "required": false,
+      "doc": "BIBLIOTECA-searchservice.md",
+      "description": "Consulta HTTP local ao índice persistente com autenticação e limites.",
+      "dependencies": [
+        "loopback",
+        "searchsegments"
+      ]
     }
   ]
 }

@@ -1,3 +1,20 @@
+> **Continuação de 12/11/2026 — 58,00%, 0/5 gates.**
+> [Serviço em loopback](../relatorios/2026-11-12-m8-servico-busca-local.md),
+> [índice segmentado](../relatorios/2026-11-12-m7-indice-segmentado.md) e
+> [revalidação visual](../relatorios/2026-11-12-m3-revalidacao-visual.md).
+> M3: buffer de edição por nó, texto/número, IME, imagens, importação HTML,
+> live regions e identidade incremental/editor. Aceites de captura de
+> desktop, leitor real, DPI, monitores e fluidez percebida do SSC seguem abertos.
+> M4/M5/M6: SDK geral, células, inscrições, valores, invalidação incremental,
+> inspetor, sandbox macOS/ARM64, RSS/disco/perfis órfãos, loader remoto,
+> DNS/redirect/TLS, origem, partição e ciclo de abas.
+> M7/M8: merge seletivo, compressão, migração/backup e perda física de energia,
+> relevância rotulada, snippets, fronteira persistente, robots, limites por
+> host, serviço sob carga e consulta voluntária no Browser.
+> M9: distribuição/atualização verificável, CI nativa por alvo, 24 h de carga
+> integrada e aceite por terceiro. Os cinco gates continuam na fila integral.
+> Meta 70% a 12 pontos. Easy por último. Entradas abaixo históricas.
+
 > **Continuação de 12/11/2026 — 54,30%, 0/5 gates.**
 > [M3 formulários](../relatorios/2026-11-12-m3-formularios-visuais.md) e
 > [M7 busca local](../relatorios/2026-11-12-m7-busca-local.md) parciais.

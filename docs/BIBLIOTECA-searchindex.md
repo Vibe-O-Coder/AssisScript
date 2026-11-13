@@ -69,9 +69,12 @@ falhou. Consulte o snapshot antes de repetir nessa situação. Em Windows uma
 substituição pode falhar enquanto outro processo mantém o arquivo aberto.
 As entradas anteriores permanecem consultáveis após uma troca recusada.
 
-O snapshot é carregado inteiro. A aplicação de lotes exige espaço para a
-versão antiga e a candidata durante a troca. A liberação do lock após kill
+O [serviço de busca local](BIBLIOTECA-searchservice.md) consulta o mesmo snapshot
+por HTTP em loopback. O snapshot ASIX é carregado inteiro. Use o
+[perfil segmentado ASIS](BIBLIOTECA-searchsegments.md) para ler um segmento
+por vez. A aplicação de lotes exige espaço para a versão antiga e a candidata
+durante a troca. A liberação do lock após kill
 e a preservação do arquivo anterior sob falha de gravação têm testes nativos.
-Backup, migração entre versões, segmentos maiores que RAM, ranking por
-relevância, crawler, serviço, integração no Browser e teste de perda física
-de energia continuam abertos.
+Backup, migração entre versões, ranking por relevância, crawler, serviço
+remoto, integração no Browser e teste de perda
+física de energia continuam abertos.

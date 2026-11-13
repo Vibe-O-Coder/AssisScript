@@ -1,0 +1,191 @@
+{
+  "passed": true,
+  "compiler_sha256": "4ae10529f28c5a6a28a0d7597f2ef1fd27c1d6ee7271bb2da6ec0fc12970adab",
+  "setup_sha256": null,
+  "provider_sha256": null,
+  "runtime_sha256": {
+    "page-worker": "8dfb6110b02cc7c724a7b513f4eb774d7c91f84e86a9f9d372722417508e2f87",
+    "libassis_worker_v1.so": "9000d11642afa896f42cd0363f482b7ef2b3652fb0e3aa8518bfba2a8145f8cf"
+  },
+  "selected_libraries": [
+    "buffers",
+    "cli",
+    "doctree",
+    "documents",
+    "flowpage",
+    "fluxstyle",
+    "framehost",
+    "framereader",
+    "frameworker",
+    "graphemes",
+    "htdl",
+    "htdlsearch",
+    "http",
+    "httpurl",
+    "localresources",
+    "loopback",
+    "motionpage",
+    "owned",
+    "pagecompiler",
+    "pageframe",
+    "pagepresent",
+    "pageresources",
+    "pagevm",
+    "pagewire",
+    "pageworker",
+    "parse",
+    "process",
+    "reader",
+    "sanscript",
+    "searchindex",
+    "searchsegments",
+    "searchservice",
+    "unicode",
+    "viewer",
+    "window"
+  ],
+  "search_forms": true,
+  "checks": [
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/instalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces",
+        "--no-path",
+        "--with",
+        "frameworker,localresources,http,cli,searchservice,htdlsearch,process"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: instalado em <TEMP>/prefix with spaces/bin/assis\nInclua <TEMP>/prefix with spaces/bin no PATH ou use o caminho completo.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/prefix with spaces/bin/assis",
+        "check",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/27_http_client.assis",
+        "--safe"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: <TEMP>/prefix with spaces/share/assisscript/exemplos/27_http_client.assis passou na an\u00e1lise de sintaxe e tipos.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/prefix with spaces/bin/assis",
+        "build",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/69_confined_resource_frame.assis",
+        "--safe",
+        "--debug",
+        "-o",
+        "<TEMP>/granted runtime/installed-example"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: execut\u00e1vel nativo gerado em <TEMP>/granted runtime/installed-example\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/granted runtime/installed-example",
+        "<TEMP>/prefix with spaces/bin/assis",
+        "<TEMP>/granted runtime/page-worker",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/resource-demo"
+      ],
+      "returncode": 0,
+      "stdout": "CONFINED FRAME 4 0 1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/prefix with spaces/bin/assis",
+        "build",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/71_search_index.assis",
+        "--safe",
+        "--debug",
+        "-o",
+        "<TEMP>/search-index"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: execut\u00e1vel nativo gerado em <TEMP>/search-index\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/search-index",
+        "build"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/search-index",
+        "query",
+        "phrase",
+        "local index"
+      ],
+      "returncode": 0,
+      "stdout": "1 1 0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/search-index",
+        "build-segmented"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/search-index",
+        "query-segmented",
+        "phrase",
+        "local index"
+      ],
+      "returncode": 0,
+      "stdout": "4096 1 0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/prefix with spaces/bin/assis",
+        "build",
+        "<TEMP>/prefix with spaces/share/assisscript/exemplos/73_search_service.assis",
+        "--safe",
+        "--debug",
+        "-o",
+        "<TEMP>/search-service"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: execut\u00e1vel nativo gerado em <TEMP>/search-service\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<TEMP>/search-service",
+        "0",
+        "1200"
+      ],
+      "returncode": 0,
+      "httpStatus": 200,
+      "stdout": "1 1 0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "sh",
+        "<TEMP>/distribution/desinstalar.sh",
+        "--prefix",
+        "<TEMP>/prefix with spaces"
+      ],
+      "returncode": 0,
+      "stdout": "ASSIS: compilador desinstalado. Seus projetos foram preservados.\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Fresh candidate and isolated offline prefix, transitive closure of frameworker,localresources,http,cli,searchservice,htdlsearch,process; installed resource Frame/worker demo, uninstall and user file preservation"
+}

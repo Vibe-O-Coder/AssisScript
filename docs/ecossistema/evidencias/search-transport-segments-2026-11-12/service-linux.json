@@ -1,0 +1,18 @@
+{
+  "command": "python tests/test-searchservice.py",
+  "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3",
+  "compilerSha256": "4ae10529f28c5a6a28a0d7597f2ef1fd27c1d6ee7271bb2da6ec0fc12970adab",
+  "executed": 16,
+  "skipped": 0,
+  "optimized": {
+    "serviceSha256": "6ab179dd9400d158068c617a775a79ae8b08f07dfd4ca620d007419d5360094f",
+    "indexSha256": "1a3fb1909fd4e0db78365b9822cc439f7297beea9c3fd3be7e784ec31e0b2a31",
+    "queryWhilePeerPartialMs": 7.384
+  },
+  "reference": {
+    "serviceSha256": "aa1ee865d146d94b3e3d9288c49bfb8aa3ad62903520399d31c1744753a75586",
+    "indexSha256": "9adf6e796401cb17863716adc2cb984e98a42f9713d3cd9fd952493eff496290",
+    "queryWhilePeerPartialMs": 11.641
+  }
+}
