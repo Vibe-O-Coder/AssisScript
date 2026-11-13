@@ -2,9 +2,7 @@
 import importlib.util
 import json
 import random
-import platform
 import subprocess
-import sys
 from pathlib import Path
 import unittest
 
@@ -115,8 +113,6 @@ class CompleteIR(base.Evolution):
         self.inspect(source)
         self.accepted(source, '42\n')
         file = self.source(source)
-        native_target = {'win32':'windows-x64', 'darwin':'macos-x64'}.get(sys.platform, 'linux-x64')
-        if platform.machine().lower() in ('aarch64','arm64') and sys.platform!='win32': native_target=native_target.replace('-x64','-arm64')
         # Execute symbols only when both OS and CPU match this Python host.
         for target, magic in [('windows-x64', b'MZ'), ('linux-x64', b'\x7fELF'), ('linux-arm64', b'\x7fELF'), ('macos-x64', b'\xcf\xfa\xed\xfe'), ('macos-arm64', b'\xcf\xfa\xed\xfe')]:
             binary = self.temp / ('with-symbols-'+target+'.exe')
@@ -126,7 +122,7 @@ class CompleteIR(base.Evolution):
             mapping = json.loads(Path(str(binary)+'.map.json').read_text(encoding='utf-8'))
             self.assertEqual(mapping['format'], 'AssisScript-map-v1')
             self.assertTrue(any(function['name'] == 'make' and function['size'] > 0 for function in mapping['functions']))
-            if target == native_target:
+            if target == base.NATIVE_TARGET:
                 result = subprocess.run([str(binary)], capture_output=True, text=True, encoding='utf-8', timeout=30)
                 self.assertEqual((result.returncode, result.stdout, result.stderr), (0, '42\n', ''))
 

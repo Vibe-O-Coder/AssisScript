@@ -18,8 +18,15 @@ for suite in suites:
     started=time.monotonic();result=subprocess.run([sys.executable,ROOT/f'tests/test-{suite}.py'],env=environment,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=240)
     log=args.output.parent/(args.output.stem+'-'+suite+'.log');log.write_text(result.stdout+result.stderr,encoding='utf-8')
     match=re.search(r'Ran (\d+) tests?',result.stderr)
-    records.append(dict(suite=suite,returnCode=result.returncode,tests=int(match[1]) if match else None,seconds=time.monotonic()-started,log=log.name))
-    print(suite, 'PASS' if not result.returncode else 'FAIL',flush=True)
+    skipped_match=re.search(r'^\s*(?:OK|FAILED) \((?:[^\r\n]*, )?skipped=(\d+)',result.stderr,re.MULTILINE)
+    tests=int(match[1]) if match else None
+    skipped=int(skipped_match[1]) if skipped_match else 0
+    records.append(dict(suite=suite,returnCode=result.returncode,tests=tests,skipped=skipped,seconds=time.monotonic()-started,log=log.name))
+    status='FAIL' if result.returncode else 'PASS'
+    if status=='PASS' and tests==skipped:
+        status='SKIP'
+    skip_note=f' ({skipped} skipped)' if skipped else ''
+    print(f'{suite} {status}{skip_note}',flush=True)
 compiler=Path(os.environ.get('ASSIS_BIN',ROOT/'bin'/('assis.exe' if os.name=='nt' else 'assis')))
 report=dict(platform=sys.platform,compilerSha256=hashlib.sha256(compiler.read_bytes()).hexdigest(),testEnvironment=dict(tlsTimeoutMilliseconds=os.environ.get('ASSIS_TLS_TEST_TIMEOUT_MS','native defaults')),passed=all(r['returnCode']==0 for r in records),suites=records)
 args.output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')

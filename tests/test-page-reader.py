@@ -28,6 +28,7 @@ safe fn drain(borrow mut s:pagereader::Session,expected:int):void{
 }
 '''
 
+@unittest.skipUnless(worker.builder.supports_host(), 'Worker provider requires Windows/Linux x64')
 class PageReader(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

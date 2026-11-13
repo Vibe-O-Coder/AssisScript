@@ -287,7 +287,7 @@ jobs:
         run: python3 tools/test-portability.py --expect-host arm64 --output build/review-tests/${{ matrix.artifact }}.json
       - name: Native ARM64 debugger, macOS signature and format gates
         run: python3 tools/test-new-targets.py --debugger --output build/review-tests/new-targets-${{ matrix.artifact }}.json
-      - name: Complete native Linux ARM64 semantic matrix
+      - name: Native Linux ARM64 semantic matrix
         if: runner.os == 'Linux'
         run: python3 tools/test-native.py --output build/review-tests/linux-arm64-release.json
       - name: Native macOS ARM64 runtime and ABI regressions
@@ -322,7 +322,9 @@ jobs:
         if: always()
         with:
           name: ${{ matrix.artifact }}-validation
-          path: build/review-tests/*.json
+          path: |
+            build/review-tests/*.json
+            build/review-tests/linux-arm64-release-*.log
   package:
     needs: [linux, windows, macos, arm-hosts]
     runs-on: ubuntu-latest

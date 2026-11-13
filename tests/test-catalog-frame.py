@@ -222,7 +222,7 @@ class CatalogFrame(unittest.TestCase):
 
     @unittest.skipUnless(os.name=='nt','Windows catalog provider unavailable')
     def test_independent_native_com_roles_actions_hits_revocation_and_allocation_rollback(self):
-        cc='C:/msys64/ucrt64/bin/gcc.exe';binary=self.temp/'catalog-oracle.exe'
+        cc=self.provider_compiler;binary=self.temp/'catalog-oracle.exe'
         command=[cc,'-O2','-std=c11','-Wall','-Wextra','-Wpedantic','-Werror',str(base.ROOT/'tests/catalog_frame_oracle.c'),
                  '-o',str(binary),'-loleacc','-loleaut32','-lole32','-luuid','-luser32','-lgdi32']
         r=subprocess.run(command,capture_output=True,text=True,env=dict(os.environ,PATH=str(Path(cc).parent)+os.pathsep+os.environ['PATH']))

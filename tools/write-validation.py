@@ -18,7 +18,7 @@ record=dict(version=version,date=date.today().isoformat(),status='passed',scope=
 for platform,path,binary in [('windows',args.windows,'assis.exe'),('linux',args.linux,'assis')]:
     result=read(path);expected=hashlib.sha256((ROOT/'bin'/binary).read_bytes()).hexdigest()
     assert result['passed'] and result['compilerSha256']==expected,(platform,'stale or failed native results')
-    result['testCount']=sum(r['tests'] or 0 for r in result['suites']);record['native'][platform]=result
+    result['testCount']=sum((r['tests'] or 0)-r.get('skipped',0) for r in result['suites']);record['native'][platform]=result
     clean=ROOT/'build'/('clean-win32.json' if platform=='windows' else 'clean-linux.json')
     if clean.exists():
         proof=read(clean)

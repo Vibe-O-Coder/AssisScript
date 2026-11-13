@@ -6,12 +6,17 @@ All rejected sources are checked before any generated program can run.
 import json
 import os
 from pathlib import Path
+import platform
 import subprocess
+import sys
 import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parent.parent
 COMPILER = Path(os.environ.get('ASSIS_BIN', ROOT / 'bin' / ('assis.exe' if os.name == 'nt' else 'assis'))).resolve()
+NATIVE_TARGET = {'win32': 'windows-x64', 'darwin': 'macos-x64'}.get(sys.platform, 'linux-x64')
+if sys.platform != 'win32' and platform.machine().lower() in ('aarch64', 'arm64'):
+    NATIVE_TARGET = NATIVE_TARGET.replace('-x64', '-arm64')
 INVOCATIONS = 0
 
 

@@ -6,7 +6,8 @@
 > no desktop. Composição IME, capturas, leitor real, DPI, monitores e fluidez
 > SSC permanecem no aceite.
 > [Campos editáveis](../relatorios/2026-11-13-m3-campos-editaveis.md) ·
-> [Compilador e VSIX alpha.15](../relatorios/2026-11-13-compilador-vsix.md).
+> [Compilador e VSIX alpha.15](../relatorios/2026-11-13-compilador-vsix.md) ·
+> [Correção da CI Windows e Linux ARM64](../relatorios/2026-11-13-ci-windows-arm64.md).
 > Meta 70% a 11,50 pontos. [Fila integral](FILA-M0-M1.md). Easy por último.
 
 > **Continuação de 12/11/2026 — 58,00%, 0/5 gates.**

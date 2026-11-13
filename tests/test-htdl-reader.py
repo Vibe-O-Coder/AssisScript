@@ -31,7 +31,7 @@ class HtdlReader(base.Evolution):
         if os.name=='nt':
             cls.builder=module('reader_builder',base.ROOT/'tools/build-platform.py')
             cls.provider=Path(cls.provider_temp.name)/'assis_platform_v1.dll'
-            cls.builder.build(cls.provider,testing=True)
+            cls.provider_compiler=cls.builder.build(cls.provider,testing=True)[0]
     @classmethod
     def tearDownClass(cls):cls.provider_temp.cleanup()
     def setUp(self):
@@ -167,7 +167,7 @@ class HtdlReader(base.Evolution):
                     self.assertEqual(struct.unpack_from('<I',data,4)[0],0x0100000c if target.endswith('arm64') else 0x01000007)
                 else:
                     pe=struct.unpack_from('<I',data,0x3c)[0];self.assertEqual(struct.unpack_from('<H',data,pe+4)[0],0x8664)
-                if target==('windows-x64' if os.name=='nt' else 'linux-x64'):
+                if target==base.NATIVE_TARGET:
                     run=subprocess.run([binary],capture_output=True,timeout=20)
                     self.assertEqual((run.returncode,run.stdout,run.stderr),(0,b'',b''))
 

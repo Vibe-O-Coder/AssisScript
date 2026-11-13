@@ -1,0 +1,228 @@
+{
+  "base": "26fcae9a786ffbd854446a7b79aa9a5a026a6d46",
+  "publicWorkflow": "https://github.com/Vibe-O-Coder/AssisScript/actions/runs/43404887548",
+  "publicArm64Artifact": {
+    "url": "https://github.com/Vibe-O-Coder/AssisScript/actions/runs/43404887548/artifacts/14026408478",
+    "sha256": "b912b37688558832de62f3e5cd3930e1126014b557334be6bf1c9ea84bf0fafa",
+    "failedSuites": [
+      "htdl-viewer",
+      "htdl-reader",
+      "reader-transactions",
+      "pagevm",
+      "page-worker",
+      "page-reader",
+      "page-compiler",
+      "frame-worker",
+      "page-resources"
+    ]
+  },
+  "windowsX64": {
+    "compilerSha256": "0afad2bd14e7f7f98fcccbe9ca89d4bd7c5f0a54141d302e3eb76fbc182d69b7",
+    "checks": [
+      {
+        "log": "ci-fix-windows-catalog-frame.log",
+        "sha256": "3453bbe4cde8b99457343c9865efc99ecff2d1207af37070530b2524a822e09e",
+        "executed": 21,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-windows-htdl-viewer-repeat.log",
+        "sha256": "f28bc8a148b1e74d88faa86cfed9ce8092f47f1002cbf54c6ab174615d0237af",
+        "executed": 12,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-windows-htdl-reader.log",
+        "sha256": "abd35636225fc94375cc8524e0e1685b93ad23c4cae05f2760e554d0adb38fbc",
+        "executed": 10,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-windows-reader-transactions.log",
+        "sha256": "b4f19ac0d1177f6f51dfdf2d76f064c6d088dd8d6a490a2cec32fdfb55037adb",
+        "executed": 15,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-windows-pagevm.log",
+        "sha256": "1e0e962ca8f2fe7b9a6cfeabc549c5536be10cf8f812925b82a1eab042aa465b",
+        "executed": 10,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-windows-complete-ir.log",
+        "sha256": "0191f3be1fe34012bdb9db4fe5480c8baaf8860ec33acf2022695c001a886ae1",
+        "executed": 7,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-windows-frame-worker.log",
+        "sha256": "19aeb6a86c9daf65ac397e39c299d3a52fa6a1da2456627762082484577891f5",
+        "executed": 15,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-windows-page-resources.log",
+        "sha256": "cbb25d8919394a006fb6f5aa038565de20ef46e8614fd8e4e6641ebc8fe298e8",
+        "executed": 14,
+        "skipped": 0
+      }
+    ]
+  },
+  "linuxX64": {
+    "compilerSha256": "4ae10529f28c5a6a28a0d7597f2ef1fd27c1d6ee7271bb2da6ec0fc12970adab",
+    "checks": [
+      {
+        "log": "ci-fix-linux-x64-complete-ir.log",
+        "sha256": "eefa50efab25619b61b93139e06112a6aab772be29ede952c113eb304916afd9",
+        "executed": 7,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-linux-x64-page-worker.log",
+        "sha256": "a79fd0923eb148f25787564606960f060de8b0a6219ab3112d6acbee31df5459",
+        "executed": 18,
+        "skipped": 2
+      },
+      {
+        "log": "ci-fix-linux-x64-page-reader.log",
+        "sha256": "98562b2d3b2a204fecc715c3e7a4c01fe0293c82b4f57c73bad7ccfdefcd3c15",
+        "executed": 9,
+        "skipped": 1
+      },
+      {
+        "log": "ci-fix-linux-x64-page-compiler.log",
+        "sha256": "fd97d65f3609468e8eee9528f18c18195d23db537fa6eda242236a30ff0041a4",
+        "executed": 13,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-linux-x64-frame-worker.log",
+        "sha256": "1579e5b41e58383b8a1c5302c2463d0f87a6c00dbd1d606d45992400812b1a7e",
+        "executed": 13,
+        "skipped": 2
+      },
+      {
+        "log": "ci-fix-linux-x64-page-resources.log",
+        "sha256": "8d1cb5b01dd610bb7801c39ce3b702b11db739aba91795e0a92b14681742dc42",
+        "executed": 12,
+        "skipped": 2
+      }
+    ],
+    "matrix": {
+      "suites": 61,
+      "executed": 573,
+      "skipped": 28,
+      "sha256": "a3d0a696135fc90c07e6ed57dee447404d8cea304a13765a0fcb88cdd2898bfa"
+    }
+  },
+  "linuxArm64Emulated": {
+    "compilerSha256": "4b935f529f21ea0b2d03a44688611885a27940ad36e3cf078efc4906a24321ee",
+    "checks": [
+      {
+        "log": "ci-fix-arm64-htdl-viewer.log",
+        "sha256": "b8976bb10b8781ccbb56ac8b37647e873e67760f300953fa8e27a59fb26ee424",
+        "executed": 1,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-arm64-htdl-reader.log",
+        "sha256": "27d4a5edd66b5a07ddde72bb265f666d4abb9c32f066f02fbe3fa1ae5537f513",
+        "executed": 1,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-arm64-reader-transactions.log",
+        "sha256": "69d370c769612d97e384b5bcd8d04a309187bd9cbafedc671669fd757b31ecb6",
+        "executed": 1,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-arm64-pagevm.log",
+        "sha256": "d81d6a780b6caf45192fbaacc04f6731a2a30424fa9d5a5f4a8e055690f124c2",
+        "executed": 1,
+        "skipped": 0
+      },
+      {
+        "log": "ci-fix-arm64-page-worker.log",
+        "sha256": "22fc16d8ec0565fa6c39fb67afcf08277d5c676903b68f0cee7a8c3de215689f",
+        "executed": 0,
+        "skipped": 20
+      },
+      {
+        "log": "ci-fix-arm64-page-reader.log",
+        "sha256": "a24e3076636257bff03046ac8a83a9f239693e161ebe97d2e4111cca35f10ee8",
+        "executed": 0,
+        "skipped": 10
+      },
+      {
+        "log": "ci-fix-arm64-page-compiler.log",
+        "sha256": "55a29bef77722a608c82a83f9a65bf74ccf0737393da538a9549769af4b88fce",
+        "executed": 0,
+        "skipped": 13
+      },
+      {
+        "log": "ci-fix-arm64-frame-worker.log",
+        "sha256": "11b736ad1dfa6e2f2a2cce538eb718af8c43314e4a3d519c3fd12dae5e8fc717",
+        "executed": 1,
+        "skipped": 14
+      },
+      {
+        "log": "ci-fix-arm64-page-resources.log",
+        "sha256": "51f07a69099a0998eadfe748aabc7808122e9cecccd598fe02aa8acaef583e6e",
+        "executed": 7,
+        "skipped": 7
+      }
+    ],
+    "build": "aarch64-linux-gnu-gcc -O2 -std=c11 -static src/assisc.c -o build/session/assis-arm64-ci",
+    "runner": "QEMU user mode in Ubuntu WSL, ELF x64 executable rejection in test runner",
+    "nativeWorker": false
+  },
+  "additionalFrameRegressions": {
+    "windows": [
+      {
+        "log": "editing-framehost-windows.log",
+        "sha256": "e8a251937b6e8d0e38576b3224d8a1c58dc7997d35a79f9e77e9d103656a87d5",
+        "executed": 12,
+        "skipped": 0
+      },
+      {
+        "log": "editing-framereader-windows.log",
+        "sha256": "91d566d7e325c466bb827c49de781e06bb6e0750438a3cc3e457067c44de7898",
+        "executed": 15,
+        "skipped": 0
+      }
+    ],
+    "linux": [
+      {
+        "log": "editing-framehost-linux.log",
+        "sha256": "4c84bd9f12c7077fef6d9e42d97544c83aba2a9285ed80bc4c4d63021ca01c52",
+        "executed": 10,
+        "skipped": 2
+      },
+      {
+        "log": "editing-framereader-linux.log",
+        "sha256": "66219cc63e07d5ca88c15992ab821f266fd0d68804cc0b902608ff755392215e",
+        "executed": 14,
+        "skipped": 1
+      }
+    ]
+  },
+  "desktop": {
+    "formFocus": [
+      "Nome",
+      "Quantidade inteira",
+      "Validar"
+    ],
+    "sscFocus": [
+      "Alternar esquerdo",
+      "Alternar direito"
+    ],
+    "sscKeysSent": [
+      "Return",
+      "space"
+    ],
+    "screenshotResult": "window capture timed out: timed out waiting on channel",
+    "accentKeyResult": "unsupported key: uacute"
+  }
+}

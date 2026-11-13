@@ -9,8 +9,11 @@ import subprocess
 
 ROOT=Path(__file__).resolve().parent.parent
 
+def supports_host():
+    return platform.machine().lower() in ('x86_64','amd64') and platform.system() in ('Windows','Linux')
+
 def build(output,compiler=None,cc=None,testing=False):
-    if platform.machine().lower() not in ('x86_64','amd64') or platform.system() not in ('Windows','Linux'):
+    if not supports_host():
         raise RuntimeError('Worker provider supports Windows/Linux x64 only')
     output=Path(output).resolve();output.mkdir(parents=True,exist_ok=True)
     windows=os.name=='nt'

@@ -107,7 +107,6 @@ class PageVM(base.Evolution):
         self.execute(load(program(ops))+'assert(v.run(10)==2 && v.result()== -9223372036854775808);')
 
     def test_five_target_formats_and_native_execution(self):
-        import os
         import subprocess
         code=PREFIX+'safe fn main():int{'+load(program([instruction(1,immediate=42),instruction(0)]))+'assert(v.run(10)==2 && v.result()==42);return 0;}'
         source=self.source(code)
@@ -125,7 +124,7 @@ class PageVM(base.Evolution):
                 else:
                     self.assertEqual(data[:2],b'MZ');pe=struct.unpack_from('<I',data,0x3c)[0]
                     self.assertEqual(struct.unpack_from('<H',data,pe+4)[0],0x8664)
-                if target==('windows-x64' if os.name=='nt' else 'linux-x64'):
+                if target==base.NATIVE_TARGET:
                     result=subprocess.run([output],capture_output=True,timeout=20)
                     self.assertEqual((result.returncode,result.stdout,result.stderr),(0,b'',b''))
 

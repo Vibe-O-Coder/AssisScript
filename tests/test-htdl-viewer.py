@@ -186,7 +186,7 @@ class HtdlViewer(base.Evolution):
                         (0xfeedfacf,0x0100000c if target.endswith('arm64') else 0x01000007))
                 else:
                     self.assertEqual(data[:2],b'MZ');self.assertEqual(struct.unpack_from('<H',data,struct.unpack_from('<I',data,60)[0]+4)[0],0x8664)
-                if target==('windows-x64' if os.name=='nt' else 'linux-x64'):
+                if target==base.NATIVE_TARGET:
                     result=subprocess.run([binary],capture_output=True,timeout=15)
                     self.assertEqual((result.returncode,result.stdout,result.stderr),(0,b'',b''))
 

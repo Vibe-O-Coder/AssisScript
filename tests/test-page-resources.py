@@ -94,6 +94,14 @@ class ResourceBatch(unittest.TestCase):
             'assert(b.deliver(b.envelope(0),slice_of(raw,0,65537),2)== -3 && b.used_bytes()==0);'
             'assert(b.deliver(b.envelope(0),slice_of(raw,0,65536),2)==0 && b.used_bytes()==65536);')
 
+    def test_resource_example_emits_five_formats_without_claiming_their_execution(self):
+        for flags in ([],['--no-opt']):
+            for target in ('windows-x64','linux-x64','linux-arm64','macos-x64','macos-arm64'):
+                result=self.invoke('build',ROOT/'exemplos/66_resource_frame.assis','--target',target,'-o',self.temp/target,*flags)
+                self.assertEqual(result.returncode,0,(target,result.stderr))
+
+
+@unittest.skipUnless(fw.pr.worker.builder.supports_host(), 'Worker provider requires Windows/Linux x64')
 class ResourceIntegration(unittest.TestCase):
     setUpClass=classmethod(fw.FrameWorker.setUpClass.__func__)
     tearDownClass=classmethod(fw.FrameWorker.tearDownClass.__func__)
@@ -180,12 +188,6 @@ class ResourceIntegration(unittest.TestCase):
                 'assert(code==0 || code== -4);assert(b.is_open() && b.size()==2 && b.used_bytes()>=4);'+cleanup+'}'
                 'if(!b.complete()){assert(b.deliver(b.envelope(1),utf8("retry"),4)==0);}assert(b.complete() && pageresources::equal(b.content(0),utf8("keep")));')
             self.fault_program('import "std/pageresources.assis";safe fn main():int{'+body+'return 0;}','')
-
-    def test_resource_example_emits_five_formats_without_claiming_their_execution(self):
-        for flags in ([],['--no-opt']):
-            for target in ('windows-x64','linux-x64','linux-arm64','macos-x64','macos-arm64'):
-                result=subprocess.run([base.COMPILER,'build',ROOT/'exemplos/66_resource_frame.assis','--safe','--target',target,'-o',self.temp/target,*flags],cwd=ROOT,capture_output=True,text=True)
-                self.assertEqual(result.returncode,0,(target,result.stderr))
 
     @unittest.skipUnless(os.name=='nt','Windows atomic resource/raster/MSAA publication')
     def test_native_resource_publish_failure_retry_and_abort_preserve_active_owners(self):

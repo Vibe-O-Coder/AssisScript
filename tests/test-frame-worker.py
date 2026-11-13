@@ -29,6 +29,17 @@ safe fn drain(borrow mut s:frameworker::Session,expected:int):void{
 FS=literal('flow B{8px -> target.offsetX;}bind #add to B;')
 SSC=literal('motion B{spring(target:fs.target.offsetX,frequency:4Hz,dampingRatio:0.8)->presentation.offsetX;}bind #add to B;')
 
+class FrameWorkerFormats(unittest.TestCase):
+    setUp=base.Evolution.setUp
+    invoke=base.Evolution.invoke
+
+    def test_worker_example_generates_five_target_formats(self):
+        for flags in ([],['--no-opt']):
+            for target in ('windows-x64','linux-x64','linux-arm64','macos-x64','macos-arm64'):
+                result=self.invoke('build',ROOT/'exemplos/64_frame_worker.assis','--safe','--target',target,'-o',self.temp/target,*flags)
+                self.assertEqual(result.returncode,0,(target,result.stderr))
+
+@unittest.skipUnless(pr.worker.builder.supports_host(), 'Worker provider requires Windows/Linux x64')
 class FrameWorker(unittest.TestCase):
     setUpClass=classmethod(pr.PageReader.setUpClass.__func__)
     tearDownClass=classmethod(pr.PageReader.tearDownClass.__func__)
@@ -137,11 +148,8 @@ class FrameWorker(unittest.TestCase):
             for key,value in original.items():
                 if value is None:os.environ.pop(key,None)
                 else:os.environ[key]=value
-    def test_examples_and_five_generated_formats_have_separate_native_acceptance(self):
+    def test_worker_example_runs_with_the_native_provider(self):
         for flags in ([],['--no-opt']):
-            for target in ('windows-x64','linux-x64','linux-arm64','macos-x64','macos-arm64'):
-                r=subprocess.run([base.COMPILER,'build',ROOT/'exemplos/64_frame_worker.assis','--safe','--target',target,'-o',self.temp/target,*flags],capture_output=True,text=True,cwd=ROOT)
-                self.assertEqual(r.returncode,0,r.stderr)
             binary=self.temp/('example.exe' if os.name=='nt' else 'example')
             r=subprocess.run([base.COMPILER,'build',ROOT/'exemplos/64_frame_worker.assis','--safe','-o',binary,*flags],capture_output=True,text=True,cwd=ROOT);self.assertEqual(r.returncode,0,r.stderr)
             r=subprocess.run([binary,base.COMPILER,self.worker],env=self.env,capture_output=True,text=True,timeout=20,cwd=ROOT)

@@ -20,6 +20,7 @@ def request(source,reference=False):
     if isinstance(source,str):source=source.encode()
     return b'ASC1'+struct.pack('<II',len(source),int(reference))+source
 
+@unittest.skipUnless(worker.builder.supports_host(), 'Worker provider requires Windows/Linux x64')
 class PageCompiler(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

@@ -153,7 +153,7 @@ class Transactions(unittest.TestCase):
                     self.assertEqual(struct.unpack_from('<II',data),(0xfeedfacf,0x0100000c if target.endswith('arm64') else 0x01000007))
                 else:
                     self.assertEqual(data[:2],b'MZ');pe=struct.unpack_from('<I',data,0x3c)[0];self.assertEqual(struct.unpack_from('<H',data,pe+4)[0],0x8664)
-                if target==('windows-x64' if os.name=='nt' else 'linux-x64'):
+                if target==base.NATIVE_TARGET:
                     run=subprocess.run([output],capture_output=True,timeout=20);self.assertEqual((run.returncode,run.stdout,run.stderr),(0,b'',b''))
 
     def test_oom_during_candidate_construction_preserves_active_and_neighbor(self):

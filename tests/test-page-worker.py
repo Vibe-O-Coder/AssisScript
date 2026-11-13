@@ -26,6 +26,7 @@ def frame(kind,request=1,payload=b'',identity=(7,11,1),args=(0,0,0,0)):
     return HEADER.pack(b'ASIP',1,kind,len(payload),*identity,request,*args)+payload
 def load(code,**kw):return frame(1,payload=struct.pack('<I',len(DOC))+DOC+code,args=(0,16,100000,1000),**kw)
 
+@unittest.skipUnless(builder.supports_host(), 'Worker provider requires Windows/Linux x64')
 class PageWorker(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
