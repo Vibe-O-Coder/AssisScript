@@ -1,7 +1,8 @@
 > **Continuação de 13/11/2026 — 58,50%, 0/5 gates.**
 > [Edição local](../relatorios/2026-11-13-m3-campos-editaveis.md) entrega
 > texto/número, buffer por nó, grafemas, seleção por teclado e valor MSAA.
-> M3: IME, colagem/arraste, bidi, imagens, importação HTML, live regions
+> [Colagem](../relatorios/2026-11-13-m3-colagem.md) substitui a seleção em um commit.
+> M3: IME, seleção por arraste, bidi, imagens, importação HTML, live regions
 > e identidade incremental/editor. Captura desktop, leitor real, DPI,
 > monitores e fluidez SSC aguardam aceite.
 > M4–M6: SDK geral, células, inscrições, valores, invalidação incremental,

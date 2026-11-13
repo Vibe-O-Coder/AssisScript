@@ -144,7 +144,7 @@ def main():
             run = subprocess.run([binary,*extra,'--smoke'], cwd=run_dir, env=environment,
                                  check=True, capture_output=True, text=True, timeout=30)
             expected = {'reading': 'FRAME WORKER WINDOW 2 11', 'panels': 'MOTION FRAME 2 10',
-                        'forms': 'FORMS WINDOW 3 1', 'editing': 'EDITABLE FORM 8'}[path.stem]
+                        'forms': 'FORMS WINDOW 3 1', 'editing': 'EDITABLE FORM 4'}[path.stem]
             assert run.stdout.strip() == expected and not run.stderr, (path.stem, run.stdout, run.stderr)
             runs[mode][path.stem] = dict(stdout=run.stdout.strip(), stderr=run.stderr, sha256=sha(binary))
         for name, size in sizes.items():

@@ -29,7 +29,13 @@ acrescenta papéis 24/25 de campo editável e um comprimento u16 seguido
 do valor UTF-8 após cada nome correspondente. MSAA entrega o valor
 publicado para leitura. A escrita permanece sob controle do host.
 
-Composição IME, colagem, seleção por arraste em campos, bidi, acesso de
+Ctrl+V emite ação 13 com o nó em foco. O shell lê até 1.024 bytes por
+`pageclipboard::ClipboardText` e chama `Session.paste_field` com a
+revisão, a sequência e o nó da ação. A colagem substitui a seleção em
+uma transação, valida UTF-8 de linha única e preserva o valor anterior
+se a entrada exceder a cota ou contiver um controle.
+
+Composição IME, seleção por arraste em campos, bidi, acesso de
 escrita por tecnologias assistivas e eventos autorais de página seguem
 na fila. O [exemplo 74](../../exemplos/74_editable_forms_window.assis)
 abre a demo Windows. `--smoke` exercita edição e submissão a 200%.

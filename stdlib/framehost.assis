@@ -15,7 +15,7 @@ public final class Drawing{
 safe fn build_drawing(borrow document:documents::Document,borrow styles:flowpage::Page,borrow mut motion:motionpage::Page,
         borrow previous:Drawing,borrow mut drawing:Drawing,window_instance:int,revision:int,width:int,height:int,scroll:int,scale:int,
         elapsed:int,visible:bool,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int,
-        toggle:doctree::NodeId,edit_node:doctree::NodeId,editing:bool):int{
+        toggle:doctree::NodeId,edit_node:doctree::NodeId,editing:bool,borrow paste:slice<byte>):int{
     let focus:doctree::NodeId=new doctree::NodeId();if(previous!=null){focus=previous.reading.focus_node();}
     let code:int=motion.prepare(document,styles,elapsed,visible,focus,edit_node,policy.reduced_motion);if(code!=0){return code;}
     own frame:pageframe::Frame=try_new pageframe::Frame(document,styles,revision,width,height,scroll,scale,10000000,metric);
@@ -43,7 +43,9 @@ safe fn build_drawing(borrow document:documents::Document,borrow styles:flowpage
         }
         if(!doctree::absent(edit_node)){
             if(previous==null || !pageframe::same(selected_focus,edit_node)){return 204;}
-            code=fields.apply(edit_node,previous.reading.pending_edit());
+            val edit:pageedit::Edit=previous.reading.pending_edit();
+            if(edit.command==10){code=fields.replace_selection(edit_node,paste);}
+            else{code=fields.apply(edit_node,edit);}
             if(code!=0){return code;}
         }
         drawing.fields=move(fields);
@@ -89,20 +91,27 @@ public final class Page{
     fn cancel_gesture(borrow mut self):void{if(self.current!=null){self.current.reading.cancel_gesture();}}
     fn prepare(borrow mut self,borrow document:documents::Document,revision:int,width:int,height:int,scroll:int,scale:int,
             elapsed:int,visible:bool,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int):int{
-        return self.prepare_drawing(document,revision,width,height,scroll,scale,elapsed,visible,policy,metric,new doctree::NodeId(),new doctree::NodeId());
+        return self.prepare_drawing(document,revision,width,height,scroll,scale,elapsed,visible,policy,metric,new doctree::NodeId(),new doctree::NodeId(),utf8(""));
     }
     fn prepare_checked(borrow mut self,borrow document:documents::Document,revision:int,width:int,height:int,scroll:int,scale:int,
             elapsed:int,visible:bool,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int,toggle:doctree::NodeId):int{
-        return self.prepare_drawing(document,revision,width,height,scroll,scale,elapsed,visible,policy,metric,toggle,new doctree::NodeId());
+        return self.prepare_drawing(document,revision,width,height,scroll,scale,elapsed,visible,policy,metric,toggle,new doctree::NodeId(),utf8(""));
     }
     fn prepare_edit(borrow mut self,borrow document:documents::Document,projection:int,revision:int,request:int,node:doctree::NodeId,
             width:int,height:int,scroll:int,scale:int,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int):int{
+        return self.prepare_input(document,projection,revision,request,node,width,height,scroll,scale,policy,metric,utf8(""));
+    }
+    fn prepare_input(borrow mut self,borrow document:documents::Document,projection:int,revision:int,request:int,node:doctree::NodeId,
+            width:int,height:int,scroll:int,scale:int,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int,
+            borrow paste:slice<byte>):int{
         if(!self.editing || self.current==null || self.current.frame.version()!=projection ||
            !self.current.reading.edit_ready(request,node)){return 204;}
-        return self.prepare_drawing(document,revision,width,height,scroll,scale,0,true,policy,metric,new doctree::NodeId(),node);
+        if((self.current.reading.pending_edit().command==10)!=(len(paste)>0)){return 204;}
+        return self.prepare_drawing(document,revision,width,height,scroll,scale,0,true,policy,metric,new doctree::NodeId(),node,paste);
     }
     private fn prepare_drawing(borrow mut self,borrow document:documents::Document,revision:int,width:int,height:int,scroll:int,scale:int,
-            elapsed:int,visible:bool,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int,toggle:doctree::NodeId,edit_node:doctree::NodeId):int{
+            elapsed:int,visible:bool,policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int,
+            toggle:doctree::NodeId,edit_node:doctree::NodeId,borrow paste:slice<byte>):int{
         if(!self.active){return 204;}if(self.pending!=null){return 407;}
         if(!self.editing){
             val profile:int=pageframe::forms_profile(document);
@@ -115,7 +124,7 @@ public final class Page{
         own drawing:Drawing=try_new Drawing();if(drawing==null){return 401;}
         own styles:flowpage::Page=move(self.styles);own motion:motionpage::Page=move(self.motion);own previous:Drawing=move(self.current);
         val code:int=build_drawing(document,styles,motion,previous,drawing,self.window_instance,revision,width,height,scroll,scale,elapsed,visible,
-            policy,metric,toggle,edit_node,self.editing);
+            policy,metric,toggle,edit_node,self.editing,paste);
         self.styles=move(styles);self.motion=move(motion);self.current=move(previous);
         if(code!=0){self.motion.abort();return code;}
         self.pending=move(drawing);return 0;
@@ -250,9 +259,18 @@ public final class Session{
     }
     fn edit_field(borrow mut self,projection:int,request:int,node:doctree::NodeId,width:int,height:int,scroll:int,scale:int,
             policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int):int{
+        return self.prepare_input(projection,request,node,width,height,scroll,scale,policy,metric,utf8(""));
+    }
+    fn paste_field(borrow mut self,projection:int,request:int,node:doctree::NodeId,width:int,height:int,scroll:int,scale:int,
+            policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int,borrow content:slice<byte>):int{
+        if(len(content)==0){return 206;}
+        return self.prepare_input(projection,request,node,width,height,scroll,scale,policy,metric,content);
+    }
+    private fn prepare_input(borrow mut self,projection:int,request:int,node:doctree::NodeId,width:int,height:int,scroll:int,scale:int,
+            policy:reader::Preferences,metric:safe fn(borrow slice<byte>,int,int):int,borrow paste:slice<byte>):int{
         if(self.current==null || self.pending!=null || projection!=self.revision || self.revision==9223372036854775807){return 204;}
         own page:Page=move(self.current);own store:documents::Store=move(self.store);
-        val code:int=page.prepare_edit(store.active_document(),projection,self.revision+1,request,node,width,height,scroll,scale,policy,metric);
+        val code:int=page.prepare_input(store.active_document(),projection,self.revision+1,request,node,width,height,scroll,scale,policy,metric,paste);
         self.current=move(page);self.store=move(store);return code;
     }
     private fn prepare_reflow(borrow mut self,width:int,height:int,scroll:int,scale:int,elapsed:int,visible:bool,policy:reader::Preferences,

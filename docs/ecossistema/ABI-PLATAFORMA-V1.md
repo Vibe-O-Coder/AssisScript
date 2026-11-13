@@ -173,3 +173,9 @@ permanecem; novos callers exigem DLL correspondente. Contrato em
 O [perfil de edição HTDL](PERFIL-EDICAO-LOCAL-V1.md) documenta a extensão
 Windows x64 de texto confirmado, o evento 14 e os papéis MSAA editáveis.
 Os símbolos de janela e os formatos de Frame anteriores permanecem válidos.
+O símbolo adicional `assisp_clipboard_read_utf8` lê `CF_UNICODETEXT`
+por solicitação explícita do shell para a janela editável e a instância
+ativa. Valida UTF-16 e converte até 1.024 bytes para um buffer emprestado.
+O retorno positivo é a contagem de bytes sem terminador. Zero indica
+texto ausente ou vazio. A ponte libera o bloqueio antes de retornar.
+[Referência Win32](https://learn.microsoft.com/en-us/windows/win32/dataxchg/clipboard-operations).

@@ -1,0 +1,92 @@
+{
+  "base": "3373ad5",
+  "progress": {
+    "points": 58.5,
+    "gatesApproved": 0
+  },
+  "checks": {
+    "windows": [
+      {
+        "log": "paste-windows-frame-editing.log",
+        "sha256": "7ffdfb542c1564171413c2defb45474470649771f6c9f3e8a434213dacaecaea",
+        "executed": 6,
+        "skipped": 0
+      },
+      {
+        "log": "paste-windows-htdl-reader-final.log",
+        "sha256": "5c49d418e0a45fda8816156f3eb2a2d6545bad6d28b873137f20f122d1cb0c28",
+        "executed": 10,
+        "skipped": 0
+      },
+      {
+        "log": "paste-windows-frame-forms.log",
+        "sha256": "d994884730758e78138b98aedae249a9ed40465ba8f2cf864fc799eba32e0859",
+        "executed": 5,
+        "skipped": 0
+      },
+      {
+        "log": "paste-windows-pagepresent.log",
+        "sha256": "9652dd4e35b51c9106da6d0b963846b7c827920e047eb19da454b00fe45190b1",
+        "executed": 9,
+        "skipped": 0
+      },
+      {
+        "log": "paste-windows-framehost.log",
+        "sha256": "ec553ffdfc1455841db8944363a20103d7540ef18bf7fe1e8d85833d37a66b00",
+        "executed": 12,
+        "skipped": 0
+      }
+    ],
+    "linux": [
+      {
+        "log": "paste-linux-frame-editing.log",
+        "sha256": "039495ef5eeb5baa8928b725bfe86cdd45c60e6a699cb4524718c5995edc1979",
+        "executed": 5,
+        "skipped": 1
+      },
+      {
+        "log": "paste-linux-htdl-reader.log",
+        "sha256": "b1a645b8dc7f5b1ac8cafa65ec2c499ed432629ca2cecfab8e847e24587eb183",
+        "executed": 7,
+        "skipped": 3
+      },
+      {
+        "log": "paste-linux-frame-forms.log",
+        "sha256": "03f97aae23d8e33fb354598e4b9e630db6400d2e7be0ec741c10f6aa5154141d",
+        "executed": 3,
+        "skipped": 2
+      },
+      {
+        "log": "paste-linux-pagepresent.log",
+        "sha256": "3115e5da5cd0801218d29a0ab3b602b6c6489aad53d276626b7122348c43bd48",
+        "executed": 3,
+        "skipped": 6
+      },
+      {
+        "log": "paste-linux-framehost.log",
+        "sha256": "e33f90139e707f492091dc2f88f89854b9d8e82b9b80f91677d85f06b4e061d7",
+        "executed": 10,
+        "skipped": 2
+      }
+    ]
+  },
+  "visual": {
+    "visual.json": "a9d028a59fb6066ed115fb7f0342c4c66391665aed48696c253a4860c193e1f3",
+    "editing-200.png": "7d1bdc8d0e18c69083825d16c8c9b5d093e28aebcb3ec30821894780c2b43f78"
+  },
+  "desktop": {
+    "binarySha256": "a55a3a94b034bac2022b3a206ffc6d4cde0cfca27a45f35686a354a3825b066e",
+    "fieldValueAfterSyntheticInput": "Júlia",
+    "screenshot": "FrameArrived timed out: timed out waiting on channel"
+  },
+  "install": {
+    "windows": {
+      "selectedLibraries": 37,
+      "passed": true
+    },
+    "linux": {
+      "selectedLibraries": 37,
+      "passed": true
+    }
+  }
+}

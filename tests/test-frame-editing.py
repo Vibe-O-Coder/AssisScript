@@ -118,6 +118,35 @@ class FrameEditing(unittest.TestCase):
             assert(s.snapshot().fields.value(entry)[7]==32);
         """)
 
+    def test_paste_replaces_selection_once_and_rejects_invalid_or_stale_requests(self):
+        self.execute(start() + f"""
+            val node:doctree::NodeId=htdl::find_id(s.document().nodes(),utf8("entry"));
+            val amount:doctree::NodeId=htdl::find_id(s.document().nodes(),utf8("amount"));
+            assert(s.dispatch(1,ev(3,86,1,1)).kind==0);
+            assert(s.dispatch(1,ev(3,9,1,2)).kind==1);
+            s.dispatch(1,ev(3,17,1,3));
+            assert(s.dispatch(1,ev(3,65,1,4)).kind==12);
+            assert(s.edit_field(1,4,node,320,200,0,65536,{PREFS})==0 && s.commit_reflow());
+            assert(s.dispatch(2,ev(3,86,1,5)).kind==13);
+            assert(s.edit_field(2,5,node,320,200,0,65536,{PREFS})==204);
+            assert(s.paste_field(2,5,amount,320,200,0,65536,{PREFS},utf8("3"))==204);
+            assert(s.paste_field(2,5,node,320,200,0,65536,{PREFS},utf8("a\\nb"))==206);
+            assert(s.paste_field(2,5,node,320,200,0,65536,{PREFS},utf8("{'x' * 1025}"))==401);
+            assert(len(s.snapshot().fields.value(node))==7 && s.snapshot().fields.selection(node).anchor==0);
+            assert(s.paste_field(2,5,node,320,200,0,65536,{PREFS},utf8("Júlia🙂"))==0);
+            assert(len(s.snapshot().fields.value(node))==7);
+            s.abort_reflow();
+            assert(s.paste_field(2,5,node,320,200,0,65536,{PREFS},utf8("Júlia🙂"))==0);
+            assert(s.commit_reflow());
+            assert(len(s.snapshot().fields.value(node))==10 && s.snapshot().fields.value(node)[0]==74);
+            assert(s.snapshot().fields.selection(node).anchor==10 && s.snapshot().fields.selection(node).caret==10);
+            assert(s.snapshot().fields.value(amount)[0]==45);
+            assert(s.paste_field(3,5,node,320,200,0,65536,{PREFS},utf8("stale"))==204);
+            assert(s.dispatch(3,ev(3,86,1,6)).kind==13);
+            s.dispatch(3,ev(3,9,1,7));
+            assert(s.paste_field(3,6,node,320,200,0,65536,{PREFS},utf8("late"))==204);
+        """)
+
 
 @unittest.skipUnless(os.name == "nt", "Windows text provider required")
 class NativeInput(unittest.TestCase):

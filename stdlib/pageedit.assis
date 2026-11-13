@@ -163,23 +163,39 @@ public final class Fields {
             self.fields[index]=new Field(node,field.length,new Selection(anchor,caret));
             return 0;
         }
-        let inserted:int=0;
-        own scalar:*byte=try_alloc<byte>(4);
-        if(scalar==null){return 401;}
         if(edit.command==1){
             if(!printable(edit.argument)){return 206;}
-            inserted=encode(scalar,0,edit.argument);
+            own scalar:*byte=try_alloc<byte>(4);
+            if(scalar==null){return 401;}
+            val inserted:int=encode(scalar,0,edit.argument);
+            return self.splice(index,left,right,slice_of(scalar,0,inserted));
         }
         if(left==right){
             if(edit.command==2){left=boundaries.previous(left);}
             if(edit.command==3){right=boundaries.next(right);}
         }
+        return self.splice(index,left,right,utf8(""));
+    }
+    fn replace_selection(borrow mut self,node:doctree::NodeId,borrow value:slice<byte>):int {
+        val index:int=self.find(node);
+        if(self.code!=0 || index<0){return 204;}
+        if(len(value)>byte_limit()){return 401;}
+        if(len(value)==0 || !single_line(value)){return 206;}
+        let left:int=self.fields[index].selection.anchor;
+        let right:int=self.fields[index].selection.caret;
+        if(left>right){val swap:int=left;left=right;right=swap;}
+        return self.splice(index,left,right,value);
+    }
+    private fn splice(borrow mut self,index:int,left:int,right:int,borrow value:slice<byte>):int {
+        val field:Field=self.fields[index];
+        val start:int=index*byte_limit();
+        val inserted:int=len(value);
         val length:int=field.length+inserted-(right-left);
         if(length>byte_limit()){return 401;}
         own candidate:*byte=try_alloc<byte>(byte_limit());
         if(candidate==null){return 401;}
         for(let i:int=0;i<left;i++){candidate[i]=self.content[start+i];}
-        for(let i:int=0;i<inserted;i++){candidate[left+i]=scalar[i];}
+        for(let i:int=0;i<inserted;i++){candidate[left+i]=value[i];}
         for(let i:int=right;i<field.length;i++){candidate[left+inserted+i-right]=self.content[start+i];}
         own updated:graphemes::Index=try_new graphemes::Index(slice_of(candidate,0,length));
         if(updated==null || updated.status()!=0){return 401;}
@@ -187,7 +203,7 @@ public final class Fields {
         let caret:int=left+inserted;
         while(!updated.boundary(caret)){caret++;}
         for(let i:int=0;i<length;i++){self.content[start+i]=candidate[i];}
-        self.fields[index]=new Field(node,length,new Selection(caret,caret));
+        self.fields[index]=new Field(field.node,length,new Selection(caret,caret));
         return 0;
     }
 }

@@ -1,6 +1,7 @@
 // Local HTDL text and integer fields. Tab moves between fields and Validate.
 import "std/framehost.assis";
 import "std/cli.assis";
+import "std/pageclipboard.assis";
 
 safe fn option():bool{
     if(arg_count()!=2){return false;}
@@ -28,15 +29,16 @@ safe fn smoke(borrow mut session:framehost::Session,borrow mut window:window::Wi
     val name:doctree::NodeId=htdl::find_id(session.document().nodes(),utf8("name"));
     val amount:doctree::NodeId=htdl::find_id(session.document().nodes(),utf8("amount"));
     assert(session.dispatch(1,new window::Event(0,3,7,1,9,1,1)).kind==1);
-    edit(session,window,policy,2,74);
-    edit(session,window,policy,3,250);
-    edit(session,window,policy,4,108);
-    edit(session,window,policy,5,105);
-    edit(session,window,policy,6,97);
-    assert(session.dispatch(6,new window::Event(0,3,7,1,9,1,7)).kind==1);
-    edit(session,window,policy,8,51);
-    assert(session.dispatch(7,new window::Event(0,3,7,1,9,1,9)).kind==1);
-    assert(session.dispatch(7,new window::Event(0,3,7,1,13,1,10)).kind==10);
+    session.dispatch(1,new window::Event(0,3,7,1,17,1,2));
+    val action:viewer::Change=session.dispatch(1,new window::Event(0,3,7,1,86,1,3));
+    assert(action.kind==13);
+    assert(session.paste_field(1,3,action.node,640,400,0,65536,policy,pagepresent::measure,utf8("Júlia"))==0);
+    assert(session.publish_reflow(window)==0);
+    session.dispatch(2,new window::Event(0,3,7,1,17,0,4));
+    assert(session.dispatch(2,new window::Event(0,3,7,1,9,1,5)).kind==1);
+    edit(session,window,policy,6,51);
+    assert(session.dispatch(3,new window::Event(0,3,7,1,9,1,7)).kind==1);
+    assert(session.dispatch(3,new window::Event(0,3,7,1,13,1,8)).kind==10);
     assert(session.reflow(640,400,0,131072,0,true,policy,pagepresent::measure)==0);
     assert(session.publish_reflow(window)==0);
     assert(render_status(window,640,400,10,policy)==0 && window.present()==0);
@@ -82,12 +84,16 @@ safe fn main():int{
             if(action.kind==7){scroll=session.snapshot().reading.scroll_target();repaint=true;}
             if(action.kind==9){repaint=true;}
             if(action.kind==10 || action.kind==11){status=action.kind;repaint=true;}
-            if(action.kind==12){repaint=true;}
+            if(action.kind==12 || action.kind==13){repaint=true;}
         }
         if(!repaint || session.snapshot().reading.gesture_active()){continue;}
         let code:int=0;
         if(action.kind==12){
             code=session.edit_field(projection,event.request_id,action.node,width,height,scroll,scale,policy,pagepresent::measure);
+        }else if(action.kind==13){
+            own contents:pageclipboard::ClipboardText=try_new pageclipboard::ClipboardText(window,session.document().instance());
+            if(contents==null || contents.status()<=0){continue;}
+            code=session.paste_field(projection,event.request_id,action.node,width,height,scroll,scale,policy,pagepresent::measure,contents.data());
         }else if(action.kind==9){
             code=session.toggle_checkbox(projection,action.node,width,height,scroll,scale,policy,pagepresent::measure);
         }else{
@@ -95,7 +101,7 @@ safe fn main():int{
         }
         if(code==0){code=session.publish_reflow(window);}
         if(code!=0){session.abort_reflow();continue;}
-        if(action.kind==12){status=0;}
+        if(action.kind==12 || action.kind==13){status=0;}
         if(render_status(window,width,height,status,policy)!=0 || window.present()!=0){return 4;}
     }
     session.close();return int(window.close()!=0);

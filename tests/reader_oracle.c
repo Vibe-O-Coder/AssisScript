@@ -16,6 +16,10 @@ typedef int64_t (*Control)(int64_t,int64_t);
 typedef int32_t (*Publish)(int64_t,int64_t,const int64_t *,int64_t,const uint8_t *,int64_t);
 typedef int64_t (*Measure)(const uint8_t *,int64_t,int32_t);
 typedef int32_t (*Copy)(int64_t,const uint8_t *,int64_t);
+typedef int32_t (*ReadClipboard)(int64_t,int64_t,uint8_t *,int64_t);
+typedef int32_t (*TextEvents)(int64_t,int32_t);
+typedef int32_t (*EditingCommit)(int64_t,int64_t,int64_t,uint32_t,
+    const int64_t *,int64_t,const uint8_t *,int64_t,const int64_t *,int64_t,const uint8_t *,int64_t);
 #define LOAD(target,symbol) do {FARPROC function=GetProcAddress(dll,symbol); CHECK(function!=NULL); memcpy(&(target),&function,sizeof(target));} while(0)
 static VARIANT child(LONG n) {VARIANT v;VariantInit(&v);V_VT(&v)=VT_I4;V_I4(&v)=n;return v;}
 static DWORD WINAPI wrong_thread(void *pointer) {
@@ -73,6 +77,16 @@ int main(int argc,char **argv) {
     int64_t token=0;CHECK(open_window(1,400,250,(const uint8_t *)"oracle",6,&token)==0);
     HWND hwnd=(HWND)(uintptr_t)control(4,token);
     if(clipboard) {
+        ReadClipboard read_clipboard;TextEvents text_events;EditingCommit commit_editing;
+        LOAD(read_clipboard,"assisp_clipboard_read_utf8");LOAD(text_events,"assisp_text_events");
+        LOAD(commit_editing,"assisp_frame_editing_commit");
+        uint8_t pasted[16];memset(pasted,0xaa,sizeof(pasted));
+        CHECK(read_clipboard(token,1,pasted,sizeof(pasted))==-2);
+        const int64_t document[8]={1,0,0,0,400,250,0,5};
+        CHECK(commit_editing(token,1,71,0xffffffff,NULL,0,NULL,0,document,1,(const uint8_t *)"Title",5)==0);
+        CHECK(text_events(token,1)==0);
+        CHECK(OpenClipboard(hwnd) && EmptyClipboard() && CloseClipboard());
+        CHECK(read_clipboard(token,71,pasted,sizeof(pasted))==0);
         CHECK(copy(token,(const uint8_t *)"A\xc3\xa7\xc3\xa3o\n\xf0\x9f\x98\x80",11)==0);
         CHECK(OpenClipboard(hwnd));HGLOBAL value=GetClipboardData(CF_UNICODETEXT);CHECK(value);
         wchar_t *wide=GlobalLock(value);CHECK(wide && wcscmp(wide,L"A\x00e7\x00e3o\r\n\xd83d\xde00")==0);
@@ -81,6 +95,18 @@ int main(int argc,char **argv) {
         CHECK(control(0,0)==0);CHECK(copy(token,(const uint8_t *)"new",3)==-4);CHECK(control(0,-1)==0);
         CHECK(OpenClipboard(hwnd));value=GetClipboardData(CF_UNICODETEXT);wide=GlobalLock(value);
         CHECK(wide && wcscmp(wide,L"A\x00e7\x00e3o\r\n\xd83d\xde00")==0);GlobalUnlock(value);CHECK(CloseClipboard());
+        const uint8_t expected[]="A\xc3\xa7\xc3\xa3o\r\n\xf0\x9f\x98\x80";
+        CHECK(read_clipboard(token,71,pasted,11)==-4 && pasted[0]==0xaa);
+        CHECK(read_clipboard(token,72,pasted,sizeof(pasted))==-2);
+        CHECK(read_clipboard(token,71,pasted,12)==12 && !memcmp(pasted,expected,12) && pasted[12]==0xaa);
+        CHECK(copy(token,(const uint8_t *)"",0)==0 && read_clipboard(token,71,pasted,sizeof(pasted))==0);
+        HGLOBAL malformed=GlobalAlloc(GMEM_MOVEABLE,2*sizeof(WCHAR));CHECK(malformed);
+        wide=GlobalLock(malformed);CHECK(wide);wide[0]=0xd800;wide[1]=0;GlobalUnlock(malformed);
+        CHECK(OpenClipboard(hwnd) && EmptyClipboard() && SetClipboardData(CF_UNICODETEXT,malformed) && CloseClipboard());
+        CHECK(read_clipboard(token,71,pasted,sizeof(pasted))==-1);
+        CHECK(commit_editing(token,2,72,0xffffffff,NULL,0,NULL,0,document,1,(const uint8_t *)"Title",5)==0);
+        CHECK(read_clipboard(token,71,pasted,sizeof(pasted))==-2);
+        CHECK(text_events(token,0)==0 && read_clipboard(token,72,pasted,sizeof(pasted))==-2);
         CHECK(close_window(token)==0);CHECK(SetThreadDesktop(original_desktop));CHECK(SetProcessWindowStation(original_station));
         CHECK(CloseDesktop(desktop));CHECK(CloseWindowStation(station));FreeLibrary(dll);puts("PASS isolated clipboard");return 0;
     }

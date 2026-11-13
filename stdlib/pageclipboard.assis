@@ -1,0 +1,38 @@
+namespace pageclipboard;
+import "std/window.assis";
+
+platform("windows-x64"){
+extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_clipboard_read_utf8")
+fn native_read(window:int,document:int,borrow mut output:*byte,capacity:int):i32;
+}
+platform("linux"){
+pure fn native_read(window:int,document:int,borrow mut output:*byte,capacity:int):i32{return i32(-3);}
+}
+platform("macos"){
+pure fn native_read(window:int,document:int,borrow mut output:*byte,capacity:int):i32{return i32(-3);}
+}
+
+/// Trusted host only. Read once for an accepted paste action.
+public final class ClipboardText {
+    private own content:*byte;
+    private let size:int;
+
+    fn init(borrow mut self,borrow window:window::Window,document:int):void{
+        if(!window.opened()){self.size=-2;return;}
+        if(document<1){self.size=-1;return;}
+        val capacity:int=1024;
+        own content:*byte=try_alloc<byte>(capacity);
+        if(content==null){self.size=-4;return;}
+        let size:int=0;
+        unsafe{size=int(native_read(window.platform_token(),document,content,capacity));}
+        if(size>capacity){size=-6;}
+        self.size=size;
+        self.content=move(content);
+    }
+    fn status(borrow self):int{return self.size;}
+    fn data(borrow self):borrow(self) slice<byte>{
+        let length:int=0;
+        if(self.size>0){length=self.size;}
+        return slice_of(self.content,0,length);
+    }
+}

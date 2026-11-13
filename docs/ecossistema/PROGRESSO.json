@@ -492,7 +492,7 @@
           "name": "Fontes, edição e entrada de texto",
           "level": 3,
           "acceptance": "Integrar shaping/fallback/bidi, medição e quebra, seleção, clipboard e IME; validar edição com graphemes, escala 200%, RTL e navegação por teclado em providers de cada OS.",
-          "baseline": "Edição local de texto e int64 com valor/seleção por nó, grafemas, zoom 200%, entrada Win32 e confirmação nativa. Execução adversa Windows e Linux headless. Composição IME, bidi, outros providers e DPI do OS seguem abertos.",
+          "baseline": "Edição local de texto e int64 com valor/seleção por nó, grafemas, zoom 200%, entrada Win32 e confirmação nativa. Colagem de linha única em transação validada no Windows e em testes headless Linux. Composição IME, bidi, outros providers e DPI do OS seguem abertos.",
           "evidence": [
             "docs/BIBLIOTECA-unicode.md",
             "docs/relatorios/2026-11-01-m2-visualizador-htdl.md",
@@ -509,7 +509,9 @@
             "docs/relatorios/2026-11-13-m3-campos-editaveis.md",
             "docs/ecossistema/evidencias/frame-editing-2026-11-13/summary.json",
             "docs/ecossistema/evidencias/frame-editing-2026-11-13/desktop.json",
-            "docs/ecossistema/evidencias/frame-editing-2026-11-13/visual.json"
+            "docs/ecossistema/evidencias/frame-editing-2026-11-13/visual.json",
+            "docs/relatorios/2026-11-13-m3-colagem.md",
+            "docs/ecossistema/evidencias/frame-paste-2026-11-13/summary.json"
           ]
         },
         {

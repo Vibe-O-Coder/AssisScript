@@ -498,6 +498,15 @@
         "loopback",
         "searchsegments"
       ]
+    },
+    {
+      "name": "pageclipboard",
+      "required": false,
+      "doc": "BIBLIOTECA-pageclipboard.md",
+      "description": "Leitura limitada da área de transferência em formulários locais.",
+      "dependencies": [
+        "window"
+      ]
     }
   ]
 }

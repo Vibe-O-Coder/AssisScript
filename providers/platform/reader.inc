@@ -277,6 +277,41 @@ int32_t assisp_clipboard_utf8(int64_t token, const uint8_t *text, int64_t length
     int success = EmptyClipboard() && SetClipboardData(CF_UNICODETEXT, memory) != NULL;
     CloseClipboard(); if (!success) {GlobalFree(memory); return -6;} return 0;
 }
+int32_t assisp_clipboard_read_utf8(int64_t token, int64_t document, uint8_t *output, int64_t capacity) {
+    Window *w = NULL;
+    int code = access_window(token, &w);
+    if (code) return code;
+    if (!output || capacity < 1 || capacity > 1024 || document <= 0) return -1;
+    if (!w->text_input || w->text_document != document) return -2;
+    if (!OpenClipboard(w->hwnd)) return -6;
+
+    int result = 0;
+    if (IsClipboardFormatAvailable(CF_UNICODETEXT)) {
+        HGLOBAL memory = GetClipboardData(CF_UNICODETEXT);
+        const WCHAR *wide = memory ? GlobalLock(memory) : NULL;
+        if (!wide) {
+            result = -6;
+        } else {
+            size_t units = GlobalSize(memory) / sizeof(*wide);
+            size_t limit = units < (size_t)capacity + 1 ? units : (size_t)capacity + 1;
+            size_t count = 0;
+            while (count < limit && wide[count]) count++;
+            if (count == limit) result = count > (size_t)capacity ? -4 : -1;
+            else if (count) {
+                int bytes = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, wide, (int)count, NULL, 0, NULL, NULL);
+                if (!bytes) result = -1;
+                else if (bytes > capacity) result = -4;
+                else {
+                    int written = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, wide, (int)count, (char *)output, bytes, NULL, NULL);
+                    result = written == bytes ? bytes : -1;
+                }
+            }
+            GlobalUnlock(memory);
+        }
+    }
+    if (!CloseClipboard()) return -6;
+    return result;
+}
 static int32_t accessibility_commit(int64_t token, int64_t document, const int64_t *words, int64_t count, const uint8_t *names, int64_t length, int projection_kind) {
     Window *w = NULL; int code = access_window(token, &w); if (code) {return code;}
     if (document <= 0 || !words || count < 1 || count > 32769 || length < 0 || length > 1048608 || (!names && length)) {return -1;}

@@ -12,6 +12,9 @@ um grafema, move para a esquerda/direita, início/fim, seleciona tudo ou
 posiciona o cursor numa fronteira. Os offsets são bytes UTF-8. Se uma
 edição unir dois grafemas, o cursor avança até a próxima fronteira.
 Falha de validação ou de memória preserva valor e seleção.
+`replace_selection(node, value)` usa a mesma transação para substituir
+a seleção por um trecho UTF-8 de linha única. O perfil limita tanto
+o trecho recebido como o valor resultante a 1.024 bytes.
 
 `FrameHost` prepara uma cópia do estado da mesma instância de documento.
 `edit_field` exige a revisão do quadro, a sequência de entrada e o nó

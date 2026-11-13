@@ -2,6 +2,7 @@
 > Use `work/eco-70-20261112`, branch `work/ecosystem-2026-11-12`. A busca
 > HTTP e o índice segmentado foram publicados em `48a18b7`. A edição local
 > de texto/número tem buffer por nó e commit de valor, raster e MSAA.
+> [Colagem Ctrl+V](../relatorios/2026-11-13-m3-colagem.md) usa a mesma transação.
 > A demo passou nos rasters a 100% e 200% e recebeu entrada de teclado
 > no desktop. Composição IME, capturas, leitor real, DPI, monitores e fluidez
 > SSC permanecem no aceite.

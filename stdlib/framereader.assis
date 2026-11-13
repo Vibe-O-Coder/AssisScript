@@ -248,9 +248,15 @@ public final class Reader{
             if(event.arg0==35){command=7;}
             if(self.control && event.arg0==65){command=8;}
             val copy:bool=self.control && event.arg0==67;
-            if(command>0 || copy || event.arg0==32 || event.arg0==13){
+            val paste:bool=self.control && event.arg0==86;
+            if(command>0 || copy || paste || event.arg0==32 || event.arg0==13){
                 if(!self.accept(frame,document,projection,event) || event.arg1==0){return none;}
                 if(copy){return new viewer::Change(4,self.focus);}
+                if(paste && !self.dragging && doctree::absent(self.pressed)){
+                    self.editing=new pageedit::Edit(10,0,false);
+                    self.edit_request=event.request_id;
+                    return new viewer::Change(13,self.focus);
+                }
                 if(command==0 || self.dragging || !doctree::absent(self.pressed)){return none;}
                 self.editing=new pageedit::Edit(command,0,self.shift && command!=8);
                 self.edit_request=event.request_id;

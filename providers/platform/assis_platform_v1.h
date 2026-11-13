@@ -63,6 +63,10 @@ ASSISP_API int32_t assisp_frame_forms_commit(int64_t window, int64_t projection,
    Text events are opt-in per window and require a committed editable frame. */
 ASSISP_API int64_t assisp_frame_editing_version(void);
 ASSISP_API int32_t assisp_text_events(int64_t window, int32_t enabled);
+/* Bounded CF_UNICODETEXT read for an enabled editing window and document.
+   Returns UTF-8 byte count, zero for empty/missing text, or a negative error.
+   No NUL is written. Only bytes in a positive result may be used. */
+ASSISP_API int32_t assisp_clipboard_read_utf8(int64_t window, int64_t document, uint8_t *output, int64_t capacity);
 ASSISP_API int32_t assisp_frame_editing_commit(int64_t window, int64_t projection, int64_t instance, uint32_t background,
     const int64_t *commands, int64_t count, const uint8_t *text, int64_t length,
     const int64_t *access, int64_t items, const uint8_t *names, int64_t names_length);

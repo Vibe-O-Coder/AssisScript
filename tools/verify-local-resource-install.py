@@ -19,7 +19,7 @@ parser.add_argument('--output',type=Path)
 args=parser.parse_args()
 OUT=args.output or ROOT/'docs/ecossistema/evidencias/m3-local-resources-2026-11-04'
 selected=['frameworker','localresources','http','cli'] if args.confined else ['frameworker']
-if args.search_forms:selected+=['searchservice','htdlsearch','cli','process']
+if args.search_forms:selected+=['searchservice','htdlsearch','cli','process','pageclipboard']
 selected=list(dict.fromkeys(selected))
 selection=','.join(selected)
 OUT.mkdir(parents=True,exist_ok=True);host='windows' if os.name=='nt' else 'linux';compiler=Path(os.environ['ASSIS_BIN']).resolve();records=[]
@@ -133,7 +133,7 @@ with tempfile.TemporaryDirectory(prefix='assis-presentation-install-') as temp:
             assert run([forms,'--smoke']).stdout.splitlines()==[b'FORMS WINDOW 3 1']
             editing=prefix/'bin/editing.exe'
             run([installed,'build',data/'exemplos/74_editable_forms_window.assis','--safe','--debug','-o',editing])
-            assert run([editing,'--smoke']).stdout.splitlines()==[b'EDITABLE FORM 8']
+            assert run([editing,'--smoke']).stdout.splitlines()==[b'EDITABLE FORM 4']
     user=prefix/'personal.txt';user.write_text('preserve');run(uninstall);assert user.read_text()=='preserve' and not installed.exists()
     if os.name=='nt':
         command=['node','--test','--test-isolation=none','tests/test-development.js','tests/test-v31.js']
