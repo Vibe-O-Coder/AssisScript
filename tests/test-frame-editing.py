@@ -147,6 +147,12 @@ class FrameEditing(unittest.TestCase):
             assert(s.paste_field(3,6,node,320,200,0,65536,{PREFS},utf8("late"))==204);
         """)
 
+    def test_clipboard_demo_compiles_for_all_five_targets(self):
+        for target in ("windows-x64", "linux-x64", "linux-arm64", "macos-x64", "macos-arm64"):
+            result = self.invoke("build", ROOT / "exemplos/74_editable_forms_window.assis",
+                                 "--target", target, "-o", self.temp / target)
+            self.assertEqual(result.returncode, 0, (target, result.stderr))
+
 
 @unittest.skipUnless(os.name == "nt", "Windows text provider required")
 class NativeInput(unittest.TestCase):

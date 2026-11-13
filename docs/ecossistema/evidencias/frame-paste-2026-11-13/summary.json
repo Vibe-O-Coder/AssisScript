@@ -8,8 +8,8 @@
     "windows": [
       {
         "log": "paste-windows-frame-editing.log",
-        "sha256": "7ffdfb542c1564171413c2defb45474470649771f6c9f3e8a434213dacaecaea",
-        "executed": 6,
+        "sha256": "0102fcab3bc9d8d9ccbed120c31b51fc47be9dc9dd3e1fc4a9c94b9c6d5bf2fa",
+        "executed": 7,
         "skipped": 0
       },
       {
@@ -40,8 +40,8 @@
     "linux": [
       {
         "log": "paste-linux-frame-editing.log",
-        "sha256": "039495ef5eeb5baa8928b725bfe86cdd45c60e6a699cb4524718c5995edc1979",
-        "executed": 5,
+        "sha256": "68d2d77406df54e3cb64e5937b25a101e8cdf9f1e17d1198f579e945bc0e6c40",
+        "executed": 6,
         "skipped": 1
       },
       {
@@ -82,11 +82,31 @@
   "install": {
     "windows": {
       "selectedLibraries": 37,
-      "passed": true
+      "passed": true,
+      "sha256": "e98518795d2af43894ac1d488d7a5b991db0b031ecac0a5ee09471df189fecd0"
     },
     "linux": {
       "selectedLibraries": 37,
-      "passed": true
+      "passed": true,
+      "sha256": "84a7697292b1ab047c1251f05585669f3207e6d02bc91247828a128db165199f"
+    }
+  },
+  "examples": {
+    "windows": {
+      "passed": 75,
+      "rpg": [
+        "victory",
+        "defeat"
+      ],
+      "sha256": "3ab38c6f188f569b8514984589d1469383b114f5f77af3a1f040fef58fe06607"
+    },
+    "linux": {
+      "passed": 75,
+      "rpg": [
+        "victory",
+        "defeat"
+      ],
+      "sha256": "dfe4c7463c1c3c0cda34fe6223c40f8c1070df60eebfeb82e3252a889bf03c0a"
     }
   }
 }

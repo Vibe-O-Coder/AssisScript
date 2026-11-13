@@ -6,10 +6,10 @@ extern("assis_platform_v1.dll","assis_platform_v1.dll","assisp_clipboard_read_ut
 fn native_read(window:int,document:int,borrow mut output:*byte,capacity:int):i32;
 }
 platform("linux"){
-pure fn native_read(window:int,document:int,borrow mut output:*byte,capacity:int):i32{return i32(-3);}
+safe fn native_read(window:int,document:int,borrow mut output:*byte,capacity:int):i32{return i32(-3);}
 }
 platform("macos"){
-pure fn native_read(window:int,document:int,borrow mut output:*byte,capacity:int):i32{return i32(-3);}
+safe fn native_read(window:int,document:int,borrow mut output:*byte,capacity:int):i32{return i32(-3);}
 }
 
 /// Trusted host only. Read once for an accepted paste action.
